@@ -15,6 +15,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
+    "dev-client": "react-scripts start",
     "dev-server": "NODE_ENV=development nodemon src/backend --exec babel-node"
   }
 }
