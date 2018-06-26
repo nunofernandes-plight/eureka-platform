@@ -10,4 +10,12 @@ export default class {
      return this.db.collection('reviews').find().toArray();
   }
 
+  insertReview(rating, text) {
+    return this.db.collection('reviews').insert(
+      {
+        rating: rating,
+        text: text
+      }
+    )
+  }
 }
