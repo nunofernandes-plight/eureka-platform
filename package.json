@@ -5,12 +5,12 @@
   "dependencies": {
     "babel-cli": "^6.26.0",
     "express": "^4.16.3",
-    "mongojs": "^2.6.0",
     "nodemon": "^1.17.5",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",
-    "styled-components": "^3.3.3"
+    "styled-components": "^3.3.3",
+    "then-mongo": "^3.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
