@@ -40,6 +40,12 @@ npm run dev-server
 
 > Default dev port: `http://localhost:8080/`
 
+#### Build Smart Contract
+```
+
+```
+> Default dev Ethereum node: `http://127.0.0.1:7545`
+
 ## How to contribute
 
 Pull requests welcome! Please include tests and follow the style conventions.
