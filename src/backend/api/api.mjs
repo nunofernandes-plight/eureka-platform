@@ -1,22 +1,21 @@
 import express from 'express'
 import DBConnector from "../db/db";
+import {asyncHandler} from "../requestHandler";
+
 const app = express();
 
 //database
 const dbUrl = 'localhost/eurekaDB';
 const db = new DBConnector(dbUrl);
 
-app.get('/reviews', (req, res) => {
-    db.getAllReviews().then( (result) => res.json(result)).catch(err => console.log(err));
-});
+app.get('/reviews', asyncHandler(async (req, res) => {
+    let result = await db.getAllReviews();
+    return result;
+}));
 
-app.get('/insertReview',  async (req, res) => {
-   let result = await db.insertReview(3, 'test');
-   if(result) {
-       res.json('Success')
-   } else {
-       res.json('Error')
-   }
-});
+app.get('/insertReview', asyncHandler(async (req, res) => {
+    let result = await db.insertReview(3, 'test');
+    return result;
+}));
 
 export default app;
