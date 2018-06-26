@@ -1,6 +1,12 @@
 import express from 'express'
 import DBConnector from "../db/db";
+import Web3Manager from "../web3/index";
+
 const app = express();
+
+// web3 instance
+const web3Manager = new Web3Manager();
+web3Manager.deployContract();
 
 //database
 const dbUrl = 'localhost/eurekaDB';
