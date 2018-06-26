@@ -1,6 +1,6 @@
 import express from 'express'
 import DBConnector from "../db/db";
-import {asyncHandler} from "../requestHandler";
+import {asyncHandler} from "./requestHandler";
 import Web3Manager from "../web3/index";
 
 const app = express();
