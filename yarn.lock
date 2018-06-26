@@ -2,6 +2,32 @@
 # yarn lockfile v1
 
 
+"@types/bson@*":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@types/bson/-/bson-1.0.9.tgz#0a042ac50d879c4a842a269586162e12010f6ebd"
+  dependencies:
+    "@types/node" "*"
+
+"@types/events@*":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
+
+"@types/mongodb@^2.2.7":
+  version "2.2.21"
+  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-2.2.21.tgz#6ca4eaab420110f8ee9dd633d2a3adf5fed7d115"
+  dependencies:
+    "@types/bson" "*"
+    "@types/events" "*"
+    "@types/node" "*"
+
+"@types/node@*":
+  version "10.3.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.3.6.tgz#ea8aab9439b59f40d19ec5f13b44642344872b11"
+
+"@types/promise@^7.1.30":
+  version "7.1.30"
+  resolved "https://registry.yarnpkg.com/@types/promise/-/promise-7.1.30.tgz#1b6714b321fdfc54d1527e7a17116a0e1f2ab810"
+
 abab@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.4.tgz#5faad9c2c07f60dd76770f71cf025b62a63cfd4e"
@@ -4597,7 +4623,7 @@ mongodb-core@2.1.19:
     bson "~1.0.4"
     require_optional "~1.0.0"
 
-mongodb@^2.2.31:
+mongodb@^2.0.45:
   version "2.2.35"
   resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-2.2.35.tgz#cd1b5af8a9463e3f9a787fa5b3d05565579730f9"
   dependencies:
@@ -4605,18 +4631,18 @@ mongodb@^2.2.31:
     mongodb-core "2.1.19"
     readable-stream "2.2.7"
 
-mongojs@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/mongojs/-/mongojs-2.6.0.tgz#333f580621a0dc64800865e38e36a6e61ff16989"
+mongojs@2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/mongojs/-/mongojs-2.4.0.tgz#f287fbfd457fedf588b5a9011e68513d9dd32bfb"
   dependencies:
     each-series "^1.0.0"
-    mongodb "^2.2.31"
-    once "^1.4.0"
-    parse-mongo-url "^1.1.1"
-    readable-stream "^2.3.3"
-    thunky "^1.0.2"
+    mongodb "^2.0.45"
+    once "^1.3.2"
+    parse-mongo-url "^1.1.0"
+    readable-stream "^2.0.2"
+    thunky "^0.1.0"
     to-mongodb-core "^2.0.0"
-    xtend "^4.0.1"
+    xtend "^4.0.0"
 
 ms@2.0.0:
   version "2.0.0"
@@ -4912,7 +4938,7 @@ on-headers@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/on-headers/-/on-headers-1.0.1.tgz#928f5d0f470d49342651ea6794b0857c100693f7"
 
-once@^1.3.0, once@^1.4.0:
+once@^1.3.0, once@^1.3.2, once@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"
   dependencies:
@@ -5069,7 +5095,7 @@ parse-json@^2.2.0:
   dependencies:
     error-ex "^1.2.0"
 
-parse-mongo-url@^1.1.1:
+parse-mongo-url@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/parse-mongo-url/-/parse-mongo-url-1.1.1.tgz#66238df5f8e7c0c8ca4cd970d4ab6a1373eb75b5"
 
@@ -5546,7 +5572,7 @@ progress@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.0.tgz#8a1be366bf8fc23db2bd23f10c6fe920b4389d1f"
 
-promise@8.0.1:
+promise@8.0.1, promise@^8.0.0:
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/promise/-/promise-8.0.1.tgz#e45d68b00a17647b6da711bf85ed6ed47208f450"
   dependencies:
@@ -6751,6 +6777,15 @@ text-table@0.2.0, text-table@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
 
+then-mongo@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/then-mongo/-/then-mongo-3.0.2.tgz#b6daf440e387f6f4a16357e5688870528213a2ba"
+  dependencies:
+    "@types/mongodb" "^2.2.7"
+    "@types/promise" "^7.1.30"
+    mongojs "2.4.0"
+    promise "^8.0.0"
+
 throat@^3.0.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/throat/-/throat-3.2.0.tgz#50cb0670edbc40237b9e347d7e1f88e4620af836"
@@ -6758,6 +6793,10 @@ throat@^3.0.0:
 through@2, through@^2.3.6, through@~2.3, through@~2.3.1:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
+
+thunky@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/thunky/-/thunky-0.1.0.tgz#bf30146824e2b6e67b0f2d7a4ac8beb26908684e"
 
 thunky@^1.0.2:
   version "1.0.2"
@@ -7352,7 +7391,7 @@ xml-name-validator@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/xml-name-validator/-/xml-name-validator-2.0.1.tgz#4d8b8f1eccd3419aa362061becef515e1e559635"
 
-xtend@^4.0.0, xtend@^4.0.1:
+xtend@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.1.tgz#a5c6d532be656e23db820efb943a1f04998d63af"
 
