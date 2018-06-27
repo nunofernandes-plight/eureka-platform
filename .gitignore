@@ -26,3 +26,4 @@ yarn-error.log*
 src/frontend/ethereum/truffle/build/
 package-lock.json
 src/frontend/ethereum/truffle/contracts/*
+src/smartcontracts
