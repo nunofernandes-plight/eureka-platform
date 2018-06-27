@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import solc from 'solc';
 import web3 from './init';
-import linker from 'solc/linker';
 import getAccounts from './get-accounts';
 
 const deployContract = async () => {
