@@ -19,9 +19,17 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "npm run lint && react-scripts test --env=jsdom",
+    "lint": "eslint '**/*.mjs' --ignore-path .gitignore",
+    "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
     "eject": "react-scripts eject",
     "dev-client": "react-scripts start",
     "dev-server": "NODE_ENV=development nodemon --exec \"node --experimental-modules\" src/backend babel-node"
+  },
+  "devDependencies": {
+    "eslint": "^5.0.1",
+    "eslint-plugin-prettier": "^2.6.1",
+    "eslint-plugin-react": "^7.10.0",
+    "prettier": "^1.13.6"
   }
 }

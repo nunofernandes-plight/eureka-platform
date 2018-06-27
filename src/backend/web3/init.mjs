@@ -1,4 +1,4 @@
-import Web3 from "web3";
+import Web3 from 'web3';
 import isProduction from '../../helpers/isProduction';
 const web3 = new Web3();
 
