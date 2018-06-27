@@ -8,7 +8,7 @@ import getAccounts from './get-accounts';
 const deployContract = async () => {
   const dirname = path.resolve(path.dirname(''));
   const file = fs.readFileSync(
-    path.resolve(dirname, 'src/smartcontracts/eureka.sol'),
+    path.resolve(dirname, 'src/smartcontracts/Utils.sol'),
     'utf-8'
   );
   if (!file) {
@@ -16,16 +16,6 @@ const deployContract = async () => {
       'Contract input file ' + file.toString() + ' is not valid!'
     );
   }
-
-  // const input = {
-  //   'eureka.sol': fs.readFileSync(
-  //     path.resolve(dirname, 'src/smartcontracts/eureka.sol'),
-  //     'utf8'
-  //   )
-  // };
-
-  const SafeMathAddress = '0x713D1A0b03d66Da796BD6F0e5Fa77E7aa031c8FA';
-  const UtilsAddress = '0x7F117faAFBe1Ce1925B30d9347A190621a5bF2f6';
 
   const input = {
     'eureka.sol': fs.readFileSync(
@@ -43,6 +33,40 @@ const deployContract = async () => {
   };
 
   let compiledContract = solc.compile({sources: input}, 1);
+  let accounts = await getAccounts();
+
+  const EurekaContract = compiledContract.contracts['eureka.sol:Eureka'];
+  const UtilsContract = compiledContract.contracts['Utils.sol:Utils'];
+
+  const web3EurekaContract = new web3.eth.Contract(
+    JSON.parse(EurekaContract.interface)
+  );
+
+  const web3UtilsContract = new web3.eth.Contract(
+    JSON.parse(UtilsContract.interface)
+  );
+
+  let UtilsAddress = '';
+
+  await web3UtilsContract
+    .deploy({data: UtilsContract.bytecode})
+    .send({
+      from: accounts[0],
+      gas: 4660727,
+      gasPrice: 1
+    })
+    .on('receipt', resp => {
+      console.log(
+        'Smart contract "' +
+          'Utils' +
+          '" has been deployed and accepted in block number ' +
+          resp.blockNumber +
+          ' (address: ' +
+          resp.contractAddress +
+          ')'
+      );
+      UtilsAddress = resp.contractAddress;
+    });
 
   //console.log(compiledContract);
 
@@ -54,8 +78,8 @@ const deployContract = async () => {
   // const contract =
   //   compiledContract.contracts[Object.keys(compiledContract.contracts)[0]];
 
-  // let bytecode = linker.linkBytecode(contract.bytecode, {"Utils": UtilsAddress});
-  // bytecode = linker.linkBytecode(bytecode, {"SafeMath": SafeMathAddress});
+  // const linkReferences = linker.findLinkReferences(bytecode);
+  // console.log(linkReferences);
 
   // const myContract = new web3.eth.Contract(JSON.parse(contract.interface));
   // const contractName = Object.keys(compiledContract.contracts)
@@ -63,26 +87,45 @@ const deployContract = async () => {
   //   .toString()
   //   .substr(1);
   //
-  // let accounts = await getAccounts();
-  //
-  // myContract
-  //   .deploy({data: contract.bytecode})
-  //   .send({
-  //     from: accounts[0],
-  //     gas: 4660727,
-  //     gasPrice: 1
-  //   })
-  //   .on('receipt', resp => {
-  //     console.log(
-  //       'Smart contract "' +
-  //         contractName +
-  //         '" has been deployed and accepted in block number ' +
-  //         resp.blockNumber +
-  //         ' (address: ' +
-  //         resp.contractAddress +
-  //         ')'
-  //     );
-  //   });
+
+  let bytecode = solc.linkBytecode(EurekaContract.bytecode, {
+    'Utils.sol:Utils': '0xB5aA5B106a09f6448D28000b88b6294c7325bAE4'
+  });
+
+  //console.log(bytecode);
+  // const hacked = bytecode.replace(new RegExp())
+
+  await web3EurekaContract
+    .deploy({data: bytecode})
+    .send({
+      from: accounts[0],
+      gas: 4660727,
+      gasPrice: 1
+    })
+    .on('receipt', resp => {
+      console.log(
+        'Smart contract "' +
+          'EUREKA' +
+          ' has been deployed and accepted in block number ' +
+          resp.blockNumber +
+          ' (address: ' +
+          resp.contractAddress +
+          ')'
+      );
+      web3EurekaContract.options.address = resp.contractAddress;
+    });
+
+  let gasEstimated = await web3.eth.estimateGas({data: bytecode});
+
+  console.log('Gas estimated: ' + gasEstimated);
+  await web3EurekaContract.methods
+    .totalSupply_()
+    .call({from: accounts[0], gas: gasEstimated})
+    .then(succ => {
+      console.log(succ);
+    });
+
+  web3UtilsContract.options.address = UtilsAddress;
 };
 
 export default deployContract;
