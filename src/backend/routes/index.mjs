@@ -7,4 +7,3 @@ const router = express.Router();
 router.use('/reviews', reviewRoutes);
 
 export default router;
-

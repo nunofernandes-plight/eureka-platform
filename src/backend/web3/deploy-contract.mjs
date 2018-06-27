@@ -1,9 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import solc from 'solc';
-import web3 from './init';
-import linker from 'solc/linker';
-import getAccounts from './get-accounts';
 
 const deployContract = async () => {
   const dirname = path.resolve(path.dirname(''));
@@ -24,8 +21,8 @@ const deployContract = async () => {
   //   )
   // };
 
-  const SafeMathAddress = '0x713D1A0b03d66Da796BD6F0e5Fa77E7aa031c8FA';
-  const UtilsAddress = '0x7F117faAFBe1Ce1925B30d9347A190621a5bF2f6';
+  const SafeMathAddress = '0x713D1A0b03d66Da796BD6F0e5Fa77E7aa031c8FA'; //eslint-disable-line
+  const UtilsAddress = '0x7F117faAFBe1Ce1925B30d9347A190621a5bF2f6'; //eslint-disable-line
 
   const input = {
     'eureka.sol': fs.readFileSync(
@@ -42,7 +39,7 @@ const deployContract = async () => {
     )
   };
 
-  let compiledContract = solc.compile({sources: input}, 1);
+  let compiledContract = solc.compile({sources: input}, 1); //eslint-disable-line
 
   //console.log(compiledContract);
 
