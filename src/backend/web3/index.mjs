@@ -3,10 +3,12 @@ import deployContract from './deploy-contract';
 
 export default class {
   constructor() {
-    console.log('Current provider ', web3.currentProvider.host);
+    console.log('Current Web3 Provider ', web3.currentProvider.host);
   }
 
   deployContract() {
-    deployContract();
+    if (web3) {
+      deployContract();
+    }
   }
 }
