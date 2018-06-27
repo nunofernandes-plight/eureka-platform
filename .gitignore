@@ -25,3 +25,4 @@ yarn-error.log*
 .idea
 src/frontend/ethereum/truffle/build/
 package-lock.json
+src/frontend/ethereum/truffle/contracts/*
