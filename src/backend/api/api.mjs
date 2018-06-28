@@ -11,6 +11,6 @@ app.use('/api', router);
 
 // web3 instance
 const web3Manager = new Web3Manager();
-web3Manager.deployContract();
+web3Manager.deployContracts();
 
 export default app;
