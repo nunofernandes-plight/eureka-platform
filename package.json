@@ -24,7 +24,8 @@
     "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
     "eject": "react-scripts eject",
     "dev-client": "react-scripts start",
-    "dev-server": "NODE_ENV=development nodemon --exec \"node --experimental-modules\" src/backend babel-node"
+    "dev-server": "NODE_ENV=development nodemon --exec \"node --experimental-modules\" src/backend babel-node",
+    "dev-contracts": "NODE_ENV=development nodemon --exec \"node --experimental-modules\" src/backend/web3/index.mjs babel-node"
   },
   "devDependencies": {
     "eslint": "^5.0.1",
