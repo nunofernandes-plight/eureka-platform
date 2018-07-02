@@ -1,4 +1,4 @@
-import web3 from './init';
+import web3 from './web3Instance';
 
 const getAccounts = async () => {
   return web3.eth
