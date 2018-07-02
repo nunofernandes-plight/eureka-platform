@@ -10,32 +10,27 @@ export const deployContract = async (contractInput, addressMap, accounts) => {
   );
   const compiledContract = solc.compile({sources: input}, 1);
 
-  // await Promise.all(
-  Object.keys(contractInput.contract).map(async cName => {
-    const web3Contract = getWeb3Contract(cName, compiledContract);
-    let bytecode = web3Contract.options.data;
-    const linkReferences = linker.findLinkReferences(bytecode);
+  return Promise.all(
+    Object.keys(contractInput.contract).map(async cName => {
+      const web3Contract = getWeb3Contract(cName, compiledContract);
+      let bytecode = web3Contract.options.data;
+      const linkReferences = linker.findLinkReferences(bytecode);
 
-    if (linkReferences) {
-      Object.keys(linkReferences).forEach(async link => {
-        let libraryAddress = addressMap.get(link);
+      if (linkReferences) {
+        Object.keys(linkReferences).forEach(async link => {
+          let libraryAddress = addressMap.get(link);
 
-        if (libraryAddress) {
-          let linkObj = {};
-          linkObj[link] = libraryAddress; // example: { 'Utils.sol:Utils': '0x6EeCB98D711dbff3ceFD8F0619994BaBaCC3585b'}
-          bytecode = linker.linkBytecode(bytecode, linkObj);
-        }
-      });
-    }
+          if (libraryAddress) {
+            let linkObj = {};
+            linkObj[link] = libraryAddress; // example: { 'Utils.sol:Utils': '0x6EeCB98D711dbff3ceFD8F0619994BaBaCC3585b'}
+            bytecode = linker.linkBytecode(bytecode, linkObj);
+          }
+        });
+      }
 
-    const contract = await deploy(
-      web3Contract,
-      bytecode,
-      accounts,
-      cName
-    );
-  });
-  // );
+      return deploy(web3Contract, bytecode, accounts, cName);
+    })
+  );
 };
 
 // const pattern = cName.toString() + ':' + cName.split('.')[0];
@@ -116,6 +111,7 @@ const getWeb3Contract = (cName, compiledContract) => {
 
 const deploy = async (web3Contract, bytecode, accounts, contractName) => {
   const gasEstimated = await web3.eth.estimateGas({data: bytecode});
+  web3Contract.options.data = bytecode;
   return web3Contract
     .deploy({data: bytecode})
     .send({

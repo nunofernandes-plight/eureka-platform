@@ -14,11 +14,13 @@ export default class {
       let eurekaInput = getEurekaSmartContractInput();
       const addressMap = await deployLibraries(eurekaInput.libraries, accounts);
 
-      const web3Contract = await deployContract(
+      const eurekaContract = await deployContract(
         eurekaInput,
         addressMap,
         accounts
       );
+
+      console.log(eurekaContract); 
     }
   }
 }
