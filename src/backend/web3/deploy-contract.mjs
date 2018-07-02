@@ -5,8 +5,8 @@ import linker from 'solc/linker';
 export const deployContract = async (contractInput, addressMap, accounts) => {
   let input = {};
   // remove top level labels (libraries and contract)
-  Object.keys(contractInput).forEach(item =>
-    Object.assign(input, contractInput[item])
+  Object.keys(contractInput).forEach(key =>
+    Object.assign(input, contractInput[key])
   );
   const compiledContract = solc.compile({sources: input}, 1);
 
@@ -112,6 +112,8 @@ const getWeb3Contract = (cName, compiledContract) => {
 const deploy = async (web3Contract, bytecode, accounts, contractName) => {
   const gasEstimated = await web3.eth.estimateGas({data: bytecode});
   web3Contract.options.data = bytecode;
+  web3Contract.options.gas = gasEstimated;
+  web3Contract.options.from = accounts[0];
   return web3Contract
     .deploy({data: bytecode})
     .send({
