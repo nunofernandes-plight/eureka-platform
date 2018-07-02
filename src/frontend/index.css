@@ -1,5 +1,175 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+:root {
+  --main: rgb(76, 174, 243);
+  --main-hover: #00b;
+  --second: rgb(46, 49, 146);
+  --second-hover: #fff;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  background-color: rgba(0, 0, 0, 0);
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.625em;
+}
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  line-height: inherit;
+  font-size: inherit;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+
+p {
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+}
+
+h1 {
+  font-size: 40px;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+/*-------------Buttons-------------*/
+button {
+  margin: 15px 0;
+  color: #ffffff;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 15px;
+  text-align: center;
+  padding: 17px 30px;
+  white-space: nowrap;
+  letter-spacing: 1px;
+  background: -webkit-linear-gradient(0deg, var(--main) 0%, var(--second) 100%);
+  display: inline-block;
+  text-decoration: none;
+  text-transform: uppercase;
+  border: none;
+  -webkit-animation-delay: 2s;
+  animation-delay: 2s;
+  -webkit-transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+  transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+  border-radius: 4px;
+}
+
+.btn-default {
+  color: #000;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 15px;
+  text-align: center;
+  padding: 17px 30px;
+  white-space: nowrap;
+  letter-spacing: 1px;
+  display: inline-block;
+  border: none;
+  text-transform: uppercase;
+  -webkit-animation-delay: 2s;
+  animation-delay: 2s;
+  -webkit-transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+  transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+  border-radius: 4px;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-default:hover,
+.btn-default:focus {
+  cursor: pointer;
+  color: #ffffff;
+  background: -webkit-linear-gradient(
+    0deg,
+    var(--main-hover) 0%,
+    var(--second-hover) 100%
+  );
+  -webkit-transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
+  transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
+}
+
+/*---------Input and Labels--------*/
+
+textarea:focus,
+input:focus {
+  outline: none;
+}
+
+label,
+input[type='text'] {
+  -moz-transition: all 0.25s cubic-bezier(0.53, 0.01, 0.35, 1.5);
+  -o-transition: all 0.25s cubic-bezier(0.53, 0.01, 0.35, 1.5);
+  -webkit-transition: all 0.25s cubic-bezier(0.53, 0.01, 0.35, 1.5);
+  transition: all 0.25s cubic-bezier(0.53, 0.01, 0.35, 1.5);
+}
+
+label {
+  transform-origin: left center;
+  color: var(--main);
+  font-weight: 100;
+  letter-spacing: 0.01em;
+  font-size: 17px;
+  box-sizing: border-box;
+  padding: 10px 15px;
+  display: block;
+  position: absolute;
+  margin-top: -40px;
+  z-index: 2;
+  pointer-events: none;
+}
+input[type='text'] {
+  margin-bottom: -2px;
+  max-width: 300px;
+  border: 1px solid var(--main);
+  font-size: 17px;
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+  padding: 9px;
+  border-radius: 60px;
+  color: var(--main);
+  font-weight: 100;
+  letter-spacing: 0.01em;
+  position: relative;
+  z-index: 1;
+}
+input[type='text']:focus {
+  outline: none;
+  background: var(--main);
+  color: white;
+  margin-top: 30px;
+}
+input[type='text']:valid {
+  margin-top: 30px;
+}
+input[type='text']:focus ~ label {
+  -moz-transform: translate(0, -35px);
+  -ms-transform: translate(0, -35px);
+  -webkit-transform: translate(0, -35px);
+  transform: translate(0, -35px);
+}
+input[type='text']:valid ~ label {
+  text-transform: uppercase;
+  font-style: italic;
+  -moz-transform: translate(5px, -35px) scale(0.6);
+  -ms-transform: translate(5px, -35px) scale(0.6);
+  -webkit-transform: translate(5px, -35px) scale(0.6);
+  transform: translate(5px, -35px) scale(0.6);
 }
