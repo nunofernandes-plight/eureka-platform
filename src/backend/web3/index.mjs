@@ -1,5 +1,5 @@
 import web3 from './web3Instance';
-import {deployLibraries} from './deploy-contract';
+import {deployLibraries, deployContract} from './deploy-contract';
 import getEurekaSmartContractInput from './get-input';
 import getAccounts from './get-accounts';
 
@@ -12,8 +12,13 @@ export default class {
     const accounts = await getAccounts();
     if (web3) {
       let eurekaInput = getEurekaSmartContractInput();
-      const addresses = await deployLibraries(eurekaInput.libraries, accounts);
-      console.log(addresses);
+      const addressMap = await deployLibraries(eurekaInput.libraries, accounts);
+
+      const web3Contract = await deployContract(
+        eurekaInput,
+        addressMap,
+        accounts
+      );
     }
   }
 }
