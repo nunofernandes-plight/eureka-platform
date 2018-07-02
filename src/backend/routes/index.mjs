@@ -1,5 +1,5 @@
 import express from 'express';
-import reviewRoutes from './review-routes';
+import reviewRoutes from './review-routes.mjs';
 
 const router = express.Router();
 

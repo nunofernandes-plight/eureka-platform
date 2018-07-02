@@ -1,5 +1,5 @@
 import express from 'express';
-import {asyncHandler} from '../api/requestHandler';
+import {asyncHandler} from '../api/requestHandler.mjs';
 const router = express.Router();
 import db from '../db/db';
 

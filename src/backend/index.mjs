@@ -1,5 +1,5 @@
-import app from './api/api';
-import isProduction from '../helpers/isProduction';
+import app from './api/api.mjs';
+import isProduction from '../helpers/isProduction.mjs';
 
 if (!isProduction()) {
   app.listen(process.env.PORT || 8080);
