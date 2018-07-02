@@ -6,7 +6,6 @@
     "babel-cli": "^6.26.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
-    "mocha": "^5.2.0",
     "nodemon": "^1.17.5",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
@@ -20,7 +19,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "mocha",
+    "test": "jest",
     "lint": "eslint '**/*.mjs' --ignore-path .gitignore",
     "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
     "eject": "react-scripts eject",
