@@ -19,7 +19,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest",
+    "test": "ava",
     "lint": "eslint '**/*.mjs' --ignore-path .gitignore",
     "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
     "eject": "react-scripts eject",
@@ -28,6 +28,7 @@
     "dev-contracts": "NODE_ENV=development nodemon --exec \"node --experimental-modules\" src/backend/web3/index.mjs babel-node"
   },
   "devDependencies": {
+    "ava": "^0.25.0",
     "eslint": "^5.0.1",
     "eslint-plugin-prettier": "^2.6.1",
     "eslint-plugin-react": "^7.10.0",
