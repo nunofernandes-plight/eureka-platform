@@ -42,7 +42,7 @@ npm run dev-server
 
 #### Build Smart Contract
 ```
-
+npm run dev-contracts
 ```
 > Default dev Ethereum node: `http://127.0.0.1:7545`
 
