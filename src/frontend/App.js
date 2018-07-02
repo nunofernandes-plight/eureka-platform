@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
+import Router from './webpack/Router';
 class App extends Component {
   render() {
     return (
       <div>
-        <input type="text" required />
-        <label>First Name</label>
-        <button>afsjoasjof</button>
+        <Router />
       </div>
-
     );
   }
 }

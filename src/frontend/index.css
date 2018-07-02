@@ -5,6 +5,7 @@
   --main-hover: rgb(114, 197, 255);
   --second: rgb(46, 49, 146);
   --second-hover: rgb(61, 63, 152);
+  --color-text: #000;
 }
 
 body {
@@ -12,6 +13,7 @@ body {
   padding: 0;
   background-color: rgba(0, 0, 0, 0);
   font-family: 'Poppins', sans-serif;
+  color: var(--color-text);
   font-size: 14px;
   font-weight: 300;
   line-height: 1.625em;
