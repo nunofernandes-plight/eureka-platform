@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-class App extends Component {
+
+class WelcomePage extends Component {
   render() {
     return (
       <div>
@@ -7,9 +8,8 @@ class App extends Component {
         <label>First Name</label>
         <button>afsjoasjof</button>
       </div>
-
     );
   }
 }
 
-export default App;
+export default WelcomePage;

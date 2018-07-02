@@ -2,9 +2,9 @@
 
 :root {
   --main: rgb(76, 174, 243);
-  --main-hover: #00b;
+  --main-hover: rgb(114, 197, 255);
   --second: rgb(46, 49, 146);
-  --second-hover: #fff;
+  --second-hover: rgb(61, 63, 152);
 }
 
 body {
@@ -50,6 +50,7 @@ h1 {
 
 /*-------------Buttons-------------*/
 button {
+  cursor: pointer;
   margin: 15px 0;
   color: #ffffff;
   font-weight: 400;
@@ -67,11 +68,13 @@ button {
   -webkit-animation-delay: 2s;
   animation-delay: 2s;
   -webkit-transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
-  transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+  /*transition: background 0.3s ease-in-out, color 0.3s ease-in-out;*/
   border-radius: 4px;
+  transition: all 0.5s;
 }
 
 .btn-default {
+  cursor: pointer;
   color: #000;
   font-weight: 400;
   font-size: 14px;
@@ -90,8 +93,8 @@ button {
   border-radius: 4px;
 }
 
-.btn-primary:hover,
-.btn-primary:focus,
+button:hover,
+button:focus,
 .btn-default:hover,
 .btn-default:focus {
   cursor: pointer;
