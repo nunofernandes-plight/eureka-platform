@@ -16,7 +16,7 @@ export const deployContract = async (contractInput, addressMap, accounts) => {
       let bytecode = web3Contract.options.data;
       const linkReferences = linker.findLinkReferences(bytecode);
 
-      if (linkReferences) {
+      if (linkReferences) { // there is a library linked in the bytecode
         Object.keys(linkReferences).forEach(async link => {
           let libraryAddress = addressMap.get(link);
 
@@ -40,7 +40,6 @@ export const deployLibraries = async (libraries, accounts) => {
     Object.keys(libraries).map(async libraryName => {
       const web3Contract = getWeb3Contract(libraryName, compiledLibraries);
       const bytecode = web3Contract.options.data;
-      const gasEstimated = await web3.eth.estimateGas({data: bytecode});
 
       const contract = await deploy(
         web3Contract,

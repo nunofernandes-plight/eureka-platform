@@ -10,7 +10,9 @@ const EurekaLogo = props => {
   return (
     <Logo
       src={
-        props.blue ? '../img/logos/eureka-blue.png' : '../img/logos/eureka-hd.png'
+        props.blue
+          ? '../img/logos/eureka-blue.png'
+          : '../img/logos/eureka-hd.png'
       }
       {...props}
     />
