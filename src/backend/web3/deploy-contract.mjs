@@ -33,50 +33,6 @@ export const deployContract = async (contractInput, addressMap, accounts) => {
   );
 };
 
-// const pattern = cName.toString() + ':' + cName.split('.')[0];
-// const contract = compiledContract.contracts[pattern];
-// const webContract = new web3.eth.Contract(JSON.parse(contract.interface));
-// let bytecode = contract.bytecode;
-// const linkReferences = linker.findLinkReferences(bytecode);
-//
-// if (linkReferences) {
-//   Object.keys(linkReferences).forEach(link => {
-//     let address = patternMap.get(link);
-//
-//     if (address) {
-//       bytecode = linker.linkBytecode(bytecode, {
-//         pattern: address
-//       });
-//     }
-//   });
-// }
-//
-// let gasEstimated = await web3.eth.estimateGas({data: bytecode});
-// await webContract
-//   .deploy({data: bytecode})
-//   .send({
-//     from: accounts[0],
-//     gas: gasEstimated
-//   })
-//   .once('transactionHash', hash => {})
-//   .once('receipt', receipt => {})
-//   .on('confirmation', (confNumber, receipt) => {})
-//   .on('error', error => {})
-//
-//   .then(resp => {
-//     console.log(
-//       'Smart contract "' +
-//         pattern +
-//         '" has been deployed and accepted in block number ' +
-//         resp.blockNumber +
-//         ' (address: ' +
-//         resp.contractAddress +
-//         ')'
-//     );
-//     webContract.options.address = resp.contractAddress;
-//     patternMap.set(pattern, resp.contractAddress);
-//   });
-
 export const deployLibraries = async (libraries, accounts) => {
   const compiledLibraries = solc.compile({sources: libraries}, 1);
   let addressMap = new Map();
