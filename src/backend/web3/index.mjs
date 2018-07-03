@@ -3,7 +3,7 @@ import {deployLibraries, deployContract} from './deploy-contract.mjs';
 import getEurekaSmartContractInput from './get-input.mjs';
 import getAccounts from './get-accounts.mjs';
 
-let eurekaContract;
+
 
 const deployContracts = async () => {
   console.log('Current Web3 Provider ', web3.currentProvider.host);
@@ -12,9 +12,9 @@ const deployContracts = async () => {
     let eurekaInput = getEurekaSmartContractInput();
     const addressMap = await deployLibraries(eurekaInput.libraries, accounts);
 
-    [eurekaContract] = await deployContract(eurekaInput, addressMap, accounts);
+    return deployContract(eurekaInput, addressMap, accounts);
   }
+
 };
 
-deployContracts();
-export default eurekaContract;
+export default deployContracts;
