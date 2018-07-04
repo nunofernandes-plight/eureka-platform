@@ -27,64 +27,47 @@ test('minting', async t => {
     amounts.push(1000);
   });
 
-  eurekaContract.methods.totalSupply().call({
-    from: accounts[0]
-  })
-    .then(()=>(console.log));
+  await getTotalSupply(accounts[0], eurekaContract);
 
   let gasEstimated = await eurekaContract.methods.mint(accounts, amounts)
     .estimateGas({
       from: accounts[0]
     });
-  console.log(gasEstimated);
-  // console.log(eurekaContract);
 
-  const receipt = await eurekaContract.methods.mint(accounts, amounts)
-    .send({
+ await eurekaContract.methods
+   .mint(accounts, amounts)
+   .send({
       from: accounts[0],
       gas: gasEstimated
     })
-    .on('receipt', async receipt => {
-      // console.log(receipt);
-      // TODO: check balances and assert it.
-
-
-
-      //TODO map and promise all
-      let amountAfterMinting = await getBalanceOf(accounts[0], eurekaContract);
-      console.log(amountAfterMinting);
-      return receipt;
+   .on('receipt', async receipt => {
+     console.log(receipt);
+     return receipt;
     });
 
-  t.pass();
+  const totalSupply = await getTotalSupply(accounts[0], eurekaContract);
 
+  t.is(totalSupply, (amounts.length * 1000).toString());
 });
 
-function getBalanceOf(account, eurekaContract) {
-  return eurekaContract.methods.balanceOf(account)
-    .call({
-      from: account
-    }).then((bal) => {
-      console.log(bal);
-      return bal;
-    }).catch(err => console.log(err));
+function getTotalSupply(account, eurekaContract) {
+  return eurekaContract.methods
+    .totalSupply()
+    .call({from: account})
+    .then(succ => {
+      console.log(succ);
+      return succ;
+    });
 }
 
-// eb3Contract
-//   .deploy({data: bytecode})
-//   .send({
-//     from: accounts[0],
-//     gas: gasEstimated
-//   })
-//   .on('receipt', receipt => {
-//     console.log(
-//       'Smart contract "' +
-//       contractName +
-//       '" has been deployed and accepted in block number ' +
-//       receipt.blockNumber +
-//       ' (address: ' +
-//       receipt.contractAddress +
-//       ')'
-//     );
-//   });
+function getBalanceOf(account, eurekaContract) {
+  return eurekaContract.methods
+    .balanceOf(account)
+    .call({from: account})
+    .then((bal) => {
+      console.log(bal);
+      return bal;
+    })
+    .catch(err => console.log(err));
+}
 
