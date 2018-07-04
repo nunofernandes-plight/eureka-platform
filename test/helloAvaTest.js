@@ -19,7 +19,6 @@ test('bar', async t => {
 
 test('minting', async t => {
   const [eurekaContract] = await deployContracts();
-  console.log(eurekaContract);
 
   let accounts = await getAccounts();
   let amounts = [];
@@ -28,21 +27,48 @@ test('minting', async t => {
     amounts.push(1000);
   });
 
-  let gasEstimated = await eurekaContract.methods.mint(accounts, amounts).
+  eurekaContract.methods.totalSupply().call({
+    from: accounts[0]
+  })
+    .then(()=>(console.log));
 
-  eurekaContract.methods.mint(accounts, amounts)
+  let gasEstimated = await eurekaContract.methods.mint(accounts, amounts)
+    .estimateGas({
+      from: accounts[0]
+    });
+  console.log(gasEstimated);
+  // console.log(eurekaContract);
+
+  const receipt = await eurekaContract.methods.mint(accounts, amounts)
     .send({
       from: accounts[0],
       gas: gasEstimated
     })
-    .on('receipt', receipt => {
-      console.log(receipt);
+    .on('receipt', async receipt => {
+      // console.log(receipt);
       // TODO: check balances and assert it.
+
+
+
+      //TODO map and promise all
+      let amountAfterMinting = await getBalanceOf(accounts[0], eurekaContract);
+      console.log(amountAfterMinting);
+      return receipt;
     });
 
-  const bar = Promise.resolve('bar');
-  t.is(await bar, 'bar');
+  t.pass();
+
 });
+
+function getBalanceOf(account, eurekaContract) {
+  return eurekaContract.methods.balanceOf(account)
+    .call({
+      from: account
+    }).then((bal) => {
+      console.log(bal);
+      return bal;
+    }).catch(err => console.log(err));
+}
 
 // eb3Contract
 //   .deploy({data: bytecode})
