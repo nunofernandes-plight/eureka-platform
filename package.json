@@ -22,7 +22,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom && ava && npm run lint",
+    "test": "ava && npm run lint",
     "lint": "eslint '**/*.mjs' --ignore-path .gitignore",
     "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
     "eject": "react-scripts eject",
