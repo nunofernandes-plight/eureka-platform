@@ -7,17 +7,17 @@ export const getEurekaSmartContractInput = () => {
   return {
     libraries: {
       'Utils.sol': fs.readFileSync(
-        path.resolve(DIR_NAME, 'src/smartcontracts/Utils.sol'),
+        path.resolve(DIR_NAME, 'src/smartcontracts/contracts/Utils.sol'),
         'utf-8'
       ),
       'SafeMath.sol': fs.readFileSync(
-        path.resolve(DIR_NAME, 'src/smartcontracts/SafeMath.sol'),
+        path.resolve(DIR_NAME, 'src/smartcontracts/contracts/SafeMath.sol'),
         'utf-8'
       )
     },
     contract: {
       'Eureka.sol': fs.readFileSync(
-        path.resolve(DIR_NAME, 'src/smartcontracts/Eureka.sol'),
+        path.resolve(DIR_NAME, 'src/smartcontracts/contracts/Eureka.sol'),
         'utf-8'
       )
     }
