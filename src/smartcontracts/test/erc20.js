@@ -1,50 +1,48 @@
 //based on https://github.com/ConsenSys/Tokens/tree/master/test
 
-var EurekaToken = artifacts.require('./Eureka.sol')
-var utils = require('../lib/utils');
+const EurekaToken = artifacts.require('./Eureka.sol');
+const utils = require('../lib/utils');
 
 
 contract('EurekaToken', function (accounts) {
 
   //https://ethereum.stackexchange.com/questions/15567/truffle-smart-contract-testing-does-not-reset-state/15574#15574
-  var contract;
+  let contract;
   beforeEach(function () {
-    return EurekaToken.new()
-      .then(function(instance) {
+    return EurekaToken.deployed()
+      .then(function (instance) {
         contract = instance;
       });
   });
 
-  const evmThrewRevertError = (err) => {
+  const evmThrewRevertError = ((err) => {
     if (err.toString().includes('Error: VM Exception while processing transaction: revert')) {
       return true
     }
     return false
-  }
+  });
 
   //************************** TEST ERC20 - the smart contract code is copy&paste from reliable sources ************
   it("test ERC20 basic functionality", function () {
-    return EurekaToken.deployed().then(function (instance) {
-      return contract.balanceOf.call(accounts[0], 0, {from: accounts[0]});
-    }).then(function (balance) {
-      assert.equal(balance.valueOf(), 0, "everything should be empty");
-      return contract.mint([accounts[0]], [1000], {from: accounts[1]});
-    }).then(function (retVal) {
+    contract.balanceOf.call(accounts[0], 0, {from: accounts[0]})
+      .then(function (balance) {
+        assert.equal(balance.valueOf(), 0, "everything should be empty");
+        return contract.mint([accounts[0]], [1000], {from: accounts[1]});
+      }).then(function (retVal) {
       assert.equal(false, "only owner can mint");
     }).catch(function (e) {
-      console.log('start minting')
       return contract.mint([accounts[0]], [1000], {from: accounts[0]});
     }).then(function (retVal) {
       // return contract.balanceOf.call(accounts[0], 0, {from: accounts[0]});
-    // }).then(function (balance) {
+      // }).then(function (balance) {
       // assert.equal(balance.valueOf(), 1000, "balance is 1000, seen by owner");
-    //   return contract.balanceOf.call(accounts[0], 0, {from: accounts[1]});
-    // }).then(function (balance) {
-    //   assert.equal(balance.valueOf(), 1000, "balance is 1000, seen by any account");
+      //   return contract.balanceOf.call(accounts[0], 0, {from: accounts[1]});
+      // }).then(function (balance) {
+      //   assert.equal(balance.valueOf(), 1000, "balance is 1000, seen by any account");
       return contract.totalSupply.call({from: accounts[1]});
     }).then(function (balance) {
       assert.equal(balance.valueOf(), 1000, "total supply is 1000");
-    //   return contract.transfer(accounts[1], 1, 0, {from: accounts[0]});
+      //   return contract.transfer(accounts[1], 1, 0, {from: accounts[0]});
     })//.then(function (retVal) {
     //   assert.equal(false, "minting not done yet, cannot transfor");
     // }).catch(function (e) {
@@ -97,7 +95,9 @@ contract('EurekaToken', function (accounts) {
       return ctr.balanceOf.call(accounts[0])
     }).then(function (result) {
       assert.strictEqual(result.toNumber(), 0)
-    }).catch((err) => { throw new Error(err) })
+    }).catch((err) => {
+      throw new Error(err)
+    })
   })
 
 // TRANSERS
@@ -113,7 +113,9 @@ contract('EurekaToken', function (accounts) {
       return web3.eth.sendTransaction({from: accounts[0], to: ctr.address, value: web3.toWei('10', 'Ether')})
     }).catch(function (result) {
       assert(true)
-    }).catch((err) => { throw new Error(err) })
+    }).catch((err) => {
+      throw new Error(err)
+    })
   })
 
   it('transfers: should transfer 10000 to accounts[1] with accounts[0] having 10000', function () {
@@ -125,7 +127,9 @@ contract('EurekaToken', function (accounts) {
       return contract.balanceOf.call(accounts[1])
     }).then(function (result) {
       assert.strictEqual(result.toNumber(), 10000)
-    }).catch((err) => { throw new Error(err) })
+    }).catch((err) => {
+      throw new Error(err)
+    })
   })
 
   it('transfers: should fail when trying to transfer 10001 to accounts[1] with accounts[0] having 10000', function () {
@@ -150,7 +154,8 @@ contract('EurekaToken', function (accounts) {
       assert(false, 'The preceding call should have thrown an error.')
     }).catch((err) => {
       assert(evmThrewRevertError(err), 'the EVM did not throw an error or did not ' +
-        'throw the expected error')})
+        'throw the expected error')
+    })
   })
 
   // NOTE: testing uint256 wrapping is impossible in this standard token since you can't supply > 2^256 -1.
@@ -166,7 +171,9 @@ contract('EurekaToken', function (accounts) {
       return contract.allowance.call(accounts[0], accounts[1])
     }).then(function (result) {
       assert.strictEqual(result.toNumber(), 100)
-    }).catch((err) => { throw new Error(err) })
+    }).catch((err) => {
+      throw new Error(err)
+    })
   })
 
   // bit overkill. But is for testing a bug
@@ -198,7 +205,9 @@ contract('EurekaToken', function (accounts) {
       return contract.balanceOf.call(accounts[0])
     }).then(function (result) {
       assert.strictEqual(result.toNumber(), 9980)
-    }).catch((err) => { throw new Error(err) })
+    }).catch((err) => {
+      throw new Error(err)
+    })
   })
 
   // should approve 100 of msg.sender & withdraw 50, twice. (should succeed)
@@ -235,7 +244,9 @@ contract('EurekaToken', function (accounts) {
       return contract.balanceOf.call(accounts[0])
     }).then(function (result) {
       assert.strictEqual(result.toNumber(), 9960)
-    }).catch((err) => { throw new Error(err) })
+    }).catch((err) => {
+      throw new Error(err)
+    })
   })
 
   // should approve 100 of msg.sender & withdraw 50 & 60 (should fail).
@@ -312,7 +323,9 @@ contract('EurekaToken', function (accounts) {
     }).then(function (result) {
       var match = result.equals('1.15792089237316195423570985008687907853269984665640564039457584007913129639935e+77')
       assert.isTrue(match)
-    }).catch((err) => { throw new Error(err) })
+    }).catch((err) => {
+      throw new Error(err)
+    })
   })
 
   it('events: should fire Transfer event properly', function () {
@@ -322,12 +335,18 @@ contract('EurekaToken', function (accounts) {
       return contract.transfer(accounts[1], '2666', {from: accounts[0]})
     }).then(function (result) {
       var transferLog = result.logs.find((element) => {
-        if (element.event.match('Transfer')) { return true } else { return false }
+        if (element.event.match('Transfer')) {
+          return true
+        } else {
+          return false
+        }
       })
       assert.strictEqual(transferLog.args.from, accounts[0])
       assert.strictEqual(transferLog.args.to, accounts[1])
       assert.strictEqual(transferLog.args.value.toString(), '2666')
-    }).catch((err) => { throw new Error(err) })
+    }).catch((err) => {
+      throw new Error(err)
+    })
   })
 
   it('events: should fail on a zero transfer', function () {
@@ -339,7 +358,7 @@ contract('EurekaToken', function (accounts) {
       assert(false, 'The preceding call should have thrown an error.')
     }).catch((err) => {
       assert(evmThrewRevertError(err), 'the EVM did not throw an error or did not ' +
-        'throw the expected error:'+err)
+        'throw the expected error:' + err)
     })
   })
 
@@ -350,11 +369,18 @@ contract('EurekaToken', function (accounts) {
       return contract.approve(accounts[1], '2666', {from: accounts[0]})
     }).then(function (result) {
       var approvalLog = result.logs.find((element) => {
-        if (element.event.match('Approval')) { return true } else { return false }
+        if (element.event.match('Approval')) {
+          return true
+        } else {
+          return false
+        }
       })
       assert.strictEqual(approvalLog.args.owner, accounts[0])
       assert.strictEqual(approvalLog.args.spender, accounts[1])
       assert.strictEqual(approvalLog.args.value.toString(), '2666')
-    }).catch((err) => { throw new Error(err) })
+    }).catch((err) => {
+      throw new Error(err)
+    })
   })
 })
+
