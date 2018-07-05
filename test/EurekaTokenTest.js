@@ -1,21 +1,6 @@
 import test from 'ava';
 import deployContracts from '../src/backend/web3/index.mjs';
 import getAccounts from "../src/backend/web3/get-accounts.mjs";
-// import isProduction from '../src/helpers/isProduction.mjs'
-
-test('foo', t => {
-  t.pass();
-});
-
-test('arrays are equal', t => {
-  t.deepEqual([1, 2], [1, 2]);
-});
-
-
-test('bar', async t => {
-  const bar = Promise.resolve('bar');
-  t.is(await bar, 'bar');
-});
 
 test('minting', async t => {
   const [eurekaContract] = await deployContracts();
