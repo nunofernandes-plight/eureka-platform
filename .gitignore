@@ -23,7 +23,6 @@ yarn-error.log*
 # IntellJ
 
 .idea
-src/frontend/ethereum/truffle/build/
-src/frontend/ethereum/truffle/contracts/*
-src/smartcontracts
+src/smartcontracts/build/
+src/smartcontracts/contracts/
 package-lock.json
