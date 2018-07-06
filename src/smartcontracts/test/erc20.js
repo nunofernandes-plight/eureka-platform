@@ -42,15 +42,15 @@ contract('EurekaToken', function (accounts) {
       return contract.totalSupply.call({from: accounts[1]});
     }).then(function (balance) {
       assert.equal(balance.valueOf(), 1000, "total supply is 1000");
-      //   return contract.transfer(accounts[1], 1, 0, {from: accounts[0]});
-    })//.then(function (retVal) {
-    //   assert.equal(false, "minting not done yet, cannot transfor");
-    // }).catch(function (e) {
-    //   //minting done
-    //   return contract.setMintDone({from: accounts[0]});
-    // }).then(function (retVal) {
+        return contract.transfer(accounts[1], 1, 0, {from: accounts[0]});
+    }).then(function (retVal) {
+      assert.equal(false, "minting not done yet, cannot transfer");
+    }).catch(function (e) {
+      //minting done
+      return contract.finishMinting({from: accounts[0]});
+    }).then(function (retVal) {
     //   return contract.transfer(accounts[1], 1, 0, {from: accounts[0]});
-    // }).then(function (retVal) {
+    })//.then(function (retVal) {
     //   assert.equal(false, "account 1 does not have any tokens");
     // }).catch(function (e) {
     //   return contract.transfer(accounts[1], 0, 0, {from: accounts[1]});
