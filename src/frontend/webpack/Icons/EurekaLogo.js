@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Logo = styled.img`
-  width: ${props => props.width}px;
-  height: auto;
+  height: ${props => (props.height ? props.height + 'px' : null)};
+  width: ${props => (props.width ? props.width + 'px' : null)};
 `;
 
 const EurekaLogo = props => {
