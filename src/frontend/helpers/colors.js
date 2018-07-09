@@ -4,3 +4,5 @@ export const __SECOND = 'rgb(46, 49, 146)';
 export const __SECOND_HOVER = 'rgb(61, 63, 152)';
 export const __THIRD = 'rgb(46, 50, 146)';
 export const __THIRD_HOVER = 'rgb(46, 50, 165)';
+
+export const __METAMASK = '#F6851B';
