@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {Row} from '../helpers/layout.js';
 import {__THIRD} from '../helpers/colors.js';
 import EurekaLogo from './icons/EurekaLogo.js';
+import Cards from './WelcomeCard.js';
 
 const Parent = styled.div`
   display: flex;
@@ -15,7 +16,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   background: ${__THIRD};
-  min-height: 720px;
+  min-height: 620px;
   position: relative;
 `;
 
@@ -23,6 +24,7 @@ const Wrapper = Row.extend`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin-bottom: 7em;
 `;
 
 const Title = styled.h1``;
@@ -55,7 +57,9 @@ class WelcomePage extends Component {
               Democratising science through decentralisation and transparency
             </SubTitle>
             <GetStarted>GET STARTED</GetStarted>
+
           </Wrapper>
+            <Cards />
           <Curve />
         </Container>
       </Parent>
