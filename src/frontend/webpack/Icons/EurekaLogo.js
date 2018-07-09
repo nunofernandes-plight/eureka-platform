@@ -6,17 +6,18 @@ const Logo = styled.img`
   width: ${props => (props.width ? props.width + 'px' : null)};
 `;
 
+const renderLogo = props => {
+  if (props.blue) {
+    return <Logo src="../img/logos/eureka-blue.png" {...props} />;
+  } else if (props.white) {
+    return <Logo src="../img/logos/eureka-white.png" {...props} />;
+  } else {
+    return <Logo src="../img/logos/eureka-hd.png" {...props} />;
+  }
+};
+
 const EurekaLogo = props => {
-  return (
-    <Logo
-      src={
-        props.blue
-          ? '../img/logos/eureka-blue.png'
-          : '../img/logos/eureka-hd.png'
-      }
-      {...props}
-    />
-  );
+  return <div>{renderLogo(props)}</div>;
 };
 
 export default EurekaLogo;
