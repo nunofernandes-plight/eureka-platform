@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import {__THIRD} from '../helpers/colors.js';
 
 const Container = styled.div`
-    display: flex;
-    position: absolute;
-    bottom: -90px;
+  display: flex;
+  position: absolute;
+  bottom: -90px;
 `;
 const Card = styled.div`
   display: flex;
@@ -25,9 +25,14 @@ const Card = styled.div`
   z-index: 100;
 `;
 
-const CardTitle = styled.h2``;
+const CardTitle = styled.h2`
+  text-transform: uppercase;
+`;
 
-const CardFigure = styled.div``;
+const CardFigure = styled.img`
+  height: 72px;
+  width: auto;
+`;
 
 const CardDescription = styled.p``;
 
@@ -35,32 +40,28 @@ const Cards = () => {
   return (
     <Container>
       <Card>
-        <CardTitle>Get a Reviewer</CardTitle>
-        <CardFigure>figure</CardFigure>
+        <CardTitle>Submit your article</CardTitle>
+        <CardFigure src="img/icons/submit.png" />
+        <CardDescription>Submit your article</CardDescription>
+      </Card>
+      <Card>
+        <CardTitle>Start reviewing</CardTitle>
+        <CardFigure src="img/icons/become_reviewer.png" />
         <CardDescription>
-          as0fokasfkoasokfkoasfkoaskofakosfkoasfkoasfkoasof
+          In few steps join the Eureka ecosystem and become a reviewer.
         </CardDescription>
       </Card>
       <Card>
-        <CardTitle>Get a Reviewer</CardTitle>
-        <CardFigure>figure</CardFigure>
+        <CardTitle>(In)Validate a work</CardTitle>
+        <CardFigure src="img/icons/validate.png" />
         <CardDescription>
-          as0fokasfkoasokfkoasfkoaskofakosfkoasfkoasfkoasof
+          Validate or invalidate a existing work!
         </CardDescription>
       </Card>
       <Card>
-        <CardTitle>Get a Reviewer</CardTitle>
-        <CardFigure>figure</CardFigure>
-        <CardDescription>
-          as0fokasfkoasokfkoasfkoaskofakosfkoasfkoasfkoasof
-        </CardDescription>
-      </Card>
-      <Card>
-        <CardTitle>Get a Reviewer</CardTitle>
-        <CardFigure>figure</CardFigure>
-        <CardDescription>
-          as0fokasfkoasokfkoasfkoaskofakosfkoasfkoasfkoasof
-        </CardDescription>
+        <CardTitle>Claim your tokens</CardTitle>
+        <CardFigure src="img/icons/claim.png" />
+        <CardDescription>Claim your tokens in a few step.</CardDescription>
       </Card>
     </Container>
   );
