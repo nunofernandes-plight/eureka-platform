@@ -4,8 +4,10 @@ import {__THIRD} from '../helpers/colors.js';
 
 const Container = styled.div`
   display: flex;
+  width: 100%;
+  justify-content: space-evenly;
   position: absolute;
-  bottom: -90px;
+  bottom: -60px;
 `;
 const Card = styled.div`
   display: flex;
@@ -17,10 +19,10 @@ const Card = styled.div`
   background-color: #fff;
   box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.1);
   transition: 0.2s ease;
-  max-width: 275px;
+  width: 275px;
   height: 250px;
   color: ${__THIRD};
-  margin: 0 40px;
+  margin: 0 10px;
   padding: 15px;
   z-index: 100;
 `;
