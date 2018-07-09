@@ -10,5 +10,5 @@ export const Row = styled.div`
   max-width: ${DESKTOP_WIDTH}px;
   padding-left: 20px;
   padding-right: 20px;
-  margin: auto;
+  margin: 0 auto;
 `;
