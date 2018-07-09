@@ -3,14 +3,17 @@
 :root {
   --main: rgb(76, 174, 243);
   --main-hover: rgb(114, 197, 255);
-  --second: rgb(46, 49, 146);
-  --second-hover: rgb(61, 63, 152);
 
-  /*EUREKA LOGO color*/
+  /****************EUREKA LOGO COLORS******************/
+  --second: rgb(66, 113, 173);
+  --second-hover: rgb(66, 134, 194);
   --third: rgb(46, 50, 146);
   --third-hover: rgb(46, 50, 165);
+  --fourth: #66cad3;
+  --fourth-hover: #66d4dd;
+  /************************** *************************/
 
-  --color-text: #000;
+  --color-text: white;
 }
 
 body {
@@ -67,7 +70,11 @@ button {
   padding: 17px 30px;
   white-space: nowrap;
   letter-spacing: 1px;
-  background: -webkit-linear-gradient(0deg, var(--main) 0%, var(--second) 100%);
+  background: -webkit-linear-gradient(
+    0deg,
+    var(--fourth) 0%,
+    var(--second) 100%
+  );
   display: inline-block;
   text-decoration: none;
   text-transform: uppercase;
@@ -108,7 +115,7 @@ button:focus,
   color: #ffffff;
   background: -webkit-linear-gradient(
     0deg,
-    var(--main-hover) 0%,
+    var(--fourth-hover) 0%,
     var(--second-hover) 100%
   );
   -webkit-transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
