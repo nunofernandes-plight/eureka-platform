@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Row} from '../helpers/layout.js';
-import EurekaLogo from './Icons/EurekaLogo.js';
-import {__METAMASK, __THIRD} from '../helpers/colors.js';
-import Icon from './Icons/Icon.js';
-import MetaMaskLogo from './Icons/MetaMaskLogo.js';
+import EurekaLogo from './icons/EurekaLogo.js';
+import {__THIRD} from '../helpers/colors.js';
+import Icon from './icons/Icon.js';
+import MetaMaskLogo from './icons/MetaMaskLogo.js';
 
 const Container = Row.extend`
   transition: all 150ms ease;
