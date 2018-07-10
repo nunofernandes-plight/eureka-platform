@@ -1,7 +1,4 @@
-import mongo from 'then-mongo';
-
-const collections = ['reviews'];
-const db = mongo('localhost/eurekaDB', collections);
+import db from './db';
 
 export default {
   getAllReviews: () => {
@@ -11,7 +8,7 @@ export default {
       .toArray();
   },
   //{rating, text} --> rating: body.rating, text: body.text
-  insertReview: ({rating, text}) => {
+  createReview: ({rating, text}) => {
     return db.collection('reviews').insert({
       rating, // rating: rating
       text

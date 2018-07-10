@@ -1,19 +1,19 @@
 import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
 const router = express.Router();
-import db from '../db/db';
+import reviewService from '../db-services/review-service';
 
 router.get(
   '/',
   asyncHandler(async () => {
-    return db.getAllReviews();
+    return reviewService.getAllReviews();
   })
 );
 
 router.post(
   '/',
   asyncHandler(async req => {
-    return db.insertReview(req.body);
+    return reviewService.createReview(req.body);
   })
 );
 
