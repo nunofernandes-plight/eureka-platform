@@ -1,9 +1,9 @@
 import mongoose from './mongoose';
-import db from './db'
+import db from './db';
 import reviewSchema from '../schemas/review.mjs';
 
 const collectionName = 'reviews';
-const Review = mongoose.model(collectionName , reviewSchema, collectionName);
+const Review = mongoose.model(collectionName, reviewSchema, collectionName);
 
 export default {
   getAllReviews: () => {
@@ -12,19 +12,11 @@ export default {
       .find()
       .toArray();
   },
-  // //{rating, text} --> rating: body.rating, text: body.text
-  // createReview: ({rating, text}) => {
-  //   return db.collection('reviews').insert({
-  //     rating, // rating: rating
-  //     text
-  //   });
-  // }
-
-    createReview: ({rating, text}) => {
-        const review = new Review({rating: rating, text: text});
-        return review.save(function (err) {
-            if (err) return console.error(err);
-            console.log('Created new review on DB done');
-        });
-    }
+  createReview: ({rating, text}) => {
+    const review = new Review({rating: rating, text: text});
+    return review.save(function (err) {
+      if (err) return console.error(err);
+      console.log('Created new review on DB done');
+    });
+  }
 };
