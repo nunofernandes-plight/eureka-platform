@@ -1,7 +1,7 @@
 import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
 const router = express.Router();
-import authorService from '../db-services/author-service';
+import authorService from '../db/author-service';
 
 router.get(
     '/',
