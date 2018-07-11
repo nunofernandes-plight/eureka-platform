@@ -6,6 +6,9 @@ import {__THIRD} from '../helpers/colors.js';
 import Icon from './icons/Icon.js';
 import MetaMaskLogo from './icons/MetaMaskLogo.js';
 
+const Parent = styled.div`
+  box-shadow: -21.213px 21.213px 30px 0px rgba(158, 158, 158, 0.3);
+`;
 const Container = Row.extend`
   transition: all 150ms ease;
   color: ${__THIRD};
@@ -87,11 +90,13 @@ const renderRight = () => {
 class Header extends Component {
   render() {
     return (
-      <Container>
-        {renderLeft()}
-        {renderMiddle()}
-        {renderRight()}
-      </Container>
+      <Parent>
+        <Container>
+          {renderLeft()}
+          {renderMiddle()}
+          {renderRight()}
+        </Container>
+      </Parent>
     );
   }
 }
