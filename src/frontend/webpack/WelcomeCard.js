@@ -1,13 +1,17 @@
-import React from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
 import {__THIRD} from '../helpers/colors.js';
+import ReactCardFlip from 'react-card-flip';
+import Icon from './icons/Icon.js';
+import EurekaLogo from './icons/EurekaLogo.js';
 
 const Container = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-evenly;
   position: absolute;
-  bottom: -60px;
+  margin-top: 80px;
+  z-index: 100;
 `;
 const Card = styled.div`
   display: flex;
@@ -25,48 +29,137 @@ const Card = styled.div`
   margin: 0 10px;
   padding: 15px;
   z-index: 100;
+  position: absolute;
+  left: -147px;
 `;
 
 const CardTitle = styled.h2`
+  margin-bottom: auto;
   text-transform: uppercase;
 `;
 
 const CardFigure = styled.img`
   height: 72px;
   width: auto;
+  margin-bottom: auto;
 `;
 
-const CardDescription = styled.p``;
+const CardFigureBack = styled.div`
+  &:hover {
+    transition: all 0.25s;
+    background: #2e3391;
+    border: 1px solid #2e3391;
+    color: white;
+  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 72px;
+  margin-bottom: auto;
+  color: ${__THIRD};
+  cursor: pointer;
+  background: white;
+  border: 1px solid #2e3391;
+  padding: 40px 25px;
+  border-radius: 50%;
+  margin-top: 10px;
+`;
 
-const Cards = () => {
-  return (
-    <Container>
-      <Card>
-        <CardTitle>Submit your article</CardTitle>
-        <CardFigure src="img/icons/submit.png" />
-        <CardDescription>Submit your article</CardDescription>
-      </Card>
-      <Card>
-        <CardTitle>Start reviewing</CardTitle>
-        <CardFigure src="img/icons/become_reviewer.png" />
-        <CardDescription>
-          In few steps join the Eureka ecosystem and become a reviewer.
-        </CardDescription>
-      </Card>
-      <Card>
-        <CardTitle>(In)Validate a work</CardTitle>
-        <CardFigure src="img/icons/validate.png" />
-        <CardDescription>
-          Validate or invalidate a existing work!
-        </CardDescription>
-      </Card>
-      <Card>
-        <CardTitle>Claim your tokens</CardTitle>
-        <CardFigure src="img/icons/claim.png" />
-        <CardDescription>Claim your tokens in a few step.</CardDescription>
-      </Card>
-    </Container>
-  );
-};
+const CardDescription = styled.p`
+  margin: auto 0;
+  word-break: break-word;
+`;
+
+class Cards extends Component {
+  constructor() {
+    super();
+    this.state = {
+      '1': false,
+      '2': false,
+      '3': false,
+      '4': false
+    };
+  }
+
+  flipCard(key) {
+    const flip = !this.state[key];
+    this.setState({[key]: flip});
+  }
+  render() {
+    return (
+      <Container>
+        <ReactCardFlip isFlipped={this.state['1']}>
+          <Card key="front" onMouseEnter={() => this.flipCard('1')}>
+            <CardTitle>Become an author</CardTitle>
+            <CardFigure src="img/icons/submit.png" />
+            <CardDescription>
+              Submit your article to be peer-reviewed in the EUREKA ecosystem
+            </CardDescription>
+          </Card>
+          <Card key="back" onMouseLeave={() => this.flipCard('1')}>
+            <CardTitle>Submit article</CardTitle>
+            <CardFigureBack>
+              <Icon icon="plus" width={30} height={30} />
+            </CardFigureBack>
+            <button>Submit article now!</button>
+          </Card>
+        </ReactCardFlip>
+
+        <ReactCardFlip isFlipped={this.state['2']}>
+          <Card key="front" onMouseEnter={() => this.flipCard('2')}>
+            <CardTitle>Start reviewing</CardTitle>
+            <CardFigure src="img/icons/become_reviewer.png" />
+            <CardDescription>
+              Send your reviewer application in a few steps!{' '}
+            </CardDescription>
+          </Card>
+          <Card key="back" onMouseLeave={() => this.flipCard('2')}>
+            <CardTitle>Submit application</CardTitle>
+            <CardFigureBack>
+              <Icon icon="arrow-right" width={30} height={30} />
+            </CardFigureBack>
+            <button>Become a reviewer!</button>
+          </Card>
+        </ReactCardFlip>
+
+        <ReactCardFlip isFlipped={this.state['3']}>
+          <Card key="front" onMouseEnter={() => this.flipCard('3')}>
+            <CardTitle>Validation</CardTitle>
+
+            <CardFigure src="img/icons/validate.png" />
+            <CardDescription>
+              Validate or invalidate a existing work!
+            </CardDescription>
+          </Card>
+          <Card key="back" onMouseLeave={() => this.flipCard('3')}>
+            <CardTitle>Validate a work</CardTitle>
+            <CardFigureBack>
+              <Icon icon="check" width={30} height={30} />
+            </CardFigureBack>
+            <button>Submit</button>
+          </Card>
+        </ReactCardFlip>
+
+        <ReactCardFlip isFlipped={this.state['4']}>
+          <Card key="front" onMouseEnter={() => this.flipCard('4')}>
+            <CardTitle>Our Journal</CardTitle>
+            <EurekaLogo width={70} height={70} />
+            <CardDescription>
+              Have a look at the articles which have been published into our
+              Journal
+            </CardDescription>
+          </Card>
+          <Card key="back" onMouseLeave={() => this.flipCard(4)}>
+            <CardTitle>Submit</CardTitle>
+            <CardFigureBack>
+              <Icon icon="read" width={30} height={30} />
+            </CardFigureBack>
+            <button>Read more</button>
+          </Card>
+        </ReactCardFlip>
+      </Container>
+    );
+  }
+}
 
 export default Cards;
