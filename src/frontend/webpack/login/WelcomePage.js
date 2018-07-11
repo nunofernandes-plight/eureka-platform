@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {Row} from '../helpers/layout.js';
-import {__SECOND, __THIRD} from '../helpers/colors.js';
-import EurekaLogo from './icons/EurekaLogo.js';
+import {Row} from '../../helpers/layout.js';
+import {Link} from 'react-router-dom';
+import {__THIRD} from '../../helpers/colors.js';
+import EurekaLogo from '../icons/EurekaLogo.js';
 import Cards from './WelcomeCard.js';
 
 const Parent = styled.div`
@@ -26,9 +27,6 @@ const Wrapper = Row.extend`
   flex-direction: column;
   margin-bottom: 7em;
 `;
-
-const Title = styled.h1``;
-
 const SubTitle = styled.p``;
 
 const GetStarted = styled.button``;
@@ -62,7 +60,9 @@ class WelcomePage extends Component {
             <SubTitle>
               Democratising science through decentralisation and transparency
             </SubTitle>
-            <GetStarted>GET STARTED</GetStarted>
+            <Link to="/login">
+              <button>GET STARTED</button>
+            </Link>
           </Wrapper>
           <Cards />
           <Curve />

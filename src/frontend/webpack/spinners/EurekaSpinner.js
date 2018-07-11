@@ -41,20 +41,19 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  top: 40%;
+  top: 30%;
   position: absolute;
   width: 100%;
-
 `;
 
 const Logo = styled.img`
   transition: 1s all;
   margin-left: 22px;
-  animation: ${pulseLogo} 1.75s infinite linear;
+  animation: ${pulseLogo} 2.5s infinite linear;
 `;
 
 const EurekaLoader = styled.div`
-  animation: ${pulse} 1.75s infinite linear;
+  animation: ${pulse} 2.5s infinite linear;
   padding: 60px 55px;
   border-radius: 50%;
 `;
@@ -62,7 +61,7 @@ const EurekaSpinner = () => {
   return (
     <Container>
       <EurekaLoader>
-        <Logo src="../img/logos/eureka-hd.png" width={200} height={200} />
+        <Logo src="../img/logos/eureka-hd.png" width={150} height={150} />
       </EurekaLoader>
     </Container>
   );

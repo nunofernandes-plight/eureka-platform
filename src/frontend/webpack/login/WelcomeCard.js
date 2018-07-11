@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {__THIRD} from '../helpers/colors.js';
+import {__THIRD} from '../../helpers/colors.js';
 import ReactCardFlip from 'react-card-flip';
-import Icon from './icons/Icon.js';
-import EurekaLogo from './icons/EurekaLogo.js';
+import Icon from '../icons/Icon.js';
+import EurekaLogo from '../icons/EurekaLogo.js';
 
 const Container = styled.div`
   display: flex;
