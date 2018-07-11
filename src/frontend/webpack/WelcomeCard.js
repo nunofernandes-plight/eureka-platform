@@ -136,7 +136,7 @@ class Cards extends Component {
             <CardFigureBack>
               <Icon icon="check" width={30} height={30} />
             </CardFigureBack>
-            <button>Submit</button>
+            <button>Validate!</button>
           </Card>
         </ReactCardFlip>
 
@@ -150,11 +150,11 @@ class Cards extends Component {
             </CardDescription>
           </Card>
           <Card key="back" onMouseLeave={() => this.flipCard(4)}>
-            <CardTitle>Submit</CardTitle>
+            <CardTitle>Our Jorunal</CardTitle>
             <CardFigureBack>
               <Icon icon="read" width={30} height={30} />
             </CardFigureBack>
-            <button>Read more</button>
+            <button>Read more...</button>
           </Card>
         </ReactCardFlip>
       </Container>
