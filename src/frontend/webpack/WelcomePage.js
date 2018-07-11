@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Row} from '../helpers/layout.js';
-import {__THIRD} from '../helpers/colors.js';
+import {__SECOND, __THIRD} from '../helpers/colors.js';
 import EurekaLogo from './icons/EurekaLogo.js';
 import Cards from './WelcomeCard.js';
 
@@ -39,10 +39,17 @@ const Curve = styled.div`
   height: 100px;
   content: '';
   display: block;
-  width: 110%;
+  width: 100%;
   bottom: 0px;
   border-top-right-radius: 50%;
   border-top-left-radius: 50%;
+`;
+
+const Footer = styled.div`
+  background: white;
+  width: 100%;
+  min-height: 120px;
+  margin-top: 5em;
 `;
 
 class WelcomePage extends Component {
@@ -52,16 +59,15 @@ class WelcomePage extends Component {
         <Container>
           <Wrapper>
             <EurekaLogo white width={500} height={80} />
-            {/*<Title>EUREKA PLATFORM ahjas</Title>*/}
             <SubTitle>
               Democratising science through decentralisation and transparency
             </SubTitle>
             <GetStarted>GET STARTED</GetStarted>
-
           </Wrapper>
-            <Cards />
+          <Cards />
           <Curve />
         </Container>
+        <Footer />
       </Parent>
     );
   }
