@@ -1,20 +1,6 @@
-import mongo from 'then-mongo';
+import mongo from 'then-mongo/index';
 
-const collections = ['reviews'];
+const collections = ['authors','reviews'];
 const db = mongo('localhost/eurekaDB', collections);
 
-export default {
-  getAllReviews: () => {
-    return db
-      .collection('reviews')
-      .find()
-      .toArray();
-  },
-  //{rating, text} --> rating: body.rating, text: body.text
-  insertReview: ({rating, text}) => {
-    return db.collection('reviews').insert({
-      rating, // rating: rating
-      text
-    });
-  }
-};
+export default db;
