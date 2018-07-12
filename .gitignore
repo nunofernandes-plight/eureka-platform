@@ -8,6 +8,7 @@
 
 # production
 /build
+src/backend/.env
 
 # misc
 .DS_Store
@@ -25,3 +26,4 @@ yarn-error.log*
 .idea
 src/smartcontracts/build/
 package-lock.json
+
