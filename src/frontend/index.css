@@ -21,7 +21,7 @@ body {
   padding: 0;
   background-color: rgba(0, 0, 0, 0);
   font-family: 'Poppins', sans-serif;
-  color: var(--color-text);
+  color: var(--third);
   font-size: 14px;
   font-weight: 300;
   line-height: 1.625em;
@@ -124,8 +124,10 @@ button:focus,
 }
 
 /*---------Input and Labels--------*/
-
-textarea:focus,
+input,
+textarea,
+button,
+button:focus, textarea:focus,
 input:focus {
   outline: none;
 }
@@ -140,7 +142,7 @@ input[type='text'] {
 
 label {
   transform-origin: left center;
-  color: var(--main);
+  color: var(--third);
   font-weight: 100;
   letter-spacing: 0.01em;
   font-size: 17px;
@@ -154,15 +156,14 @@ label {
 }
 input[type='text'] {
   margin-bottom: -2px;
-  max-width: 300px;
-  border: 1px solid var(--main);
+  border: 1px solid var(--third);
   font-size: 17px;
   width: 100%;
   display: block;
   box-sizing: border-box;
   padding: 9px;
   border-radius: 60px;
-  color: var(--main);
+  color: var(--third);
   font-weight: 100;
   letter-spacing: 0.01em;
   position: relative;
@@ -170,7 +171,7 @@ input[type='text'] {
 }
 input[type='text']:focus {
   outline: none;
-  background: var(--main);
+  background: var(--third);
   color: white;
   margin-top: 30px;
 }
@@ -190,4 +191,8 @@ input[type='text']:valid ~ label {
   -ms-transform: translate(5px, -35px) scale(0.6);
   -webkit-transform: translate(5px, -35px) scale(0.6);
   transform: translate(5px, -35px) scale(0.6);
+}
+
+input[type='text']::placeholder {
+  color: var(--third);
 }
