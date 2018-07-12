@@ -8,6 +8,10 @@ import MetaMaskLogo from './icons/MetaMaskLogo.js';
 
 const Parent = styled.div`
   box-shadow: -21.213px 21.213px 30px 0px rgba(158, 158, 158, 0.3);
+  width: 100%;
+  position: fixed;
+  background: white;
+  z-index: 100;
 `;
 const Container = Row.extend`
   transition: all 150ms ease;
