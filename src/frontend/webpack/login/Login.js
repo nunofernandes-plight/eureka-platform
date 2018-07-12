@@ -49,7 +49,7 @@ const TitleRow = Row.extend`
   flex-direction: column;
 `;
 const LoginRow = styled.div`
-margin: 10px 0;
+  margin: 10px 0;
 `;
 
 const ButtonRow = styled.div`

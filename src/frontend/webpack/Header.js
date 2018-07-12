@@ -5,6 +5,7 @@ import EurekaLogo from './icons/EurekaLogo.js';
 import {__THIRD} from '../helpers/colors.js';
 import Icon from './icons/Icon.js';
 import MetaMaskLogo from './icons/MetaMaskLogo.js';
+import {Switch} from 'react-router';
 
 const Parent = styled.div`
   box-shadow: -21.213px 21.213px 30px 0px rgba(158, 158, 158, 0.3);
