@@ -1,8 +1,9 @@
 export const __MAIN = 'rgb(76, 174, 243)';
 export const __MAIN_HOVER = 'rgb(114, 197, 255)';
-export const __SECOND = 'rgb(46, 49, 146)';
-export const __SECOND_HOVER = 'rgb(61, 63, 152)';
+export const __SECOND = 'rgb(66, 113, 173)';
+export const __SECOND_HOVER = 'rgb(66, 134, 194)';
 export const __THIRD = 'rgb(46, 50, 146)';
 export const __THIRD_HOVER = 'rgb(46, 50, 165)';
-
+export const __FOURTH = '#66cad3';
+export const __FOURTH_HOVER = '#66d4dd';
 export const __METAMASK = '#F6851B';
