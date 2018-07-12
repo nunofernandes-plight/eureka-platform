@@ -7,6 +7,7 @@ const Logo = styled.img`
   margin-left: 5px;
   margin-right: 5px;
   margin-bottom: 3px;
+  vertical-align: middle;
 `;
 
 const MetaMaskLogo = props => {
