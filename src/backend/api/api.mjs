@@ -1,12 +1,14 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
+import dotenv from 'dotenv';
 
 import router from '../routes/index.mjs';
 import passportLocal from "passport-local/lib/index";
 import userSchema from "../schemas/user";
 import mongoose from "../db/mongoose";
 
+dotenv.config();
 const LocalStrategy = passportLocal.Strategy;
 /**
  *  Configure the local strategy for use by Passport
