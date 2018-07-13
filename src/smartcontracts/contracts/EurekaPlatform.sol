@@ -6,9 +6,16 @@ import "./Utils.sol";
 
 contract EurekaPlatform {
 
+    // primary key mappings
+    mapping(uint256 => ArticleSubmission) articleSubmissions;
     mapping(bytes32 => ArticleVersion) articlesVersions;
-    mapping(bytes32 => uint) articleSubmissionIds;
-    mapping(bytes32 => ArticleSubmission) articleSubmissions;
+    mapping(uint256 => Review) reviews;
+
+    // other mappings
+    mapping(address => ArticleVersion[]) articleVersionByAuthor;
+    mapping(address => ArticleSubmission[]) articleSubmissionsByEditor;
+    mapping(address => Review[]) reviewsByReviewer;
+
 
     using SafeMath for uint256;
 
@@ -18,13 +25,14 @@ contract EurekaPlatform {
         uint256 submissionId;
         SubmissionState submissionState;
         address submissionOwner;
-        ArticleVersions[] versions;
+        ArticleVersion[] versions;
         address editor;
     }
 
     enum ArticleVersionState {NOT_EXISTING, CREATED}
     // an ArticleSubmission can have different versions
     struct ArticleVersion {
+        uint256 submissionId;
         bytes32 articleHash;
         // the timestamp when the article was published
         uint256 publishedTimestamp;
@@ -36,20 +44,33 @@ contract EurekaPlatform {
         // the hashes of the linked articles
         bytes32[] linkedArticles;
 
+        // the reviewers which are allowed to review that article as an editor approved Reviewer
         address[] allowedEditorApprovedReviewers;
+        // the reviewers which are approved from the editor
+        // TODO how to check if Reviewer already saved a review -> with array for loop (expensive) maybe save additional mapping
+//        mapping(address => Review) editorApprovedReviews;
         Review[] editorApprovedReviews;
+
+        // every community reviewer can add a community review without being approved
+        // TODO how to check if Reviewer already saved a review -> with array for loop (expensive) maybe save additional mapping
+//        mapping(address => Review) communityReviews;
         Review[] communityReviews;
 
+        // either save aggregated scores in article version or loop in GET method over review array
+        uint8 score1;
+        uint8 score2;
     }
 
     enum ReviewState {NOT_EXISTING, CREATED}
     struct Review {
+        uint256 reviewId;
         bytes32 reviewHash;
         uint256 reviewedTimestamp;
         address reviewer;
 
         ReviewState reviewState;
 
-        uint8[] scores;
+        uint8 score1;
+        uint8 score2;
     }
 }
