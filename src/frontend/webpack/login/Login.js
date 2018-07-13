@@ -2,9 +2,15 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import {Row} from '../../helpers/layout.js';
-import {__FOURTH, __THIRD} from '../../helpers/colors.js';
+import {
+  __ALERT_WARNING,
+  __FOURTH,
+  __SECOND,
+  __THIRD
+} from '../../helpers/colors.js';
 import MetaMaskLogo from '../icons/MetaMaskLogo.js';
 import EurekaLogo from '../icons/EurekaLogo.js';
+import Web3Providers from '../../web3/Web3Providers.js';
 
 const Container = styled.div`
   width: 100%;
@@ -29,7 +35,9 @@ const LoginContainer = styled.div`
   border-radius: 5px;
   width: 600px;
   position: relative;
-  z-index: 10;
+  opacity: ${props => (props.provider === Web3Providers.META_MASK ? 1 : 0.1)};
+  pointer-events: ${props =>
+    props.provider === Web3Providers.META_MASK ? null : 'none'};
 `;
 
 const Button = styled.button`
@@ -44,7 +52,7 @@ const Paragraph = styled.p`
   text-align: center;
   width: 600px;
   margin-bottom: 40px;
-  background: ${__THIRD};
+  background: ${__SECOND};
   border-radius: 10px;
   color: white;
   padding: 20px;
@@ -81,10 +89,19 @@ const Background = styled.div`
 `;
 
 const MetaMaskInstalled = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  background: ${__ALERT_WARNING};
+  font-size: 13px;
+  max-width: 900px;
+  color: white;
+  border-radius: 4px;
+  margin-top: 4em;
+`;
 
-`
-
-const SubTitle = styled.h2``;
+const SubTitle = styled.h2`text-align: center`;
 class Login extends Component {
   constructor() {
     super();
@@ -93,8 +110,18 @@ class Login extends Component {
   render() {
     return (
       <Container>
-        <MetaMaskInstalled>
-        </MetaMaskInstalled>
+        {this.props.provider !== Web3Providers.META_MASK ? (
+          <MetaMaskInstalled>
+            <p>
+              Ouh! We were not able to detect MetaMask in your browser. Please
+              follow the instruction{' '}
+              <strong>
+                <Link to="/metamask"> here </Link>
+              </strong>{' '}
+              of how to download it.
+            </p>
+          </MetaMaskInstalled>
+        ) : null}
         <TitleRow>
           <Title>
             Welcome to{' '}
@@ -113,12 +140,10 @@ class Login extends Component {
             </Paragraph>
           </MetaMaskDisclaimer>
         </TitleRow>
-        <SubTitle>Please login</SubTitle>
+
         <Row>
-          <LoginContainer>
-            <Background>
-              <EurekaLogo width={400} height={400} />
-            </Background>
+          <LoginContainer provider={this.props.provider}>
+              <SubTitle>Please login</SubTitle>
             <LoginRow>
               <input type="text" required />
               <label>Username</label>
@@ -132,6 +157,9 @@ class Login extends Component {
                 Login with Metamask <MetaMaskLogo width={20} height={20} />
               </Button>
             </ButtonRow>
+            <Background>
+              <EurekaLogo width={400} height={400} />
+            </Background>
           </LoginContainer>
         </Row>
         <Row>
