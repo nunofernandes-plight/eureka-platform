@@ -50,5 +50,11 @@
       "babel-register"
     ],
     "babel": "inherit"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "bracketSpacing": false,
+    "jsxBracketSameLine": false,
+    "useTabs": false
   }
 }
