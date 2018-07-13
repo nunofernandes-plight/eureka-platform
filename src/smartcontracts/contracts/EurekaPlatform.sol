@@ -19,7 +19,7 @@ contract EurekaPlatform {
 
     using SafeMath for uint256;
 
-    enum SubmissionState {NOT_EXISTING, CREATED}
+    enum SubmissionState {NOT_EXISTING, OPEN, CLOSED}
     // different ArticleVersions from different review-rounds are saved in the same ArticleSubmission Object
     struct ArticleSubmission {
         uint256 submissionId;
@@ -29,7 +29,7 @@ contract EurekaPlatform {
         address editor;
     }
 
-    enum ArticleVersionState {NOT_EXISTING, CREATED}
+    enum ArticleVersionState {NOT_EXISTING, SUBMITTED, EDITOR_CHECKED, NOT_ENOUGH_REVIEWERS, NOT_ACCEPTED, ACCEPTED}
     // an ArticleSubmission can have different versions
     struct ArticleVersion {
         uint256 submissionId;
@@ -61,7 +61,7 @@ contract EurekaPlatform {
         uint8 score2;
     }
 
-    enum ReviewState {NOT_EXISTING, CREATED}
+    enum ReviewState {NOT_EXISTING, HANDED_IN, DECLINED, ACCEPTED}
     struct Review {
         uint256 reviewId;
         bytes32 reviewHash;
