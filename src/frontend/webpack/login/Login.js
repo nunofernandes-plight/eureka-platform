@@ -80,6 +80,10 @@ const Background = styled.div`
   filter: alpha(opacity=0.05); /* For IE8 and earlier */
 `;
 
+const MetaMaskInstalled = styled.div`
+
+`
+
 const SubTitle = styled.h2``;
 class Login extends Component {
   constructor() {
@@ -89,6 +93,8 @@ class Login extends Component {
   render() {
     return (
       <Container>
+        <MetaMaskInstalled>
+        </MetaMaskInstalled>
         <TitleRow>
           <Title>
             Welcome to{' '}

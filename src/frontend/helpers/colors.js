@@ -1,9 +1,14 @@
-export const __MAIN = 'rgb(76, 174, 243)';
-export const __MAIN_HOVER = 'rgb(114, 197, 255)';
-export const __SECOND = 'rgb(66, 113, 173)';
-export const __SECOND_HOVER = 'rgb(66, 134, 194)';
-export const __THIRD = 'rgb(46, 50, 146)';
-export const __THIRD_HOVER = 'rgb(46, 50, 165)';
+export const __MAIN = '#4caef3';
+export const __MAIN_HOVER = '#72c5ff';
+export const __SECOND = '#4271ad';
+export const __SECOND_HOVER = '#4286c2';
+export const __THIRD = '#2e3292';
+export const __THIRD_HOVER = '#2e32a5';
 export const __FOURTH = '#66cad3';
 export const __FOURTH_HOVER = '#66d4dd';
 export const __METAMASK = '#F6851B';
+
+// ALERT COLORS (for notifications and alert messages)
+export const __ALERT_ERROR = '#f96332';
+export const __ALERT_WARNING = '#ffbc50';
+export const __ALERT_SUCCESS = '#1be611';
