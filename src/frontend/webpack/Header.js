@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Row} from '../helpers/layout.js';
 import EurekaLogo from './icons/EurekaLogo.js';
-import {__ALERT_SUCCESS, __THIRD} from '../helpers/colors.js';
+import {__ALERT_SUCCESS, __ALERT_WARNING, __THIRD} from '../helpers/colors.js';
 import Icon from './icons/Icon.js';
 import MetaMaskLogo from './icons/MetaMaskLogo.js';
 import {Switch} from 'react-router';
@@ -62,7 +62,7 @@ const NoMetaMask = MetaMask.extend`
 `;
 
 const MetaMaskDetected = MetaMask.extend`
-  background: ${__ALERT_SUCCESS};
+  background: ${__ALERT_WARNING};
   color: white;
 `;
 const SignUp = Item.extend`
@@ -87,7 +87,7 @@ const renderMiddle = props => {
       </Item>
       {props.provider === Web3Providers.META_MASK ? (
         <MetaMaskDetected>
-          MetaMask detected{' '}
+          MetaMask detected but not logged in
           <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
         </MetaMaskDetected>
       ) : (
