@@ -1,4 +1,4 @@
-import mongoose from './mongoose';
+import mongoose from './mongoose-db';
 import db from './db';
 import reviewSchema from '../schemas/review.mjs';
 
