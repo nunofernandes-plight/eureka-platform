@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 import db from './db';
 import bcryptHasher from '../helpers/bcrypt-hasher';
 import userSchema from '../schema/user';
@@ -23,9 +23,6 @@ export default {
       email: email
     });
 
-    newUser.save(function (err, newUser) {
-      if (err) throw  err;
-      console.log('New DB User: ' + newUser);
-    });
+    return await newUser.save();
   }
 };
