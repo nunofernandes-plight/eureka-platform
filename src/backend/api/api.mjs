@@ -6,7 +6,6 @@ import passport from '../helpers/local-passport';
 import mongooseDB from '../db/mongoose-db';
 import connectMongo from 'connect-mongo';
 
-
 import router from '../routes/index.mjs';
 
 //load in env variables
@@ -46,7 +45,6 @@ app.use(passport.initialize());
 
 app.use(passport.session());
 
-
 /** Parser **/
 //Parses the text as URL encoded data
 app.use(
@@ -56,7 +54,6 @@ app.use(
 );
 //Parses the text as JSON and exposes the resulting object on req.body.
 app.use(bodyParser.json());
-
 
 app.use('/api', router);
 export default app;
