@@ -6,13 +6,24 @@ import mongoose from 'mongoose';
  */
 const userSchema = mongoose.Schema(
   {
-    username: String,
-    password: String,
-    email: String
+    username: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    password: {
+      type: String,
+      required: true,
+      unique: false
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true
+    }
   },
   {collection: 'users'}
 );
-
 
 
 export default userSchema;
