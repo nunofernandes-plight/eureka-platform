@@ -20,7 +20,7 @@ app.use(
   session({
     secret: 'eureka secret snippet', //TODO change to random generated string?
     resave: false,
-    //stores session into DB 
+    //stores session into DB
     store: new MongoStore({
       mongooseConnection: mongooseDB.connection
     }),

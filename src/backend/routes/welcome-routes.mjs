@@ -2,6 +2,7 @@
  * Testing routes
  */
 import express from 'express';
+import authenticationMiddleware from '../helpers/authentication-middleware'
 const router = express.Router();
 
 
@@ -13,5 +14,11 @@ router.get(
     res.send('Welcome to EUREKA! REQ_USER: ' + req.user + ' AUTHENTICATED: ' + req.isAuthenticated());
   }
 );
+
+router.use(authenticationMiddleware);
+router.get('/logged-in',
+  function (req, res) {
+    res.send('Welcome in the part for user logged in');
+  });
 
 export default router;

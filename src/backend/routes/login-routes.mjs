@@ -7,6 +7,8 @@ router.get('/', function(req, res) {
   res.sendFile(path.join(__dirname + '/src/backend/view/login.html'));
 });
 
-//router.post('/', function(req, res) {});
+// router.post('/', async function(req, res) {
+//
+// });
 
 export default router;
