@@ -2,7 +2,7 @@ import express from 'express';
 import reviewRoutes from './review-routes.mjs';
 import authorRoutes from './author-routes.mjs';
 import signupRoutes from './sign-up-routes.mjs';
-import loginRoutes from './log-in-out-routes';
+import loginRoutes from './login-routes';
 
 const router = express.Router();
 
