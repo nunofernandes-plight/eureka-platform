@@ -23,6 +23,15 @@ export default {
       email: email
     });
 
-    return await newUser.save();
+
+    return newUser.save().then(
+      function() {
+        console.log('Success');
+        return newUser;
+      }, function (err) {
+        console.log('Error :' + err);
+        throw err; //Trowing new error for parent promise
+      }
+    )
   }
-};
+}
