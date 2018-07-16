@@ -22,7 +22,7 @@ const Container = styled.div`
 `;
 const Title = styled.h1`
   color: ${__THIRD};
-  margin-top: 2em;
+  margin-top: 1.5em;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -50,7 +50,7 @@ const MetaMaskDisclaimer = styled.div``;
 const Paragraph = styled.p`
   word-break: break-word;
   text-align: center;
-  width: 600px;
+  width: 700px;
   margin-bottom: 40px;
   background: ${__SECOND};
   border-radius: 10px;
@@ -101,7 +101,9 @@ const MetaMaskInstalled = styled.div`
   margin-top: 4em;
 `;
 
-const SubTitle = styled.h2`text-align: center`;
+const SubTitle = styled.h2`
+  text-align: center;
+`;
 class Login extends Component {
   constructor() {
     super();
@@ -129,21 +131,21 @@ class Login extends Component {
               <EurekaLogo blueNoLogo width={200} />
             </div>
           </Title>
-
-          <MetaMaskDisclaimer>
-            <Paragraph>
-              Our application requires MetaMask<MetaMaskLogo
-                width={15}
-                height={15}
-              />as authentication provider. Please note that we are not able
-              neither to see nor to store your private keys.{' '}
-            </Paragraph>
-          </MetaMaskDisclaimer>
+          {this.props.provider === Web3Providers.META_MASK ? (
+            <MetaMaskDisclaimer>
+              <Paragraph>
+                We detected MetaMask<MetaMaskLogo width={15} height={15} />in
+                your Browser! We use it as our authentication provider. Please
+                note that we are not able neither to see nor to store your
+                private keys.{' '}
+              </Paragraph>
+            </MetaMaskDisclaimer>
+          ) : null}
         </TitleRow>
 
         <Row>
           <LoginContainer provider={this.props.provider}>
-              <SubTitle>Please login</SubTitle>
+            <SubTitle>Please login</SubTitle>
             <LoginRow>
               <input type="text" required />
               <label>Username</label>
@@ -157,9 +159,9 @@ class Login extends Component {
                 Login with Metamask <MetaMaskLogo width={20} height={20} />
               </Button>
             </ButtonRow>
-            <Background>
-              <EurekaLogo width={400} height={400} />
-            </Background>
+            {/*<Background>*/}
+              {/*<EurekaLogo width={400} height={400} />*/}
+            {/*</Background>*/}
           </LoginContainer>
         </Row>
         <Row>

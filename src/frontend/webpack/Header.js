@@ -2,10 +2,11 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Row} from '../helpers/layout.js';
 import EurekaLogo from './icons/EurekaLogo.js';
-import {__THIRD} from '../helpers/colors.js';
+import {__ALERT_SUCCESS, __THIRD} from '../helpers/colors.js';
 import Icon from './icons/Icon.js';
 import MetaMaskLogo from './icons/MetaMaskLogo.js';
 import {Switch} from 'react-router';
+import Web3Providers from '../web3/Web3Providers.js';
 
 const Parent = styled.div`
   box-shadow: -21.213px 21.213px 30px 0px rgba(158, 158, 158, 0.3);
@@ -47,13 +48,22 @@ const MetaMask = Item.extend`
   display: flex;
   align-items: center;
   font-size: 13px;
-  background: #2f3292;
-  color: white;
+
   padding-top: 6px;
   padding-bottom: 6px;
   padding-left: 10px;
   padding-right: 4px;
   border-radius: 6px;
+`;
+
+const NoMetaMask = MetaMask.extend`
+  background: #2f3292;
+  color: white;
+`;
+
+const MetaMaskDetected = MetaMask.extend`
+  background: ${__ALERT_SUCCESS};
+  color: white;
 `;
 const SignUp = Item.extend`
   border: 1px solid ${__THIRD};
@@ -69,16 +79,23 @@ const renderLeft = () => {
   );
 };
 
-const renderMiddle = () => {
+const renderMiddle = props => {
   return (
     <MiddleContainer>
       <Item>
         Products <Icon icon="chevron-down" width={15} height={15} />
       </Item>
-      <MetaMask>
-        Get MetaMask{' '}
-        <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
-      </MetaMask>
+      {props.provider === Web3Providers.META_MASK ? (
+        <MetaMaskDetected>
+          MetaMask detected{' '}
+          <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
+        </MetaMaskDetected>
+      ) : (
+        <NoMetaMask>
+          Get MetaMask{' '}
+          <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
+        </NoMetaMask>
+      )}
     </MiddleContainer>
   );
 };
@@ -97,9 +114,9 @@ class Header extends Component {
     return (
       <Parent>
         <Container>
-          {renderLeft()}
-          {renderMiddle()}
-          {renderRight()}
+          {renderLeft(this.props)}
+          {renderMiddle(this.props)}
+          {renderRight(this.props)}
         </Container>
       </Parent>
     );
