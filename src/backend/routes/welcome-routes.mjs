@@ -2,7 +2,7 @@
  * Testing routes
  */
 import express from 'express';
-import authenticationMiddleware from '../helpers/authentication-middleware'
+import authenticationCheck from '../helpers/authentication-check'
 const router = express.Router();
 
 
@@ -15,7 +15,8 @@ router.get(
   }
 );
 
-router.use(authenticationMiddleware);
+//Test the login through session
+router.use(authenticationCheck);
 router.get('/logged-in',
   function (req, res) {
     res.send('Welcome in the part for user logged in');

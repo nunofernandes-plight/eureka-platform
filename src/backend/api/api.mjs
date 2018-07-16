@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import session from 'express-session';
-import passport from '../auth/localPassport';
+import passport from '../helpers/local-passport';
 import mongooseDB from '../db/mongoose-db';
 import connectMongo from 'connect-mongo';
 
@@ -33,15 +33,16 @@ app.use(
 /** Passport setup **/
 app.use(passport.initialize());
 
-passport.serializeUser(function (_id, done) {
-  done(null, _id);
-});
-
-passport.deserializeUser(function (_id, done) {
-  User.findById(_id, function (err, user) {
-    done(err, user);
-  });
-});
+//already in /helpers/local-passport
+// passport.serializeUser(function (_id, done) {
+//   done(null, _id);
+// });
+//
+// passport.deserializeUser(function (_id, done) {
+//   User.findById(_id, function (err, user) {
+//     done(err, user);
+//   });
+// });
 
 app.use(passport.session());
 

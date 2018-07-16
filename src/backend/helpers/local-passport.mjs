@@ -1,6 +1,6 @@
 import passport from 'passport';
 import passportLocal from 'passport-local/lib/index';
-import hasher from '../helpers/bcrypt-hasher';
+import hasher from './bcrypt-hasher';
 import mongoose from '../db/mongoose-db';
 import userSchema from '../schema/user';
 
@@ -41,8 +41,8 @@ passport.use(
 /**
  *  Configure Passport authenticated session persistence.
  */
-passport.serializeUser(function(user_id, done) {
-  done(null, user_id);
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
 });
 
 passport.deserializeUser(function(user_id, done) {
