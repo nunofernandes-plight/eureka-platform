@@ -1,6 +1,6 @@
 import passport from 'passport';
 import passportLocal from 'passport-local/lib/index';
-import hasher from './bcrypt-hasher';
+import bcryptHasher from './bcrypt-hasher';
 import mongoose from '../db/mongoose-db';
 import userSchema from '../schema/user';
 
@@ -10,7 +10,7 @@ const User = mongoose.model('users', userSchema, 'users');
 passport.use(
   new LocalStrategy(async function(username, password, done) {
     const dbUser = await User.findOne({username: username});
-    const isCorrectHash = await hasher.compare(password, dbUser.password);
+    const isCorrectHash = await bcryptHasher.compare(password, dbUser.password);
 
     User.findOne(
       {
