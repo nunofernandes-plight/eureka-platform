@@ -1,6 +1,6 @@
 import passport from 'passport';
 import passportLocal from "passport-local/lib/index";
-import hasher from "../helpers/hasher";
+import hasher from "../helpers/bcrypt-hasher";
 import mongoose from "../db/mongoose";
 import userSchema from "../schemas/user";
 

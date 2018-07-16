@@ -25,6 +25,12 @@ app.use(session({
   //cookie: { secure: true }
 }));
 app.use(passport.initialize());
+
+//Parses the text as URL encoded data
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+//Parses the text as JSON and exposes the resulting object on req.body.
 app.use(bodyParser.json());
 
 app.use('/api', router);

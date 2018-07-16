@@ -1,17 +1,16 @@
 import bcrypt from 'bcrypt';
-import userSchema from "../schemas/user";
-import mongoose from "../db/mongoose";
 
 /**
  * Hashes a string , used for the password
  * and compares a given hash with a new inputString
+ * Methods return a promise --> use async - await
  */
-const User = mongoose.model('users', userSchema, 'users');
 // rounds of hash, higher => safer, but slower
 const saltRounds = 10;
 
 export default {
   hash: (password) => {
+    console.log('Hash-PW: ' + password);
     return bcrypt.hash(password, saltRounds).then(function (hash) {
       return hash;
     });
