@@ -16,7 +16,7 @@ class MetaMaskGuide extends Component {
     return (
       <Container>
         <Title>EUREKA and MetaMask</Title>
-        <MetaMaskLogo width={100} height={100} />
+        <MetaMaskLogo download width={500} />
         <SubTitle>How does it work</SubTitle>
       </Container>
     );
