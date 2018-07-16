@@ -9,14 +9,14 @@ import bcrypt from 'bcrypt';
 const saltRounds = 10;
 
 export default {
-  hash: (password) => {
-    return bcrypt.hash(password, saltRounds).then(function (hash) {
+  hash: password => {
+    return bcrypt.hash(password, saltRounds).then(function(hash) {
       return hash;
     });
   },
   compare: (plainPassword, hashedPassword) => {
-    return bcrypt.compare(plainPassword, hashedPassword).then(function (res) {
+    return bcrypt.compare(plainPassword, hashedPassword).then(function(res) {
       return res;
     });
   }
-}
+};

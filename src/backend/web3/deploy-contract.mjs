@@ -16,7 +16,8 @@ export const deployContract = async (contractInput, addressMap, accounts) => {
       let bytecode = web3Contract.options.data;
       const linkReferences = linker.findLinkReferences(bytecode);
 
-      if (linkReferences) { // there is a library linked in the bytecode
+      if (linkReferences) {
+        // there is a library linked in the bytecode
         Object.keys(linkReferences).forEach(async link => {
           let libraryAddress = addressMap.get(link);
 

@@ -1,7 +1,7 @@
-import app from "./api/api.mjs";
+import app from './api/api.mjs';
 import dotenv from 'dotenv';
 
-import isProduction from "../helpers/isProduction.mjs";
+import isProduction from '../helpers/isProduction.mjs';
 
 if (!isProduction()) {
   //import env variables from .env file
@@ -9,4 +9,4 @@ if (!isProduction()) {
   app.listen(process.env.PORT || 8080);
 }
 
-console.log("App started. Date: " + new Date().toString());
+console.log('App started. Date: ' + new Date().toString());

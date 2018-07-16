@@ -14,5 +14,4 @@ router.use('/signup', signupRoutes);
 router.use('/login', loginRoutes);
 router.use('/register', registerRoutes);
 
-
 export default router;
