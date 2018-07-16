@@ -14,11 +14,17 @@ router.post('/', async function (req, res) {
     req.body.username,
     req.body.password,
     req.body.email
-  ).then((response) => {
-    res.send(response);
+  ).then((newUserInDB) => {
+
+    
+    req.login(newUserInDB._id, function (err) {
+        if (err) res.send('Login error: ' + err);
+        res.send(newUserInDB);
+      }
+    )
   })
     .catch((err) => {
-      res.send(err);
+      res.send('Registration error: ' + err);
     })
 });
 

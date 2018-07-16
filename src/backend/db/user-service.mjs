@@ -13,7 +13,6 @@ export default {
       .find()
       .toArray();
   },
-  //{rating, text} --> rating: body.rating, text: body.text
   createUser: async (username, password, email) => {
     const hashedPassword = await bcryptHasher.hash(password);
 
@@ -26,11 +25,10 @@ export default {
 
     return newUser.save().then(
       function() {
-        console.log('Success');
         return newUser;
       }, function (err) {
         console.log('Error :' + err);
-        throw err; //Trowing new error for parent promise
+        throw err;
       }
     )
   }
