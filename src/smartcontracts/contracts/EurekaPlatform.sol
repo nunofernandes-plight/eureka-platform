@@ -33,6 +33,42 @@ contract EurekaPlatform is ERC677Receiver {
     uint submissionFee;
 
 
+    constructor() {
+
+        editorApprovedReviewerRewardPerReviewer.push(150);
+        editorApprovedReviewerRewardPerReviewer.push(75);
+        editorApprovedReviewerRewardPerReviewer.push(25);
+        editorApprovedReviewerRewardPerReviewer.push(25);
+
+        communityReviewerRewardPerReviewer.push(60);
+        communityReviewerRewardPerReviewer.push(30);
+        communityReviewerRewardPerReviewer.push(10);
+        communityReviewerRewardPerReviewer.push(10);
+
+        secondReviewerRewardPerReviewer.push(19);
+        secondReviewerRewardPerReviewer.push(9);
+        secondReviewerRewardPerReviewer.push(3);
+        secondReviewerRewardPerReviewer.push(3);
+
+        submissionFee =
+        sciencemattersFoundation
+        + editorReward
+        + linkedArticlesReward
+        + invalidationWorkReward
+        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[0]
+        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[1]
+        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[2]
+        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[3]
+        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[0]
+        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[1]
+        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[2]
+        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[3]
+        + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[0]
+        + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[1]
+        + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[2]
+        + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[3];
+
+    }
 
 
     // primary key mappings
@@ -89,16 +125,16 @@ contract EurekaPlatform is ERC677Receiver {
         // the submission owner can weight the impact of the linked articles [0;10000]
         uint8[] linkedArticlesSplitRatio;
 
-        // the reviewers which are allowed to review that article as an editor approved Reviewer
+        // the reviewers which are allowed to review that article as an editor approved reviewer
         address[] allowedEditorApprovedReviewers;
         // the reviewers which are approved from the editor
         // TODO how to check if Reviewer already saved a review -> with array for loop (expensive) maybe save additional mapping
-//        mapping(address => Review) editorApprovedReviews;
+        //        mapping(address => Review) editorApprovedReviews;
         Review[] editorApprovedReviews;
 
         // every community reviewer can add a community review without being approved
         // TODO how to check if Reviewer already saved a review -> with array for loop (expensive) maybe save additional mapping
-//        mapping(address => Review) communityReviews;
+        //        mapping(address => Review) communityReviews;
         Review[] communityReviews;
 
         // either save aggregated scores in article version or loop in GET method over review array
@@ -143,7 +179,7 @@ contract EurekaPlatform is ERC677Receiver {
             payloadSize := mload(_extraData)
             payload := mload(add(_extraData, 0x20))
         }
-        payload = payload >> 8*(32 - payloadSize);
+        payload = payload >> 8 * (32 - payloadSize);
         info[sender] = payload;
         return true;
     }
