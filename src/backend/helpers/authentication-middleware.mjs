@@ -12,6 +12,5 @@ export default function (req, res, next) {
   console.log('Hello from external middleware');
 
   if(req.isAuthenticated()) return next();
-
   res.send('Not logged in');
 }
