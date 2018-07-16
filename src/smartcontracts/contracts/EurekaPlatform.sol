@@ -56,8 +56,13 @@ contract EurekaPlatform is ERC677Receiver{
         ArticleVersionState versionState;
 
         address[] authors;
+        // the submission owner can weight the contributions of the different authors [0;10000]
+        //  ( e.g. 3 authors with 1/3 contribution each: {3334,3333,3333} )
+        uint8[] authorContributionRatio;
         // the hashes of the linked articles
         bytes32[] linkedArticles;
+        // the submission owner can weight the impact of the linked articles [0;10000]
+        uint8[] linkedArticlesSplitRatio;
 
         // the reviewers which are allowed to review that article as an editor approved Reviewer
         address[] allowedEditorApprovedReviewers;
