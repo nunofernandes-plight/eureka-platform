@@ -5,10 +5,35 @@ import "./Utils.sol";
 import "./Eureka.sol";
 
 
-contract EurekaPlatform is ERC677Receiver{
+contract EurekaPlatform is ERC677Receiver {
 
-    // contract fixed variables
-    uint256 submissionPrice;
+    /*
+    *   journal parameters
+    */
+
+    // amount of rewarded reviewers
+    uint minAmountOfEditorApprovedReviewer = 2;
+    uint maxAmountOfEditorApprovedReviewer = 3;
+
+    uint minAmountOfCommunityReviewer = 0;
+    uint maxAmountOfCommunityReviewer = 5;
+
+
+    // rewards amount
+    uint sciencemattersFoundation = 1252;               // rounded up that fee equals 5000
+    uint editorReward = 500;
+    uint linkedArticlesReward = 750;
+    uint invalidationWorkReward = 1000;
+    uint[] editorApprovedReviewerRewardPerReviewer;
+    uint[] communityReviewerRewardPerReviewer;
+    uint[] secondReviewerRewardPerReviewer;
+
+
+    // resulting submission fee
+    uint submissionFee;
+
+
+
 
     // primary key mappings
     mapping(uint256 => ArticleSubmission) articleSubmissions;
