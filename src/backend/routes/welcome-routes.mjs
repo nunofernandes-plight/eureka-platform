@@ -2,14 +2,24 @@
  * Testing routes
  */
 import express from 'express';
+import authenticationCheck from '../helpers/authentication-check'
 const router = express.Router();
 
 
 router.get(
   '/',
   function (req, res) {
-    res.send('Welcome to EUREKA!');
+    console.log(req.user);
+    console.log(req.isAuthenticated());
+    res.send('Welcome to EUREKA! REQ_USER: ' + req.user + ' AUTHENTICATED: ' + req.isAuthenticated());
   }
 );
+
+//Test the login through session
+router.use(authenticationCheck);
+router.get('/logged-in',
+  function (req, res) {
+    res.send('Welcome in the part for user logged in');
+  });
 
 export default router;

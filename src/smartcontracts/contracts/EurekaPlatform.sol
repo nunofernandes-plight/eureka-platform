@@ -5,10 +5,71 @@ import "./Utils.sol";
 import "./Eureka.sol";
 
 
-contract EurekaPlatform is ERC677Receiver{
+contract EurekaPlatform is ERC677Receiver {
 
-    // contract fixed variables
-    uint256 submissionPrice;
+    /*
+    *   journal parameters
+    */
+
+    // amount of rewarded reviewers
+    uint minAmountOfEditorApprovedReviewer = 2;
+    uint maxAmountOfEditorApprovedReviewer = 3;
+
+    uint minAmountOfCommunityReviewer = 0;
+    uint maxAmountOfCommunityReviewer = 5;
+
+
+    // rewards amount
+    uint sciencemattersFoundation = 1252;               // rounded up that fee equals 5000
+    uint editorReward = 500;
+    uint linkedArticlesReward = 750;
+    uint invalidationWorkReward = 1000;
+    uint[] editorApprovedReviewerRewardPerReviewer;
+    uint[] communityReviewerRewardPerReviewer;
+    uint[] secondReviewerRewardPerReviewer;
+
+
+    // resulting submission fee
+    uint submissionFee;
+
+
+    constructor() {
+
+        editorApprovedReviewerRewardPerReviewer.push(150);
+        editorApprovedReviewerRewardPerReviewer.push(75);
+        editorApprovedReviewerRewardPerReviewer.push(25);
+        editorApprovedReviewerRewardPerReviewer.push(25);
+
+        communityReviewerRewardPerReviewer.push(60);
+        communityReviewerRewardPerReviewer.push(30);
+        communityReviewerRewardPerReviewer.push(10);
+        communityReviewerRewardPerReviewer.push(10);
+
+        secondReviewerRewardPerReviewer.push(19);
+        secondReviewerRewardPerReviewer.push(9);
+        secondReviewerRewardPerReviewer.push(3);
+        secondReviewerRewardPerReviewer.push(3);
+
+        submissionFee =
+        sciencemattersFoundation
+        + editorReward
+        + linkedArticlesReward
+        + invalidationWorkReward
+        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[0]
+        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[1]
+        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[2]
+        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[3]
+        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[0]
+        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[1]
+        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[2]
+        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[3]
+        + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[0]
+        + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[1]
+        + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[2]
+        + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[3];
+
+    }
+
 
     // primary key mappings
     mapping(uint256 => ArticleSubmission) articleSubmissions;
@@ -56,19 +117,24 @@ contract EurekaPlatform is ERC677Receiver{
         ArticleVersionState versionState;
 
         address[] authors;
+        // the submission owner can weight the contributions of the different authors [0;10000]
+        //  ( e.g. 3 authors with 1/3 contribution each: {3334,3333,3333} )
+        uint8[] authorContributionRatio;
         // the hashes of the linked articles
         bytes32[] linkedArticles;
+        // the submission owner can weight the impact of the linked articles [0;10000]
+        uint8[] linkedArticlesSplitRatio;
 
-        // the reviewers which are allowed to review that article as an editor approved Reviewer
+        // the reviewers which are allowed to review that article as an editor approved reviewer
         address[] allowedEditorApprovedReviewers;
         // the reviewers which are approved from the editor
         // TODO how to check if Reviewer already saved a review -> with array for loop (expensive) maybe save additional mapping
-//        mapping(address => Review) editorApprovedReviews;
+        //        mapping(address => Review) editorApprovedReviews;
         Review[] editorApprovedReviews;
 
         // every community reviewer can add a community review without being approved
         // TODO how to check if Reviewer already saved a review -> with array for loop (expensive) maybe save additional mapping
-//        mapping(address => Review) communityReviews;
+        //        mapping(address => Review) communityReviews;
         Review[] communityReviews;
 
         // either save aggregated scores in article version or loop in GET method over review array
@@ -113,7 +179,7 @@ contract EurekaPlatform is ERC677Receiver{
             payloadSize := mload(_extraData)
             payload := mload(add(_extraData, 0x20))
         }
-        payload = payload >> 8*(32 - payloadSize);
+        payload = payload >> 8 * (32 - payloadSize);
         info[sender] = payload;
         return true;
     }

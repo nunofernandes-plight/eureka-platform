@@ -5,24 +5,27 @@ import userService from '../db/user-service';
 const router = express.Router();
 const __dirname = path.resolve();
 
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
   res.sendFile(path.join(__dirname + '/src/backend/view/register.html'));
 });
 
-router.post('/', async function(req, res) {
-  const newDBUser = await userService.createUser(
+router.post('/', async function (req, res) {
+  userService.createUser(
     req.body.username,
     req.body.password,
     req.body.email
-  );
+  ).then((newUserInDB) => {
 
-  // login user after creation
-  req.login(newDBUser._id, function(err) {
-    if (err) throw err;
-    console.log(req.user);
-    console.log(req.isAuthenticated());
-  });
-  res.send(newDBUser);
+    
+    req.login(newUserInDB._id, function (err) {
+        if (err) res.send('Login error: ' + err);
+        res.send(newUserInDB);
+      }
+    )
+  })
+    .catch((err) => {
+      res.send('Registration error: ' + err);
+    })
 });
 
 export default router;
