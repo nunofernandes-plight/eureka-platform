@@ -58,15 +58,12 @@ contract EurekaPlatform is ERC677Receiver {
         + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[0]
         + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[1]
         + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[2]
-        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[3]
         + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[0]
         + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[1]
         + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[2]
-        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[3]
         + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[0]
         + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[1]
-        + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[2]
-        + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[3];
+        + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[2];
 
     }
 
@@ -159,7 +156,6 @@ contract EurekaPlatform is ERC677Receiver {
         uint8 score1;
         uint8 score2;
     }
-
 
     function submitArticle(bytes32 articleHash, bytes32 articleURL, address[] authors, bytes32[] linkedArticles, address[] allowedEditorApprovedReviewers) public payable {
 
