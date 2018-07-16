@@ -1,6 +1,6 @@
 import mongoose from './mongoose-db';
 import db from './db';
-import authorSchema from '../schemas/author';
+import authorSchema from '../schema/author';
 
 const collectionName = 'authors';
 const Author = mongoose.model(collectionName, authorSchema, collectionName);

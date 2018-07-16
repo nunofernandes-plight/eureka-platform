@@ -1,6 +1,6 @@
 import mongoose from './mongoose-db';
 import db from './db';
-import reviewSchema from '../schemas/review.mjs';
+import reviewSchema from '../schema/review.mjs';
 
 const collectionName = 'reviews';
 const Review = mongoose.model(collectionName, reviewSchema, collectionName);

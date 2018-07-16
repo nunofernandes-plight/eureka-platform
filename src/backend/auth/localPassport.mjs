@@ -2,7 +2,7 @@ import passport from 'passport';
 import passportLocal from 'passport-local/lib/index';
 import hasher from '../helpers/bcrypt-hasher';
 import mongoose from '../db/mongoose-db';
-import userSchema from '../schemas/user';
+import userSchema from '../schema/user';
 
 const LocalStrategy = passportLocal.Strategy;
 const User = mongoose.model('users', userSchema, 'users');
