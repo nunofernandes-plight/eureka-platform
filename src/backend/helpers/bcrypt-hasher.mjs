@@ -10,7 +10,6 @@ const saltRounds = 10;
 
 export default {
   hash: (password) => {
-    console.log('Hash-PW: ' + password);
     return bcrypt.hash(password, saltRounds).then(function (hash) {
       return hash;
     });
