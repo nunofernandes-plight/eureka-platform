@@ -1,8 +1,8 @@
 import passport from 'passport';
 import passportLocal from 'passport-local/lib/index';
-import hasher from '../helpers/bcrypt-hasher';
-import mongoose from '../db/mongoose';
-import userSchema from '../schemas/user';
+import bcryptHasher from './bcrypt-hasher';
+import mongoose from '../db/mongoose-db';
+import userSchema from '../schema/user';
 
 const LocalStrategy = passportLocal.Strategy;
 const User = mongoose.model('users', userSchema, 'users');
@@ -10,7 +10,7 @@ const User = mongoose.model('users', userSchema, 'users');
 passport.use(
   new LocalStrategy(async function(username, password, done) {
     const dbUser = await User.findOne({username: username});
-    const isCorrectHash = await hasher.compare(password, dbUser.password);
+    const isCorrectHash = await bcryptHasher.compare(password, dbUser.password);
 
     User.findOne(
       {
@@ -41,8 +41,8 @@ passport.use(
 /**
  *  Configure Passport authenticated session persistence.
  */
-passport.serializeUser(function(user_id, done) {
-  done(null, user_id);
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
 });
 
 passport.deserializeUser(function(user_id, done) {

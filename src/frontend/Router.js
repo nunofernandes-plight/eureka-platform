@@ -6,7 +6,6 @@ import Header from './webpack/Header';
 import Login from './webpack/login/Login';
 import MetaMaskGuide from './webpack/MetaMaskGuide';
 
-
 class Router extends Component {
   constructor() {
     super();
@@ -16,7 +15,7 @@ class Router extends Component {
   render() {
     return (
       <div>
-        <Header />
+        <Header provider={this.props.provider} />
         <div style={{paddingTop: 100}}>
           <BrowserRouter>
             <Switch>

@@ -2,8 +2,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import session from 'express-session';
-import passport from '../auth/localPassport';
-
+import passport from '../helpers/local-passport';
+import mongooseDB from '../db/mongoose-db';
+import connectMongo from 'connect-mongo';
 
 import router from '../routes/index.mjs';
 
@@ -13,11 +14,16 @@ dotenv.config();
 const app = express();
 
 /** Session Setup **/
+const MongoStore = connectMongo(session);
 app.use(
   session({
     secret: 'eureka secret snippet', //TODO change to random generated string?
     resave: false,
-    saveUninitialized: false,
+    //stores session into DB
+    store: new MongoStore({
+      mongooseConnection: mongooseDB.connection
+    }),
+    saveUninitialized: true,
     name: 'eureka.sid'
     //cookie: { secure: true }
   })
@@ -26,17 +32,18 @@ app.use(
 /** Passport setup **/
 app.use(passport.initialize());
 
-passport.serializeUser(function(_id, done) {
-  done(null, _id);
-});
+//already in /helpers/local-passport
+// passport.serializeUser(function (_id, done) {
+//   done(null, _id);
+// });
+//
+// passport.deserializeUser(function (_id, done) {
+//   User.findById(_id, function (err, user) {
+//     done(err, user);
+//   });
+// });
 
-passport.deserializeUser(function(_id, done) {
-  User.findById(_id, function (err, user) {
-    done(err, user);
-  });
-});
 app.use(passport.session());
-
 
 /** Parser **/
 //Parses the text as URL encoded data
@@ -47,7 +54,6 @@ app.use(
 );
 //Parses the text as JSON and exposes the resulting object on req.body.
 app.use(bodyParser.json());
-
 
 app.use('/api', router);
 export default app;
