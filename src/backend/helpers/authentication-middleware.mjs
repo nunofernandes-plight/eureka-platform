@@ -1,16 +1,7 @@
-
-// let authenticationMiddleware = function (req, res, next) {
-//     console.log(`req.session.passport.user: ${JSON.stringify(req.session.passport)}`);
-//
-//     if (req.isAuthenticated()) return next();
-//     res.redirect('api/login')
-// };
-
-//export default authenticationMiddleware();
-
 export default function (req, res, next) {
-  console.log('Hello from external middleware');
-
   if(req.isAuthenticated()) return next();
+
+  //not logged in
+  res.status(401);
   res.send('Not logged in');
 }
