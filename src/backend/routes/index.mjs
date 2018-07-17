@@ -6,6 +6,7 @@ import signupRoutes from './register-routes.mjs';
 import loginRoutes from './login-routes';
 import logoutRoutes from './logout-routes';
 import registerRoutes from './register-routes';
+import rolesRoutes from './roles-routes';
 
 const router = express.Router();
 
@@ -17,5 +18,6 @@ router.use('/signup', signupRoutes);
 router.use('/login', loginRoutes);
 router.use('/logout', logoutRoutes);
 router.use('/register', registerRoutes);
+router.use('/roles', rolesRoutes);
 
 export default router;

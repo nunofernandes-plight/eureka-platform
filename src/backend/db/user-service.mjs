@@ -31,5 +31,9 @@ export default {
         throw err;
       }
     );
-  }
+  },
+
+  // addRole: async (user_id) => {
+  //
+  // }
 };
