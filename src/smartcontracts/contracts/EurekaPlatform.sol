@@ -27,7 +27,7 @@ contract EurekaPlatform is ERC677Receiver {
     // rewards for the reviews saved in arrays, specifiable reward for every round.
     // if rounds not needes, returned back to author
     // if max reviewer amount is not reached, not used rewards is returned to author
-    uint maxReviewRounds = 3;
+    uint constant maxReviewRounds  = 3;
     uint[maxReviewRounds] editorApprovedReviewerRewardPerReviewer;
     uint[maxReviewRounds] communityReviewerRewardPerReviewer;
     uint[maxReviewRounds] secondReviewerRewardPerReviewer;
@@ -38,17 +38,17 @@ contract EurekaPlatform is ERC677Receiver {
 
     constructor() {
 
-        editorApprovedReviewerRewardPerReviewer.push(150);
-        editorApprovedReviewerRewardPerReviewer.push(75);
-        editorApprovedReviewerRewardPerReviewer.push(25);
+        editorApprovedReviewerRewardPerReviewer[0] = 150;
+        editorApprovedReviewerRewardPerReviewer[1] = 75;
+        editorApprovedReviewerRewardPerReviewer[2] = 25;
 
-        communityReviewerRewardPerReviewer.push(60);
-        communityReviewerRewardPerReviewer.push(30);
-        communityReviewerRewardPerReviewer.push(10);
+        communityReviewerRewardPerReviewer[0] = 60;
+        communityReviewerRewardPerReviewer[1] = 30;
+        communityReviewerRewardPerReviewer[2] = 10;
 
-        secondReviewerRewardPerReviewer.push(30);
-        secondReviewerRewardPerReviewer.push(15);
-        secondReviewerRewardPerReviewer.push(5);
+        secondReviewerRewardPerReviewer[0] = 30;
+        secondReviewerRewardPerReviewer[1] = 15;
+        secondReviewerRewardPerReviewer[2] = 5;
 
         submissionFee =
         sciencemattersFoundationReward
@@ -159,28 +159,121 @@ contract EurekaPlatform is ERC677Receiver {
         uint8 score2;
     }
 
-    function submitArticle(bytes32 articleHash, bytes32 articleURL, address[] authors, bytes32[] linkedArticles, address[] allowedEditorApprovedReviewers) public payable {
+    function submitArticle(bytes32 articleHash, bytes32 articleURL, address submissionOwner, address[] authors, bytes32[] linkedArticles) private  {
+
+
 
     }
 
     /**
-     * @title Receiver interface for ERC677 transferAndCall
+     *  Receiver interface for ERC677 transferAndCall
      * @dev See https://github.com/ethereum/EIPs/issues/677 for specification and
      *      discussion.
      */
-    function tokenFallback(address _sender, uint256 _value, bytes _extraData) returns (bool) {
+    function tokenFallback(address _from, uint256 _amount, bytes _data) {
         require(msg.sender == Eureka);
-        require(_value == submissionPrice);
-        uint256 payloadSize;
-        uint256 payload;
-        assembly {
-            payloadSize := mload(_extraData)
-            payload := mload(add(_extraData, 0x20))
+        require(_amount == submissionFee);
+
+        //TODO parse submitInformation from _data
+        bytes32 articleHash;
+        bytes32 articleURL;
+        uint16 authorsLength;
+        address[] authors;
+        uint16 linkedArticlesLength;
+        bytes32[] linkedArticles;
+
+        uint dataIndex=0;
+        for (uint i=0; i < articleHash.length; i++) {
+            articleHash[i] = _data[dataIndex];
+            dataIndex++;
         }
-        payload = payload >> 8 * (32 - payloadSize);
-        info[sender] = payload;
-        return true;
+        for (i=0; i < articleURL.length; i++) {
+            articleURL[i] = _data[dataIndex];
+            dataIndex++;
+        }
+        for (i=0; i < 2; i++) {
+            uint16 temp = uint16(_data[dataIndex]);
+            dataIndex++;
+            temp<<=8*i;
+            authorsLength = authorsLength ^ temp;
+        }
+//        for (uint j = 0; j < authorsLength; j++) {
+//            for (i=0; i < 20; i++) {                    // address is 20 bytes
+//                address temp = address(_data[dataIndex]);
+//                dataIndex++;
+//                temp<<=8*i;
+//                authorsLength^=temp;
+//            }
+//        }
+//        for (i=0; i < 2; i++) {
+//            uint16 temp = uint16(_data[dataIndex]);
+//            dataIndex++;
+//            temp<<=8*i;
+//            linkedArticlesLength = linkedArticlesLength ^ temp;
+//        }
+//        for (uint j = 0; j < linkedArticlesLength; j++) {
+//
+//        }
+
+
+
+
+        submitArticle(articleHash, articleURL, _from, authors, linkedArticles);
+
+//        uint256 payloadSize;
+//        uint256 payload;
+//        assembly {
+//            payloadSize := mload(_data)
+//            payload := mload(add(_data, 0x20))
+//        }
+//        payload = payload >> 8 * (32 - payloadSize);
+//
+//
+//        info[_from] = payload;
     }
 
+//    function exactUserStructToBytes(ExactUserStruct u) private
+//    returns (bytes data)
+//    {
+//        // _size = "sizeof" all data connected together
+//        uint _size = 4 + bytes(u.name).length;
+//        bytes memory _data = new bytes(_size);
+//
+//        uint counter = 0;
+//        for (uint i = 0; i < 4; i++)
+//        {
+//            _data[counter] = byte(u.id >> (8 * i) & uint32(255));
+//            counter++;
+//        }
+//
+//        for (i = 0; i < bytes(u.name).length; i++)
+//        {
+//            _data[counter] = bytes(u.name)[i];
+//            counter++;
+//        }
+//
+//        return (_data);
+//    }
+//
+//
+//    function submissionDataFromBytes(bytes data) private
+//    returns (ExactUserStruct u)
+//    {
+//        for (uint i = 0; i < 4; i++)
+//        {
+//            uint32 temp = uint32(data[i]);
+//            temp <<= 8 * i;
+//            u.id ^= temp;
+//        }
+//
+//        bytes memory str = new bytes(data.length - 4);
+//
+//        for (i = 0; i < data.length - 4; i++)
+//        {
+//            str[i] = data[i + 4];
+//        }
+//
+//        u.name = string(str);
+//    }
 
 }
