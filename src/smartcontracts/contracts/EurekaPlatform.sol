@@ -7,6 +7,8 @@ import "./Eureka.sol";
 
 contract EurekaPlatform is ERC677Receiver {
 
+    using SafeMath for uint256;
+
     /*
     *   journal parameters
     */
@@ -27,7 +29,7 @@ contract EurekaPlatform is ERC677Receiver {
     // rewards for the reviews saved in arrays, specifiable reward for every round.
     // if rounds not needes, returned back to author
     // if max reviewer amount is not reached, not used rewards is returned to author
-    uint constant maxReviewRounds  = 3;
+    uint constant maxReviewRounds = 3;
     uint[maxReviewRounds] editorApprovedReviewerRewardPerReviewer;
     uint[maxReviewRounds] communityReviewerRewardPerReviewer;
     uint[maxReviewRounds] secondReviewerRewardPerReviewer;
@@ -80,8 +82,6 @@ contract EurekaPlatform is ERC677Receiver {
     mapping(address => ArticleSubmission[]) articleSubmissionsByEditor;
     mapping(address => Review[]) reviewsByReviewer;
 
-
-    using SafeMath for uint256;
 
     enum SubmissionState {
         NOT_EXISTING,
@@ -159,22 +159,15 @@ contract EurekaPlatform is ERC677Receiver {
         uint8 score2;
     }
 
-    function submitArticle(bytes32 articleHash, bytes32 articleURL, address submissionOwner, address[] authors, bytes32[] linkedArticles) private  {
-
-
-
-    }
-
     /**
      *  Receiver interface for ERC677 transferAndCall
      * @dev See https://github.com/ethereum/EIPs/issues/677 for specification and
      *      discussion.
      */
     function tokenFallback(address _from, uint256 _amount, bytes _data) {
-        require(msg.sender == Eureka);
+        //require(msg.sender == Eureka);                                        ??????
         require(_amount == submissionFee);
 
-        //TODO parse submitInformation from _data
         bytes32 articleHash;
         bytes32 articleURL;
         uint16 authorsLength;
@@ -182,98 +175,69 @@ contract EurekaPlatform is ERC677Receiver {
         uint16 linkedArticlesLength;
         bytes32[] linkedArticles;
 
-        uint dataIndex=0;
-        for (uint i=0; i < articleHash.length; i++) {
-            articleHash[i] = _data[dataIndex];
-            dataIndex++;
+        uint dataIndex = 0;
+        // bytes to bytes32
+        for (uint i = 0; i < 32; i++) {
+            articleHash = articleHash | (bytes32(_data[dataIndex++]) >> (i * 8));
         }
-        for (i=0; i < articleURL.length; i++) {
-            articleURL[i] = _data[dataIndex];
-            dataIndex++;
+        for (i = 0; i < 32; i++) {
+            articleURL = articleURL | (bytes32(_data[dataIndex++]) >> (i * 8));
         }
-        for (i=0; i < 2; i++) {
-            uint16 temp = uint16(_data[dataIndex]);
-            dataIndex++;
-            temp<<=8*i;
-            authorsLength = authorsLength ^ temp;
+
+        // bytes to uint
+        for (i = 0; i < 2; i++) {
+            authorsLength = authorsLength | (uint16(_data[dataIndex++]) >> (i * 8));
         }
-//        for (uint j = 0; j < authorsLength; j++) {
-//            for (i=0; i < 20; i++) {                    // address is 20 bytes
-//                address temp = address(_data[dataIndex]);
-//                dataIndex++;
-//                temp<<=8*i;
-//                authorsLength^=temp;
-//            }
-//        }
-//        for (i=0; i < 2; i++) {
-//            uint16 temp = uint16(_data[dataIndex]);
-//            dataIndex++;
-//            temp<<=8*i;
-//            linkedArticlesLength = linkedArticlesLength ^ temp;
-//        }
-//        for (uint j = 0; j < linkedArticlesLength; j++) {
-//
-//        }
+        // bytes to address
+        for (uint j = 0; j < authorsLength; j++) {
+            // copied from https://github.com/oraclize/ethereum-api/blob/master/oraclizeAPI_0.5.sol
+            uint160 iaddr = 0;
+            uint160 b1;
+            uint160 b2;
+            for (i = 2; i < 2 + 2 * 20; i += 2) {
+                iaddr *= 256;
+                b1 = uint160(_data[dataIndex]);
+                b2 = uint160(_data[dataIndex + 1]);
+                dataIndex++;
 
+                if ((b1 >= 97) && (b1 <= 102)) b1 -= 87;
+                else if ((b1 >= 65) && (b1 <= 70)) b1 -= 55;
+                else if ((b1 >= 48) && (b1 <= 57)) b1 -= 48;
+                if ((b2 >= 97) && (b2 <= 102)) b2 -= 87;
+                else if ((b2 >= 65) && (b2 <= 70)) b2 -= 55;
+                else if ((b2 >= 48) && (b2 <= 57)) b2 -= 48;
+                iaddr += (b1 * 16 + b2);
+            }
+            authors.push(address(iaddr));
+        }
 
+        // bytes to uint
+        for (i = 0; i < 2; i++) {
+            linkedArticlesLength = linkedArticlesLength | (uint16(_data[dataIndex++]) >> (i * 8));
+        }
+        // bytes to array
+        for (j = 0; j < linkedArticlesLength; j++) {
+            // bytes to bytes32
+            bytes32 article;
+            for (i = 0; i < 32; i++) {
+                article = article | (bytes32(_data[dataIndex++]) >> (i * 8));
+            }
+            linkedArticles.push(article);
+        }
 
+        createArticleSubmission(_from);
+        createArticleVersion(articleHash, articleURL, authors, linkedArticles);
 
-        submitArticle(articleHash, articleURL, _from, authors, linkedArticles);
-
-//        uint256 payloadSize;
-//        uint256 payload;
-//        assembly {
-//            payloadSize := mload(_data)
-//            payload := mload(add(_data, 0x20))
-//        }
-//        payload = payload >> 8 * (32 - payloadSize);
-//
-//
-//        info[_from] = payload;
     }
 
-//    function exactUserStructToBytes(ExactUserStruct u) private
-//    returns (bytes data)
-//    {
-//        // _size = "sizeof" all data connected together
-//        uint _size = 4 + bytes(u.name).length;
-//        bytes memory _data = new bytes(_size);
-//
-//        uint counter = 0;
-//        for (uint i = 0; i < 4; i++)
-//        {
-//            _data[counter] = byte(u.id >> (8 * i) & uint32(255));
-//            counter++;
-//        }
-//
-//        for (i = 0; i < bytes(u.name).length; i++)
-//        {
-//            _data[counter] = bytes(u.name)[i];
-//            counter++;
-//        }
-//
-//        return (_data);
-//    }
-//
-//
-//    function submissionDataFromBytes(bytes data) private
-//    returns (ExactUserStruct u)
-//    {
-//        for (uint i = 0; i < 4; i++)
-//        {
-//            uint32 temp = uint32(data[i]);
-//            temp <<= 8 * i;
-//            u.id ^= temp;
-//        }
-//
-//        bytes memory str = new bytes(data.length - 4);
-//
-//        for (i = 0; i < data.length - 4; i++)
-//        {
-//            str[i] = data[i + 4];
-//        }
-//
-//        u.name = string(str);
-//    }
 
+    function createArticleSubmission(address submissionOwner) private {
+
+
+    }
+
+    function createArticleVersion(bytes32 articleHash, bytes32 articleURL , address[] authors, bytes32[] linkedArticles) private {
+
+
+    }
 }
