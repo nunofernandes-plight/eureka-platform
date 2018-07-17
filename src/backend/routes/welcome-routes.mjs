@@ -2,7 +2,7 @@
  * Testing routes
  */
 import express from 'express';
-import authenticationCheck from '../helpers/authentication-check';
+import authenticationCheck from '../helpers/authorization-check';
 const router = express.Router();
 
 router.get('/', function(req, res) {
@@ -17,7 +17,7 @@ router.get('/', function(req, res) {
 });
 
 //Test the login through session
-router.use(authenticationCheck);
+//router.use(authenticationCheck.adminOnly);
 router.get('/logged-in', function(req, res) {
   res.send('Welcome in the part for user logged in');
 });

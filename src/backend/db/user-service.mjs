@@ -2,19 +2,29 @@ import mongoose from 'mongoose';
 import db from './db';
 import bcryptHasher from '../helpers/bcrypt-hasher';
 import userSchema from '../schema/user';
-import roleSchema from '../schema/role';
+import Roles from '../schema/roles-enum';
 
 const COLLECTION = 'users';
 const User = mongoose.model('User', userSchema);
-const Role = mongoose.model('Role', roleSchema);
 
 export default {
+  /**
+   * get all existing users from the DB
+   * @returns {*}
+   */
   getAllUsers: () => {
     return db
       .collection(COLLECTION)
       .find()
       .toArray();
   },
+  /**
+   * create a new user in the DB
+   * @param username
+   * @param password
+   * @param email
+   * @returns {Promise<Model>}
+   */
   createUser: async (username, password, email) => {
     const hashedPassword = await bcryptHasher.hash(password);
 
@@ -35,26 +45,30 @@ export default {
     );
   },
 
+  /**
+   * add the role to the given user
+   * @param user_id
+   * @param role
+   * @returns {Promise<*>}
+   */
+
+
   addRole: async (user_id, role) => {
+    if (Roles.hasOwnProperty(role)) {
+      console.log('Roles ID works ' + role);
+      User.findByIdAndUpdate(
+        user_id,
+        {'$addToSet': {
+          roles: role
+          }},
+        function (err, user) {
+          if(err) throw err;
 
-    const newRole = new Role({
-      value: role
-    });
+          return user;
+        })
 
-    const validationError = newRole.validateSync();
-    if(validationError) {
-      throw validationError;
+    } else {
+      throw new Error('No matching role!')
     }
-
-    // add to set if not there yet
-    return User.findByIdAndUpdate( user_id ,
-      {'$addToSet': {
-        'roles': newRole
-        }},
-      function (err, user) {
-        if(err) return err;
-        return user;
-      }
-      );
   }
 };
