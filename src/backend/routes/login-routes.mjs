@@ -1,14 +1,20 @@
 import express from 'express';
-const router = express.Router();
 import path from 'path';
+import passport from '../helpers/local-passport';
+
+const router = express.Router();
 const __dirname = path.resolve();
 
 router.get('/', function(req, res) {
   res.sendFile(path.join(__dirname + '/src/backend/view/login.html'));
 });
 
-// router.post('/', async function(req, res) {
-//
-// });
+router.post(
+  '/',
+  passport.authenticate('local', {
+    successRedirect: '/api/welcome/logged-in',
+    failureRedirect: '/api/welcome/logged-in'
+  })
+);
 
 export default router;

@@ -22,14 +22,14 @@ export default {
       email: email
     });
 
-
     return newUser.save().then(
       function() {
         return newUser;
-      }, function (err) {
+      },
+      function(err) {
         console.log('Error :' + err);
         throw err;
       }
-    )
+    );
   }
-}
+};

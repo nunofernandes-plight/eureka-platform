@@ -2,10 +2,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import session from 'express-session';
-import passport from '../auth/localPassport';
+import passport from '../helpers/local-passport';
 import mongooseDB from '../db/mongoose-db';
 import connectMongo from 'connect-mongo';
-
 
 import router from '../routes/index.mjs';
 
@@ -32,19 +31,7 @@ app.use(
 
 /** Passport setup **/
 app.use(passport.initialize());
-
-passport.serializeUser(function (_id, done) {
-  done(null, _id);
-});
-
-passport.deserializeUser(function (_id, done) {
-  User.findById(_id, function (err, user) {
-    done(err, user);
-  });
-});
-
 app.use(passport.session());
-
 
 /** Parser **/
 //Parses the text as URL encoded data
@@ -53,9 +40,15 @@ app.use(
     extended: true
   })
 );
+
+//set global variable isAuthenticated -> call ir everywhere dynamically
+app.use(function (req, res, next) {
+  res.locals.isAuthenticated = req.isAuthenticated();
+  next()
+});
+
 //Parses the text as JSON and exposes the resulting object on req.body.
 app.use(bodyParser.json());
-
 
 app.use('/api', router);
 export default app;

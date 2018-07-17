@@ -5733,11 +5733,11 @@ mongojs@2.4.0:
 
 mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"
-  resolved "https://registry.yarnpkg.com/mongooseDB-legacy-pluralize/-/mongooseDB-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
+  resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
 
 mongoose@^5.2.2:
   version "5.2.3"
-  resolved "https://registry.yarnpkg.com/mongooseDB/-/mongooseDB-5.2.3.tgz#667b92c394a6aa81c3c9f2f45f3a8f28cea28e9c"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.2.3.tgz#667b92c394a6aa81c3c9f2f45f3a8f28cea28e9c"
   dependencies:
     async "2.6.1"
     bson "~1.0.5"
@@ -5745,7 +5745,7 @@ mongoose@^5.2.2:
     lodash.get "4.4.2"
     mongodb "3.1.1"
     mongodb-core "3.1.0"
-    mongooseDB-legacy-pluralize "1.0.2"
+    mongoose-legacy-pluralize "1.0.2"
     mpath "0.4.1"
     mquery "3.0.0"
     ms "2.0.0"

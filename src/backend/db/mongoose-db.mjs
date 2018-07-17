@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import isProduction from "../../helpers/isProduction";
-import dotenv from "dotenv";
+import isProduction from '../../helpers/isProduction';
+import dotenv from 'dotenv';
 
 if (!isProduction()) {
   dotenv.config();
