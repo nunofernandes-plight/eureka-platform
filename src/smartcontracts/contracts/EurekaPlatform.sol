@@ -38,7 +38,7 @@ contract EurekaPlatform is ERC677Receiver {
     uint submissionFee;
 
 
-    constructor() {
+    constructor() public {
 
         editorApprovedReviewerRewardPerReviewer[0] = 150;
         editorApprovedReviewerRewardPerReviewer[1] = 75;
@@ -73,7 +73,7 @@ contract EurekaPlatform is ERC677Receiver {
     // primary key mappings
     uint256 submissionCounter;
     mapping(uint256 => ArticleSubmission) articleSubmissions;
-    mapping(bytes32 => ArticleVersion) articlesVersions;
+    mapping(bytes32 => ArticleVersion) articleVersions;
     uint256 reviewCounter;
     mapping(uint256 => Review) reviews;
 
@@ -164,80 +164,102 @@ contract EurekaPlatform is ERC677Receiver {
      * @dev See https://github.com/ethereum/EIPs/issues/677 for specification and
      *      discussion.
      */
-    function tokenFallback(address _from, uint256 _amount, bytes _data) {
+    function tokenFallback(address _from, uint256 _amount, bytes _data) public {
         //require(msg.sender == Eureka);                                        ??????
         require(_amount == submissionFee);
 
-        bytes32 articleHash;
-        bytes32 articleURL;
-        uint16 authorsLength;
-        address[] authors;
-        uint16 linkedArticlesLength;
-        bytes32[] linkedArticles;
-
         uint dataIndex = 0;
-        // bytes to bytes32
-        for (uint i = 0; i < 32; i++) {
-            articleHash = articleHash | (bytes32(_data[dataIndex++]) >> (i * 8));
-        }
-        for (i = 0; i < 32; i++) {
-            articleURL = articleURL | (bytes32(_data[dataIndex++]) >> (i * 8));
-        }
 
-        // bytes to uint
-        for (i = 0; i < 2; i++) {
-            authorsLength = authorsLength | (uint16(_data[dataIndex++]) >> (i * 8));
-        }
-        // bytes to address
+        bytes32 articleHash = bytesToBytes32(_data, dataIndex);
+        dataIndex += 32;
+
+        bytes32 articleURL = bytesToBytes32(_data, dataIndex);
+        dataIndex += 32;
+
+        uint16 authorsLength = bytesToUint16(_data, dataIndex);
+        dataIndex += 2;
+        address[] authors;
         for (uint j = 0; j < authorsLength; j++) {
-            // copied from https://github.com/oraclize/ethereum-api/blob/master/oraclizeAPI_0.5.sol
-            uint160 iaddr = 0;
-            uint160 b1;
-            uint160 b2;
-            for (i = 2; i < 2 + 2 * 20; i += 2) {
-                iaddr *= 256;
-                b1 = uint160(_data[dataIndex]);
-                b2 = uint160(_data[dataIndex + 1]);
-                dataIndex++;
-
-                if ((b1 >= 97) && (b1 <= 102)) b1 -= 87;
-                else if ((b1 >= 65) && (b1 <= 70)) b1 -= 55;
-                else if ((b1 >= 48) && (b1 <= 57)) b1 -= 48;
-                if ((b2 >= 97) && (b2 <= 102)) b2 -= 87;
-                else if ((b2 >= 65) && (b2 <= 70)) b2 -= 55;
-                else if ((b2 >= 48) && (b2 <= 57)) b2 -= 48;
-                iaddr += (b1 * 16 + b2);
-            }
-            authors.push(address(iaddr));
+            authors.push(bytesToAddress(_data, dataIndex));
+            dataIndex += 20;
+            //address is 20 bytes
         }
 
-        // bytes to uint
-        for (i = 0; i < 2; i++) {
-            linkedArticlesLength = linkedArticlesLength | (uint16(_data[dataIndex++]) >> (i * 8));
-        }
-        // bytes to array
+        uint16 linkedArticlesLength = bytesToUint16(_data, dataIndex);
+        dataIndex += 2;
+        bytes32[] linkedArticles;
         for (j = 0; j < linkedArticlesLength; j++) {
-            // bytes to bytes32
-            bytes32 article;
-            for (i = 0; i < 32; i++) {
-                article = article | (bytes32(_data[dataIndex++]) >> (i * 8));
-            }
-            linkedArticles.push(article);
+            linkedArticles.push(bytesToBytes32(_data, dataIndex));
+            dataIndex += 32;
         }
 
-        createArticleSubmission(_from);
-        createArticleVersion(articleHash, articleURL, authors, linkedArticles);
+        startSubmissionProcess(_from, articleHash, articleURL, authors, linkedArticles);
 
     }
 
-
-    function createArticleSubmission(address submissionOwner) private {
-
-
+    function bytesToBytes32(bytes _data, uint _dataIndex) pure private returns (bytes32 result){
+        for (uint i = 0; i < 32; i++) {
+            result = result | (bytes32(_data[_dataIndex++]) >> (i * 8));
+        }
     }
 
-    function createArticleVersion(bytes32 articleHash, bytes32 articleURL , address[] authors, bytes32[] linkedArticles) private {
+    function bytesToUint16(bytes _data, uint _dataIndex) pure private returns (uint16 result){
+        for (uint i = 0; i < 2; i++) {
+            result = result | (uint16(_data[_dataIndex++]) >> (i * 8));
+        }
+    }
 
+    // copied from https://github.com/oraclize/ethereum-api/blob/master/oraclizeAPI_0.5.sol
+    function bytesToAddress(bytes _data, uint _dataIndex) pure private returns (address result){
+        uint160 iaddr = 0;
+        uint160 b1;
+        uint160 b2;
+        for (uint i = 2; i < 2 + 2 * 20; i += 2) {
+            iaddr *= 256;
+            b1 = uint160(_data[_dataIndex]);
+            b2 = uint160(_data[_dataIndex + 1]);
+            _dataIndex++;
+
+            if ((b1 >= 97) && (b1 <= 102)) b1 -= 87;
+            else if ((b1 >= 65) && (b1 <= 70)) b1 -= 55;
+            else if ((b1 >= 48) && (b1 <= 57)) b1 -= 48;
+            if ((b2 >= 97) && (b2 <= 102)) b2 -= 87;
+            else if ((b2 >= 65) && (b2 <= 70)) b2 -= 55;
+            else if ((b2 >= 48) && (b2 <= 57)) b2 -= 48;
+            iaddr += (b1 * 16 + b2);
+        }
+        result = address(iaddr);
+    }
+
+    function startSubmissionProcess(address _from, bytes32 articleHash, bytes32 articleURL, address[] authors, bytes32[] linkedArticles) private {
+
+        uint submissionId = submissionCounter++;
+        ArticleSubmission storage submission = articleSubmissions[submissionId];
+
+        submission.submissionId = submissionId;
+        submission.submissionOwner = _from;
+
+        submitArticleVersion(submissionId, articleHash, articleURL, authors, linkedArticles);
+
+        submission.submissionState = SubmissionState.OPEN;
+    }
+
+    function submitArticleVersion(uint256 submissionId, bytes32 articleHash, bytes32 articleURL, address[] authors, bytes32[] linkedArticles) private {
+
+        ArticleVersion storage version = articleVersions[articleHash];
+
+        version.submissionId = submissionId;
+        version.articleHash = articleHash;
+        version.articleUrl = articleURL;
+        version.publishedTimestamp = block.timestamp;
+
+        version.authors = authors;
+        // TODO: parse version.authorContributionRatio = authorContributionRatio;
+        version.linkedArticles = linkedArticles;
+        // TODO: parse version.linkedArticlesSplitRatio = linkedArticlesSplitRatio;
+
+        articleSubmissions[submissionId].versions.push(version);
+        version.versionState = ArticleVersionState.SUBMITTED;
 
     }
 }
