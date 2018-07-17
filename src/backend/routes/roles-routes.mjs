@@ -3,6 +3,7 @@ import {asyncHandler} from '../api/requestHandler.mjs';
 
 const router = express.Router();
 import reviewService from '../db/review-service';
+import userService from '../db/user-service';
 
 router.get(
   '/',
@@ -14,7 +15,7 @@ router.get(
 router.post(
   '/',
   asyncHandler(async req => {
-    //return reviewService.createReview(req.body);
+    return userService.addRole(req.body.user_id, req.body.role);
   })
 );
 
