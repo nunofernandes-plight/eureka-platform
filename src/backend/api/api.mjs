@@ -2,9 +2,11 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import session from 'express-session';
+import connectMongo from 'connect-mongo';
+
 import passport from '../helpers/local-passport';
 import mongooseDB from '../db/mongoose-db';
-import connectMongo from 'connect-mongo';
+
 
 import router from '../routes/index.mjs';
 
@@ -17,7 +19,8 @@ const app = express();
 const MongoStore = connectMongo(session);
 app.use(
   session({
-    secret: 'eureka secret snippet', //TODO change to random generated string?
+    secret: 'eureka secret snippet', //TODO change to env variable
+    //secret: process.env.DB_USER,
     resave: false,
     //stores session into DB
     store: new MongoStore({
@@ -46,6 +49,12 @@ app.use(function (req, res, next) {
   res.locals.isAuthenticated = req.isAuthenticated();
   next()
 });
+
+/** Access Control list **/
+// //TODO implement the starting list
+// let acl = new Acl(new Acl.mongodbBackend(db, 'sessions'));
+//
+// acl.allow('guest', 'login', ['edit', 'view', 'delete']);
 
 //Parses the text as JSON and exposes the resulting object on req.body.
 app.use(bodyParser.json());
