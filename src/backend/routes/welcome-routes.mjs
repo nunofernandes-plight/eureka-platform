@@ -17,7 +17,7 @@ router.get('/', function(req, res) {
 });
 
 //Test the login through session
-//router.use(authenticationCheck.adminOnly);
+router.use(authenticationCheck.adminOnly);
 router.get('/logged-in', function(req, res) {
   res.send('Welcome in the part for user logged in');
 });

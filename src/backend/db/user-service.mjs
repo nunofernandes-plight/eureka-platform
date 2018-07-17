@@ -46,23 +46,24 @@ export default {
   },
 
   /**
-   * add the role to the given user
+   * Add the role to the given user
+   * if the role matches a roles-enum
    * @param user_id
    * @param role
-   * @returns {Promise<*>}
+   * @returns {Promise<void>}
    */
-
-
   addRole: async (user_id, role) => {
     if (Roles.hasOwnProperty(role)) {
       console.log('Roles ID works ' + role);
       User.findByIdAndUpdate(
         user_id,
-        {'$addToSet': {
-          roles: role
-          }},
+        {
+          '$addToSet': {
+            roles: role
+          }
+        },
         function (err, user) {
-          if(err) throw err;
+          if (err) throw err;
 
           return user;
         })

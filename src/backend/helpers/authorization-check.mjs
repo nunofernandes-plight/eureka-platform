@@ -1,9 +1,9 @@
 import userSchema from '../schema/user';
-import roleSchema from '../schema/roles-enum';
+import Roles from '../schema/roles-enum';
 import mongoose from 'mongoose';
 
 const User = mongoose.model('User', userSchema);
-//const Role = mongoose.model('Role', roleSchema);
+
 
 //const adminRole = new Role({value: 'ADMIN' });
 
@@ -23,4 +23,20 @@ export default {
     res.status(401);
     res.send('Not logged in');
   },
+  adminOnly: (req, res, next) => {
+    console.log(req.user);
+    User.findById(req.user)
+      .exec()
+      .then( user => {
+        if(user.roles.indexOf(Roles.ADMIN) >= 0) next();
+
+       res.status(403).json({
+         error: 'Not authorized - not an admin'
+       });
+      })
+      .catch( err => {
+        throw err;
+      })
+
+  }
 }
