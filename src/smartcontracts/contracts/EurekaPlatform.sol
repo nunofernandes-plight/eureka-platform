@@ -18,16 +18,19 @@ contract EurekaPlatform is ERC677Receiver {
     uint minAmountOfCommunityReviewer = 0;
     uint maxAmountOfCommunityReviewer = 5;
 
-
     // rewards amount
-    uint sciencemattersFoundation = 1252;               // rounded up that fee equals 5000
+    uint sciencemattersFoundationReward = 1252;               // rounded up that fee equals 5000
     uint editorReward = 500;
     uint linkedArticlesReward = 750;
     uint invalidationWorkReward = 1000;
-    uint[] editorApprovedReviewerRewardPerReviewer;
-    uint[] communityReviewerRewardPerReviewer;
-    uint[] secondReviewerRewardPerReviewer;
 
+    // rewards for the reviews saved in arrays, specifiable reward for every round.
+    // if rounds not needes, returned back to author
+    // if max reviewer amount is not reached, not used rewards is returned to author
+    uint maxReviewRounds = 3;
+    uint[maxReviewRounds] editorApprovedReviewerRewardPerReviewer;
+    uint[maxReviewRounds] communityReviewerRewardPerReviewer;
+    uint[maxReviewRounds] secondReviewerRewardPerReviewer;
 
     // resulting submission fee
     uint submissionFee;
@@ -38,20 +41,17 @@ contract EurekaPlatform is ERC677Receiver {
         editorApprovedReviewerRewardPerReviewer.push(150);
         editorApprovedReviewerRewardPerReviewer.push(75);
         editorApprovedReviewerRewardPerReviewer.push(25);
-        editorApprovedReviewerRewardPerReviewer.push(25);
 
         communityReviewerRewardPerReviewer.push(60);
         communityReviewerRewardPerReviewer.push(30);
         communityReviewerRewardPerReviewer.push(10);
-        communityReviewerRewardPerReviewer.push(10);
 
-        secondReviewerRewardPerReviewer.push(19);
-        secondReviewerRewardPerReviewer.push(9);
-        secondReviewerRewardPerReviewer.push(3);
-        secondReviewerRewardPerReviewer.push(3);
+        secondReviewerRewardPerReviewer.push(30);
+        secondReviewerRewardPerReviewer.push(15);
+        secondReviewerRewardPerReviewer.push(5);
 
         submissionFee =
-        sciencemattersFoundation
+        sciencemattersFoundationReward
         + editorReward
         + linkedArticlesReward
         + invalidationWorkReward
@@ -61,16 +61,18 @@ contract EurekaPlatform is ERC677Receiver {
         + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[0]
         + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[1]
         + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[2]
-        + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[0]
-        + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[1]
-        + (maxAmountOfEditorApprovedReviewer + maxAmountOfCommunityReviewer) * secondReviewerRewardPerReviewer[2];
+        + maxAmountOfCommunityReviewer * secondReviewerRewardPerReviewer[0]
+        + maxAmountOfCommunityReviewer * secondReviewerRewardPerReviewer[1]
+        + maxAmountOfCommunityReviewer * secondReviewerRewardPerReviewer[2];
 
     }
 
 
     // primary key mappings
+    uint256 submissionCounter;
     mapping(uint256 => ArticleSubmission) articleSubmissions;
     mapping(bytes32 => ArticleVersion) articlesVersions;
+    uint256 reviewCounter;
     mapping(uint256 => Review) reviews;
 
     // other mappings
