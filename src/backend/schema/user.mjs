@@ -1,18 +1,6 @@
 import mongoose from 'mongoose';
 
-/**
- * Different roles a platform user can have --> access authorization is based on it.
- */
-const roleSchema =  mongoose.Schema(
-  {
-    roleName: {
-      type: String,
-      enum: ['ADMIN', 'EDITOR', 'REVIEWER', 'GUEST'],
-      default: 'GUEST'
-    },
-  }
-);
-
+import roleSchema from './role';
 /**
  * User of the eureka platform
  * Model is used for the local user authentication with passport
@@ -34,9 +22,7 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true
     },
-    roles: {
-      type: [roleSchema]
-    }
+    roles: [roleSchema]
   },
   {collection: 'users'}
 );
