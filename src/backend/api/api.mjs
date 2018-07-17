@@ -31,18 +31,6 @@ app.use(
 
 /** Passport setup **/
 app.use(passport.initialize());
-
-//already in /helpers/local-passport
-// passport.serializeUser(function (_id, done) {
-//   done(null, _id);
-// });
-//
-// passport.deserializeUser(function (_id, done) {
-//   User.findById(_id, function (err, user) {
-//     done(err, user);
-//   });
-// });
-
 app.use(passport.session());
 
 /** Parser **/
@@ -52,6 +40,13 @@ app.use(
     extended: true
   })
 );
+
+//set global variable isAuthenticated -> call ir everywhere dynamically
+app.use(function (req, res, next) {
+  res.locals.isAuthenticated = req.isAuthenticated();
+  next()
+});
+
 //Parses the text as JSON and exposes the resulting object on req.body.
 app.use(bodyParser.json());
 
