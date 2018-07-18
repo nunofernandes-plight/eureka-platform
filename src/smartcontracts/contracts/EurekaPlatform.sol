@@ -31,7 +31,7 @@ contract EurekaPlatform is ERC677Receiver {
     uint invalidationWorkReward = 1000;
 
     // rewards for the reviews saved in arrays, specifiable reward for every round.
-    // if rounds not needes, returned back to author
+    // if rounds not needed, returned back to author
     // if max reviewer amount is not reached, not used rewards is returned to author
     uint constant maxReviewRounds = 3;
     uint[maxReviewRounds] editorApprovedReviewerRewardPerReviewer;
