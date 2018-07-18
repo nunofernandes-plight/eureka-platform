@@ -286,5 +286,33 @@ contract EurekaPlatform is ERC677Receiver {
 
     }
 
+    function editorCheck(bytes32 _articleHash, bool _isSanityOk) public {
+        
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.SUBMITTED, "this method can't be called.");
+
+        if (_isSanityOk) {
+            article.versionState = ArticleVersionState.EDITOR_CHECKED;
+        }
+        else {
+            article.versionState = ArticleVersionState.NOT_ACCEPTED_SANITY_NOTOK;
+        }
+    }
+
+    function editorCheckAndReviewerInvitation(bytes32 _articleHash, bool _isSanityOk, address[] _allowedEditorApprovedReviewers) public {
+
+        editorCheck(_articleHash, _isSanityOk);
+        addAllowedReviewers(_articleHash, _allowedEditorApprovedReviewers);
+    }
+
+    function addAllowedReviewers(bytes32 _articleHash, address[] _allowedEditorApprovedReviewers) public {
+
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
+
+        for (uint i = 0; i < _allowedEditorApprovedReviewers.length; i++) {
+            article.allowedEditorApprovedReviewers[_allowedEditorApprovedReviewers[i]] = true;
+        }
+    }
     }
 }
