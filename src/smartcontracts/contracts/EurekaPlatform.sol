@@ -125,10 +125,11 @@ contract EurekaPlatform is ERC677Receiver {
         uint8[] linkedArticlesSplitRatio;
 
         // the reviewers which are allowed to review that article as an editor approved reviewer
-        address[] allowedEditorApprovedReviewers;
+//        address[] allowedEditorApprovedReviewers;
+        mapping(address => bool) allowedEditorApprovedReviewers;
         // the reviewers which are approved from the editor
         // TODO how to check if Reviewer already saved a review -> with array for loop (expensive) maybe save additional mapping
-        //        mapping(address => Review) editorApprovedReviews;
+//        mapping(address => Review) editorApprovedReviews;
         Review[] editorApprovedReviews;
 
         // every community reviewer can add a community review without being approved
