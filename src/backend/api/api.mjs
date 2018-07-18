@@ -50,12 +50,6 @@ app.use(function (req, res, next) {
   next()
 });
 
-/** Access Control list **/
-// //TODO implement the starting list
-// let acl = new Acl(new Acl.mongodbBackend(db, 'sessions'));
-//
-// acl.allow('guest', 'login', ['edit', 'view', 'delete']);
-
 //Parses the text as JSON and exposes the resulting object on req.body.
 app.use(bodyParser.json());
 

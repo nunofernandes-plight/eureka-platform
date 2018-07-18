@@ -54,7 +54,7 @@ export default {
    */
   addRole: async (user_id, role) => {
     if (Roles.hasOwnProperty(role)) {
-      console.log('Roles ID works ' + role);
+
       User.findByIdAndUpdate(
         user_id,
         {
@@ -64,12 +64,12 @@ export default {
         },
         function (err, user) {
           if (err) throw err;
-
+          console.log('User ' + user_id + ' was granted the role "' + role + '"');
           return user;
         })
 
     } else {
-      throw new Error('No matching role!')
+      throw new Error('No matching role found in DB')
     }
   }
 };
