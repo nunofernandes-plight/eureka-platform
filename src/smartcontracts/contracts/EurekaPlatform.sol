@@ -144,6 +144,7 @@ contract EurekaPlatform is ERC677Receiver {
 
     enum ReviewState {
         NOT_EXISTING,
+        INVITATION_ACCEPTED,
         HANDED_IN,
         DECLINED,
         ACCEPTED
@@ -314,5 +315,20 @@ contract EurekaPlatform is ERC677Receiver {
             article.allowedEditorApprovedReviewers[_allowedEditorApprovedReviewers[i]] = true;
         }
     }
+
+    function acceptReviewInvitation(bytes32 _articleHash) public{
+
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
+        
+        require(article.allowedEditorApprovedReviewers[msg.sender] == true, "msg.sender is not invited to review");
+        
+        Review review = reviews[_articleHash][msg.sender];
+        review.reviewState = ReviewState.INVITATION_ACCEPTED;
+        review.reviewer = msg.sender;
+    }
+
+    function addReview(bytes32 _articleHash, uint score1, uint score2) public {
+
     }
 }
