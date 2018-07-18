@@ -82,7 +82,7 @@ contract EurekaPlatform is ERC677Receiver {
     mapping(bytes32 => ArticleVersion) articleVersions;
     mapping(bytes32 => mapping(address => Review)) reviews;
 
-    // other mappings
+    // address mappings
     mapping(address => ArticleVersion[]) articleVersionByAuthor;
     mapping(address => ArticleSubmission[]) articleSubmissionsByEditor;
     mapping(address => Review[]) reviewsByReviewer;
@@ -324,10 +324,10 @@ contract EurekaPlatform is ERC677Receiver {
 
     function firstEditorCheck(bytes32 _articleHash, bool _isSanityOk) public {
         
-        require(isEditor[msg.sender], "msg.sender must be an editor to call this function");
+        require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
         
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.SUBMITTED, "this method can't be called.");
+        require(article.versionState == ArticleVersionState.SUBMITTED, "this method can't be called. version state must be SUBMITTED.");
 
         if (_isSanityOk) {
             article.versionState = ArticleVersionState.EDITOR_CHECKED;
@@ -339,10 +339,10 @@ contract EurekaPlatform is ERC677Receiver {
 
     function addAllowedReviewers(bytes32 _articleHash, address[] _allowedEditorApprovedReviewers) public {
         
-        require(isEditor[msg.sender], "msg.sender must be an editor to call this function");
+        require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
 
         for (uint i = 0; i < _allowedEditorApprovedReviewers.length; i++) {
             article.allowedEditorApprovedReviewers[_allowedEditorApprovedReviewers[i]] = true;
@@ -352,7 +352,7 @@ contract EurekaPlatform is ERC677Receiver {
     function acceptReviewInvitation(bytes32 _articleHash) public{
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
         
         require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
         
@@ -364,7 +364,7 @@ contract EurekaPlatform is ERC677Receiver {
     function addEditorApprovedReview(bytes32 _articleHash, uint8 _score1, uint8 _score2) public {
         
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
         
         require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
         
@@ -379,26 +379,26 @@ contract EurekaPlatform is ERC677Receiver {
 
     function acceptReview(bytes32 _articleHash, address _reviewerAddress) public {
         
-        require(isEditor[msg.sender], "msg.sender must be an editor to call this function.");
+        require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
         
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
         
         Review storage review = reviews[_articleHash][_reviewerAddress];
-        require(review.reviewState == ReviewState.HANDED_IN, "review can't be accepted.");
+        require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.ACCEPTED;
     }
     
     function declineReview (bytes32 _articleHash, address _reviewerAddress) public {
         
-        require(isEditor[msg.sender], "msg.sender must be an editor to call this function.");
+        require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
         
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
         
         Review storage review = reviews[_articleHash][_reviewerAddress];
-        require(review.reviewState == ReviewState.HANDED_IN, "review can't be accepted.");
+        require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.DECLINED;
     }
