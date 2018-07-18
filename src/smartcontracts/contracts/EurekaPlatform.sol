@@ -341,14 +341,29 @@ contract EurekaPlatform is ERC677Receiver {
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
         
-        require(article.allowedEditorApprovedReviewers[msg.sender] == true, "msg.sender is not invited to review");
+        require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
         
-        Review review = reviews[_articleHash][msg.sender];
+        Review storage review = reviews[_articleHash][msg.sender];
         review.reviewState = ReviewState.INVITATION_ACCEPTED;
         review.reviewer = msg.sender;
     }
 
-    function addReview(bytes32 _articleHash, uint score1, uint score2) public {
+    function addEditorApprovedReview(bytes32 _articleHash, uint8 _score1, uint8 _score2) public {
+        
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
+        
+        require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
+        
+        Review storage review = reviews[_articleHash][msg.sender];
+        review.reviewer = msg.sender;
+        review.reviewState = ReviewState.HANDED_IN;
+        review.score1 = _score1;
+        review.score2 = _score2;
+        
+        article.editorApprovedReviews.push(review);
+    }
+
 
     }
 }
