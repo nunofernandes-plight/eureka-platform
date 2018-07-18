@@ -74,8 +74,7 @@ contract EurekaPlatform is ERC677Receiver {
     uint256 submissionCounter;
     mapping(uint256 => ArticleSubmission) articleSubmissions;
     mapping(bytes32 => ArticleVersion) articleVersions;
-    uint256 reviewCounter;
-    mapping(uint256 => Review) reviews;
+    mapping(bytes32 => mapping(address => Review)) reviews;
 
     // other mappings
     mapping(address => ArticleVersion[]) articleVersionByAuthor;
