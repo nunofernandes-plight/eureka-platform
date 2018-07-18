@@ -313,6 +313,8 @@ contract EurekaPlatform is ERC677Receiver {
         
         submission.editor = msg.sender;
     }
+    
+    // TODO change editor by contract owner or editor itself
 
     function editorCheckAndReviewerInvitation(bytes32 _articleHash, bool _isSanityOk, address[] _allowedEditorApprovedReviewers) public {
         
@@ -361,7 +363,7 @@ contract EurekaPlatform is ERC677Receiver {
         review.reviewer = msg.sender;
     }
 
-    function addEditorApprovedReview(bytes32 _articleHash, uint8 _score1, uint8 _score2) public {
+    function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
         
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
@@ -371,11 +373,17 @@ contract EurekaPlatform is ERC677Receiver {
         Review storage review = reviews[_articleHash][msg.sender];
         review.reviewer = msg.sender;
         review.reviewState = ReviewState.HANDED_IN;
+        
+        review.reviewHash = _reviewHash;
+        review.reviewedTimestamp = block.timestamp;
         review.score1 = _score1;
         review.score2 = _score2;
         
         article.editorApprovedReviews.push(review);
     }
+    
+    // TODO check if review already exists
+    // TODO correct review if DECLINED.
 
     function acceptReview(bytes32 _articleHash, address _reviewerAddress) public {
         
