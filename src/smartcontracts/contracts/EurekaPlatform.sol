@@ -167,7 +167,7 @@ contract EurekaPlatform is ERC677Receiver {
      *      discussion.
      */
     function tokenFallback(address _from, uint256 _amount, bytes _data) public {
-        //require(msg.sender == Eureka);                                        ??????
+        //require(msg.sender == EutekaTokenAddress);
         require(_amount == submissionFee);
 
         uint dataIndex = 0;
