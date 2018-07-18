@@ -304,7 +304,9 @@ contract EurekaPlatform is ERC677Receiver {
     function editorCheckAndReviewerInvitation(bytes32 _articleHash, bool _isSanityOk, address[] _allowedEditorApprovedReviewers) public {
         
         firstEditorCheck(_articleHash, _isSanityOk);
-        addAllowedReviewers(_articleHash, _allowedEditorApprovedReviewers);
+        
+        if (_isSanityOk)
+            addAllowedReviewers(_articleHash, _allowedEditorApprovedReviewers);
     }
 
     function firstEditorCheck(bytes32 _articleHash, bool _isSanityOk) public {
