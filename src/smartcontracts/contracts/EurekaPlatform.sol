@@ -179,7 +179,7 @@ contract EurekaPlatform is ERC677Receiver {
 
         uint16 authorsLength = bytesToUint16(_data, dataIndex);
         dataIndex += 2;
-        address[] authors;
+        address[] storage authors;
         for (uint j = 0; j < authorsLength; j++) {
             authors.push(bytesToAddress(_data, dataIndex));
             dataIndex += 20;
@@ -188,7 +188,7 @@ contract EurekaPlatform is ERC677Receiver {
 
         uint16 linkedArticlesLength = bytesToUint16(_data, dataIndex);
         dataIndex += 2;
-        bytes32[] linkedArticles;
+        bytes32[] storage linkedArticles;
         for (j = 0; j < linkedArticlesLength; j++) {
             linkedArticles.push(bytesToBytes32(_data, dataIndex));
             dataIndex += 32;
