@@ -232,7 +232,7 @@ contract EurekaPlatform is ERC677Receiver {
         result = address(iaddr);
     }
 
-    function startSubmissionProcess(address _from, bytes32 articleHash, bytes32 articleURL, address[] authors, bytes32[] linkedArticles) private {
+    function startSubmissionProcess(address _from, bytes32 _articleHash, bytes32 _articleURL, address[] _authors, bytes32[] _linkedArticles) private {
 
         uint submissionId = submissionCounter++;
         ArticleSubmission storage submission = articleSubmissions[submissionId];
@@ -240,27 +240,51 @@ contract EurekaPlatform is ERC677Receiver {
         submission.submissionId = submissionId;
         submission.submissionOwner = _from;
 
-        submitArticleVersion(submissionId, articleHash, articleURL, authors, linkedArticles);
+        submitArticleVersion(submissionId, _articleHash, _articleURL, _authors, _linkedArticles);
 
         submission.submissionState = SubmissionState.OPEN;
     }
 
-    function submitArticleVersion(uint256 submissionId, bytes32 articleHash, bytes32 articleURL, address[] authors, bytes32[] linkedArticles) private {
+    function submitArticleVersion(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors, bytes32[] _linkedArticles) private {
 
-        ArticleVersion storage version = articleVersions[articleHash];
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.submissionId == 0, 'Article was already uploaded.');
+        // edge case: two articles have the same hash
 
-        version.submissionId = submissionId;
-        version.articleHash = articleHash;
-        version.articleUrl = articleURL;
-        version.publishedTimestamp = block.timestamp;
+        article.submissionId = _submissionId;
+        article.articleHash = _articleHash;
+        article.articleUrl = _articleURL;
+        article.publishedTimestamp = block.timestamp;
 
-        version.authors = authors;
+        article.authors = _authors;
         // TODO: parse version.authorContributionRatio = authorContributionRatio;
-        version.linkedArticles = linkedArticles;
+        article.linkedArticles = _linkedArticles;
         // TODO: parse version.linkedArticlesSplitRatio = linkedArticlesSplitRatio;
 
-        articleSubmissions[submissionId].versions.push(version);
-        version.versionState = ArticleVersionState.SUBMITTED;
+        articleSubmissions[_submissionId].versions.push(article);
+        article.versionState = ArticleVersionState.SUBMITTED;
+
+    }
+
+    function submitArticleVersion2(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors, bytes32[] _linkedArticles) private {
+
+        require(articleVersions[_articleHash].submissionId == 0, "Article was already uploaded.");
+        // edge case: two articles have the same hash
+
+        articleVersions[_articleHash].submissionId = _submissionId;
+        articleVersions[_articleHash].articleHash = _articleHash;
+        articleVersions[_articleHash].articleUrl = _articleURL;
+        articleVersions[_articleHash].publishedTimestamp = block.timestamp;
+
+        articleVersions[_articleHash].authors = _authors;
+        // TODO: parse version.authorContributionRatio = authorContributionRatio;
+        articleVersions[_articleHash].linkedArticles = _linkedArticles;
+        // TODO: parse version.linkedArticlesSplitRatio = linkedArticlesSplitRatio;
+
+        articleSubmissions[_submissionId].versions.push(articleVersions[_articleHash]);
+        articleVersions[_articleHash].versionState = ArticleVersionState.SUBMITTED;
+
+    }
 
     }
 }
