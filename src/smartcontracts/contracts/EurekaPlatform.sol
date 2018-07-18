@@ -302,12 +302,12 @@ contract EurekaPlatform is ERC677Receiver {
     }
 
     function editorCheckAndReviewerInvitation(bytes32 _articleHash, bool _isSanityOk, address[] _allowedEditorApprovedReviewers) public {
-
-        editorCheck(_articleHash, _isSanityOk);
+        
+        firstEditorCheck(_articleHash, _isSanityOk);
         addAllowedReviewers(_articleHash, _allowedEditorApprovedReviewers);
     }
 
-    function editorCheck(bytes32 _articleHash, bool _isSanityOk) public {
+    function firstEditorCheck(bytes32 _articleHash, bool _isSanityOk) public {
         
         require(isEditor[msg.sender], "msg.sender must be an editor to call this function");
         
