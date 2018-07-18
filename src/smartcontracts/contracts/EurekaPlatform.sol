@@ -300,6 +300,19 @@ contract EurekaPlatform is ERC677Receiver {
         articleVersions[_articleHash].versionState = ArticleVersionState.SUBMITTED;
 
     }
+    
+    // a journal editor can assign him/herself to an article submission process
+    // if the process is not already claimed by another editor
+    function assignForSubmissionProcess(uint256 _submissionId) {
+        
+        require(isEditor[msg.sender], "msg.sender must be an editor to call this function.");
+        
+        ArticleSubmission submission = articleSubmissions[_submissionId];
+        require(submission.submissionState == SubmissionState.OPEN, "the submission process not open.");
+        require(submission.editor == address(0), "the submission process is already assigned to an editor.");
+        
+        submission.editor = msg.sender;
+    }
 
     function editorCheckAndReviewerInvitation(bytes32 _articleHash, bool _isSanityOk, address[] _allowedEditorApprovedReviewers) public {
         
