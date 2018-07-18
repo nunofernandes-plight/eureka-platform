@@ -8,10 +8,14 @@ import "./Eureka.sol";
 contract EurekaPlatform is ERC677Receiver {
 
     using SafeMath for uint256;
+    
+    address contractOwner;
 
     /*
     *   journal parameters
     */
+    
+    mapping(address => bool) isEditor;
 
     // amount of rewarded reviewers
     uint minAmountOfEditorApprovedReviewer = 2;
@@ -39,6 +43,8 @@ contract EurekaPlatform is ERC677Receiver {
 
 
     constructor() public {
+        
+        contractOwner = msg.sender;
 
         editorApprovedReviewerRewardPerReviewer[0] = 150;
         editorApprovedReviewerRewardPerReviewer[1] = 75;
@@ -113,6 +119,7 @@ contract EurekaPlatform is ERC677Receiver {
         uint256 publishedTimestamp;
         // the URL where the article is saved
         bytes32 articleUrl;
+        
         ArticleVersionState versionState;
 
         address[] authors;
@@ -160,6 +167,12 @@ contract EurekaPlatform is ERC677Receiver {
         uint8 score1;
         uint8 score2;
     }
+    
+    function signUpEditor(address editor) public {
+        
+        require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
+        isEditor[editor] = true;
+    }
 
     /**
      *  Receiver interface for ERC677 transferAndCall
@@ -167,6 +180,7 @@ contract EurekaPlatform is ERC677Receiver {
      *      discussion.
      */
     function tokenFallback(address _from, uint256 _amount, bytes _data) public {
+        
         //require(msg.sender == EutekaTokenAddress);
         require(_amount == submissionFee);
 
@@ -287,7 +301,15 @@ contract EurekaPlatform is ERC677Receiver {
 
     }
 
+    function editorCheckAndReviewerInvitation(bytes32 _articleHash, bool _isSanityOk, address[] _allowedEditorApprovedReviewers) public {
+
+        editorCheck(_articleHash, _isSanityOk);
+        addAllowedReviewers(_articleHash, _allowedEditorApprovedReviewers);
+    }
+
     function editorCheck(bytes32 _articleHash, bool _isSanityOk) public {
+        
+        require(isEditor[msg.sender], "msg.sender must be an editor to call this function");
         
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.SUBMITTED, "this method can't be called.");
@@ -300,13 +322,9 @@ contract EurekaPlatform is ERC677Receiver {
         }
     }
 
-    function editorCheckAndReviewerInvitation(bytes32 _articleHash, bool _isSanityOk, address[] _allowedEditorApprovedReviewers) public {
-
-        editorCheck(_articleHash, _isSanityOk);
-        addAllowedReviewers(_articleHash, _allowedEditorApprovedReviewers);
-    }
-
     function addAllowedReviewers(bytes32 _articleHash, address[] _allowedEditorApprovedReviewers) public {
+        
+        require(isEditor[msg.sender], "msg.sender must be an editor to call this function");
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
