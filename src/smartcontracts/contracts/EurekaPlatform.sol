@@ -101,6 +101,7 @@ contract EurekaPlatform is ERC677Receiver {
         SUBMITTED,
         EDITOR_CHECKED,
         NOT_ENOUGH_REVIEWERS,
+        NOT_ACCEPTED_SANITY_NOTOK,
         NOT_ACCEPTED,
         ACCEPTED
     }
