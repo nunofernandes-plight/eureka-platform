@@ -149,13 +149,13 @@ contract EurekaPlatform is ERC677Receiver {
         ACCEPTED
     }
     struct Review {
-        uint256 reviewId;
-        bytes32 reviewHash;
-        uint256 reviewedTimestamp;
+        bytes32 articleHash;
         address reviewer;
 
         ReviewState reviewState;
-
+        
+        bytes32 reviewHash;
+        uint256 reviewedTimestamp;
         uint8 score1;
         uint8 score2;
     }
