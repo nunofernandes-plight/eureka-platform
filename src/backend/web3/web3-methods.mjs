@@ -5,13 +5,21 @@ let accounts = [];
 
 const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
 
-  await mintEurekaTokens(eurekaTokenContract);
+  await mintEurekaTokens(eurekaTokenContract, eurekaPlatformContract);
+
+  // let bytes = web3.utils.padRight(web3.utils.utf8ToHex("salit"), 64);
+  let bytes = web3.utils.utf8ToHex("sali");
+
+  console.log(bytes);
+  console.log(eurekaPlatformContract.options.address);
+  console.log(accounts[1]);
 
   // submit Article = send submission fee to service contract
   await eurekaTokenContract.methods
-    .transferAndCall(eurekaPlatformContract.options.address, 5000, "0x0")
+    .transferAndCall(eurekaPlatformContract.options.address, 5000, bytes)
+    // .transferAndCall(accounts[1], 5000, bytes)
     .send({
-      from: accounts[1]
+      from: accounts[0]
     })
     .then((receipt) => {
       console.log(receipt);
@@ -19,11 +27,26 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
     .catch((err) => {
       console.error(err)
     });
+
+  //  WORKS
+  // await eurekaPlatformContract.methods
+  //   .submitTestArticle (bytes, 300)
+  //   .send({
+  //     from: accounts[1]
+  //   })
+  //   .then((receipt) => {
+  //     console.log(receipt);
+  //   })
+  //   .catch((err) => {
+  //     console.error(err)
+  //   });
 };
 
 
-const mintEurekaTokens = async (eurekaTokenContract) => {
+const mintEurekaTokens = async (eurekaTokenContract, eurekaPlatformContract) => {
   accounts = await getAccounts();
+
+  accounts.push(eurekaPlatformContract.options.address);
 
   let amounts = [];
 
