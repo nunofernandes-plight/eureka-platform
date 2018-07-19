@@ -385,6 +385,26 @@ contract EurekaPlatform is ERC677Receiver {
         review.reviewState = ReviewState.HANDED_IN;
     }
     
+    // TODO check max number of reviews
+    function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
+        
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        
+        Review storage review = reviews[_articleHash][msg.sender];
+        require(review.reviewState <= ReviewState.INVITATION_ACCEPTED, "the review already exists.");
+        
+        review.reviewer = msg.sender;
+        
+        review.reviewHash = _reviewHash;
+        review.reviewedTimestamp = block.timestamp;
+        review.score1 = _score1;
+        review.score2 = _score2;
+        
+        article.communityReviews.push(review);
+        review.reviewState = ReviewState.HANDED_IN;
+    }
+    
     function correctReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
         
         ArticleVersion storage article = articleVersions[_articleHash];
