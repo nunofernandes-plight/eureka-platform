@@ -361,6 +361,8 @@ contract EurekaPlatform is ERC677Receiver {
         Review storage review = reviews[_articleHash][msg.sender];
         review.reviewState = ReviewState.INVITATION_ACCEPTED;
         review.reviewer = msg.sender;
+        
+        article.editorApprovedReviews.push(review);
     }
 
     // TODO check max number of reviews
@@ -381,7 +383,9 @@ contract EurekaPlatform is ERC677Receiver {
         review.score1 = _score1;
         review.score2 = _score2;
         
-        article.editorApprovedReviews.push(review);
+        if (review.reviewState != ReviewState.INVITATION_ACCEPTED) {
+            article.editorApprovedReviews.push(review);
+        }
         review.reviewState = ReviewState.HANDED_IN;
     }
     
