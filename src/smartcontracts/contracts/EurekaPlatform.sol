@@ -357,6 +357,7 @@ contract EurekaPlatform is ERC677Receiver {
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
         
         require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
+        require(article.editorApprovedReviews.length < maxAmountOfEditorApprovedReviewer, "the max amount of editor approved reviews is already reached.");
         
         Review storage review = reviews[_articleHash][msg.sender];
         review.reviewState = ReviewState.INVITATION_ACCEPTED;
@@ -365,7 +366,6 @@ contract EurekaPlatform is ERC677Receiver {
         article.editorApprovedReviews.push(review);
     }
 
-    // TODO check max number of reviews
     function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
         
         ArticleVersion storage article = articleVersions[_articleHash];
@@ -376,6 +376,11 @@ contract EurekaPlatform is ERC677Receiver {
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState <= ReviewState.INVITATION_ACCEPTED, "the review already exists.");
         
+        if (review.reviewState != ReviewState.INVITATION_ACCEPTED) {
+            require(article.editorApprovedReviews.length < maxAmountOfEditorApprovedReviewer, "the max amount of editor approved reviews is already reached.");
+            article.editorApprovedReviews.push(review);
+        }
+        
         review.reviewer = msg.sender;
         
         review.reviewHash = _reviewHash;
@@ -383,17 +388,15 @@ contract EurekaPlatform is ERC677Receiver {
         review.score1 = _score1;
         review.score2 = _score2;
         
-        if (review.reviewState != ReviewState.INVITATION_ACCEPTED) {
-            article.editorApprovedReviews.push(review);
-        }
         review.reviewState = ReviewState.HANDED_IN;
     }
-    
-    // TODO check max number of reviews
+
     function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
         
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        
+        require(article.communityReviews.length < maxAmountOfCommunityReviewer, "the max amount of rewarded community reviews is already reached.");
         
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState <= ReviewState.INVITATION_ACCEPTED, "the review already exists.");
