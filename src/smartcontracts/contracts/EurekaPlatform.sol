@@ -303,11 +303,11 @@ contract EurekaPlatform is ERC677Receiver {
     
     // a journal editor can assign him/herself to an article submission process
     // if the process is not already claimed by another editor
-    function assignForSubmissionProcess(uint256 _submissionId) {
+    function assignForSubmissionProcess(uint256 _submissionId) public{
         
         require(isEditor[msg.sender], "msg.sender must be an editor to call this function.");
         
-        ArticleSubmission submission = articleSubmissions[_submissionId];
+        ArticleSubmission storage submission = articleSubmissions[_submissionId];
         require(submission.submissionState == SubmissionState.OPEN, "the submission process not open.");
         require(submission.editor == address(0), "the submission process is already assigned to an editor.");
         
