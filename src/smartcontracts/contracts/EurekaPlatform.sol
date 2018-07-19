@@ -363,6 +363,7 @@ contract EurekaPlatform is ERC677Receiver {
         review.reviewer = msg.sender;
     }
 
+    // TODO check max number of reviews
     function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
         
         ArticleVersion storage article = articleVersions[_articleHash];
@@ -371,6 +372,8 @@ contract EurekaPlatform is ERC677Receiver {
         require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
         
         Review storage review = reviews[_articleHash][msg.sender];
+        require(review.reviewState <= ReviewState.INVITATION_ACCEPTED, "the review already exists.");
+        
         review.reviewer = msg.sender;
         
         review.reviewHash = _reviewHash;
@@ -397,8 +400,6 @@ contract EurekaPlatform is ERC677Receiver {
         
         review.reviewState = ReviewState.HANDED_IN;
     }
-    
-    // TODO check if review already exists
 
     function acceptReview(bytes32 _articleHash, address _reviewerAddress) public {
         
