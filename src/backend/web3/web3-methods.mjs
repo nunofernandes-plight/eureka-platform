@@ -17,9 +17,8 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
   // submit Article = send submission fee to service contract
   await eurekaTokenContract.methods
     .transferAndCall(eurekaPlatformContract.options.address, 5000, bytes)
-    // .transferAndCall(accounts[1], 5000, bytes)
     .send({
-      from: accounts[0]
+      from: accounts[1]
     })
     .then((receipt) => {
       console.log(receipt);
@@ -46,7 +45,7 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
 const mintEurekaTokens = async (eurekaTokenContract, eurekaPlatformContract) => {
   accounts = await getAccounts();
 
-  accounts.push(eurekaPlatformContract.options.address);
+  // accounts.push(eurekaPlatformContract.options.address);       //when service contract is also in list, then transferAndCall function works
 
   let amounts = [];
 
@@ -85,6 +84,21 @@ const mintEurekaTokens = async (eurekaTokenContract, eurekaPlatformContract) => 
     .call({from: accounts[0]})
     .then( succ => {
       console.log('Total Supply: ' + succ);
+    });
+
+  // balanceOf method only works, if the address was in minting process
+  console.log(await getBalanceOf(eurekaTokenContract, eurekaPlatformContract.options.address));
+};
+
+const getBalanceOf = (contract, account) => {
+  return contract.methods
+    .balanceOf(account)
+    .call({from: account})
+    .then((bal) => {
+      return bal;
+    })
+    .catch((err) => {
+      return err;
     });
 };
 
