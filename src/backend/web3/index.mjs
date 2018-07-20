@@ -19,7 +19,8 @@ const deployContracts = async () => {
 
 const run = async () => {
   let [eurekaTokenContract, eurekaPlatformContract] = await deployContracts();
-  // testMethod(eurekaTokenContract, eurekaPlatformContract);
+  testMethod(eurekaTokenContract, eurekaPlatformContract);
 };
 
-export default run;
+export default deployContracts;
+// export default run;
