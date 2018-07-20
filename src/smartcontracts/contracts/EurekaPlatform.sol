@@ -25,7 +25,7 @@ contract EurekaPlatform is ERC677Receiver {
     uint maxAmountOfCommunityReviewer = 5;
 
     // rewards amount
-    uint sciencemattersFoundationReward = 1252;               // rounded up that fee equals 5000
+    uint sciencemattersFoundationReward = 1250;
     uint editorReward = 500;
     uint linkedArticlesReward = 750;
     uint invalidationWorkReward = 1000;
@@ -79,7 +79,7 @@ contract EurekaPlatform is ERC677Receiver {
     // primary key mappings
     uint256 submissionCounter;
     mapping(uint256 => ArticleSubmission) articleSubmissions;
-    mapping(bytes32 => ArticleVersion) articleVersions;
+    mapping(bytes32 => ArticleVersion) public articleVersions;
     mapping(bytes32 => mapping(address => Review)) reviews;
 
     // address mappings
@@ -189,7 +189,7 @@ contract EurekaPlatform is ERC677Receiver {
         bytes32 articleHash = bytesToBytes32(_data, dataIndex);
         dataIndex += 32;
 
-        bytes32 articleURL = bytesToBytes32(_data, dataIndex);
+        bytes32 articleUrl = bytesToBytes32(_data, dataIndex);
         dataIndex += 32;
 
         uint16 authorsLength = bytesToUint16(_data, dataIndex);
@@ -203,13 +203,13 @@ contract EurekaPlatform is ERC677Receiver {
 
         uint16 linkedArticlesLength = bytesToUint16(_data, dataIndex);
         dataIndex += 2;
-        bytes32[] storage linkedArticles;
-        for (j = 0; j < linkedArticlesLength; j++) {
-            linkedArticles.push(bytesToBytes32(_data, dataIndex));
+        bytes32[] memory linkedArticles;
+        for (uint j = 0; j < linkedArticlesLength; j++) {
+            linkedArticles[j] = bytesToBytes32(_data, dataIndex);
             dataIndex += 32;
         }
 
-        startSubmissionProcess(_from, articleHash, articleURL, authors, linkedArticles);
+        startSubmissionProcess(_from, articleHash, articleUrl, authors, linkedArticles);
 
     }
 
