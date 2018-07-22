@@ -25,7 +25,7 @@ contract EurekaPlatform is ERC677Receiver {
     uint maxAmountOfCommunityReviewer = 5;
 
     // rewards amount
-    uint sciencemattersFoundationReward = 1252;               // rounded up that fee equals 5000
+    uint sciencemattersFoundationReward = 1250;
     uint editorReward = 500;
     uint linkedArticlesReward = 750;
     uint invalidationWorkReward = 1000;
@@ -79,10 +79,10 @@ contract EurekaPlatform is ERC677Receiver {
     // primary key mappings
     uint256 submissionCounter;
     mapping(uint256 => ArticleSubmission) articleSubmissions;
-    mapping(bytes32 => ArticleVersion) articleVersions;
+    mapping(bytes32 => ArticleVersion) public articleVersions;
     mapping(bytes32 => mapping(address => Review)) reviews;
 
-    // other mappings
+    // address mappings
     mapping(address => ArticleVersion[]) articleVersionByAuthor;
     mapping(address => ArticleSubmission[]) articleSubmissionsByEditor;
     mapping(address => Review[]) reviewsByReviewer;
@@ -189,27 +189,27 @@ contract EurekaPlatform is ERC677Receiver {
         bytes32 articleHash = bytesToBytes32(_data, dataIndex);
         dataIndex += 32;
 
-        bytes32 articleURL = bytesToBytes32(_data, dataIndex);
+        bytes32 articleUrl = bytesToBytes32(_data, dataIndex);
         dataIndex += 32;
 
-        uint16 authorsLength = bytesToUint16(_data, dataIndex);
-        dataIndex += 2;
-        address[] storage authors;
-        for (uint j = 0; j < authorsLength; j++) {
-            authors.push(bytesToAddress(_data, dataIndex));
-            dataIndex += 20;
-            //address is 20 bytes
-        }
+//        uint16 authorsLength = bytesToUint16(_data, dataIndex);
+//        dataIndex += 2;
+        address[] memory authors;
+//        for (uint j = 0; j < authorsLength; j++) {
+//            authors.push(bytesToAddress(_data, dataIndex));
+//            dataIndex += 20;
+//            //address is 20 bytes
+//        }
 
         uint16 linkedArticlesLength = bytesToUint16(_data, dataIndex);
         dataIndex += 2;
-        bytes32[] storage linkedArticles;
-        for (j = 0; j < linkedArticlesLength; j++) {
-            linkedArticles.push(bytesToBytes32(_data, dataIndex));
+        bytes32[] memory linkedArticles;
+        for (uint j = 0; j < linkedArticlesLength; j++) {
+            linkedArticles[j] = bytesToBytes32(_data, dataIndex);
             dataIndex += 32;
         }
 
-        startSubmissionProcess(_from, articleHash, articleURL, authors, linkedArticles);
+        startSubmissionProcess(_from, articleHash, articleUrl, authors, linkedArticles);
 
     }
 
@@ -300,6 +300,21 @@ contract EurekaPlatform is ERC677Receiver {
         articleVersions[_articleHash].versionState = ArticleVersionState.SUBMITTED;
 
     }
+    
+    // a journal editor can assign him/herself to an article submission process
+    // if the process is not already claimed by another editor
+    function assignForSubmissionProcess(uint256 _submissionId) public{
+        
+        require(isEditor[msg.sender], "msg.sender must be an editor to call this function.");
+        
+        ArticleSubmission storage submission = articleSubmissions[_submissionId];
+        require(submission.submissionState == SubmissionState.OPEN, "the submission process not open.");
+        require(submission.editor == address(0), "the submission process is already assigned to an editor.");
+        
+        submission.editor = msg.sender;
+    }
+    
+    // TODO change editor by contract owner or editor itself
 
     function editorCheckAndReviewerInvitation(bytes32 _articleHash, bool _isSanityOk, address[] _allowedEditorApprovedReviewers) public {
         
@@ -311,10 +326,10 @@ contract EurekaPlatform is ERC677Receiver {
 
     function firstEditorCheck(bytes32 _articleHash, bool _isSanityOk) public {
         
-        require(isEditor[msg.sender], "msg.sender must be an editor to call this function");
+        require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
         
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.SUBMITTED, "this method can't be called.");
+        require(article.versionState == ArticleVersionState.SUBMITTED, "this method can't be called. version state must be SUBMITTED.");
 
         if (_isSanityOk) {
             article.versionState = ArticleVersionState.EDITOR_CHECKED;
@@ -326,10 +341,10 @@ contract EurekaPlatform is ERC677Receiver {
 
     function addAllowedReviewers(bytes32 _articleHash, address[] _allowedEditorApprovedReviewers) public {
         
-        require(isEditor[msg.sender], "msg.sender must be an editor to call this function");
+        require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
 
         for (uint i = 0; i < _allowedEditorApprovedReviewers.length; i++) {
             article.allowedEditorApprovedReviewers[_allowedEditorApprovedReviewers[i]] = true;
@@ -339,53 +354,102 @@ contract EurekaPlatform is ERC677Receiver {
     function acceptReviewInvitation(bytes32 _articleHash) public{
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
         
         require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
+        require(article.editorApprovedReviews.length < maxAmountOfEditorApprovedReviewer, "the max amount of editor approved reviews is already reached.");
         
         Review storage review = reviews[_articleHash][msg.sender];
         review.reviewState = ReviewState.INVITATION_ACCEPTED;
         review.reviewer = msg.sender;
-    }
-
-    function addEditorApprovedReview(bytes32 _articleHash, uint8 _score1, uint8 _score2) public {
-        
-        ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
-        
-        require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
-        
-        Review storage review = reviews[_articleHash][msg.sender];
-        review.reviewer = msg.sender;
-        review.reviewState = ReviewState.HANDED_IN;
-        review.score1 = _score1;
-        review.score2 = _score2;
         
         article.editorApprovedReviews.push(review);
     }
 
-    function acceptReview(bytes32 _articleHash, address _reviewerAddress) public {
-        
-        require(isEditor[msg.sender], "msg.sender must be an editor to call this function.");
+    function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
         
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        
+        require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
+        
+        Review storage review = reviews[_articleHash][msg.sender];
+        require(review.reviewState <= ReviewState.INVITATION_ACCEPTED, "the review already exists.");
+        
+        if (review.reviewState != ReviewState.INVITATION_ACCEPTED) {
+            require(article.editorApprovedReviews.length < maxAmountOfEditorApprovedReviewer, "the max amount of editor approved reviews is already reached.");
+            article.editorApprovedReviews.push(review);
+        }
+        
+        review.reviewer = msg.sender;
+        
+        review.reviewHash = _reviewHash;
+        review.reviewedTimestamp = block.timestamp;
+        review.score1 = _score1;
+        review.score2 = _score2;
+        
+        review.reviewState = ReviewState.HANDED_IN;
+    }
+
+    function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
+        
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        
+        require(article.communityReviews.length < maxAmountOfCommunityReviewer, "the max amount of rewarded community reviews is already reached.");
+        
+        Review storage review = reviews[_articleHash][msg.sender];
+        require(review.reviewState <= ReviewState.INVITATION_ACCEPTED, "the review already exists.");
+        
+        review.reviewer = msg.sender;
+        
+        review.reviewHash = _reviewHash;
+        review.reviewedTimestamp = block.timestamp;
+        review.score1 = _score1;
+        review.score2 = _score2;
+        
+        article.communityReviews.push(review);
+        review.reviewState = ReviewState.HANDED_IN;
+    }
+    
+    function correctReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
+        
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        
+        Review storage review = reviews[_articleHash][msg.sender];
+        require(review.reviewState == ReviewState.DECLINED, "only declined reviews can be corrected.");
+        
+        review.reviewHash = _reviewHash;
+        review.reviewedTimestamp = block.timestamp;
+        review.score1 = _score1;
+        review.score2 = _score2;
+        
+        review.reviewState = ReviewState.HANDED_IN;
+    }
+
+    function acceptReview(bytes32 _articleHash, address _reviewerAddress) public {
+        
+        require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
+        
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
         
         Review storage review = reviews[_articleHash][_reviewerAddress];
-        require(review.reviewState == ReviewState.HANDED_IN, "review can't be accepted.");
+        require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.ACCEPTED;
     }
     
     function declineReview (bytes32 _articleHash, address _reviewerAddress) public {
         
-        require(isEditor[msg.sender], "msg.sender must be an editor to call this function.");
+        require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
         
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called.");
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
         
         Review storage review = reviews[_articleHash][_reviewerAddress];
-        require(review.reviewState == ReviewState.HANDED_IN, "review can't be accepted.");
+        require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.DECLINED;
     }

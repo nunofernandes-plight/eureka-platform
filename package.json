@@ -21,6 +21,7 @@
     "polished": "^1.9.3",
     "react": "^16.4.1",
     "react-card-flip": "^0.2.1",
+    "react-detect-offline": "^2.1.2",
     "react-dom": "^16.4.1",
     "react-ga": "^2.5.3",
     "react-router-dom": "^4.3.1",
