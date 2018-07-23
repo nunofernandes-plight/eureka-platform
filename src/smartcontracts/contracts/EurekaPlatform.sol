@@ -232,6 +232,12 @@ contract EurekaPlatform is ERC677Receiver {
         for (uint i = 0; i < 2; i++) {
             result = result | (uint16(_data[_dataIndex++]) >> (i * 8));
         }
+
+//        bytes32 b;
+//        for (uint i = 0; i < 2; i++) {
+//            b = b | (bytes32(_data[_dataIndex++]) >> (i * 8));
+//        }
+//        result = uint16(b);
     }
 
     // copied from https://github.com/oraclize/ethereum-api/blob/master/oraclizeAPI_0.5.sol

@@ -14,25 +14,25 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
   let authors = ['0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88', '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88', '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88'];
 
   // convert the articleVersion to a bytes array
-  let articleBytes32 = web3.utils.padRight(web3.utils.utf8ToHex(article), 64);
-  let urlBytes32 = web3.utils.padRight(web3.utils.utf8ToHex(url), 64);
-  let authorsLength = web3.utils.padLeft(web3.utils.numberToHex(authors.length), 4);   // for number add padLeft instead of right
+  let articleBytes32 = web3.utils.padRight(web3.utils.toHex(article), 64);
+  let urlBytes32 = web3.utils.padRight(web3.utils.toHex(url), 64);
+  let authorsLength = web3.utils.padLeft(web3.utils.toHex(authors.length), 4);   // for number add padLeft instead of right
   let authorsInBytes = [];
   authors.forEach((address) => {
     authorsInBytes.push(address);
   });
-  let linkedArticleLength = web3.utils.padLeft(web3.utils.numberToHex(linkedArticles.length), 4);   // for number add padLeft instead of right
+  let linkedArticleLength = web3.utils.padLeft(web3.utils.toHex(linkedArticles.length), 4);   // for number add padLeft instead of right
   let linkedArticlesInBytes = [];
   linkedArticles.forEach((articleHash) => {
     linkedArticlesInBytes.push(
-      web3.utils.padRight(web3.utils.utf8ToHex(articleHash), 64)
+      web3.utils.padRight(web3.utils.toHex(articleHash), 64)
     );
   });
 
   console.log(linkedArticleLength);
   console.log(web3.utils.hexToNumber(linkedArticleLength));
 
-  let articleInHex = web3.utils.utf8ToHex(article);
+  let articleInHex = web3.utils.toHex(article);
 
   let dataInBytes =
     articleBytes32
