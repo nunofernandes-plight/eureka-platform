@@ -4,6 +4,7 @@ import mailService from './helpers/mailService';
 
 import isProduction from '../helpers/isProduction.mjs';
 
+//TODO remove her, only testing purpose
 mailService.sendMail();
 
 if (!isProduction()) {
