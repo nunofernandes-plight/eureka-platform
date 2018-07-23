@@ -10,14 +10,15 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
 
   let article = 'salit';
   let url = 'hoihoi';
-  let linkedArticles = ['ciaoHash', 'adiosHash'];
+  let linkedArticles = ['ciaoHash', 'adiosHash', 'adieuHash'];
+  let authors = ['0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88', '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88', '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88'];
 
   // convert the articleVersion to a bytes array
   let articleBytes32 = web3.utils.padRight(web3.utils.utf8ToHex(article), 64);
   let urlBytes32 = web3.utils.padRight(web3.utils.utf8ToHex(url), 64);
   let linkedArticleLength = web3.utils.padLeft(web3.utils.numberToHex(linkedArticles.length), 4);   // for number add padLeft instead of right
   let linkedArticlesInBytes = [];
-  linkedArticles.forEach( (articleHash) => {
+  linkedArticles.forEach((articleHash) => {
     linkedArticlesInBytes.push(
       web3.utils.padRight(web3.utils.utf8ToHex(articleHash), 64)
     );
@@ -62,11 +63,23 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
     .then((receipt) => {
       console.log(receipt);
       let encodedUrl = web3.utils.hexToAscii(receipt.articleUrl);
-      console.log('Entered URL: '+ encodedUrl);
+      console.log('Entered URL: ' + encodedUrl);
     })
     .catch((err) => {
       console.error(err)
     });
+
+  // await eurekaPlatformContract.methods
+  //   .getArticleHash(articleInHex)
+  //   .call({
+  //     from: accounts[1]
+  //   })
+  //   .then((receipt) => {
+  //     console.log(receipt);
+  //   })
+  //   .catch((err) => {
+  //     console.error(err)
+  //   });
 };
 
 
@@ -108,7 +121,7 @@ const mintEurekaTokens = async (eurekaTokenContract, eurekaPlatformContract) => 
   eurekaTokenContract.methods
     .totalSupply()
     .call({from: accounts[0]})
-    .then( succ => {
+    .then(succ => {
       console.log('Total Supply: ' + succ);
     });
 

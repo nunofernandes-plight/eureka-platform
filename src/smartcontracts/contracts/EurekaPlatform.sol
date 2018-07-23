@@ -167,7 +167,11 @@ contract EurekaPlatform is ERC677Receiver {
         uint8 score1;
         uint8 score2;
     }
-    
+
+    function getArticleHash(bytes32 hash) public view returns (bytes32[] linkedArticle) {
+        linkedArticle = articleVersions[hash].linkedArticles;
+    }
+
     function signUpEditor(address editor) public {
         
         require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
