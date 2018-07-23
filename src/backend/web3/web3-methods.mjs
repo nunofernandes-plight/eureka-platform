@@ -16,6 +16,11 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
   // convert the articleVersion to a bytes array
   let articleBytes32 = web3.utils.padRight(web3.utils.utf8ToHex(article), 64);
   let urlBytes32 = web3.utils.padRight(web3.utils.utf8ToHex(url), 64);
+  let authorsLength = web3.utils.padLeft(web3.utils.numberToHex(authors.length), 4);   // for number add padLeft instead of right
+  let authorsInBytes = [];
+  authors.forEach((address) => {
+    authorsInBytes.push(address);
+  });
   let linkedArticleLength = web3.utils.padLeft(web3.utils.numberToHex(linkedArticles.length), 4);   // for number add padLeft instead of right
   let linkedArticlesInBytes = [];
   linkedArticles.forEach((articleHash) => {
@@ -32,8 +37,12 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
   let dataInBytes =
     articleBytes32
     + urlBytes32.substring(2)
-    + linkedArticleLength.substring(2);
-  linkedArticlesInBytes.forEach( (bytes32) => {
+  // + authorsLength.substring(2);
+  authorsInBytes.forEach((address) => {
+    dataInBytes = dataInBytes + address.substring(2);
+  });
+  // + linkedArticleLength.substring(2);
+  linkedArticlesInBytes.forEach((bytes32) => {
     dataInBytes = dataInBytes + bytes32.substring(2);
   });
 
@@ -69,17 +78,21 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
       console.error(err)
     });
 
-  // await eurekaPlatformContract.methods
-  //   .getArticleHash(articleInHex)
-  //   .call({
-  //     from: accounts[1]
-  //   })
-  //   .then((receipt) => {
-  //     console.log(receipt);
-  //   })
-  //   .catch((err) => {
-  //     console.error(err)
-  //   });
+  await eurekaPlatformContract.methods
+    // .getArticleHash(articleInHex)
+    .getAddresses(articleInHex)
+    .call({
+      from: accounts[1]
+    })
+    .then((receipt) => {
+      console.log(receipt);
+      // receipt.forEach((text) => {
+      //   console.log(web3.utils.hexToAscii(text));
+      // })
+    })
+    .catch((err) => {
+      console.error(err)
+    });
 };
 
 

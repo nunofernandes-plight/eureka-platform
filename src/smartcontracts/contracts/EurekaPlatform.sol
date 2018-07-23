@@ -172,6 +172,11 @@ contract EurekaPlatform is ERC677Receiver {
         linkedArticle = articleVersions[hash].linkedArticles;
     }
 
+    function getAddresses(bytes32 hash) public view returns (address[] linkedArticle) {
+        linkedArticle = articleVersions[hash].authors;
+    }
+
+
     function signUpEditor(address editor) public {
         
         require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
@@ -196,19 +201,19 @@ contract EurekaPlatform is ERC677Receiver {
         bytes32 articleUrl = bytesToBytes32(_data, dataIndex);
         dataIndex += 32;
 
-//        uint16 authorsLength = bytesToUint16(_data, dataIndex);
+        uint16 authorsLength = 3;        // bytesToUint16(_data, dataIndex);
 //        dataIndex += 2;
-        address[] memory authors;
-//        for (uint j = 0; j < authorsLength; j++) {
-//            authors.push(bytesToAddress(_data, dataIndex));
-//            dataIndex += 20;
-//            //address is 20 bytes
-//        }
+        address[] memory authors = new address[](authorsLength);
+        for (uint j = 0; j < authorsLength; j++) {
+            authors[j] = bytesToAddress(_data, dataIndex);
+            dataIndex += 20;
+            //address is 20 bytes
+        }
 
-        uint16 linkedArticlesLength = bytesToUint16(_data, dataIndex);
-        dataIndex += 2;
-        bytes32[] memory linkedArticles;
-        for (uint j = 0; j < linkedArticlesLength; j++) {
+        uint16 linkedArticlesLength = 3;    //= bytesToUint16(_data, dataIndex);
+//        dataIndex += 2;
+        bytes32[] memory linkedArticles = new bytes32[](linkedArticlesLength);
+        for (j = 0; j < linkedArticlesLength; j++) {
             linkedArticles[j] = bytesToBytes32(_data, dataIndex);
             dataIndex += 32;
         }
@@ -234,7 +239,8 @@ contract EurekaPlatform is ERC677Receiver {
         uint160 iaddr = 0;
         uint160 b1;
         uint160 b2;
-        for (uint i = 2; i < 2 + 2 * 20; i += 2) {
+//        for (uint i = 2; i < 2 + 2 * 20; i += 2) {
+        for (uint i = 0 ; i < 2 * 20; i += 2) {
             iaddr *= 256;
             b1 = uint160(_data[_dataIndex]);
             b2 = uint160(_data[_dataIndex + 1]);
