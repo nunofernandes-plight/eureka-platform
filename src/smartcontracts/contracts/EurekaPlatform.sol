@@ -228,19 +228,15 @@ contract EurekaPlatform is ERC677Receiver {
         }
     }
 
-    function bytesToUint16(bytes _data, uint _dataIndex) pure public returns (uint result){
-//        for (uint i = 0; i < 2; i++) {
-//            result = result | (uint16(_data[_dataIndex++]) >> (i * 8));
-//        }
-
-        bytes32 b;
-        for (uint i = 0; i < 32; i++) {
-            b = b | (bytes32(_data[_dataIndex++]) >> (i * 8));
+    function bytesToUint16(bytes _data, uint _dataIndex) pure public returns (uint16 result){
+        bytes2 b;
+        for (uint i = 0; i < 2; i++) {
+            b = b | (bytes2(_data[_dataIndex++]) >> (i * 8));
         }
-        result = uint(b);
+        result = uint16(b);
     }
 
-    function getInt(bytes _data) public returns (uint result) {
+    function getInt(bytes _data) public returns (uint16 result) {
         uint dataIndex = 0;
 
         bytes32 articleHash = bytesToBytes32(_data, dataIndex);

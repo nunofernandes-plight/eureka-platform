@@ -46,7 +46,7 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
   //   dataInBytes = dataInBytes + bytes32.substring(2);
   // });
 
-    + web3.utils.padLeft(web3.utils.numberToHex(1315).substring(2),64);
+    + web3.utils.padLeft(web3.utils.numberToHex(6).substring(2),4);
 
   console.log(dataInBytes);
   // console.log(eurekaPlatformContract.options.address);
