@@ -4,7 +4,7 @@ import mailService from './helpers/mailService';
 
 import isProduction from '../helpers/isProduction.mjs';
 
-mailService;
+mailService.sendMail();
 
 if (!isProduction()) {
   //import env variables from .env file
