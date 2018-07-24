@@ -16,7 +16,9 @@ if (!isProduction()) {
     //Test contract methods
     contractMethodTester.setup(eurekaPlatformContract._address)
       .then(account => {
-        contractMethodTester.signUpTestEditor();
+        //Trigger functions on SC
+        contractMethodTester.testSignUpEditor();
+        contractMethodTester.testStartSubmissionProcess();
       })
       .catch(error => {
         console.log(error);
