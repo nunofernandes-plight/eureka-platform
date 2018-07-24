@@ -23,7 +23,9 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true
     },
-//    roles: [roleSchema]
+    isEditor: {
+      type: Boolean,
+    },
     roles: [{
       type: String,
       enum: Object.values(Roles),

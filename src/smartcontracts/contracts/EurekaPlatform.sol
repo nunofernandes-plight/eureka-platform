@@ -176,7 +176,7 @@ contract EurekaPlatform is ERC677Receiver {
         authors = articleVersions[hash].authors;
     }
 
-    //event EditorSignUp(byte32 editorAdress);
+
     event EditorSignUp(address editorAdress);
     function signUpEditor(address editor) public {
         

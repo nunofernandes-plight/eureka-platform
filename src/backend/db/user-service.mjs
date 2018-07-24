@@ -31,7 +31,8 @@ export default {
     const newUser = new User({
       username: username,
       password: hashedPassword,
-      email: email
+      email: email,
+      isEditor: false, //default not an editor
     });
 
     return newUser.save().then(
@@ -66,7 +67,7 @@ export default {
           if (err) throw err;
           console.log('User ' + user_id + ' was granted the role "' + role + '"');
           return user;
-        })
+        });
 
     } else {
       throw new Error('No matching role found in DB')
