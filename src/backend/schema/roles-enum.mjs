@@ -1,5 +1,3 @@
-import mongoose from "mongoose";
-
 /**
  * Different roles a platform user can have --> access authorization is based on it.
  */

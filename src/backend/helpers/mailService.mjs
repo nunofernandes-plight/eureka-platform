@@ -26,21 +26,21 @@ let mailOptions = {
 
 export default {
   // write the whole options body new
-  setMailOptions: (options) => {
+  setMailOptions: options => {
     mailOptions = options;
   },
 
-  setMailHTML: (htmlBody) => {
+  setMailHTML: htmlBody => {
     mailOptions.html = htmlBody;
   },
 
-  setMailText: (textBody) => {
+  setMailText: textBody => {
     mailOptions.text = textBody;
   },
 
   sendMail: () => {
-    nodemailer.createTestAccount((err) => {
-      if(err) {
+    nodemailer.createTestAccount(err => {
+      if (err) {
         return console.log(err);
       }
       // create reusable transporter object using the default SMTP transport
@@ -59,6 +59,3 @@ export default {
     });
   }
 };
-
-
-

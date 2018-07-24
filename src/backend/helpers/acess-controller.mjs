@@ -4,7 +4,6 @@ import mongoose from 'mongoose';
 
 const User = mongoose.model('User', userSchema);
 
-
 //const adminRole = new Role({value: 'ADMIN' });
 
 export default {
@@ -37,8 +36,7 @@ export default {
       })
       .catch(err => {
         throw err;
-      })
-
+      });
   },
 
   /**
@@ -48,8 +46,8 @@ export default {
    * @param roles as array of string
    * @returns {Function}
    */
-  rolesOnly: (roles) => {
-    return function (req, res, next) {
+  rolesOnly: roles => {
+    return function(req, res, next) {
       User.findById(req.user)
         .exec()
         .then(user => {
@@ -57,7 +55,7 @@ export default {
           if (user.roles.length > 0) {
             for (let i = 0; i < roles.length; i++) {
               if (user.roles.indexOf(roles[i]) >= 0) {
-                authorized = true
+                authorized = true;
               }
             }
             if (authorized) next();
@@ -76,7 +74,7 @@ export default {
           res.status(500).json({
             error: err
           });
-        })
-    }
+        });
+    };
   }
-}
+};

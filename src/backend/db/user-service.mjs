@@ -55,28 +55,29 @@ export default {
    */
   addRole: async (user_id, role) => {
     if (Roles.hasOwnProperty(role)) {
-
       User.findByIdAndUpdate(
         user_id,
         {
-          '$addToSet': {
+          $addToSet: {
             roles: role
           }
         },
         function(err, user) {
           if (err) throw err;
-          console.log('User ' + user_id + ' was granted the role "' + role + '"');
+          console.log(
+            'User ' + user_id + ' was granted the role "' + role + '"'
+          );
           return user;
-        });
-
+        }
+      );
     } else {
       throw new Error('No matching role found in DB');
     }
   },
 
-  makeEditor: async (ethereumAddress) => {
+  makeEditor: async ethereumAddress => {
     User.findOneAndUpdate(
-      {'ethereumAddress' : ethereumAddress},
+      {ethereumAddress: ethereumAddress},
       {
         isEditor: true
       },
@@ -84,6 +85,7 @@ export default {
         if (err) throw err;
         console.log('User with' + user._id + ' has become an Editor');
         return user;
-      });
+      }
+    );
   }
 };

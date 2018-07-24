@@ -29,17 +29,16 @@ const userSchema = mongoose.Schema(
       unique: true
     },
     isEditor: {
-      type: Boolean,
+      type: Boolean
     },
-    roles: [{
-      type: String,
-      enum: Object.values(Roles),
-    }]
+    roles: [
+      {
+        type: String,
+        enum: Object.values(Roles)
+      }
+    ]
   },
   {collection: 'users'}
 );
-
-
-
 
 export default userSchema;

@@ -1,15 +1,10 @@
 import app from './api/api.mjs';
 import dotenv from 'dotenv';
-import mailService from './helpers/mailService';
-import deployContracts from './web3/index';
-import fs from 'fs';
-
 import isProduction from '../helpers/isProduction.mjs';
 
 if (!isProduction()) {
   //import env variables from .env file
   dotenv.config();
-
 }
 // TODO implement production
 app.setupApp();

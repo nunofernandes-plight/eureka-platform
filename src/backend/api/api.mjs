@@ -17,7 +17,7 @@ if (!isProduction) {
 let app;
 
 export default {
-  setupApp: (eurekaPlatformContract) => {
+  setupApp: eurekaPlatformContract => {
     app = express();
 
     const MongoStore = connectMongo(session);
@@ -56,7 +56,6 @@ export default {
       // TODO setup with constant public address
     }
 
-
     //set global variable isAuthenticated -> call ir everywhere dynamically
     app.use(function(req, res, next) {
       res.locals.isAuthenticated = req.isAuthenticated();
@@ -69,9 +68,7 @@ export default {
     app.use('/api', router);
   },
 
-  listenTo: (port) => {
+  listenTo: port => {
     app.listen(port || 8080);
   }
 };
-
-

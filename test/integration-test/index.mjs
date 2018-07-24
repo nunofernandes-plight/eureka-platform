@@ -14,8 +14,9 @@ if (!isProduction()) {
     app.listenTo(process.env.PORT || 8080);
 
     //Test contract methods
-    contractMethodTester.setup(eurekaTokenContract, eurekaPlatformContract)
-      .then(account => {
+    contractMethodTester
+      .setup(eurekaTokenContract, eurekaPlatformContract)
+      .then(() => {
         //Trigger functions on SC
         contractMethodTester.testSignUpEditor();
         contractMethodTester.testSubmitArticle();
