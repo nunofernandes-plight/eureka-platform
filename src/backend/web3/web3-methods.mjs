@@ -8,36 +8,40 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
   await mintEurekaTokens(eurekaTokenContract, eurekaPlatformContract);
 
 
-  let article = 'salit';
+  let article = 'sali';
   let url = 'hoihoi';
-  let linkedArticles = ['ciaoHash', 'adiosHash'];
+  let linkedArticles = ['ciaoHash', 'adiosHash', 'adieuHash'];
+  let authors = ['0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88', '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'];
 
   // convert the articleVersion to a bytes array
-  let articleBytes32 = web3.utils.padRight(web3.utils.utf8ToHex(article), 64);
-  let urlBytes32 = web3.utils.padRight(web3.utils.utf8ToHex(url), 64);
-  let linkedArticleLength = web3.utils.padLeft(web3.utils.numberToHex(linkedArticles.length), 4);   // for number add padLeft instead of right
+  let articleBytes32 = web3.utils.padRight(web3.utils.toHex(article), 64);
+  let urlBytes32 = web3.utils.padRight(web3.utils.toHex(url), 64);
+  let authorsLength = web3.utils.padLeft(web3.utils.toHex(authors.length), 4);   // for number add padLeft instead of right
+  let authorsInBytes = [];
+  authors.forEach((address) => {
+    authorsInBytes.push(address);
+  });
+  let linkedArticleLength = web3.utils.padLeft(web3.utils.toHex(linkedArticles.length), 4);   // for number add padLeft instead of right
   let linkedArticlesInBytes = [];
-  linkedArticles.forEach( (articleHash) => {
+  linkedArticles.forEach((articleHash) => {
     linkedArticlesInBytes.push(
-      web3.utils.padRight(web3.utils.utf8ToHex(articleHash), 64)
+      web3.utils.padRight(web3.utils.toHex(articleHash), 64)
     );
   });
-
-  console.log(linkedArticleLength);
-  console.log(web3.utils.hexToNumber(linkedArticleLength));
-
-  let articleInHex = web3.utils.utf8ToHex(article);
 
   let dataInBytes =
     articleBytes32
     + urlBytes32.substring(2)
-    + linkedArticleLength.substring(2);
-  linkedArticlesInBytes.forEach( (bytes32) => {
+    + authorsLength.substring(2);
+  authorsInBytes.forEach((address) => {
+    dataInBytes = dataInBytes + address.substring(2);
+  });
+  dataInBytes += linkedArticleLength.substring(2);
+  linkedArticlesInBytes.forEach((bytes32) => {
     dataInBytes = dataInBytes + bytes32.substring(2);
   });
 
   console.log(dataInBytes);
-  console.log(eurekaPlatformContract.options.address);
 
   // submit Article = send submission fee to service contract
   await eurekaTokenContract.methods
@@ -55,14 +59,40 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
   await getBalanceOf(eurekaTokenContract, eurekaPlatformContract.options.address);
 
   await eurekaPlatformContract.methods
-    .articleVersions(articleInHex)
+    .articleVersions(articleBytes32)
     .call({
       from: accounts[1]
     })
     .then((receipt) => {
       console.log(receipt);
       let encodedUrl = web3.utils.hexToAscii(receipt.articleUrl);
-      console.log('Entered URL: '+ encodedUrl);
+      console.log('Entered URL: ' + encodedUrl);
+    })
+    .catch((err) => {
+      console.error(err)
+    });
+
+  await eurekaPlatformContract.methods
+    .getAuthors(articleBytes32)
+    .call({
+      from: accounts[1]
+    })
+    .then((receipt) => {
+      console.log(receipt);
+    })
+    .catch((err) => {
+      console.error(err)
+    });
+
+  await eurekaPlatformContract.methods
+    .getLinkedArticles(articleBytes32)
+    .call({
+      from: accounts[1]
+    })
+    .then((receipt) => {
+      receipt.forEach((text) => {
+        console.log(web3.utils.hexToAscii(text));
+      })
     })
     .catch((err) => {
       console.error(err);
@@ -108,7 +138,7 @@ const mintEurekaTokens = async (eurekaTokenContract, eurekaPlatformContract) => 
   eurekaTokenContract.methods
     .totalSupply()
     .call({from: accounts[0]})
-    .then( succ => {
+    .then(succ => {
       console.log('Total Supply: ' + succ);
     });
 

@@ -168,6 +168,15 @@ contract EurekaPlatform is ERC677Receiver {
         uint8 score2;
     }
 
+    function getLinkedArticles(bytes32 hash) public view returns (bytes32[] linkedArticles) {
+        linkedArticles = articleVersions[hash].linkedArticles;
+    }
+
+    function getAuthors(bytes32 hash) public view returns (address[] authors) {
+        authors = articleVersions[hash].authors;
+    }
+
+    //event EditorSignUp(byte32 editorAdress);
     event EditorSignUp(address editorAdress);
     function signUpEditor(address editor) public {
         
@@ -194,19 +203,19 @@ contract EurekaPlatform is ERC677Receiver {
         bytes32 articleUrl = bytesToBytes32(_data, dataIndex);
         dataIndex += 32;
 
-//        uint16 authorsLength = bytesToUint16(_data, dataIndex);
-//        dataIndex += 2;
-        address[] memory authors;
-//        for (uint j = 0; j < authorsLength; j++) {
-//            authors.push(bytesToAddress(_data, dataIndex));
-//            dataIndex += 20;
-//            //address is 20 bytes
-//        }
+        uint16 authorsLength = bytesToUint16(_data, dataIndex);
+        dataIndex += 2;
+        address[] memory authors = new address[](authorsLength);
+        for (uint j = 0; j < authorsLength; j++) {
+            authors[j] = bytesToAddress(_data, dataIndex);
+            dataIndex += 20;
+            //address is 20 bytes
+        }
 
         uint16 linkedArticlesLength = bytesToUint16(_data, dataIndex);
         dataIndex += 2;
-        bytes32[] memory linkedArticles;
-        for (uint j = 0; j < linkedArticlesLength; j++) {
+        bytes32[] memory linkedArticles = new bytes32[](linkedArticlesLength);
+        for (j = 0; j < linkedArticlesLength; j++) {
             linkedArticles[j] = bytesToBytes32(_data, dataIndex);
             dataIndex += 32;
         }
@@ -221,32 +230,44 @@ contract EurekaPlatform is ERC677Receiver {
         }
     }
 
-    function bytesToUint16(bytes _data, uint _dataIndex) pure private returns (uint16 result){
+    function bytesToUint16(bytes _data, uint _dataIndex) pure public returns (uint16 result){
+        bytes2 b;
         for (uint i = 0; i < 2; i++) {
-            result = result | (uint16(_data[_dataIndex++]) >> (i * 8));
+            b = b | (bytes2(_data[_dataIndex++]) >> (i * 8));
         }
+        result = uint16(b);
     }
 
-    // copied from https://github.com/oraclize/ethereum-api/blob/master/oraclizeAPI_0.5.sol
     function bytesToAddress(bytes _data, uint _dataIndex) pure private returns (address result){
-        uint160 iaddr = 0;
-        uint160 b1;
-        uint160 b2;
-        for (uint i = 2; i < 2 + 2 * 20; i += 2) {
-            iaddr *= 256;
-            b1 = uint160(_data[_dataIndex]);
-            b2 = uint160(_data[_dataIndex + 1]);
-            _dataIndex++;
+        uint resultInt = bytes20ToUint(_data, _dataIndex);
+        result = address(resultInt);
+    }
 
-            if ((b1 >= 97) && (b1 <= 102)) b1 -= 87;
-            else if ((b1 >= 65) && (b1 <= 70)) b1 -= 55;
-            else if ((b1 >= 48) && (b1 <= 57)) b1 -= 48;
-            if ((b2 >= 97) && (b2 <= 102)) b2 -= 87;
-            else if ((b2 >= 65) && (b2 <= 70)) b2 -= 55;
-            else if ((b2 >= 48) && (b2 <= 57)) b2 -= 48;
-            iaddr += (b1 * 16 + b2);
+    function bytes20ToUint(bytes _data, uint _dataIndex) pure public returns (uint result){
+        bytes20 b;
+        for (uint i = 0; i < 20; i++) {
+            b = b | (bytes20(_data[_dataIndex++]) >> (i * 8));
         }
-        result = address(iaddr);
+        result = uint(b);
+    }
+
+    function getInt(bytes _data) pure public returns (uint16 result) {
+        uint dataIndex = 0;
+
+        //bytes32 articleHash = bytesToBytes32(_data, dataIndex);
+        dataIndex += 32;
+
+        result = bytesToUint16(_data, dataIndex);
+    }
+
+    function getAddress(bytes _data) pure public returns (address result) {
+        uint dataIndex = 0;
+
+        //bytes32 articleHash = bytesToBytes32(_data, dataIndex);
+        dataIndex += 32;
+
+        uint resultInt = bytes20ToUint(_data, dataIndex);
+        result = address(resultInt);
     }
 
     function startSubmissionProcess(address _from, bytes32 _articleHash, bytes32 _articleURL, address[] _authors, bytes32[] _linkedArticles) private {
