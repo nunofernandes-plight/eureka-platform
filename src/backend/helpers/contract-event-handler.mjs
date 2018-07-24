@@ -1,6 +1,6 @@
 import fs from 'fs';
 import solc from 'solc';
-import web3WS from '../web3/web3-websocket-instance.mjs';
+import web3 from '../web3/web3Instance';
 import userService from '../db/user-service';
 
 // //dependent files
@@ -16,7 +16,7 @@ const abi = JSON.parse(output.contracts['EurekaPlatform.sol:EurekaPlatform'].int
 export default {
   setup: (contractAddress) => {
     // setup connection ot contract
-    const EurekaPlatformContract = new web3WS.eth.Contract(abi);
+    const EurekaPlatformContract = new web3.eth.Contract(abi);
     EurekaPlatformContract.options.address = contractAddress;
 
     //sign in for events
