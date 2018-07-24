@@ -10,7 +10,7 @@ if (!isProduction()) {
 
   deployContracts().then(([eurekaTokenContract, eurekaPlatformContract]) => {
     //start backend
-    app.setupApp(eurekaPlatformContract._address);
+    app.setupApp(eurekaPlatformContract);
     app.listenTo(process.env.PORT || 8080);
 
     //Test contract methods

@@ -17,7 +17,7 @@ if (!isProduction) {
 let app;
 
 export default {
-  setupApp: (eurekaContractAdress) => {
+  setupApp: (eurekaPlatformContract) => {
     app = express();
 
     const MongoStore = connectMongo(session);
@@ -50,8 +50,8 @@ export default {
 
     /** SC Events Listener **/
     // if(!isProduction()) { swap to that
-    if (eurekaContractAdress) {
-      contractEventListener.setup(eurekaContractAdress);
+    if (eurekaPlatformContract) {
+      contractEventListener.setup(eurekaPlatformContract);
     } else {
       // TODO setup with constant public address
     }

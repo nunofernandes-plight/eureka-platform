@@ -270,6 +270,7 @@ contract EurekaPlatform is ERC677Receiver {
         result = address(resultInt);
     }
 
+    event SubmissionProcessStart(address submissionOwner);
     function startSubmissionProcess(address _from, bytes32 _articleHash, bytes32 _articleURL, address[] _authors, bytes32[] _linkedArticles) private {
 
         uint submissionId = submissionCounter++;
@@ -281,6 +282,7 @@ contract EurekaPlatform is ERC677Receiver {
         submitArticleVersion(submissionId, _articleHash, _articleURL, _authors, _linkedArticles);
 
         submission.submissionState = SubmissionState.OPEN;
+        emit SubmissionProcessStart(_from);
     }
 
     function submitArticleVersion(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors, bytes32[] _linkedArticles) private {

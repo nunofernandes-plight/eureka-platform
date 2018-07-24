@@ -63,9 +63,9 @@ export default {
 
     await web3Methods.submitArticle(EurekaTokenContract, account, EurekaPlatformContract.options.address, 5000, dataInHex);
 
-    console.log('The balance of the service contract is ' + await web3Methods.getBalanceOf(EurekaTokenContract, EurekaPlatformContract.options.address));
-    console.log('URL of the article: ' + await web3Methods.getUrl(EurekaPlatformContract, articleHashHex));
-    console.log('Authors: ' + await web3Methods.getAuthors(EurekaPlatformContract, articleHashHex));
-    console.log('Linked articles: ' + await web3Methods.getLinkedArticles(EurekaPlatformContract, articleHashHex));
+    // console.log('The balance of the service contract is ' + await web3Methods.getBalanceOf(EurekaTokenContract, EurekaPlatformContract.options.address));
+    // console.log('URL of the article: ' + await web3Methods.getUrl(EurekaPlatformContract, articleHashHex));
+    // console.log('Authors: ' + await web3Methods.getAuthors(EurekaPlatformContract, articleHashHex));
+    // console.log('Linked articles: ' + await web3Methods.getLinkedArticles(EurekaPlatformContract, articleHashHex));
   }
 };
