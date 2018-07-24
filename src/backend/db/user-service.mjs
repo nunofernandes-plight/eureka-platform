@@ -25,20 +25,21 @@ export default {
    * @param email
    * @returns {Promise<Model>}
    */
-  createUser: async (username, password, email) => {
+  createUser: async (username, password, email, ethereumAddress) => {
     const hashedPassword = await bcryptHasher.hash(password);
-
     const newUser = new User({
       username: username,
+      ethereumAddress: ethereumAddress,
       password: hashedPassword,
-      email: email
+      email: email,
+      isEditor: false //default not an editor
     });
 
     return newUser.save().then(
-      function () {
+      function() {
         return newUser;
       },
-      function (err) {
+      function(err) {
         console.log('Error :' + err);
         throw err;
       }
@@ -62,14 +63,27 @@ export default {
             roles: role
           }
         },
-        function (err, user) {
+        function(err, user) {
           if (err) throw err;
           console.log('User ' + user_id + ' was granted the role "' + role + '"');
           return user;
-        })
+        });
 
     } else {
-      throw new Error('No matching role found in DB')
+      throw new Error('No matching role found in DB');
     }
+  },
+
+  makeEditor: async (ethereumAddress) => {
+    User.findOneAndUpdate(
+      {'ethereumAddress' : ethereumAddress},
+      {
+        isEditor: true
+      },
+      (err, user) => {
+        if (err) throw err;
+        console.log('User with' + user._id + ' has become an Editor');
+        return user;
+      });
   }
 };

@@ -32,6 +32,7 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
   console.log('URL of the article: ' + await getUrl(eurekaPlatformContract, articleHashHex));
   console.log('Authors: ' + await getAuthors(eurekaPlatformContract, articleHashHex));
   console.log('Linked articles: ' + await getLinkedArticles(eurekaPlatformContract, articleHashHex));
+
 };
 
 

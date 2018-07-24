@@ -13,6 +13,7 @@
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "fs": "^0.0.1-security",
     "mongoose": "^5.2.2",
     "nodemailer": "^4.6.7",
     "nodemon": "^1.17.5",
@@ -42,7 +43,8 @@
     "eject": "react-scripts eject",
     "dev-client": "react-scripts start",
     "dev-server": "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" src/backend babel-node",
-    "dev-contracts": "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" src/backend/web3/deployer-script.mjs babel-node"
+    "dev-contracts": "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" src/backend/web3/deployer-script.mjs babel-node",
+    "integration-test": "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" test/integration-test/index.mjs babel-node"
   },
   "devDependencies": {
     "ava": "^0.25.0",

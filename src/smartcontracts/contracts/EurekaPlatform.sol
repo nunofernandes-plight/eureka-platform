@@ -176,12 +176,13 @@ contract EurekaPlatform is ERC677Receiver {
         authors = articleVersions[hash].authors;
     }
 
-    //event EditorSignUp(byte32 editorAdress);
+
+    event EditorSignUp(address editorAdress);
     function signUpEditor(address editor) public {
         
         require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
         isEditor[editor] = true;
-        //emit EditorSignUp(editor);
+        emit EditorSignUp(editor);
     }
 
     /**
@@ -220,6 +221,7 @@ contract EurekaPlatform is ERC677Receiver {
         }
 
         startSubmissionProcess(_from, articleHash, articleUrl, authors, linkedArticles);
+
     }
 
     function bytesToBytes32(bytes _data, uint _dataIndex) pure private returns (bytes32 result){

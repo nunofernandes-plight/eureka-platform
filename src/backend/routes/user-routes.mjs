@@ -13,9 +13,16 @@ router.get(
 );
 
 router.post(
-  '/',
+  '/addRole',
   asyncHandler(async req => {
     return userService.addRole(req.body.user_id, req.body.role);
+  })
+);
+
+router.post(
+  '/makeEditor',
+  asyncHandler(async req => {
+    return userService.makeEditor(req.body.user_id);
   })
 );
 

@@ -1,16 +1,18 @@
 import app from './api/api.mjs';
 import dotenv from 'dotenv';
 import mailService from './helpers/mailService';
+import deployContracts from './web3/index';
+import fs from 'fs';
 
 import isProduction from '../helpers/isProduction.mjs';
-
-//TODO remove her, only testing purpose
-mailService.sendMail();
 
 if (!isProduction()) {
   //import env variables from .env file
   dotenv.config();
-  app.listen(process.env.PORT || 8080);
+
 }
+// TODO implement production
+app.setupApp();
+app.listenTo(process.env.PORT || 8080);
 
 console.log('App started. Date: ' + new Date().toString());

@@ -6,53 +6,72 @@ import connectMongo from 'connect-mongo';
 
 import passport from '../helpers/local-passport';
 import mongooseDB from '../db/mongoose-db';
-
-
+import isProduction from '../../helpers/isProduction';
 import router from '../routes/index.mjs';
+import contractEventListener from '../helpers/contract-event-handler';
 
-//load in env variables
-dotenv.config();
+if (!isProduction) {
+  dotenv.config();
+}
 
-console.log(process.env.DB_HOST);
-const app = express();
+let app;
 
-/** Session Setup **/
-const MongoStore = connectMongo(session);
-app.use(
-  session({
-    secret: 'eureka secret snippet', //TODO change to env variable
-    //secret: process.env.DB_USER,
-    resave: false,
-    //stores session into DB
-    store: new MongoStore({
-      mongooseConnection: mongooseDB.connection
-    }),
-    saveUninitialized: true,
-    name: 'eureka.sid'
-    //cookie: { secure: true }
-  })
-);
+export default {
+  setupApp: (eurekaContractAdress) => {
+    app = express();
 
-/** Passport setup **/
-app.use(passport.initialize());
-app.use(passport.session());
+    const MongoStore = connectMongo(session);
+    app.use(
+      session({
+        secret: 'eureka secret snippet', //TODO change to env variable
+        //secret: process.env.DB_USER,
+        resave: false,
+        //stores session into DB
+        store: new MongoStore({
+          mongooseConnection: mongooseDB.connection
+        }),
+        saveUninitialized: true,
+        name: 'eureka.sid'
+        //cookie: { secure: true }
+      })
+    );
 
-/** Parser **/
-//Parses the text as URL encoded data
-app.use(
-  bodyParser.urlencoded({
-    extended: true
-  })
-);
+    /** Passport setup **/
+    app.use(passport.initialize());
+    app.use(passport.session());
 
-//set global variable isAuthenticated -> call ir everywhere dynamically
-app.use(function (req, res, next) {
-  res.locals.isAuthenticated = req.isAuthenticated();
-  next();
-});
+    /** Parser **/
+    //Parses the text as URL encoded data
+    app.use(
+      bodyParser.urlencoded({
+        extended: true
+      })
+    );
 
-//Parses the text as JSON and exposes the resulting object on req.body.
-app.use(bodyParser.json());
+    /** SC Events Listener **/
+    // if(!isProduction()) { swap to that
+    if (eurekaContractAdress) {
+      contractEventListener.setup(eurekaContractAdress);
+    } else {
+      // TODO setup with constant public address
+    }
 
-app.use('/api', router);
-export default app;
+
+    //set global variable isAuthenticated -> call ir everywhere dynamically
+    app.use(function(req, res, next) {
+      res.locals.isAuthenticated = req.isAuthenticated();
+      next();
+    });
+
+    //Parses the text as JSON and exposes the resulting object on req.body.
+    app.use(bodyParser.json());
+
+    app.use('/api', router);
+  },
+
+  listenTo: (port) => {
+    app.listen(port || 8080);
+  }
+};
+
+

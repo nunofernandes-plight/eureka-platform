@@ -3,6 +3,7 @@
  */
 import express from 'express';
 import authenticationCheck from '../helpers/acess-controller';
+import Roles from '../schema/roles-enum';
 const router = express.Router();
 
 router.get('/', function(req, res) {
@@ -17,7 +18,7 @@ router.get('/', function(req, res) {
 });
 
 //Test the login through session
-router.use(authenticationCheck.rolesOnly(['GUEST']));
+router.use(authenticationCheck.rolesOnly([Roles.GUEST]));
 router.get('/logged-in', function(req, res) {
   res.send('Welcome in the part for user logged in');
 });

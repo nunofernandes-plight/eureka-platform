@@ -13,6 +13,11 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true
     },
+    ethereumAddress: {
+      type: String,
+      required: true,
+      unique: true
+    },
     password: {
       type: String,
       required: true,
@@ -23,7 +28,9 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true
     },
-//    roles: [roleSchema]
+    isEditor: {
+      type: Boolean,
+    },
     roles: [{
       type: String,
       enum: Object.values(Roles),
