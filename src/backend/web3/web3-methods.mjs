@@ -8,7 +8,7 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
   await mintEurekaTokens(eurekaTokenContract, eurekaPlatformContract);
 
 
-  let article = 'sali ';
+  let article = 'sali';
   let url = 'hoihoi';
   let linkedArticles = ['ciaoHash', 'adiosHash', 'adieuHash'];
   let authors = ['0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88', '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'];
