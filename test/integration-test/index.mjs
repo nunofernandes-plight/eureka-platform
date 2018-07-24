@@ -14,11 +14,11 @@ if (!isProduction()) {
     app.listenTo(process.env.PORT || 8080);
 
     //Test contract methods
-    contractMethodTester.setup(eurekaPlatformContract._address)
+    contractMethodTester.setup(eurekaPlatformContract)
       .then(account => {
         //Trigger functions on SC
         contractMethodTester.testSignUpEditor();
-        contractMethodTester.testStartSubmissionProcess();
+        //contractMethodTester.testStartSubmissionProcess();
       })
       .catch(error => {
         console.log(error);
