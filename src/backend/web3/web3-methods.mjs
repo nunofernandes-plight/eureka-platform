@@ -18,147 +18,148 @@ let article = {
 
 let accounts = [];
 
-const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
+const web3Methods = {
 
-  await mintEurekaTokens(eurekaTokenContract);
+  testMethod: async (eurekaTokenContract, eurekaPlatformContract) => {
 
-  let dataInHex = getArticleHex(article);
-  let articleHashHex = '0x' + article.articleHash;
+    await web3Methods.mintEurekaTokens(eurekaTokenContract);
 
-  // submit Article = send submission fee to service contract
-  await submitArticle(eurekaTokenContract, accounts[1], eurekaPlatformContract.options.address, 5000, dataInHex)
+    let dataInHex = getArticleHex(article);
+    let articleHashHex = '0x' + article.articleHash;
 
-  console.log('The balance of the service contract is ' + await getBalanceOf(eurekaTokenContract, eurekaPlatformContract.options.address));
-  console.log('URL of the article: ' + await getUrl(eurekaPlatformContract, articleHashHex));
-  console.log('Authors: ' + await getAuthors(eurekaPlatformContract, articleHashHex));
-  console.log('Linked articles: ' + await getLinkedArticles(eurekaPlatformContract, articleHashHex));
+    // submit Article = send submission fee to service contract
+    await web3Methods.submitArticle(eurekaTokenContract, accounts[1], eurekaPlatformContract.options.address, 5000, dataInHex)
 
-};
+    console.log('The balance of the service contract is ' + await web3Methods.getBalanceOf(eurekaTokenContract, eurekaPlatformContract.options.address));
+    console.log('URL of the article: ' + await web3Methods.getUrl(eurekaPlatformContract, articleHashHex));
+    console.log('Authors: ' + await web3Methods.getAuthors(eurekaPlatformContract, articleHashHex));
+    console.log('Linked articles: ' + await web3Methods.getLinkedArticles(eurekaPlatformContract, articleHashHex));
 
+  },
 
+  mintEurekaTokens: async (eurekaTokenContract) => {
+    accounts = await getAccounts();
 
-const mintEurekaTokens = async (eurekaTokenContract) => {
-  accounts = await getAccounts();
-
-  let amounts = [];
-  let amount = 10000;
-  accounts.forEach(() => {
-    amounts.push(amount);
-  });
-
-  let gasEstimated = await getGasEstimation(eurekaTokenContract.methods.mint(accounts, amounts));
-
-  //Minting
-  await eurekaTokenContract.methods
-    .mint(accounts, amounts)
-    .send({
-      from: accounts[0],
-      gas: gasEstimated
-    })
-    .then((receipt) => {
-      return receipt;
+    let amounts = [];
+    let amount = 10000;
+    accounts.forEach(() => {
+      amounts.push(amount);
     });
 
-  await eurekaTokenContract.methods
-    .finishMinting()
-    .send({
+    let gasEstimated = await web3Methods.getGasEstimation(eurekaTokenContract.methods.mint(accounts, amounts));
+
+    //Minting
+    await eurekaTokenContract.methods
+      .mint(accounts, amounts)
+      .send({
+        from: accounts[0],
+        gas: gasEstimated
+      })
+      .then((receipt) => {
+        return receipt;
+      });
+
+    await eurekaTokenContract.methods
+      .finishMinting()
+      .send({
+        from: accounts[0]
+      })
+      .then((receipt) => {
+        console.log('The EKA token minting has been finished.');
+        return receipt;
+      });
+  },
+
+  submitArticle: (_contract, _from, _to, _amount, _data) => {
+    return _contract.methods
+      .transferAndCall(_to, _amount, _data)
+      .send({
+        from: _from
+      })
+      .then((receipt) => {
+        console.log('The article submission exited with the TX status: ' + receipt.status);
+      })
+      .catch((err) => {
+        console.error(err)
+      });
+  },
+
+
+  /*
+    Getters
+   */
+
+  getBalanceOf: (contract, account) => {
+    return contract.methods
+      .balanceOf(account)
+      .call({from: account})
+      .then((bal) => {
+        return bal;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+
+  getTotalSupplyOf: (contract, fromAccount) => {
+    return contract.methods
+      .totalSupply()
+      .call({from: fromAccount})
+      .then(supply => {
+        return supply;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+
+  getGasEstimation: (func) => {
+    return func.estimateGas({
       from: accounts[0]
-    })
-    .then((receipt) => {
-      console.log('The EKA token minting has been finished.');
-      return receipt;
     });
+  },
+
+  getUrl: (contract, articleHashHex) => {
+    return contract.methods
+      .articleVersions(articleHashHex)
+      .call({
+        from: accounts[0]
+      })
+      .then((receipt) => {
+        return web3.utils.hexToUtf8(receipt.articleUrl);
+      })
+      .catch((err) => {
+        console.error(err)
+      });
+  },
+
+  getAuthors: (contract, articleHashHex) => {
+    return contract.methods
+      .getAuthors(articleHashHex)
+      .call({
+        from: accounts[0]
+      })
+      .then((authors) => {
+        return authors;
+      })
+      .catch((err) => {
+        console.error(err)
+      });
+  },
+
+  getLinkedArticles: (contract, articleHashHex) => {
+    return contract.methods
+      .getLinkedArticles(articleHashHex)
+      .call({
+        from: accounts[0]
+      })
+      .then((authors) => {
+        return authors;
+      })
+      .catch((err) => {
+        console.error(err)
+      });
+  }
 };
 
-const submitArticle = (_contract, _from, _to, _amount, _data) => {
-  return _contract.methods
-    .transferAndCall(_to, _amount, _data)
-    .send({
-      from: _from
-    })
-    .then((receipt) => {
-      console.log('The article submission exited with the TX status: ' + receipt.status);
-    })
-    .catch((err) => {
-      console.error(err)
-    });
-};
-
-
-/*
-  Getters
- */
-
-const getBalanceOf = (contract, account) => {
-  return contract.methods
-    .balanceOf(account)
-    .call({from: account})
-    .then((bal) => {
-      return bal;
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-};
-
-const getTotalSupplyOf = (contract, fromAccount) => {
-  return contract.methods
-    .totalSupply()
-    .call({from: fromAccount})
-    .then(supply => {
-      return supply;
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-};
-
-const getGasEstimation = (func) => {
-  return func.estimateGas({
-    from: accounts[0]
-  });
-};
-
-const getUrl = (contract, articleHashHex) => {
-  return contract.methods
-    .articleVersions(articleHashHex)
-    .call({
-      from: accounts[0]
-    })
-    .then((receipt) => {
-      return web3.utils.hexToUtf8(receipt.articleUrl);
-    })
-    .catch((err) => {
-      console.error(err)
-    });
-};
-
-const getAuthors = (contract, articleHashHex) => {
-  return contract.methods
-    .getAuthors(articleHashHex)
-    .call({
-      from: accounts[0]
-    })
-    .then((authors) => {
-      return authors;
-    })
-    .catch((err) => {
-      console.error(err)
-    });
-};
-
-const getLinkedArticles = (contract, articleHashHex) => {
-  return contract.methods
-    .getLinkedArticles(articleHashHex)
-    .call({
-      from: accounts[0]
-    })
-    .then((authors) => {
-      return authors;
-    })
-    .catch((err) => {
-      console.error(err)
-    });
-};
-
-export default testMethod;
+export default web3Methods;
