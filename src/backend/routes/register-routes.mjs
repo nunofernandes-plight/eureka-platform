@@ -11,7 +11,12 @@ router.get('/', function(req, res) {
 
 router.post('/', async function(req, res) {
   userService
-    .createUser(req.body.username, req.body.password, req.body.email)
+    .createUser(
+      req.body.username,
+      req.body.password,
+      req.body.email,
+      req.body.ethereumAddress
+    )
     .then(newUserInDB => {
       req.login(newUserInDB._id, function(err) {
         if (err) res.send('Login error: ' + err);

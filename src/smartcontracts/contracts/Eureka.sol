@@ -56,6 +56,7 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
     uint8 public constant decimals = 18;
 
     mapping(address => Snapshot[]) balances;
+    uint256 public loyalty;
     mapping(address => mapping(address => uint256)) internal allowed;
     /* Nonces of transfers performed */
     mapping(bytes => bool) signatures;
@@ -69,11 +70,11 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
         uint64 fromBlock;
         address fromAddress;
         //0 is regular, rest is for accumulation
-        mapping(uint8 => uint256) amount;
+        mapping(uint256 => uint256) amounts;
     }
 
     // token lockups
-    mapping(address => uint256) lockups;
+    mapping(address => uint256) public lockups;
 
     // ownership
     address public owner;
@@ -82,6 +83,10 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
     bool public mintingDone = false;
 
     event TokensLocked(address indexed _holder, uint256 _timeout);
+
+    event TokensFrom(address indexed _holder, uint256 _amount);
+    event TokensTo(address indexed _holder, uint256 _amount);
+    event TokensLoyalty(uint256 _amount);
 
     constructor() public {
         owner = msg.sender;
@@ -108,10 +113,13 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
             uint256 amount = _amounts[i];
 
             if(balances[recipient].length == 0) {
-                createCurrentSnapshotForAddress(recipient);
+                Snapshot memory tmp;
+                tmp.fromAddress = tx.origin;
+                tmp.fromBlock = uint64(block.number);
+                balances[recipient].push(tmp);
             }
-            Snapshot current = balances[recipient][balances[recipient].length - 1];
-            current.amount[0] = current.amount[0].add(amount);
+            Snapshot storage current = balances[recipient][balances[recipient].length - 1];
+            current.amounts[0] = current.amounts[0].add(amount);
 
             totalSupply_ = totalSupply_.add(amount);
             require(totalSupply_ <= maxSupply); // enforce maximum token supply
@@ -162,7 +170,7 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
     }
 
     function transfer(address _to, uint256 _value, uint8 _fromType) public returns (bool) {
-        doTransfer(msg.sender, _to, _value, 0, _fromType);
+        doTransfer(msg.sender, _to, _value, 0, address(0), _fromType);
         emit Transfer(msg.sender, _to, _value);
         return true;
     }
@@ -171,17 +179,26 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
         return transferFrom(_from, _to, _value, 0);
     }
 
-    function transferFrom(address _from, address _to, uint256 _value, uint8 _fromType) public returns (bool) {
+    function transferFrom(address _from, address _to, uint256 _value, uint256 _fromType) public returns (bool) {
         require(_value <= allowed[_from][msg.sender]);
-        doTransfer(_from, _to, _value, 0, _fromType);
+        doTransfer(_from, _to, _value, 0, address(0), _fromType);
         allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
         emit Transfer(_from, _to, _value);
         return true;
     }
 
-    function doTransfer(address _from, address _to, uint256 _value, uint256 _fee, uint8 _fromType) internal {
+    function doTransfer(address _from, address _to, uint256 _value, uint256 _fee, address _feeAddress, uint256 _fromType) internal {
         require(_to != address(0));
+        uint256 fromLoyalty = 0;
+        uint256 toLoyalty = 0;
         uint256 fromValue = balanceOf(_from);
+        if(_fromType > 1) {
+            fromLoyalty = claim(_from);
+            toLoyalty = claim(_to);
+            fromValue = fromValue.add(fromLoyalty);
+            _value = _value.add(toLoyalty);
+        }
+
         uint256 total = _value.add(_fee);
         require(total <= fromValue);
         require(mintingDone == true);
@@ -190,11 +207,85 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
             require(now >= lockups[_from]);
         }
 
-        createCurrentSnapshotForAddress(_from);
-        balances[_from][balances[_from].length - 1].amount[0] = fromValue.sub(total);
-        balances[_to][balances[_to].length - 1].amount[0] = balanceOf(_to).add(_value);
-        if(_fromType != 0) {
-            balances[_to][balances[_to].length - 1].amount[_fromType] = balanceOf(_to, _fromType).add(total);
+        from(fromValue, total, fromLoyalty, _from);
+        emit TokensFrom(_from, fromValue);
+
+        fee(_fee, _feeAddress);
+        //event is TransferPreSigned, that will be emitted after this function call
+
+        if(_fromType > 1) {
+            uint256 tmpLoyalty = _value.div(200); //0.5%
+            _value = _value.sub(tmpLoyalty);
+            loyalty = loyalty.add(tmpLoyalty);
+            emit TokensLoyalty(loyalty);
+        }
+
+        to(_value, toLoyalty, _to, _fromType);
+        emit TokensTo(_to, _value);
+    }
+
+    function claim(address _addr) internal view returns (uint256) {
+        uint256 maxClaim = loyalty.mul(balanceOf(_addr)).div(totalSupply_);
+        uint256 alreadyClaimed = balanceOf(_addr, 1);
+
+        return maxClaim.sub(alreadyClaimed);
+    }
+
+    function from(uint256 fromValue, uint256 total, uint256 fromLoyalty, address _from) internal {
+        Snapshot memory tmpFrom;
+        tmpFrom.fromAddress = tx.origin;
+        tmpFrom.fromBlock = uint64(block.number);
+        uint256 amounts0  = fromValue.sub(total);
+
+        uint256 amounts1 = 0;
+        if(fromLoyalty > 0) {
+            amounts1 = balanceOf(_from, 1).add(fromLoyalty);
+        }
+        balances[_from].push(tmpFrom);
+
+        uint256 index = balances[_from].length - 1;
+        balances[_from][index].amounts[0] = amounts0;
+        if(fromLoyalty > 0) {
+            balances[_from][index].amounts[1] = amounts1;
+        }
+    }
+
+    function fee(uint256 _fee, address _feeAddress) internal {
+        if(_fee > 0 && _feeAddress != address(0)) {
+            Snapshot memory tmpFee;
+            tmpFee.fromAddress = tx.origin;
+            tmpFee.fromBlock = uint64(block.number);
+            uint256 amounts0 = balanceOf(_feeAddress).add(_fee);
+            balances[_feeAddress].push(tmpFee);
+            balances[_feeAddress][balances[_feeAddress].length - 1].amounts[0] = amounts0;
+        }
+    }
+
+    function to(uint256 valueTo, uint256 toLoyalty, address _to, uint256 _fromType) internal {
+        Snapshot memory tmpTo;
+        tmpTo.fromAddress = tx.origin;
+        tmpTo.fromBlock = uint64(block.number);
+        uint256 amounts0 = balanceOf(_to).add(valueTo);
+        uint256 amounts1 = 0;
+        if(toLoyalty > 0) {
+            amounts1 = balanceOf(_to, 1).add(toLoyalty);
+            emit Transfer(address(this), _to, toLoyalty);
+        }
+
+        uint256 amountsX = 0;
+        if(_fromType > 1) { //0 is the balance, 1 is the loyality
+            amountsX = balanceOf(_to, _fromType).add(valueTo);
+        }
+        balances[_to].push(tmpTo);
+
+        uint256 index = balances[_to].length - 1;
+
+        balances[_to][index].amounts[0] = amounts0;
+        if(toLoyalty > 0) {
+            balances[_to][index].amounts[1] = amounts1;
+        }
+        if(_fromType > 1) {
+            balances[_to][index].amounts[_fromType] = amountsX;
         }
     }
 
@@ -204,18 +295,21 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
     * @return An uint256 representing the amount owned by the passed address.
     */
     function balanceOf(address _owner) public view returns (uint256) {
-        return balances[_owner][balances[_owner].length - 1].amount[0];
-        //return balanceOf(_owner, 0, uint64(block.number));
+        //return balances[_owner][balances[_owner].length - 1].amounts[0];
+        return balanceOf(_owner, 0, uint64(block.number));
     }
 
-    function balanceOf(address _owner, uint8 _fromType) public view returns (uint256) {
-        return balances[_owner][balances[_owner].length - 1].amount[_fromType];
-        //return balanceOf(_owner, _fromType, uint64(block.number));
+    function balanceOf(address _owner, uint256 _fromType) public view returns (uint256) {
+        //return balances[_owner][balances[_owner].length - 1].amounts[_fromType];
+        return balanceOf(_owner, _fromType, uint64(block.number));
     }
 
-    function balanceOf(address _owner, uint8 _fromType, uint64 _fromBlock) public view returns (uint256) {
+    function balanceOf(address _owner, uint256 _fromType, uint64 _fromBlock) public view returns (uint256) {
         // Binary search of the value in the array
         uint min = 0;
+        if (balances[_owner].length == 0) {
+            return 0;
+        }
         uint max = balances[_owner].length-1;
         while (max > min) {
             uint mid = (max + min + 1)/ 2;
@@ -225,7 +319,7 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
                 max = mid-1;
             }
         }
-        return balances[_owner][min].amount[_fromType];
+        return balances[_owner][min].amounts[_fromType];
     }
 
 
@@ -305,7 +399,7 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
     // ERC677 functionality
     function transferAndCall(address _to, uint _value, bytes _data, uint8 _fromType) public returns (bool) {
         require(mintingDone == true);
-        require(transfer(_to, _value));
+        require(transfer(_to, _value, _fromType));
 
         emit Transfer(msg.sender, _to, _value, _data);
 
@@ -333,8 +427,7 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
         address from = Utils.recover(hashedTx, _signature);
         require(from != address(0));
 
-        doTransfer(from, _to, _value, _fee, _fromType);
-        balances[msg.sender][balances[msg.sender].length -1].amount[0] = balanceOf(msg.sender).add(_fee);
+        doTransfer(from, _to, _value, _fee, msg.sender, _fromType);
         signatures[_signature] = true;
 
         emit Transfer(from, _to, _value);
@@ -358,8 +451,7 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
         address from = Utils.recover(hashedTx, _signature);
         require(from != address(0));
 
-        doTransfer(from, _to, _value, _fee, _fromType);
-        balances[msg.sender][balances[msg.sender].length -1].amount[0] = balanceOf(msg.sender).add(_fee);
+        doTransfer(from, _to, _value, _fee, msg.sender, _fromType);
         signatures[_signature] = true;
 
         emit Transfer(from, _to, _value);
@@ -374,11 +466,4 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
         return true;
     }
 
-    function createCurrentSnapshotForAddress(address addr) internal{
-        //check memory vs. storage options
-        Snapshot memory tmp;
-        tmp.fromAddress = msg.sender;
-        tmp.fromBlock = uint64(block.number);
-        balances[addr].push(tmp);
-    }
 }

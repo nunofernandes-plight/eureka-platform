@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+import Roles from './roles-enum';
+
 /**
  * User of the eureka platform
  * Model is used for the local user authentication with passport
@@ -7,6 +9,11 @@ import mongoose from 'mongoose';
 const userSchema = mongoose.Schema(
   {
     username: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    ethereumAddress: {
       type: String,
       required: true,
       unique: true
@@ -20,7 +27,16 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true
-    }
+    },
+    isEditor: {
+      type: Boolean
+    },
+    roles: [
+      {
+        type: String,
+        enum: Object.values(Roles)
+      }
+    ]
   },
   {collection: 'users'}
 );

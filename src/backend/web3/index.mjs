@@ -4,7 +4,7 @@ import getEurekaSmartContractInput from './get-input.mjs';
 import getAccounts from './get-accounts.mjs';
 
 const deployContracts = async () => {
-  console.log('Current Web3 Provider ', web3.currentProvider.host);
+  console.log('Current Web3 Provider ', web3.currentProvider.connection._url);
   const accounts = await getAccounts();
   if (web3) {
     let eurekaInput = getEurekaSmartContractInput();
@@ -15,4 +15,10 @@ const deployContracts = async () => {
   }
 };
 
+// const run = async () => {
+//   let [eurekaTokenContract, eurekaPlatformContract] = await deployContracts();
+//   methods.testMethod(eurekaTokenContract, eurekaPlatformContract);
+// };
+
 export default deployContracts;
+//export default run;

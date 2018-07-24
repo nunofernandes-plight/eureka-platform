@@ -3,6 +3,9 @@ import Router from './Router';
 import Web3Providers from './web3/Web3Providers.js';
 import Web3 from 'web3';
 import Network from './web3/Network.js';
+import NoConnection from './webpack/NoConnection.js';
+import {Detector} from 'react-detect-offline';
+
 
 class App extends Component {
   constructor() {
@@ -60,15 +63,26 @@ class App extends Component {
   render() {
     return (
       <div>
-        {window.web3.isConnected() ? (
-          <Router
-            web3={this.state.web3}
-            provider={this.state.provider}
-            network={this.state.network}
-          />
-        ) : (
-          <h1>We were not able to connect web3</h1>
-        )}
+        <Detector
+          render={({online}) =>
+            online ? (
+              window.web3.isConnected() ? (
+                <Router
+                  web3={this.state.web3}
+                  provider={this.state.provider}
+                  network={this.state.network}
+                />
+              ) : (
+                <h1>
+                  We were not able to connect web3. Application cannot be
+                  started
+                </h1>
+              )
+            ) : (
+              <NoConnection/>
+            )
+          }
+        />
       </div>
     );
   }
