@@ -1,119 +1,51 @@
 import web3 from './web3Instance.mjs';
 import getAccounts from "./get-accounts.mjs";
+import getArticleHex from "./get-articleHex.mjs";
+
+let article = {
+  articleHash: '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+  url: 'hoihoi',
+  authors: [
+    '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88',
+    '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'
+  ],
+  linkedArticles: [
+    '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
+    '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
+    'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
+  ]
+};
 
 let accounts = [];
 
 const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
 
-  await mintEurekaTokens(eurekaTokenContract, eurekaPlatformContract);
+  await mintEurekaTokens(eurekaTokenContract);
 
-
-  let article = 'sali';
-  let url = 'hoihoi';
-  let linkedArticles = ['ciaoHash', 'adiosHash', 'adieuHash'];
-  let authors = ['0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88', '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'];
-
-  // convert the articleVersion to a bytes array
-  let articleBytes32 = web3.utils.padRight(web3.utils.toHex(article), 64);
-  let urlBytes32 = web3.utils.padRight(web3.utils.toHex(url), 64);
-  let authorsLength = web3.utils.padLeft(web3.utils.toHex(authors.length), 4);   // for number add padLeft instead of right
-  let authorsInBytes = [];
-  authors.forEach((address) => {
-    authorsInBytes.push(address);
-  });
-  let linkedArticleLength = web3.utils.padLeft(web3.utils.toHex(linkedArticles.length), 4);   // for number add padLeft instead of right
-  let linkedArticlesInBytes = [];
-  linkedArticles.forEach((articleHash) => {
-    linkedArticlesInBytes.push(
-      web3.utils.padRight(web3.utils.toHex(articleHash), 64)
-    );
-  });
-
-  let dataInBytes =
-    articleBytes32
-    + urlBytes32.substring(2)
-    + authorsLength.substring(2);
-  authorsInBytes.forEach((address) => {
-    dataInBytes = dataInBytes + address.substring(2);
-  });
-  dataInBytes += linkedArticleLength.substring(2);
-  linkedArticlesInBytes.forEach((bytes32) => {
-    dataInBytes = dataInBytes + bytes32.substring(2);
-  });
-
-  console.log(dataInBytes);
+  let dataInHex = getArticleHex(article);
+  let articleHashHex = '0x' + article.articleHash;
 
   // submit Article = send submission fee to service contract
-  await eurekaTokenContract.methods
-    .transferAndCall(eurekaPlatformContract.options.address, 5000, dataInBytes)
-    .send({
-      from: accounts[1]
-    })
-    .then((receipt) => {
-      console.log('tx status: ' + receipt.status);
-    })
-    .catch((err) => {
-      console.error(err)
-    });
+  await submitArticle(eurekaTokenContract, accounts[1], eurekaPlatformContract.options.address, 5000, dataInHex)
 
-  await getBalanceOf(eurekaTokenContract, eurekaPlatformContract.options.address);
-
-  await eurekaPlatformContract.methods
-    .articleVersions(articleBytes32)
-    .call({
-      from: accounts[1]
-    })
-    .then((receipt) => {
-      console.log(receipt);
-      let encodedUrl = web3.utils.hexToAscii(receipt.articleUrl);
-      console.log('Entered URL: ' + encodedUrl);
-    })
-    .catch((err) => {
-      console.error(err)
-    });
-
-  await eurekaPlatformContract.methods
-    .getAuthors(articleBytes32)
-    .call({
-      from: accounts[1]
-    })
-    .then((receipt) => {
-      console.log(receipt);
-    })
-    .catch((err) => {
-      console.error(err)
-    });
-
-  await eurekaPlatformContract.methods
-    .getLinkedArticles(articleBytes32)
-    .call({
-      from: accounts[1]
-    })
-    .then((receipt) => {
-      receipt.forEach((text) => {
-        console.log(web3.utils.hexToAscii(text));
-      })
-    })
-    .catch((err) => {
-      console.error(err)
-    });
+  console.log('The balance of the service contract is ' + await getBalanceOf(eurekaTokenContract, eurekaPlatformContract.options.address));
+  console.log('URL of the article: ' + await getUrl(eurekaPlatformContract, articleHashHex));
+  console.log('Authors: ' + await getAuthors(eurekaPlatformContract, articleHashHex));
+  console.log('Linked articles: ' + await getLinkedArticles(eurekaPlatformContract, articleHashHex));
 };
 
 
-const mintEurekaTokens = async (eurekaTokenContract, eurekaPlatformContract) => {
+
+const mintEurekaTokens = async (eurekaTokenContract) => {
   accounts = await getAccounts();
 
   let amounts = [];
-
   let amount = 10000;
   accounts.forEach(() => {
     amounts.push(amount);
   });
 
-  let gasEstimated = await eurekaTokenContract.methods.mint(accounts, amounts)
-    .estimateGas({
-      from: accounts[0]
-    });
+  let gasEstimated = await getGasEstimation(eurekaTokenContract.methods.mint(accounts, amounts));
 
   //Minting
   await eurekaTokenContract.methods
@@ -132,29 +64,99 @@ const mintEurekaTokens = async (eurekaTokenContract, eurekaPlatformContract) => 
       from: accounts[0]
     })
     .then((receipt) => {
+      console.log('The EKA token minting has been finished.');
       return receipt;
     });
-
-  eurekaTokenContract.methods
-    .totalSupply()
-    .call({from: accounts[0]})
-    .then(succ => {
-      console.log('Total Supply: ' + succ);
-    });
-
-  await getBalanceOf(eurekaTokenContract, eurekaPlatformContract.options.address);
 };
+
+const submitArticle = (_contract, _from, _to, _amount, _data) => {
+  return _contract.methods
+    .transferAndCall(_to, _amount, _data)
+    .send({
+      from: _from
+    })
+    .then((receipt) => {
+      console.log('The article submission exited with the TX status: ' + receipt.status);
+    })
+    .catch((err) => {
+      console.error(err)
+    });
+};
+
+
+/*
+  Getters
+ */
 
 const getBalanceOf = (contract, account) => {
   return contract.methods
     .balanceOf(account)
     .call({from: account})
     .then((bal) => {
-      console.log('balance of ' + account + ': ' + bal);
       return bal;
     })
     .catch((err) => {
       console.error(err);
+    });
+};
+
+const getTotalSupplyOf = (contract, fromAccount) => {
+  return contract.methods
+    .totalSupply()
+    .call({from: fromAccount})
+    .then(supply => {
+      return supply;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
+const getGasEstimation = (func) => {
+  return func.estimateGas({
+    from: accounts[0]
+  });
+};
+
+const getUrl = (contract, articleHashHex) => {
+  return contract.methods
+    .articleVersions(articleHashHex)
+    .call({
+      from: accounts[0]
+    })
+    .then((receipt) => {
+      return web3.utils.hexToUtf8(receipt.articleUrl);
+    })
+    .catch((err) => {
+      console.error(err)
+    });
+};
+
+const getAuthors = (contract, articleHashHex) => {
+  return contract.methods
+    .getAuthors(articleHashHex)
+    .call({
+      from: accounts[0]
+    })
+    .then((authors) => {
+      return authors;
+    })
+    .catch((err) => {
+      console.error(err)
+    });
+};
+
+const getLinkedArticles = (contract, articleHashHex) => {
+  return contract.methods
+    .getLinkedArticles(articleHashHex)
+    .call({
+      from: accounts[0]
+    })
+    .then((authors) => {
+      return authors;
+    })
+    .catch((err) => {
+      console.error(err)
     });
 };
 
