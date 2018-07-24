@@ -1,6 +1,7 @@
 import fs from 'fs';
 import solc from 'solc';
 import web3WS from '../web3/web3-websocket-instance.mjs';
+import userService from '../db/user-service';
 
 // //dependent files
 const input = {
@@ -19,11 +20,9 @@ export default {
     EurekaPlatformContract.options.address = contractAddress;
 
     //sign in for events
-    EurekaPlatformContract.events.EditorSignUp(undefined, (error, body) => {
+    EurekaPlatformContract.events.EditorSignUp(undefined, (error, event) => {
       if (error) throw error;
-
-      // TODO implement event handler --> save data into DB
-      console.log('EVENT RECEIVED!');
+      userService.makeEditor(event.returnValues.editorAdress);
     });
   }
 };

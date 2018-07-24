@@ -8,7 +8,7 @@ import passport from '../helpers/local-passport';
 import mongooseDB from '../db/mongoose-db';
 import isProduction from '../../helpers/isProduction';
 import router from '../routes/index.mjs';
-import contractEventListener from '../helpers/contract-event-listener';
+import contractEventListener from '../helpers/contract-event-handler';
 
 if (!isProduction) {
   dotenv.config();
