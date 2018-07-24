@@ -22,5 +22,5 @@ const run = async () => {
   testMethod(eurekaTokenContract, eurekaPlatformContract);
 };
 
-// export default deployContracts;
-export default run;
+export default deployContracts;
+//export default run;
