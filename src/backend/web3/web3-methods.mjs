@@ -8,7 +8,7 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
   await mintEurekaTokens(eurekaTokenContract, eurekaPlatformContract);
 
 
-  let article = 'salit';
+  let article = 'sali ';
   let url = 'hoihoi';
   let linkedArticles = ['ciaoHash', 'adiosHash', 'adieuHash'];
   let authors = ['0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88'];
@@ -46,14 +46,15 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
   //   dataInBytes = dataInBytes + bytes32.substring(2);
   // });
 
-    + web3.utils.padLeft(web3.utils.numberToHex(6).substring(2),4);
+    // + web3.utils.padLeft(web3.utils.numberToHex(6).substring(2),4);
+  + authors[0].substring(2);
 
   console.log(dataInBytes);
   // console.log(eurekaPlatformContract.options.address);
 
   await eurekaPlatformContract.methods
     // .getArticleHash(articleInHex)
-    .getInt(dataInBytes)
+    .getAddress(dataInBytes)
     .call({
       from: accounts[1]
     })

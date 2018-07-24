@@ -168,14 +168,13 @@ contract EurekaPlatform is ERC677Receiver {
         uint8 score2;
     }
 
-    function getArticleHash(bytes32 hash) public view returns (bytes32[] linkedArticle) {
-        linkedArticle = articleVersions[hash].linkedArticles;
+    function getLinkedArticles(bytes32 hash) public view returns (bytes32[] linkedArticles) {
+        linkedArticles = articleVersions[hash].linkedArticles;
     }
 
-    function getAddresses(bytes32 hash) public view returns (address[] linkedArticle) {
-        linkedArticle = articleVersions[hash].authors;
+    function getAuthors(bytes32 hash) public view returns (address[] authors) {
+        authors = articleVersions[hash].authors;
     }
-
 
     function signUpEditor(address editor) public {
         
@@ -219,7 +218,6 @@ contract EurekaPlatform is ERC677Receiver {
         }
 
         startSubmissionProcess(_from, articleHash, articleUrl, authors, linkedArticles);
-
     }
 
     function bytesToBytes32(bytes _data, uint _dataIndex) pure private returns (bytes32 result){
@@ -236,36 +234,36 @@ contract EurekaPlatform is ERC677Receiver {
         result = uint16(b);
     }
 
-    function getInt(bytes _data) public returns (uint16 result) {
+    function bytesToAddress(bytes _data, uint _dataIndex) pure private returns (address result){
+        uint resultInt = bytes20ToUint(_data, _dataIndex);
+        result = address(resultInt);
+    }
+
+    function bytes20ToUint(bytes _data, uint _dataIndex) pure public returns (uint result){
+        bytes20 b;
+        for (uint i = 0; i < 20; i++) {
+            b = b | (bytes20(_data[_dataIndex++]) >> (i * 8));
+        }
+        result = uint(b);
+    }
+
+    function getInt(bytes _data) pure public returns (uint16 result) {
         uint dataIndex = 0;
 
-        bytes32 articleHash = bytesToBytes32(_data, dataIndex);
+        //bytes32 articleHash = bytesToBytes32(_data, dataIndex);
         dataIndex += 32;
 
         result = bytesToUint16(_data, dataIndex);
     }
 
-    // copied from https://github.com/oraclize/ethereum-api/blob/master/oraclizeAPI_0.5.sol
-    function bytesToAddress(bytes _data, uint _dataIndex) pure private returns (address result){
-        uint160 iaddr = 0;
-        uint160 b1;
-        uint160 b2;
-//        for (uint i = 2; i < 2 + 2 * 20; i += 2) {
-        for (uint i = 0 ; i < 2 * 20; i += 2) {
-            iaddr *= 256;
-            b1 = uint160(_data[_dataIndex]);
-            b2 = uint160(_data[_dataIndex + 1]);
-            _dataIndex++;
+    function getAddress(bytes _data) pure public returns (address result) {
+        uint dataIndex = 0;
 
-            if ((b1 >= 97) && (b1 <= 102)) b1 -= 87;
-            else if ((b1 >= 65) && (b1 <= 70)) b1 -= 55;
-            else if ((b1 >= 48) && (b1 <= 57)) b1 -= 48;
-            if ((b2 >= 97) && (b2 <= 102)) b2 -= 87;
-            else if ((b2 >= 65) && (b2 <= 70)) b2 -= 55;
-            else if ((b2 >= 48) && (b2 <= 57)) b2 -= 48;
-            iaddr += (b1 * 16 + b2);
-        }
-        result = address(iaddr);
+        //bytes32 articleHash = bytesToBytes32(_data, dataIndex);
+        dataIndex += 32;
+
+        uint resultInt = bytes20ToUint(_data, dataIndex);
+        result = address(resultInt);
     }
 
     function startSubmissionProcess(address _from, bytes32 _articleHash, bytes32 _articleURL, address[] _authors, bytes32[] _linkedArticles) private {
