@@ -13,6 +13,7 @@ import router from '../routes/index.mjs';
 //load in env variables
 dotenv.config();
 
+console.log(process.env.DB_HOST);
 const app = express();
 
 /** Session Setup **/
@@ -47,7 +48,7 @@ app.use(
 //set global variable isAuthenticated -> call ir everywhere dynamically
 app.use(function (req, res, next) {
   res.locals.isAuthenticated = req.isAuthenticated();
-  next()
+  next();
 });
 
 //Parses the text as JSON and exposes the resulting object on req.body.
