@@ -1,5 +1,5 @@
 import web3 from './web3Instance.mjs';
-import getAccounts from "./get-accounts.mjs";
+import getAccounts from './get-accounts.mjs';
 
 let accounts = [];
 
@@ -49,7 +49,7 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
       console.log('tx status: ' + receipt.status);
     })
     .catch((err) => {
-      console.error(err)
+      console.error(err);
     });
 
   await getBalanceOf(eurekaTokenContract, eurekaPlatformContract.options.address);
@@ -65,7 +65,7 @@ const testMethod = async (eurekaTokenContract, eurekaPlatformContract) => {
       console.log('Entered URL: '+ encodedUrl);
     })
     .catch((err) => {
-      console.error(err)
+      console.error(err);
     });
 };
 

@@ -168,7 +168,7 @@ contract EurekaPlatform is ERC677Receiver {
         uint8 score2;
     }
 
-    event EditorSignUp(byte32 editorAdress);
+    event EditorSignUp(address editorAdress);
     function signUpEditor(address editor) public {
         
         require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
