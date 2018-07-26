@@ -1,6 +1,8 @@
 import web3 from '../../src/backend/web3/web3Instance.mjs';
-import web3Methods from '../../src/backend/web3/web3-methods';
+import {mintEurekaTokens, finishMinting, submitArticle, getBalanceOf} from "../../src/backend/web3/web3-token-contract-methods.mjs";
+import {getAuthors, getLinkedArticles, getUrl} from "../../src/backend/web3/web3-platform-contract-methods.mjs";
 import getArticleHex from '../../src/backend/web3/get-articleHex';
+import getAccounts from "../../src/backend/web3/get-accounts.mjs";
 
 let EurekaPlatformContract = undefined;
 let EurekaTokenContract = undefined;
@@ -8,16 +10,19 @@ let account = undefined;
 
 export default {
   setup: async (eurekaTokenContract, eurekaPlatformContract) => {
-    return web3.eth.getAccounts().then(async accounts => {
-      account = accounts[0];
-      EurekaPlatformContract = eurekaPlatformContract;
-      EurekaTokenContract = eurekaTokenContract;
+    let accounts = await getAccounts();
+    account = accounts[0];
+    EurekaPlatformContract = eurekaPlatformContract;
+    EurekaTokenContract = eurekaTokenContract;
 
-      await web3Methods.mintEurekaTokens(EurekaTokenContract);
-
-      return account;
+    let tokenAmounts = [];
+    accounts.forEach(() => {
+      tokenAmounts.push(20000);
     });
+    await mintEurekaTokens(EurekaTokenContract, accounts, tokenAmounts, account);
+    await finishMinting(EurekaTokenContract, account);
   },
+
   // signUpEditor() on SC
   testSignUpEditor: () => {
     if (EurekaPlatformContract) {
@@ -63,9 +68,9 @@ export default {
     };
 
     let dataInHex = getArticleHex(article);
-    //let articleHashHex = '0x' + article.articleHash;
+    let articleHashHex = '0x' + article.articleHash;
 
-    await web3Methods.submitArticle(
+    await submitArticle(
       EurekaTokenContract,
       account,
       EurekaPlatformContract.options.address,
@@ -73,9 +78,9 @@ export default {
       dataInHex
     );
 
-    // console.log('The balance of the service contract is ' + await web3Methods.getBalanceOf(EurekaTokenContract, EurekaPlatformContract.options.address));
-    // console.log('URL of the article: ' + await web3Methods.getUrl(EurekaPlatformContract, articleHashHex));
-    // console.log('Authors: ' + await web3Methods.getAuthors(EurekaPlatformContract, articleHashHex));
-    // console.log('Linked articles: ' + await web3Methods.getLinkedArticles(EurekaPlatformContract, articleHashHex));
+    console.log('The balance of the service contract is ' + await getBalanceOf(EurekaTokenContract, EurekaPlatformContract.options.address));
+    console.log('URL of the article: ' + await getUrl(EurekaPlatformContract, articleHashHex, account));
+    console.log('Authors: ' + await getAuthors(EurekaPlatformContract, articleHashHex, account));
+    console.log('Linked articles: ' + await getLinkedArticles(EurekaPlatformContract, articleHashHex, account));
   }
 };
