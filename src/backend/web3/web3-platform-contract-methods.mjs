@@ -1,5 +1,22 @@
 import web3 from './web3Instance.mjs';
 
+export const signUpEditor = (contract, editor, _from) => {
+  return contract.methods
+    .signUpEditor(editor)
+    .send({
+      from: _from
+    })
+    .then(receipt => {
+      console.log(
+        'The editor sign up for account ' + editor + ' exited with the TX status: ' + receipt.status
+      );
+      return receipt;
+    })
+    .catch(err => {
+      console.error(err);
+    });
+};
+
 /*
   Getters
  */

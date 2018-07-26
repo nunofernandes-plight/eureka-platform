@@ -1,17 +1,23 @@
 import web3 from '../../src/backend/web3/web3Instance.mjs';
 import {mintEurekaTokens, finishMinting, submitArticle, getBalanceOf} from "../../src/backend/web3/web3-token-contract-methods.mjs";
-import {getAuthors, getLinkedArticles, getUrl} from "../../src/backend/web3/web3-platform-contract-methods.mjs";
+import {
+  getAuthors,
+  getLinkedArticles,
+  getUrl,
+  signUpEditor
+} from "../../src/backend/web3/web3-platform-contract-methods.mjs";
 import getArticleHex from '../../src/backend/web3/get-articleHex';
 import getAccounts from "../../src/backend/web3/get-accounts.mjs";
 
 let EurekaPlatformContract = undefined;
 let EurekaTokenContract = undefined;
-let account = undefined;
+let contractOwner = undefined;
+let accounts = [];
 
 export default {
   setup: async (eurekaTokenContract, eurekaPlatformContract) => {
-    let accounts = await getAccounts();
-    account = accounts[0];
+    accounts = await getAccounts();
+    contractOwner = accounts[0];
     EurekaPlatformContract = eurekaPlatformContract;
     EurekaTokenContract = eurekaTokenContract;
 
@@ -19,31 +25,14 @@ export default {
     accounts.forEach(() => {
       tokenAmounts.push(20000);
     });
-    await mintEurekaTokens(EurekaTokenContract, accounts, tokenAmounts, account);
-    await finishMinting(EurekaTokenContract, account);
+    await mintEurekaTokens(EurekaTokenContract, accounts, tokenAmounts, contractOwner);
+    await finishMinting(EurekaTokenContract, contractOwner);
   },
 
   // signUpEditor() on SC
   testSignUpEditor: () => {
     if (EurekaPlatformContract) {
-      //TODO implement web3Method function as soon as there is one
-      EurekaPlatformContract.methods
-        .signUpEditor(account)
-        .send({
-          from: account,
-          gas: 4678127
-        })
-        .on('transactionHash', () => {
-          //this.addNewTx(tx, game.id, Status.GAME_JOINED);
-          // this.setLoadingToTrue(game);
-        })
-        .on('receipt', () => {
-          //console.log(res);
-          console.log('Successful Editor Sign up for address ' + account);
-        })
-        .on('confirmation', () => {
-          // is returned for the first 24 block confirmations
-        });
+      signUpEditor(EurekaPlatformContract, accounts[1], contractOwner);
     } else {
       throw new Error(
         'No setup Contract Method Tester - set it up with an adress'
@@ -72,15 +61,15 @@ export default {
 
     await submitArticle(
       EurekaTokenContract,
-      account,
+      contractOwner,
       EurekaPlatformContract.options.address,
       5000,
       dataInHex
     );
 
     console.log('The balance of the service contract is ' + await getBalanceOf(EurekaTokenContract, EurekaPlatformContract.options.address));
-    console.log('URL of the article: ' + await getUrl(EurekaPlatformContract, articleHashHex, account));
-    console.log('Authors: ' + await getAuthors(EurekaPlatformContract, articleHashHex, account));
-    console.log('Linked articles: ' + await getLinkedArticles(EurekaPlatformContract, articleHashHex, account));
+    console.log('URL of the article: ' + await getUrl(EurekaPlatformContract, articleHashHex, contractOwner));
+    console.log('Authors: ' + await getAuthors(EurekaPlatformContract, articleHashHex, contractOwner));
+    console.log('Linked articles: ' + await getLinkedArticles(EurekaPlatformContract, articleHashHex, contractOwner));
   }
 };
