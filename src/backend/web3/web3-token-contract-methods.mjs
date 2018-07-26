@@ -1,4 +1,4 @@
-import {getGasEstimation} from "./web3-utils-methods.mjs";
+import {getGasEstimation} from './web3-utils-methods.mjs';
 
 export const mintEurekaTokens = async (
   eurekaTokenContract,
@@ -6,7 +6,6 @@ export const mintEurekaTokens = async (
   amounts,
   owner
 ) => {
-
   let gasEstimated = await getGasEstimation(
     eurekaTokenContract.methods.mint(accounts, amounts)
   );

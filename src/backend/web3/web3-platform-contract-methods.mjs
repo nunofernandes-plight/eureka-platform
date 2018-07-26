@@ -8,7 +8,10 @@ export const signUpEditor = (contract, editor, _from) => {
     })
     .then(receipt => {
       console.log(
-        'The editor sign up for account ' + editor + ' exited with the TX status: ' + receipt.status
+        'The editor sign up for account ' +
+          editor +
+          ' exited with the TX status: ' +
+          receipt.status
       );
       return receipt;
     })
