@@ -329,7 +329,7 @@ contract EurekaPlatform is ERC677Receiver {
     
     // a journal editor can assign him/herself to an article submission process
     // if the process is not already claimed by another editor
-    function assignForSubmissionProcess(uint256 _submissionId) public{
+    function assignForSubmissionProcess(uint256 _submissionId) public {
         
         require(isEditor[msg.sender], "msg.sender must be an editor to call this function.");
         
@@ -338,6 +338,27 @@ contract EurekaPlatform is ERC677Receiver {
         require(submission.editor == address(0), "the submission process is already assigned to an editor.");
         
         submission.editor = msg.sender;
+    }
+    
+    function removeEditorFromSubmissionProcess(uint256 _submissionId) public {
+    
+        ArticleSubmission storage submission = articleSubmissions[_submissionId];
+        require(msg.sender == contractOwner
+            || msg.sender == submission.editor, "an editor can only be removed by the contract owner or itself.");
+            
+        submission.editor = address(0);
+    }
+    
+    // is it a good idea that the current editor can assign another editor? or should only removing (method below) be possible?
+    function changeEditorFromSubmissionProcess(uint256 _submissionId, address _newEditor) public {
+    
+        require(isEditor[_newEditor], 'the new editor must be an allowed editor.');
+    
+        ArticleSubmission storage submission = articleSubmissions[_submissionId];
+        require(msg.sender == contractOwner
+            || msg.sender == submission.editor, "an editor can only be changed by the contract owner or the current editor.");
+            
+        submission.editor = _newEditor;
     }
     
     // TODO change editor by contract owner or editor itself
