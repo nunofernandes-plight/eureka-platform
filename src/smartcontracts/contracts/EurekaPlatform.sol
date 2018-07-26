@@ -118,6 +118,7 @@ contract EurekaPlatform is ERC677Receiver {
         // the timestamp when the article was published
         uint256 publishedTimestamp;
         // the URL where the article is saved
+        //TODO: URL can be resp. IS USUALLY bigger than bytes32 -> us string and length indicator in bytes parser
         bytes32 articleUrl;
         
         ArticleVersionState versionState;
