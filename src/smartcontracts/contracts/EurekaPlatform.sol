@@ -360,8 +360,6 @@ contract EurekaPlatform is ERC677Receiver {
             
         submission.editor = _newEditor;
     }
-    
-    // TODO change editor by contract owner or editor itself
 
     function editorCheckAndReviewerInvitation(bytes32 _articleHash, bool _isSanityOk, address[] _allowedEditorApprovedReviewers) public {
         
@@ -500,4 +498,6 @@ contract EurekaPlatform is ERC677Receiver {
 
         review.reviewState = ReviewState.DECLINED;
     }
+    
+    
 }
