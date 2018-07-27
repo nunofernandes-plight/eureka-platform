@@ -8,13 +8,13 @@ import "./Eureka.sol";
 contract EurekaPlatform is ERC677Receiver {
 
     using SafeMath for uint256;
-    
+
     address contractOwner;
 
     /*
     *   journal parameters
     */
-    
+
     mapping(address => bool) isEditor;
 
     // amount of rewarded reviewers
@@ -43,7 +43,7 @@ contract EurekaPlatform is ERC677Receiver {
 
 
     constructor() public {
-        
+
         contractOwner = msg.sender;
 
         editorApprovedReviewerRewardPerReviewer[0] = 150;
@@ -121,7 +121,7 @@ contract EurekaPlatform is ERC677Receiver {
         // the URL where the article is saved
         //TODO: URL can be resp. IS USUALLY bigger than bytes32 -> us string and length indicator in bytes parser
         bytes32 articleUrl;
-        
+
         ArticleVersionState versionState;
 
         address[] authors;
@@ -134,11 +134,11 @@ contract EurekaPlatform is ERC677Receiver {
         uint16[] linkedArticlesSplitRatios;
 
         // the reviewers which are allowed to review that article as an editor approved reviewer
-//        address[] allowedEditorApprovedReviewers;
+        //        address[] allowedEditorApprovedReviewers;
         mapping(address => bool) allowedEditorApprovedReviewers;
         // the reviewers which are approved from the editor
         // TODO how to check if Reviewer already saved a review -> with array for loop (expensive) maybe save additional mapping
-//        mapping(address => Review) editorApprovedReviews;
+        //        mapping(address => Review) editorApprovedReviews;
         Review[] editorApprovedReviews;
 
         // every community reviewer can add a community review without being approved
@@ -159,7 +159,7 @@ contract EurekaPlatform is ERC677Receiver {
         address reviewer;
 
         ReviewState reviewState;
-        
+
         bytes32 reviewHash;
         uint256 reviewedTimestamp;
         uint8 score1;
@@ -176,8 +176,9 @@ contract EurekaPlatform is ERC677Receiver {
 
 
     event EditorSignUp(address editorAdress);
+
     function signUpEditor(address editor) public {
-        
+
         require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
         isEditor[editor] = true;
         emit EditorSignUp(editor);
@@ -189,7 +190,7 @@ contract EurekaPlatform is ERC677Receiver {
      *      discussion.
      */
     function tokenFallback(address _from, uint256 _amount, bytes _data) public {
-        
+
         //require(msg.sender == EutekaTokenAddress);
         require(_amount == submissionFee);
 
@@ -207,7 +208,8 @@ contract EurekaPlatform is ERC677Receiver {
         uint16[] memory contributeRatios = new uint16[](authorsLength);
         for (uint j = 0; j < authorsLength; j++) {
             authors[j] = bytesToAddress(_data, dataIndex);
-            dataIndex += 20; //address is 20 bytes
+            //address is 20 bytes
+            dataIndex += 20;
             contributeRatios[j] = bytesToUint16(_data, dataIndex);
             dataIndex += 2;
         }
@@ -274,6 +276,7 @@ contract EurekaPlatform is ERC677Receiver {
     }
 
     event SubmissionProcessStart(address submissionOwner);
+
     function startSubmissionProcess(address _from, bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
         uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) private {
 
@@ -330,53 +333,53 @@ contract EurekaPlatform is ERC677Receiver {
         articleVersions[_articleHash].versionState = ArticleVersionState.SUBMITTED;
 
     }
-    
+
     // a journal editor can assign him/herself to an article submission process
     // if the process is not already claimed by another editor
     function assignForSubmissionProcess(uint256 _submissionId) public {
-        
+
         require(isEditor[msg.sender], "msg.sender must be an editor to call this function.");
-        
+
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
         require(submission.submissionState == SubmissionState.OPEN, "the submission process not open.");
         require(submission.editor == address(0), "the submission process is already assigned to an editor.");
-        
+
         submission.editor = msg.sender;
     }
-    
+
     function removeEditorFromSubmissionProcess(uint256 _submissionId) public {
-    
+
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
         require(msg.sender == contractOwner
-            || msg.sender == submission.editor, "an editor can only be removed by the contract owner or itself.");
-            
+        || msg.sender == submission.editor, "an editor can only be removed by the contract owner or itself.");
+
         submission.editor = address(0);
     }
-    
+
     // is it a good idea that the current editor can assign another editor? or should only removing (method below) be possible?
     function changeEditorFromSubmissionProcess(uint256 _submissionId, address _newEditor) public {
-    
+
         require(isEditor[_newEditor], 'the new editor must be an allowed editor.');
-    
+
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
         require(msg.sender == contractOwner
-            || msg.sender == submission.editor, "an editor can only be changed by the contract owner or the current editor.");
-            
+        || msg.sender == submission.editor, "an editor can only be changed by the contract owner or the current editor.");
+
         submission.editor = _newEditor;
     }
 
     function editorCheckAndReviewerInvitation(bytes32 _articleHash, bool _isSanityOk, address[] _allowedEditorApprovedReviewers) public {
-        
+
         firstEditorCheck(_articleHash, _isSanityOk);
-        
+
         if (_isSanityOk)
             addAllowedReviewers(_articleHash, _allowedEditorApprovedReviewers);
     }
 
     function firstEditorCheck(bytes32 _articleHash, bool _isSanityOk) public {
-        
+
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
-        
+
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.SUBMITTED, "this method can't be called. version state must be SUBMITTED.");
 
@@ -391,7 +394,7 @@ contract EurekaPlatform is ERC677Receiver {
     }
 
     function addAllowedReviewers(bytes32 _articleHash, address[] _allowedEditorApprovedReviewers) public {
-        
+
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
         ArticleVersion storage article = articleVersions[_articleHash];
@@ -402,158 +405,158 @@ contract EurekaPlatform is ERC677Receiver {
         }
     }
 
-    function acceptReviewInvitation(bytes32 _articleHash) public{
+    function acceptReviewInvitation(bytes32 _articleHash) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
-        
+
         require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
         require(article.editorApprovedReviews.length < maxAmountOfEditorApprovedReviewer, "the max amount of editor approved reviews is already reached.");
-        
+
         Review storage review = reviews[_articleHash][msg.sender];
         review.reviewState = ReviewState.INVITATION_ACCEPTED;
         review.reviewer = msg.sender;
-        
+
         article.editorApprovedReviews.push(review);
     }
 
     function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
-        
+
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
-        
+
         require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
-        
+
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState <= ReviewState.INVITATION_ACCEPTED, "the review already exists.");
-        
+
         if (review.reviewState != ReviewState.INVITATION_ACCEPTED) {
             require(article.editorApprovedReviews.length < maxAmountOfEditorApprovedReviewer, "the max amount of editor approved reviews is already reached.");
             article.editorApprovedReviews.push(review);
         }
-        
+
         review.reviewer = msg.sender;
-        
+
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
         review.score1 = _score1;
         review.score2 = _score2;
-        
+
         review.reviewState = ReviewState.HANDED_IN;
     }
 
     function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
-        
+
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
-        
+
         require(article.communityReviews.length < maxAmountOfCommunityReviewer, "the max amount of rewarded community reviews is already reached.");
-        
+
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState <= ReviewState.INVITATION_ACCEPTED, "the review already exists.");
-        
+
         review.reviewer = msg.sender;
-        
+
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
         review.score1 = _score1;
         review.score2 = _score2;
-        
+
         article.communityReviews.push(review);
         review.reviewState = ReviewState.HANDED_IN;
     }
-    
+
     function correctReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
-        
+
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
-        
+
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState == ReviewState.DECLINED, "only declined reviews can be corrected.");
-        
+
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
         review.score1 = _score1;
         review.score2 = _score2;
-        
+
         review.reviewState = ReviewState.HANDED_IN;
     }
 
     function acceptReview(bytes32 _articleHash, address _reviewerAddress) public {
-        
+
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
-        
+
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
-        
+
         Review storage review = reviews[_articleHash][_reviewerAddress];
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
-        
+
         review.reviewState = ReviewState.ACCEPTED;
     }
-    
-    function declineReview (bytes32 _articleHash, address _reviewerAddress) public {
-        
+
+    function declineReview(bytes32 _articleHash, address _reviewerAddress) public {
+
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
-        
+
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
-        
+
         Review storage review = reviews[_articleHash][_reviewerAddress];
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.DECLINED;
     }
-    
-    function acceptArticleVersion (bytes32 _articleHash) public {
-        
+
+    function acceptArticleVersion(bytes32 _articleHash) public {
+
         require(isEditor[msg.sender], "msg.sender needs to be an editor.");
-        
+
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
-        
+
         require(countAcceptedReviews(article.editorApprovedReviews) >= minAmountOfEditorApprovedReviewer,
             "the article doesn't have enough accepted editor approved reviews to get accepted.");
         require(countAcceptedReviews(article.communityReviews) >= minAmountOfCommunityReviewer,
             "the article doesn't have enough community reviews to get accepted.");
-        
+
         // TODO if accept method is called to early, other reviewers could be rewarded.
-        
+
         article.versionState = ArticleVersionState.ACCEPTED;
-        
+
         closeSubmissionProcess(article.submissionId);
     }
-    
-    function declineArticleVersion (bytes32 _articleHash) public {
-        
+
+    function declineArticleVersion(bytes32 _articleHash) public {
+
         require(isEditor[msg.sender], "msg.sender needs to be an editor.");
-        
+
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
-        
+
         // TODO if accept method is called to early, other reviewers could be rewarded.
-        
+
         article.versionState = ArticleVersionState.DECLINED;
-        
+
         if (countDeclinedArticles(article.submissionId) >= maxReviewRounds)
             closeSubmissionProcess(article.submissionId);
         else
             requestNewReviewRound(article.submissionId);
     }
-    
-    function countAcceptedReviews (Review[] _reviews) pure private returns (uint count) {
-        for (uint i=0; i < _reviews.length; i++) {
+
+    function countAcceptedReviews(Review[] _reviews) pure private returns (uint count) {
+        for (uint i = 0; i < _reviews.length; i++) {
             if (_reviews[i].reviewState == ReviewState.ACCEPTED)
                 count++;
         }
         return count;
     }
-    
+
     // only counts the articles which went through a review process and therefore have the state DECLINED
     // does not consider the versions with state DECLINED_SANITY_NOTOK
-    function countDeclinedArticles (uint256 _submissionId) view private returns (uint count) {
+    function countDeclinedArticles(uint256 _submissionId) view private returns (uint count) {
         ArticleVersion[] storage versions = articleSubmissions[_submissionId].versions;
-        for (uint i=0; i < versions.length; i++) {
+        for (uint i = 0; i < versions.length; i++) {
             if (versions[i].versionState == ArticleVersionState.DECLINED)
                 count++;
         }
@@ -589,12 +592,12 @@ contract EurekaPlatform is ERC677Receiver {
     }
 
     function declineNewReviewRound(uint256 _submissionId) public {
-        
+
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
         require(msg.sender == submission.submissionOwner, "only the submission process owner can call this method");
         require(submission.submissionState == SubmissionState.NEW_REVIEW_ROUND_REQUESTED,
             "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
-        
+
         closeSubmissionProcess(_submissionId);
     }
 }
