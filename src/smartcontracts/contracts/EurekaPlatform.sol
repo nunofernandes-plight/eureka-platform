@@ -91,6 +91,7 @@ contract EurekaPlatform is ERC677Receiver {
     enum SubmissionState {
         NOT_EXISTING,
         OPEN,
+        NEW_REVIEW_ROUND_REQUESTED,
         CLOSED
     }
     // different ArticleVersions from different review-rounds are saved in the same ArticleSubmission Object
@@ -377,6 +378,8 @@ contract EurekaPlatform is ERC677Receiver {
         }
         else {
             article.versionState = ArticleVersionState.DECLINED_SANITY_NOTOK;
+            // TODO handle difference between review rounds and article versions
+            requestNewReviewRound(article.submissionId);
         }
     }
 
@@ -495,7 +498,7 @@ contract EurekaPlatform is ERC677Receiver {
         review.reviewState = ReviewState.DECLINED;
     }
     
-    function acceptArticle (bytes32 _articleHash) public {
+    function acceptArticleVersion (bytes32 _articleHash) public {
         
         require(isEditor[msg.sender], "msg.sender needs to be an editor.");
         
@@ -514,19 +517,54 @@ contract EurekaPlatform is ERC677Receiver {
         closeSubmissionProcess(article.submissionId);
     }
     
-    function countAcceptedReviews (Review[] _reviews) private returns (uint count) {
-        for (uint i=0; i < reviews.length; i++) {
+    function declineArticleVersion (bytes32 _articleHash) public {
+        
+        require(isEditor[msg.sender], "msg.sender needs to be an editor.");
+        
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        
+        // TODO if accept method is called to early, other reviewers could be rewarded.
+        
+        article.versionState = ArticleVersionState.DECLINED;
+        
+        if (countDeclinedArticles(article.submissionId) >= maxReviewRounds)
+            closeSubmissionProcess(article.submissionId);
+        else
+            requestNewReviewRound(article.submissionId);
+    }
+    
+    function countAcceptedReviews (Review[] _reviews) pure private returns (uint count) {
+        for (uint i=0; i < _reviews.length; i++) {
             if (_reviews[i].reviewState == ReviewState.ACCEPTED)
                 count++;
         }
+        return count;
     }
     
+    // only counts the articles which went through a review process and therefore have the state DECLINED
+    // does not consider the versions with state DECLINED_SANITY_NOTOK
+    function countDeclinedArticles (uint256 _submissionId) view private returns (uint count) {
+        ArticleVersion[] storage versions = articleSubmissions[_submissionId].versions;
+        for (uint i=0; i < versions.length; i++) {
+            if (versions[i].versionState == ArticleVersionState.DECLINED)
+                count++;
+        }
+        return count;
+    }
+
+    // TODO: should it be possible to close a submission process before reaching maxReviewRounds ??
     function closeSubmissionProcess(uint256 _submissionId) private {
-        
+
         // TODO transfer all rewards
-        
+
         articleSubmissions[_submissionId].submissionState = SubmissionState.CLOSED;
-    } 
-    
-    
+    }
+
+    function requestNewReviewRound(uint256 _submissionId) private {
+
+        // maybe TODO transfer all rewards
+
+        articleSubmissions[_submissionId].submissionState = SubmissionState.NEW_REVIEW_ROUND_REQUESTED;
+    }
 }
