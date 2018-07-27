@@ -127,11 +127,11 @@ contract EurekaPlatform is ERC677Receiver {
         address[] authors;
         // the submission owner can weight the contributions of the different authors [0;10000]
         //  ( e.g. 3 authors with 1/3 contribution each: {3334,3333,3333} )
-        uint8[] authorContributionRatio;
+        uint16[] authorContributionRatios;
         // the hashes of the linked articles
         bytes32[] linkedArticles;
         // the submission owner can weight the impact of the linked articles [0;10000]
-        uint8[] linkedArticlesSplitRatio;
+        uint16[] linkedArticlesSplitRatios;
 
         // the reviewers which are allowed to review that article as an editor approved reviewer
 //        address[] allowedEditorApprovedReviewers;
@@ -204,21 +204,26 @@ contract EurekaPlatform is ERC677Receiver {
         uint16 authorsLength = bytesToUint16(_data, dataIndex);
         dataIndex += 2;
         address[] memory authors = new address[](authorsLength);
+        uint16[] memory contributeRatios = new uint16[](authorsLength);
         for (uint j = 0; j < authorsLength; j++) {
             authors[j] = bytesToAddress(_data, dataIndex);
-            dataIndex += 20;
-            //address is 20 bytes
+            dataIndex += 20; //address is 20 bytes
+            contributeRatios[j] = bytesToUint16(_data, dataIndex);
+            dataIndex += 2;
         }
 
         uint16 linkedArticlesLength = bytesToUint16(_data, dataIndex);
         dataIndex += 2;
         bytes32[] memory linkedArticles = new bytes32[](linkedArticlesLength);
+        uint16[] memory linkedArticlesSplitRatios = new uint16[](linkedArticlesLength);
         for (j = 0; j < linkedArticlesLength; j++) {
             linkedArticles[j] = bytesToBytes32(_data, dataIndex);
             dataIndex += 32;
+            linkedArticlesSplitRatios[j] = bytesToUint16(_data, dataIndex);
+            dataIndex += 2;
         }
 
-        startSubmissionProcess(_from, articleHash, articleUrl, authors, linkedArticles);
+        startSubmissionProcess(_from, articleHash, articleUrl, authors, contributeRatios, linkedArticles, linkedArticlesSplitRatios);
 
     }
 
@@ -269,7 +274,8 @@ contract EurekaPlatform is ERC677Receiver {
     }
 
     event SubmissionProcessStart(address submissionOwner);
-    function startSubmissionProcess(address _from, bytes32 _articleHash, bytes32 _articleURL, address[] _authors, bytes32[] _linkedArticles) private {
+    function startSubmissionProcess(address _from, bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
+        uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) private {
 
         uint submissionId = submissionCounter++;
         ArticleSubmission storage submission = articleSubmissions[submissionId];
@@ -277,13 +283,14 @@ contract EurekaPlatform is ERC677Receiver {
         submission.submissionId = submissionId;
         submission.submissionOwner = _from;
 
-        submitArticleVersion(submissionId, _articleHash, _articleURL, _authors, _linkedArticles);
+        submitArticleVersion(submissionId, _articleHash, _articleURL, _authors, _authorContributionRatios, _linkedArticles, _linkedArticlesSplitRatios);
 
         submission.submissionState = SubmissionState.OPEN;
         emit SubmissionProcessStart(_from);
     }
 
-    function submitArticleVersion(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors, bytes32[] _linkedArticles) private {
+    function submitArticleVersion(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL,
+        address[] _authors, uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) private {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.submissionId == 0, 'Article was already uploaded.');
@@ -295,9 +302,9 @@ contract EurekaPlatform is ERC677Receiver {
         article.publishedTimestamp = block.timestamp;
 
         article.authors = _authors;
-        // TODO: parse version.authorContributionRatio = authorContributionRatio;
+        article.authorContributionRatios = _authorContributionRatios;
         article.linkedArticles = _linkedArticles;
-        // TODO: parse version.linkedArticlesSplitRatio = linkedArticlesSplitRatio;
+        article.linkedArticlesSplitRatios = _linkedArticlesSplitRatios;
 
         articleSubmissions[_submissionId].versions.push(article);
         article.versionState = ArticleVersionState.SUBMITTED;
@@ -568,15 +575,16 @@ contract EurekaPlatform is ERC677Receiver {
         articleSubmissions[_submissionId].submissionState = SubmissionState.NEW_REVIEW_ROUND_REQUESTED;
     }
 
-    function openNewReviewRound(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors, bytes32[] _linkedArticles) public {
-        
+    function openNewReviewRound(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
+        uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) public {
+
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
         require(msg.sender == submission.submissionOwner, "only the submission process owner can submit articles.");
         require(submission.submissionState == SubmissionState.NEW_REVIEW_ROUND_REQUESTED,
             "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
-        
-        submitArticleVersion(_submissionId, _articleHash, _articleURL, _authors, _linkedArticles);
-        
+
+        submitArticleVersion(_submissionId, _articleHash, _articleURL, _authors, _authorContributionRatios, _linkedArticles, _linkedArticlesSplitRatios);
+
         submission.submissionState = SubmissionState.OPEN;
     }
 
