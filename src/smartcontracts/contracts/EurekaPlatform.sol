@@ -567,4 +567,16 @@ contract EurekaPlatform is ERC677Receiver {
 
         articleSubmissions[_submissionId].submissionState = SubmissionState.NEW_REVIEW_ROUND_REQUESTED;
     }
+
+    function openNewReviewRound(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors, bytes32[] _linkedArticles) public {
+        
+        ArticleSubmission storage submission = articleSubmissions[_submissionId];
+        require(msg.sender == submission.submissionOwner, "only the submission process owner can submit articles.");
+        require(submission.submissionState == SubmissionState.NEW_REVIEW_ROUND_REQUESTED,
+            "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
+        
+        submitArticleVersion(_submissionId, _articleHash, _articleURL, _authors, _linkedArticles);
+        
+        submission.submissionState = SubmissionState.OPEN;
+    }
 }
