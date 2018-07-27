@@ -107,8 +107,8 @@ contract EurekaPlatform is ERC677Receiver {
         SUBMITTED,
         EDITOR_CHECKED,
         NOT_ENOUGH_REVIEWERS,
-        NOT_ACCEPTED_SANITY_NOTOK,
-        NOT_ACCEPTED,
+        DECLINED_SANITY_NOTOK,
+        DECLINED,
         ACCEPTED
     }
     // an ArticleSubmission can have different versions
@@ -376,7 +376,7 @@ contract EurekaPlatform is ERC677Receiver {
             article.versionState = ArticleVersionState.EDITOR_CHECKED;
         }
         else {
-            article.versionState = ArticleVersionState.NOT_ACCEPTED_SANITY_NOTOK;
+            article.versionState = ArticleVersionState.DECLINED_SANITY_NOTOK;
         }
     }
 
