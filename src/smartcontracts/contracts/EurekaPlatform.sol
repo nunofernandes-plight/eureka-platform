@@ -521,5 +521,12 @@ contract EurekaPlatform is ERC677Receiver {
         }
     }
     
+    function closeSubmissionProcess(uint256 _submissionId) private {
+        
+        // TODO transfer all rewards
+        
+        articleSubmissions[_submissionId].submissionState = SubmissionState.CLOSED;
+    } 
+    
     
 }
