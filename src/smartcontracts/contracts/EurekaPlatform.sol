@@ -144,10 +144,6 @@ contract EurekaPlatform is ERC677Receiver {
         // TODO how to check if Reviewer already saved a review -> with array for loop (expensive) maybe save additional mapping
         //        mapping(address => Review) communityReviews;
         Review[] communityReviews;
-
-        // either save aggregated scores in article version or loop in GET method over review array
-        uint8 score1;
-        uint8 score2;
     }
 
     enum ReviewState {
@@ -482,7 +478,7 @@ contract EurekaPlatform is ERC677Receiver {
         
         Review storage review = reviews[_articleHash][_reviewerAddress];
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
-
+        
         review.reviewState = ReviewState.ACCEPTED;
     }
     
@@ -497,6 +493,32 @@ contract EurekaPlatform is ERC677Receiver {
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.DECLINED;
+    }
+    
+    function acceptArticle (bytes32 _articleHash) public {
+        
+        require(isEditor[msg.sender], "msg.sender needs to be an editor.");
+        
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        
+        require(countAcceptedReviews(article.editorApprovedReviews) >= minAmountOfEditorApprovedReviewer,
+            "the article doesn't have enough accepted editor approved reviews to get accepted.");
+        require(countAcceptedReviews(article.communityReviews) >= minAmountOfCommunityReviewer,
+            "the article doesn't have enough community reviews to get accepted.");
+        
+        // TODO if accept method is called to early, other reviewers could be rewarded.
+        
+        article.versionState = ArticleVersionState.ACCEPTED;
+        
+        closeSubmissionProcess(article.submissionId);
+    }
+    
+    function countAcceptedReviews (Review[] _reviews) private returns (uint count) {
+        for (uint i=0; i < reviews.length; i++) {
+            if (_reviews[i].reviewState == ReviewState.ACCEPTED)
+                count++;
+        }
     }
     
     
