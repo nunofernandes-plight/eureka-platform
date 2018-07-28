@@ -1,6 +1,7 @@
 import web3 from '../../src/backend/web3/web3Instance.mjs';
 import web3Methods from '../../src/backend/web3/web3-methods';
 import getArticleHex from '../../src/backend/web3/get-articleHex';
+import mongoose from '../../src/backend/db/mongoose-db';
 
 let EurekaPlatformContract = undefined;
 let EurekaTokenContract = undefined;
@@ -72,6 +73,7 @@ export default {
       5000,
       dataInHex
     );
+
 
     // console.log('The balance of the service contract is ' + await web3Methods.getBalanceOf(EurekaTokenContract, EurekaPlatformContract.options.address));
     // console.log('URL of the article: ' + await web3Methods.getUrl(EurekaPlatformContract, articleHashHex));
