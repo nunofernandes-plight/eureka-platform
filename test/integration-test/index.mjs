@@ -8,7 +8,8 @@ if (!isProduction()) {
   //import env variables from .env file
   dotenv.config();
 
-  deployContracts().then(([eurekaTokenContract, eurekaPlatformContract]) => {
+  deployContracts()
+    .then(([eurekaTokenContract, eurekaPlatformContract]) => {
     //start backend
     app.setupApp(eurekaPlatformContract);
     app.listenTo(process.env.PORT || 8080);
