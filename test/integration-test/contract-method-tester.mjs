@@ -13,6 +13,7 @@ import {
 import getArticleHex from '../../src/backend/web3/get-articleHex';
 import getAccounts from '../../src/backend/web3/get-accounts.mjs';
 import User from '../../src/backend/schema/user';
+import Submission from '../../src/backend/schema/submission';
 import userService from '../../src/backend/db/user-service';
 
 let EurekaPlatformContract = undefined;
@@ -27,8 +28,9 @@ export default {
     EurekaPlatformContract = eurekaPlatformContract;
     EurekaTokenContract = eurekaTokenContract;
 
-    //setup DB
-    let user = await User.remove({});
+    //setup DB & delete collections
+    await User.remove({});
+    await Submission.remove({});
     await userService.createUser('test2', 'test', 'test@test.test', contractOwner);
 
     let tokenAmounts = [];
@@ -42,8 +44,6 @@ export default {
       contractOwner
     );
     await finishMinting(EurekaTokenContract, contractOwner);
-
-    return user;
   },
 
   // signUpEditor() on SC
