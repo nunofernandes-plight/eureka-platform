@@ -26,7 +26,7 @@ class App extends Component {
       web3: web3Instance,
       provider,
       network: null,
-      metaMaskStatus: MetaMaskStatus.NO_DETECTED
+      metaMaskStatus: null
     };
 
     this.getNetwork();
@@ -39,16 +39,6 @@ class App extends Component {
     this.interval = setInterval(async () => {
       const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
       this.setState({metaMaskStatus});
-
-      console.log(metaMaskStatus);
-
-      // // if modal is open and metamask has been accessed by the user
-      // if (
-      //   this.state.isShowed &&
-      //   metaMaskStatus === MetaMaskStatus.DETECTED_LOGGED_IN
-      // ) {
-      //   this.setState({isShowed: false});
-      // }
     }, 1200);
   }
 
