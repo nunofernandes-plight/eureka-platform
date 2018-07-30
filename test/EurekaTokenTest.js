@@ -1,6 +1,6 @@
 import test from 'ava';
 import deployContracts from '../src/backend/web3/index.mjs';
-import getAccounts from "../src/backend/web3/get-accounts.mjs";
+import getAccounts from '../src/backend/web3/get-accounts.mjs';
 
 let contract;
 let accounts;
@@ -28,14 +28,14 @@ test('minting and total supply', async t => {
     });
 
   //Minting
- await contract.methods
-   .mint(accounts, amounts)
-   .send({
+  await contract.methods
+    .mint(accounts, amounts)
+    .send({
       from: accounts[0],
       gas: gasEstimated
     })
-   .then((receipt) => {
-     return receipt;
+    .then((receipt) => {
+      return receipt;
     });
 
   // total supply after minting

@@ -1,14 +1,9 @@
-import mongoose from './mongoose-db';
-import db from './db';
-import authorSchema from '../schema/author';
-
-const collectionName = 'authors';
-const Author = mongoose.model(collectionName, authorSchema, collectionName);
+import db from './db.mjs';
+import Author from '../schema/author.mjs';
 
 export default {
   getAllAuthors: () => {
     return db
-      .collection(collectionName)
       .find()
       .toArray();
   },

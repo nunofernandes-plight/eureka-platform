@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import Roles from './roles-enum';
+import Roles from './roles-enum.mjs';
 
 /**
  * User of the eureka platform
@@ -41,4 +41,6 @@ const userSchema = mongoose.Schema(
   {collection: 'users'}
 );
 
-export default userSchema;
+const User = mongoose.model('User', userSchema, 'users');
+
+export default User;

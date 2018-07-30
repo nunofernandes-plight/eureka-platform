@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import passport from '../helpers/local-passport';
+import passport from '../helpers/local-passport.mjs';
 
 const router = express.Router();
 const __dirname = path.resolve();

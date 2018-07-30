@@ -2,7 +2,7 @@ import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
 
 const router = express.Router();
-import userService from '../db/user-service';
+import userService from '../db/user-service.mjs';
 
 router.get(
   '/',

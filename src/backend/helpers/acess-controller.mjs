@@ -1,10 +1,5 @@
-import userSchema from '../schema/user';
-import Roles from '../schema/roles-enum';
-import mongoose from 'mongoose';
-
-const User = mongoose.model('User', userSchema);
-
-//const adminRole = new Role({value: 'ADMIN' });
+import User from '../schema/user.mjs';
+import Roles from '../schema/roles-enum.mjs';
 
 export default {
   /**

@@ -2,8 +2,8 @@
  * Testing routes
  */
 import express from 'express';
-import authenticationCheck from '../helpers/acess-controller';
-import Roles from '../schema/roles-enum';
+import authenticationCheck from '../helpers/acess-controller.mjs';
+import Roles from '../schema/roles-enum.mjs';
 const router = express.Router();
 
 router.get('/', function(req, res) {

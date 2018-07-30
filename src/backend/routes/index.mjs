@@ -3,10 +3,10 @@ import reviewRoutes from './review-routes.mjs';
 import welcomeRoutes from './welcome-routes.mjs';
 import authorRoutes from './author-routes.mjs';
 import signupRoutes from './register-routes.mjs';
-import loginRoutes from './login-routes';
-import logoutRoutes from './logout-routes';
-import registerRoutes from './register-routes';
-import userRoutes from './user-routes';
+import loginRoutes from './login-routes.mjs';
+import logoutRoutes from './logout-routes.mjs';
+import registerRoutes from './register-routes.mjs';
+import userRoutes from './user-routes.mjs';
 
 const router = express.Router();
 

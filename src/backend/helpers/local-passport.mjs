@@ -1,11 +1,9 @@
 import passport from 'passport';
 import passportLocal from 'passport-local/lib/index';
-import bcryptHasher from './bcrypt-hasher';
-import mongoose from '../db/mongoose-db';
-import userSchema from '../schema/user';
+import bcryptHasher from './bcrypt-hasher.mjs';
+import User from '../schema/user.mjs';
 
 const LocalStrategy = passportLocal.Strategy;
-const User = mongoose.model('users', userSchema, 'users');
 
 passport.use(
   new LocalStrategy(async function(username, password, done) {

@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import isProduction from '../../helpers/isProduction';
+import isProduction from '../../helpers/isProduction.mjs';
 import mongo from 'then-mongo/index';
 
 const collections = ['reviews'];
@@ -16,6 +16,11 @@ const url =
   process.env.DB_HOST +
   '/' +
   process.env.DB_NAME;
+
+if(isProduction()) {
+  url.concat('?ssl=true');
+}
+
 const db = mongo(url, collections);
 
 export default db;

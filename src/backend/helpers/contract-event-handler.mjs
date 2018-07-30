@@ -1,4 +1,5 @@
-import userService from '../db/user-service';
+import userService from '../db/user-service.mjs';
+import submissionService from '../db/submission-service.mjs';
 
 export default {
   setup: EurekaPlatformContract => {
@@ -12,10 +13,7 @@ export default {
       undefined,
       (error, event) => {
         if (error) throw error;
-        //TODO save submission in DB
-        console.log(
-          'Backend - Submission here: ' + event.returnValues.submissionOwner
-        );
+        submissionService.createSubmission(event.returnValues.submissionOwner);
       }
     );
   }

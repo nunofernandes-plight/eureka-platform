@@ -1,11 +1,7 @@
-import mongoose from 'mongoose';
-import db from './db';
-import bcryptHasher from '../helpers/bcrypt-hasher';
-import userSchema from '../schema/user';
-import Roles from '../schema/roles-enum';
-
-const COLLECTION = 'users';
-const User = mongoose.model('User', userSchema);
+import db from './db.mjs';
+import bcryptHasher from '../helpers/bcrypt-hasher.mjs';
+import User from '../schema/user.mjs';
+import Roles from '../schema/roles-enum.mjs';
 
 export default {
   /**
@@ -14,7 +10,6 @@ export default {
    */
   getAllUsers: () => {
     return db
-      .collection(COLLECTION)
       .find()
       .toArray();
   },
@@ -44,6 +39,15 @@ export default {
         throw err;
       }
     );
+  },
+
+  /**
+   * Get one user by ethereumAddress
+   * @param ethereumAddress
+   * @returns {Promise<Query|void|*|Promise<Object>|Promise<TSchema | null>|Promise>}
+   */
+  getUserByEthereumAddress: async (ethereumAddress) => {
+    return User.findOne({'ethereumAddress': ethereumAddress});
   },
 
   /**
