@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import Roles from './roles-enum';
+import Roles from './roles-enum.mjs';
 
 /**
  * User of the eureka platform

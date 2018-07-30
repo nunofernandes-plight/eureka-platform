@@ -1,5 +1,5 @@
-import userService from '../db/user-service';
-import submissionService from '../db/submission-service';
+import userService from '../db/user-service.mjs';
+import submissionService from '../db/submission-service.mjs';
 
 export default {
   setup: EurekaPlatformContract => {

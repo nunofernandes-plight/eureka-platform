@@ -1,5 +1,5 @@
-import db from './db';
-import Author from '../schema/author';
+import db from './db.mjs';
+import Author from '../schema/author.mjs';
 
 export default {
   getAllAuthors: () => {

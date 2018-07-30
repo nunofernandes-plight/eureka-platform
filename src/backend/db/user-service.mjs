@@ -1,7 +1,7 @@
-import db from './db';
-import bcryptHasher from '../helpers/bcrypt-hasher';
-import User from '../schema/user';
-import Roles from '../schema/roles-enum';
+import db from './db.mjs';
+import bcryptHasher from '../helpers/bcrypt-hasher.mjs';
+import User from '../schema/user.mjs';
+import Roles from '../schema/roles-enum.mjs';
 
 export default {
   /**
@@ -39,6 +39,15 @@ export default {
         throw err;
       }
     );
+  },
+
+  /**
+   * Get one user by ethereumAddress
+   * @param ethereumAddress
+   * @returns {Promise<Query|void|*|Promise<Object>|Promise<TSchema | null>|Promise>}
+   */
+  getUserByEthereumAddress: async (ethereumAddress) => {
+    return db.findOne({'ethereumAddress': ethereumAddress});
   },
 
   /**

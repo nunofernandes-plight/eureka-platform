@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import userService from '../db/user-service';
+import userService from '../db/user-service.mjs';
 
 const router = express.Router();
 const __dirname = path.resolve();
