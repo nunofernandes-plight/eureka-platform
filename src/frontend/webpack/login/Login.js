@@ -121,15 +121,31 @@ class Login extends Component {
   async componentDidMount() {
     const metaMaskStatus = await getMetaMaskStatus(this.props.web3);
     this.setState({metaMaskStatus});
+    this.interval = setInterval(async () => {
+      const metaMaskStatus = await getMetaMaskStatus(this.props.web3);
+      this.setState({metaMaskStatus});
+
+      // if modal is open and metamask has been accessed by the user
+      if (
+        this.state.isShowed &&
+        metaMaskStatus === MetaMaskStatus.DETECTED_LOGGED_IN
+      ) {
+        this.setState({isShowed: false});
+      }
+    }, 1200);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   async login() {
-    // metamask installed as chrome extension but not logged in
-    if (this.state.metaMaskStatus === MetaMaskStatus.DETECTED_NO_LOGGED_IN) {
+    const status = this.state.metaMaskStatus;
+    if (
+      status === MetaMaskStatus.DETECTED_NO_LOGGED_IN ||
+      status === MetaMaskStatus.NO_DETECTED
+    ) {
       this.setState({isShowed: true});
-    } else if (this.state.metaMaskStatus === MetaMaskStatus.NO_DETECTED) {
-      // this.setState({isShowed: true});
-      // metamask not detected
     } else {
       // already logged in
     }
@@ -150,13 +166,13 @@ class Login extends Component {
             this.setState({isShowed});
           }}
           show={this.state.isShowed}
-          title={'Login using MetaMask'}
-          callback={() => {}}
-          action
+          title={'Login using MetaMask - INFORMATION'}
         >
-          We detected MetaMask<MetaMaskLogo width={15} height={15} />in your
-          browser! Please open the Chrome Extension and log in into your account
-          please!
+          Please be sure to have MetaMask<MetaMaskLogo width={15} height={15} />{' '}
+          installed in your browser! If you already have installed it, open the
+          Extension and log in into your account please!{' '}
+          <strong>Remember: </strong> we can neither see nor store your private
+          keys.
         </Modal>
         <Container>
           {this.props.provider !== Web3Providers.META_MASK ? (
