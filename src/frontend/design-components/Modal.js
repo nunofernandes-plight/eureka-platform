@@ -83,8 +83,8 @@ const CloseButton = styled.div`
 const Content = styled.p``;
 
 const ActionButton = styled.button`
-  
-`
+  margin: 0 0 0 auto;
+`;
 
 class Modal extends Component {
   constructor() {
@@ -115,12 +115,12 @@ class Modal extends Component {
                 <Content>{this.props.children}</Content>
               </MyModalBody>
               <MyModalFooter>
+                <CloseButton onClick={() => this.toggle()}>CLOSE</CloseButton>
                 {this.props.action ? (
                   <ActionButton onClick={() => this.props.callback()}>
                     Continue
                   </ActionButton>
                 ) : null}
-                <CloseButton onClick={() => this.toggle()}>CLOSE</CloseButton>
               </MyModalFooter>
             </MyModal>
           </ModalParent>
