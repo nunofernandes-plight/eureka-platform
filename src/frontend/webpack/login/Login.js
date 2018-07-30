@@ -123,6 +123,14 @@ class Login extends Component {
   }
 
   async login() {
+    // metamask installed as chrome extension but not logged in
+    if (this.state.metaMaskStatus === MetaMaskStatus.DETECTED_LOGGED_IN) {
+      this.setState({metaMaskPopup: true});
+    } else if (this.state.metaMaskStatus === MetaMaskStatus.NO_DETECTED) {
+      // metamask not detected
+    } else {
+      // already logged in
+    }
     //web3.eth.sign('Hello world', '0x6FF530adA03d01361e08c82f86B9E5114B1E5c4c');
     //await web3.eth.getAccounts()
     //web3.eth.personal.sign("0x6FF530adA03d01361e08c82f86B9E5114B1E5c4c", "0x6FF530adA03d01361e08c82f86B9E5114B1E5c4c")
