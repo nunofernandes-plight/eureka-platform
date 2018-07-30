@@ -1,11 +1,8 @@
-import db from './db.mjs';
 import Author from '../schema/author.mjs';
 
 export default {
   getAllAuthors: () => {
-    return db
-      .find()
-      .toArray();
+    return Author.find({});
   },
   createAuthor: ({ethereumAdress, prename, lastname}) => {
     const author1 = new Author({

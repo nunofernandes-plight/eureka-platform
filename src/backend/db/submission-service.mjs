@@ -1,11 +1,8 @@
-import db from './db.mjs';
 import Submission from '../schema/submission.mjs';
 
 export default {
-  getAllSubmission: () => {
-    return db
-      .find()
-      .toArray();
+  getAllSubmissions: () => {
+    return Submission.find({});
   },
   createSubmission: (ownerAddress) => {
     const submission = new Submission({ownerAddress: ownerAddress});

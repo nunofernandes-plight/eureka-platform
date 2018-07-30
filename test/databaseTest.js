@@ -4,6 +4,8 @@ import Submission from '../src/backend/schema/submission.mjs';
 import Review from '../src/backend/schema/review.mjs';
 import Author from '../src/backend/schema/author.mjs';
 import userService from '../src/backend/db/user-service.mjs';
+import submissionService from '../src/backend/db/submission-service.mjs';
+import authorService from '../src/backend/db/author-service.mjs';
 import app from '../src/backend/api/api.mjs';
 
 
@@ -25,8 +27,8 @@ async function cleanDB() {
   await Author.remove({});
 }
 
-test('DB: all DBs are empty', async t => {
-  let users = await userService.getAllUsers();
-  console.log(users);
-  t.is(users.length, 0);
+test('DB: all collections are empty', async t => {
+  t.is((await userService.getAllUsers()).length, 0);
+  t.is((await submissionService.getAllSubmissions()).length, 0);
+  t.is((await authorService.getAllAuthors()).length, 0);
 });
