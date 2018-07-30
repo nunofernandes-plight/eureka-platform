@@ -3,9 +3,7 @@ import Review from '../schema/review.mjs';
 
 export default {
   getAllReviews: () => {
-    return db
-      .find()
-      .toArray();
+    return Review.find({});
   },
   createReview: ({rating, text}) => {
     const review = new Review({rating: rating, text: text});
