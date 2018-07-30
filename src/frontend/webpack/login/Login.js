@@ -109,6 +109,10 @@ class Login extends Component {
     super();
   }
 
+  login() {
+    const web3 = this.props.web3; 
+  }
+
   render() {
     return (
       <Container>
@@ -155,7 +159,9 @@ class Login extends Component {
               <label>Email address</label>
             </LoginRow>
             <ButtonRow>
-              <Button>
+              <Button onClick={() => {
+                this.login();
+              }}>
                 Login with Metamask <MetaMaskLogo width={20} height={20} />
               </Button>
             </ButtonRow>
