@@ -8,5 +8,5 @@ const authorSchema = mongoose.Schema(
   },
   {collection: 'authors'}
 );
-
-export default authorSchema;
+const Author = mongoose.model('Author', authorSchema, 'authors');
+export default Author;

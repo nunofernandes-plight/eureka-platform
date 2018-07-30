@@ -1,11 +1,7 @@
-import mongoose from 'mongoose';
 import db from './db';
 import bcryptHasher from '../helpers/bcrypt-hasher';
-import userSchema from '../schema/user';
+import User from '../schema/user';
 import Roles from '../schema/roles-enum';
-
-const COLLECTION = 'users';
-const User = mongoose.model('User', userSchema);
 
 export default {
   /**
@@ -14,7 +10,6 @@ export default {
    */
   getAllUsers: () => {
     return db
-      .collection(COLLECTION)
       .find()
       .toArray();
   },

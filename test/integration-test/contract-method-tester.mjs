@@ -1,4 +1,3 @@
-import web3 from '../../src/backend/web3/web3Instance.mjs';
 import {
   mintEurekaTokens,
   finishMinting,
@@ -13,6 +12,9 @@ import {
 } from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import getArticleHex from '../../src/backend/web3/get-articleHex';
 import getAccounts from '../../src/backend/web3/get-accounts.mjs';
+import User from '../../src/backend/schema/user';
+import Submission from '../../src/backend/schema/submission';
+import userService from '../../src/backend/db/user-service';
 
 let EurekaPlatformContract = undefined;
 let EurekaTokenContract = undefined;
@@ -25,6 +27,11 @@ export default {
     contractOwner = accounts[0];
     EurekaPlatformContract = eurekaPlatformContract;
     EurekaTokenContract = eurekaTokenContract;
+
+    //setup DB & delete collections
+    await User.remove({});
+    await Submission.remove({});
+    await userService.createUser('test2', 'test', 'test@test.test', contractOwner);
 
     let tokenAmounts = [];
     accounts.forEach(() => {
@@ -42,7 +49,7 @@ export default {
   // signUpEditor() on SC
   testSignUpEditor: () => {
     if (EurekaPlatformContract) {
-      signUpEditor(EurekaPlatformContract, accounts[1], contractOwner);
+      signUpEditor(EurekaPlatformContract, contractOwner, contractOwner);
     } else {
       throw new Error(
         'No setup Contract Method Tester - set it up with an adress'
