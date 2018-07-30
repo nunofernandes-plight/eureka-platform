@@ -78,6 +78,7 @@ const ModalTitle = styled.h3`
 
 const CloseButton = styled.div`
   letter-spacing: 1.5px;
+  cursor: pointer;
 `;
 
 const Content = styled.p``;
