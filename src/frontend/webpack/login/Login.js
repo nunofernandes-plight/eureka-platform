@@ -150,7 +150,14 @@ class Login extends Component {
             this.setState({isShowed});
           }}
           show={this.state.isShowed}
-        />
+          title={'Login using MetaMask'}
+          callback={() => {}}
+          action
+        >
+          We detected MetaMask<MetaMaskLogo width={15} height={15} />in your
+          browser! Please open the Chrome Extension and log in into your account
+          please!
+        </Modal>
         <Container>
           {this.props.provider !== Web3Providers.META_MASK ? (
             <MetaMaskInstalled>

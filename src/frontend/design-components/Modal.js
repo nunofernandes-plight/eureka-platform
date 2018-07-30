@@ -25,8 +25,9 @@ const modalFade = keyframes`
 `;
 
 const MyModal = styled.div`
-  height: 420px;
+  min-height: 250px;
   max-width: 500px;
+  min-width: 300px;
   margin: 1.75rem auto;
   display: flex;
   flex-direction: column;
@@ -81,12 +82,13 @@ const CloseButton = styled.div`
 
 const Content = styled.p``;
 
+const ActionButton = styled.button`
+  
+`
+
 class Modal extends Component {
   constructor() {
     super();
-    this.state = {
-      isOpen: false
-    };
   }
 
   toggle() {
@@ -101,7 +103,7 @@ class Modal extends Component {
           <ModalParent>
             <MyModal>
               <MyModalHeader>
-                <ModalTitle>This is the header of the modal</ModalTitle>
+                <ModalTitle>{this.props.title}</ModalTitle>
                 <Icon
                   icon={'close'}
                   width={10}
@@ -110,13 +112,14 @@ class Modal extends Component {
                 />
               </MyModalHeader>
               <MyModalBody>
-                <Content>
-                  jaosfojas faihsf asjf aos fajso fao sfo jasfja josfoja sfoasj
-                  of asfoj asof aojsfoas fjoas foasjof aos foja sfoja sfo asfoj
-                  asof asof asojf
-                </Content>
+                <Content>{this.props.children}</Content>
               </MyModalBody>
               <MyModalFooter>
+                {this.props.action ? (
+                  <ActionButton onClick={() => this.props.callback()}>
+                    Continue
+                  </ActionButton>
+                ) : null}
                 <CloseButton onClick={() => this.toggle()}>CLOSE</CloseButton>
               </MyModalFooter>
             </MyModal>
