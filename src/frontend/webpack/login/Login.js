@@ -107,10 +107,18 @@ const SubTitle = styled.h2`
 class Login extends Component {
   constructor() {
     super();
+    this.state = {
+      username: null,
+      email: null
+    };
   }
 
   login() {
-    const web3 = this.props.web3; 
+    const web3 = this.props.web3;
+  }
+
+  handleInput(stateKey, e) {
+    this.setState({[stateKey]: e.target.value});
   }
 
   render() {
@@ -151,22 +159,32 @@ class Login extends Component {
           <LoginContainer provider={this.props.provider}>
             <SubTitle>Please login</SubTitle>
             <LoginRow>
-              <input type="text" required />
+              <input
+                onChange={e => this.handleInput('username', e)}
+                type="text"
+                required
+              />
               <label>Username</label>
             </LoginRow>
             <LoginRow>
-              <input type="text" required />
+              <input
+                onChange={e => this.handleInput('email', e)}
+                type="text"
+                required
+              />
               <label>Email address</label>
             </LoginRow>
             <ButtonRow>
-              <Button onClick={() => {
-                this.login();
-              }}>
+              <Button
+                onClick={() => {
+                  this.login();
+                }}
+              >
                 Login with Metamask <MetaMaskLogo width={20} height={20} />
               </Button>
             </ButtonRow>
             {/*<Background>*/}
-              {/*<EurekaLogo width={400} height={400} />*/}
+            {/*<EurekaLogo width={400} height={400} />*/}
             {/*</Background>*/}
           </LoginContainer>
         </Row>
