@@ -15,6 +15,7 @@ if (!isProduction) {
 }
 
 let app;
+let server;
 
 export default {
   setupApp: eurekaPlatformContract => {
@@ -69,6 +70,10 @@ export default {
   },
 
   listenTo: port => {
-    app.listen(port || 8080);
+    server = app.listen(port || 8080);
+  },
+
+  close: () => {
+    server.close();
   }
 };

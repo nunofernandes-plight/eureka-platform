@@ -1,119 +1,105 @@
-//
-// import isProduction from '../../src/helpers/isProduction';
-// import dotenv from 'dotenv';
-// import deployContracts from '../../src/backend/web3/index';
-// import app from '../../src/backend/api/api';
-// import contractMethodTester from './contract-method-tester';
-// import User from '../../src/backend/schema/user';
-// import Submission from '../../src/backend/schema/submission';
-// import userService from '../../src/backend/db/user-service';
-// import getAccounts from '../../src/backend/web3/get-accounts';
-// import {finishMinting, mintEurekaTokens} from '../../src/backend/web3/web3-token-contract-methods';
-// import {signUpEditor} from '../../src/backend/web3/web3-platform-contract-methods';
-//
-// // const {dotenv} = require('dotenv');
-// // const {deployContracts} = require('../../src/backend/web3/index');
-// // const {app} = require('../../src/backend/api/api');
-// // const {User} = require('../../src/backend/schema/user');
-// // const {Submission} = require('../../src/backend/schema/submission');
-// // const {userService} = require('../../src/backend/db/user-service');
-// // const {getAccounts} = require('../../src/backend/web3/get-accounts');
-// // const {finishMinting, mintEurekaTokens} = require('../../src/backend/web3/web3-token-contract-methods');
-// // const {signUpEditor} = require('../../src/backend/web3/web3-platform-contract-methods');
-//
-// let EurekaPlatformContract = undefined;
-// let EurekaTokenContract = undefined;
-// let contractOwner = undefined;
-//
-// describe('sample test', function() {
-//   it(' should give 5, when sum up 2 + 3', function() {
-//     assert.ok(2 + 3 === 5);
-//   });
-// });
-//
-// describe('Integration Test: SC - Backend', () => {
-//   before('connect', (done) => {
-//     if (!isProduction()) {
-//       dotenv.config();
-//
-//       return deployContracts()
-//         .then(async ([eurekaTokenContract, eurekaPlatformContract]) => {
-//           //start backend
-//           app.setupApp(eurekaPlatformContract);
-//           app.listenTo(process.env.PORT || 8080);
-//
-//           const accounts = await getAccounts();
-//           contractOwner = accounts[0];
-//           EurekaPlatformContract = eurekaPlatformContract;
-//           EurekaTokenContract = eurekaTokenContract;
-//
-//           let tokenAmounts = [];
-//           accounts.forEach(() => {
-//             tokenAmounts.push(20000);
-//           });
-//           await mintEurekaTokens(
-//             EurekaTokenContract,
-//             accounts,
-//             tokenAmounts,
-//             contractOwner
-//           );
-//           await finishMinting(EurekaTokenContract, contractOwner);
-//         });
-//     }
-//   });
-//
-//   beforeEach(() => {
-//     cleanDB();
-//
-//   });
-//
-//   it('should  sign up up an user as editor in SC and DB', (done) => {
-//     let user = createUserOnDB();
-//     signUpEditor(EurekaPlatformContract, contractOwner, contractOwner);
-//
-//     console.log(user);
-//
-//     assert(2 + 3 === 5);
-//     done();
-//   });
-// });
-//
-// async function cleanDB() {
-//   await User.remove({});
-//   await Submission.remove({});
-// }
-// async function createUserOnDB() {
-//   let user = await userService.createUser('test2', 'test', 'test@test.test', contractOwner);
-//   return user;
-// }
-
-
+import {signUpEditor} from '../src/backend/web3/web3-platform-contract-methods.mjs';
+import {
+  mintEurekaTokens,
+  finishMinting,
+  submitArticle,
+  getBalanceOf
+} from '../src/backend/web3/web3-token-contract-methods.mjs';
 import test from 'ava';
 import app from '../src/backend/api/api.mjs';
 import deployContracts from '../src/backend/web3/index.mjs';
 import getAccounts from '../src/backend/web3/get-accounts.mjs';
+import User from '../src/backend/schema/user.mjs';
+import Submission from '../src/backend/schema/submission.mjs';
+import userService from '../src/backend/db/user-service.mjs';
+import getArticleHex from '../src/backend/web3/get-articleHex.mjs';
+import {getLinkedArticles} from '../src/backend/web3/web3-platform-contract-methods.mjs';
+import {getAuthors} from '../src/backend/web3/web3-platform-contract-methods.mjs';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
 let accounts;
+let contractOwner;
 
-test.beforeEach(async t => {
-  const [eurekaContract, platformContract] = await deployContracts();
-  eurekaTokenContract = eurekaContract;
-  eurekaPlatformContract = platformContract;
-  accounts = await getAccounts();
+
+test.before(async () => {
+  let [eurekaContract, platformContract] = await deployContracts();
+  await setupContract(eurekaContract, platformContract);
 
   app.setupApp(eurekaPlatformContract);
   app.listenTo(process.env.PORT || 8080);
+
+  contractOwner = accounts[0];
+
+  await cleanDB();
 });
 
+async function setupContract  (eurekaContract, platformContract){
+  accounts = await getAccounts();
+  contractOwner = accounts[0];
+  eurekaTokenContract = eurekaContract;
+  eurekaPlatformContract = platformContract;
 
-test('foo', t => {
-  t.pass();
+  let tokenAmounts = [];
+  accounts.forEach(() => {
+    tokenAmounts.push(20000);
+  });
+  await mintEurekaTokens(
+    eurekaTokenContract,
+    accounts,
+    tokenAmounts,
+    contractOwner
+  );
+  await finishMinting(eurekaTokenContract, contractOwner);
+}
+
+async function cleanDB() {
+  await User.remove({});
+  await Submission.remove({});
+}
+
+test('Event - DB -> Sign up Editor', async t => {
+  await userService.createUser('test2', 'test', 'test@test.test', contractOwner);
+
+  let user = await userService.getUserByEthereumAddress(contractOwner);
+  t.is(user.isEditor, false);
+
+  await signUpEditor(eurekaPlatformContract, contractOwner, contractOwner);
+
+  user = await userService.getUserByEthereumAddress(contractOwner);
+  t.is(user.isEditor, true);
+  //app.close();
 });
 
-test('bar', async t => {
-  const bar = Promise.resolve('bar');
+test('Event - DB ->  Submit Article', async t => {
+  let article = {
+    articleHash: '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+    url: 'hoihoi',
+    authors: [
+      '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88',
+      '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'
+    ],
+    contributorRatios: [4000,6000],
+    linkedArticles: [
+      '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
+      '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
+      'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
+    ],
+    linkedArticlesSplitRatios: [3334,3333,3333]
+  };
+  let dataInHex = getArticleHex(article);
+  let articleHashHex = '0x' + article.articleHash;
 
-  t.is(await bar, 'bar');
+  await submitArticle(
+    eurekaTokenContract,
+    contractOwner,
+    eurekaPlatformContract.options.address,
+    5000,
+    dataInHex
+  );
+
+  let balance = await getBalanceOf(eurekaTokenContract, eurekaPlatformContract.options.address);
+  t.is('5000', balance);
+  t.is(3, (await getLinkedArticles(eurekaPlatformContract, articleHashHex, contractOwner)).length);
+  t.is(2, (await getAuthors(eurekaPlatformContract, articleHashHex, contractOwner)).length);
 });
