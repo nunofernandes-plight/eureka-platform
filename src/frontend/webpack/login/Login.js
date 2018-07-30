@@ -11,6 +11,8 @@ import {
 import MetaMaskLogo from '../icons/MetaMaskLogo.js';
 import EurekaLogo from '../icons/EurekaLogo.js';
 import Web3Providers from '../../web3/Web3Providers.js';
+import {getMetaMaskStatus} from '../../web3/IsLoggedIn.js';
+import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
 
 const Container = styled.div`
   width: 100%;
@@ -107,10 +109,27 @@ const SubTitle = styled.h2`
 class Login extends Component {
   constructor() {
     super();
+    this.state = {
+      username: null,
+      email: null,
+      metaMaskStatus: null,
+      metaMaskPopup: false
+    };
   }
 
-  login() {
-    const web3 = this.props.web3; 
+  async componentDidMount() {
+    const metaMaskStatus = await getMetaMaskStatus(this.props.web3);
+    this.setState({metaMaskStatus});
+  }
+
+  async login() {
+    //web3.eth.sign('Hello world', '0x6FF530adA03d01361e08c82f86B9E5114B1E5c4c');
+    //await web3.eth.getAccounts()
+    //web3.eth.personal.sign("0x6FF530adA03d01361e08c82f86B9E5114B1E5c4c", "0x6FF530adA03d01361e08c82f86B9E5114B1E5c4c")
+  }
+
+  handleInput(stateKey, e) {
+    this.setState({[stateKey]: e.target.value});
   }
 
   render() {
@@ -151,22 +170,32 @@ class Login extends Component {
           <LoginContainer provider={this.props.provider}>
             <SubTitle>Please login</SubTitle>
             <LoginRow>
-              <input type="text" required />
+              <input
+                onChange={e => this.handleInput('username', e)}
+                type="text"
+                required
+              />
               <label>Username</label>
             </LoginRow>
             <LoginRow>
-              <input type="text" required />
+              <input
+                onChange={e => this.handleInput('email', e)}
+                type="text"
+                required
+              />
               <label>Email address</label>
             </LoginRow>
             <ButtonRow>
-              <Button onClick={() => {
-                this.login();
-              }}>
+              <Button
+                onClick={() => {
+                  this.login();
+                }}
+              >
                 Login with Metamask <MetaMaskLogo width={20} height={20} />
               </Button>
             </ButtonRow>
             {/*<Background>*/}
-              {/*<EurekaLogo width={400} height={400} />*/}
+            {/*<EurekaLogo width={400} height={400} />*/}
             {/*</Background>*/}
           </LoginContainer>
         </Row>
