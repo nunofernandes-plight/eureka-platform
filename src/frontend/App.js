@@ -6,7 +6,6 @@ import Network from './web3/Network.js';
 import NoConnection from './webpack/NoConnection.js';
 import {Detector} from 'react-detect-offline';
 
-
 class App extends Component {
   constructor() {
     super();
@@ -31,33 +30,35 @@ class App extends Component {
   }
 
   async getNetwork() {
-    window.web3.version.getNetwork((err, netId) => {
-      switch (netId) {
-        case '1':
-          console.log('Mainnet detected');
-          this.setState({network: Network.MAIN});
-          break;
-        case '2':
-          console.log('Morden test network detected.');
-          this.setState({network: Network.MORDEN});
-          break;
-        case '3':
-          console.log('Ropsten test network detected.');
-          this.setState({network: Network.ROPSTEN});
-          break;
-        case '4':
-          console.log('Rinkeby test network detected.');
-          this.setState({network: Network.RINKEBY});
-          break;
-        case '42':
-          console.log('Kovan test network detected.');
-          this.setState({network: Network.KOVAN});
-          break;
-        default:
-          this.setState({network: Network.UNKNOWN});
-          console.log('Unknown network detected.');
-      }
-    });
+    if (this.state.web3) {
+      window.web3.version.getNetwork((err, netId) => {
+        switch (netId) {
+          case '1':
+            console.log('Mainnet detected');
+            this.setState({network: Network.MAIN});
+            break;
+          case '2':
+            console.log('Morden test network detected.');
+            this.setState({network: Network.MORDEN});
+            break;
+          case '3':
+            console.log('Ropsten test network detected.');
+            this.setState({network: Network.ROPSTEN});
+            break;
+          case '4':
+            console.log('Rinkeby test network detected.');
+            this.setState({network: Network.RINKEBY});
+            break;
+          case '42':
+            console.log('Kovan test network detected.');
+            this.setState({network: Network.KOVAN});
+            break;
+          default:
+            this.setState({network: Network.UNKNOWN});
+            console.log('Unknown network detected.');
+        }
+      });
+    }
   }
 
   render() {
@@ -66,20 +67,13 @@ class App extends Component {
         <Detector
           render={({online}) =>
             online ? (
-              window.web3.isConnected() ? (
-                <Router
-                  web3={this.state.web3}
-                  provider={this.state.provider}
-                  network={this.state.network}
-                />
-              ) : (
-                <h1>
-                  We were not able to connect web3. Application cannot be
-                  started
-                </h1>
-              )
+              <Router
+                web3={this.state.web3}
+                provider={this.state.provider}
+                network={this.state.network}
+              />
             ) : (
-              <NoConnection/>
+              <NoConnection />
             )
           }
         />
