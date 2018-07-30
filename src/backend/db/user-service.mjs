@@ -47,7 +47,7 @@ export default {
    * @returns {Promise<Query|void|*|Promise<Object>|Promise<TSchema | null>|Promise>}
    */
   getUserByEthereumAddress: async (ethereumAddress) => {
-    return db.findOne({'ethereumAddress': ethereumAddress});
+    return User.findOne({'ethereumAddress': ethereumAddress});
   },
 
   /**

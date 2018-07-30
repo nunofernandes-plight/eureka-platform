@@ -87,15 +87,20 @@
 //   return user;
 // }
 
-
+import {signUpEditor} from '../src/backend/web3/web3-platform-contract-methods.mjs';
 import test from 'ava';
 import app from '../src/backend/api/api.mjs';
 import deployContracts from '../src/backend/web3/index.mjs';
 import getAccounts from '../src/backend/web3/get-accounts.mjs';
+import User from '../src/backend/schema/user.mjs';
+import Submission from '../src/backend/schema/submission.mjs';
+import userService from '../src/backend/db/user-service.mjs';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
 let accounts;
+let contractOwner;
+
 
 test.beforeEach(async t => {
   const [eurekaContract, platformContract] = await deployContracts();
@@ -104,16 +109,39 @@ test.beforeEach(async t => {
   accounts = await getAccounts();
 
   app.setupApp(eurekaPlatformContract);
-  app.listenTo(process.env.PORT || 8080);
+  app.listenTo(process.env.PORT || 8081);
+
+  contractOwner = accounts[0];
+
+  await cleanDB();
 });
 
+async function cleanDB() {
+  await User.remove({});
+  await Submission.remove({});
+}
+
+test('Event - DB -> Sign up Editor', async t => {
+  await userService.createUser('test2', 'test', 'test@test.test', contractOwner);
+
+  let user = await userService.getUserByEthereumAddress(contractOwner);
+  t.is(user.isEditor, false);
+
+  await signUpEditor(eurekaPlatformContract, contractOwner, contractOwner);
+
+  user = await userService.getUserByEthereumAddress(contractOwner);
+  t.is(user.isEditor, true);
+  app.close();
+});
 
 test('foo', t => {
   t.pass();
+  app.close();
 });
 
 test('bar', async t => {
   const bar = Promise.resolve('bar');
 
   t.is(await bar, 'bar');
+  app.close();
 });
