@@ -1,5 +1,5 @@
-import db from './db';
-import Submission from '../schema/submission';
+import db from './db.mjs';
+import Submission from '../schema/submission.mjs';
 
 export default {
   getAllSubmission: () => {

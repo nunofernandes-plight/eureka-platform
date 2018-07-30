@@ -1,5 +1,5 @@
-import User from '../schema/user';
-import Roles from '../schema/roles-enum';
+import User from '../schema/user.mjs';
+import Roles from '../schema/roles-enum.mjs';
 
 export default {
   /**

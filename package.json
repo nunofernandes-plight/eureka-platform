@@ -14,7 +14,6 @@
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "fs": "^0.0.1-security",
-    "mocha": "^5.2.0",
     "mongoose": "^5.2.2",
     "nodemailer": "^4.6.7",
     "nodemon": "^1.17.5",
@@ -38,14 +37,14 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test-ci": "if [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then npm run lint; fi && ava test/* !test/EurekaTokenTest.js",
-    "test": "ava && npm run lint",
+    "test": "ava --serial",
     "lint": "eslint **/*.mjs --ignore-path .gitignore",
     "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
     "eject": "react-scripts eject",
     "dev-client": "react-scripts start",
     "dev-server": "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" src/backend babel-node",
     "dev-contracts": "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" src/backend/web3/deployer-script.mjs babel-node",
-    "integration-test": "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" test/integration-test/index.mjs babel-node"
+    "test-contract": "ava --serial ./test/ContractMethodTest.js"
   },
   "devDependencies": {
     "ava": "^0.25.0",

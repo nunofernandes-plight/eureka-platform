@@ -1,7 +1,7 @@
 import passport from 'passport';
 import passportLocal from 'passport-local/lib/index';
-import bcryptHasher from './bcrypt-hasher';
-import User from '../schema/user';
+import bcryptHasher from './bcrypt-hasher.mjs';
+import User from '../schema/user.mjs';
 
 const LocalStrategy = passportLocal.Strategy;
 
