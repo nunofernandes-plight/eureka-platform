@@ -65,7 +65,7 @@ export default {
    */
   addRole: async (user_id, role) => {
     if (Roles.hasOwnProperty(role)) {
-      User.findByIdAndUpdate(
+      return User.findByIdAndUpdate(
         user_id,
         {
           $addToSet: {

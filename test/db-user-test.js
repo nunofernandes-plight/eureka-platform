@@ -1,13 +1,13 @@
 import test from 'ava';
-import User from '../src/backend/schema/user.mjs';
-import Submission from '../src/backend/schema/submission.mjs';
-import Review from '../src/backend/schema/review.mjs';
-import Author from '../src/backend/schema/author.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import submissionService from '../src/backend/db/submission-service.mjs';
 import authorService from '../src/backend/db/author-service.mjs';
 import reviewService from '../src/backend/db/review-service.mjs';
+import Roles from '../src/backend/schema/roles-enum.mjs';
 import app from '../src/backend/api/api.mjs';
+import {cleanDB} from './helpers';
+
+const PRETEXT = 'DB-USER: ';
 
 test.before(async () => {
   app.setupApp();
@@ -18,25 +18,14 @@ test.beforeEach(async () => {
   await cleanDB();
 });
 
-/**
- * Reset all collections, so they are empty
- * @returns {Promise<void>}
- */
-async function cleanDB() {
-  await User.remove({});
-  await Submission.remove({});
-  await Review.remove({});
-  await Author.remove({});
-}
-
-test('DB: all collections are empty', async t => {
+test(PRETEXT + 'all collections are empty', async t => {
   t.is((await userService.getAllUsers()).length, 0);
   t.is((await submissionService.getAllSubmissions()).length, 0);
   t.is((await authorService.getAllAuthors()).length, 0);
   t.is((await reviewService.getAllReviews()).length, 0);
 });
 
-test('DB: create a User', async t => {
+test(PRETEXT + 'create a User', async t => {
   t.is((await userService.getAllUsers()).length, 0);
 
   const user = await userService.createUser('test', 'test', 'test@test@test.ch',
@@ -50,3 +39,20 @@ test('DB: create a User', async t => {
   t.is(dbUser.email, user.email);
   t.is(dbUser.ethereumAddress, user.ethereumAddress);
 });
+
+test(PRETEXT + 'add roles to a user', async t => {
+  t.is((await userService.getAllUsers()).length, 0);
+
+  const user = await userService.createUser('test', 'test', 'test@test@test.ch',
+    '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015');
+
+  //test roles
+  let dbUser = await userService.getUserById(user._id);
+  t.is(dbUser.roles.length, 0);
+
+  await userService.addRole(user._id, Roles.GUEST);
+  dbUser = await userService.getUserById(user._id);
+  t.is(dbUser.roles.length, 1);
+});
+
+// TODO removeRole
