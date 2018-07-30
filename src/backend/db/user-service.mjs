@@ -9,9 +9,7 @@ export default {
    * @returns {*}
    */
   getAllUsers: () => {
-    return db
-      .find()
-      .toArray();
+    return User.find({});
   },
   /**
    * create a new user in the DB
