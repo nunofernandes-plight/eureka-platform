@@ -13,6 +13,8 @@ import User from '../src/backend/schema/user.mjs';
 import Submission from '../src/backend/schema/submission.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import getArticleHex from '../src/backend/web3/get-articleHex.mjs';
+import {getLinkedArticles} from '../src/backend/web3/web3-platform-contract-methods.mjs';
+import {getAuthors} from '../src/backend/web3/web3-platform-contract-methods.mjs';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
@@ -20,7 +22,7 @@ let accounts;
 let contractOwner;
 
 
-test.before(async t => {
+test.before(async () => {
   let [eurekaContract, platformContract] = await deployContracts();
   await setupContract(eurekaContract, platformContract);
 
@@ -97,7 +99,7 @@ test('Event - DB ->  Submit Article', async t => {
   );
 
   let balance = await getBalanceOf(eurekaTokenContract, eurekaPlatformContract.options.address);
-  console.log(balance);
   t.is('5000', balance);
-  
+  t.is(3, (await getLinkedArticles(eurekaPlatformContract, articleHashHex, contractOwner)).length);
+  t.is(2, (await getAuthors(eurekaPlatformContract, articleHashHex, contractOwner)).length);
 });

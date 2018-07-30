@@ -1,18 +1,18 @@
-import getArticleHex from "../src/backend/web3/get-articleHex.mjs";
+import getArticleHex from '../src/backend/web3/get-articleHex.mjs';
 import {
   finishMinting,
   getBalanceOf,
   mintEurekaTokens,
   submitArticle
-} from "../src/backend/web3/web3-token-contract-methods.mjs";
+} from '../src/backend/web3/web3-token-contract-methods.mjs';
 import {
   getAuthors,
   getLinkedArticles,
   getUrl,
   signUpEditor
-} from "../src/backend/web3/web3-platform-contract-methods.mjs";
-import getAccounts from "../src/backend/web3/get-accounts.mjs";
-import deployContracts from "../src/backend/web3/index.mjs";
+} from '../src/backend/web3/web3-platform-contract-methods.mjs';
+import getAccounts from '../src/backend/web3/get-accounts.mjs';
+import deployContracts from '../src/backend/web3/index.mjs';
 
 let EurekaPlatformContract = undefined;
 let EurekaTokenContract = undefined;
