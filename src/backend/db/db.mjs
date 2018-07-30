@@ -16,6 +16,11 @@ const url =
   process.env.DB_HOST +
   '/' +
   process.env.DB_NAME;
+
+if(isProduction()) {
+  url.concat('?ssl=true');
+}
+
 const db = mongo(url, collections);
 
 export default db;

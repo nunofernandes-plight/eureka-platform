@@ -8,8 +8,8 @@ import {
 import {
   getAuthors,
   getLinkedArticles,
-  getUrl,
-  signUpEditor
+  getUrl
+  // signUpEditor
 } from '../src/backend/web3/web3-platform-contract-methods.mjs';
 import getAccounts from '../src/backend/web3/get-accounts.mjs';
 import deployContracts from '../src/backend/web3/index.mjs';
@@ -47,15 +47,15 @@ const setup = async (eurekaTokenContract, eurekaPlatformContract) => {
 };
 
 // signUpEditor() on SC
-const testSignUpEditor = () => {
-  if (EurekaPlatformContract) {
-    signUpEditor(EurekaPlatformContract, contractOwner, contractOwner);
-  } else {
-    throw new Error(
-      'No setup Contract Method Tester - set it up with an adress'
-    );
-  }
-};
+// const testSignUpEditor = () => {
+//   if (EurekaPlatformContract) {
+//     signUpEditor(EurekaPlatformContract, contractOwner, contractOwner);
+//   } else {
+//     throw new Error(
+//       'No setup Contract Method Tester - set it up with an adress'
+//     );
+//   }
+// };
 
 const testSubmitArticle = async () => {
   let article = {
@@ -88,30 +88,26 @@ const testSubmitArticle = async () => {
 
   console.log(
     'The balance of the service contract is ' +
-    (await getBalanceOf(
-      EurekaTokenContract,
-      EurekaPlatformContract.options.address
-    ))
+      (await getBalanceOf(
+        EurekaTokenContract,
+        EurekaPlatformContract.options.address
+      ))
   );
   console.log(
     'URL of the article: ' +
-    (await getUrl(EurekaPlatformContract, articleHashHex, contractOwner))
+      (await getUrl(EurekaPlatformContract, articleHashHex, contractOwner))
   );
   console.log(
     'Authors: ' +
-    (await getAuthors(
-      EurekaPlatformContract,
-      articleHashHex,
-      contractOwner
-    ))
+      (await getAuthors(EurekaPlatformContract, articleHashHex, contractOwner))
   );
   console.log(
     'Linked articles: ' +
-    (await getLinkedArticles(
-      EurekaPlatformContract,
-      articleHashHex,
-      contractOwner
-    ))
+      (await getLinkedArticles(
+        EurekaPlatformContract,
+        articleHashHex,
+        contractOwner
+      ))
   );
 };
 

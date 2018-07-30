@@ -16,6 +16,10 @@ const url =
   '/' +
   process.env.DB_NAME;
 
+if(isProduction()) {
+  url.concat('?ssl=true');
+}
+
 mongoose.connect(url);
 mongoose.Promise = global.Promise;
 
