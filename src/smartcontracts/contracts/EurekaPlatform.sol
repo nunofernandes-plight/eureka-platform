@@ -91,6 +91,7 @@ contract EurekaPlatform is ERC677Receiver {
     enum SubmissionState {
         NOT_EXISTING,
         OPEN,
+        NEW_REVIEW_ROUND_REQUESTED,
         CLOSED
     }
     // different ArticleVersions from different review-rounds are saved in the same ArticleSubmission Object
@@ -107,8 +108,8 @@ contract EurekaPlatform is ERC677Receiver {
         SUBMITTED,
         EDITOR_CHECKED,
         NOT_ENOUGH_REVIEWERS,
-        NOT_ACCEPTED_SANITY_NOTOK,
-        NOT_ACCEPTED,
+        DECLINED_SANITY_NOTOK,
+        DECLINED,
         ACCEPTED
     }
     // an ArticleSubmission can have different versions
@@ -118,6 +119,7 @@ contract EurekaPlatform is ERC677Receiver {
         // the timestamp when the article was published
         uint256 publishedTimestamp;
         // the URL where the article is saved
+        //TODO: URL can be resp. IS USUALLY bigger than bytes32 -> us string and length indicator in bytes parser
         bytes32 articleUrl;
         
         ArticleVersionState versionState;
@@ -143,10 +145,6 @@ contract EurekaPlatform is ERC677Receiver {
         // TODO how to check if Reviewer already saved a review -> with array for loop (expensive) maybe save additional mapping
         //        mapping(address => Review) communityReviews;
         Review[] communityReviews;
-
-        // either save aggregated scores in article version or loop in GET method over review array
-        uint8 score1;
-        uint8 score2;
     }
 
     enum ReviewState {
@@ -328,7 +326,7 @@ contract EurekaPlatform is ERC677Receiver {
     
     // a journal editor can assign him/herself to an article submission process
     // if the process is not already claimed by another editor
-    function assignForSubmissionProcess(uint256 _submissionId) public{
+    function assignForSubmissionProcess(uint256 _submissionId) public {
         
         require(isEditor[msg.sender], "msg.sender must be an editor to call this function.");
         
@@ -339,7 +337,26 @@ contract EurekaPlatform is ERC677Receiver {
         submission.editor = msg.sender;
     }
     
-    // TODO change editor by contract owner or editor itself
+    function removeEditorFromSubmissionProcess(uint256 _submissionId) public {
+    
+        ArticleSubmission storage submission = articleSubmissions[_submissionId];
+        require(msg.sender == contractOwner
+            || msg.sender == submission.editor, "an editor can only be removed by the contract owner or itself.");
+            
+        submission.editor = address(0);
+    }
+    
+    // is it a good idea that the current editor can assign another editor? or should only removing (method below) be possible?
+    function changeEditorFromSubmissionProcess(uint256 _submissionId, address _newEditor) public {
+    
+        require(isEditor[_newEditor], 'the new editor must be an allowed editor.');
+    
+        ArticleSubmission storage submission = articleSubmissions[_submissionId];
+        require(msg.sender == contractOwner
+            || msg.sender == submission.editor, "an editor can only be changed by the contract owner or the current editor.");
+            
+        submission.editor = _newEditor;
+    }
 
     function editorCheckAndReviewerInvitation(bytes32 _articleHash, bool _isSanityOk, address[] _allowedEditorApprovedReviewers) public {
         
@@ -360,7 +377,9 @@ contract EurekaPlatform is ERC677Receiver {
             article.versionState = ArticleVersionState.EDITOR_CHECKED;
         }
         else {
-            article.versionState = ArticleVersionState.NOT_ACCEPTED_SANITY_NOTOK;
+            article.versionState = ArticleVersionState.DECLINED_SANITY_NOTOK;
+            // TODO handle difference between review rounds and article versions
+            requestNewReviewRound(article.submissionId);
         }
     }
 
@@ -462,7 +481,7 @@ contract EurekaPlatform is ERC677Receiver {
         
         Review storage review = reviews[_articleHash][_reviewerAddress];
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
-
+        
         review.reviewState = ReviewState.ACCEPTED;
     }
     
@@ -477,5 +496,97 @@ contract EurekaPlatform is ERC677Receiver {
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.DECLINED;
+    }
+    
+    function acceptArticleVersion (bytes32 _articleHash) public {
+        
+        require(isEditor[msg.sender], "msg.sender needs to be an editor.");
+        
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        
+        require(countAcceptedReviews(article.editorApprovedReviews) >= minAmountOfEditorApprovedReviewer,
+            "the article doesn't have enough accepted editor approved reviews to get accepted.");
+        require(countAcceptedReviews(article.communityReviews) >= minAmountOfCommunityReviewer,
+            "the article doesn't have enough community reviews to get accepted.");
+        
+        // TODO if accept method is called to early, other reviewers could be rewarded.
+        
+        article.versionState = ArticleVersionState.ACCEPTED;
+        
+        closeSubmissionProcess(article.submissionId);
+    }
+    
+    function declineArticleVersion (bytes32 _articleHash) public {
+        
+        require(isEditor[msg.sender], "msg.sender needs to be an editor.");
+        
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        
+        // TODO if accept method is called to early, other reviewers could be rewarded.
+        
+        article.versionState = ArticleVersionState.DECLINED;
+        
+        if (countDeclinedArticles(article.submissionId) >= maxReviewRounds)
+            closeSubmissionProcess(article.submissionId);
+        else
+            requestNewReviewRound(article.submissionId);
+    }
+    
+    function countAcceptedReviews (Review[] _reviews) pure private returns (uint count) {
+        for (uint i=0; i < _reviews.length; i++) {
+            if (_reviews[i].reviewState == ReviewState.ACCEPTED)
+                count++;
+        }
+        return count;
+    }
+    
+    // only counts the articles which went through a review process and therefore have the state DECLINED
+    // does not consider the versions with state DECLINED_SANITY_NOTOK
+    function countDeclinedArticles (uint256 _submissionId) view private returns (uint count) {
+        ArticleVersion[] storage versions = articleSubmissions[_submissionId].versions;
+        for (uint i=0; i < versions.length; i++) {
+            if (versions[i].versionState == ArticleVersionState.DECLINED)
+                count++;
+        }
+        return count;
+    }
+
+    // TODO: should it be possible to close a submission process before reaching maxReviewRounds ??
+    function closeSubmissionProcess(uint256 _submissionId) private {
+
+        // TODO transfer all rewards
+
+        articleSubmissions[_submissionId].submissionState = SubmissionState.CLOSED;
+    }
+
+    function requestNewReviewRound(uint256 _submissionId) private {
+
+        // maybe TODO transfer all rewards
+
+        articleSubmissions[_submissionId].submissionState = SubmissionState.NEW_REVIEW_ROUND_REQUESTED;
+    }
+
+    function openNewReviewRound(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors, bytes32[] _linkedArticles) public {
+        
+        ArticleSubmission storage submission = articleSubmissions[_submissionId];
+        require(msg.sender == submission.submissionOwner, "only the submission process owner can submit articles.");
+        require(submission.submissionState == SubmissionState.NEW_REVIEW_ROUND_REQUESTED,
+            "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
+        
+        submitArticleVersion(_submissionId, _articleHash, _articleURL, _authors, _linkedArticles);
+        
+        submission.submissionState = SubmissionState.OPEN;
+    }
+
+    function declineNewReviewRound(uint256 _submissionId) public {
+        
+        ArticleSubmission storage submission = articleSubmissions[_submissionId];
+        require(msg.sender == submission.submissionOwner, "only the submission process owner can call this method");
+        require(submission.submissionState == SubmissionState.NEW_REVIEW_ROUND_REQUESTED,
+            "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
+        
+        closeSubmissionProcess(_submissionId);
     }
 }

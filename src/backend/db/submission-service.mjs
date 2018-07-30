@@ -1,14 +1,9 @@
-import mongoose from './mongoose-db';
 import db from './db';
-import submissionSchema from '../schema/submission';
-
-const collectionName = 'submissions';
-const Submission = mongoose.model(collectionName, submissionSchema, collectionName);
+import Submission from '../schema/submission';
 
 export default {
   getAllSubmission: () => {
     return db
-      .collection(collectionName)
       .find()
       .toArray();
   },

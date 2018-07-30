@@ -1,14 +1,9 @@
-import mongoose from './mongoose-db';
 import db from './db';
-import reviewSchema from '../schema/review.mjs';
-
-const collectionName = 'reviews';
-const Review = mongoose.model(collectionName, reviewSchema, collectionName);
+import Review from '../schema/review.mjs';
 
 export default {
   getAllReviews: () => {
     return db
-      .collection(collectionName)
       .find()
       .toArray();
   },
