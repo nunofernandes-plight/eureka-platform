@@ -136,7 +136,7 @@ class Login extends Component {
     this.setState({[stateKey]: e.target.value});
   }
 
-  render() { 
+  render() {
     return (
       <div>
         <Modal

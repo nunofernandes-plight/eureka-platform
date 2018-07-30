@@ -83,14 +83,12 @@ const SignUp = Item.extend`
   border-radius: 4px;
 `;
 
-const renderMetaMaskStatus = props => {
-  //
-
+const renderMetaMaskStatus = props => { 
   const status = props.metaMaskStatus;
   if (status === MetaMaskStatus.DETECTED_NO_LOGGED_IN) {
     return (
       <MetaMaskDetectedNoLoggedIn>
-        MetaMask detected but not logged in
+        MetaMask detected but locked
         <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
       </MetaMaskDetectedNoLoggedIn>
     );
@@ -104,7 +102,7 @@ const renderMetaMaskStatus = props => {
   } else if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
     return (
       <MetaMaskDetectedLoggedIn>
-        Logged In
+        MetaMask unlocked
         <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
       </MetaMaskDetectedLoggedIn>
     );
