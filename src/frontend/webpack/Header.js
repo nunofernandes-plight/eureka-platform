@@ -2,11 +2,17 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Row} from '../helpers/layout.js';
 import EurekaLogo from './icons/EurekaLogo.js';
-import {__ALERT_SUCCESS, __ALERT_WARNING, __THIRD} from '../helpers/colors.js';
+import {
+  __ALERT_ERROR,
+  __ALERT_SUCCESS,
+  __ALERT_WARNING,
+  __THIRD
+} from '../helpers/colors.js';
 import Icon from './icons/Icon.js';
 import MetaMaskLogo from './icons/MetaMaskLogo.js';
 import {Switch} from 'react-router';
 import Web3Providers from '../web3/Web3Providers.js';
+import {MetaMaskStatus} from '../web3/MetaMaskStatus.js';
 
 const Parent = styled.div`
   box-shadow: -21.213px 21.213px 30px 0px rgba(158, 158, 158, 0.3);
@@ -57,19 +63,53 @@ const MetaMask = Item.extend`
 `;
 
 const NoMetaMask = MetaMask.extend`
-  background: #2f3292;
+  background: ${__ALERT_ERROR};
   color: white;
 `;
 
-const MetaMaskDetected = MetaMask.extend`
+const MetaMaskDetectedNoLoggedIn = MetaMask.extend`
   background: ${__ALERT_WARNING};
   color: white;
 `;
+
+const MetaMaskDetectedLoggedIn = MetaMask.extend`
+  background: ${__ALERT_SUCCESS};
+  color: white;
+`;
+
 const SignUp = Item.extend`
   border: 1px solid ${__THIRD};
   padding: 8px 12px;
   border-radius: 4px;
 `;
+
+const renderMetaMaskStatus = props => {
+  //
+
+  const status = props.metaMaskStatus;
+  if (status === MetaMaskStatus.DETECTED_NO_LOGGED_IN) {
+    return (
+      <MetaMaskDetectedNoLoggedIn>
+        MetaMask detected but not logged in
+        <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
+      </MetaMaskDetectedNoLoggedIn>
+    );
+  } else if (status === MetaMaskStatus.NO_DETECTED) {
+    return (
+      <NoMetaMask>
+        No MetaMask detected{' '}
+        <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
+      </NoMetaMask>
+    );
+  } else if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
+    return (
+      <MetaMaskDetectedLoggedIn>
+        Logged In
+        <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
+      </MetaMaskDetectedLoggedIn>
+    );
+  }
+};
 
 const renderLeft = () => {
   return (
@@ -85,17 +125,7 @@ const renderMiddle = props => {
       <Item>
         Products <Icon icon="chevron-down" width={15} height={15} />
       </Item>
-      {props.provider === Web3Providers.META_MASK ? (
-        <MetaMaskDetected>
-          MetaMask detected but not logged in
-          <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
-        </MetaMaskDetected>
-      ) : (
-        <NoMetaMask>
-          Get MetaMask{' '}
-          <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
-        </NoMetaMask>
-      )}
+      <div>{renderMetaMaskStatus(props)}</div>
     </MiddleContainer>
   );
 };
