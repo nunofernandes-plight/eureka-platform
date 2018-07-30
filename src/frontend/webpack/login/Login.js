@@ -113,34 +113,12 @@ class Login extends Component {
     this.state = {
       username: null,
       email: null,
-      metaMaskStatus: null,
       isShowed: false
     };
   }
 
-  async componentDidMount() {
-    const metaMaskStatus = await getMetaMaskStatus(this.props.web3);
-    this.setState({metaMaskStatus});
-    this.interval = setInterval(async () => {
-      const metaMaskStatus = await getMetaMaskStatus(this.props.web3);
-      this.setState({metaMaskStatus});
-
-      // if modal is open and metamask has been accessed by the user
-      if (
-        this.state.isShowed &&
-        metaMaskStatus === MetaMaskStatus.DETECTED_LOGGED_IN
-      ) {
-        this.setState({isShowed: false});
-      }
-    }, 1200);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  async login() {
-    const status = this.state.metaMaskStatus;
+  async login(props) {
+    const status = props.metaMaskStatus;
     if (
       status === MetaMaskStatus.DETECTED_NO_LOGGED_IN ||
       status === MetaMaskStatus.NO_DETECTED
@@ -158,14 +136,17 @@ class Login extends Component {
     this.setState({[stateKey]: e.target.value});
   }
 
-  render() {
+  render() { 
     return (
       <div>
         <Modal
           toggle={isShowed => {
             this.setState({isShowed});
           }}
-          show={this.state.isShowed}
+          show={
+            this.state.isShowed &&
+            this.props.metaMaskStatus !== MetaMaskStatus.DETECTED_LOGGED_IN
+          }
           title={'Login using MetaMask - INFORMATION'}
         >
           Please be sure to have MetaMask<MetaMaskLogo width={15} height={15} />{' '}
@@ -228,7 +209,7 @@ class Login extends Component {
               <ButtonRow>
                 <Button
                   onClick={() => {
-                    this.login();
+                    this.login(this.props);
                   }}
                 >
                   Login with Metamask <MetaMaskLogo width={20} height={20} />
