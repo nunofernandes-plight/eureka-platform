@@ -31,6 +31,7 @@ class Router extends Component {
                     provider={this.props.provider}
                     web3={this.props.web3}
                     metaMaskStatus={this.props.metaMaskStatus}
+                    accounts={this.props.accounts}
                   />
                 )}
               />

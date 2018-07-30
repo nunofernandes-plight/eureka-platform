@@ -14,6 +14,7 @@ import Web3Providers from '../../web3/Web3Providers.js';
 import {getMetaMaskStatus} from '../../web3/IsLoggedIn.js';
 import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
 import Modal from '../../design-components/Modal.js';
+import AccountBalance from '../../web3/AccountBalance.js';
 
 const Container = styled.div`
   width: 100%;
@@ -206,6 +207,13 @@ class Login extends Component {
                 />
                 <label>Email address</label>
               </LoginRow>
+
+              {this.props.metaMaskStatus ===
+                MetaMaskStatus.DETECTED_LOGGED_IN && this.props.accounts ? (
+                <LoginRow>
+                  <AccountBalance address={this.props.accounts} balance={0} />
+                </LoginRow>
+              ) : null}
               <ButtonRow>
                 <Button
                   onClick={() => {

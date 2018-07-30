@@ -6,7 +6,7 @@ import Network from './web3/Network.js';
 import NoConnection from './webpack/NoConnection.js';
 import {Detector} from 'react-detect-offline';
 import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
-import {MetaMaskStatus} from './web3/MetaMaskStatus.js';
+import {getAccounts} from './web3/getAccounts.js';
 
 class App extends Component {
   constructor() {
@@ -26,11 +26,13 @@ class App extends Component {
       web3: web3Instance,
       provider,
       network: null,
-      metaMaskStatus: MetaMaskStatus.NO_DETECTED
+      metaMaskStatus: null,
+      accounts: []
     };
 
     this.getNetwork();
     this.callMetaMaskStatus();
+    this.getAccounts();
   }
 
   async callMetaMaskStatus() {
@@ -39,17 +41,16 @@ class App extends Component {
     this.interval = setInterval(async () => {
       const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
       this.setState({metaMaskStatus});
-
-      console.log(metaMaskStatus);
-
-      // // if modal is open and metamask has been accessed by the user
-      // if (
-      //   this.state.isShowed &&
-      //   metaMaskStatus === MetaMaskStatus.DETECTED_LOGGED_IN
-      // ) {
-      //   this.setState({isShowed: false});
-      // }
     }, 1200);
+  }
+
+  async getAccounts() {
+    const accounts = await getAccounts(this.state.web3);
+    this.setState({accounts});
+    this.interval = setInterval(async () => {
+      const accounts = await getAccounts(this.state.web3);
+      this.setState({accounts});
+    }, 2500);
   }
 
   async getNetwork() {
@@ -99,6 +100,7 @@ class App extends Component {
                 provider={this.state.provider}
                 network={this.state.network}
                 metaMaskStatus={this.state.metaMaskStatus}
+                accounts={this.state.accounts}
               />
             ) : (
               <NoConnection />
