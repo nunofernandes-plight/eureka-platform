@@ -13,6 +13,7 @@ export const __ALERT_ERROR = '#fb6340';
 export const __ALERT_INFO = '#11cdef';
 export const __ALERT_PRIMARY = '#5e72e4';
 export const __ALERT_WARNING = '#ffbc50';
+export const __ALERT_DANGER = '#fda08b';
 export const __ALERT_SUCCESS = '#2dce89';
 
 // GRAY SCALES
