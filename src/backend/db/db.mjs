@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import {isProduction} from '../../helpers/isProduction.mjs';
+import {isProduction, isTest} from '../../helpers/isProduction.mjs';
 import mongo from 'then-mongo/index';
 
 const collections = ['reviews'];
@@ -17,7 +17,7 @@ const url =
   '/' +
   process.env.DB_NAME;
 
-if(isProduction()) {
+if(isProduction() || isTest()) {
   url.concat('?ssl=true');
 }
 
