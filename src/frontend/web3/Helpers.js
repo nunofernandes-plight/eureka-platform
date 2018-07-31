@@ -34,7 +34,7 @@ export const getAllAccounts = async web3 => {
         await Promise.all(
           addresses.map(async address => {
             const balance = await getBalance(web3, address);
-            const ethBalance = web3.utils.fromWei(balance.toString()); 
+            const ethBalance = web3.utils.fromWei(balance.toString());
             accounts.set(address, ethBalance);
           })
         );

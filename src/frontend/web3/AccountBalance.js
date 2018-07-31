@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__GRAY_100, __GRAY_200} from '../helpers/colors.js';
+import {__GRAY_100, __GRAY_200, __THIRD} from '../helpers/colors.js';
+import Icon from '../webpack/icons/Icon.js';
 
 const Parent = styled.div`
   display: flex;
@@ -44,17 +45,26 @@ class AccountBalance extends React.Component {
   render() {
     return (
       <Parent>
-        {Array.from(this.props.accounts.keys()).map( (address, index) => {
+        {Array.from(this.props.accounts.keys()).map((address, index) => {
           return (
             <Container key={index}>
               <ColumnLeft>
-                <Title>Account</Title>
+                <Title>Selected Account</Title>
                 <Address>{address}</Address>
               </ColumnLeft>
 
               <ColumnRight>
                 <Title>Current Balance</Title>
-                <Balance>{this.props.accounts.get(address)} ETH</Balance>
+                <Balance>
+                  {this.props.accounts.get(address)}{' '}
+                  <Icon
+                    icon={'ethereum'}
+                    width={15}
+                    height={15}
+                    color={__THIRD}
+                    bottom={'3'}
+                  />
+                </Balance>
               </ColumnRight>
             </Container>
           );
