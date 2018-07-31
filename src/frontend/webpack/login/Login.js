@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import {Row} from '../../helpers/layout.js';
 import {
+  __ALERT_ERROR,
   __ALERT_WARNING,
   __FOURTH,
   __SECOND,
@@ -11,10 +12,11 @@ import {
 import MetaMaskLogo from '../icons/MetaMaskLogo.js';
 import EurekaLogo from '../icons/EurekaLogo.js';
 import Web3Providers from '../../web3/Web3Providers.js';
-import {getMetaMaskStatus} from '../../web3/IsLoggedIn.js';
 import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
 import Modal from '../../design-components/Modal.js';
 import AccountBalance from '../../web3/AccountBalance.js';
+import {isEmailValid} from '../../../helpers/emailValidator.js';
+import {InputField} from '../../design-components/Inputs.js';
 
 const Container = styled.div`
   width: 100%;
@@ -108,13 +110,19 @@ const MetaMaskInstalled = styled.div`
 const SubTitle = styled.h2`
   text-align: center;
 `;
+
+const EmailInput = styled.input`
+  border: ${__ALERT_ERROR};
+`;
 class Login extends Component {
   constructor() {
     super();
     this.state = {
       username: null,
       email: null,
-      isShowed: false
+      isShowed: false,
+      signedKey: null,
+      inputStatus: 'error' // fake
     };
   }
 
@@ -125,12 +133,31 @@ class Login extends Component {
       status === MetaMaskStatus.NO_DETECTED
     ) {
       this.setState({isShowed: true});
-    } else {
-      // already logged in
     }
-    //web3.eth.sign('Hello world', '0x6FF530adA03d01361e08c82f86B9E5114B1E5c4c');
-    //await web3.eth.getAccounts()
-    //web3.eth.personal.sign("0x6FF530adA03d01361e08c82f86B9E5114B1E5c4c", "0x6FF530adA03d01361e08c82f86B9E5114B1E5c4c")
+
+    if (!isEmailValid(this.state.email)) {
+      console.log('asijfasijfjiasfjoasfjoasfjoasjof');
+    }
+
+    if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
+      // already logged in
+      const accounts = Array.from(this.props.accounts.keys());
+      let defaultAccount;
+      if (accounts.length === 1) {
+        defaultAccount = accounts[0];
+      } else {
+        // TODO: handle GANACHE case
+      }
+      this.props.web3.eth.personal
+        .sign(
+          'EUREKA Platform - Login Authentification - Please click to the Sign Button below.',
+          defaultAccount
+        )
+        .then(signedKey => {
+          this.setState({signedKey});
+        })
+        .catch(err => console.log(err));
+    }
   }
 
   handleInput(stateKey, e) {
@@ -192,20 +219,17 @@ class Login extends Component {
             <LoginContainer provider={this.props.provider}>
               <SubTitle>Please login</SubTitle>
               <LoginRow>
-                <input
-                  onChange={e => this.handleInput('username', e)}
-                  type="text"
-                  required
-                />
-                <label>Username</label>
-              </LoginRow>
-              <LoginRow>
-                <input
+                {/*<EmailInput*/}
+                {/*onChange={e => this.handleInput('email', e)}*/}
+                {/*type="text"*/}
+                {/*required*/}
+                {/*/>*/}
+                <InputField
+                  placeholder={'email address'}
+                  status={this.state.inputStatus}
                   onChange={e => this.handleInput('email', e)}
-                  type="text"
-                  required
                 />
-                <label>Email address</label>
+                {/*<label>Email address</label>*/}
               </LoginRow>
 
               {this.props.metaMaskStatus ===
