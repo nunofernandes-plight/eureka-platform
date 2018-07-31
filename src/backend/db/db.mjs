@@ -4,10 +4,10 @@ import mongo from 'then-mongo/index';
 
 const collections = ['reviews'];
 
-if (!isProduction()) {
+if (!isProduction() && !isTest()) {
   dotenv.config();
 }
-const url =
+let url =
   'mongodb://' +
   process.env.DB_USER +
   ':' +
@@ -17,8 +17,8 @@ const url =
   '/' +
   process.env.DB_NAME;
 
-if(isProduction() || isTest()) {
-  url.concat('?ssl=true');
+if (isProduction() || isTest()) {
+  url = url.concat('?ssl=true');
 }
 
 const db = mongo(url, collections);
