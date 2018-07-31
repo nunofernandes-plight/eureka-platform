@@ -19,7 +19,7 @@ test.beforeEach(async () => {
 });
 
 //test(PRETEXT + 'all collections are empty', async t => {
-test('all collections are empty', async t => {
+test(PRETEXT + 'all collections are empty', async t => {
   t.is((await userService.getAllUsers()).length, 0);
   t.is((await submissionService.getAllSubmissions()).length, 0);
   t.is((await authorService.getAllAuthors()).length, 0);
