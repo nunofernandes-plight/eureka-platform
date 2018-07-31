@@ -1,6 +1,7 @@
  import React, {Component} from 'react';
 import styled from 'styled-components';
 import MetaMaskLogo from './icons/MetaMaskLogo.js';
+ import Modal from "../design-components/Modal.js";
 
 const Container = styled.div`
   display: flex;

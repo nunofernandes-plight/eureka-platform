@@ -1,4 +1,3 @@
-import db from './db.mjs';
 import bcryptHasher from '../helpers/bcrypt-hasher.mjs';
 import User from '../schema/user.mjs';
 import Roles from '../schema/roles-enum.mjs';
@@ -9,9 +8,7 @@ export default {
    * @returns {*}
    */
   getAllUsers: () => {
-    return db
-      .find()
-      .toArray();
+    return User.find({});
   },
   /**
    * create a new user in the DB
@@ -51,6 +48,15 @@ export default {
   },
 
   /**
+   * Get one user by the ID
+   * @param userId
+   * @returns {Promise<Query|void|*|ThenPromise<Object>|Promise<TSchema | null>|Promise>}
+   */
+  getUserById: async (userId) => {
+    return User.findOne({'_id': userId});
+  },
+
+  /**
    * Add the role to the given user
    * if the role matches a roles-enum
    * @param user_id
@@ -59,7 +65,7 @@ export default {
    */
   addRole: async (user_id, role) => {
     if (Roles.hasOwnProperty(role)) {
-      User.findByIdAndUpdate(
+      return User.findByIdAndUpdate(
         user_id,
         {
           $addToSet: {

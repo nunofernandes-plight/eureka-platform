@@ -46,6 +46,22 @@ npm run dev-contracts
 ```
 > Default dev Ethereum node: `http://127.0.0.1:7545`
 
+### Testing
+```
+npm run test
+```
+or 
+```
+npm run test-ci
+```
+
+Testing is done with ava. All tests which should be excluded on dev and prod must use the pretag 'DEV-TEST'. Like the following example: 
+```
+test('DEV-TEST: Event - DB -> Sign up Editor', async t => {
+  ...
+});
+```
+
 ## How to contribute
 
 Pull requests welcome! Please include tests and follow the style conventions.

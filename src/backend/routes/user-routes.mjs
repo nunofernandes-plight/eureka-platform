@@ -7,7 +7,7 @@ import userService from '../db/user-service.mjs';
 router.get(
   '/',
   asyncHandler(async () => {
-    //return reviewService.getAllReviews();
+    return userService.getAllUsers();
   })
 );
 

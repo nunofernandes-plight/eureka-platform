@@ -58,7 +58,7 @@ async function cleanDB() {
   await Submission.remove({});
 }
 
-test('Event - DB -> Sign up Editor', async t => {
+test('DEV-TEST: Event - DB -> Sign up Editor', async t => {
   await userService.createUser('test2', 'test', 'test@test.test', contractOwner);
 
   let user = await userService.getUserByEthereumAddress(contractOwner);
@@ -71,7 +71,7 @@ test('Event - DB -> Sign up Editor', async t => {
   //app.close();
 });
 
-test('Event - DB ->  Submit Article', async t => {
+test('DEV-TEST: Event - DB ->  Submit Article', async t => {
   let article = {
     articleHash: '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
     url: 'hoihoi',

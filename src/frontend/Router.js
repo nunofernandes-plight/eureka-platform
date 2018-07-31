@@ -15,7 +15,10 @@ class Router extends Component {
   render() {
     return (
       <div>
-        <Header provider={this.props.provider} />
+        <Header
+          provider={this.props.provider}
+          metaMaskStatus={this.props.metaMaskStatus}
+        />
         <div style={{paddingTop: 100}}>
           <BrowserRouter>
             <Switch>
@@ -27,6 +30,8 @@ class Router extends Component {
                   <Login
                     provider={this.props.provider}
                     web3={this.props.web3}
+                    metaMaskStatus={this.props.metaMaskStatus}
+                    accounts={this.props.accounts}
                   />
                 )}
               />
