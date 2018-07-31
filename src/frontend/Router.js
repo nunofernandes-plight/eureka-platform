@@ -18,6 +18,7 @@ class Router extends Component {
         <Header
           provider={this.props.provider}
           metaMaskStatus={this.props.metaMaskStatus}
+          network={this.props.network}
         />
         <div style={{paddingTop: 100}}>
           <BrowserRouter>

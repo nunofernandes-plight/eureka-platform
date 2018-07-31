@@ -13,6 +13,7 @@ import MetaMaskLogo from './icons/MetaMaskLogo.js';
 import {Switch} from 'react-router';
 import Web3Providers from '../web3/Web3Providers.js';
 import {MetaMaskStatus} from '../web3/MetaMaskStatus.js';
+import RenderNetwork from '../web3/RenderNetwork.js';
 
 const Parent = styled.div`
   box-shadow: -21.213px 21.213px 30px 0px rgba(158, 158, 158, 0.3);
@@ -24,7 +25,6 @@ const Parent = styled.div`
 const Container = Row.extend`
   transition: all 150ms ease;
   color: ${__THIRD};
-  cursor: pointer;
   font-size: 18px;
   padding: 25px;
   align-items: center;
@@ -83,7 +83,7 @@ const SignUp = Item.extend`
   border-radius: 4px;
 `;
 
-const renderMetaMaskStatus = props => { 
+const renderMetaMaskStatus = props => {
   const status = props.metaMaskStatus;
   if (status === MetaMaskStatus.DETECTED_NO_LOGGED_IN) {
     return (
@@ -124,6 +124,9 @@ const renderMiddle = props => {
         Products <Icon icon="chevron-down" width={15} height={15} />
       </Item>
       <div>{renderMetaMaskStatus(props)}</div>
+      <div>
+        {props.network ? <RenderNetwork network={props.network} /> : null}
+      </div>
     </MiddleContainer>
   );
 };
