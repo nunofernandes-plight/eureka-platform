@@ -29,7 +29,7 @@ const Status = styled.div`
 `;
 
 const IconContainer = styled.div`
-  background: ${props => getColor(props)};
+  background: ${props => (props.status ? getColor(props) : null)};
   padding: 3px 9px;
   border-radius: 50%;
 `;
@@ -41,9 +41,8 @@ const Container = styled.div`
 const renderIcon = props => {
   if (props.status === 'valid') {
     return <Icon icon={'check'} width={10} heigth={10} />;
-  }
-  else if (props.status === "error") {
-      return <Icon icon={'exlamation'} width={10} height={16} bottom={2} />;
+  } else if (props.status === 'error') {
+    return <Icon icon={'exlamation'} width={10} height={16} bottom={2} />;
   }
 };
 export const InputField = props => {

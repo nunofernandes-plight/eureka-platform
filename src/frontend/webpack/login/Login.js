@@ -122,7 +122,7 @@ class Login extends Component {
       email: null,
       isShowed: false,
       signedKey: null,
-      inputStatus: 'error' // fake
+      inputStatus: null
     };
   }
 
@@ -161,6 +161,11 @@ class Login extends Component {
   }
 
   handleInput(stateKey, e) {
+    if (isEmailValid(e.target.value)) {
+      this.setState({inputStatus: 'valid'});
+    } else {
+      this.setState({inputStatus: 'error'});
+    }
     this.setState({[stateKey]: e.target.value});
   }
 
@@ -226,7 +231,7 @@ class Login extends Component {
                 {/*/>*/}
                 <InputField
                   placeholder={'email address'}
-                  status={this.state.inputStatus}
+                  status={this.state.email ? this.state.inputStatus : null}
                   onChange={e => this.handleInput('email', e)}
                 />
                 {/*<label>Email address</label>*/}
