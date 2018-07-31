@@ -42,22 +42,23 @@ class AccountBalance extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <Parent>
-        <Container>
-          <ColumnLeft>
-            <Title>Account</Title>
-            {this.props.addresses.map((address, index) => {
-              return <Address key={index}>{address}</Address>;
-            })}
-          </ColumnLeft>
+        {Array.from(this.props.accounts.keys()).map( (address, index) => {
+          return (
+            <Container key={index}>
+              <ColumnLeft>
+                <Title>Account</Title>
+                <Address>{address}</Address>
+              </ColumnLeft>
 
-          <ColumnRight>
-            <Title>Current Balance</Title>
-            <Balance>{this.props.balance} ETH</Balance>
-          </ColumnRight>
-        </Container>
+              <ColumnRight>
+                <Title>Current Balance</Title>
+                <Balance>{this.props.accounts.get(address)} ETH</Balance>
+              </ColumnRight>
+            </Container>
+          );
+        })}
       </Parent>
     );
   }

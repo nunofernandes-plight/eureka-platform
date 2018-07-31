@@ -6,7 +6,7 @@ import Network from './web3/Network.js';
 import NoConnection from './webpack/NoConnection.js';
 import {Detector} from 'react-detect-offline';
 import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
-import {getAccounts} from './web3/Helpers.js';
+import {getAccounts, getAllAccounts} from './web3/Helpers.js';
 
 class App extends Component {
   constructor() {
@@ -27,7 +27,7 @@ class App extends Component {
       provider,
       network: null,
       metaMaskStatus: null,
-      addresses: []
+      accounts: null
     };
 
     this.getNetwork();
@@ -41,16 +41,16 @@ class App extends Component {
     this.interval = setInterval(async () => {
       const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
       this.setState({metaMaskStatus});
-    }, 1200);
+    }, 1500);
   }
 
   async getAddresses() {
-    const addresses = await getAccounts(this.state.web3);
-    this.setState({addresses});
+    const accounts = await getAllAccounts(this.state.web3);
+    this.setState({accounts});
     this.interval = setInterval(async () => {
-      const addresses = await getAccounts(this.state.web3);
-      this.setState({addresses});
-    }, 2500);
+      const accounts = await getAllAccounts(this.state.web3);
+      this.setState({accounts});
+    }, 2000);
   }
 
   async getNetwork() {
@@ -100,7 +100,7 @@ class App extends Component {
                 provider={this.state.provider}
                 network={this.state.network}
                 metaMaskStatus={this.state.metaMaskStatus}
-                addresses={this.state.addresses}
+                accounts={this.state.accounts}
               />
             ) : (
               <NoConnection />
