@@ -42,12 +42,15 @@ class AccountBalance extends React.Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <Parent>
         <Container>
           <ColumnLeft>
             <Title>Account</Title>
-            <Address>{this.props.address}</Address>
+            {this.props.addresses.map((address, index) => {
+              return <Address key={index}>{address}</Address>;
+            })}
           </ColumnLeft>
 
           <ColumnRight>
