@@ -122,11 +122,14 @@ class Login extends Component {
       email: null,
       isShowed: false,
       signedKey: null,
-      inputStatus: null
+      inputStatus: null,
+      isEmailValidModal: false,
+      submitted: false
     };
   }
 
   async login(props) {
+    this.setState({submitted: true});
     const status = props.metaMaskStatus;
     if (
       status === MetaMaskStatus.DETECTED_NO_LOGGED_IN ||
@@ -136,7 +139,7 @@ class Login extends Component {
     }
 
     if (!isEmailValid(this.state.email)) {
-      console.log('asijfasijfjiasfjoasfjoasfjoasjof');
+      this.setState({isEmailValidModal: true})
     }
 
     if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
@@ -188,6 +191,18 @@ class Login extends Component {
           <strong>Remember: </strong> we can neither see nor store your private
           keys.
         </Modal>
+
+        <Modal
+          toggle={isEmailValidModal => {
+            this.setState({isEmailValidModal});
+          }}
+          show={this.state.isEmailValidModal && this.state.submitted}
+          title={'Inserted Email is invalid'}
+        >
+          Ouh. The email {this.state.email} does not seem to be a valid email.
+          Please insert a correct one.
+        </Modal>
+
         <Container>
           {this.props.provider !== Web3Providers.META_MASK ? (
             <MetaMaskInstalled>
@@ -224,17 +239,11 @@ class Login extends Component {
             <LoginContainer provider={this.props.provider}>
               <SubTitle>Please login</SubTitle>
               <LoginRow>
-                {/*<EmailInput*/}
-                {/*onChange={e => this.handleInput('email', e)}*/}
-                {/*type="text"*/}
-                {/*required*/}
-                {/*/>*/}
                 <InputField
                   placeholder={'email address'}
                   status={this.state.email ? this.state.inputStatus : null}
                   onChange={e => this.handleInput('email', e)}
                 />
-                {/*<label>Email address</label>*/}
               </LoginRow>
 
               {this.props.metaMaskStatus ===
