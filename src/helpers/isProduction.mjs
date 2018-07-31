@@ -1,4 +1,4 @@
-const isProduction = () => {
+export const isProduction = () => {
   // for client-side
   if (typeof window !== 'undefined') {
     return window.location.hostname !== 'localhost';
@@ -7,4 +7,11 @@ const isProduction = () => {
   return process.env.NODE_ENV === 'production';
 };
 
-export default isProduction;
+export const isDevelopment = () => {
+  // for client-side
+  if (typeof window !== 'undefined') {
+    return window.location.hostname === 'localhost';
+  }
+  // for server-side
+  return process.env.NODE_ENV === 'development';
+};

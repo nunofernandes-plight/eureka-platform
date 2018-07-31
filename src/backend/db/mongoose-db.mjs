@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import isProduction from '../../helpers/isProduction.mjs';
+import {isProduction} from '../../helpers/isProduction.mjs';
 import dotenv from 'dotenv';
 
 if (!isProduction()) {
