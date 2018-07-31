@@ -32,7 +32,7 @@ class App extends Component {
 
     this.getNetwork();
     this.callMetaMaskStatus();
-    this.getAddresses();
+    this.getAccounts();
   }
 
   async callMetaMaskStatus() {
@@ -44,7 +44,7 @@ class App extends Component {
     }, 1500);
   }
 
-  async getAddresses() {
+  async getAccounts() {
     const accounts = await getAllAccounts(this.state.web3);
     this.setState({accounts});
     this.interval = setInterval(async () => {
