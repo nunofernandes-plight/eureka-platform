@@ -17,6 +17,7 @@ import Modal from '../../design-components/Modal.js';
 import AccountBalance from '../../web3/AccountBalance.js';
 import {isEmailValid} from '../../../helpers/emailValidator.js';
 import {InputField} from '../../design-components/Inputs.js';
+import {Alert} from '../../design-components/Alerts.js';
 
 const Container = styled.div`
   width: 100%;
@@ -226,14 +227,7 @@ class Login extends Component {
               </div>
             </Title>
             {this.props.provider === Web3Providers.META_MASK ? (
-              <MetaMaskDisclaimer>
-                <Paragraph>
-                  We detected MetaMask<MetaMaskLogo width={15} height={15} />in
-                  your Browser! We use it as our authentication provider. Please
-                  note that we are not able neither to see nor to store your
-                  private keys.{' '}
-                </Paragraph>
-              </MetaMaskDisclaimer>
+              <Alert status={'warning'}>Lalallaallalaalal</Alert>
             ) : null}
           </TitleRow>
 
