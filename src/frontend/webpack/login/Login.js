@@ -39,7 +39,7 @@ const LoginContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   border-radius: 5px;
-  width: 600px;
+  width: 450px;
   position: relative;
   opacity: ${props => (props.provider === Web3Providers.META_MASK ? 1 : 0.1)};
   pointer-events: ${props =>
