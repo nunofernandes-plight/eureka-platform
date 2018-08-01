@@ -17,7 +17,7 @@ import Modal from '../../design-components/Modal.js';
 import AccountBalance from '../../web3/AccountBalance.js';
 import {isEmailValid} from '../../../helpers/emailValidator.js';
 import {InputField} from '../../design-components/Inputs.js';
-import {Alert} from '../../design-components/Alerts.js';
+import Alert from '../../design-components/Alerts.js';
 
 const Container = styled.div`
   width: 100%;
@@ -52,18 +52,10 @@ const Button = styled.button`
   align-self: center;
 `;
 
-const MetaMaskDisclaimer = styled.div``;
-
-const Paragraph = styled.p`
+const AlertContainer = styled.p`
   word-break: break-word;
-  text-align: center;
   width: 700px;
   margin-bottom: 40px;
-  background: ${__SECOND};
-  border-radius: 10px;
-  color: white;
-  padding: 20px;
-  box-shadow: 0 2.213px 15px 0px rgb(51, 46, 46);
 `;
 
 const TitleRow = Row.extend`
@@ -227,7 +219,13 @@ class Login extends Component {
               </div>
             </Title>
             {this.props.provider === Web3Providers.META_MASK ? (
-              <Alert status={'warning'}>Lalallaallalaalal</Alert>
+              <AlertContainer>
+                <Alert status={'info'}>
+                  We detected MetaMask in your Browser! We use it as our
+                  authentication provider. Please note that we are not able
+                  neither to see nor to store your private keys.{' '}
+                </Alert>
+              </AlertContainer>
             ) : null}
           </TitleRow>
 

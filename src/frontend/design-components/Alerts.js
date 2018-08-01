@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
 import {
   __ALERT_DANGER,
@@ -25,21 +25,22 @@ const getColor = props => {
 
 const getIcon = props => {
   if (props.status === 'success') {
-    return <Icon icon={'thumbs-up'} width={20} height={20} right={5} />;
+    return <Icon icon={'thumbs-up'} width={25} height={25} right={5} />;
   } else if (props.status === 'info') {
-    return <Icon icon={'bell'} width={20} height={20} right={5} />;
+    return <Icon icon={'bell'} width={25} height={25} right={5} />;
   } else if (props.status === 'warning') {
-    return <Icon icon={'bell'} width={20} height={20} right={5} />;
+    return <Icon icon={'bell'} width={25} height={25} right={5} />;
   } else if (props.status === 'danger') {
-    return <Icon icon={'bell'} width={20} height={20} right={5} />;
+    return <Icon icon={'bell'} width={25} height={25} right={5} />;
   } else if (props.status === 'error') {
-    return <Icon icon={'exlamation-circle'} width={20} height={20} right={5} />;
+    return <Icon icon={'exlamation-circle'} width={25} height={25} right={5} />;
   }
 };
 
 const Label = styled.div`
   margin: 0 4px;
   font-weight: bold;
+  min-width: 35px;
 `;
 
 const getLabel = props => {
@@ -66,11 +67,36 @@ const Container = styled.div`
   display: flex;
   border-radius: 0.25rem;
 `;
-export const Alert = props => {
-  return (
-    <Container {...props}>
-      {getIcon(props)} {getLabel(props)} This is a text message for testing the
-      alerts!! Check it our pleaese
-    </Container>
-  );
-};
+
+class Alert extends Component {
+  constructor() {
+    super();
+    this.state = {
+        isHidden: false
+    }
+  }
+
+  hideAlert() {
+    this.setState({isHidden: true});
+  }
+  render() {
+    return (
+      <div>
+        {this.state.isHidden ? null : (
+          <Container {...this.props}>
+            {getIcon(this.props)} {getLabel(this.props)} {this.props.children}
+            <Icon
+              onClick={() => this.hideAlert()}
+              icon={'close'}
+              width={18}
+              height={18}
+              top={2}
+            />
+          </Container>
+        )}
+      </div>
+    );
+  }
+}
+
+export default Alert;
