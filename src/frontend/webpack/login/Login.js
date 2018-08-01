@@ -139,7 +139,7 @@ class Login extends Component {
     }
 
     if (!isEmailValid(this.state.email)) {
-      this.setState({isEmailValidModal: true})
+      this.setState({isEmailValidModal: true});
     }
 
     if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
@@ -153,7 +153,9 @@ class Login extends Component {
       }
       this.props.web3.eth.personal
         .sign(
-          'EUREKA Platform - Login Authentification - Please click to the Sign Button below.',
+          'EUREKA Login Authentication for the email: ' +
+            this.state.email +
+            '  - Please click to the Sign Button below.',
           defaultAccount
         )
         .then(signedKey => {

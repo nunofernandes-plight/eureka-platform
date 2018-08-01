@@ -54,7 +54,7 @@ class AccountBalance extends React.Component {
               </ColumnLeft>
 
               <ColumnRight>
-                <Title>Current Balance</Title>
+                <Title>Balance</Title>
                 <Balance>
                   {this.props.accounts.get(address)}{' '}
                   <Icon

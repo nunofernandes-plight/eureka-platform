@@ -48,7 +48,11 @@ const renderIcon = props => {
 export const InputField = props => {
   return (
     <Container>
-      <Input {...props} />
+      <Input
+        id={props.id ? props.id : null}
+        type={props.type ? props.type : null}
+        {...props}
+      />
       <Status {...props}>
         <IconContainer {...props}>{renderIcon(props)}</IconContainer>
       </Status>
