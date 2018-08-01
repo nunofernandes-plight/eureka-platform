@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-import isProduction from '../../helpers/isProduction';
+import {isProduction} from '../../helpers/isProduction';
 
 if (!isProduction()) {
   dotenv.config();

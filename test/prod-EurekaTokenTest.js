@@ -10,7 +10,7 @@ test.beforeEach(async t => {
   accounts = await getAccounts();
 });
 
-test('minting and total supply', async t => {
+test('DEV-TEST: minting and total supply', async t => {
   let amounts = [];
 
   let amount = 1000;
@@ -52,7 +52,7 @@ test('minting and total supply', async t => {
     });
 });
 
-test('minting and balanceOf', async t => {
+test('DEV-TEST: minting and balanceOf', async t => {
   let amounts = [];
 
   let amount = 1000;
@@ -85,7 +85,7 @@ test('minting and balanceOf', async t => {
 });
 
 
-test('minting and balanceOf of another address', async t => {
+test('DEV-TEST: minting and balanceOf of another address', async t => {
   let amounts = [];
 
   let amount = 1000;

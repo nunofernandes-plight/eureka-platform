@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import isProduction from '../../helpers/isProduction.mjs';
+import {isProduction} from '../../helpers/isProduction.mjs';
 import mongo from 'then-mongo/index';
 
 const collections = ['reviews'];

@@ -27,6 +27,7 @@
     "react-ga": "^2.5.3",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
+    "react-select": "^2.0.0",
     "solc": "^0.4.24",
     "styled-components": "^3.3.3",
     "then-mongo": "^3.0.2",
@@ -36,8 +37,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test-ci": "if [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then npm run lint; fi && ava test/* !test/EurekaTokenTest.js",
-    "test": "ava --serial && npm run lint",
+    "test-ci": "if [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then npm run lint; fi && ava --serial --match='!*DEV-TEST*' --match='!*foo*'",
+    "test": "ava --serial --match='!*DEV-TEST*' --match='!*DB-USER*' && npm run lint",
     "lint": "eslint **/*.mjs --ignore-path .gitignore",
     "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
     "eject": "react-scripts eject",
