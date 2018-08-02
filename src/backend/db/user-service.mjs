@@ -13,12 +13,11 @@ export default {
   },
   /**
    * create a new user in the DB
-   * @param username
    * @param password
    * @param email
    * @returns {Promise<Model>}
    */
-  createUser: async (username, password, email, ethereumAddress) => {
+  createUser: async (password, email, ethereumAddress) => {
     if (!password || !email || !ethereumAddress) {
       throw new Error('Password Email or Address is missing!');
     }
@@ -28,10 +27,10 @@ export default {
         'Checks sum for the address ' + ethereumAddress + ' failed.'
       );
     }
+
     const hashedPassword = await bcryptHasher.hash(password);
 
     const newUser = new User({
-      username,
       ethereumAddress,
       password: hashedPassword,
       email,
