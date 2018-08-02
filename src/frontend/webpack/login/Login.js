@@ -157,15 +157,17 @@ class Login extends Component {
             if (response.success) {
               // TODO: implement success case
             } else {
-              this.setState({errorMessage: response.error});
+              this.setState({
+                errorMessage: response.error,
+
+                loading: false
+              });
             }
-            this.setState({
-              loading: false
-            });
           })
           .catch(err => {
-            this.setState({errorMessage: err});
             this.setState({
+              errorMessage: err,
+
               loading: false
             });
           });
@@ -207,6 +209,7 @@ class Login extends Component {
   }
 
   renderModals() {
+    console.log(this.state);
     return (
       <div>
         {' '}
@@ -236,6 +239,16 @@ class Login extends Component {
         >
           Ouh. The email {this.state.email} does not seem to be a valid email.
           Please insert a correct one.
+        </Modal>
+        <Modal
+          type={'notification'}
+          toggle={isErrorMessage => {
+            this.setState({errorMessage: null});
+          }}
+          show={this.state.errorMessage}
+          title={'You got the following error'}
+        >
+          {this.state.errorMessage}
         </Modal>
       </div>
     );
