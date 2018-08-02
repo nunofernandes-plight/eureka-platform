@@ -100,7 +100,7 @@ npm run dev-contracts
 ```
 > Default dev Ethereum node: `http://127.0.0.1:7545`
 
-### Testing
+#Testing
 ```
 npm run test
 ```
@@ -109,11 +109,38 @@ or
 npm run test-ci
 ```
 
-Testing is done with ava. All tests which should be excluded on dev and prod must use the pretag 'DEV-TEST'. Like the following example: 
+###Testing strategy
+
+**Local testing:**  
+    1. DB must be running (see Start DB).   
+    2. Ganache must be running and listen to port 7545.  
+    3. run 'yarn run test'.
+
+**Dev testing:**  
+    only application-intern unit-tests.
+    
+**Test testing:**  
+    1. DB on: https://app.compose.io/science-matters-ag/deployments/eureka-platform-mongodb/mongodb/databases/test-eureka-platform/collections  
+    2. SC is deployed to //TODO  
+    3. Runs all types of tests
+    
+**Master testing:**  
+    1. DB on:  https://app.compose.io/science-matters-ag/deployments/eureka-platform-mongodb/mongodb/databases/eureka-platform/collections  
+    2. SC is deployed to ethereum main-net
+    3. runs only application-intern unit-tests
+     
+| Branch\ Test-type       | Unit test        | DB test  | SC Integration test |
+| ----------------------- |:----------------:| --------:|--------------------:|
+| **Local**               |        Yes       |   Yes    |        Yes          |
+| **Dev**                 |        Yes       |   No     |        No           |
+| **Test**                |        Yes       |   Yes    |        Yes          |
+| **Master**              |        Yes       |   No     |        No           |
+
+Testing is done with ava. Based on the branch (see table) only specific test-files are executed. (e.g. on 'dev' only the file NormalTests.js).
+When new test-files are created the script in package.json needs to be updated.
+
 ```
-test('DEV-TEST: Event - DB -> Sign up Editor', async t => {
-  ...
-});
+"test-ci": "if [ \"${CIRCLE_BRANCH}\" = \"dev\" ]; then ava --serial ./test/NormalTests.js; elif [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then ava --serial ./test/NormalTests.js; else ava --serial;fi"
 ```
 
 ## How to contribute
