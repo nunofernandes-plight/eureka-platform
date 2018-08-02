@@ -5,6 +5,7 @@ import WelcomePage from './webpack/login/WelcomePage';
 import Header from './webpack/Header/Header';
 import Login from './webpack/login/Login';
 import MetaMaskGuide from './webpack/MetaMaskGuide';
+import MainScreen from './dashboard/MainScreen.js';
 
 class Router extends Component {
   constructor() {
@@ -24,6 +25,19 @@ class Router extends Component {
           <BrowserRouter>
             <Switch>
               <Route path="/metamask" exact render={() => <MetaMaskGuide />} />
+              {/*TODO: handle guard for this route*/}
+              <Route
+                path="/dashboard"
+                exact
+                render={() => (
+                  <MainScreen
+                    provider={this.props.provider}
+                    web3={this.props.web3}
+                    metaMaskStatus={this.props.metaMaskStatus}
+                    accounts={this.props.accounts}
+                  />
+                )}
+              />
               <Route
                 path="/login"
                 exact
