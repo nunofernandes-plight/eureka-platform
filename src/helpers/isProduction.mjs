@@ -7,7 +7,7 @@ export const isProduction = () => {
   return process.env.NODE_ENV === 'production';
 };
 
-export const isTesting = () => {
+export const isTest = () => {
   // for client-side --> TODO
   // for server-side
   return process.env.NODE_ENV === 'test';

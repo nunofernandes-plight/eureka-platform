@@ -6,11 +6,11 @@ import connectMongo from 'connect-mongo';
 
 import passport from '../helpers/local-passport.mjs';
 import mongooseDB from '../db/mongoose-db.mjs';
-import {isProduction} from '../../helpers/isProduction.mjs';
+import {isProduction, isTest} from '../../helpers/isProduction.mjs';
 import router from '../routes/index.mjs';
 import contractEventListener from '../helpers/contract-event-handler.mjs';
 
-if (!isProduction) {
+if (!isProduction && !isTest()) {
   dotenv.config();
 }
 
