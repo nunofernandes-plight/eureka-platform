@@ -28,7 +28,7 @@ export default {
     }
 
     if (!password || !email || !ethereumAddress) {
-      let error = new Error('Password Email or Address is missing!');
+      let error = new Error('Password, Email or Address is missing!');
       error.status = 400;
       throw error;
     }
