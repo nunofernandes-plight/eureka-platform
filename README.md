@@ -91,8 +91,32 @@ DB_PASSWORD=admin
 ```
 npm run dev-server
 ```
-
 > Default dev port: `http://localhost:8080/`
+
+### Start DB locally  
+    1. start mondo db service with "mongod" command
+    2. open new terminal/ connect to localhost mongodb with "mongo" command
+    3. type in 'use eurekaDB'.
+    4. creata a new admin user with:
+        "
+            db.createUser({
+    	        user: "admin",
+    	        pwd: "admin",
+    	        roles: [{
+    		        role: "dbAdmin",
+    		    db:"eurekaDB"
+    		    }]
+            })
+        "
+    5. maybe necessary to save the db: 
+        db.testData.insert({"test": "test"})
+    6. show dbs --> check if DB is created
+    7. create .env file in project folder with the following text:
+        DB_HOST=localhost
+        DB_NAME=eurekaDB
+        DB_USER=admin
+        DB_PASSWORD=admin
+        
 
 #### Build Smart Contract
 ```
@@ -100,7 +124,7 @@ npm run dev-contracts
 ```
 > Default dev Ethereum node: `http://127.0.0.1:7545`
 
-#Testing
+###Testing
 ```
 npm run test
 ```
@@ -109,10 +133,10 @@ or
 npm run test-ci
 ```
 
-###Testing strategy
+####Testing strategy
 
 **Local testing:**  
-    1. DB must be running (see Start DB).   
+    1. DB must be running (see Start DB locally).   
     2. Ganache must be running and listen to port 7545.  
     3. run 'yarn run test'.
 
