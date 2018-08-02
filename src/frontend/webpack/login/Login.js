@@ -14,6 +14,7 @@ import {InputField} from '../../design-components/Inputs.js';
 import Alert from '../../design-components/Alerts.js';
 import EurekaSpinner from '../../webpack/spinners/EurekaSpinner.js';
 import {getDomain} from '../../../helpers/getDomain.js';
+import {Label} from '../../design-components/Labels.js';
 
 const Container = styled.div`
   width: 100%;
@@ -277,6 +278,7 @@ class Login extends Component {
                         authentication provider. Please note that we are not
                         able neither to see nor to store your private keys.{' '}
                       </Alert>
+                      <Label status={'primary'}>this is a test</Label>
                     </AlertContainer>
                   ) : null}
                 </TitleRow>
