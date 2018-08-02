@@ -14,11 +14,15 @@ router.post('/', async function(req, res) {
     .createUser(req.body.password, req.body.email, req.body.ethereumAddress)
     .then(newUserInDB => {
       req.login(newUserInDB._id, function(err) {
-        if (err) res.send('Login error: ' + err);
+        if (err) {
+          res.status(400);
+          res.send('Login error: ' + err);
+        }
         res.send(newUserInDB);
       });
     })
     .catch(err => {
+      res.status(400);
       res.send('Registration error: ' + err);
     });
 });
