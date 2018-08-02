@@ -10,8 +10,6 @@ import {
 } from '../../helpers/colors.js';
 import Icon from '../icons/Icon.js';
 import MetaMaskLogo from '../icons/MetaMaskLogo.js';
-import {Switch} from 'react-router';
-import Web3Providers from '../../web3/Web3Providers.js';
 import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
 import RenderNetwork from '../../web3/RenderNetwork.js';
 

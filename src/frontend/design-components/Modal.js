@@ -104,10 +104,6 @@ const ActionButton = styled.button`
 `;
 
 class Modal extends Component {
-  constructor() {
-    super();
-  }
-
   toggle() {
     const isShowed = !this.props.show;
     this.props.toggle(isShowed);

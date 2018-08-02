@@ -8,10 +8,6 @@ import MetaMaskGuide from './webpack/MetaMaskGuide';
 import MainScreen from './dashboard/MainScreen.js';
 
 class Router extends Component {
-  constructor() {
-    super();
-  }
-
   componentDidMount() {}
   render() {
     return (

@@ -29,8 +29,6 @@ const Wrapper = Row.extend`
 `;
 const SubTitle = styled.p``;
 
-const GetStarted = styled.button``;
-
 const Curve = styled.div`
   position: absolute;
   background: #ffffff;

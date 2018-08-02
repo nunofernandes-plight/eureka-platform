@@ -6,7 +6,7 @@ import Network from './web3/Network.js';
 import NoConnection from './webpack/NoConnection.js';
 import {Detector} from 'react-detect-offline';
 import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
-import {getAccounts, getAllAccounts} from './web3/Helpers.js';
+import {getAllAccounts} from './web3/Helpers.js';
 
 class App extends Component {
   constructor() {

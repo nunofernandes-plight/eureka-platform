@@ -38,10 +38,6 @@ const Title = styled.h4`
 `;
 
 class AccountBalance extends React.Component {
-  constructor() {
-    super();
-  }
-
   render() {
     return (
       <Parent>

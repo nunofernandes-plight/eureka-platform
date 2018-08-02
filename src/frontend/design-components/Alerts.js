@@ -73,27 +73,6 @@ const getIcon = props => {
     );
   }
 };
-
-const Label = styled.div`
-  margin: 0 4px;
-  font-weight: bold;
-  min-width: 35px;
-`;
-
-const getLabel = props => {
-  if (props.status === 'success') {
-    return <Label>Success: </Label>;
-  } else if (props.status === 'info') {
-    return <Label>Info: </Label>;
-  } else if (props.status === 'warning') {
-    return <Label>Warning: </Label>;
-  } else if (props.status === 'danger') {
-    return <Label>Danger: </Label>;
-  } else if (props.status === 'error') {
-    return <Label>Error: </Label>;
-  }
-};
-
 const Container = styled.div`
   color: #fff;
   border-color: ${props => getColor(props)};
@@ -102,7 +81,7 @@ const Container = styled.div`
   padding: 1rem 1.5rem;
   border: 0;
   border-radius: 0.25rem;
-  transition: 0.5s all;
+  transition: 0.5s ease-in-out;
   display: ${props => (props.isHidden ? 'none' : 'flex')};
 `;
 
@@ -117,6 +96,7 @@ class Alert extends Component {
   hideAlert() {
     this.setState({isHidden: true});
   }
+
   render() {
     return (
       <div>

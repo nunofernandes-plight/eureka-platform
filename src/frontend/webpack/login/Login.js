@@ -68,21 +68,6 @@ const ButtonRow = styled.div`
 
 const SignUp = styled.p``;
 
-const Background = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.05;
-  filter: alpha(opacity=0.05); /* For IE8 and earlier */
-`;
-
 const MetaMaskInstalled = styled.div`
   display: flex;
   justify-content: center;
