@@ -43,7 +43,7 @@ export default {
       },
       function(err) {
         console.log('Error :' + err);
-        throw err;
+        throw new Error('Something went wrong: ' + err);
       }
     );
   },
