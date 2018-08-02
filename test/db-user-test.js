@@ -18,6 +18,10 @@ test.beforeEach(async () => {
   await cleanDB();
 });
 
+test.after(async () => {
+  app.close();
+});
+
 //test(PRETEXT + 'all collections are empty', async t => {
 test(PRETEXT + 'all collections are empty', async t => {
   t.is((await userService.getAllUsers()).length, 0);
@@ -29,12 +33,12 @@ test(PRETEXT + 'all collections are empty', async t => {
 test(PRETEXT + 'create a User', async t => {
   t.is((await userService.getAllUsers()).length, 0);
 
-  const user = await userService.createUser('test', 'test', 'test@test@test.ch',
-    '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015');
+  const user = await userService.createUser('test','test@test@test.ch',
+    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac');
 
   t.is((await userService.getAllUsers()).length, 1);
 
-  const dbUser = await userService.getUserById(user._id);
+  const dbUser = await userService.getUserByEthereumAddress(user.ethereumAddress);
   // t.is(dbUser.username, user.username);
   t.is(dbUser.password, user.password);
   t.is(dbUser.email, user.email);
@@ -44,11 +48,11 @@ test(PRETEXT + 'create a User', async t => {
 test(PRETEXT + 'add roles to a user', async t => {
   t.is((await userService.getAllUsers()).length, 0);
 
-  const user = await userService.createUser('test', 'test', 'test@test@test.ch',
-    '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015');
+  const user = await userService.createUser('test', 'test@test@test.ch',
+    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac');
 
   //test roles
-  let dbUser = await userService.getUserById(user._id);
+  let dbUser = await userService.getUserByEthereumAddress(user.ethereumAddress);
   t.is(dbUser.roles.length, 0);
 
   await userService.addRole(user._id, Roles.GUEST);

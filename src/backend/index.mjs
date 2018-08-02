@@ -1,8 +1,8 @@
 import app from './api/api.mjs';
 import dotenv from 'dotenv';
-import {isProduction, isTest} from '../helpers/isProduction.mjs';
+import {isProduction} from '../helpers/isProduction.mjs';
 
-if (!isProduction() && isTest()) {
+if (!isProduction()) {
   //import env variables from .env file
   dotenv.config();
 }

@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import {isProduction, isTest} from '../../helpers/isProduction.mjs';
+import {isProduction} from '../../helpers/isProduction.mjs';
 import dotenv from 'dotenv';
 
-if (!isProduction() && (!isTest())) {
+if (!isProduction()) {
   dotenv.config();
 }
 
@@ -16,10 +16,10 @@ let url =
   '/' +
   process.env.DB_NAME;
 
-if(isProduction() || isTest()) {
-  url = url.concat('?ssl=true');
-}
-
+// if(isProduction()) {
+//   url = url.concat('');
+// }
+console.log(process.env.NODE_ENV);
 console.log(url);
 mongoose.connect(url);
 mongoose.Promise = global.Promise;
