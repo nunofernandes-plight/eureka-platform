@@ -46,14 +46,20 @@ const Container = styled.div`
   width: 100%;
 `;
 
+const spinner = keyframes`
+
+  to {transform: rotate(360deg);}
+`;
+
 const Logo = styled.img`
   transition: 1s all;
   margin-left: 22px;
   animation: ${pulseLogo} 2.5s infinite linear;
+  animation: ${spinner} 2s linear infinite;
 `;
 
 const EurekaLoader = styled.div`
-  animation: ${pulse} 2.5s infinite linear;
+  // animation: ${pulse} 2.5s infinite linear;
   padding: 60px 55px;
   border-radius: 50%;
 `;
