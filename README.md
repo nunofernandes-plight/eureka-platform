@@ -93,7 +93,7 @@ npm run dev-server
 ```
 > Default dev port: `http://localhost:8080/`
 
-###Testing
+### Testing
 
 ```
 npm run test
@@ -103,7 +103,7 @@ or
 npm run test-ci
 ```
 
-####Testing strategy
+#### Testing strategy
 
 **Local testing:**  
     1. DB must be running on port 27017 (see Create & start MongoDB locally).   
