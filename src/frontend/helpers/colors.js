@@ -26,3 +26,7 @@ export const __GRAY_600 = '#8898aa';
 export const __GRAY_700 = '#525f7f';
 export const __GRAY_800 = '#32325d';
 export const __GRAY_900 = '#212529';
+
+// LABELS COLORS
+export const __LABEL_PRIMARY_TEXT = '#2643e9';
+export const __LABEL_PRIMARY_BACK = 'rgba(203,210,246,.5)';

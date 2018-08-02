@@ -1,15 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
+import {__LABEL_PRIMARY_TEXT, __LABEL_PRIMARY_BACK} from '../helpers/colors.js';
 
 const getTextColor = props => {
   if (props.status === 'primary') {
-    return '#2643e9';
+    return `${__LABEL_PRIMARY_TEXT}`;
   }
 };
 
 const getBackColor = props => {
   if (props.status === 'primary') {
-    return 'rgba(203, 210, 246, 0.5)';
+    return `${__LABEL_PRIMARY_BACK}`;
   }
 };
 const LabelContainer = styled.div`
