@@ -37,7 +37,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test-ci": "if [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then npm run lint; fi && ava --serial",
+    "test-ci": "if [ \"${CIRCLE_BRANCH}\" = \"dev\" ]; ava --serial --match='!*DB*' --match='!*INTEGRATION*'; else ava --serial --match='!*INTEGRATION*'; fi",
     "test-ci-dev": "ava --serial --match='!*DB*' --match='!*INTEGRATION*'",
     "test-ci-test": "ava --serial --match='!*INTEGRATION'",
     "lint": "eslint **/*.mjs --ignore-path .gitignore",
