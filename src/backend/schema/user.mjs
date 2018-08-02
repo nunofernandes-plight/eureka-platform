@@ -8,11 +8,6 @@ import Roles from './roles-enum.mjs';
  */
 const userSchema = mongoose.Schema(
   {
-    username: {
-      type: String,
-      required: false,
-      unique: true
-    },
     ethereumAddress: {
       type: String,
       required: true,
