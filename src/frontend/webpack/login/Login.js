@@ -2,13 +2,7 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import {Row} from '../../helpers/layout.js';
-import {
-  __ALERT_ERROR,
-  __ALERT_WARNING,
-  __FOURTH,
-  __SECOND,
-  __THIRD
-} from '../../helpers/colors.js';
+import {__ALERT_WARNING, __FOURTH, __THIRD} from '../../helpers/colors.js';
 import MetaMaskLogo from '../icons/MetaMaskLogo.js';
 import EurekaLogo from '../icons/EurekaLogo.js';
 import Web3Providers from '../../web3/Web3Providers.js';
@@ -104,9 +98,6 @@ const SubTitle = styled.h2`
   text-align: center;
 `;
 
-const EmailInput = styled.input`
-  border: ${__ALERT_ERROR};
-`;
 class Login extends Component {
   constructor() {
     super();
@@ -133,6 +124,7 @@ class Login extends Component {
 
     if (!isEmailValid(this.state.email)) {
       this.setState({isEmailValidModal: true});
+      return;
     }
 
     if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {

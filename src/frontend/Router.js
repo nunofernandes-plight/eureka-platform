@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Switch, Route} from 'react-router';
 import {BrowserRouter} from 'react-router-dom';
 import WelcomePage from './webpack/login/WelcomePage';
-import Header from './webpack/Header';
+import Header from './webpack/Header/Header';
 import Login from './webpack/login/Login';
 import MetaMaskGuide from './webpack/MetaMaskGuide';
 
