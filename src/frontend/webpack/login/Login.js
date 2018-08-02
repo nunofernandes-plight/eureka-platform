@@ -1,14 +1,8 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import {Row} from '../../helpers/layout.js';
-import {
-  __ALERT_ERROR,
-  __ALERT_WARNING,
-  __FOURTH,
-  __SECOND,
-  __THIRD
-} from '../../helpers/colors.js';
+import {__ALERT_WARNING, __FOURTH, __THIRD} from '../../helpers/colors.js';
 import MetaMaskLogo from '../icons/MetaMaskLogo.js';
 import EurekaLogo from '../icons/EurekaLogo.js';
 import Web3Providers from '../../web3/Web3Providers.js';
@@ -17,6 +11,9 @@ import Modal from '../../design-components/Modal.js';
 import AccountBalance from '../../web3/AccountBalance.js';
 import {isEmailValid} from '../../../helpers/emailValidator.js';
 import {InputField} from '../../design-components/Inputs.js';
+import Alert from '../../design-components/Alerts.js';
+import EurekaSpinner from '../../webpack/spinners/EurekaSpinner.js';
+import {getDomain} from '../../../helpers/getDomain.js';
 
 const Container = styled.div`
   width: 100%;
@@ -51,18 +48,10 @@ const Button = styled.button`
   align-self: center;
 `;
 
-const MetaMaskDisclaimer = styled.div``;
-
-const Paragraph = styled.p`
+const AlertContainer = styled.p`
   word-break: break-word;
-  text-align: center;
   width: 700px;
   margin-bottom: 40px;
-  background: ${__SECOND};
-  border-radius: 10px;
-  color: white;
-  padding: 20px;
-  box-shadow: 0 2.213px 15px 0px rgb(51, 46, 46);
 `;
 
 const TitleRow = Row.extend`
@@ -111,9 +100,6 @@ const SubTitle = styled.h2`
   text-align: center;
 `;
 
-const EmailInput = styled.input`
-  border: ${__ALERT_ERROR};
-`;
 class Login extends Component {
   constructor() {
     super();
@@ -121,15 +107,20 @@ class Login extends Component {
       username: null,
       email: null,
       isShowed: false,
+      defaultAccount: null,
       signedKey: null,
       inputStatus: null,
       isEmailValidModal: false,
-      submitted: false
+      submitted: false,
+      errorMessage: null,
+      loading: false,
+      authenticated: false
     };
   }
 
   async login(props) {
     this.setState({submitted: true});
+
     const status = props.metaMaskStatus;
     if (
       status === MetaMaskStatus.DETECTED_NO_LOGGED_IN ||
@@ -139,28 +130,75 @@ class Login extends Component {
     }
 
     if (!isEmailValid(this.state.email)) {
-      this.setState({isEmailValidModal: true})
+      this.setState({isEmailValidModal: true});
+      return;
     }
 
     if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
       // already logged in
-      const accounts = Array.from(this.props.accounts.keys());
-      let defaultAccount;
-      if (accounts.length === 1) {
-        defaultAccount = accounts[0];
-      } else {
-        // TODO: handle GANACHE case
-      }
-      this.props.web3.eth.personal
-        .sign(
-          'EUREKA Platform - Login Authentification - Please click to the Sign Button below.',
-          defaultAccount
-        )
-        .then(signedKey => {
-          this.setState({signedKey});
+      const signedKey = await this.signPrivateKey();
+      this.setState({signedKey});
+
+      if (signedKey) {
+        this.setState({loading: true});
+        fetch(`${getDomain()}/api/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          mode: 'cors',
+          body: JSON.stringify({
+            email: this.state.email,
+            password: this.state.signedKey,
+            ethereumAddress: this.state.defaultAccount
+          })
         })
-        .catch(err => console.log(err));
+          .then(response => response.json())
+          .then(response => {
+            if (response.success) {
+              this.setState({authenticated: true});
+              console.log(response);
+            } else {
+              this.setState({
+                errorMessage: response.error,
+
+                loading: false
+              });
+            }
+          })
+          .catch(err => {
+            this.setState({
+              errorMessage: err,
+
+              loading: false
+            });
+          });
+      }
     }
+  }
+
+  signPrivateKey() {
+    const accounts = Array.from(this.props.accounts.keys());
+    let defaultAccount;
+    if (accounts.length === 1) {
+      defaultAccount = accounts[0];
+    } else {
+      // TODO: handle GANACHE case
+    }
+    if (defaultAccount) {
+      this.setState({defaultAccount});
+    }
+    return this.props.web3.eth.personal
+      .sign(
+        'EUREKA Login Authentication for the email: ' +
+          this.state.email +
+          '  - Please click to the Sign Button below.',
+        defaultAccount
+      )
+      .then(signedKey => {
+        return signedKey;
+      })
+      .catch(err => console.log(err));
   }
 
   handleInput(stateKey, e) {
@@ -172,9 +210,10 @@ class Login extends Component {
     this.setState({[stateKey]: e.target.value});
   }
 
-  render() {
+  renderModals() {
     return (
       <div>
+        {' '}
         <Modal
           toggle={isShowed => {
             this.setState({isShowed});
@@ -191,8 +230,8 @@ class Login extends Component {
           <strong>Remember: </strong> we can neither see nor store your private
           keys.
         </Modal>
-
         <Modal
+          type={'notification'}
           toggle={isEmailValidModal => {
             this.setState({isEmailValidModal});
           }}
@@ -202,77 +241,108 @@ class Login extends Component {
           Ouh. The email {this.state.email} does not seem to be a valid email.
           Please insert a correct one.
         </Modal>
+        <Modal
+          type={'notification'}
+          toggle={isErrorMessage => {
+            this.setState({errorMessage: null});
+          }}
+          show={this.state.errorMessage}
+          title={'You got the following error'}
+        >
+          {this.state.errorMessage}
+        </Modal>
+      </div>
+    );
+  }
+  render() {
+    return (
+      <div>
+        {this.state.authenticated ? <Redirect to={'/dashboard'} /> : null}
+        <div>
+          {this.state.loading ? (
+            <EurekaSpinner />
+          ) : (
+            <div>
+              {this.renderModals()}
+              <Container>
+                {this.props.provider !== Web3Providers.META_MASK ? (
+                  <MetaMaskInstalled>
+                    <p>
+                      Ouh! We were not able to detect MetaMask in your browser.
+                      Please follow the instruction{' '}
+                      <strong>
+                        <Link to="/metamask"> here </Link>
+                      </strong>{' '}
+                      of how to download it.
+                    </p>
+                  </MetaMaskInstalled>
+                ) : null}
+                <TitleRow>
+                  <Title>
+                    Welcome to{' '}
+                    <div style={{marginLeft: 10}}>
+                      <EurekaLogo blueNoLogo width={200} />
+                    </div>
+                  </Title>
+                  {this.props.provider === Web3Providers.META_MASK ? (
+                    <AlertContainer>
+                      <Alert status={'info'}>
+                        We detected MetaMask in your Browser! We use it as our
+                        authentication provider. Please note that we are not
+                        able neither to see nor to store your private keys.{' '}
+                      </Alert>
+                    </AlertContainer>
+                  ) : null}
+                </TitleRow>
 
-        <Container>
-          {this.props.provider !== Web3Providers.META_MASK ? (
-            <MetaMaskInstalled>
-              <p>
-                Ouh! We were not able to detect MetaMask in your browser. Please
-                follow the instruction{' '}
-                <strong>
-                  <Link to="/metamask"> here </Link>
-                </strong>{' '}
-                of how to download it.
-              </p>
-            </MetaMaskInstalled>
-          ) : null}
-          <TitleRow>
-            <Title>
-              Welcome to{' '}
-              <div style={{marginLeft: 10}}>
-                <EurekaLogo blueNoLogo width={200} />
-              </div>
-            </Title>
-            {this.props.provider === Web3Providers.META_MASK ? (
-              <MetaMaskDisclaimer>
-                <Paragraph>
-                  We detected MetaMask<MetaMaskLogo width={15} height={15} />in
-                  your Browser! We use it as our authentication provider. Please
-                  note that we are not able neither to see nor to store your
-                  private keys.{' '}
-                </Paragraph>
-              </MetaMaskDisclaimer>
-            ) : null}
-          </TitleRow>
+                <Row>
+                  <LoginContainer provider={this.props.provider}>
+                    <SubTitle>Please login</SubTitle>
+                    <LoginRow>
+                      <InputField
+                        placeholder={'email address'}
+                        status={
+                          this.state.email ? this.state.inputStatus : null
+                        }
+                        onChange={e => this.handleInput('email', e)}
+                      />
+                    </LoginRow>
 
-          <Row>
-            <LoginContainer provider={this.props.provider}>
-              <SubTitle>Please login</SubTitle>
-              <LoginRow>
-                <InputField
-                  placeholder={'email address'}
-                  status={this.state.email ? this.state.inputStatus : null}
-                  onChange={e => this.handleInput('email', e)}
-                />
-              </LoginRow>
-
-              {this.props.metaMaskStatus ===
-                MetaMaskStatus.DETECTED_LOGGED_IN && this.props.accounts ? (
-                <LoginRow>
-                  <AccountBalance accounts={this.props.accounts} balance={0} />
-                </LoginRow>
-              ) : null}
-              <ButtonRow>
-                <Button
-                  onClick={() => {
-                    this.login(this.props);
-                  }}
-                >
-                  Login with Metamask <MetaMaskLogo width={20} height={20} />
-                </Button>
-              </ButtonRow>
-              {/*<Background>*/}
-              {/*<EurekaLogo width={400} height={400} />*/}
-              {/*</Background>*/}
-            </LoginContainer>
-          </Row>
-          <Row>
-            <SignUp>
-              Do not have <strong>Metamask</strong>? Please{' '}
-              <Link to="/metamask">See here.</Link>
-            </SignUp>
-          </Row>
-        </Container>
+                    {this.props.metaMaskStatus ===
+                      MetaMaskStatus.DETECTED_LOGGED_IN &&
+                    this.props.accounts ? (
+                      <LoginRow>
+                        <AccountBalance
+                          accounts={this.props.accounts}
+                          balance={0}
+                        />
+                      </LoginRow>
+                    ) : null}
+                    <ButtonRow>
+                      <Button
+                        onClick={() => {
+                          this.login(this.props);
+                        }}
+                      >
+                        Login with Metamask{' '}
+                        <MetaMaskLogo width={20} height={20} />
+                      </Button>
+                    </ButtonRow>
+                    {/*<Background>*/}
+                    {/*<EurekaLogo width={400} height={400} />*/}
+                    {/*</Background>*/}
+                  </LoginContainer>
+                </Row>
+                <Row>
+                  <SignUp>
+                    Do not have <strong>Metamask</strong>? Please{' '}
+                    <Link to="/metamask">See here.</Link>
+                  </SignUp>
+                </Row>
+              </Container>
+            </div>
+          )}
+        </div>
       </div>
     );
   }

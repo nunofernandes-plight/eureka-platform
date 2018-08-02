@@ -18,6 +18,7 @@ test.beforeEach(async () => {
   await cleanDB();
 });
 
+//test(PRETEXT + 'all collections are empty', async t => {
 test(PRETEXT + 'all collections are empty', async t => {
   t.is((await userService.getAllUsers()).length, 0);
   t.is((await submissionService.getAllSubmissions()).length, 0);
@@ -34,7 +35,7 @@ test(PRETEXT + 'create a User', async t => {
   t.is((await userService.getAllUsers()).length, 1);
 
   const dbUser = await userService.getUserById(user._id);
-  t.is(dbUser.username, user.username);
+  // t.is(dbUser.username, user.username);
   t.is(dbUser.password, user.password);
   t.is(dbUser.email, user.email);
   t.is(dbUser.ethereumAddress, user.ethereumAddress);

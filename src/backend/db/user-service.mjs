@@ -1,6 +1,8 @@
 import bcryptHasher from '../helpers/bcrypt-hasher.mjs';
 import User from '../schema/user.mjs';
 import Roles from '../schema/roles-enum.mjs';
+import {isValidAddress} from '../../helpers/isValidEthereumAddress.mjs';
+import userService from '../db/user-service.mjs';
 
 export default {
   /**
@@ -12,18 +14,37 @@ export default {
   },
   /**
    * create a new user in the DB
-   * @param username
    * @param password
    * @param email
    * @returns {Promise<Model>}
    */
-  createUser: async (username, password, email, ethereumAddress) => {
+  createUser: async (password, email, ethereumAddress) => {
+
+    let user = await userService.getUserByEthereumAddress(ethereumAddress);
+    if (user) {
+      let error = new Error('User with address '+ ethereumAddress + ' already exists.');
+      error.status = 409;
+      throw error;
+    }
+
+    if (!password || !email || !ethereumAddress) {
+      let error = new Error('Password, Email or Address is missing!');
+      error.status = 400;
+      throw error;
+    }
+
+    if (!isValidAddress(ethereumAddress)) {
+      let error = new Error('Checks sum for the address ' + ethereumAddress + ' failed.');
+      error.status = 400;
+      throw error;
+    }
+
     const hashedPassword = await bcryptHasher.hash(password);
+
     const newUser = new User({
-      username: username,
-      ethereumAddress: ethereumAddress,
+      ethereumAddress,
       password: hashedPassword,
-      email: email,
+      email,
       isEditor: false //default not an editor
     });
 
@@ -33,7 +54,7 @@ export default {
       },
       function(err) {
         console.log('Error :' + err);
-        throw err;
+        throw new Error('Something went wrong: ' + err);
       }
     );
   },
@@ -43,8 +64,8 @@ export default {
    * @param ethereumAddress
    * @returns {Promise<Query|void|*|Promise<Object>|Promise<TSchema | null>|Promise>}
    */
-  getUserByEthereumAddress: async (ethereumAddress) => {
-    return User.findOne({'ethereumAddress': ethereumAddress});
+  getUserByEthereumAddress: async ethereumAddress => {
+    return User.findOne({ethereumAddress: ethereumAddress});
   },
 
   /**
@@ -52,8 +73,8 @@ export default {
    * @param userId
    * @returns {Promise<Query|void|*|ThenPromise<Object>|Promise<TSchema | null>|Promise>}
    */
-  getUserById: async (userId) => {
-    return User.findOne({'_id': userId});
+  getUserById: async userId => {
+    return User.findOne({_id: userId});
   },
 
   /**

@@ -6,13 +6,13 @@ import User from '../schema/user.mjs';
 const LocalStrategy = passportLocal.Strategy;
 
 passport.use(
-  new LocalStrategy(async function(username, password, done) {
-    const dbUser = await User.findOne({username: username});
+  new LocalStrategy(async function(ethereumAddress, password, done) {
+    const dbUser = await User.findOne({ethereumAddress: ethereumAddress});
     const isCorrectHash = await bcryptHasher.compare(password, dbUser.password);
 
     User.findOne(
       {
-        username: username
+        ethereumAddress: ethereumAddress
       },
       function(err, user) {
         if (err) {

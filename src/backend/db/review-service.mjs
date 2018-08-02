@@ -1,4 +1,3 @@
-import db from './db.mjs';
 import Review from '../schema/review.mjs';
 
 export default {

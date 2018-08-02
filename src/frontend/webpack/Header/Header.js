@@ -1,19 +1,19 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {Row} from '../helpers/layout.js';
-import EurekaLogo from './icons/EurekaLogo.js';
+import {Row} from '../../helpers/layout.js';
+import EurekaLogo from '../icons/EurekaLogo.js';
 import {
   __ALERT_ERROR,
   __ALERT_SUCCESS,
   __ALERT_WARNING,
   __THIRD
-} from '../helpers/colors.js';
-import Icon from './icons/Icon.js';
-import MetaMaskLogo from './icons/MetaMaskLogo.js';
+} from '../../helpers/colors.js';
+import Icon from '../icons/Icon.js';
+import MetaMaskLogo from '../icons/MetaMaskLogo.js';
 import {Switch} from 'react-router';
-import Web3Providers from '../web3/Web3Providers.js';
-import {MetaMaskStatus} from '../web3/MetaMaskStatus.js';
-import RenderNetwork from '../web3/RenderNetwork.js';
+import Web3Providers from '../../web3/Web3Providers.js';
+import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
+import RenderNetwork from '../../web3/RenderNetwork.js';
 
 const Parent = styled.div`
   box-shadow: -21.213px 21.213px 30px 0px rgba(158, 158, 158, 0.3);
