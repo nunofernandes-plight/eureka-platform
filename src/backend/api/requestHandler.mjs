@@ -19,7 +19,7 @@ export const asyncHandler = fn => {
       const data = await fn(request, response);
       successHandler(response, data);
     } catch (err) {
-      if (!process.env.TEST || !err.status) {
+      if (!process.env.NODE_ENV === 'test' || !err.status) {
         console.log(err);
       }
       errorHandler(response, err);

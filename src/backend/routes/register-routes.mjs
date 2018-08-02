@@ -13,7 +13,8 @@ router.get('/', function (req, res) {
 router.post('/',
   asyncHandler(async (req, res) => {
     return userService
-      .createUser(req.body.password, req.body.email, req.body.ethereumAddress);
+      .createUser(req.body.password, req.body.email, req.body.ethereumAddress)
+      .then(res.status(201));
   })
 );
 

@@ -2,6 +2,7 @@ import bcryptHasher from '../helpers/bcrypt-hasher.mjs';
 import User from '../schema/user.mjs';
 import Roles from '../schema/roles-enum.mjs';
 import {isValidAddress} from '../../helpers/isValidEthereumAddress.mjs';
+import userService from '../db/user-service.mjs';
 
 export default {
   /**
@@ -18,14 +19,24 @@ export default {
    * @returns {Promise<Model>}
    */
   createUser: async (password, email, ethereumAddress) => {
+
+    let user = await userService.getUserByEthereumAddress(ethereumAddress);
+    if (user) {
+      let error = new Error('User with address '+ ethereumAddress + ' already exists.');
+      error.status = 409;
+      throw error;
+    }
+
     if (!password || !email || !ethereumAddress) {
-      throw new Error('Password Email or Address is missing!');
+      let error = new Error('Password Email or Address is missing!');
+      error.status = 400;
+      throw error;
     }
 
     if (!isValidAddress(ethereumAddress)) {
-      throw new Error(
-        'Checks sum for the address ' + ethereumAddress + ' failed.'
-      );
+      let error = new Error('Checks sum for the address ' + ethereumAddress + ' failed.');
+      error.status = 400;
+      throw error;
     }
 
     const hashedPassword = await bcryptHasher.hash(password);
