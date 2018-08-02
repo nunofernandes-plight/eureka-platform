@@ -206,6 +206,40 @@ class Login extends Component {
     this.setState({[stateKey]: e.target.value});
   }
 
+  renderModals() {
+    return (
+      <div>
+        {' '}
+        <Modal
+          toggle={isShowed => {
+            this.setState({isShowed});
+          }}
+          show={
+            this.state.isShowed &&
+            this.props.metaMaskStatus !== MetaMaskStatus.DETECTED_LOGGED_IN
+          }
+          title={'Login using MetaMask - INFORMATION'}
+        >
+          Please be sure to have MetaMask<MetaMaskLogo width={15} height={15} />{' '}
+          installed in your browser! If you already have installed it, open the
+          Extension and log in into your account please!{' '}
+          <strong>Remember: </strong> we can neither see nor store your private
+          keys.
+        </Modal>
+        <Modal
+          type={'notification'}
+          toggle={isEmailValidModal => {
+            this.setState({isEmailValidModal});
+          }}
+          show={this.state.isEmailValidModal && this.state.submitted}
+          title={'Inserted Email is invalid'}
+        >
+          Ouh. The email {this.state.email} does not seem to be a valid email.
+          Please insert a correct one.
+        </Modal>
+      </div>
+    );
+  }
   render() {
     return (
       <div>
@@ -213,37 +247,7 @@ class Login extends Component {
           <EurekaSpinner />
         ) : (
           <div>
-            {' '}
-            <Modal
-              toggle={isShowed => {
-                this.setState({isShowed});
-              }}
-              show={
-                this.state.isShowed &&
-                this.props.metaMaskStatus !== MetaMaskStatus.DETECTED_LOGGED_IN
-              }
-              title={'Login using MetaMask - INFORMATION'}
-            >
-              Please be sure to have MetaMask<MetaMaskLogo
-                width={15}
-                height={15}
-              />{' '}
-              installed in your browser! If you already have installed it, open
-              the Extension and log in into your account please!{' '}
-              <strong>Remember: </strong> we can neither see nor store your
-              private keys.
-            </Modal>
-            <Modal
-              type={'notification'}
-              toggle={isEmailValidModal => {
-                this.setState({isEmailValidModal});
-              }}
-              show={this.state.isEmailValidModal && this.state.submitted}
-              title={'Inserted Email is invalid'}
-            >
-              Ouh. The email {this.state.email} does not seem to be a valid
-              email. Please insert a correct one.
-            </Modal>
+            {this.renderModals()}
             <Container>
               {this.props.provider !== Web3Providers.META_MASK ? (
                 <MetaMaskInstalled>
