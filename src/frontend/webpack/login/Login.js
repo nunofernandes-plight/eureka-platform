@@ -120,7 +120,6 @@ class Login extends Component {
 
   async login(props) {
     this.setState({submitted: true});
-
     const status = props.metaMaskStatus;
     if (
       status === MetaMaskStatus.DETECTED_NO_LOGGED_IN ||
@@ -249,7 +248,9 @@ class Login extends Component {
           show={this.state.errorMessage}
           title={'You got the following error'}
         >
-          {this.state.errorMessage}
+          {this.state.errorMessage === typeof 'string'
+            ? this.state.errorMessage
+            : 'Ouh. Something went wrong. Please try again or contact us'}
         </Modal>
       </div>
     );
