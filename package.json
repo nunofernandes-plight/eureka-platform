@@ -37,8 +37,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test-ci": "if [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then npm run lint; fi && ava --serial --match='!*DEV-TEST*' --match='!*foo*'",
-    "test": "ava --serial --match='!*DEV-TEST*' --match='!*DB-USER*' && npm run lint",
+    "test-ci": "if [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then npm run lint; fi && ava --serial",
+    "test-ci-dev": "ava --serial --match='!*DB*' --match='!*INTEGRATION*'",
+    "test-ci-test": "ava --serial --match='!*INTEGRATION'",
     "lint": "eslint **/*.mjs --ignore-path .gitignore",
     "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
     "eject": "react-scripts eject",
