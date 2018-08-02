@@ -24,16 +24,53 @@ const getColor = props => {
 };
 
 const getIcon = props => {
+  const marginRight = 20;
+  const iconSize = 25;
   if (props.status === 'success') {
-    return <Icon icon={'thumbs-up'} width={25} height={25} right={5} />;
+    return (
+      <Icon
+        icon={'thumbs-up'}
+        width={iconSize}
+        height={iconSize}
+        right={marginRight}
+      />
+    );
   } else if (props.status === 'info') {
-    return <Icon icon={'bell'} width={25} height={25} right={5} />;
+    return (
+      <Icon
+        icon={'bell'}
+        width={iconSize}
+        height={iconSize}
+        right={marginRight}
+      />
+    );
   } else if (props.status === 'warning') {
-    return <Icon icon={'bell'} width={25} height={25} right={5} />;
+    return (
+      <Icon
+        icon={'bell'}
+        width={iconSize}
+        height={iconSize}
+        right={marginRight}
+      />
+    );
   } else if (props.status === 'danger') {
-    return <Icon icon={'bell'} width={25} height={25} right={5} />;
+    return (
+      <Icon
+        icon={'bell'}
+        width={iconSize}
+        height={iconSize}
+        right={marginRight}
+      />
+    );
   } else if (props.status === 'error') {
-    return <Icon icon={'exlamation-circle'} width={25} height={25} right={5} />;
+    return (
+      <Icon
+        icon={'exlamation-circle'}
+        width={iconSize}
+        height={iconSize}
+        right={marginRight}
+      />
+    );
   }
 };
 
@@ -64,16 +101,17 @@ const Container = styled.div`
   font-size: 0.875rem;
   padding: 1rem 1.5rem;
   border: 0;
-  display: flex;
   border-radius: 0.25rem;
+  transition: 0.5s all;
+  display: ${props => (props.isHidden ? 'none' : 'flex')};
 `;
 
 class Alert extends Component {
   constructor() {
     super();
     this.state = {
-        isHidden: false
-    }
+      isHidden: false
+    };
   }
 
   hideAlert() {
@@ -82,18 +120,16 @@ class Alert extends Component {
   render() {
     return (
       <div>
-        {this.state.isHidden ? null : (
-          <Container {...this.props}>
-            {getIcon(this.props)} {getLabel(this.props)} {this.props.children}
-            <Icon
-              onClick={() => this.hideAlert()}
-              icon={'close'}
-              width={18}
-              height={18}
-              top={2}
-            />
-          </Container>
-        )}
+        <Container isHidden={this.state.isHidden} {...this.props}>
+          {getIcon(this.props)} {this.props.children}
+          <Icon
+            onClick={() => this.hideAlert()}
+            icon={'close'}
+            width={18}
+            height={18}
+            top={2}
+          />
+        </Container>
       </div>
     );
   }
