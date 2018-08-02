@@ -18,6 +18,10 @@ export default {
    * @returns {Promise<Model>}
    */
   createUser: async (username, password, email, ethereumAddress) => {
+    if (!password || !email) {
+      throw new Error('Password or Email are missing!');
+    }
+
     const hashedPassword = await bcryptHasher.hash(password);
     const newUser = new User({
       username: username,
@@ -43,8 +47,8 @@ export default {
    * @param ethereumAddress
    * @returns {Promise<Query|void|*|Promise<Object>|Promise<TSchema | null>|Promise>}
    */
-  getUserByEthereumAddress: async (ethereumAddress) => {
-    return User.findOne({'ethereumAddress': ethereumAddress});
+  getUserByEthereumAddress: async ethereumAddress => {
+    return User.findOne({ethereumAddress: ethereumAddress});
   },
 
   /**
@@ -52,8 +56,8 @@ export default {
    * @param userId
    * @returns {Promise<Query|void|*|ThenPromise<Object>|Promise<TSchema | null>|Promise>}
    */
-  getUserById: async (userId) => {
-    return User.findOne({'_id': userId});
+  getUserById: async userId => {
+    return User.findOne({_id: userId});
   },
 
   /**
