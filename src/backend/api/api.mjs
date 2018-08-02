@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import session from 'express-session';
 import connectMongo from 'connect-mongo';
-
+import cors from 'cors';
 import passport from '../helpers/local-passport.mjs';
 import mongooseDB from '../db/mongoose-db.mjs';
 import {isProduction, isTest} from '../../helpers/isProduction.mjs';
@@ -20,6 +20,8 @@ let server;
 export default {
   setupApp: eurekaPlatformContract => {
     app = express();
+
+
 
     const MongoStore = connectMongo(session);
     app.use(
@@ -49,6 +51,7 @@ export default {
       })
     );
 
+      app.use(cors());
     /** SC Events Listener **/
     // if(!isProduction()) { swap to that
     if (eurekaPlatformContract) {

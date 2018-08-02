@@ -2,6 +2,19 @@ import React, {Component} from 'react';
 import styled, {keyframes} from 'styled-components';
 import Icon from '../webpack/icons/Icon.js';
 
+const getBackColor = props => {
+  if (props.type === 'notification') {
+    return 'linear-gradient(87deg,#f5365c 0,#f56036 100%)!important';
+  } else {
+    return `#fff`;
+  }
+};
+
+const getFontColor = props => {
+  if (props.type === 'notification') {
+    return `#fff`;
+  }
+};
 const ModalParent = styled.div`
   position: fixed;
   z-index: 1050;
@@ -33,7 +46,7 @@ const MyModal = styled.div`
   flex-direction: column;
   border-radius: 0.3rem;
   outline: 0;
-  background-color: #fff;
+  background: ${props => getBackColor(props)};
   background-clip: padding-box;
   box-shadow: rgba(50, 50, 93, 0.2) 0px 15px 35px 0px,
     rgba(0, 0, 0, 0.17) 0px 5px 15px 0px;
@@ -45,12 +58,14 @@ const MyModal = styled.div`
   position: relative;
   width: auto;
   border: 0;
+  color: ${props => getFontColor(props)};
 `;
 
 const MyModalHeader = styled.div`
   display: flex;
   padding: 1.25rem;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: ${props =>
+    props.type === 'notification' ? null : '1px solid #e9ecef'};
   border-top-left-radius: 0.3rem;
   border-top-right-radius: 0.3rem;
   align-items: flex-start;
@@ -66,12 +81,13 @@ const MyModalBody = styled.div`
 const MyModalFooter = styled.div`
   display: flex;
   padding: 1.5rem;
-  border-top: 1px solid #e9ecef;
+  border-top: ${props =>
+    props.type === 'notification' ? null : '1px solid #e9ecef'};
   align-items: center;
   justify-content: flex-end;
 `;
 
-const ModalTitle = styled.h3`
+const ModalTitle = styled.h4`
   margin-bottom: 0;
   margin-top: 0;
 `;
@@ -101,9 +117,9 @@ class Modal extends Component {
     return (
       <div>
         {this.props.show ? (
-          <ModalParent>
-            <MyModal>
-              <MyModalHeader>
+          <ModalParent {...this.props}>
+            <MyModal {...this.props}>
+              <MyModalHeader {...this.props}>
                 <ModalTitle>{this.props.title}</ModalTitle>
                 <Icon
                   icon={'close'}
@@ -113,9 +129,20 @@ class Modal extends Component {
                 />
               </MyModalHeader>
               <MyModalBody>
+                {this.props.type === 'notification' ? (
+                  <div style={{display: 'flex', justifyContent: 'center'}}>
+                    <Icon
+                      icon={'bell'}
+                      width={40}
+                      height={40}
+                      top={10}
+                      bottom={20}
+                    />
+                  </div>
+                ) : null}
                 <Content>{this.props.children}</Content>
               </MyModalBody>
-              <MyModalFooter>
+              <MyModalFooter {...this.props}>
                 <CloseButton onClick={() => this.toggle()}>CLOSE</CloseButton>
                 {this.props.action ? (
                   <ActionButton onClick={() => this.props.callback()}>

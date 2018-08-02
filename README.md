@@ -32,6 +32,60 @@ npm run dev-client
 
 > Default dev port: `http://localhost:3000/`
 
+#### Create & start MongoDB locally
+
+Create directory at:
+
+> Windows:  `C:\data\db`
+
+> Unix:     `data/db`
+
+Start mondoDB service:
+```
+mongod
+```
+
+Connect to service:
+```
+mongo
+```
+
+Use a new DB:
+```
+use eurekaDB
+```
+
+Create a new DB admin:
+```
+db.createUser({
+	user: "admin",
+	pwd: "admin",
+	roles: [{
+		role: "dbAdmin",
+		db:"eurekaDB"
+		}]
+})
+```
+
+Insert something into the DB to save the DB:
+```
+db.testData.insert({"test": "test"})
+```
+
+Check created DB:
+```
+show dbs
+```
+
+Create ``.env`` file in root of project folder (``eureka-platform``) with content:
+```
+DB_HOST=localhost
+DB_NAME=eurekaDB
+DB_USER=admin
+DB_PASSWORD=admin
+```
+
+
 #### Build Server
 
 ```

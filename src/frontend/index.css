@@ -117,13 +117,13 @@ button:focus,
 .btn-default:focus {
   cursor: pointer;
   color: #ffffff;
-  background: -webkit-linear-gradient(
-    0deg,
-    var(--fourth-hover) 0%,
-    var(--second-hover) 100%
-  );
-  -webkit-transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
-  transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
+  /*background: -webkit-linear-gradient(*/
+    /*0deg,*/
+    /*var(--fourth-hover) 0%,*/
+    /*var(--second-hover) 100%*/
+  /*);*/
+
+  transition: 0.5s all;
   transform: translateY(-2px);
   box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
 }
