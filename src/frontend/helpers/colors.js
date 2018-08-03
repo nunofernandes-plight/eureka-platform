@@ -6,6 +6,7 @@ export const __THIRD = '#2e3292';
 export const __THIRD_HOVER = '#2e32a5';
 export const __FOURTH = '#66cad3';
 export const __FOURTH_HOVER = '#66d4dd';
+export const __FIFTH = '#5e72e4';
 export const __METAMASK = '#F6851B';
 
 // ALERT COLORS (for notifications and alert messages)
@@ -29,4 +30,4 @@ export const __GRAY_900 = '#212529';
 
 // LABELS COLORS
 export const __LABEL_PRIMARY_TEXT = '#2643e9';
-export const __LABEL_PRIMARY_BACK = 'rgba(203,210,246,.5)';
+export const __LABEL_PRIMARY_BACK = '#cbd2f6';
