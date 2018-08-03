@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {__GRAY_100, __GRAY_200} from '../helpers/colors.js';
 import EurekaLogo from '../webpack/icons/EurekaLogo.js';
-import {NavItem} from './NavItem.js';
+import {NavItem, Separator} from './NavItem.js';
 
 const Container = styled.div`
   display: flex;
@@ -41,6 +41,7 @@ class PanelLeft extends Component {
           <EurekaLogo blue height={40} />
         </TopLogo>
         <Items>
+          <Separator text={"General"}/>
           <NavItem status="active" icon={'bell'} width={20} height={20}>
             {' '}
             Dashboard

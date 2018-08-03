@@ -4,6 +4,8 @@ import Icon from '../webpack/icons/Icon.js';
 import {
   __GRAY_200,
   __GRAY_300,
+  __GRAY_500,
+  __GRAY_800,
   __THIRD
 } from '../helpers/colors.js';
 
@@ -29,8 +31,23 @@ const Nav = styled.div`
 const SeparatorDiv = styled.div`
   display: flex;
   height: 2px;
+  width: ${props => props.width}px;
   background: ${__GRAY_200};
-  width: 100%;
+  //width: 100%;
+`;
+
+const SeparatorText = styled.div`
+  color: ${__GRAY_500}
+  font-size: 18px;
+  text-transform: uppercase !important;
+  font-weight: bold;
+  margin: 0 10px;
+`;
+
+const SeparatorContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 10px 14px;
 `;
 
 export const NavItem = props => {
@@ -43,5 +60,11 @@ export const NavItem = props => {
 };
 
 export const Separator = props => {
-  return <SeparatorDiv>{props.separator}</SeparatorDiv>;
+  return (
+    <SeparatorContainer>
+      <SeparatorDiv width={35} />
+      <SeparatorText>{props.text}</SeparatorText>
+      <SeparatorDiv width={100} />
+    </SeparatorContainer>
+  );
 };
