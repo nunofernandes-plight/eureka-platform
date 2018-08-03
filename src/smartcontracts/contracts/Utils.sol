@@ -12,7 +12,7 @@ library Utils {
     * @param addr address to check
     * @return whether the target address is a contract
     */
-    function isContract(address addr) public view returns (bool) {
+    function isContract(address addr) internal view returns (bool) {
         uint256 size;
         // XXX Currently there is no better way to check if there is a contract in an address
         // than to check the size of the code at that address.
@@ -36,10 +36,9 @@ library Utils {
      * @param _nonce uint256 Presigned transaction number.
      */
     function transferPreSignedHashing(address _token, address _to, uint256 _value, uint256 _fee,
-        uint256 _nonce, bytes _data) internal pure returns (bytes32) {
-        /* "48664c16": transferPreSignedHashing(address,address,address,uint256,uint256,uint256) */
-        //TODO update
-        return keccak256(bytes4(0x48664c16), _token, _to, _value, _fee, _nonce, _data);
+        uint256 _nonce, bytes4 _methodName, bytes _args) internal pure returns (bytes32) {
+        /* "dbe43fca": transferPreSignedHashing(address,address,address,uint256,uint256,uint256,bytes4,bytes) */
+        return keccak256(bytes4(0xdbe43fca), _token, _to, _value, _fee, _nonce, _methodName, _args);
     }
 
     function transferPreSignedHashing(address _token, address _to, uint256 _value, uint256 _fee,

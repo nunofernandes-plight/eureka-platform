@@ -19,35 +19,31 @@ contract ERC20 {
  * @title ERC677 transferAndCall token interface
  * @dev See https://github.com/ethereum/EIPs/issues/677 for specification and
  *      discussion.
+ *
+ * We deviate from the specification and we don't define a tokenfallback. That menas
+ * tranferAndCall can specify the function to call (bytes4(sha3("setN(uint256)")))
+ * and its arguments, and the respective function is called.
+ * TODO: find out what happens if the function is not found. Will the default function
+ * be called, or will the function return false?
+ *
+ * We also deviate from ERC865 and added a pre signed transaction for transferAndCall.
  */
-contract ERC677 {
-    event Transfer(address indexed _from, address indexed _to, uint256 _value, bytes _data);
+contract ERC865Plus677ish {
+    event Transfer(address indexed _from, address indexed _to, uint256 _value, bytes4 _methodName, bytes _args);
+    function transferAndCall(address _to, uint _value, bytes4 _methodName, bytes _args) public returns (bool success);
 
-    function transferAndCall(address _to, uint _value, bytes _data) public returns (bool success);
-}
-
-/**
- * @title Receiver interface for ERC677 transferAndCall
- * @dev See https://github.com/ethereum/EIPs/issues/677 for specification and
- *      discussion.
- */
-contract ERC677Receiver {
-    function tokenFallback(address _from, uint _value, bytes _data) public;
-}
-
-contract ERC865Plus677 {
     event TransferPreSigned(address indexed _from, address indexed _to, address indexed _delegate,
         uint256 _amount, uint256 _fee);
     event TransferPreSigned(address indexed _from, address indexed _to, address indexed _delegate,
-        uint256 _amount, uint256 _fee, bytes _data);
+        uint256 _amount, uint256 _fee, bytes4 _methodName, bytes _args);
 
     function transferPreSigned(bytes _signature, address _to, uint256 _value,
         uint256 _fee, uint256 _nonce) public returns (bool);
     function transferAndCallPreSigned(bytes _signature, address _to, uint256 _value,
-        uint256 _fee, uint256 _nonce, bytes _data) public returns (bool);
+        uint256 _fee, uint256 _nonce, bytes4 _methodName, bytes _args) public returns (bool);
 }
 
-contract Eureka is ERC677, ERC20, ERC865Plus677 {
+contract Eureka is ERC20, ERC865Plus677ish {
 
     using SafeMath for uint256;
 
@@ -55,22 +51,37 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
     string public constant symbol = "EKA";
     uint8 public constant decimals = 18;
 
-    mapping(address => Snapshot[]) balances;
     uint256 public loyalty;
     mapping(address => mapping(address => uint256)) internal allowed;
     /* Nonces of transfers performed */
     mapping(bytes => bool) signatures;
-
+    mapping(address => AmountReward) balances;
     uint256 public totalSupply_;
     uint256 constant public maxSupply = 298607040 * (10 ** uint256(decimals));
 
-    //we want to create a snapshot of the token balances will fit into 2 x 256bit
-    struct Snapshot {
-        // `fromBlock` is the block number that the value was generated from
-        uint64 fromBlock;
+    uint256 constant public oneYearsInBlocks = 4 * 60 * 24 * 365;
+    uint256 constant public max88 = 2**88;
+
+    struct SnapshotReward { //256bits
+        uint48 fromBlock;
+        uint88 reward1;
+        uint88 reward2;
+        uint32 counter;
+    }
+
+    struct SnapshotAmount { //512bits
+        uint48 fromBlock;
         address fromAddress;
-        //0 is regular, rest is for accumulation
-        mapping(uint256 => uint256) amounts;
+        //0 is regular, 1 is loyalty, rest is for accumulation
+        uint88 amount; //amount type 0
+        uint88 claimedLoyalty; //amount type 1
+        uint88 payedLoyalty;
+        uint24 counter;
+    }
+
+    struct AmountReward {
+        mapping(address => SnapshotReward[]) rewards;
+        SnapshotAmount[] amounts;
     }
 
     // token lockups
@@ -84,8 +95,6 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
 
     event TokensLocked(address indexed _holder, uint256 _timeout);
 
-    event TokensFrom(address indexed _holder, uint256 _amount);
-    event TokensTo(address indexed _holder, uint256 _amount);
     event TokensLoyalty(uint256 _amount);
 
     constructor() public {
@@ -112,14 +121,17 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
             address recipient = _recipients[i];
             uint256 amount = _amounts[i];
 
-            if(balances[recipient].length == 0) {
-                Snapshot memory tmp;
-                tmp.fromAddress = tx.origin;
-                tmp.fromBlock = uint64(block.number);
-                balances[recipient].push(tmp);
+            if(balances[recipient].amounts.length == 0) {
+                SnapshotAmount memory tmp;
+                tmp.fromAddress = msg.sender;
+                tmp.fromBlock = uint48(block.number);
+                balances[recipient].amounts.push(tmp);
             }
-            Snapshot storage current = balances[recipient][balances[recipient].length - 1];
-            current.amounts[0] = current.amounts[0].add(amount);
+            SnapshotAmount storage current = balances[recipient].amounts[balances[recipient].amounts.length - 1];
+
+            uint256 tmpAmount = uint256(current.amount).add(amount);
+            require(tmpAmount < max88);
+            current.amount = uint88(tmpAmount);
 
             totalSupply_ = totalSupply_.add(amount);
             require(totalSupply_ <= maxSupply); // enforce maximum token supply
@@ -169,8 +181,8 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
         return transfer(_to, _value, 0);
     }
 
-    function transfer(address _to, uint256 _value, uint8 _fromType) public returns (bool) {
-        doTransfer(msg.sender, _to, _value, 0, address(0), _fromType);
+    function transfer(address _to, uint256 _value, uint8 _rewardType) public returns (bool) {
+        doTransfer(msg.sender, _to, _value, 0, address(0), _rewardType);
         emit Transfer(msg.sender, _to, _value);
         return true;
     }
@@ -179,113 +191,183 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
         return transferFrom(_from, _to, _value, 0);
     }
 
-    function transferFrom(address _from, address _to, uint256 _value, uint256 _fromType) public returns (bool) {
+    function transferFrom(address _from, address _to, uint256 _value, uint8 _rewardType) public returns (bool) {
         require(_value <= allowed[_from][msg.sender]);
-        doTransfer(_from, _to, _value, 0, address(0), _fromType);
+        doTransfer(_from, _to, _value, 0, address(0), _rewardType);
         allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
         emit Transfer(_from, _to, _value);
         return true;
     }
 
-    function doTransfer(address _from, address _to, uint256 _value, uint256 _fee, address _feeAddress, uint256 _fromType) internal {
-        require(_to != address(0));
-        uint256 fromLoyalty = 0;
-        uint256 toLoyalty = 0;
-        uint256 fromValue = balanceOf(_from);
-        if(_fromType > 1) {
-            fromLoyalty = claim(_from);
-            toLoyalty = claim(_to);
-            fromValue = fromValue.add(fromLoyalty);
-            _value = _value.add(toLoyalty);
+    function reclaim(address[] loyaltyOwners) public {
+        require(owner == msg.sender);
+        require(mintingDone == true);
+
+        uint256 loyalityBalanceTotal = 0;
+        uint8 len = uint8(loyaltyOwners.length);
+        for(uint8 i=0;i<len;i++) {
+            require(balances[loyaltyOwners[i]].amounts.length > 0);
+            //give the unclaimed (1 year old) loyalties to the owner
+            require(balances[loyaltyOwners[i]].amounts[balances[loyaltyOwners[i]].amounts.length - 1].fromBlock + oneYearsInBlocks < block.number);
+            (uint256 balance, uint256 loyaltyNow) = balanceWithLoyaltyClaimOf(loyaltyOwners[i]);
+            from(balance, 0, loyaltyOwners[i]);
+            loyalityBalanceTotal = loyalityBalanceTotal.add(loyaltyNow);
         }
 
-        uint256 total = _value.add(_fee);
-        require(total <= fromValue);
+        (uint256 toBalance, uint256 toLoyalty) = balanceWithLoyaltyClaimOf(owner);
+        to(toBalance.add(toLoyalty), loyalityBalanceTotal, 0, 0, owner);
+        emit Transfer(address(this), owner, loyalityBalanceTotal);
+    }
+
+    function loyalty(uint256 _amount) public {
+        (uint256 balance, uint256 loyaltyNow) = balanceWithLoyaltyClaimOf(msg.sender);
+        require(_amount <= balance.add(loyaltyNow));
+        from(balance.add(loyaltyNow), _amount, msg.sender);
+        loyalty = loyalty.add(_amount);
+        emit TokensLoyalty(_amount);
+    }
+
+    function rewardOf(address _owner, address _from) public view returns (uint256, uint256, uint256) {
+        //if no balances are present, the balance is 0
+        if (balances[_owner].rewards[_from].length == 0) {
+            return (0,0,0);
+        }
+        //return last amount
+        SnapshotReward memory r = balances[_owner].rewards[_from][balances[_owner].rewards[_from].length - 1];
+        return (r.reward1, r.reward2, r.counter);
+    }
+
+    function rewardOf(address _owner, address _from, uint48 _fromBlock) public view returns (uint256, uint256, uint256) {
+        //if no balances are present, the balance is 0
+        if (balances[_owner].rewards[_from].length == 0) {
+            return (0,0,0);
+        }
+        // Binary search of the value in the array
+        //TODO: check overflow
+        uint256 min = 0;
+        uint256 max = balances[_owner].rewards[_from].length-1;
+        while (max > min) {
+            uint256 mid = (max + min + 1)/ 2;
+            if (balances[_owner].rewards[_from][mid].fromBlock<=_fromBlock) {
+                min = mid;
+            } else {
+                max = mid-1;
+            }
+        }
+        return rewardOf_internal(_owner, _from, min);
+    }
+
+    function rewardOf_internal(address _owner, address _from, uint256 _index) internal view returns (uint256, uint256, uint256) {
+        SnapshotReward memory sr = balances[_owner].rewards[_from][_index];
+        return (sr.reward1, sr.reward2, sr.counter);
+    }
+
+
+    function doTransfer(address _from, address _to, uint256 _value, uint256 _fee, address _feeAddress, uint8 _rewardType) internal {
+        require(_to != address(0));
         require(mintingDone == true);
+
+        (uint256 fromBalance, uint256 fromLoyalty) = balanceWithLoyaltyClaimOf(_from);
+        if(fromLoyalty > 0) {
+            emit Transfer(address(this), _from, fromLoyalty);
+        }
+
+        (uint256 toBalance, uint256 toLoyalty) = balanceWithLoyaltyClaimOf(_to);
+        if(toLoyalty > 0) {
+            emit Transfer(address(this), _to, toLoyalty);
+        }
+
+        uint256 totalValue = _value.add(_fee);
+        require(totalValue <= fromBalance);
+
         // check lockups
         if (lockups[_from] != 0) {
             require(now >= lockups[_from]);
         }
 
-        from(fromValue, total, fromLoyalty, _from);
-        emit TokensFrom(_from, fromValue);
+        from(fromBalance.add(fromLoyalty), totalValue, _from);
+        fee(_fee, _feeAddress); //event is TransferPreSigned, that will be emitted after this function call
 
-        fee(_fee, _feeAddress);
-        //event is TransferPreSigned, that will be emitted after this function call
+        uint256 tmpLoyalty = 0;
+        totalValue = _value;
+        if(_rewardType > 0) {
+            tmpLoyalty = totalValue.div(100); //1%
+            totalValue = totalValue.sub(tmpLoyalty);
+            emit TokensLoyalty(tmpLoyalty);
+        }
 
-        if(_fromType > 1) {
-            uint256 tmpLoyalty = _value.div(200); //0.5%
-            _value = _value.sub(tmpLoyalty);
+        to(toBalance.add(toLoyalty), totalValue, _value, _rewardType, _to);
+
+        if(_rewardType > 0) {
             loyalty = loyalty.add(tmpLoyalty);
-            emit TokensLoyalty(loyalty);
         }
-
-        to(_value, toLoyalty, _to, _fromType);
-        emit TokensTo(_to, _value);
     }
 
-    function claim(address _addr) internal view returns (uint256) {
-        uint256 maxClaim = loyalty.mul(balanceOf(_addr)).div(totalSupply_);
-        uint256 alreadyClaimed = balanceOf(_addr, 1);
-
-        return maxClaim.sub(alreadyClaimed);
+    function balanceWithLoyaltyClaimOf(address _addr) public view returns (uint256, uint256) {
+        uint256 balance = balanceOf(_addr);
+        uint256 toClaim = loyalty.sub(balanceOf(_addr, false));
+        return (balance, toClaim.mul(balance).div(totalSupply_));
     }
 
-    function from(uint256 fromValue, uint256 total, uint256 fromLoyalty, address _from) internal {
-        Snapshot memory tmpFrom;
-        tmpFrom.fromAddress = tx.origin;
-        tmpFrom.fromBlock = uint64(block.number);
-        uint256 amounts0  = fromValue.sub(total);
-
-        uint256 amounts1 = 0;
-        if(fromLoyalty > 0) {
-            amounts1 = balanceOf(_from, 1).add(fromLoyalty);
-        }
-        balances[_from].push(tmpFrom);
-
-        uint256 index = balances[_from].length - 1;
-        balances[_from][index].amounts[0] = amounts0;
-        if(fromLoyalty > 0) {
-            balances[_from][index].amounts[1] = amounts1;
-        }
+    function from(uint256 _fromBalance, uint256 _totalValue, address _fromAddress) internal {
+        SnapshotAmount memory tmpFrom;
+        tmpFrom.fromAddress = msg.sender;
+        tmpFrom.fromBlock = uint48(block.number);
+        require(loyalty < max88);
+        tmpFrom.claimedLoyalty = uint88(loyalty);
+        uint256 amount = _fromBalance.sub(_totalValue);
+        require(amount < max88);
+        tmpFrom.amount = uint88(amount);
+        balances[_fromAddress].amounts.push(tmpFrom);
     }
 
     function fee(uint256 _fee, address _feeAddress) internal {
         if(_fee > 0 && _feeAddress != address(0)) {
-            Snapshot memory tmpFee;
-            tmpFee.fromAddress = tx.origin;
-            tmpFee.fromBlock = uint64(block.number);
-            uint256 amounts0 = balanceOf(_feeAddress).add(_fee);
-            balances[_feeAddress].push(tmpFee);
-            balances[_feeAddress][balances[_feeAddress].length - 1].amounts[0] = amounts0;
+            SnapshotAmount memory tmpFee;
+            tmpFee.fromAddress = msg.sender;
+            tmpFee.fromBlock = uint48(block.number);
+            require(loyalty < max88);
+            tmpFee.claimedLoyalty = uint88(loyalty); //the fee claimer cannot claim loyalty
+            uint256 amount = balanceOf(_feeAddress).add(_fee);
+            require(amount < max88);
+            tmpFee.amount = uint88(amount);
+            balances[_feeAddress].amounts.push(tmpFee);
         }
     }
 
-    function to(uint256 valueTo, uint256 toLoyalty, address _to, uint256 _fromType) internal {
-        Snapshot memory tmpTo;
-        tmpTo.fromAddress = tx.origin;
-        tmpTo.fromBlock = uint64(block.number);
-        uint256 amounts0 = balanceOf(_to).add(valueTo);
-        uint256 amounts1 = 0;
-        if(toLoyalty > 0) {
-            amounts1 = balanceOf(_to, 1).add(toLoyalty);
-            emit Transfer(address(this), _to, toLoyalty);
-        }
+    function to(uint256 _toBalance, uint256 _totalValue, uint256 _reward, uint24 _rewardType, address _toAddress) internal {
+        SnapshotAmount memory tmpTo;
+        tmpTo.fromAddress = msg.sender;
+        tmpTo.fromBlock = uint48(block.number);
+        require(loyalty < max88);
+        tmpTo.claimedLoyalty = uint88(loyalty);
+        uint256 amount = _toBalance.add(_totalValue);
+        require(amount < max88);
+        tmpTo.amount = uint88(amount);
+        balances[_toAddress].amounts.push(tmpTo);
 
-        uint256 amountsX = 0;
-        if(_fromType > 1) { //0 is the balance, 1 is the loyality
-            amountsX = balanceOf(_to, _fromType).add(valueTo);
-        }
-        balances[_to].push(tmpTo);
+        if(_rewardType > 0) {
+            SnapshotReward memory sr;
+            sr.fromBlock = uint48(block.number);
+            sr.reward1 = balances[_toAddress].rewards[msg.sender][balances[_toAddress].rewards[msg.sender].length - 1].reward1;
+            sr.reward2 = balances[_toAddress].rewards[msg.sender][balances[_toAddress].rewards[msg.sender].length - 1].reward2;
+            sr.counter = balances[_toAddress].rewards[msg.sender][balances[_toAddress].rewards[msg.sender].length - 1].counter;
 
-        uint256 index = balances[_to].length - 1;
-
-        balances[_to][index].amounts[0] = amounts0;
-        if(toLoyalty > 0) {
-            balances[_to][index].amounts[1] = amounts1;
-        }
-        if(_fromType > 1) {
-            balances[_to][index].amounts[_fromType] = amountsX;
+            uint256 total = 0;
+            if(_rewardType == 1) {
+                total =  _reward.add(sr.reward1);
+                require(total < max88);
+                sr.reward1 = uint88(total);
+            } else if(_rewardType == 2) {
+                total =  _reward.add(sr.reward2);
+                require(total < max88);
+                sr.reward2 = uint88(total);
+            } else {
+                if(uint32(sr.counter + 1) > 0) { //it will always stay at max, don't overflow
+                    sr.counter = uint32(sr.counter + 1);
+                }
+            }
+            balances[_toAddress].rewards[msg.sender].push(sr);
         }
     }
 
@@ -295,34 +377,45 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
     * @return An uint256 representing the amount owned by the passed address.
     */
     function balanceOf(address _owner) public view returns (uint256) {
-        //return balances[_owner][balances[_owner].length - 1].amounts[0];
-        return balanceOf(_owner, 0, uint64(block.number));
+        return balanceOf(_owner, true);
     }
 
-    function balanceOf(address _owner, uint256 _fromType) public view returns (uint256) {
-        //return balances[_owner][balances[_owner].length - 1].amounts[_fromType];
-        return balanceOf(_owner, _fromType, uint64(block.number));
-    }
-
-    function balanceOf(address _owner, uint256 _fromType, uint64 _fromBlock) public view returns (uint256) {
-        // Binary search of the value in the array
-        uint min = 0;
-        if (balances[_owner].length == 0) {
+    function balanceOf(address _owner, bool _amountType) public view returns (uint256) {
+        //if no balances are present, the balance is 0
+        if (balances[_owner].amounts.length == 0) {
             return 0;
         }
-        uint max = balances[_owner].length-1;
+        //return last amount
+        return balanceOf0(_owner, _amountType, balances[_owner].amounts.length - 1);
+    }
+
+    function balanceOf(address _owner, bool _amountType, uint64 _fromBlock) public view returns (uint256) {
+        //if no balances are present, the balance is 0
+        if (balances[_owner].amounts.length == 0) {
+            return 0;
+        }
+        // Binary search of the value in the array
+        //TODO: check overflow
+        uint256 min = 0;
+        uint256 max = balances[_owner].amounts.length-1;
         while (max > min) {
-            uint mid = (max + min + 1)/ 2;
-            if (balances[_owner][mid].fromBlock<=_fromBlock) {
+            uint256 mid = (max + min + 1)/ 2;
+            if (balances[_owner].amounts[mid].fromBlock<=_fromBlock) {
                 min = mid;
             } else {
                 max = mid-1;
             }
         }
-        return balances[_owner][min].amounts[_fromType];
+        return balanceOf0(_owner, _amountType, min);
     }
 
-
+    function balanceOf0(address _owner, bool _amountType, uint256 _index) internal view returns (uint256) {
+        if(_amountType) {
+            return balances[_owner].amounts[_index].amount;
+        } else {
+            return balances[_owner].amounts[_index].claimedLoyalty;
+        }
+    }
 
     /**
      * @dev Approve the passed address to spend the specified amount of tokens on behalf of msg.sender.
@@ -392,21 +485,20 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
         return true;
     }
 
-    function transferAndCall(address _to, uint _value, bytes _data) public returns (bool) {
-        return transferAndCall(_to, _value, _data, 0);
+    function transferAndCall(address _to, uint _value, bytes4 _methodName, bytes _args) public returns (bool) {
+        return transferAndCall(_to, _value, 0, _methodName, _args);
     }
 
     // ERC677 functionality
-    function transferAndCall(address _to, uint _value, bytes _data, uint8 _fromType) public returns (bool) {
+    function transferAndCall(address _to, uint _value, uint8 _rewardType, bytes4 _methodName, bytes _args) public returns (bool) {
         require(mintingDone == true);
-        require(transfer(_to, _value, _fromType));
+        //require(transfer(_to, _value, _rewardType));
 
-        emit Transfer(msg.sender, _to, _value, _data);
+        emit Transfer(msg.sender, _to, _value, _methodName, _args);
 
         // call receiver
         if (Utils.isContract(_to)) {
-            ERC677Receiver receiver = ERC677Receiver(_to);
-            receiver.tokenFallback(msg.sender, _value, _data);
+            require(_to.call(_methodName, _args));
         }
         return true;
     }
@@ -437,31 +529,29 @@ contract Eureka is ERC677, ERC20, ERC865Plus677 {
     }
 
     function transferAndCallPreSigned(bytes _signature, address _to, uint256 _value, uint256 _fee, uint256 _nonce,
-        bytes _data) public returns (bool) {
-        return transferAndCallPreSigned(_signature, _to, _value, _fee, _nonce, _data, 0);
+        bytes4 _methodName, bytes _args) public returns (bool) {
+        return transferAndCallPreSigned(_signature, _to, _value, _fee, _nonce, 0, _methodName, _args);
     }
 
-    function transferAndCallPreSigned(bytes _signature, address _to, uint256 _value, uint256 _fee, uint256 _nonce,
-        bytes _data, uint8 _fromType) public returns (bool) {
-
+    function transferAndCallPreSigned(bytes _signature, address _to, uint256 _value, uint256 _fee,
+        uint256 _nonce, uint8 _rewardType, bytes4 _methodName, bytes _args) public returns (bool) {
 
         require(signatures[_signature] == false);
 
-        bytes32 hashedTx = Utils.transferPreSignedHashing(address(this), _to, _value, _fee, _nonce, _data);
+        bytes32 hashedTx = Utils.transferPreSignedHashing(address(this), _to, _value, _fee, _nonce, _methodName, _args);
         address from = Utils.recover(hashedTx, _signature);
         require(from != address(0));
 
-        doTransfer(from, _to, _value, _fee, msg.sender, _fromType);
+        doTransfer(from, _to, _value, _fee, msg.sender, _rewardType);
         signatures[_signature] = true;
 
         emit Transfer(from, _to, _value);
         emit Transfer(from, msg.sender, _fee);
-        emit TransferPreSigned(from, _to, msg.sender, _value, _fee, _data);
+        emit TransferPreSigned(from, _to, msg.sender, _value, _fee, _methodName, _args);
 
         // call receiver
         if (Utils.isContract(_to)) {
-            ERC677Receiver receiver = ERC677Receiver(_to);
-            receiver.tokenFallback(from, _value, _data);
+            require(_to.call(_methodName, _args));
         }
         return true;
     }

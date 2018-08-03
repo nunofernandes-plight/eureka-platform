@@ -5,7 +5,7 @@ import "./Utils.sol";
 import "./Eureka.sol";
 
 
-contract EurekaPlatform is ERC677Receiver {
+contract EurekaPlatform {
 
     using SafeMath for uint256;
 
