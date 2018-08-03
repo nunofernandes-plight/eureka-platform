@@ -40,9 +40,9 @@ const Container = styled.div`
 
 const renderIcon = props => {
   if (props.status === 'valid') {
-    return <Icon icon={'check'} width={10} heigth={10} />;
+    return <Icon icon={'check'} width={10} heigth={10} bottom={3}/>;
   } else if (props.status === 'error') {
-    return <Icon icon={'exlamation'} width={10} height={16} bottom={2} />;
+    return <Icon icon={'exlamation'} width={10} height={16} bottom={3} />;
   }
 };
 export const InputField = props => {
