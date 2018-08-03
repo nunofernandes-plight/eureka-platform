@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {__GRAY_100, __GRAY_200} from '../helpers/colors.js';
+import {__ALERT_ERROR, __GRAY_100, __GRAY_200} from '../helpers/colors.js';
 import EurekaLogo from '../webpack/icons/EurekaLogo.js';
 import {NavItem, Separator} from './NavItem.js';
 
@@ -24,12 +24,23 @@ const Container = styled.div`
 const TopLogo = styled.div`
   display: flex;
   justify-content: center;
-  margin: 10px 0;
+  position: relative;
 `;
 
 const Items = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const NotificationBell = styled.div`
+  position: absolute;
+
+  border-radius: 50%;
+  background: red; 
+  margin-left: 8px;
+
+  width: 20px;
+  height: 20px;
 `;
 
 class PanelLeft extends Component {
@@ -38,31 +49,43 @@ class PanelLeft extends Component {
     return (
       <Container>
         <TopLogo>
-          <EurekaLogo blue height={40} />
+          <NotificationBell />
+          <EurekaLogo height={40} />
         </TopLogo>
         <Items>
           <Separator text={'General'} />
-          <NavItem status="active" icon={'bell'} width={20} height={20}>
+          <NavItem status="active" icon={'dashboard'} width={20} height={20}>
             {' '}
             Dashboard
           </NavItem>
-          <NavItem icon={'bell'} width={20} height={20}>
+          <NavItem icon={'article'} width={20} height={20}>
             {' '}
-            Dashboard
+            My Articles
           </NavItem>
-          <NavItem icon={'bell'} width={20} height={20}>
+          <NavItem icon={'review'} width={20} height={20}>
             {' '}
-            Dashboard
+            My Reviews
           </NavItem>
 
-          <Separator text={'Wallet'} />
-          <NavItem icon={'bell'} width={20} height={20}>
+          <NavItem icon={'link'} width={20} height={20}>
             {' '}
-            Dashboard
+            My linked Articles
           </NavItem>
-          <NavItem icon={'bell'} width={20} height={20}>
+
+          <Separator text={'Personal'} />
+          <NavItem icon={'wallet'} width={20} height={20}>
             {' '}
-            Dashboard
+            My Wallet
+          </NavItem>
+          <NavItem icon={'account'} width={20} height={20}>
+            {' '}
+            My Account
+          </NavItem>
+
+          <Separator text={'History'} />
+          <NavItem icon={'ethereum'} width={20} height={20}>
+            {' '}
+            My Actions
           </NavItem>
         </Items>
       </Container>
