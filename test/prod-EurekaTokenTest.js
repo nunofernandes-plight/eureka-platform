@@ -2,15 +2,17 @@ import test from 'ava';
 import deployContracts from '../src/backend/web3/index.mjs';
 import getAccounts from '../src/backend/web3/get-accounts.mjs';
 
+const PRETEXT = 'INTEGRATION: ';
+
 let contract;
 let accounts;
-test.beforeEach(async t => {
+test.beforeEach(PRETEXT, async () => {
   const [eurekaContract] = await deployContracts();
   contract = eurekaContract;
   accounts = await getAccounts();
 });
 
-test('DEV-TEST: minting and total supply', async t => {
+test(PRETEXT + 'minting and total supply', async t => {
   let amounts = [];
 
   let amount = 1000;
@@ -52,7 +54,7 @@ test('DEV-TEST: minting and total supply', async t => {
     });
 });
 
-test('DEV-TEST: minting and balanceOf', async t => {
+test(PRETEXT + ': minting and balanceOf', async t => {
   let amounts = [];
 
   let amount = 1000;
@@ -85,7 +87,7 @@ test('DEV-TEST: minting and balanceOf', async t => {
 });
 
 
-test('DEV-TEST: minting and balanceOf of another address', async t => {
+test(PRETEXT + 'minting and balanceOf of another address', async t => {
   let amounts = [];
 
   let amount = 1000;

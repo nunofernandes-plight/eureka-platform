@@ -21,6 +21,7 @@ let eurekaPlatformContract;
 let accounts;
 let contractOwner;
 
+const PRETEXT = 'INTEGRATION: ';
 
 test.before(async () => {
   let [eurekaContract, platformContract] = await deployContracts();
@@ -33,6 +34,10 @@ test.before(async () => {
 
   await cleanDB();
 });
+
+test.after( () => {
+  app.close();
+})
 
 async function setupContract  (eurekaContract, platformContract){
   accounts = await getAccounts();
@@ -58,8 +63,8 @@ async function cleanDB() {
   await Submission.remove({});
 }
 
-test('DEV-TEST: Event - DB -> Sign up Editor', async t => {
-  await userService.createUser('test2', 'test', 'test@test.test', contractOwner);
+test( PRETEXT + 'Event - DB -> Sign up Editor', async t => {
+  await userService.createUser('test', 'test@test.test', contractOwner);
 
   let user = await userService.getUserByEthereumAddress(contractOwner);
   t.is(user.isEditor, false);
@@ -68,10 +73,9 @@ test('DEV-TEST: Event - DB -> Sign up Editor', async t => {
 
   user = await userService.getUserByEthereumAddress(contractOwner);
   t.is(user.isEditor, true);
-  //app.close();
 });
 
-test('DEV-TEST: Event - DB ->  Submit Article', async t => {
+test(PRETEXT + 'Event - DB ->  Submit Article', async t => {
   let article = {
     articleHash: '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
     url: 'hoihoi',
