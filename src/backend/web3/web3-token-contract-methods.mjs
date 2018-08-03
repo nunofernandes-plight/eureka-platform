@@ -36,7 +36,7 @@ export const finishMinting = (contract, owner) => {
 
 export const submitArticle = (_contract, _from, _to, _amount, _data) => {
   return _contract.methods
-    .transferAndCall(_to, _amount, _data)
+    .transferAndCall(_to, _amount, '0x20159e37', _data)
     .send({
       from: _from
     })

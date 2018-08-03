@@ -225,7 +225,7 @@ contract EurekaPlatform {
             dataIndex += 2;
         }
 
-        startSubmissionProcess(_from, articleHash, articleUrl, authors, contributeRatios, linkedArticles, linkedArticlesSplitRatios);
+        startSubmissionProcess(articleHash, articleUrl, authors, contributeRatios, linkedArticles, linkedArticlesSplitRatios);
 
     }
 
@@ -277,19 +277,19 @@ contract EurekaPlatform {
 
     event SubmissionProcessStart(address submissionOwner);
 
-    function startSubmissionProcess(address _from, bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
+    function startSubmissionProcess(bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
         uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) public {
 
         uint submissionId = submissionCounter++;
         ArticleSubmission storage submission = articleSubmissions[submissionId];
 
         submission.submissionId = submissionId;
-        submission.submissionOwner = _from;
+        submission.submissionOwner = tx.origin;         // doc: sender of the transaction (full call chain)
 
         submitArticleVersion(submissionId, _articleHash, _articleURL, _authors, _authorContributionRatios, _linkedArticles, _linkedArticlesSplitRatios);
 
         submission.submissionState = SubmissionState.OPEN;
-        emit SubmissionProcessStart(_from);
+        emit SubmissionProcessStart(tx.origin);
     }
 
     function submitArticleVersion(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL,
