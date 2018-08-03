@@ -278,7 +278,6 @@ class Login extends Component {
                         authentication provider. Please note that we are not
                         able neither to see nor to store your private keys.{' '}
                       </Alert>
-                      <Label status={'primary'}>this is a test</Label>
                     </AlertContainer>
                   ) : null}
                 </TitleRow>
