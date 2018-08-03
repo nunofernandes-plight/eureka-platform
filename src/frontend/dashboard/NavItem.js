@@ -47,7 +47,10 @@ const SeparatorText = styled.div`
 const SeparatorContainer = styled.div`
   display: flex;
   align-items: center;
-  margin: 10px 14px;
+  margin-left: 14px; 
+  margin-right: 14px;
+  margin-top: 40px;
+  margin-bottom: 5px;
 `;
 
 export const NavItem = props => {

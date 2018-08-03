@@ -24,7 +24,7 @@ const Container = styled.div`
 const TopLogo = styled.div`
   display: flex;
   justify-content: center;
-  margin: 25px 0;
+  margin: 10px 0;
 `;
 
 const Items = styled.div`
@@ -41,7 +41,7 @@ class PanelLeft extends Component {
           <EurekaLogo blue height={40} />
         </TopLogo>
         <Items>
-          <Separator text={"General"}/>
+          <Separator text={'General'} />
           <NavItem status="active" icon={'bell'} width={20} height={20}>
             {' '}
             Dashboard
@@ -54,6 +54,8 @@ class PanelLeft extends Component {
             {' '}
             Dashboard
           </NavItem>
+
+          <Separator text={'Wallet'} />
           <NavItem icon={'bell'} width={20} height={20}>
             {' '}
             Dashboard
