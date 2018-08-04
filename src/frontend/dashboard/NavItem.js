@@ -18,7 +18,7 @@ const Nav = styled.div`
 
   font-size: 16px;
   font-weight: 500;
-  padding: 1.3rem;
+  padding: 1rem;
   transition: all 0.15s ease;
   color: ${props => (props.status === 'active' ? 'white' : `${__THIRD}`)};
   background-color: ${props =>
@@ -49,7 +49,7 @@ const SeparatorContainer = styled.div`
   align-items: center;
   margin-left: 14px; 
   margin-right: 14px;
-  margin-top: 40px;
+  margin-top: 30px;
   margin-bottom: 5px;
   min-height: 15px;
 `;
