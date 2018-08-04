@@ -51,6 +51,7 @@ const SeparatorContainer = styled.div`
   margin-right: 14px;
   margin-top: 40px;
   margin-bottom: 5px;
+  min-height: 15px;
 `;
 
 export const NavItem = props => {
