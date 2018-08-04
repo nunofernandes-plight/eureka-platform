@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {__ALERT_ERROR, __GRAY_100, __GRAY_200} from '../helpers/colors.js';
+import {__GRAY_200} from '../helpers/colors.js';
 import EurekaLogo from '../webpack/icons/EurekaLogo.js';
 import {NavItem, Separator} from './NavItem.js';
+import Account from './Account.js';
 
 const Container = styled.div`
   display: flex;
@@ -19,6 +20,7 @@ const Container = styled.div`
   transition-property: width;
   flex: 1 1 auto;
   border-right: 1px solid ${__GRAY_200};
+  overflow-x: hidden;
 `;
 
 const TopLogo = styled.div`
@@ -34,17 +36,14 @@ const Items = styled.div`
 
 const NotificationBell = styled.div`
   position: absolute;
-
   border-radius: 50%;
-  background: red; 
+  background: red;
   margin-left: 8px;
-
   width: 20px;
   height: 20px;
 `;
 
 class PanelLeft extends Component {
-  //  Dashboard / Submitted articles / My reviews / My linked articles / Wallet /  History /
   render() {
     return (
       <Container>
@@ -88,6 +87,8 @@ class PanelLeft extends Component {
             My Actions
           </NavItem>
         </Items>
+
+        <Account {...this.props} />
       </Container>
     );
   }
