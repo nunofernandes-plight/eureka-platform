@@ -7,11 +7,11 @@ import MetaMaskLogo from '../icons/MetaMaskLogo.js';
 import EurekaLogo from '../icons/EurekaLogo.js';
 import Web3Providers from '../../web3/Web3Providers.js';
 import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
-import Modal from '../../design-components/Modal.js';
+import Modal from '../design-components/Modal.js';
 import AccountBalance from '../../web3/AccountBalance.js';
 import {isEmailValid} from '../../../helpers/emailValidator.js';
-import {InputField} from '../../design-components/Inputs.js';
-import Alert from '../../design-components/Alerts.js';
+import {InputField} from '../design-components/Inputs.js';
+import Alert from '../design-components/Alerts.js';
 import EurekaSpinner from '../../webpack/spinners/EurekaSpinner.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import Icon from '../webpack/icons/Icon.js';
+import Icon from '../icons/Icon.js';
 import {
   __GRAY_200,
   __GRAY_300,
   __GRAY_500,
   __THIRD
-} from '../helpers/colors.js';
+} from '../../helpers/colors.js';
 
 const Nav = styled.div`
   &:hover {

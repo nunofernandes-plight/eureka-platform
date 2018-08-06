@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__LABEL_PRIMARY_TEXT, __LABEL_PRIMARY_BACK} from '../helpers/colors.js';
+import {__LABEL_PRIMARY_TEXT, __LABEL_PRIMARY_BACK} from '../../helpers/colors.js';
 
 const getTextColor = props => {
   if (props.status === 'primary') {

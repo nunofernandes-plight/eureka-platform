@@ -5,8 +5,8 @@ import WelcomePage from './webpack/login/WelcomePage';
 import Header from './webpack/Header/Header';
 import Login from './webpack/login/Login';
 import MetaMaskGuide from './webpack/MetaMaskGuide';
-import MainScreen from './dashboard/MainScreen.js';
-import {LoginGuard} from './guards/Guards.js';
+import MainScreen from './webpack/dashboard/MainScreen.js';
+import {LoginGuard} from './webpack/guards/Guards.js';
 
 class Router extends Component {
   constructor() {
