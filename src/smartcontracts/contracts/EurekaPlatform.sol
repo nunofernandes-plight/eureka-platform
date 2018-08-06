@@ -228,26 +228,6 @@ contract EurekaPlatform {
         article.versionState = ArticleVersionState.SUBMITTED;
     }
 
-    function submitArticleVersion2(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors, bytes32[] _linkedArticles) private {
-
-        require(articleVersions[_articleHash].submissionId == 0, "Article was already uploaded.");
-        // edge case: two articles have the same hash
-
-        articleVersions[_articleHash].submissionId = _submissionId;
-        articleVersions[_articleHash].articleHash = _articleHash;
-        articleVersions[_articleHash].articleUrl = _articleURL;
-        articleVersions[_articleHash].publishedTimestamp = block.timestamp;
-
-        articleVersions[_articleHash].authors = _authors;
-        // TODO: parse version.authorContributionRatio = authorContributionRatio;
-        articleVersions[_articleHash].linkedArticles = _linkedArticles;
-        // TODO: parse version.linkedArticlesSplitRatio = linkedArticlesSplitRatio;
-
-        articleSubmissions[_submissionId].versions.push(articleVersions[_articleHash]);
-        articleVersions[_articleHash].versionState = ArticleVersionState.SUBMITTED;
-
-    }
-
     // a journal editor can assign him/herself to an article submission process
     // if the process is not already claimed by another editor
     function assignForSubmissionProcess(uint256 _submissionId) public {
@@ -362,7 +342,8 @@ contract EurekaPlatform {
     function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        require(article.versionState == ArticleVersionState.SUBMITTED
+            || article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be SUBMITTED or EDITOR_CHECKED.");
 
         require(article.communityReviews.length < maxAmountOfCommunityReviewer, "the max amount of rewarded community reviews is already reached.");
 
