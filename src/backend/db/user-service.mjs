@@ -54,7 +54,9 @@ export default {
       },
       function(err) {
         console.log('Error :' + err);
-        throw new Error('Something went wrong: ' + err);
+        let error = new Error('Something went wrong: ' + err);
+        error.status = 500;
+        throw error;
       }
     );
   },
