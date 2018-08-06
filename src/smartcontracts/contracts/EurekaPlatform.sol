@@ -246,7 +246,7 @@ contract EurekaPlatform {
         require(isEditor[msg.sender], "msg.sender must be an editor to call this function.");
 
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
-        require(submission.submissionState == SubmissionState.OPEN, "the submission process not open.");
+        require(submission.submissionState == SubmissionState.OPEN, "the submission process needs to be OPEN to call this method.");
         require(submission.editor == address(0), "the submission process is already assigned to an editor.");
 
         submission.editor = msg.sender;
@@ -256,6 +256,8 @@ contract EurekaPlatform {
 
     function removeEditorFromSubmissionProcess(uint256 _submissionId) public {
 
+        require(submission.submissionState == SubmissionState.EDITOR_ASSIGNED, "an editor needs to be assigned to call this function.");
+        
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
         require(msg.sender == contractOwner
         || msg.sender == submission.editor, "an editor can only be removed by the contract owner or itself.");
@@ -268,6 +270,7 @@ contract EurekaPlatform {
     // is it a good idea that the current editor can assign another editor? or should only removing (method below) be possible?
     function changeEditorFromSubmissionProcess(uint256 _submissionId, address _newEditor) public {
 
+        require(submission.submissionState == SubmissionState.EDITOR_ASSIGNED, "an editor needs to be assigned to call this function.");
         require(isEditor[_newEditor], 'the new editor must be an allowed editor.');
 
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
