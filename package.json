@@ -38,6 +38,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "npm run lint && ava --serial",
+    "test-sc": "ava --serial test/smartcontracts",
     "test-ci":
       "if [ \"${CIRCLE_BRANCH}\" = \"dev\" ]; then ava --serial ./test/NormalTests.js; elif [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then ava --serial ./test/NormalTests.js; else ava --serial;fi",
     "lint": "eslint **/*.mjs --ignore-path .gitignore",
