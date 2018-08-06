@@ -3,10 +3,10 @@ import mongoose from 'mongoose';
 /**
  * ArticleSubmission for an article on the eureka platform
  */
-const submissionSchema = mongoose.Schema(
+export const submissionSchema = mongoose.Schema(
   {
     _id: {
-      type: String
+      type: Number
     },
     ownerAddress: {
       type: String,

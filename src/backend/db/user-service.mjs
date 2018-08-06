@@ -145,12 +145,13 @@ export default {
    * @returns {Promise<void>}
    */
   addSubmission: async (ethereumAddress, submissionId) => {
-    let submission = await ArticleSubmission.findOne(submissionId);
+    let submission = await ArticleSubmission.findById(submissionId);
     if (!submission) {
       let error = new Error('ArticleSubmission could not be found in DB');
       error.status = 400;
       throw error;
     }
+
     User.findOneAndUpdate({ethereumAddress: ethereumAddress},
       {$push: {submissions: submission}},
       (err, user) => {
@@ -159,7 +160,7 @@ export default {
           error.status = 400;
           throw error;
         }
-        console.log('User with' + user.eth + ' has submitted ' + submission._id);
+        console.log('User ' + user.ethereumAddress + ' got the submission with ID: ' + submission._id);
         return user;
       });
   }

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import {submissionSchema} from './article-submission.mjs';
 import Roles from './roles-enum.mjs';
 
 const Schema = mongoose.Schema;
@@ -34,9 +35,7 @@ const userSchema = mongoose.Schema(
       }
     ],
     submissions: [
-      {
-        type: Schema.Types.ObjectId, ref: 'ArticleSubmission'
-      }
+      submissionSchema
     ],
   },
   {collection: 'users'}
