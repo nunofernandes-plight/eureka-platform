@@ -39,7 +39,7 @@ contract EurekaPlatform {
     uint[maxReviewRounds] secondReviewerRewardPerReviewer;
 
     // resulting submission fee
-    uint submissionFee;
+    uint public submissionFee;
 
 
     constructor() public {
@@ -112,6 +112,7 @@ contract EurekaPlatform {
         DECLINED,
         ACCEPTED
     }
+    
     // an ArticleSubmission can have different versions
     struct ArticleVersion {
         uint256 submissionId;
@@ -176,103 +177,12 @@ contract EurekaPlatform {
 
 
     event EditorSignUp(address editorAdress);
-
+    
     function signUpEditor(address editor) public {
 
         require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
         isEditor[editor] = true;
         emit EditorSignUp(editor);
-    }
-
-    /**
-     *  Receiver interface for ERC677 transferAndCall
-     * @dev See https://github.com/ethereum/EIPs/issues/677 for specification and
-     *      discussion.
-     */
-    function tokenFallback(address _from, uint256 _amount, bytes _data) public {
-
-        //require(msg.sender == EutekaTokenAddress);
-        require(_amount == submissionFee);
-
-        uint dataIndex = 0;
-
-        bytes32 articleHash = bytesToBytes32(_data, dataIndex);
-        dataIndex += 32;
-
-        bytes32 articleUrl = bytesToBytes32(_data, dataIndex);
-        dataIndex += 32;
-
-        uint16 authorsLength = bytesToUint16(_data, dataIndex);
-        dataIndex += 2;
-        address[] memory authors = new address[](authorsLength);
-        uint16[] memory contributeRatios = new uint16[](authorsLength);
-        for (uint j = 0; j < authorsLength; j++) {
-            authors[j] = bytesToAddress(_data, dataIndex);
-            //address is 20 bytes
-            dataIndex += 20;
-            contributeRatios[j] = bytesToUint16(_data, dataIndex);
-            dataIndex += 2;
-        }
-
-        uint16 linkedArticlesLength = bytesToUint16(_data, dataIndex);
-        dataIndex += 2;
-        bytes32[] memory linkedArticles = new bytes32[](linkedArticlesLength);
-        uint16[] memory linkedArticlesSplitRatios = new uint16[](linkedArticlesLength);
-        for (j = 0; j < linkedArticlesLength; j++) {
-            linkedArticles[j] = bytesToBytes32(_data, dataIndex);
-            dataIndex += 32;
-            linkedArticlesSplitRatios[j] = bytesToUint16(_data, dataIndex);
-            dataIndex += 2;
-        }
-
-        startSubmissionProcess(articleHash, articleUrl, authors, contributeRatios, linkedArticles, linkedArticlesSplitRatios);
-
-    }
-
-    function bytesToBytes32(bytes _data, uint _dataIndex) pure private returns (bytes32 result){
-        for (uint i = 0; i < 32; i++) {
-            result = result | (bytes32(_data[_dataIndex++]) >> (i * 8));
-        }
-    }
-
-    function bytesToUint16(bytes _data, uint _dataIndex) pure public returns (uint16 result){
-        bytes2 b;
-        for (uint i = 0; i < 2; i++) {
-            b = b | (bytes2(_data[_dataIndex++]) >> (i * 8));
-        }
-        result = uint16(b);
-    }
-
-    function bytesToAddress(bytes _data, uint _dataIndex) pure private returns (address result){
-        uint resultInt = bytes20ToUint(_data, _dataIndex);
-        result = address(resultInt);
-    }
-
-    function bytes20ToUint(bytes _data, uint _dataIndex) pure public returns (uint result){
-        bytes20 b;
-        for (uint i = 0; i < 20; i++) {
-            b = b | (bytes20(_data[_dataIndex++]) >> (i * 8));
-        }
-        result = uint(b);
-    }
-
-    function getInt(bytes _data) pure public returns (uint16 result) {
-        uint dataIndex = 0;
-
-        //bytes32 articleHash = bytesToBytes32(_data, dataIndex);
-        dataIndex += 32;
-
-        result = bytesToUint16(_data, dataIndex);
-    }
-
-    function getAddress(bytes _data) pure public returns (address result) {
-        uint dataIndex = 0;
-
-        //bytes32 articleHash = bytesToBytes32(_data, dataIndex);
-        dataIndex += 32;
-
-        uint resultInt = bytes20ToUint(_data, dataIndex);
-        result = address(resultInt);
     }
 
     event SubmissionProcessStart(address submissionOwner);
