@@ -296,9 +296,7 @@ class Login extends Component {
                       />
                     </LoginRow>
 
-                    {this.props.metaMaskStatus ===
-                      MetaMaskStatus.DETECTED_LOGGED_IN &&
-                    this.props.accounts ? (
+                    {this.props.accounts ? (
                       <LoginRow>
                         <AccountBalance
                           accounts={this.props.accounts}
