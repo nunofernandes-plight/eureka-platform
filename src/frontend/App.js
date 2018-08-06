@@ -39,33 +39,18 @@ class App extends Component {
       accounts: null,
       contract
     };
-    
-
-    this.callMetaMaskStatus();
-    this.getAccounts();
   }
 
   async componentDidMount() {
     const network = await getNetwork(this.state.web3);
-    this.setState({network});
-  }
-
-  async callMetaMaskStatus() {
     const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
-    this.setState({metaMaskStatus});
+    const accounts = await getAllAccounts(this.state.web3);
+    this.setState({network, metaMaskStatus, accounts});
     this.interval = setInterval(async () => {
       const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
-      this.setState({metaMaskStatus});
-    }, 1500);
-  }
-
-  async getAccounts() {
-    const accounts = await getAllAccounts(this.state.web3);
-    this.setState({accounts});
-    this.interval = setInterval(async () => {
       const accounts = await getAllAccounts(this.state.web3);
-      this.setState({accounts});
-    }, 2000);
+      this.setState({network, metaMaskStatus, accounts});
+    }, 1750);
   }
 
   componentWillUnmount() {
