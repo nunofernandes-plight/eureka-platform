@@ -64,6 +64,7 @@ const testSubmitArticle = async () => {
     articleHash:
       '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
     url: 'hoihoi',
+    // url: 'https://github.com/eureka-blockchain-solutions/eureka-platform/blob/dev/test/smartcontracts/tokencontract/submitArticle.js',
     authors: [
       '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88',
       '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'
