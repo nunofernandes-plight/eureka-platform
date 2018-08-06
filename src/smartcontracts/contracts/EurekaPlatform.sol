@@ -213,6 +213,7 @@ contract EurekaPlatform {
         submitArticleVersion(submissionId, _articleHash, _articleURL, _authors, _authorContributionRatios, _linkedArticles, _linkedArticlesSplitRatios);
 
         submission.submissionState = SubmissionState.OPEN;
+        submission.stateTimestamp = block.timestamp;
         emit SubmissionProcessStart(submission.submissionId, tx.origin);
     }
 
@@ -235,6 +236,7 @@ contract EurekaPlatform {
 
         articleSubmissions[_submissionId].versions.push(article);
         article.versionState = ArticleVersionState.SUBMITTED;
+        article.stateTimestamp = block.timestamp;
     }
 
     // a journal editor can assign him/herself to an article submission process
@@ -249,6 +251,7 @@ contract EurekaPlatform {
 
         submission.editor = msg.sender;
         submission.submissionState = SubmissionState.EDITOR_ASSIGNED;
+        submission.stateTimestamp = block.timestamp;
     }
 
     function removeEditorFromSubmissionProcess(uint256 _submissionId) public {
@@ -258,6 +261,8 @@ contract EurekaPlatform {
         || msg.sender == submission.editor, "an editor can only be removed by the contract owner or itself.");
 
         submission.editor = address(0);
+        submission.submissionState = SubmissionState.OPEN;
+        submission.stateTimestamp = block.timestamp;
     }
 
     // is it a good idea that the current editor can assign another editor? or should only removing (method below) be possible?
@@ -270,6 +275,7 @@ contract EurekaPlatform {
         || msg.sender == submission.editor, "an editor can only be changed by the contract owner or the current editor.");
 
         submission.editor = _newEditor;
+        submission.stateTimestamp = block.timestamp;
     }
 
     function sanityIsOk(bytes32 _articleHash) public {
@@ -280,6 +286,7 @@ contract EurekaPlatform {
         require(article.versionState == ArticleVersionState.SUBMITTED, "this method can't be called. version state must be SUBMITTED.");
 
         article.versionState = ArticleVersionState.EDITOR_CHECKED;
+        article.stateTimestamp = block.timestamp;
     }
     
     function sanityIsNotOk(bytes32 _articleHash) public {
@@ -290,6 +297,7 @@ contract EurekaPlatform {
         require(article.versionState == ArticleVersionState.SUBMITTED, "this method can't be called. version state must be SUBMITTED.");
 
         article.versionState = ArticleVersionState.DECLINED_SANITY_NOTOK;
+        article.stateTimestamp = block.timestamp;
         // TODO handle difference between review rounds and article versions, maybe not every new version is a review round, according to max Review rounds
         requestNewReviewRound(article.submissionId);
     }
