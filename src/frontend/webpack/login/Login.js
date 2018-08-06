@@ -300,7 +300,11 @@ class Login extends Component {
                       <LoginRow>
                         <AccountBalance
                           accounts={this.props.accounts}
-                          balance={0}
+                          provider={this.props.provider}
+                          selectedAccount={this.props.selectedAccount}
+                          changeAccount={selectedAccount => {
+                            this.props.changeAccount(selectedAccount);
+                          }}
                         />
                       </LoginRow>
                     ) : null}
