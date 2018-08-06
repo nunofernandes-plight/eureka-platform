@@ -38,9 +38,6 @@ const LoginContainer = styled.div`
   border-radius: 5px;
   width: 450px;
   position: relative;
-  opacity: ${props => (props.provider === Web3Providers.META_MASK ? 1 : 0.1)};
-  pointer-events: ${props =>
-    props.provider === Web3Providers.META_MASK ? null : 'none'};
 `;
 
 const Button = styled.button`
@@ -68,17 +65,14 @@ const ButtonRow = styled.div`
 
 const SignUp = styled.p``;
 
-const MetaMaskInstalled = styled.div`
+const AlertDevContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 10px 20px;
-  background: ${__ALERT_WARNING};
-  font-size: 13px;
   max-width: 900px;
   color: white;
   border-radius: 4px;
-  margin-top: 4em;
 `;
 
 const SubTitle = styled.h2`
@@ -105,58 +99,67 @@ class Login extends Component {
 
   async login(props) {
     this.setState({submitted: true});
-    const status = props.metaMaskStatus;
-    if (
-      status === MetaMaskStatus.DETECTED_NO_LOGGED_IN ||
-      status === MetaMaskStatus.NO_DETECTED
-    ) {
-      this.setState({isShowed: true});
-    }
 
     if (!isEmailValid(this.state.email)) {
       this.setState({isEmailValidModal: true});
       return;
     }
 
-    if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
-      // already logged in
-      const signedKey = await this.signPrivateKey();
-      this.setState({signedKey});
+    // DEV ENVIRONMENT
+    if (props.provider === Web3Providers.LOCALHOST) {
+      this.apiCall();
+    } else if (props.provider === Web3Providers.META_MASK) {
+      const status = props.metaMaskStatus;
+      if (
+        status === MetaMaskStatus.DETECTED_NO_LOGGED_IN ||
+        status === MetaMaskStatus.NO_DETECTED
+      ) {
+        this.setState({isShowed: true});
+        return;
+      }
 
-      if (signedKey) {
-        this.setState({loading: true});
-        fetch(`${getDomain()}/api/register`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          mode: 'cors',
-          body: JSON.stringify({
-            email: this.state.email,
-            password: this.state.signedKey,
-            ethereumAddress: this.state.defaultAccount
-          })
+      if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
+        // already logged in
+        this.apiCall();
+      }
+    }
+  }
+
+  async apiCall() {
+    const signedKey = await this.signPrivateKey();
+    this.setState({signedKey});
+
+    if (signedKey) {
+      this.setState({loading: true});
+      fetch(`${getDomain()}/api/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        mode: 'cors',
+        body: JSON.stringify({
+          email: this.state.email,
+          password: this.state.signedKey,
+          ethereumAddress: this.state.defaultAccount
         })
-          .then(response => response.json())
-          .then(response => {
-            if (response.success) {
-              this.props.setAuth(true);
-            } else {
-              this.setState({
-                errorMessage: response.error,
-
-                loading: false
-              });
-            }
-          })
-          .catch(err => {
+      })
+        .then(response => response.json())
+        .then(response => {
+          if (response.success) {
+            this.props.setAuth(true);
+          } else {
             this.setState({
-              errorMessage: err,
-
+              errorMessage: response.error,
               loading: false
             });
+          }
+        })
+        .catch(err => {
+          this.setState({
+            errorMessage: err,
+            loading: false
           });
-      }
+        });
     }
   }
 
@@ -167,21 +170,28 @@ class Login extends Component {
       defaultAccount = accounts[0];
     } else {
       // TODO: handle GANACHE case
+      defaultAccount = accounts[0];
     }
     if (defaultAccount) {
       this.setState({defaultAccount});
     }
-    return this.props.web3.eth.personal
-      .sign(
-        'EUREKA Login Authentication for the email: ' +
-          this.state.email +
-          '  - Please click to the Sign Button below.',
-        defaultAccount
-      )
-      .then(signedKey => {
-        return signedKey;
-      })
-      .catch(err => console.log(err));
+
+    const message =
+      'EUREKA Login Authentication for the email: ' +
+      this.state.email +
+      '  - Please click to the Sign Button below.';
+
+    if (this.props.provider === Web3Providers.LOCALHOST) {
+      // FAKE PASSWORD FOR DEV
+      return '0xb91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a0291c';
+    } else if (this.props.provider === Web3Providers.META_MASK) {
+      return this.props.web3.eth.personal
+        .sign(message, defaultAccount)
+        .then(signedKey => {
+          return signedKey;
+        })
+        .catch(err => console.log(err));
+    }
   }
 
   handleInput(stateKey, e) {
@@ -232,9 +242,7 @@ class Login extends Component {
           show={this.state.errorMessage}
           title={'You got the following error'}
         >
-          {this.state.errorMessage === typeof 'string'
-            ? this.state.errorMessage
-            : 'Ouh. Something went wrong. Please try again or contact us'}
+          {this.state.errorMessage}
         </Modal>
       </div>
     );
@@ -250,18 +258,6 @@ class Login extends Component {
             <div>
               {this.renderModals()}
               <Container>
-                {this.props.provider !== Web3Providers.META_MASK ? (
-                  <MetaMaskInstalled>
-                    <p>
-                      Ouh! We were not able to detect MetaMask in your browser.
-                      Please follow the instruction{' '}
-                      <strong>
-                        <Link to="/metamask"> here </Link>
-                      </strong>{' '}
-                      of how to download it.
-                    </p>
-                  </MetaMaskInstalled>
-                ) : null}
                 <TitleRow>
                   <Title>
                     Welcome to{' '}
@@ -277,6 +273,13 @@ class Login extends Component {
                         able neither to see nor to store your private keys.{' '}
                       </Alert>
                     </AlertContainer>
+                  ) : null}
+                  {this.props.provider === Web3Providers.LOCALHOST ? (
+                    <AlertDevContainer>
+                      <Alert status={'warning'}>
+                        THIS IS A DEV ENVIRONMENT
+                      </Alert>
+                    </AlertDevContainer>
                   ) : null}
                 </TitleRow>
 
@@ -313,9 +316,6 @@ class Login extends Component {
                         <MetaMaskLogo width={20} height={20} />
                       </Button>
                     </ButtonRow>
-                    {/*<Background>*/}
-                    {/*<EurekaLogo width={400} height={400} />*/}
-                    {/*</Background>*/}
                   </LoginContainer>
                 </Row>
                 <Row>

@@ -6,7 +6,7 @@ import Network from './web3/Network.js';
 import NoConnection from './webpack/NoConnection.js';
 import {Detector} from 'react-detect-offline';
 import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
-import {getAllAccounts} from './web3/Helpers.js';
+import {getAllAccounts, getNetwork} from './web3/Helpers.js';
 import abi from './web3/eureka-ABI.json';
 
 class App extends Component {
@@ -23,79 +23,31 @@ class App extends Component {
       web3Instance = new Web3(web3.currentProvider);
       provider = Web3Providers.META_MASK;
       contract = new web3Instance.eth.Contract(abi);
-    } else if (typeof web3 !== 'undefined') {
-      console.info('Ganache detected in this browser');
     } else {
       web3Instance = new Web3('http://localhost:7545');
       contract = new web3Instance.eth.Contract(abi, EUREKA_PROD_ADDRESS);
       provider = Web3Providers.LOCALHOST;
-      // TODO: fallback strategy
     }
 
     this.state = {
       web3: web3Instance,
       provider,
-      network: null,
       metaMaskStatus: null,
       accounts: null,
       contract
     };
-
-    //this.getNetwork();
-    this.callMetaMaskStatus();
-    this.getAccounts();
-
-    console.log(contract);
   }
 
-  async callMetaMaskStatus() {
+  async componentDidMount() {
+    const network = await getNetwork(this.state.web3);
     const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
-    this.setState({metaMaskStatus});
+    const accounts = await getAllAccounts(this.state.web3);
+    this.setState({network, metaMaskStatus, accounts});
     this.interval = setInterval(async () => {
       const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
-      this.setState({metaMaskStatus});
-    }, 1500);
-  }
-
-  async getAccounts() {
-    const accounts = await getAllAccounts(this.state.web3);
-    this.setState({accounts});
-    this.interval = setInterval(async () => {
       const accounts = await getAllAccounts(this.state.web3);
-      this.setState({accounts});
-    }, 2000);
-  }
-
-  async getNetwork() {
-    if (this.state.web3) {
-      window.web3.version.getNetwork((err, netId) => {
-        switch (netId) {
-          case '1':
-            console.log('Mainnet detected');
-            this.setState({network: Network.MAIN});
-            break;
-          case '2':
-            console.log('Morden test network detected.');
-            this.setState({network: Network.MORDEN});
-            break;
-          case '3':
-            console.log('Ropsten test network detected.');
-            this.setState({network: Network.ROPSTEN});
-            break;
-          case '4':
-            console.log('Rinkeby test network detected.');
-            this.setState({network: Network.RINKEBY});
-            break;
-          case '42':
-            console.log('Kovan test network detected.');
-            this.setState({network: Network.KOVAN});
-            break;
-          default:
-            this.setState({network: Network.UNKNOWN});
-            console.log('Unknown network detected.');
-        }
-      });
-    }
+      this.setState({network, metaMaskStatus, accounts});
+    }, 2250);
   }
 
   componentWillUnmount() {

@@ -1,6 +1,7 @@
 import bcryptHasher from '../helpers/bcrypt-hasher.mjs';
 import User from '../schema/user.mjs';
 import Roles from '../schema/roles-enum.mjs';
+import ArticleSubmission from '../schema/article-submission.mjs';
 import {isValidAddress} from '../../helpers/isValidEthereumAddress.mjs';
 import userService from '../db/user-service.mjs';
 
@@ -22,7 +23,7 @@ export default {
 
     let user = await userService.getUserByEthereumAddress(ethereumAddress);
     if (user) {
-      let error = new Error('User with address '+ ethereumAddress + ' already exists.');
+      let error = new Error('User with address ' + ethereumAddress + ' already exists.');
       error.status = 409;
       throw error;
     }
@@ -67,7 +68,7 @@ export default {
    * @returns {Promise<string>}
    */
   isAuth: async (req) => {
-    if(req.user) {
+    if (req.user) {
       return 'success';
     } else {
       let error = new Error('You are not logged in');
@@ -131,9 +132,37 @@ export default {
       },
       (err, user) => {
         if (err) throw err;
-        console.log('User with' + user._id + ' has become an Editor');
+        console.log('User ' + user.ethereumAddress + ' has become an Editor');
         return user;
       }
     );
+  },
+
+  /**
+   * Pushes an submission to the User's submissions. User is given by the etherumaddress
+   * @param ethereumAddress
+   * @param submissionId
+   * @returns {Promise<void>}
+   */
+  addSubmission: async (ethereumAddress, submissionId) => {
+    let submission = await ArticleSubmission.findById(submissionId);
+    if (!submission) {
+      let error = new Error('ArticleSubmission could not be found in DB');
+      error.status = 400;
+      throw error;
+    }
+
+    User.findOneAndUpdate({ethereumAddress: ethereumAddress},
+      {$push: {submissions: submission}},
+      (err, user) => {
+        if (err) {
+          let error = new Error('Could not update user ' + ethereumAddress + ': ' + err);
+          error.status = 400;
+          throw error;
+        }
+        console.log('User ' + user.ethereumAddress + ' got the submission with ID: ' + submission._id);
+        return user;
+      });
   }
+
 };

@@ -1,3 +1,5 @@
+import Network from './Network.js';
+
 export const getAccounts = async web3 => {
   if (web3) {
     return web3.eth
@@ -44,5 +46,36 @@ export const getAllAccounts = async web3 => {
         console.error('An error with getAccounts() occurred: ' + err);
         return null;
       });
+  }
+};
+
+export const getNetwork = async web3 => {
+  if (web3) {
+    const netId = await web3.eth.net.getId().then(netId => {
+      return netId;
+    });
+    switch (netId.toString()) {
+      case '1':
+        console.log('Mainnet detected');
+        return Network.MAIN;
+      case '2':
+        console.log('Morden test network detected.');
+        return Network.MORDEN;
+      case '3':
+        console.log('Ropsten test network detected.');
+        return Network.ROPSTEN;
+      case '4':
+        console.log('Rinkeby test network detected.');
+        return Network.RINKEBY;
+      case '42':
+        console.log('Kovan test network detected.');
+        return Network.KOVAN;
+      case '5777':
+        console.log('GANACHE test network detected.');
+        return Network.GANACHE;
+      default:
+        console.log('Unknown network detected.');
+        return Network.UNKNOWN;
+    }
   }
 };
