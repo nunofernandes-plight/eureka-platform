@@ -99,58 +99,67 @@ class Login extends Component {
 
   async login(props) {
     this.setState({submitted: true});
-    const status = props.metaMaskStatus;
-    if (
-      status === MetaMaskStatus.DETECTED_NO_LOGGED_IN ||
-      status === MetaMaskStatus.NO_DETECTED
-    ) {
-      this.setState({isShowed: true});
-    }
 
     if (!isEmailValid(this.state.email)) {
       this.setState({isEmailValidModal: true});
       return;
     }
 
-    if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
-      // already logged in
-      const signedKey = await this.signPrivateKey();
-      this.setState({signedKey});
+    // DEV ENVIRONMENT
+    if (props.provider === Web3Providers.LOCALHOST) {
+      this.apiCall();
+    } else if (props.provider === Web3Providers.META_MASK) {
+      const status = props.metaMaskStatus;
+      if (
+        status === MetaMaskStatus.DETECTED_NO_LOGGED_IN ||
+        status === MetaMaskStatus.NO_DETECTED
+      ) {
+        this.setState({isShowed: true});
+        return;
+      }
 
-      if (signedKey) {
-        this.setState({loading: true});
-        fetch(`${getDomain()}/api/register`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          mode: 'cors',
-          body: JSON.stringify({
-            email: this.state.email,
-            password: this.state.signedKey,
-            ethereumAddress: this.state.defaultAccount
-          })
+      if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
+        // already logged in
+        this.apiCall();
+      }
+    }
+  }
+
+  async apiCall() {
+    const signedKey = await this.signPrivateKey();
+    this.setState({signedKey});
+
+    if (signedKey) {
+      this.setState({loading: true});
+      fetch(`${getDomain()}/api/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        mode: 'cors',
+        body: JSON.stringify({
+          email: this.state.email,
+          password: this.state.signedKey,
+          ethereumAddress: this.state.defaultAccount
         })
-          .then(response => response.json())
-          .then(response => {
-            if (response.success) {
-              this.props.setAuth(true);
-            } else {
-              this.setState({
-                errorMessage: response.error,
-
-                loading: false
-              });
-            }
-          })
-          .catch(err => {
+      })
+        .then(response => response.json())
+        .then(response => {
+          if (response.success) {
+            this.props.setAuth(true);
+          } else {
             this.setState({
-              errorMessage: err,
-
+              errorMessage: response.error,
               loading: false
             });
+          }
+        })
+        .catch(err => {
+          this.setState({
+            errorMessage: err,
+            loading: false
           });
-      }
+        });
     }
   }
 
@@ -161,21 +170,28 @@ class Login extends Component {
       defaultAccount = accounts[0];
     } else {
       // TODO: handle GANACHE case
+      defaultAccount = accounts[0];
     }
     if (defaultAccount) {
       this.setState({defaultAccount});
     }
-    return this.props.web3.eth.personal
-      .sign(
-        'EUREKA Login Authentication for the email: ' +
-          this.state.email +
-          '  - Please click to the Sign Button below.',
-        defaultAccount
-      )
-      .then(signedKey => {
-        return signedKey;
-      })
-      .catch(err => console.log(err));
+
+    const message =
+      'EUREKA Login Authentication for the email: ' +
+      this.state.email +
+      '  - Please click to the Sign Button below.';
+
+    if (this.props.provider === Web3Providers.LOCALHOST) {
+      // FAKE PASSWORD FOR DEV
+      return '0xb91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a0291c';
+    } else if (this.props.provider === Web3Providers.META_MASK) {
+      return this.props.web3.eth.personal
+        .sign(message, defaultAccount)
+        .then(signedKey => {
+          return signedKey;
+        })
+        .catch(err => console.log(err));
+    }
   }
 
   handleInput(stateKey, e) {
@@ -302,9 +318,6 @@ class Login extends Component {
                         <MetaMaskLogo width={20} height={20} />
                       </Button>
                     </ButtonRow>
-                    {/*<Background>*/}
-                    {/*<EurekaLogo width={400} height={400} />*/}
-                    {/*</Background>*/}
                   </LoginContainer>
                 </Row>
                 <Row>
