@@ -145,7 +145,7 @@ export default {
    * @returns {Promise<void>}
    */
   addSubmission: async (ethereumAddress, submissionId) => {
-    let submission = await ArticleSubmission.findById(submissionId);
+    let submission = await ArticleSubmission.findById((submissionId));
     if (!submission) {
       let error = new Error('ArticleSubmission could not be found in DB');
       error.status = 400;

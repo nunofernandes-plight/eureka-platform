@@ -13,8 +13,8 @@ export const submissionSchema = mongoose.Schema(
       required: true
     },
   },
-  {collection: 'submissions'}
+  {collection: 'articleSubmissions'}
 );
 
-const ArticleSubmission = mongoose.model('ArticleSubmission', submissionSchema, 'submissions');
+const ArticleSubmission = mongoose.model('ArticleSubmission', submissionSchema, 'articleSubmissions');
 export default ArticleSubmission;
