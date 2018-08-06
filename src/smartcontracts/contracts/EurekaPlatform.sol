@@ -342,7 +342,8 @@ contract EurekaPlatform {
     function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        require(article.versionState == ArticleVersionState.SUBMITTED
+            || article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be SUBMITTED or EDITOR_CHECKED.");
 
         require(article.communityReviews.length < maxAmountOfCommunityReviewer, "the max amount of rewarded community reviews is already reached.");
 
