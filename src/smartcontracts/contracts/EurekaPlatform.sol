@@ -78,9 +78,9 @@ contract EurekaPlatform {
 
     // primary key mappings
     uint256 submissionCounter;
-    mapping(uint256 => ArticleSubmission) articleSubmissions;
+    mapping(uint256 => ArticleSubmission) public articleSubmissions;
     mapping(bytes32 => ArticleVersion) public articleVersions;
-    mapping(bytes32 => mapping(address => Review)) reviews;
+    mapping(bytes32 => mapping(address => Review)) public  reviews;
 
     // address mappings
     mapping(address => ArticleVersion[]) articleVersionByAuthor;
@@ -226,7 +226,6 @@ contract EurekaPlatform {
 
         articleSubmissions[_submissionId].versions.push(article);
         article.versionState = ArticleVersionState.SUBMITTED;
-
     }
 
     function submitArticleVersion2(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors, bytes32[] _linkedArticles) private {
