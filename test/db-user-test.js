@@ -1,6 +1,6 @@
 import test from 'ava';
 import userService from '../src/backend/db/user-service.mjs';
-import submissionService from '../src/backend/db/submission-service.mjs';
+import articleSubmissionService from '../src/backend/db/article-submission-service.mjs';
 import authorService from '../src/backend/db/author-service.mjs';
 import reviewService from '../src/backend/db/review-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -25,7 +25,7 @@ test.after(async () => {
 //test(PRETEXT + 'all collections are empty', async t => {
 test(PRETEXT + 'all collections are empty', async t => {
   t.is((await userService.getAllUsers()).length, 0);
-  t.is((await submissionService.getAllSubmissions()).length, 0);
+  t.is((await articleSubmissionService.getAllSubmissions()).length, 0);
   t.is((await authorService.getAllAuthors()).length, 0);
   t.is((await reviewService.getAllReviews()).length, 0);
 });
@@ -69,12 +69,12 @@ test(PRETEXT + 'create submission and add it to a user', async t => {
   t.is((await userService.getAllUsers()).length, 1);
 
   //test submission creation
-  t.is((await submissionService.getAllSubmissions()).length, 0);
-  const submission = await submissionService.createSubmission(0, user.ethereumAddress);
-  t.is((await submissionService.getAllSubmissions()).length, 1);
+  t.is((await articleSubmissionService.getAllSubmissions()).length, 0);
+  const articleSubmission = await articleSubmissionService.createSubmission(0, user.ethereumAddress);
+  t.is((await articleSubmissionService.getAllSubmissions()).length, 1);
 
   //test adding of submission to user
   user = await userService.getUserByEthereumAddress(user.ethereumAddress);
-  t.is(submission.submissionId, user.submissions[0].submissionId);
+  t.is(articleSubmission.submissionId, user.articleSubmissions[0].submissionId);
 });
 // TODO removeRole
