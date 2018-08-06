@@ -6,8 +6,15 @@ import Header from './webpack/Header/Header';
 import Login from './webpack/login/Login';
 import MetaMaskGuide from './webpack/MetaMaskGuide';
 import MainScreen from './dashboard/MainScreen.js';
+import {LoginGuard} from './guards/Guards.js';
 
 class Router extends Component {
+  constructor() {
+    super();
+    this.state = {
+      authed: false
+    };
+  }
   componentDidMount() {}
   render() {
     return (
@@ -26,12 +33,14 @@ class Router extends Component {
                 path="/dashboard"
                 exact
                 render={() => (
-                  <MainScreen
-                    provider={this.props.provider}
-                    web3={this.props.web3}
-                    metaMaskStatus={this.props.metaMaskStatus}
-                    accounts={this.props.accounts}
-                  />
+                  <LoginGuard authed={this.state.authed}>
+                    <MainScreen
+                      provider={this.props.provider}
+                      web3={this.props.web3}
+                      metaMaskStatus={this.props.metaMaskStatus}
+                      accounts={this.props.accounts}
+                    />
+                  </LoginGuard>
                 )}
               />
               <Route
@@ -43,6 +52,10 @@ class Router extends Component {
                     web3={this.props.web3}
                     metaMaskStatus={this.props.metaMaskStatus}
                     accounts={this.props.accounts}
+                    authed={this.state.authed}
+                    setAuth={authed => {
+                      this.setState({authed});
+                    }}
                   />
                 )}
               />

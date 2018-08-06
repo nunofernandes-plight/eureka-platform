@@ -1,12 +1,10 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
 
-const LoginGuard = props => {
-  if (!props.authenticated) {
+export const LoginGuard = props => {
+  if (!props.authed) {
     return <Redirect to="/login" />;
   } else {
     return props.children;
   }
 };
-
-export default LoginGuard;

@@ -141,8 +141,7 @@ class Login extends Component {
           .then(response => response.json())
           .then(response => {
             if (response.success) {
-              this.setState({authenticated: true});
-              console.log(response);
+              this.props.setAuth(true);
             } else {
               this.setState({
                 errorMessage: response.error,
@@ -244,7 +243,7 @@ class Login extends Component {
   render() {
     return (
       <div>
-        {this.state.authenticated ? <Redirect to={'/dashboard'} /> : null}
+        {this.props.authed ? <Redirect to={'/dashboard'} /> : null}
         <div>
           {this.state.loading ? (
             <EurekaSpinner />

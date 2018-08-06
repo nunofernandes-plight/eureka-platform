@@ -7,6 +7,13 @@ const Container = styled.div`
 `;
 
 class MainScreen extends Component {
+  constructor() {
+    super();
+  }
+
+  componentDidMount() {
+
+  }
   render() {
     return (
       <Container>
