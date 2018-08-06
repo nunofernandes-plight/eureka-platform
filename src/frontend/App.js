@@ -23,13 +23,10 @@ class App extends Component {
       web3Instance = new Web3(web3.currentProvider);
       provider = Web3Providers.META_MASK;
       contract = new web3Instance.eth.Contract(abi);
-    } else if (typeof web3 !== 'undefined') {
-      console.info('Ganache detected in this browser');
     } else {
       web3Instance = new Web3('http://localhost:7545');
       contract = new web3Instance.eth.Contract(abi, EUREKA_PROD_ADDRESS);
       provider = Web3Providers.LOCALHOST;
-      // TODO: fallback strategy
     }
 
     this.state = {
@@ -50,7 +47,7 @@ class App extends Component {
       const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
       const accounts = await getAllAccounts(this.state.web3);
       this.setState({network, metaMaskStatus, accounts});
-    }, 1750);
+    }, 2250);
   }
 
   componentWillUnmount() {
