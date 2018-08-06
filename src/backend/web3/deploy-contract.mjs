@@ -53,7 +53,6 @@ export const deployLibraries = async (libraries, accounts) => {
       addressMap.set(byteCodeLink, contract.options.address);
     })
   );
-
   return addressMap;
 };
 
