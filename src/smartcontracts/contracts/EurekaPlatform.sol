@@ -91,6 +91,7 @@ contract EurekaPlatform {
     enum SubmissionState {
         NOT_EXISTING,
         OPEN,
+        EDITOR_ASSIGNED,
         NEW_REVIEW_ROUND_REQUESTED,
         CLOSED
     }
@@ -247,6 +248,7 @@ contract EurekaPlatform {
         require(submission.editor == address(0), "the submission process is already assigned to an editor.");
 
         submission.editor = msg.sender;
+        submission.submissionState = SubmissionState.EDITOR_ASSIGNED;
     }
 
     function removeEditorFromSubmissionProcess(uint256 _submissionId) public {
