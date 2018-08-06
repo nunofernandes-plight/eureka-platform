@@ -12,17 +12,38 @@ router.get('/', function(req, res) {
 
 router.post('/',
   asyncHandler(async (req, res) => {
-    return userService
-      .createUser(req.body.password, req.body.email, req.body.ethereumAddress)
-      .then(newUserInDB => {
-        req.login(newUserInDB, function(err) {
-          if (err) {
-            throw err;
-          } else {
-            res.send(newUserInDB);
-          }
-        });
-      });
+    let newUserInDB = await userService.createUser(req.body.password,
+      req.body.email, req.body.ethereumAddress);
+
+    req.login(newUserInDB, function(err) {
+      if (err) {
+        let error = new Error('Login did not work!');
+        error.status = 401;
+        throw error;
+      } else {
+        return newUserInDB;
+        // res.status = 201; TODO fix problem with setting headers after res has ben sent
+        // res.json({
+        //   data: newUserInDB
+        // });
+      }
+    });
+    // return userService
+    //   .createUser(req.body.password, req.body.email, req.body.ethereumAddress)
+    //   .then(newUserInDB => {
+    //     req.login(newUserInDB, function(err) {
+    //       if (err) {
+    //         let error = new Error('Login did not work!');
+    //         error.status = 401;
+    //         throw error;
+    //       } else {
+    //         res.json({
+    //           status: 201,
+    //           data: newUserInDB
+    //         });
+    //       }
+    //     });
+    //   });
   })
 );
 
