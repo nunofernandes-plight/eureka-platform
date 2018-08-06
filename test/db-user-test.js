@@ -33,7 +33,7 @@ test(PRETEXT + 'all collections are empty', async t => {
 test(PRETEXT + 'create a User', async t => {
   t.is((await userService.getAllUsers()).length, 0);
 
-  const user = await userService.createUser('test','test@test@test.ch',
+  const user = await userService.createUser('test', 'test@test@test.ch',
     '0x123f681646d4a755815f9cb19e1acc8565a0c2ac');
 
   t.is((await userService.getAllUsers()).length, 1);
@@ -60,4 +60,21 @@ test(PRETEXT + 'add roles to a user', async t => {
   t.is(dbUser.roles.length, 1);
 });
 
+//add submission to a user
+test(PRETEXT + 'create submission and add it to a user', async t => {
+  //test user creation
+  t.is((await userService.getAllUsers()).length, 0);
+  let user = await userService.createUser('test', 'test@test@test.ch',
+    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac');
+  t.is((await userService.getAllUsers()).length, 1);
+
+  //test submission creation
+  t.is((await submissionService.getAllSubmissions()).length, 0);
+  const submission = await submissionService.createSubmission(0, user.ethereumAddress);
+  t.is((await submissionService.getAllSubmissions()).length, 1);
+
+  //test adding of submission to user
+  user = await userService.getUserByEthereumAddress(user.ethereumAddress);
+  t.is(submission.submissionId, user.submissions[0].submissionId);
+});
 // TODO removeRole

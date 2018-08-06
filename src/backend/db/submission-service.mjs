@@ -9,11 +9,7 @@ export default {
     const submission = new ArticleSubmission(
       {_id: submissionId, ownerAddress: ownerAddress});
 
-    await submission.save( (err) => {
-      if (err) return console.error(err);
-      console.log('Created new ArticleSubmission on DB done');
-    });
-
+    await submission.save();
     await userService.addSubmission(ownerAddress, submissionId);
     return submissionId;
   }
