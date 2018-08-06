@@ -10,11 +10,12 @@ import {cleanDB} from './helpers';
 const PRETEXT = 'DB-USER: ';
 
 test.before(async () => {
+  await cleanDB();
   app.setupApp();
   app.listenTo(process.env.PORT || 8080);
 });
 
-test.beforeEach(async () => {
+test.afterEach(async () => {
   await cleanDB();
 });
 
