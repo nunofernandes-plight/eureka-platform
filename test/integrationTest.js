@@ -10,7 +10,7 @@ import app from '../src/backend/api/api.mjs';
 import deployContracts from '../src/backend/web3/index.mjs';
 import getAccounts from '../src/backend/web3/get-accounts.mjs';
 import User from '../src/backend/schema/user.mjs';
-import Submission from '../src/backend/schema/submission.mjs';
+import ArticleSubmission from '../src/backend/schema/article-submission.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import getArticleHex from '../src/backend/web3/get-articleHex.mjs';
 import {getLinkedArticles} from '../src/backend/web3/web3-platform-contract-methods.mjs';
@@ -60,7 +60,7 @@ async function setupContract  (eurekaContract, platformContract){
 
 async function cleanDB() {
   await User.remove({});
-  await Submission.remove({});
+  await ArticleSubmission.remove({});
 }
 
 test( PRETEXT + 'Event - DB -> Sign up Editor', async t => {

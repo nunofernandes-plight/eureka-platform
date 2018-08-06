@@ -35,7 +35,7 @@ const userSchema = mongoose.Schema(
     ],
     submissions: [
       {
-        type: Schema.Types.ObjectId, ref: 'Submission'
+        type: Schema.Types.ObjectId, ref: 'ArticleSubmission'
       }
     ],
   },
