@@ -1,7 +1,7 @@
 import bcryptHasher from '../helpers/bcrypt-hasher.mjs';
 import User from '../schema/user.mjs';
 import Roles from '../schema/roles-enum.mjs';
-import Submission from '../schema/submission';
+import ArticleSubmission from '../schema/article-submission';
 import {isValidAddress} from '../../helpers/isValidEthereumAddress.mjs';
 import userService from '../db/user-service.mjs';
 
@@ -145,9 +145,9 @@ export default {
    * @returns {Promise<void>}
    */
   addSubmission: async (ethereumAddress, submissionId) => {
-    let submission = await Submission.findOne(submissionId);
+    let submission = await ArticleSubmission.findOne(submissionId);
     if (!submission) {
-      let error = new Error('Submission could not be found in DB');
+      let error = new Error('ArticleSubmission could not be found in DB');
       error.status = 400;
       throw error;
     }
