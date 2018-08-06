@@ -16,11 +16,6 @@ let url =
   '/' +
   process.env.DB_NAME;
 
-// if(isProduction()) {
-//   url = url.concat('');
-// }
-console.log(process.env.NODE_ENV);
-console.log(url);
 mongoose.connect(url);
 mongoose.Promise = global.Promise;
 
