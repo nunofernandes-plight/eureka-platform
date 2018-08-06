@@ -41,7 +41,7 @@ class App extends Component {
       contract
     };
 
-    //this.getNetwork();
+    this.getNetwork();
     this.callMetaMaskStatus();
     this.getAccounts();
 
@@ -68,33 +68,40 @@ class App extends Component {
 
   async getNetwork() {
     if (this.state.web3) {
-      window.web3.version.getNetwork((err, netId) => {
-        switch (netId) {
-          case '1':
-            console.log('Mainnet detected');
-            this.setState({network: Network.MAIN});
-            break;
-          case '2':
-            console.log('Morden test network detected.');
-            this.setState({network: Network.MORDEN});
-            break;
-          case '3':
-            console.log('Ropsten test network detected.');
-            this.setState({network: Network.ROPSTEN});
-            break;
-          case '4':
-            console.log('Rinkeby test network detected.');
-            this.setState({network: Network.RINKEBY});
-            break;
-          case '42':
-            console.log('Kovan test network detected.');
-            this.setState({network: Network.KOVAN});
-            break;
-          default:
-            this.setState({network: Network.UNKNOWN});
-            console.log('Unknown network detected.');
-        }
+      const netId = await this.state.web3.eth.net.getId().then(netId => {
+        return netId;
       });
+
+      console.log(netId);
+      switch (netId.toString()) {
+        case '1':
+          console.log('Mainnet detected');
+          this.setState({network: Network.MAIN});
+          break;
+        case '2':
+          console.log('Morden test network detected.');
+          this.setState({network: Network.MORDEN});
+          break;
+        case '3':
+          console.log('Ropsten test network detected.');
+          this.setState({network: Network.ROPSTEN});
+          break;
+        case '4':
+          console.log('Rinkeby test network detected.');
+          this.setState({network: Network.RINKEBY});
+          break;
+        case '42':
+          console.log('Kovan test network detected.');
+          this.setState({network: Network.KOVAN});
+          break;
+        case '5777':
+          console.log('GANACHE test network detected.');
+          this.setState({network: Network.GANACHE});
+          break;
+        default:
+          this.setState({network: Network.UNKNOWN});
+          console.log('Unknown network detected.');
+      }
     }
   }
 

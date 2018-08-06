@@ -4,6 +4,7 @@ const Network = {
   ROPSTEN: 'ROPSTEN',
   RINKEBY: 'RINKEBY',
   KOVAN: 'KOVAN',
+  GANACHE: 'GANACHE',
   UNKNOWN: 'UNKNOWN'
 };
 
