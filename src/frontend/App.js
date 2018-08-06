@@ -7,32 +7,45 @@ import NoConnection from './webpack/NoConnection.js';
 import {Detector} from 'react-detect-offline';
 import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
 import {getAllAccounts} from './web3/Helpers.js';
+import abi from './web3/eureka-ABI.json';
 
 class App extends Component {
   constructor() {
     super();
+    const EUREKA_PROD_ADDRESS = '';
     let web3 = window.web3;
     let web3Instance = null;
+    let contract = null;
     let provider;
     if (typeof web3 !== 'undefined' && web3.currentProvider.isMetaMask) {
       // MetaMask as main provider
       console.info('MetaMask detected in this browser');
       web3Instance = new Web3(web3.currentProvider);
       provider = Web3Providers.META_MASK;
+      contract = new web3Instance.eth.Contract(abi);
+    } else if (typeof web3 !== 'undefined') {
+      console.info('Ganache detected in this browser');
     } else {
+      web3Instance = new Web3('http://localhost:7545');
+      contract = new web3Instance.eth.Contract(abi, EUREKA_PROD_ADDRESS);
+      provider = Web3Providers.LOCALHOST;
       // TODO: fallback strategy
     }
+
     this.state = {
       web3: web3Instance,
       provider,
       network: null,
       metaMaskStatus: null,
-      accounts: null
+      accounts: null,
+      contract
     };
 
-    this.getNetwork();
+    //this.getNetwork();
     this.callMetaMaskStatus();
     this.getAccounts();
+
+    console.log(contract);
   }
 
   async callMetaMaskStatus() {
