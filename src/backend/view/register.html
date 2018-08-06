@@ -11,39 +11,19 @@
 </head>
 <body>
 <div style="margin:100px;">
-    <!--    <nav class="navbar navbar-inverse navbar-static-top">
-            <div class="container">
-                <a class="navbar-brand" href="/">Express HTML</a>
-                <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="/">Home</a>
-                    </li>
-                    <li>
-                        <a href="/about">About</a>
-                    </li>
-                    <li>
-                        <a href="/sitemap">Sitemap</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>-->
     <div class="jumbotron"  style="padding:40px;">
         <h1>EUREKA Backend App - Registration</h1>
         <p>Test out the registration of a user in the backend</p>
         <form method="POST" action="/api/register" name="register-form">
-            <label for="username">Username:</label>
+            <label for="email">Email:</label>
             <br/>
-            <input id="username" type="text" placeholder="username" name="username"/>
+            <input id="email" type="email" placeholder="email address" name="email"/>
             <br/><br/>
             <label for="password">Password:</label>
             <br/>
             <input id="password" type="text" placeholder="password" name="password"/>
             <br/><br/>
-            <label for="email">Email:</label>
-            <br/>
-            <input id="email" type="email" placeholder="email address" name="email"/>
-            <br/><br/>
-            <label for="email">Ethereum adress:</label>
+            <label for="ethereumAddress">Ethereum adress:</label>
             <br/>
             <input id="ethereumAddress" type="text" placeholder="ethereum address" name="ethereumAddress"/>
             <br/><br/>

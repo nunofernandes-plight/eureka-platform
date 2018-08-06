@@ -5,8 +5,8 @@ import {
   __ALERT_SUCCESS,
   __GRAY_200,
   __THIRD
-} from '../helpers/colors.js';
-import Icon from '../webpack/icons/Icon.js';
+} from '../../helpers/colors.js';
+import Icon from '../icons/Icon.js';
 
 const getColor = (props, placeholder) => {
   if (props.status === 'valid') {

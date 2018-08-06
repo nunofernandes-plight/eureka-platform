@@ -40,11 +40,11 @@ passport.use(
  *  Configure Passport authenticated session persistence.
  */
 passport.serializeUser(function(user, done) {
-  done(null, user._id);
+  done(null, user.ethereumAddress);
 });
 
-passport.deserializeUser(function(user_id, done) {
-  done(null, user_id);
+passport.deserializeUser(function(user, done) {
+  done(null, user);
 });
 
 export default passport;

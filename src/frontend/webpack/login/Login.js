@@ -7,14 +7,13 @@ import MetaMaskLogo from '../icons/MetaMaskLogo.js';
 import EurekaLogo from '../icons/EurekaLogo.js';
 import Web3Providers from '../../web3/Web3Providers.js';
 import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
-import Modal from '../../design-components/Modal.js';
+import Modal from '../design-components/Modal.js';
 import AccountBalance from '../../web3/AccountBalance.js';
 import {isEmailValid} from '../../../helpers/emailValidator.js';
-import {InputField} from '../../design-components/Inputs.js';
-import Alert from '../../design-components/Alerts.js';
+import {InputField} from '../design-components/Inputs.js';
+import Alert from '../design-components/Alerts.js';
 import EurekaSpinner from '../../webpack/spinners/EurekaSpinner.js';
 import {getDomain} from '../../../helpers/getDomain.js';
-import {Label} from '../../design-components/Labels.js';
 
 const Container = styled.div`
   width: 100%;
@@ -49,7 +48,7 @@ const Button = styled.button`
   align-self: center;
 `;
 
-const AlertContainer = styled.p`
+const AlertContainer = styled.div`
   word-break: break-word;
   width: 700px;
   margin-bottom: 40px;
@@ -141,8 +140,7 @@ class Login extends Component {
           .then(response => response.json())
           .then(response => {
             if (response.success) {
-              this.setState({authenticated: true});
-              console.log(response);
+              this.props.setAuth(true);
             } else {
               this.setState({
                 errorMessage: response.error,
@@ -244,7 +242,7 @@ class Login extends Component {
   render() {
     return (
       <div>
-        {this.state.authenticated ? <Redirect to={'/dashboard'} /> : null}
+        {this.props.authed ? <Redirect to={'/dashboard'} /> : null}
         <div>
           {this.state.loading ? (
             <EurekaSpinner />

@@ -11,6 +11,13 @@ router.get(
   })
 );
 
+router.get(
+  '/auth',
+  asyncHandler(async () => {
+    return userService.isAuth();
+  })
+);
+
 router.post(
   '/addRole',
   asyncHandler(async req => {
