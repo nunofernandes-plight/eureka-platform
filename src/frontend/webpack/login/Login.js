@@ -49,7 +49,7 @@ const Button = styled.button`
   align-self: center;
 `;
 
-const AlertContainer = styled.p`
+const AlertContainer = styled.div`
   word-break: break-word;
   width: 700px;
   margin-bottom: 40px;
