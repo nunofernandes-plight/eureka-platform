@@ -313,6 +313,7 @@ contract EurekaPlatform {
         require(article.editorApprovedReviews.length < maxAmountOfEditorApprovedReviewer, "the max amount of editor approved reviews is already reached.");
 
         Review storage review = reviews[_articleHash][msg.sender];
+        require(review.reviewState == ReviewState.NOT_EXISTING, "the review already exists.");
         review.reviewState = ReviewState.INVITATION_ACCEPTED;
         review.reviewer = msg.sender;
 
@@ -332,9 +333,8 @@ contract EurekaPlatform {
         if (review.reviewState != ReviewState.INVITATION_ACCEPTED) {
             require(article.editorApprovedReviews.length < maxAmountOfEditorApprovedReviewer, "the max amount of editor approved reviews is already reached.");
             article.editorApprovedReviews.push(review);
+            review.reviewer = msg.sender;
         }
-
-        review.reviewer = msg.sender;
 
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
