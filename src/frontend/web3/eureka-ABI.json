@@ -1,0 +1,302 @@
+[
+  {
+    "constant": true,
+    "inputs": [{"name": "hash", "type": "bytes32"}],
+    "name": "getAuthors",
+    "outputs": [{"name": "authors", "type": "address[]"}],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x0347efd2"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"name": "_submissionId", "type": "uint256"},
+      {"name": "_articleHash", "type": "bytes32"},
+      {"name": "_articleURL", "type": "bytes32"},
+      {"name": "_authors", "type": "address[]"},
+      {"name": "_authorContributionRatios", "type": "uint16[]"},
+      {"name": "_linkedArticles", "type": "bytes32[]"},
+      {"name": "_linkedArticlesSplitRatios", "type": "uint16[]"}
+    ],
+    "name": "openNewReviewRound",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x0e98e3dc"
+  },
+  {
+    "constant": true,
+    "inputs": [{"name": "hash", "type": "bytes32"}],
+    "name": "getLinkedArticles",
+    "outputs": [{"name": "linkedArticles", "type": "bytes32[]"}],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x1a1d4d67"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"name": "_articleHash", "type": "bytes32"},
+      {"name": "_articleURL", "type": "bytes32"},
+      {"name": "_authors", "type": "address[]"},
+      {"name": "_authorContributionRatios", "type": "uint16[]"},
+      {"name": "_linkedArticles", "type": "bytes32[]"},
+      {"name": "_linkedArticlesSplitRatios", "type": "uint16[]"}
+    ],
+    "name": "startSubmissionProcess",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x20159e37"
+  },
+  {
+    "constant": false,
+    "inputs": [{"name": "_articleHash", "type": "bytes32"}],
+    "name": "acceptReviewInvitation",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x488edaf5"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"name": "_articleHash", "type": "bytes32"},
+      {"name": "_reviewerAddress", "type": "address"}
+    ],
+    "name": "acceptReview",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x48e102b1"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"name": "_articleHash", "type": "bytes32"},
+      {"name": "_reviewerAddress", "type": "address"}
+    ],
+    "name": "declineReview",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x4f28098d"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"name": "_articleHash", "type": "bytes32"},
+      {"name": "_isSanityOk", "type": "bool"},
+      {"name": "_allowedEditorApprovedReviewers", "type": "address[]"}
+    ],
+    "name": "editorCheckAndReviewerInvitation",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x5d108f15"
+  },
+  {
+    "constant": false,
+    "inputs": [{"name": "_submissionId", "type": "uint256"}],
+    "name": "declineNewReviewRound",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x67a28d0c"
+  },
+  {
+    "constant": false,
+    "inputs": [{"name": "_submissionId", "type": "uint256"}],
+    "name": "removeEditorFromSubmissionProcess",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x7756f3ca"
+  },
+  {
+    "constant": false,
+    "inputs": [{"name": "editor", "type": "address"}],
+    "name": "signUpEditor",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x8b416a04"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"name": "_articleHash", "type": "bytes32"},
+      {"name": "_isSanityOk", "type": "bool"}
+    ],
+    "name": "firstEditorCheck",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x99120e01"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"name": "_articleHash", "type": "bytes32"},
+      {"name": "_reviewHash", "type": "bytes32"},
+      {"name": "_score1", "type": "uint8"},
+      {"name": "_score2", "type": "uint8"}
+    ],
+    "name": "addEditorApprovedReview",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x9fa50e45"
+  },
+  {
+    "constant": false,
+    "inputs": [{"name": "_articleHash", "type": "bytes32"}],
+    "name": "declineArticleVersion",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xb0dbb693"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"name": "_articleHash", "type": "bytes32"},
+      {"name": "_reviewHash", "type": "bytes32"},
+      {"name": "_score1", "type": "uint8"},
+      {"name": "_score2", "type": "uint8"}
+    ],
+    "name": "addCommunityReview",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xb4a1d563"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"name": "_submissionId", "type": "uint256"},
+      {"name": "_newEditor", "type": "address"}
+    ],
+    "name": "changeEditorFromSubmissionProcess",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xb5af63d0"
+  },
+  {
+    "constant": true,
+    "inputs": [{"name": "", "type": "bytes32"}],
+    "name": "articleVersions",
+    "outputs": [
+      {"name": "submissionId", "type": "uint256"},
+      {"name": "articleHash", "type": "bytes32"},
+      {"name": "publishedTimestamp", "type": "uint256"},
+      {"name": "articleUrl", "type": "bytes32"},
+      {"name": "versionState", "type": "uint8"}
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xb79bf24a"
+  },
+  {
+    "constant": false,
+    "inputs": [{"name": "_articleHash", "type": "bytes32"}],
+    "name": "acceptArticleVersion",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xbe447e23"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"name": "_articleHash", "type": "bytes32"},
+      {"name": "_reviewHash", "type": "bytes32"},
+      {"name": "_score1", "type": "uint8"},
+      {"name": "_score2", "type": "uint8"}
+    ],
+    "name": "correctReview",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xc576a4a9"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "submissionFee",
+    "outputs": [{"name": "", "type": "uint256"}],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xe8888942"
+  },
+  {
+    "constant": false,
+    "inputs": [{"name": "_submissionId", "type": "uint256"}],
+    "name": "assignForSubmissionProcess",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xf45e3831"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"name": "_articleHash", "type": "bytes32"},
+      {"name": "_allowedEditorApprovedReviewers", "type": "address[]"}
+    ],
+    "name": "addAllowedReviewers",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xfda5066c"
+  },
+  {
+    "inputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor",
+    "signature": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{"indexed": false, "name": "editorAdress", "type": "address"}],
+    "name": "EditorSignUp",
+    "type": "event",
+    "signature":
+      "0x76820830ac2778c56d643bedd32da0e5e80aba7f1766b74b17817d2e85f10b5c"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": false, "name": "submissionOwner", "type": "address"}
+    ],
+    "name": "SubmissionProcessStart",
+    "type": "event",
+    "signature":
+      "0xbf4b1eae994055baa48e20d4f667102978f9d4b9e7c4a33d750a737c9f536aba"
+  }
+]

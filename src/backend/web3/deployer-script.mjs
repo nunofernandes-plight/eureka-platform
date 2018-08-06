@@ -8,14 +8,14 @@ const deploy = async () => {
   const [eurekaTokenContract, eurekaPlatformContract] = await deployContracts();
   const abi = eurekaPlatformContract._jsonInterface;
 
-  const fileName = 'eureka-ABI';
+  const fileName = 'src/frontend/web3/eureka-ABI.json';
   fs.writeFileSync(fileName, JSON.stringify(abi), function(err) {
     if (err) {
       return console.log(err);
     }
   });
 
-  console.log('ABI has been written in ' + fileName + ' in root folder.');
+  console.log('ABI has been written in ' + fileName);
   process.exit(0);
 };
 
