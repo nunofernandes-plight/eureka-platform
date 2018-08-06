@@ -60,6 +60,21 @@ export default {
   },
 
   /**
+   * to check if user is logged in
+   * @param req
+   * @returns {Promise<string>}
+   */
+  isAuth: async (req) => {
+    if(req.user) {
+      return 'success';
+    } else {
+      let error = new Error('You are not logged in');
+      error.status = 401;
+      throw error;
+    }
+  },
+
+  /**
    * Get one user by ethereumAddress
    * @param ethereumAddress
    * @returns {Promise<Query|void|*|Promise<Object>|Promise<TSchema | null>|Promise>}
