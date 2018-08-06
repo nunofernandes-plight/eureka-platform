@@ -262,14 +262,6 @@ contract EurekaPlatform {
         submission.editor = _newEditor;
     }
 
-    function editorCheckAndReviewerInvitation(bytes32 _articleHash, bool _isSanityOk, address[] _allowedEditorApprovedReviewers) public {
-
-        firstEditorCheck(_articleHash, _isSanityOk);
-
-        if (_isSanityOk)
-            addAllowedReviewers(_articleHash, _allowedEditorApprovedReviewers);
-    }
-
     function sanityIsOk(bytes32 _articleHash) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
