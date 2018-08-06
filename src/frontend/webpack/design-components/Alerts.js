@@ -108,6 +108,7 @@ class Alert extends Component {
             width={18}
             height={18}
             top={2}
+            left={10}
           />
         </Container>
       </div>

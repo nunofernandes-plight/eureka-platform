@@ -38,9 +38,6 @@ const LoginContainer = styled.div`
   border-radius: 5px;
   width: 450px;
   position: relative;
-  opacity: ${props => (props.provider === Web3Providers.META_MASK ? 1 : 0.1)};
-  pointer-events: ${props =>
-    props.provider === Web3Providers.META_MASK ? null : 'none'};
 `;
 
 const Button = styled.button`
@@ -68,17 +65,14 @@ const ButtonRow = styled.div`
 
 const SignUp = styled.p``;
 
-const MetaMaskInstalled = styled.div`
+const AlertDevContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 10px 20px;
-  background: ${__ALERT_WARNING};
-  font-size: 13px;
   max-width: 900px;
   color: white;
   border-radius: 4px;
-  margin-top: 4em;
 `;
 
 const SubTitle = styled.h2`
@@ -250,18 +244,6 @@ class Login extends Component {
             <div>
               {this.renderModals()}
               <Container>
-                {this.props.provider !== Web3Providers.META_MASK ? (
-                  <MetaMaskInstalled>
-                    <p>
-                      Ouh! We were not able to detect MetaMask in your browser.
-                      Please follow the instruction{' '}
-                      <strong>
-                        <Link to="/metamask"> here </Link>
-                      </strong>{' '}
-                      of how to download it.
-                    </p>
-                  </MetaMaskInstalled>
-                ) : null}
                 <TitleRow>
                   <Title>
                     Welcome to{' '}
@@ -277,6 +259,13 @@ class Login extends Component {
                         able neither to see nor to store your private keys.{' '}
                       </Alert>
                     </AlertContainer>
+                  ) : null}
+                  {this.props.provider === Web3Providers.LOCALHOST ? (
+                    <AlertDevContainer>
+                      <Alert status={'warning'}>
+                        THIS IS A DEV ENVIRONMENT
+                      </Alert>
+                    </AlertDevContainer>
                   ) : null}
                 </TitleRow>
 
