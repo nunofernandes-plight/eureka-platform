@@ -163,6 +163,9 @@ contract EurekaPlatform {
 
         bytes32 reviewHash;
         uint256 reviewedTimestamp;
+        
+        bool needForCorrection;
+        
         uint8 score1;
         uint8 score2;
     }
@@ -312,7 +315,7 @@ contract EurekaPlatform {
         article.editorApprovedReviews.push(review);
     }
 
-    function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
+    function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, bool _needForCorrection, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
@@ -330,13 +333,14 @@ contract EurekaPlatform {
 
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
+        review.needForCorrection = _needForCorrection;
         review.score1 = _score1;
         review.score2 = _score2;
 
         review.reviewState = ReviewState.HANDED_IN;
     }
 
-    function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
+    function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, bool _needForCorrection, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.SUBMITTED
@@ -351,6 +355,7 @@ contract EurekaPlatform {
 
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
+        review.needForCorrection = _needForCorrection;
         review.score1 = _score1;
         review.score2 = _score2;
 
@@ -358,7 +363,7 @@ contract EurekaPlatform {
         review.reviewState = ReviewState.HANDED_IN;
     }
 
-    function correctReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, uint8 _score2) public {
+    function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _needForCorrection, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
@@ -368,6 +373,7 @@ contract EurekaPlatform {
 
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
+        review.needForCorrection = _needForCorrection;
         review.score1 = _score1;
         review.score2 = _score2;
 
