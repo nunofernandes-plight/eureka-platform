@@ -6,7 +6,7 @@ export default {
     //sign in for events
     EurekaPlatformContract.events.EditorSignUp(undefined, (error, event) => {
       if (error) throw error;
-      userService.makeEditor(event.returnValues.editorAdress);
+      userService.makeEditor(event.returnValues.editorAddress);
     });
 
     EurekaPlatformContract.events.SubmissionProcessStart(

@@ -179,7 +179,7 @@ contract EurekaPlatform {
     }
 
 
-    event EditorSignUp(address editorAdress);
+    event EditorSignUp(address editorAddress);
     
     function signUpEditor(address editor) public {
 
