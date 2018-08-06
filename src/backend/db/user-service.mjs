@@ -1,7 +1,7 @@
 import bcryptHasher from '../helpers/bcrypt-hasher.mjs';
 import User from '../schema/user.mjs';
 import Roles from '../schema/roles-enum.mjs';
-import ArticleSubmission from '../schema/article-submission';
+import ArticleSubmission from '../schema/article-submission.mjs';
 import {isValidAddress} from '../../helpers/isValidEthereumAddress.mjs';
 import userService from '../db/user-service.mjs';
 

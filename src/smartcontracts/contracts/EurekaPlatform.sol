@@ -185,7 +185,7 @@ contract EurekaPlatform {
         emit EditorSignUp(editor);
     }
 
-    event SubmissionProcessStart(address submissionOwner);
+    event SubmissionProcessStart(uint256 submissionId, address submissionOwner);
 
     function startSubmissionProcess(
 //        uint256 _value,
@@ -204,7 +204,7 @@ contract EurekaPlatform {
         submitArticleVersion(submissionId, _articleHash, _articleURL, _authors, _authorContributionRatios, _linkedArticles, _linkedArticlesSplitRatios);
 
         submission.submissionState = SubmissionState.OPEN;
-        emit SubmissionProcessStart(tx.origin);
+        emit SubmissionProcessStart(submission.submissionId, tx.origin);
     }
 
     function submitArticleVersion(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL,

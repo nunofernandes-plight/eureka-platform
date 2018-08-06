@@ -6,8 +6,7 @@ import mongoose from 'mongoose';
 const submissionSchema = mongoose.Schema(
   {
     _id: {
-      type: Number,
-      unique: true
+      type: String
     },
     ownerAddress: {
       type: String,
