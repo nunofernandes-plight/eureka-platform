@@ -7,8 +7,11 @@ export const getMetaMaskStatus = async web3 => {
       .then(accounts => {
         if (accounts.length === 0) {
           return MetaMaskStatus.DETECTED_NO_LOGGED_IN;
-        } else {
+        } else if (accounts.length === 1) {
           return MetaMaskStatus.DETECTED_LOGGED_IN;
+        } else if (accounts.length > 1) {
+          // GANACHE
+          return MetaMaskStatus.NO_DETECTED;
         }
       })
       .catch(err => {
