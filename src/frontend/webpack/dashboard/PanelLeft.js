@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {__GRAY_200} from '../helpers/colors.js';
-import EurekaLogo from '../webpack/icons/EurekaLogo.js';
+import {__GRAY_200} from '../../helpers/colors.js';
+import EurekaLogo from '../icons/EurekaLogo.js';
 import {NavItem, Separator} from './NavItem.js';
 import Account from './Account.js';
 

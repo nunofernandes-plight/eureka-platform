@@ -1,13 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import Icon from '../webpack/icons/Icon.js';
+import Icon from '../icons/Icon.js';
 import {
   __GRAY_200,
   __GRAY_300,
   __GRAY_500,
-  __GRAY_800,
   __THIRD
-} from '../helpers/colors.js';
+} from '../../helpers/colors.js';
 
 const Nav = styled.div`
   &:hover {
@@ -47,7 +46,7 @@ const SeparatorText = styled.div`
 const SeparatorContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 14px; 
+  margin-left: 14px;
   margin-right: 14px;
   margin-top: 30px;
   margin-bottom: 5px;
