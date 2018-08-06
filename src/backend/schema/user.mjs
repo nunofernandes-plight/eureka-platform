@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
-
 import Roles from './roles-enum.mjs';
+
+const Schema = mongoose.Schema;
 
 /**
  * User of the eureka platform
@@ -31,7 +32,12 @@ const userSchema = mongoose.Schema(
         type: String,
         enum: Object.values(Roles)
       }
-    ]
+    ],
+    submissions: [
+      {
+        type: Schema.Types.ObjectId, ref: 'Submission'
+      }
+    ],
   },
   {collection: 'users'}
 );
