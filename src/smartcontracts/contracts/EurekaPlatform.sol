@@ -98,6 +98,7 @@ contract EurekaPlatform {
     struct ArticleSubmission {
         uint256 submissionId;
         SubmissionState submissionState;
+        uint256 stateTimestamp;
         address submissionOwner;
         ArticleVersion[] versions;
         address editor;
@@ -124,6 +125,7 @@ contract EurekaPlatform {
         bytes32 articleUrl;
 
         ArticleVersionState versionState;
+        uint256 stateTimestamp;
 
         address[] authors;
         // the submission owner can weight the contributions of the different authors [0;10000]
@@ -160,6 +162,9 @@ contract EurekaPlatform {
         address reviewer;
 
         ReviewState reviewState;
+
+        // with each state change the stateTimestamp field is updated
+        uint256 stateTimestamp;
 
         bytes32 reviewHash;
         uint256 reviewedTimestamp;
