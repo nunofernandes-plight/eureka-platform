@@ -501,7 +501,7 @@ contract Eureka is ERC20, ERC865Plus677ish {
             require(_to
                 .call(
                     _methodName,
-                    _value,
+//                    _value,
                     _args));
         }
         return true;
