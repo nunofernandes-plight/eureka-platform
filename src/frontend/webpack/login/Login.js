@@ -14,7 +14,6 @@ import {InputField} from '../../design-components/Inputs.js';
 import Alert from '../../design-components/Alerts.js';
 import EurekaSpinner from '../../webpack/spinners/EurekaSpinner.js';
 import {getDomain} from '../../../helpers/getDomain.js';
-import {Label} from '../../design-components/Labels.js';
 
 const Container = styled.div`
   width: 100%;

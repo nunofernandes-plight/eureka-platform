@@ -7,17 +7,11 @@ const Container = styled.div`
 `;
 
 class MainScreen extends Component {
-  constructor() {
-    super();
-  }
-
-  componentDidMount() {
-
-  }
+  componentDidMount() {}
   render() {
     return (
       <Container>
-        <PanelLeft/>
+        <PanelLeft />
       </Container>
     );
   }

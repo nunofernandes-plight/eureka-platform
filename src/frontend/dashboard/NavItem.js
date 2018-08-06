@@ -5,7 +5,6 @@ import {
   __GRAY_200,
   __GRAY_300,
   __GRAY_500,
-  __GRAY_800,
   __THIRD
 } from '../helpers/colors.js';
 
@@ -47,7 +46,7 @@ const SeparatorText = styled.div`
 const SeparatorContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 14px; 
+  margin-left: 14px;
   margin-right: 14px;
   margin-top: 30px;
   margin-bottom: 5px;
