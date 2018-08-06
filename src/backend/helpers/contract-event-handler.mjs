@@ -13,7 +13,8 @@ export default {
       undefined,
       (error, event) => {
         if (error) throw error;
-        submissionService.createSubmission(event.returnValues.submissionOwner);
+        submissionService.createSubmission(
+          event.returnValues.submissionId, event.returnValues.submissionOwner);
       }
     );
   }
