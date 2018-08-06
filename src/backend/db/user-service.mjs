@@ -144,23 +144,23 @@ export default {
    * @param submissionId
    * @returns {Promise<void>}
    */
-  addSubmission: async (ethereumAddress, submissionId) => {
-    let submission = await ArticleSubmission.findById((submissionId));
-    if (!submission) {
+  addArticleSubmission: async (ethereumAddress, submissionId) => {
+    let articleSubmission = await ArticleSubmission.findById((submissionId));
+    if (!articleSubmission) {
       let error = new Error('ArticleSubmission could not be found in DB');
       error.status = 400;
       throw error;
     }
 
     User.findOneAndUpdate({ethereumAddress: ethereumAddress},
-      {$push: {submissions: submission}},
+      {$push: {articleSubmissions: articleSubmission}},
       (err, user) => {
         if (err) {
           let error = new Error('Could not update user ' + ethereumAddress + ': ' + err);
           error.status = 400;
           throw error;
         }
-        console.log('User ' + user.ethereumAddress + ' got the submission with ID: ' + submission._id);
+        console.log('User ' + user.ethereumAddress + ' got the submission with ID: ' + articleSubmission._id);
         return user;
       });
   }

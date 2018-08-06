@@ -1,5 +1,5 @@
 import userService from '../db/user-service.mjs';
-import submissionService from '../db/submission-service.mjs';
+import articleSubmissionService from '../db/article-submission-service.mjs';
 
 export default {
   setup: EurekaPlatformContract => {
@@ -13,7 +13,7 @@ export default {
       undefined,
       (error, event) => {
         if (error) throw error;
-        submissionService.createSubmission(
+        articleSubmissionService.createSubmission(
           event.returnValues.submissionId, event.returnValues.submissionOwner);
       }
     );

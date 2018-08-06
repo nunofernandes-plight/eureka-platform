@@ -10,7 +10,7 @@ export default {
       {_id: submissionId, ownerAddress: ownerAddress});
 
     await submission.save();
-    await userService.addSubmission(ownerAddress, submissionId);
+    await userService.addArticleSubmission(ownerAddress, submissionId);
     return submissionId;
   }
 };

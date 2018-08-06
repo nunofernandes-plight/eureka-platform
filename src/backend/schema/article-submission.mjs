@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 /**
  * ArticleSubmission for an article on the eureka platform
  */
-export const submissionSchema = mongoose.Schema(
+export const articleSubmissionSchema = mongoose.Schema(
   {
     _id: {
       type: Number
@@ -16,5 +16,5 @@ export const submissionSchema = mongoose.Schema(
   {collection: 'articleSubmissions'}
 );
 
-const ArticleSubmission = mongoose.model('ArticleSubmission', submissionSchema, 'articleSubmissions');
+const ArticleSubmission = mongoose.model('ArticleSubmission', articleSubmissionSchema, 'articleSubmissions');
 export default ArticleSubmission;
