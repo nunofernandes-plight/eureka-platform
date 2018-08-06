@@ -279,6 +279,18 @@ contract EurekaPlatform {
 
         article.versionState = ArticleVersionState.EDITOR_CHECKED;
     }
+    
+    function sanityIsNotOk(bytes32 _articleHash) public {
+
+        require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
+
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.SUBMITTED, "this method can't be called. version state must be SUBMITTED.");
+
+        article.versionState = ArticleVersionState.DECLINED_SANITY_NOTOK;
+        // TODO handle difference between review rounds and article versions, maybe not every new version is a review round, according to max Review rounds
+        requestNewReviewRound(article.submissionId);
+    }
 
     function addAllowedReviewers(bytes32 _articleHash, address[] _allowedEditorApprovedReviewers) public {
 
