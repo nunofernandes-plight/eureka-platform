@@ -53,6 +53,10 @@ class Router extends Component {
                     metaMaskStatus={this.props.metaMaskStatus}
                     accounts={this.props.accounts}
                     authed={this.state.authed}
+                    selectedAccount={this.props.selectedAccount}
+                    changeAccount={selectedAccount => {
+                      this.props.changeAccount({selectedAccount});
+                    }}
                     setAuth={authed => {
                       this.setState({authed});
                     }}
