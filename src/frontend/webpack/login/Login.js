@@ -242,9 +242,7 @@ class Login extends Component {
           show={this.state.errorMessage}
           title={'You got the following error'}
         >
-          {this.state.errorMessage === typeof 'string'
-            ? this.state.errorMessage
-            : 'Ouh. Something went wrong. Please try again or contact us'}
+          {this.state.errorMessage}
         </Modal>
       </div>
     );
