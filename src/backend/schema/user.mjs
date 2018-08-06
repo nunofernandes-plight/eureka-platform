@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import {articleSubmissionSchema} from './article-submission.mjs';
 import Roles from './roles-enum.mjs';
 
 const Schema = mongoose.Schema;
@@ -22,7 +23,7 @@ const userSchema = mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true
+      unique: false
     },
     isEditor: {
       type: Boolean
@@ -33,10 +34,8 @@ const userSchema = mongoose.Schema(
         enum: Object.values(Roles)
       }
     ],
-    submissions: [
-      {
-        type: Schema.Types.ObjectId, ref: 'ArticleSubmission'
-      }
+    articleSubmissions: [
+      articleSubmissionSchema
     ],
   },
   {collection: 'users'}
