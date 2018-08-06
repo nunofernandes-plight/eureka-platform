@@ -24,6 +24,37 @@ export const signUpEditor = (contract, editor, _from) => {
   Getters
  */
 
+export const getSubmissionProcess = async (contract, articleHashHex, account) => {
+
+  let articleVersion = await getArticleVersion(contract, articleHashHex, account);
+
+  return contract.methods
+    .articleSubmissions(articleVersion.submissionId)
+    .call({
+      from: account
+    })
+    .then(process => {
+      return process;
+    })
+    .catch(err => {
+      console.error(err);
+    });
+};
+
+export const getArticleVersion = (contract, articleHashHex, account) => {
+  return contract.methods
+    .articleVersions(articleHashHex)
+    .call({
+      from: account
+    })
+    .then(articleVersion => {
+      return articleVersion;
+    })
+    .catch(err => {
+      console.error(err);
+    });
+};
+
 export const getUrl = (contract, articleHashHex, account) => {
   return contract.methods
     .articleVersions(articleHashHex)

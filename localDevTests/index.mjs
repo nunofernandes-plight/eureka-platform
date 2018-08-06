@@ -6,8 +6,10 @@ import {
   submitArticle
 } from '../src/backend/web3/web3-token-contract-methods.mjs';
 import {
+  getArticleVersion,
   getAuthors,
   getLinkedArticles,
+  getSubmissionProcess,
   getUrl
   // signUpEditor
 } from '../src/backend/web3/web3-platform-contract-methods.mjs';
@@ -108,6 +110,20 @@ const testSubmitArticle = async () => {
         articleHashHex,
         contractOwner
       ))
+  );
+  console.log(
+    (await getArticleVersion(
+      EurekaPlatformContract,
+      articleHashHex,
+      contractOwner
+    ))
+  );
+  console.log(
+    (await getSubmissionProcess(
+      EurekaPlatformContract,
+      articleHashHex,
+      contractOwner
+    ))
   );
 };
 
