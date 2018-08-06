@@ -6,7 +6,7 @@ import Network from './web3/Network.js';
 import NoConnection from './webpack/NoConnection.js';
 import {Detector} from 'react-detect-offline';
 import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
-import {getAllAccounts} from './web3/Helpers.js';
+import {getAllAccounts, getNetwork} from './web3/Helpers.js';
 import abi from './web3/eureka-ABI.json';
 
 class App extends Component {
@@ -35,17 +35,19 @@ class App extends Component {
     this.state = {
       web3: web3Instance,
       provider,
-      network: null,
       metaMaskStatus: null,
       accounts: null,
       contract
     };
+    
 
-    this.getNetwork();
     this.callMetaMaskStatus();
     this.getAccounts();
+  }
 
-    console.log(contract);
+  async componentDidMount() {
+    const network = await getNetwork(this.state.web3);
+    this.setState({network});
   }
 
   async callMetaMaskStatus() {
@@ -64,45 +66,6 @@ class App extends Component {
       const accounts = await getAllAccounts(this.state.web3);
       this.setState({accounts});
     }, 2000);
-  }
-
-  async getNetwork() {
-    if (this.state.web3) {
-      const netId = await this.state.web3.eth.net.getId().then(netId => {
-        return netId;
-      });
-
-      console.log(netId);
-      switch (netId.toString()) {
-        case '1':
-          console.log('Mainnet detected');
-          this.setState({network: Network.MAIN});
-          break;
-        case '2':
-          console.log('Morden test network detected.');
-          this.setState({network: Network.MORDEN});
-          break;
-        case '3':
-          console.log('Ropsten test network detected.');
-          this.setState({network: Network.ROPSTEN});
-          break;
-        case '4':
-          console.log('Rinkeby test network detected.');
-          this.setState({network: Network.RINKEBY});
-          break;
-        case '42':
-          console.log('Kovan test network detected.');
-          this.setState({network: Network.KOVAN});
-          break;
-        case '5777':
-          console.log('GANACHE test network detected.');
-          this.setState({network: Network.GANACHE});
-          break;
-        default:
-          this.setState({network: Network.UNKNOWN});
-          console.log('Unknown network detected.');
-      }
-    }
   }
 
   componentWillUnmount() {
