@@ -38,14 +38,19 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "npm run lint && ava --serial",
-    "test-ci": "if [ \"${CIRCLE_BRANCH}\" = \"dev\" ]; then ava --serial ./test/NormalTests.js; elif [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then ava --serial ./test/NormalTests.js; else ava --serial;fi",
+    "test-ci":
+      "if [ \"${CIRCLE_BRANCH}\" = \"dev\" ]; then ava --serial ./test/NormalTests.js; elif [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then ava --serial ./test/NormalTests.js; else ava --serial;fi",
     "lint": "eslint **/*.mjs --ignore-path .gitignore",
-    "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
+    "prettier":
+      "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
     "eject": "react-scripts eject",
     "dev-client": "react-scripts start",
-    "dev-server": "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" src/backend babel-node",
-    "dev-contracts": "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" src/backend/web3/deployer-script.mjs babel-node",
-    "dev-run": "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" localDevTests/index.mjs babel-node"
+    "dev-server":
+      "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" src/backend babel-node",
+    "dev-contracts":
+      "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" src/backend/web3/deployer-script.mjs babel-node",
+    "dev-run":
+      "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" localDevTests/index.mjs babel-node"
   },
   "devDependencies": {
     "ava": "^0.25.0",
@@ -55,9 +60,7 @@
     "prettier": "^1.13.6"
   },
   "ava": {
-    "require": [
-      "babel-register"
-    ],
+    "require": ["babel-register"],
     "babel": "inherit"
   },
   "prettier": {
