@@ -1,3 +1,4 @@
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
@@ -21,7 +22,13 @@ export default {
   setupApp: eurekaPlatformContract => {
     app = express();
 
-    app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+    /** Parser **/
+    //Parses the text as URL encoded data
+    app.use(
+      bodyParser.urlencoded({
+        extended: true
+      })
+    );
 
     const MongoStore = connectMongo(session);
     app.use(
@@ -35,24 +42,16 @@ export default {
         }),
         saveUninitialized: false,
         name: 'eureka.sid',
-        cookie: {maxAge: 3600000, secure: false, httpOnly: true}
+        cookie: {maxAge: 24 * 3600000, secure: false, httpOnly: false}
+        //cookie: { secure: true }
       })
     );
+
+    app.use(cors({credentials: true, origin: ['http://localhost:3000']}));
 
     /** Passport setup **/
     app.use(passport.initialize());
     app.use(passport.session());
-
-    /** Parser **/
-    //Parses the text as URL encoded data
-    app.use(
-      bodyParser.urlencoded({
-        extended: true
-      })
-    );
-
-    //Parses the text as JSON and exposes the resulting object on req.body.
-    app.use(bodyParser.json());
 
     /** SC Events Listener **/
     // if(!isProduction()) { swap to that
@@ -68,9 +67,8 @@ export default {
       next();
     });
 
-    /** Passport setup **/
-    app.use(passport.initialize());
-    app.use(passport.session());
+    //Parses the text as JSON and exposes the resulting object on req.body.
+    app.use(bodyParser.json());
 
     app.use('/api', router);
   },

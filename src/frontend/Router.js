@@ -16,7 +16,10 @@ class Router extends Component {
       authed: false
     };
   }
-  componentDidMount() {}
+
+  componentDidMount() {
+  }
+
   render() {
     return (
       <div>
@@ -28,22 +31,22 @@ class Router extends Component {
         <div style={{paddingTop: 100}}>
           <BrowserRouter>
             <Switch>
-              <Route path="/metamask" exact render={() => <MetaMaskGuide />} />
+              <Route path="/metamask" exact render={() => <MetaMaskGuide/>}/>
               <Route
                 path="/dashboard"
                 exact
                 render={() => (
-                  <LoginGuard authed={this.state.authed}>
-                    <MainScreen
-                      provider={this.props.provider}
-                      web3={this.props.web3}
-                      metaMaskStatus={this.props.metaMaskStatus}
-                      accounts={this.props.accounts}
-                      setAuth={authed => {
-                        this.setState({authed});
-                      }}
-                    />
-                  </LoginGuard>
+                  //<LoginGuard authed={this.state.authed}>
+                  <MainScreen
+                    provider={this.props.provider}
+                    web3={this.props.web3}
+                    metaMaskStatus={this.props.metaMaskStatus}
+                    accounts={this.props.accounts}
+                    setAuth={authed => {
+                      this.setState({authed});
+                    }}
+                  />
+                  // </LoginGuard>
                 )}
               />
               <Route
@@ -66,7 +69,7 @@ class Router extends Component {
                   />
                 )}
               />
-              <Route path="/" exact render={() => <WelcomePage />} />
+              <Route path="/" exact render={() => <WelcomePage/>}/>
             </Switch>
           </BrowserRouter>
         </div>

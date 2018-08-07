@@ -21,9 +21,11 @@ class MainScreen extends Component {
   constructor() {
     super();
     this.state = {
-      response: null
+      user: null,
+      isAuthenticated: false
     };
   }
+
   componentDidMount() {
     fetch(`${getDomain()}/api/welcome`, {
       method: 'GET',
@@ -34,10 +36,16 @@ class MainScreen extends Component {
     })
       .then(response => response.json())
       .then(response => {
+        console.log('fetching works');
         if (response.success) {
           this.props.setAuth({authed: true});
+          this.setState({
+            user: response.data.user,
+            isAuthenticated: response.data.isAuthenticated
+          });
+          console.log(response);
         } else {
-          // ok user is logged in
+          // to be written
         }
       })
       .catch(err => {
@@ -48,13 +56,10 @@ class MainScreen extends Component {
   render() {
     return (
       <div>
-        <PanelLeft />
+        <PanelLeft/>
         <Container>
           <PanelRight>
-            {' '}
-            {this.state.response ? (
-              <Response>Is User authenticated ? {this.state.response}</Response>
-            ) : null}
+            <Response> {this.state.isAuthenticated ? this.state.user + ' is logged in' : 'Not logged in!!'}</Response>
           </PanelRight>
         </Container>
       </div>

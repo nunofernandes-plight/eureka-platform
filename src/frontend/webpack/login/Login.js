@@ -136,7 +136,7 @@ class Login extends Component {
         headers: {
           'Content-Type': 'application/json'
         },
-        mode: 'cors',
+        credentials: 'include',
         body: JSON.stringify({
           email: this.state.email,
           password: this.state.signedKey,
@@ -146,6 +146,7 @@ class Login extends Component {
         .then(response => response.json())
         .then(response => {
           if (response.success) {
+            console.log(response.headers);
             this.props.setAuth(true);
           } else {
             this.setState({
