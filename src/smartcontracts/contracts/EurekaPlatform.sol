@@ -371,12 +371,11 @@ contract EurekaPlatform {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.SUBMITTED
-            || article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be SUBMITTED or EDITOR_CHECKED.");
-
-        require(article.communityReviews.length < maxAmountOfCommunityReviewer, "the max amount of rewarded community reviews is already reached.");
+            || article.versionState == ArticleVersionState.EDITOR_CHECKED
+            || article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be SUBMITTED, EDITOR_CHECKED or REVIEWERS_INVITED.");
 
         Review storage review = reviews[_articleHash][msg.sender];
-        require(review.reviewState <= ReviewState.INVITATION_ACCEPTED, "the review already exists.");
+        require(review.reviewState < ReviewState.HANDED_IN, "the review already exists.");
 
         review.reviewer = msg.sender;
 
