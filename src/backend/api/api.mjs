@@ -21,8 +21,6 @@ export default {
   setupApp: eurekaPlatformContract => {
     app = express();
 
-
-
     const MongoStore = connectMongo(session);
     app.use(
       session({
@@ -51,7 +49,7 @@ export default {
       })
     );
 
-      app.use(cors());
+    app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
     /** SC Events Listener **/
     // if(!isProduction()) { swap to that
     if (eurekaPlatformContract) {
