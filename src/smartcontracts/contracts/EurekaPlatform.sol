@@ -319,7 +319,6 @@ contract EurekaPlatform {
             reviews[_articleHash][_allowedEditorApprovedReviewers[i]].reviewState = ReviewState.INVITED;
             reviews[_articleHash][_allowedEditorApprovedReviewers[i]].stateTimestamp = block.timestamp;
         }
-
         article.versionState = ArticleVersionState.REVIEWERS_INVITED;
         article.stateTimestamp = block.timestamp;
     }
@@ -327,14 +326,17 @@ contract EurekaPlatform {
     function acceptReviewInvitation(bytes32 _articleHash) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
 
+        //TODO: maybe not necessary anymore
         require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
+        //TODO: handle accepted but not responding reviewers
         require(article.editorApprovedReviews.length < maxAmountOfEditorApprovedReviewer, "the max amount of editor approved reviews is already reached.");
 
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState == ReviewState.INVITED, "this method can't be called, the review state needs to be in INVITED.");
         review.reviewState = ReviewState.INVITATION_ACCEPTED;
+        review.stateTimestamp = block.timestamp;
         review.reviewer = msg.sender;
 
         article.editorApprovedReviews.push(review);
@@ -343,12 +345,14 @@ contract EurekaPlatform {
     function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, bool _needForCorrection, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
 
+        //TODO: maybe not necessary anymore
         require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
 
         Review storage review = reviews[_articleHash][msg.sender];
-        require(review.reviewState <= ReviewState.INVITATION_ACCEPTED, "the review already exists.");
+        require(review.reviewState == ReviewState.INVITATION_ACCEPTED
+            || review.reviewState == ReviewState.INVITED, "msg.sender is not authorized to add a editor approved revie");
 
         if (review.reviewState != ReviewState.INVITATION_ACCEPTED) {
             require(article.editorApprovedReviews.length < maxAmountOfEditorApprovedReviewer, "the max amount of editor approved reviews is already reached.");
