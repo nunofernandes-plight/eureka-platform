@@ -4,6 +4,7 @@ import Roles from '../schema/roles-enum.mjs';
 import ArticleSubmission from '../schema/article-submission.mjs';
 import {isValidAddress} from '../../helpers/isValidEthereumAddress.mjs';
 import userService from '../db/user-service.mjs';
+import {asyncHandler} from '../api/requestHandler.mjs';
 
 export default {
   /**
@@ -61,22 +62,6 @@ export default {
       }
     );
   },
-
-  /**
-   * to check if user is logged in
-   * @param req
-   * @returns {Promise<string>}
-   */
-  isAuth: async (req) => {
-    if (req.user) {
-      return 'success';
-    } else {
-      let error = new Error('You are not logged in');
-      error.status = 401;
-      throw error;
-    }
-  },
-
   /**
    * Get one user by ethereumAddress
    * @param ethereumAddress

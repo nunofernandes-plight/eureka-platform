@@ -20,7 +20,31 @@ let server;
 export default {
   setupApp: eurekaPlatformContract => {
     app = express();
+
     app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+
+    const MongoStore = connectMongo(session);
+    app.use(
+      session({
+        secret: 'eureka secret snippet', //TODO change to env variable
+        //secret: process.env.DB_USER,
+        resave: false,
+        //stores session into DB
+        store: new MongoStore({
+          mongooseConnection: mongooseDB.connection
+        }),
+        saveUninitialized: true,
+        name: 'eureka.sid',
+        cookie: {
+          httpOnly: false,
+          secure: false
+        }
+      })
+    );
+
+    /** Passport setup **/
+    app.use(passport.initialize());
+    app.use(passport.session());
 
     /** Parser **/
     //Parses the text as URL encoded data
@@ -46,23 +70,6 @@ export default {
       res.locals.isAuthenticated = req.isAuthenticated();
       next();
     });
-
-    const MongoStore = connectMongo(session);
-    app.use(
-      session({
-        secret: 'eureka secret snippet', //TODO change to env variable
-        //secret: process.env.DB_USER,
-        resave: false,
-        //stores session into DB
-        store: new MongoStore({
-          mongooseConnection: mongooseDB.connection
-        }),
-        saveUninitialized: false,
-        name: 'eureka.sid',
-        cookie: {maxAge: 3600000, secure: false, httpOnly: true}
-        //cookie: { secure: true }
-      })
-    );
 
     /** Passport setup **/
     app.use(passport.initialize());
