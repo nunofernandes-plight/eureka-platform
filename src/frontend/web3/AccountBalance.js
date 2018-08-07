@@ -50,7 +50,6 @@ class AccountBalance extends React.Component {
   };
 
   renderGanacheAccounts() {
-    console.log(this.props.selectedAccount);
     const address = this.props.selectedAccount
       ? this.props.selectedAccount.address
       : null;
@@ -70,26 +69,28 @@ class AccountBalance extends React.Component {
           }))}
         />
 
-        <Container>
-          <ColumnLeft>
-            <Title />
-            <Address>{address}</Address>
-          </ColumnLeft>
+        {address && balance ? (
+          <Container>
+            <ColumnLeft>
+              <Title>Selected Account</Title>
+              <Address>{address}</Address>
+            </ColumnLeft>
 
-          <ColumnRight>
-            <Title>Balance</Title>
-            <Balance>
-              {balance}
-              <Icon
-                icon={'ethereum'}
-                width={15}
-                height={15}
-                color={__THIRD}
-                bottom={'3'}
-              />
-            </Balance>
-          </ColumnRight>
-        </Container>
+            <ColumnRight>
+              <Title>Balance</Title>
+              <Balance>
+                {balance}
+                <Icon
+                  icon={'ethereum'}
+                  width={15}
+                  height={15}
+                  color={__THIRD}
+                  bottom={'3'}
+                />
+              </Balance>
+            </ColumnRight>
+          </Container>
+        ) : null}
       </div>
     );
   }
