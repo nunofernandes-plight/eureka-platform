@@ -7,15 +7,34 @@ import Login from './webpack/login/Login';
 import MetaMaskGuide from './webpack/MetaMaskGuide';
 import MainScreen from './webpack/dashboard/MainScreen.js';
 import {LoginGuard} from './webpack/guards/Guards.js';
+import {getDomain} from '../helpers/getDomain.js';
 
 class Router extends Component {
   constructor() {
     super();
     this.state = {
-      authed: true
+      authed: false
     };
   }
-  componentDidMount() {}
+  componentDidMount() {
+    fetch(`${getDomain()}/api/welcome`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.setState({authed: true});
+        } else {
+          // ok user is logged in
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
   render() {
     return (
       <div>

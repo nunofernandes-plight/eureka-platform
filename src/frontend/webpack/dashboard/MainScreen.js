@@ -25,25 +25,7 @@ class MainScreen extends Component {
     };
   }
   componentDidMount() {
-    fetch(`${getDomain()}/api/welcome`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      mode: 'cors',
-      credentials: 'include'
-    })
-      .then(response => response.json())
-      .then(response => {
-        if (!response.success) {
-          this.setState({response: response.error});
-        } else {
-          // ok user is logged in
-        }
-      })
-      .catch(err => {
-        console.error(err);
-      });
+
   }
 
   render() {
