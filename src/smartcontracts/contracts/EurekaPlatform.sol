@@ -433,6 +433,21 @@ contract EurekaPlatform {
 
         review.reviewState = ReviewState.ACCEPTED;
         review.stateTimestamp = block.timestamp;
+        
+        rewardReviewer(article, review);
+    }
+    
+    function rewardReviewer(ArticleVersion _article, Review _review) private {
+        if (_review.isEditorApprovedReview)
+            if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfEditorApprovedReviewer)
+                transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer[0]);  //TODO: handle reward
+        else 
+            if (countAcceptedReviews(_article.communityReviews) < maxAmountOfCommunityReviewer)
+                transfer(_review.reviewer, communityReviewerRewardPerReviewer[0]);  //TODO: handle reward
+    }
+    
+    function transfer(address _to, uint256 _amount) private {
+        eurekaTokenContract.transfer(_to, _amount);
     }
 
     function declineReview(bytes32 _articleHash, address _reviewerAddress) public {
