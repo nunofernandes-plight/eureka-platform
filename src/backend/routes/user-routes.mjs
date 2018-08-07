@@ -12,9 +12,15 @@ router.get(
 );
 
 router.get(
-  '/auth',
-  asyncHandler(async () => {
-    return userService.isAuth();
+  '/data',
+  asyncHandler(async (req, res) => {
+    if(!req.user) {
+      let error = new Error('Not logged in Backend');
+      error.status= 401;
+      throw error;
+    }
+
+    return await userService.getUserByEthereumAddress(req.user);
   })
 );
 

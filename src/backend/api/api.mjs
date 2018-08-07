@@ -32,8 +32,11 @@ export default {
           mongooseConnection: mongooseDB.connection
         }),
         saveUninitialized: true,
-        name: 'eureka.sid'
-        //cookie: { secure: true }
+        name: 'eureka.sid',
+        cookie: {
+          httpOnly: false,
+          secure: false
+        }
       })
     );
 
