@@ -11,20 +11,16 @@ const router = express.Router();
 router.get('/', asyncHandler(async (req, res) => {
   console.log(req.user);
   console.log(req.isAuthenticated());
+  if(!req.user) {
+    let error = new Error('Not logged in Backend');
+    error.status= 401;
+    throw error;
+  }
   return {
     user: req.user,
     isAuthenticated: req.isAuthenticated()
   };
 }));
-
-
-// res.send(
-//   'Welcome to EUREKA! REQ_USER: ' +
-//     req.user +
-//     ' AUTHENTICATED: ' +
-//     req.isAuthenticated()
-// );
-
 
 //Test the login through session
 router.use(authenticationCheck.rolesOnly([Roles.GUEST]));
