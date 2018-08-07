@@ -125,7 +125,7 @@ test(PRETEXT + 'Submit Article', async t => {
   // DB tests
   let articleSubmissions = await articleSubmissionService.getAllSubmissions();
   t.is(articleSubmissions.length, 1);
+
   let user = await userService.getUserByEthereumAddress(contractOwner);
-  //TODO read out the submission correctly from mongoose array
-  //t.is(user.articleSubmissions._id, articleSubmissions[0]._id);
+  t.is(user.articleSubmissions[0]._id.toString(), articleSubmissions[0].id.toString());
 });
