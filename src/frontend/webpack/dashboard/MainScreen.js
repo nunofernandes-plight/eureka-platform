@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import PanelLeft from './PanelLeft.js';
 import {getDomain} from '../../../helpers/getDomain.js';
-import EurekaLogo from '../icons/EurekaLogo.js';
+import Cookies from 'js-cookie';
 
 const Container = styled.div`
   display: flex;
@@ -30,7 +30,8 @@ class MainScreen extends Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      mode: 'cors'
+      mode: 'cors',
+      credentials: 'include'
     })
       .then(response => response.json())
       .then(response => {
