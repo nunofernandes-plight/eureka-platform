@@ -295,7 +295,7 @@ class Login extends Component {
                         onChange={e => this.handleInput('email', e)}
                         onKeyPress={e => {
                           if (e.key === 'Enter') {
-                            this.login(this.props)
+                            this.login(this.props);
                           }
                         }}
                       />
@@ -327,8 +327,8 @@ class Login extends Component {
                 </Row>
                 <Row>
                   <SignUp>
-                    Do not have <strong>Metamask</strong>? Please{' '}
-                    <Link to="/metamask">See here.</Link>
+                    Already have an <strong>account</strong>? Please{' '}
+                    <Link to="/signup">Sign up here.</Link>
                   </SignUp>
                 </Row>
               </Container>
