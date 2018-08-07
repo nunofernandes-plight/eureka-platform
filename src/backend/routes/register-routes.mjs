@@ -15,30 +15,19 @@ router.post('/',
     let newUserInDB = await userService.createUser(req.body.password,
       req.body.email, req.body.ethereumAddress);
 
-    let response = await req.login(newUserInDB);
-
-    if(!response) {
-      let error = new Error('Login did not work!');
-      error.status = 401;
-      throw error;
-    }
-    return newUserInDB;
-    // {
-    //   if (err) {
-    //     let error = new Error('Login did not work!');
-    //     error.status = 401;
-    //     throw error;
-    //   } else {
-    //     console.log(newUserInDB);
-    //     return newUserInDB;
-    //     // res.status = 201; TODO fix problem with setting headers after res has ben sent
-    //     // res.json({
-    //     //   data: newUserInDB
-    //     // });
-    //   }
-    // });
-    // console.log(response);
-    // return {response};
+    return req.login(newUserInDB, function(err) {
+      if (err) {
+        let error = new Error('Login did not work!');
+        error.status = 401;
+        throw error;
+      } else {
+        return newUserInDB;
+        // res.status = 201; TODO fix problem with setting headers after res has ben sent
+        // res.json({
+        //   data: newUserInDB
+        // });
+      }
+    });
     // return userService
     //   .createUser(req.body.password, req.body.email, req.body.ethereumAddress)
     //   .then(newUserInDB => {
