@@ -296,13 +296,15 @@ class Login extends Component {
                       />
                     </LoginRow>
 
-                    {this.props.metaMaskStatus ===
-                      MetaMaskStatus.DETECTED_LOGGED_IN &&
-                    this.props.accounts ? (
+                    {this.props.accounts ? (
                       <LoginRow>
                         <AccountBalance
                           accounts={this.props.accounts}
-                          balance={0}
+                          provider={this.props.provider}
+                          selectedAccount={this.props.selectedAccount}
+                          changeAccount={selectedAccount => {
+                            this.props.changeAccount(selectedAccount);
+                          }}
                         />
                       </LoginRow>
                     ) : null}

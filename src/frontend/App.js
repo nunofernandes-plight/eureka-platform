@@ -34,7 +34,11 @@ class App extends Component {
       provider,
       metaMaskStatus: null,
       accounts: null,
-      contract
+      contract,
+      selectedAccount: {
+        address: null,
+        balance: null
+      }
     };
   }
 
@@ -45,9 +49,16 @@ class App extends Component {
     this.setState({network, metaMaskStatus, accounts});
     this.interval = setInterval(async () => {
       const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
-      const accounts = await getAllAccounts(this.state.web3);
-      this.setState({network, metaMaskStatus, accounts});
-    }, 2250);
+      // const accounts = await getAllAccounts(this.state.web3);
+      this.setState({metaMaskStatus});
+    }, 5000);
+  }
+
+  changeAccount(selectedAccount) {
+    let account = {...this.state.selectedAccount};
+    account.address = selectedAccount.address;
+    account.balance = selectedAccount.balance;
+    this.setState({selectedAccount: account});
   }
 
   componentWillUnmount() {
@@ -55,6 +66,7 @@ class App extends Component {
   }
 
   render() {
+    console.log(this.state.selectedAccount)
     return (
       <div>
         <Detector
@@ -66,6 +78,10 @@ class App extends Component {
                 network={this.state.network}
                 metaMaskStatus={this.state.metaMaskStatus}
                 accounts={this.state.accounts}
+                selectedAccount={this.state.selectedAccount}
+                changeAccount={selectedAccount => {
+                  this.changeAccount(selectedAccount);
+                }}
               />
             ) : (
               <NoConnection />
