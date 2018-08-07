@@ -34,7 +34,11 @@ class App extends Component {
       provider,
       metaMaskStatus: null,
       accounts: null,
-      contract
+      contract,
+      selectedAccount: {
+        address: null,
+        balance: null
+      }
     };
   }
 
@@ -45,9 +49,22 @@ class App extends Component {
     this.setState({network, metaMaskStatus, accounts});
     this.interval = setInterval(async () => {
       const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
-      const accounts = await getAllAccounts(this.state.web3);
-      this.setState({network, metaMaskStatus, accounts});
-    }, 2250);
+      // const accounts = await getAllAccounts(this.state.web3);
+      this.setState({metaMaskStatus});
+    }, 5000);
+  }
+
+  // Ganache switch addresses
+  async changeAccount(selectedAccount) {
+    let account = {...this.state.selectedAccount};
+    account.address = selectedAccount.address;
+
+    const accounts = await getAllAccounts(this.state.web3);
+    if (accounts.get(account.address)) {
+      account.balance = accounts.get(account.address);
+    }
+
+    this.setState({selectedAccount: account});
   }
 
   componentWillUnmount() {
@@ -66,6 +83,10 @@ class App extends Component {
                 network={this.state.network}
                 metaMaskStatus={this.state.metaMaskStatus}
                 accounts={this.state.accounts}
+                selectedAccount={this.state.selectedAccount}
+                changeAccount={account => {
+                  this.changeAccount(account);
+                }}
               />
             ) : (
               <NoConnection />
