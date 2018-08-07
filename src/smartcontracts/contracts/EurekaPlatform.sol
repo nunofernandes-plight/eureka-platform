@@ -109,6 +109,7 @@ contract EurekaPlatform {
         NOT_EXISTING,
         SUBMITTED,
         EDITOR_CHECKED,
+        REVIEWERS_INVITED,
         NOT_ENOUGH_REVIEWERS,
         DECLINED_SANITY_NOTOK,
         DECLINED,
@@ -153,6 +154,7 @@ contract EurekaPlatform {
 
     enum ReviewState {
         NOT_EXISTING,
+        REVIEWER_INVITED,
         INVITATION_ACCEPTED,
         HANDED_IN,
         DECLINED,
@@ -315,6 +317,8 @@ contract EurekaPlatform {
         for (uint i = 0; i < _allowedEditorApprovedReviewers.length; i++) {
             article.allowedEditorApprovedReviewers[_allowedEditorApprovedReviewers[i]] = true;
         }
+
+        article.stateTimestamp = block.timestamp;
     }
 
     function acceptReviewInvitation(bytes32 _articleHash) public {
