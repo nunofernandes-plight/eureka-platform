@@ -365,6 +365,7 @@ contract EurekaPlatform {
         review.score2 = _score2;
 
         review.reviewState = ReviewState.HANDED_IN;
+        review.stateTimestamp = block.timestamp;
     }
 
     function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, bool _needForCorrection, uint8 _score1, uint8 _score2) public {
@@ -387,6 +388,7 @@ contract EurekaPlatform {
 
         article.communityReviews.push(review);
         review.reviewState = ReviewState.HANDED_IN;
+        review.stateTimestamp = block.timestamp;
     }
 
     function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _needForCorrection, uint8 _score1, uint8 _score2) public {
@@ -407,6 +409,7 @@ contract EurekaPlatform {
         review.score2 = _score2;
 
         review.reviewState = ReviewState.HANDED_IN;
+        review.stateTimestamp = block.timestamp;
     }
 
     function acceptReview(bytes32 _articleHash, address _reviewerAddress) public {
@@ -414,12 +417,13 @@ contract EurekaPlatform {
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
 
         Review storage review = reviews[_articleHash][_reviewerAddress];
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.ACCEPTED;
+        review.stateTimestamp = block.timestamp;
     }
 
     function declineReview(bytes32 _articleHash, address _reviewerAddress) public {
