@@ -438,14 +438,16 @@ contract EurekaPlatform {
     function declineReview(bytes32 _articleHash, address _reviewerAddress) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
-
+        
+        //TODO: in which states of the articles the reviewers can hand in reviews and get accepted?
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
 
         Review storage review = reviews[_articleHash][_reviewerAddress];
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.DECLINED;
+        review.stateTimestamp = block.timestamp;
     }
 
     function acceptArticleVersion(bytes32 _articleHash) public {
