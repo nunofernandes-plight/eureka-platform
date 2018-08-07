@@ -12,7 +12,7 @@ class Router extends Component {
   constructor() {
     super();
     this.state = {
-      authed: false
+      authed: true
     };
   }
   componentDidMount() {}
@@ -28,7 +28,6 @@ class Router extends Component {
           <BrowserRouter>
             <Switch>
               <Route path="/metamask" exact render={() => <MetaMaskGuide />} />
-              {/*TODO: handle guard for this route*/}
               <Route
                 path="/dashboard"
                 exact
