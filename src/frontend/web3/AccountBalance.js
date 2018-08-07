@@ -61,7 +61,11 @@ class AccountBalance extends React.Component {
         <Select
           simpleValue
           style={{color: 'inherit'}}
-          // value={this.state.selectedAddress}
+          value={
+            this.props.selectedAccount.balance
+              ? this.props.selectedAccount.balance
+              : null
+          }
           onChange={this.handleChange}
           options={Array.from(this.props.accounts.keys()).map(addr => ({
             label: addr,
