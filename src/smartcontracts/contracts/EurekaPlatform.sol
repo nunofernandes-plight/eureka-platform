@@ -154,7 +154,7 @@ contract EurekaPlatform {
 
     enum ReviewState {
         NOT_EXISTING,
-        REVIEWER_INVITED,
+        INVITED,
         INVITATION_ACCEPTED,
         HANDED_IN,
         DECLINED,
@@ -307,7 +307,7 @@ contract EurekaPlatform {
         requestNewReviewRound(article.submissionId);
     }
 
-    function addAllowedReviewers(bytes32 _articleHash, address[] _allowedEditorApprovedReviewers) public {
+    function inviteReviewers(bytes32 _articleHash, address[] _allowedEditorApprovedReviewers) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
@@ -330,7 +330,7 @@ contract EurekaPlatform {
         require(article.editorApprovedReviews.length < maxAmountOfEditorApprovedReviewer, "the max amount of editor approved reviews is already reached.");
 
         Review storage review = reviews[_articleHash][msg.sender];
-        require(review.reviewState == ReviewState.NOT_EXISTING, "the review already exists.");
+        require(review.reviewState == ReviewState.INVITED, "this method can't be called, the review state needs to be in INVITED.");
         review.reviewState = ReviewState.INVITATION_ACCEPTED;
         review.reviewer = msg.sender;
 
