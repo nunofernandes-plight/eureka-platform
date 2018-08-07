@@ -33,12 +33,9 @@ export default {
         store: new MongoStore({
           mongooseConnection: mongooseDB.connection
         }),
-        saveUninitialized: true,
+        saveUninitialized: false,
         name: 'eureka.sid',
-        cookie: {
-          httpOnly: false,
-          secure: false
-        }
+        cookie: {maxAge: 3600000, secure: false, httpOnly: true}
       })
     );
 
