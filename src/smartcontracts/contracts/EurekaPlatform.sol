@@ -392,10 +392,13 @@ contract EurekaPlatform {
     function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _needForCorrection, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        require(article.versionState == ArticleVersionState.SUBMITTED
+            || article.versionState == ArticleVersionState.EDITOR_CHECKED
+            || article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be SUBMITTED, EDITOR_CHECKED or REVIEWERS_INVITED.");
 
         Review storage review = reviews[_articleHash][msg.sender];
-        require(review.reviewState == ReviewState.DECLINED, "only declined reviews can be corrected.");
+        require(review.reviewState == ReviewState.DECLINED
+            || review.reviewState == ReviewState.HANDED_IN, "only declined reviews can be corrected.");
 
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
