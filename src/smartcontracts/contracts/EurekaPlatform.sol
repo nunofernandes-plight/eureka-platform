@@ -167,6 +167,8 @@ contract EurekaPlatform {
     struct Review {
         bytes32 articleHash;
         address reviewer;
+        
+        bool isEditorApprovedReview;
 
         ReviewState reviewState;
 
@@ -361,7 +363,8 @@ contract EurekaPlatform {
         if (review.reviewState != ReviewState.INVITATION_ACCEPTED) {
             acceptReviewInvitation(_articleHash);
         }
-
+        
+        review.isEditorApprovedReview = true;
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
         review.needForCorrection = _needForCorrection;
@@ -384,6 +387,7 @@ contract EurekaPlatform {
 
         review.reviewer = msg.sender;
 
+        review.isEditorApprovedReview = false;
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
         review.needForCorrection = _needForCorrection;
@@ -420,6 +424,7 @@ contract EurekaPlatform {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
+        //TODO: in which states of the articles the reviewers can hand in reviews and get accepted?
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
 
