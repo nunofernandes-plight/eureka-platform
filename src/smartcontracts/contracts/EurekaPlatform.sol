@@ -83,9 +83,9 @@ contract EurekaPlatform {
     mapping(bytes32 => mapping(address => Review)) public  reviews;
 
     // address mappings
-    mapping(address => ArticleVersion[]) articleVersionByAuthor;
-    mapping(address => ArticleSubmission[]) articleSubmissionsByEditor;
-    mapping(address => Review[]) reviewsByReviewer;
+//    mapping(address => ArticleVersion[]) articleVersionByAuthor;
+//    mapping(address => ArticleSubmission[]) articleSubmissionsByEditor;
+//    mapping(address => Review[]) reviewsByReviewer;
 
 
     enum SubmissionState {
