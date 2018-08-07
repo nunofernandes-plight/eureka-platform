@@ -91,6 +91,7 @@ contract EurekaPlatform {
     enum SubmissionState {
         NOT_EXISTING,
         OPEN,
+        EDITOR_ASSIGNED,
         NEW_REVIEW_ROUND_REQUESTED,
         CLOSED
     }
@@ -98,6 +99,7 @@ contract EurekaPlatform {
     struct ArticleSubmission {
         uint256 submissionId;
         SubmissionState submissionState;
+        uint256 stateTimestamp;
         address submissionOwner;
         ArticleVersion[] versions;
         address editor;
@@ -107,6 +109,7 @@ contract EurekaPlatform {
         NOT_EXISTING,
         SUBMITTED,
         EDITOR_CHECKED,
+        REVIEWERS_INVITED,
         NOT_ENOUGH_REVIEWERS,
         DECLINED_SANITY_NOTOK,
         DECLINED,
@@ -124,6 +127,7 @@ contract EurekaPlatform {
         bytes32 articleUrl;
 
         ArticleVersionState versionState;
+        uint256 stateTimestamp;
 
         address[] authors;
         // the submission owner can weight the contributions of the different authors [0;10000]
@@ -150,6 +154,7 @@ contract EurekaPlatform {
 
     enum ReviewState {
         NOT_EXISTING,
+        REVIEWER_INVITED,
         INVITATION_ACCEPTED,
         HANDED_IN,
         DECLINED,
@@ -160,6 +165,9 @@ contract EurekaPlatform {
         address reviewer;
 
         ReviewState reviewState;
+
+        // with each state change the stateTimestamp field is updated
+        uint256 stateTimestamp;
 
         bytes32 reviewHash;
         uint256 reviewedTimestamp;
@@ -207,6 +215,7 @@ contract EurekaPlatform {
         submitArticleVersion(submissionId, _articleHash, _articleURL, _authors, _authorContributionRatios, _linkedArticles, _linkedArticlesSplitRatios);
 
         submission.submissionState = SubmissionState.OPEN;
+        submission.stateTimestamp = block.timestamp;
         emit SubmissionProcessStart(submission.submissionId, tx.origin);
     }
 
@@ -229,6 +238,7 @@ contract EurekaPlatform {
 
         articleSubmissions[_submissionId].versions.push(article);
         article.versionState = ArticleVersionState.SUBMITTED;
+        article.stateTimestamp = block.timestamp;
     }
 
     // a journal editor can assign him/herself to an article submission process
@@ -238,24 +248,31 @@ contract EurekaPlatform {
         require(isEditor[msg.sender], "msg.sender must be an editor to call this function.");
 
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
-        require(submission.submissionState == SubmissionState.OPEN, "the submission process not open.");
+        require(submission.submissionState == SubmissionState.OPEN, "the submission process needs to be OPEN to call this method.");
         require(submission.editor == address(0), "the submission process is already assigned to an editor.");
 
         submission.editor = msg.sender;
+        submission.submissionState = SubmissionState.EDITOR_ASSIGNED;
+        submission.stateTimestamp = block.timestamp;
     }
 
     function removeEditorFromSubmissionProcess(uint256 _submissionId) public {
 
+        require(submission.submissionState == SubmissionState.EDITOR_ASSIGNED, "an editor needs to be assigned to call this function.");
+        
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
         require(msg.sender == contractOwner
         || msg.sender == submission.editor, "an editor can only be removed by the contract owner or itself.");
 
         submission.editor = address(0);
+        submission.submissionState = SubmissionState.OPEN;
+        submission.stateTimestamp = block.timestamp;
     }
 
     // is it a good idea that the current editor can assign another editor? or should only removing (method below) be possible?
     function changeEditorFromSubmissionProcess(uint256 _submissionId, address _newEditor) public {
 
+        require(submission.submissionState == SubmissionState.EDITOR_ASSIGNED, "an editor needs to be assigned to call this function.");
         require(isEditor[_newEditor], 'the new editor must be an allowed editor.');
 
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
@@ -263,6 +280,7 @@ contract EurekaPlatform {
         || msg.sender == submission.editor, "an editor can only be changed by the contract owner or the current editor.");
 
         submission.editor = _newEditor;
+        submission.stateTimestamp = block.timestamp;
     }
 
     function sanityIsOk(bytes32 _articleHash) public {
@@ -273,6 +291,7 @@ contract EurekaPlatform {
         require(article.versionState == ArticleVersionState.SUBMITTED, "this method can't be called. version state must be SUBMITTED.");
 
         article.versionState = ArticleVersionState.EDITOR_CHECKED;
+        article.stateTimestamp = block.timestamp;
     }
     
     function sanityIsNotOk(bytes32 _articleHash) public {
@@ -283,6 +302,7 @@ contract EurekaPlatform {
         require(article.versionState == ArticleVersionState.SUBMITTED, "this method can't be called. version state must be SUBMITTED.");
 
         article.versionState = ArticleVersionState.DECLINED_SANITY_NOTOK;
+        article.stateTimestamp = block.timestamp;
         // TODO handle difference between review rounds and article versions, maybe not every new version is a review round, according to max Review rounds
         requestNewReviewRound(article.submissionId);
     }
@@ -297,6 +317,8 @@ contract EurekaPlatform {
         for (uint i = 0; i < _allowedEditorApprovedReviewers.length; i++) {
             article.allowedEditorApprovedReviewers[_allowedEditorApprovedReviewers[i]] = true;
         }
+
+        article.stateTimestamp = block.timestamp;
     }
 
     function acceptReviewInvitation(bytes32 _articleHash) public {
