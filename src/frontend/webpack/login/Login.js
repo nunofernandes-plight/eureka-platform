@@ -293,6 +293,11 @@ class Login extends Component {
                           this.state.email ? this.state.inputStatus : null
                         }
                         onChange={e => this.handleInput('email', e)}
+                        onKeyPress={e => {
+                          if (e.key === 'Enter') {
+                            this.login(this.props)
+                          }
+                        }}
                       />
                     </LoginRow>
 

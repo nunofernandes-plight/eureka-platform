@@ -32,10 +32,13 @@ class MainScreen extends Component {
       },
       mode: 'cors'
     })
+      .then(response => response.json())
       .then(response => {
-        let resp = response.toString();
-        console.log(response);
-        this.setState({response: resp});
+        if (!response.success) {
+          this.setState({response: response.error});
+        } else {
+          // ok user is logged in
+        }
       })
       .catch(err => {
         console.error(err);
@@ -50,13 +53,8 @@ class MainScreen extends Component {
           <PanelRight>
             {' '}
             {this.state.response ? (
-              <Response>{this.state.response}</Response>
+              <Response>Is User authenticated ? {this.state.response}</Response>
             ) : null}
-            <div>
-              ashifajosfjoasfjoasfjo asfoaosjf ojasfjoasf joasoj fjoasf joasfjo
-              a
-            </div>
-            <EurekaLogo width={40} height={40} />
           </PanelRight>
         </Container>
       </div>

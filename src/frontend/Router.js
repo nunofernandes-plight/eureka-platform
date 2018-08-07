@@ -12,7 +12,7 @@ class Router extends Component {
   constructor() {
     super();
     this.state = {
-      authed: true
+      authed: false
     };
   }
   componentDidMount() {}
