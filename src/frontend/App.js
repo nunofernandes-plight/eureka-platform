@@ -54,11 +54,16 @@ class App extends Component {
     }, 5000);
   }
 
-  changeAccount(selectedAccount) {
-    console.log(selectedAccount.address);
+  // Ganache switch addresses
+  async changeAccount(selectedAccount) {
     let account = {...this.state.selectedAccount};
     account.address = selectedAccount.address;
-    account.balance = selectedAccount.balance;
+
+    const accounts = await getAllAccounts(this.state.web3);
+    if (accounts.get(account.address)) {
+      account.balance = accounts.get(account.address);
+    }
+
     this.setState({selectedAccount: account});
   }
 
