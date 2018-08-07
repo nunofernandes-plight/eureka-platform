@@ -8,6 +8,8 @@ import "./Eureka.sol";
 contract EurekaPlatform {
 
     using SafeMath for uint256;
+    
+    Eureka eurekaTokenContract;
 
     address contractOwner;
 
@@ -42,7 +44,9 @@ contract EurekaPlatform {
     uint public submissionFee;
 
 
-    constructor() public {
+    constructor(address _eurekaTokenContractAddress) public {
+        
+        eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
 
         contractOwner = msg.sender;
 
@@ -163,6 +167,8 @@ contract EurekaPlatform {
     struct Review {
         bytes32 articleHash;
         address reviewer;
+        
+        bool isEditorApprovedReview;
 
         ReviewState reviewState;
 
@@ -203,7 +209,7 @@ contract EurekaPlatform {
         bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
         uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) public {
 
-        //TODO: require(msg.sender == EutekaTokenAddress);
+        require(msg.sender == address(eurekaTokenContract));
 //        require(_value == submissionFee, 'transferred amount needs to equal the submission fee');
 
         uint submissionId = submissionCounter++;
@@ -357,7 +363,8 @@ contract EurekaPlatform {
         if (review.reviewState != ReviewState.INVITATION_ACCEPTED) {
             acceptReviewInvitation(_articleHash);
         }
-
+        
+        review.isEditorApprovedReview = true;
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
         review.needForCorrection = _needForCorrection;
@@ -380,6 +387,7 @@ contract EurekaPlatform {
 
         review.reviewer = msg.sender;
 
+        review.isEditorApprovedReview = false;
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
         review.needForCorrection = _needForCorrection;
@@ -416,6 +424,7 @@ contract EurekaPlatform {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
+        //TODO: in which states of the articles the reviewers can hand in reviews and get accepted?
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
 
@@ -424,19 +433,32 @@ contract EurekaPlatform {
 
         review.reviewState = ReviewState.ACCEPTED;
         review.stateTimestamp = block.timestamp;
+        
+        rewardReviewer(article, review);
+    }
+    
+    function rewardReviewer(ArticleVersion _article, Review _review) private {
+        if (_review.isEditorApprovedReview)
+            if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfEditorApprovedReviewer)
+                eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer[0]);  //TODO: handle reward
+        else 
+            if (countAcceptedReviews(_article.communityReviews) < maxAmountOfCommunityReviewer)
+                eurekaTokenContract.transfer(_review.reviewer, communityReviewerRewardPerReviewer[0]);  //TODO: handle reward
     }
 
     function declineReview(bytes32 _articleHash, address _reviewerAddress) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
-
+        
+        //TODO: in which states of the articles the reviewers can hand in reviews and get accepted?
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
 
         Review storage review = reviews[_articleHash][_reviewerAddress];
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.DECLINED;
+        review.stateTimestamp = block.timestamp;
     }
 
     function acceptArticleVersion(bytes32 _articleHash) public {
