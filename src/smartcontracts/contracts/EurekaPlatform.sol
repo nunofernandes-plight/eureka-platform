@@ -355,9 +355,7 @@ contract EurekaPlatform {
             || review.reviewState == ReviewState.INVITED, "msg.sender is not authorized to add a editor approved revie");
 
         if (review.reviewState != ReviewState.INVITATION_ACCEPTED) {
-            require(article.editorApprovedReviews.length < maxAmountOfEditorApprovedReviewer, "the max amount of editor approved reviews is already reached.");
-            article.editorApprovedReviews.push(review);
-            review.reviewer = msg.sender;
+            acceptReviewInvitation(_articleHash);
         }
 
         review.reviewHash = _reviewHash;
