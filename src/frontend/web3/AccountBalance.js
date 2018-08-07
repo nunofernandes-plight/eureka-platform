@@ -43,17 +43,14 @@ const Title = styled.h4`
 
 class AccountBalance extends React.Component {
   handleChange = selectedAccount => {
-    const address = selectedAccount.label;
-    const balance = selectedAccount.value;
-    const account = {
-      address: address,
-      balance: balance
-    };
+    let account = {};
+    account.address = selectedAccount.label;
+    account.balance = selectedAccount.value;
     this.props.changeAccount(account);
   };
 
   renderGanacheAccounts() {
-    console.log(this.props.selectedAccount)
+    console.log(this.props.selectedAccount);
     const address = this.props.selectedAccount
       ? this.props.selectedAccount.address
       : null;

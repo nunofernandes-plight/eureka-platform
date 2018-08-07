@@ -55,6 +55,7 @@ class App extends Component {
   }
 
   changeAccount(selectedAccount) {
+    console.log(selectedAccount.address);
     let account = {...this.state.selectedAccount};
     account.address = selectedAccount.address;
     account.balance = selectedAccount.balance;
@@ -66,7 +67,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.selectedAccount)
     return (
       <div>
         <Detector
@@ -79,8 +79,8 @@ class App extends Component {
                 metaMaskStatus={this.state.metaMaskStatus}
                 accounts={this.state.accounts}
                 selectedAccount={this.state.selectedAccount}
-                changeAccount={selectedAccount => {
-                  this.changeAccount(selectedAccount);
+                changeAccount={account => {
+                  this.changeAccount(account);
                 }}
               />
             ) : (

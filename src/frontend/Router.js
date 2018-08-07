@@ -55,7 +55,7 @@ class Router extends Component {
                     authed={this.state.authed}
                     selectedAccount={this.props.selectedAccount}
                     changeAccount={selectedAccount => {
-                      this.props.changeAccount({selectedAccount});
+                      this.props.changeAccount(selectedAccount);
                     }}
                     setAuth={authed => {
                       this.setState({authed});
