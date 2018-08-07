@@ -8,6 +8,8 @@ import "./Eureka.sol";
 contract EurekaPlatform {
 
     using SafeMath for uint256;
+    
+    Eureka eurekaTokenContract;
 
     address contractOwner;
 
@@ -42,7 +44,9 @@ contract EurekaPlatform {
     uint public submissionFee;
 
 
-    constructor() public {
+    constructor(address _eurekaTokenContractAddress) public {
+        
+        eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
 
         contractOwner = msg.sender;
 
@@ -203,7 +207,7 @@ contract EurekaPlatform {
         bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
         uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) public {
 
-        //TODO: require(msg.sender == EutekaTokenAddress);
+        require(msg.sender == address(eurekaTokenContract));
 //        require(_value == submissionFee, 'transferred amount needs to equal the submission fee');
 
         uint submissionId = submissionCounter++;
