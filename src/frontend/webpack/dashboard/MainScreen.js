@@ -25,7 +25,24 @@ class MainScreen extends Component {
     };
   }
   componentDidMount() {
-
+    fetch(`${getDomain()}/api/welcome`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.props.setAuth({authed: true});
+        } else {
+          // ok user is logged in
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
   render() {

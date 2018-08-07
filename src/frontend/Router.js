@@ -16,25 +16,7 @@ class Router extends Component {
       authed: false
     };
   }
-  componentDidMount() {
-    fetch(`${getDomain()}/api/welcome`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          this.setState({authed: true});
-        } else {
-          // ok user is logged in
-        }
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
+  componentDidMount() {}
   render() {
     return (
       <div>
@@ -57,6 +39,9 @@ class Router extends Component {
                       web3={this.props.web3}
                       metaMaskStatus={this.props.metaMaskStatus}
                       accounts={this.props.accounts}
+                      setAuth={authed => {
+                        this.setState({authed});
+                      }}
                     />
                   </LoginGuard>
                 )}
