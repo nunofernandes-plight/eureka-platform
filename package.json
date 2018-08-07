@@ -14,6 +14,7 @@
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "fs": "^0.0.1-security",
+    "js-cookie": "^2.2.0",
     "mongoose": "^5.2.2",
     "nodemailer": "^4.6.7",
     "nodemon": "^1.17.5",
@@ -39,8 +40,7 @@
     "build": "react-scripts build",
     "test": "npm run lint && ava --serial",
     "test-sc": "ava --serial test/smartcontracts",
-    "test-ci":
-      "if [ \"${CIRCLE_BRANCH}\" = \"dev\" ]; then ava --serial ./test/NormalTests.js; elif [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then ava --serial ./test/NormalTests.js; else ava --serial;fi",
+    "test-ci": "if [ \"${CIRCLE_BRANCH}\" = \"dev\" ]; then ava --serial ./test/NormalTests.js; elif [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then ava --serial ./test/NormalTests.js; else ava --serial;fi",
     "lint": "eslint **/*.mjs --ignore-path .gitignore",
     "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
     "eject": "react-scripts eject",
