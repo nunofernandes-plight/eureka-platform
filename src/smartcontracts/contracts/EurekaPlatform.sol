@@ -316,8 +316,11 @@ contract EurekaPlatform {
 
         for (uint i = 0; i < _allowedEditorApprovedReviewers.length; i++) {
             article.allowedEditorApprovedReviewers[_allowedEditorApprovedReviewers[i]] = true;
+            reviews[_articleHash][_allowedEditorApprovedReviewers[i]].reviewState = ReviewState.INVITED;
+            reviews[_articleHash][_allowedEditorApprovedReviewers[i]].stateTimestamp = block.timestamp;
         }
 
+        article.versionState = ArticleVersionState.REVIEWERS_INVITED;
         article.stateTimestamp = block.timestamp;
     }
 
