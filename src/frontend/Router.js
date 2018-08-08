@@ -62,16 +62,14 @@ class Router extends Component {
                 path="/dashboard"
                 exact
                 render={() => (
-                  <LoginGuard isAuthenticated={this.state.isAuthenticated}>
-                    <MainScreen
-                      provider={this.props.provider}
-                      web3={this.props.web3}
-                      metaMaskStatus={this.props.metaMaskStatus}
-                      accounts={this.props.accounts}
-                      isAuthenticated={this.state.isAuthenticated}
-                      userAddress={this.state.userAddress}
-                    />
-                  </LoginGuard>
+                  <MainScreen
+                    provider={this.props.provider}
+                    web3={this.props.web3}
+                    metaMaskStatus={this.props.metaMaskStatus}
+                    accounts={this.props.accounts}
+                    isAuthenticated={this.state.isAuthenticated}
+                    userAddress={this.state.userAddress}
+                  />
                 )}
               />
               <Route
