@@ -266,7 +266,7 @@ class SignUp extends Component {
                           this.register(this.props);
                         }}
                       >
-                        Login with Metamask{' '}
+                        Register with Metamask{' '}
                         <MetaMaskLogo width={20} height={20} />
                       </Button>
                     </ButtonRow>
@@ -275,7 +275,7 @@ class SignUp extends Component {
                 <Row>
                   <Paragraph>
                     Already have an <strong>account</strong>? Please{' '}
-                    <Link to="/signup">Sign up here.</Link>
+                    <Link to="/login">log in here.</Link>
                   </Paragraph>
                 </Row>
               </Container>
