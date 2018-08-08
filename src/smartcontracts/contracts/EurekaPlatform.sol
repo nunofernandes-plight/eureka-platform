@@ -481,7 +481,7 @@ contract EurekaPlatform {
 
         article.versionState = ArticleVersionState.DECLINED;
 
-        if (countReviewRounds(article.submissionId) >= maxReviewRounds)
+        if (countDeclinedReviewRounds(article.submissionId) >= maxReviewRounds)
             closeSubmissionProcess(article.submissionId);
         else
             requestNewReviewRound(article.submissionId);
@@ -514,7 +514,7 @@ contract EurekaPlatform {
 
     // only counts the articles which went through a review process and therefore have the state DECLINED
     // does not consider the versions with state DECLINED_SANITY_NOTOK
-    function countReviewRounds(uint256 _submissionId) view private returns (uint count) {
+    function countDeclinedReviewRounds(uint256 _submissionId) view private returns (uint count) {
         ArticleVersion[] storage versions = articleSubmissions[_submissionId].versions;
         for (uint i = 0; i < versions.length; i++) {
             if (versions[i].versionState == ArticleVersionState.DECLINED)
@@ -556,20 +556,42 @@ contract EurekaPlatform {
     // TODO: should it be possible to close a submission process before reaching maxReviewRounds ??
     function closeSubmissionProcess(uint256 _submissionId) private {
 
-        // TODO transfer all rewards
+        ArticleSubmission submission = articleSubmissions[_submissionId];
+        
+        // transfer all rewards
+        require(eurekaTokenContract.transfer(contractOwner, sciencemattersFoundationReward));
+        require(eurekaTokenContract.transfer(submission.editor, editorReward));
+        
+        // counts how many reviewRounds happened to devide the reward later
+        uint reviewRounds = countDeclinedReviewRounds(_submissionId) + 1;
+        for(uint i=0; i < submission.versions.length; i++) {
+            if (submission.versions[i].versionState == ArticleVersionState.DECLINED
+                || submission.versions[i].versionState == ArticleVersionState.ACCEPTED) {
+                
+                rewardEditorApprovedReviews(submission.versions[i].editorApprovedReviews, reviewRounds);
+                //rewardReviewers(submission.versions[i].communityReviews, reviewRounds);
+            }
+        }
 
-        articleSubmissions[_submissionId].submissionState = SubmissionState.CLOSED;
-        articleSubmissions[_submissionId].stateTimestamp = block.timestamp;
+        submission.submissionState = SubmissionState.CLOSED;
+        submission.stateTimestamp = block.timestamp;
     }
 
-    function rewardReviewer(ArticleVersion _article, Review _review) private {
-        if (_review.isEditorApprovedReview) {
-            if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfRewardedEditorApprovedReviews)
-                eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer);  //TODO: handle reward
-        }
-        else {
-            if (countAcceptedReviews(_article.communityReviews) < maxAmountOfRewardedCommunityReviews)
-                eurekaTokenContract.transfer(_review.reviewer, communityReviewerRewardPerReviewer);  //TODO: handle reward
+    function rewardEditorApprovedReviews(Review[] _editorApprovedReviews, uint _reviewRounds) private {
+        uint rewardedReviewers = 0;
+        for(uint i=0; i < _editorApprovedReviews.length; i++) {
+            if (rewardedReviewers < maxAmountOfRewardedEditorApprovedReviews) {
+                if (_editorApprovedReviews[i].reviewState == ReviewState.ACCEPTED) {
+                    require(
+                        eurekaTokenContract.transfer(
+                            _editorApprovedReviews[i].reviewer, 
+                            editorApprovedReviewerRewardPerReviewer.div(_reviewRounds)
+                        ));
+                    rewardedReviewers++;
+                }
+            }
+            else
+                return;
         }
     }
 }
