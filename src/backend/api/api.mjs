@@ -43,7 +43,6 @@ export default {
         saveUninitialized: false,
         name: 'eureka.sid',
         cookie: {maxAge: 24 * 3600000, secure: false, httpOnly: false}
-        //cookie: { secure: true }
       })
     );
 

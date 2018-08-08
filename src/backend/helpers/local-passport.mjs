@@ -6,41 +6,40 @@ import User from '../schema/user.mjs';
 const LocalStrategy = passportLocal.Strategy;
 
 passport.use(
-  new LocalStrategy(async function(ethereumAddress, password, done) {
-    const dbUser = await User.findOne({ethereumAddress: ethereumAddress});
-    const isCorrectHash = await bcryptHasher.compare(password, dbUser.password);
+  new LocalStrategy(
+    {
+      usernameField: 'ethereumAddress',
+      passwordField: 'password'
+    },
 
-    User.findOne(
-      {
-        ethereumAddress: ethereumAddress
-      },
-      function(err, user) {
-        if (err) {
-          return done(err);
-        }
+    async function(ethereumAddress, password, done) {
 
-        // no user found
-        if (!user) {
-          return done(null, false);
-        }
-
-        // incorrect password
-        if (!isCorrectHash) {
-          return done(null, false);
-        }
-
-        //login success
-        return done(null, user);
+      // user in db?
+      const dbUser = await User.findOne({ethereumAddress: ethereumAddress});
+      if(!dbUser) {
+        let error = new Error('Provided Login credentials are wrong 1');
+        error.status = 401;
+        return done(null, false);
       }
-    );
-  })
+
+      // correct pwd?
+      const isCorrectHash = await bcryptHasher.compare(password, dbUser.password);
+      if(!isCorrectHash) {
+        let error = new Error('Provided Login credentials are wrong 2');
+        error.status = 401;
+        return done(null, false);
+      }
+
+      //login success
+      return done(null, dbUser);
+    })
 );
 
 /**
  *  Configure Passport authenticated session persistence.
  */
-passport.serializeUser(function(user, done) {
-  done(null, user.ethereumAddress);
+passport.serializeUser(function(ethereumAddress, done) {
+  done(null, ethereumAddress);
 });
 
 passport.deserializeUser(function(user, done) {
