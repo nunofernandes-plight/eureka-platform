@@ -488,6 +488,7 @@ contract EurekaPlatform {
         // TODO if accept method is called to early, other reviewers could be rewarded.
 
         article.versionState = ArticleVersionState.ACCEPTED;
+        article.stateTimestamp = block.timestamp;
 
         closeSubmissionProcess(article.submissionId);
     }
