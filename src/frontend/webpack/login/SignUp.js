@@ -1,30 +1,26 @@
 import React, {Component} from 'react';
-import {Link, Redirect} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import {Row} from '../../helpers/layout.js';
 import MetaMaskLogo from '../icons/MetaMaskLogo.js';
-import EurekaLogo from '../icons/EurekaLogo.js';
+import {signPrivateKey} from '../../web3/Helpers.js';
 import Web3Providers from '../../web3/Web3Providers.js';
 import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
 import Modal from '../design-components/Modal.js';
 import AccountBalance from '../../web3/AccountBalance.js';
 import {isEmailValid} from '../../../helpers/emailValidator.js';
 import {InputField} from '../design-components/Inputs.js';
-import Alert from '../design-components/Alerts.js';
 import EurekaSpinner from '../../webpack/spinners/EurekaSpinner.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import {
   Container,
-  AlertContainer,
   Paragraph,
   SubTitle,
-  Title,
-  AlertDevContainer,
   Button,
   ButtonRow,
   LoginContainer,
-  LoginRow,
-  TitleRow
+  LoginRow
 } from './SharedForms.js';
+import TopAlertContainer from './TopAlertContainer.js';
 
 class SignUp extends Component {
   constructor() {
@@ -33,8 +29,7 @@ class SignUp extends Component {
       username: null,
       email: null,
       isShowed: false,
-      defaultAccount: null,
-      signedKey: null,
+      signature: null,
       inputStatus: null,
       isEmailValidModal: false,
       submitted: false,
@@ -72,10 +67,10 @@ class SignUp extends Component {
   }
 
   async apiCall() {
-    const signedKey = await this.signPrivateKey();
-    this.setState({signedKey});
+    const signature = await this.signPrivateKey();
+    this.setState({signature});
 
-    if (signedKey) {
+    if (signature) {
       this.setState({loading: true});
       fetch(`${getDomain()}/api/register`, {
         method: 'POST',
@@ -85,18 +80,19 @@ class SignUp extends Component {
         credentials: 'include',
         body: JSON.stringify({
           email: this.state.email,
-          password: this.state.signedKey,
-          ethereumAddress: this.state.defaultAccount
+          password: this.state.signature,
+          ethereumAddress: this.props.selectedAccount.address
         })
       })
         .then(response => response.json())
         .then(response => {
           if (response.success) {
-            this.props.setAuth(true);
+            this.props.history.push('/dashboard');
           } else {
             this.setState({
               errorMessage: response.error,
-              loading: false
+              loading: false,
+              inputStatus: null
             });
           }
         })
@@ -104,25 +100,14 @@ class SignUp extends Component {
           console.log(err);
           this.setState({
             errorMessage: 'Ouh. Something went wrong.',
-            loading: false
+            loading: false,
+            inputStatus: null
           });
         });
     }
   }
 
-  signPrivateKey() {
-    const accounts = Array.from(this.props.accounts.keys());
-    let defaultAccount;
-    if (accounts.length === 1) {
-      defaultAccount = accounts[0];
-    } else {
-      // TODO: handle GANACHE case
-      defaultAccount = accounts[0];
-    }
-    if (defaultAccount) {
-      this.setState({defaultAccount});
-    }
-
+  async signPrivateKey() {
     const message =
       'EUREKA Register Authentication for the email: ' +
       this.state.email +
@@ -132,14 +117,11 @@ class SignUp extends Component {
       // FAKE PASSWORD FOR DEV
       return '0xb91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a0291c';
     } else if (this.props.provider === Web3Providers.META_MASK) {
-      if (this.props.web3.utils.isAddress(defaultAccount)) {
-        return this.props.web3.eth.personal
-          .sign(message, defaultAccount)
-          .then(signedKey => {
-            return signedKey;
-          })
-          .catch(err => console.log(err));
-      }
+      return signPrivateKey(
+        this.props.web3,
+        this.props.selectedAccount.address,
+        message
+      );
     }
   }
 
@@ -199,7 +181,6 @@ class SignUp extends Component {
   render() {
     return (
       <div>
-        {this.props.authed ? <Redirect to={'/dashboard'} /> : null}
         <div>
           {this.state.loading ? (
             <EurekaSpinner />
@@ -207,30 +188,7 @@ class SignUp extends Component {
             <div>
               {this.renderModals()}
               <Container>
-                <TitleRow>
-                  <Title>
-                    Welcome to{' '}
-                    <div style={{marginLeft: 10}}>
-                      <EurekaLogo blueNoLogo width={200} />
-                    </div>
-                  </Title>
-                  {this.props.provider === Web3Providers.META_MASK ? (
-                    <AlertContainer>
-                      <Alert status={'info'}>
-                        We detected MetaMask in your Browser! We use it as our
-                        authentication provider. Please note that we are not
-                        able neither to see nor to store your private keys.{' '}
-                      </Alert>
-                    </AlertContainer>
-                  ) : null}
-                  {this.props.provider === Web3Providers.LOCALHOST ? (
-                    <AlertDevContainer>
-                      <Alert status={'warning'}>
-                        THIS IS A DEV ENVIRONMENT
-                      </Alert>
-                    </AlertDevContainer>
-                  ) : null}
-                </TitleRow>
+                <TopAlertContainer provider={this.props.provider} />
 
                 <Row>
                   <LoginContainer provider={this.props.provider}>
@@ -289,4 +247,4 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp;
+export default withRouter(SignUp);

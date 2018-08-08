@@ -1,41 +1,31 @@
 import React, {Component} from 'react';
-import {Link, Redirect} from 'react-router-dom';
+import {Link, Redirect, withRouter} from 'react-router-dom';
 import {Row} from '../../helpers/layout.js';
 import MetaMaskLogo from '../icons/MetaMaskLogo.js';
-import EurekaLogo from '../icons/EurekaLogo.js';
+import {signPrivateKey} from '../../web3/Helpers.js';
 import Web3Providers from '../../web3/Web3Providers.js';
 import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
 import Modal from '../design-components/Modal.js';
 import AccountBalance from '../../web3/AccountBalance.js';
-import {isEmailValid} from '../../../helpers/emailValidator.js';
-import {InputField} from '../design-components/Inputs.js';
-import Alert from '../design-components/Alerts.js';
 import EurekaSpinner from '../../webpack/spinners/EurekaSpinner.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import {
   Container,
-  AlertContainer,
-    Paragraph,
+  Paragraph,
   SubTitle,
-  Title,
-  AlertDevContainer,
   Button,
   ButtonRow,
   LoginContainer,
-  LoginRow,
-  TitleRow
+  LoginRow
 } from './SharedForms.js';
+import TopAlertContainer from './TopAlertContainer.js';
 
 class Login extends Component {
   constructor() {
     super();
     this.state = {
-      username: null,
-      email: null,
       isShowed: false,
-      defaultAccount: null,
-      signedKey: null,
-      inputStatus: null,
+      signature: null,
       isEmailValidModal: false,
       submitted: false,
       errorMessage: null,
@@ -43,13 +33,8 @@ class Login extends Component {
     };
   }
 
-  async login(props) {
+  async register(props) {
     this.setState({submitted: true});
-
-    if (!isEmailValid(this.state.email)) {
-      this.setState({isEmailValidModal: true});
-      return;
-    }
 
     // DEV ENVIRONMENT
     if (props.provider === Web3Providers.LOCALHOST) {
@@ -72,27 +57,26 @@ class Login extends Component {
   }
 
   async apiCall() {
-    const signedKey = await this.signPrivateKey();
-    this.setState({signedKey});
+    const signature = await this.signPrivateKey();
+    this.setState({signature});
 
-    if (signedKey) {
+    if (signature) {
       this.setState({loading: true});
-      fetch(`${getDomain()}/api/register`, {
+      fetch(`${getDomain()}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         credentials: 'include',
         body: JSON.stringify({
-          email: this.state.email,
-          password: this.state.signedKey,
-          ethereumAddress: this.state.defaultAccount
+          password: this.state.signature,
+          ethereumAddress: this.props.selectedAccount.address
         })
       })
         .then(response => response.json())
         .then(response => {
           if (response.success) {
-            this.props.setAuth(true);
+            this.props.history.push('/dashboard');
           } else {
             this.setState({
               errorMessage: response.error,
@@ -110,21 +94,9 @@ class Login extends Component {
     }
   }
 
-  signPrivateKey() {
-    const accounts = Array.from(this.props.accounts.keys());
-    let defaultAccount;
-    if (accounts.length === 1) {
-      defaultAccount = accounts[0];
-    } else {
-      // TODO: handle GANACHE case
-      defaultAccount = accounts[0];
-    }
-    if (defaultAccount) {
-      this.setState({defaultAccount});
-    }
-
+  async signPrivateKey() {
     const message =
-      'EUREKA Login Authentication for the email: ' +
+      'EUREKA Register Authentication for the email: ' +
       this.state.email +
       '  - Please click to the Sign Button below.';
 
@@ -132,22 +104,12 @@ class Login extends Component {
       // FAKE PASSWORD FOR DEV
       return '0xb91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a0291c';
     } else if (this.props.provider === Web3Providers.META_MASK) {
-      return this.props.web3.eth.personal
-        .sign(message, defaultAccount)
-        .then(signedKey => {
-          return signedKey;
-        })
-        .catch(err => console.log(err));
+      return signPrivateKey(
+        this.props.web3,
+        this.props.selectedAccount.address,
+        message
+      );
     }
-  }
-
-  handleInput(stateKey, e) {
-    if (isEmailValid(e.target.value)) {
-      this.setState({inputStatus: 'valid'});
-    } else {
-      this.setState({inputStatus: 'error'});
-    }
-    this.setState({[stateKey]: e.target.value});
   }
 
   renderModals() {
@@ -162,7 +124,7 @@ class Login extends Component {
             this.state.isShowed &&
             this.props.metaMaskStatus !== MetaMaskStatus.DETECTED_LOGGED_IN
           }
-          title={'Login using MetaMask - INFORMATION'}
+          title={'Register using MetaMask - INFORMATION'}
         >
           Please be sure to have MetaMask<MetaMaskLogo width={15} height={15} />{' '}
           installed in your browser! If you already have installed it, open the
@@ -205,48 +167,11 @@ class Login extends Component {
             <div>
               {this.renderModals()}
               <Container>
-                <TitleRow>
-                  <Title>
-                    Welcome to{' '}
-                    <div style={{marginLeft: 10}}>
-                      <EurekaLogo blueNoLogo width={200} />
-                    </div>
-                  </Title>
-                  {this.props.provider === Web3Providers.META_MASK ? (
-                    <AlertContainer>
-                      <Alert status={'info'}>
-                        We detected MetaMask in your Browser! We use it as our
-                        authentication provider. Please note that we are not
-                        able neither to see nor to store your private keys.{' '}
-                      </Alert>
-                    </AlertContainer>
-                  ) : null}
-                  {this.props.provider === Web3Providers.LOCALHOST ? (
-                    <AlertDevContainer>
-                      <Alert status={'warning'}>
-                        THIS IS A DEV ENVIRONMENT
-                      </Alert>
-                    </AlertDevContainer>
-                  ) : null}
-                </TitleRow>
+                <TopAlertContainer provider={this.props.provider} />
 
                 <Row>
                   <LoginContainer provider={this.props.provider}>
-                    <SubTitle>Please login</SubTitle>
-                    <LoginRow>
-                      <InputField
-                        placeholder={'email address'}
-                        status={
-                          this.state.email ? this.state.inputStatus : null
-                        }
-                        onChange={e => this.handleInput('email', e)}
-                        onKeyPress={e => {
-                          if (e.key === 'Enter') {
-                            this.login(this.props);
-                          }
-                        }}
-                      />
-                    </LoginRow>
+                    <SubTitle>Please Login</SubTitle>
 
                     {this.props.accounts ? (
                       <LoginRow>
@@ -263,7 +188,7 @@ class Login extends Component {
                     <ButtonRow>
                       <Button
                         onClick={() => {
-                          this.login(this.props);
+                          this.register(this.props);
                         }}
                       >
                         Login with Metamask{' '}
@@ -274,8 +199,8 @@ class Login extends Component {
                 </Row>
                 <Row>
                   <Paragraph>
-                    Already have an <strong>account</strong>? Please{' '}
-                    <Link to="/signup">Sign up here.</Link>
+                    Don't have an <strong>account</strong>? Please{' '}
+                    <Link to="/login">sign up here.</Link>
                   </Paragraph>
                 </Row>
               </Container>
@@ -287,4 +212,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withRouter(Login);
