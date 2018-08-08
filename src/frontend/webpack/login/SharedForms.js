@@ -12,7 +12,7 @@ export const Container = styled.div`
 `;
 export const Title = styled.h1`
   color: ${__THIRD};
-  margin-top: 1.5em;
+  margin: 0;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -37,6 +37,7 @@ export const AlertContainer = styled.div`
   word-break: break-word;
   width: 700px;
   margin-bottom: 40px;
+  margin-top: 30px;
 `;
 
 export const TitleRow = Row.extend`
@@ -61,8 +62,8 @@ export const AlertDevContainer = styled.div`
   max-width: 900px;
   color: white;
   border-radius: 4px;
+  margin-top: 30px;
 `;
-
 export const SubTitle = styled.h2`
   text-align: center;
 `;

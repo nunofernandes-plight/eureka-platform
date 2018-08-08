@@ -25,6 +25,7 @@ import {
   LoginRow,
   TitleRow
 } from './SharedForms.js';
+import TopAlertContainer from './TopAlertContainer.js';
 
 class SignUp extends Component {
   constructor() {
@@ -207,30 +208,7 @@ class SignUp extends Component {
             <div>
               {this.renderModals()}
               <Container>
-                <TitleRow>
-                  <Title>
-                    Welcome to{' '}
-                    <div style={{marginLeft: 10}}>
-                      <EurekaLogo blueNoLogo width={200} />
-                    </div>
-                  </Title>
-                  {this.props.provider === Web3Providers.META_MASK ? (
-                    <AlertContainer>
-                      <Alert status={'info'}>
-                        We detected MetaMask in your Browser! We use it as our
-                        authentication provider. Please note that we are not
-                        able neither to see nor to store your private keys.{' '}
-                      </Alert>
-                    </AlertContainer>
-                  ) : null}
-                  {this.props.provider === Web3Providers.LOCALHOST ? (
-                    <AlertDevContainer>
-                      <Alert status={'warning'}>
-                        THIS IS A DEV ENVIRONMENT
-                      </Alert>
-                    </AlertDevContainer>
-                  ) : null}
-                </TitleRow>
+                <TopAlertContainer provider={this.props.provider} />
 
                 <Row>
                   <LoginContainer provider={this.props.provider}>
