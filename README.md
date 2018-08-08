@@ -10,7 +10,7 @@ utility token and is a ERC20 combined with ERC667 token, thus it will follow
 token standards provided by the Ethereum protocol, meaning it can be sent and
 received in transactions on the Ethereum ecosystem.
 
-##### Our Social Media
+## Our Social Media
 > Medium: https://medium.com/eureka-token/
 
 > Twitter: https://twitter.com/TokenEureka/
