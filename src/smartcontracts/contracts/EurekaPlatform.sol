@@ -488,9 +488,8 @@ contract EurekaPlatform {
     }
 
     function rewardReviewer(ArticleVersion _article, Review _review) private {
-        if (_review.isEditorApprovedReview)
+        if (_review.isEditorApprovedReview) {
             if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfRewardedEditorApprovedReviews)
-                eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer[0]);  //TODO: handle reward
                 eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer);  //TODO: handle reward
         }
         else {
