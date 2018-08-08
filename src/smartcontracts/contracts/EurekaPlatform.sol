@@ -17,8 +17,6 @@ contract EurekaPlatform {
     *   journal parameters
     */
 
-    mapping(address => bool) isEditor;
-
     // amount of rewarded reviewers
     uint minAmountOfEditorApprovedReviews = 2;
     uint maxAmountOfRewardedEditorApprovedReviews = 3;
@@ -79,7 +77,9 @@ contract EurekaPlatform {
         + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer[2];
 
     }
+    
 
+    mapping(address => bool) isEditor;
 
     // primary key mappings
     uint256 submissionCounter;
