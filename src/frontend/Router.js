@@ -14,11 +14,16 @@ class Router extends Component {
     super();
     this.state = {
       isAuthenticated: false,
-      userAddress: null
+      userAddress: null,
+      user: null
     };
   }
 
   componentDidMount() {
+    this.authenticate();
+  }
+
+  authenticate() {
     fetch(`${getDomain()}/api/welcome`, {
       method: 'GET',
       headers: {
@@ -38,6 +43,28 @@ class Router extends Component {
           this.setState({
             isAuthenticated: false
           });
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+    this.getUserData();
+  }
+
+  getUserData() {
+    fetch(`${getDomain()}/api/users/data`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          let user = response.data;
+          console.log(response);
+          this.setState({user});
         }
       })
       .catch(err => {
@@ -63,6 +90,7 @@ class Router extends Component {
           metaMaskStatus={this.props.metaMaskStatus}
           network={this.props.network}
           isAuthenticated={this.state.isAuthenticated}
+          user={this.state.user}
         />
         <div style={{paddingTop: 100}}>
           <BrowserRouter>
@@ -95,8 +123,8 @@ class Router extends Component {
                     changeAccount={selectedAccount => {
                       this.props.changeAccount(selectedAccount);
                     }}
-                    setAuth={isAuthenticated => {
-                      this.setState({isAuthenticated});
+                    authenticate={isAuthenticated => {
+                      this.authenticate();
                     }}
                   />
                 )}
@@ -114,8 +142,8 @@ class Router extends Component {
                     changeAccount={selectedAccount => {
                       this.props.changeAccount(selectedAccount);
                     }}
-                    setAuth={isAuthenticated => {
-                      this.setState({isAuthenticated});
+                    authenticate={isAuthenticated => {
+                      this.authenticate();
                     }}
                   />
                 )}

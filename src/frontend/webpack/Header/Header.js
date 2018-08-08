@@ -138,22 +138,18 @@ const renderMiddle = props => {
 };
 
 const renderRight = props => {
-  if (!props.isAuthenticated) {
+  if (props.isAuthenticated && props.user) {
+    return (
+      <div>
+        <Avatar avatar={props.user.avatar} width={40} height={40} />
+      </div>
+    );
+  } else {
     return (
       <RightContainer>
         <Item style={{cursor: 'pointer'}}>Login</Item>
         <SignUp>Sign Up</SignUp>
       </RightContainer>
-    );
-  } else if (props.isAuthenticated) {
-    return (
-      <div>
-        <Avatar
-          avatar={'img/icons/avatars/assistant.svg'}
-          width={40}
-          height={40}
-        />
-      </div>
     );
   }
 };

@@ -90,7 +90,7 @@ class SignUp extends Component {
         .then(response => {
           if (response.success) {
             this.props.history.push('/dashboard');
-            this.props.setAuth(true);
+            this.props.authenticate(); 
           } else {
             this.setState({
               errorMessage: response.error,
