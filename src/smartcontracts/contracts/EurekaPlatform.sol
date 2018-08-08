@@ -20,11 +20,11 @@ contract EurekaPlatform {
     mapping(address => bool) isEditor;
 
     // amount of rewarded reviewers
-    uint minAmountOfEditorApprovedReviewer = 2;
-    uint maxAmountOfEditorApprovedReviewer = 3;
+    uint minAmountOfEditorApprovedReviews = 2;
+    uint maxAmountOfRewardedEditorApprovedReviews = 3;
 
-    uint minAmountOfCommunityReviewer = 0;
-    uint maxAmountOfCommunityReviewer = 5;
+    uint minAmountOfCommunityReviews = 0;
+    uint maxAmountOfRewardedCommunityReviews = 5;
 
     // rewards amount
     uint sciencemattersFoundationReward = 1250;
@@ -68,15 +68,15 @@ contract EurekaPlatform {
         + editorReward
         + linkedArticlesReward
         + invalidationWorkReward
-        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[0]
-        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[1]
-        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[2]
-        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[0]
-        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[1]
-        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[2]
-        + maxAmountOfCommunityReviewer * secondReviewerRewardPerReviewer[0]
-        + maxAmountOfCommunityReviewer * secondReviewerRewardPerReviewer[1]
-        + maxAmountOfCommunityReviewer * secondReviewerRewardPerReviewer[2];
+        + maxAmountOfRewardedEditorApprovedReviews * editorApprovedReviewerRewardPerReviewer[0]
+        + maxAmountOfRewardedEditorApprovedReviews * editorApprovedReviewerRewardPerReviewer[1]
+        + maxAmountOfRewardedEditorApprovedReviews * editorApprovedReviewerRewardPerReviewer[2]
+        + maxAmountOfRewardedCommunityReviews * communityReviewerRewardPerReviewer[0]
+        + maxAmountOfRewardedCommunityReviews * communityReviewerRewardPerReviewer[1]
+        + maxAmountOfRewardedCommunityReviews * communityReviewerRewardPerReviewer[2]
+        + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer[0]
+        + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer[1]
+        + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer[2];
 
     }
 
@@ -178,8 +178,11 @@ contract EurekaPlatform {
 
         bytes32 reviewHash;
         uint256 reviewedTimestamp;
-        
-        bool needForCorrection;
+
+        // if set to true, the editor cannot accept the article if he/she accepts this review
+        bool articleHasMajorIssues;
+        // acceptance of article is still possible although set to true
+        bool articleHasMinorIssues;
         
         uint8 score1;
         uint8 score2;
@@ -338,7 +341,7 @@ contract EurekaPlatform {
         //TODO: maybe not necessary anymore
         require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
         //TODO: handle accepted but not responding reviewers
-        require(article.editorApprovedReviews.length < maxAmountOfEditorApprovedReviewer, "the max amount of editor approved reviews is already reached.");
+        require(article.editorApprovedReviews.length < maxAmountOfRewardedEditorApprovedReviews, "the max amount of editor approved reviews is already reached.");
 
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState == ReviewState.INVITED, "this method can't be called, the review state needs to be in INVITED.");
@@ -349,7 +352,7 @@ contract EurekaPlatform {
         article.editorApprovedReviews.push(review);
     }
 
-    function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, bool _needForCorrection, uint8 _score2) public {
+    function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
@@ -368,7 +371,8 @@ contract EurekaPlatform {
         review.isEditorApprovedReview = true;
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
-        review.needForCorrection = _needForCorrection;
+        review.articleHasMajorIssues = _articleHasMajorIssues;
+        review.articleHasMinorIssues = _articleHasMinorIssues;
         review.score1 = _score1;
         review.score2 = _score2;
 
@@ -376,7 +380,7 @@ contract EurekaPlatform {
         review.stateTimestamp = block.timestamp;
     }
 
-    function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, bool _needForCorrection, uint8 _score1, uint8 _score2) public {
+    function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.SUBMITTED
@@ -391,7 +395,8 @@ contract EurekaPlatform {
         review.isEditorApprovedReview = false;
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
-        review.needForCorrection = _needForCorrection;
+        review.articleHasMajorIssues = _articleHasMajorIssues;
+        review.articleHasMinorIssues = _articleHasMinorIssues;
         review.score1 = _score1;
         review.score2 = _score2;
 
@@ -400,7 +405,7 @@ contract EurekaPlatform {
         review.stateTimestamp = block.timestamp;
     }
 
-    function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _needForCorrection, uint8 _score1, uint8 _score2) public {
+    function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.SUBMITTED
@@ -413,7 +418,8 @@ contract EurekaPlatform {
 
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
-        review.needForCorrection = _needForCorrection;
+        review.articleHasMajorIssues = _articleHasMajorIssues;
+        review.articleHasMinorIssues = _articleHasMinorIssues;
         review.score1 = _score1;
         review.score2 = _score2;
 
@@ -434,17 +440,6 @@ contract EurekaPlatform {
 
         review.reviewState = ReviewState.ACCEPTED;
         review.stateTimestamp = block.timestamp;
-        
-        rewardReviewer(article, review);
-    }
-    
-    function rewardReviewer(ArticleVersion _article, Review _review) private {
-        if (_review.isEditorApprovedReview)
-            if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfEditorApprovedReviewer)
-                eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer[0]);  //TODO: handle reward
-        else 
-            if (countAcceptedReviews(_article.communityReviews) < maxAmountOfCommunityReviewer)
-                eurekaTokenContract.transfer(_review.reviewer, communityReviewerRewardPerReviewer[0]);  //TODO: handle reward
     }
 
     function declineReview(bytes32 _articleHash, address _reviewerAddress) public {
@@ -469,19 +464,20 @@ contract EurekaPlatform {
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
 
-        require(countAcceptedReviews(article.editorApprovedReviews) >= minAmountOfEditorApprovedReviewer,
+        require(countAcceptedReviews(article.editorApprovedReviews) >= minAmountOfEditorApprovedReviews,
             "the article doesn't have enough accepted editor approved reviews to get accepted.");
-        require(countAcceptedReviews(article.communityReviews) >= minAmountOfCommunityReviewer,
+        require(countAcceptedReviews(article.communityReviews) >= minAmountOfCommunityReviews,
             "the article doesn't have enough community reviews to get accepted.");
             
-        require(countReviewsAskingForCorrection(article.editorApprovedReviews) == 0,
+        require(countReviewsWithMajorIssues(article.editorApprovedReviews) == 0,
             "the article needs to be corrected.");
-        require(countReviewsAskingForCorrection(article.communityReviews) == 0,
+        require(countReviewsWithMajorIssues(article.communityReviews) == 0,
             "the article needs to be corrected.");
 
         // TODO if accept method is called to early, other reviewers could be rewarded.
 
         article.versionState = ArticleVersionState.ACCEPTED;
+        article.stateTimestamp = block.timestamp;
 
         closeSubmissionProcess(article.submissionId);
     }
@@ -503,6 +499,15 @@ contract EurekaPlatform {
             requestNewReviewRound(article.submissionId);
     }
 
+    function rewardReviewer(ArticleVersion _article, Review _review) private {
+        if (_review.isEditorApprovedReview)
+            if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfRewardedEditorApprovedReviews)
+                eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer[0]);  //TODO: handle reward
+            else
+                if (countAcceptedReviews(_article.communityReviews) < maxAmountOfRewardedCommunityReviews)
+                    eurekaTokenContract.transfer(_review.reviewer, communityReviewerRewardPerReviewer[0]);  //TODO: handle reward
+    }
+
     function countAcceptedReviews(Review[] _reviews) pure private returns (uint count) {
         for (uint i = 0; i < _reviews.length; i++) {
             if (_reviews[i].reviewState == ReviewState.ACCEPTED)
@@ -511,10 +516,10 @@ contract EurekaPlatform {
         return count;
     }
     
-    function countReviewsAskingForCorrection(Review[] _reviews) pure private returns (uint count) {
+    function countReviewsWithMajorIssues(Review[] _reviews) pure private returns (uint count) {
         for (uint i = 0; i < _reviews.length; i++) {
             if (_reviews[i].reviewState == ReviewState.ACCEPTED
-                && _reviews[i].needForCorrection)
+                && _reviews[i].articleHasMajorIssues)
                 count++;
         }
         return count;
