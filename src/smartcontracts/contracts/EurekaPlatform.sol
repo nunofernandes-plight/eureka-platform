@@ -22,60 +22,35 @@ contract EurekaPlatform {
     uint maxAmountOfRewardedEditorApprovedReviews = 3;
 
     uint minAmountOfCommunityReviews = 0;
-    uint maxAmountOfRewardedCommunityReviews = 5;
+    uint maxAmountOfRewardedCommunityReviews = 10;
 
     // rewards amount
     uint sciencemattersFoundationReward = 1250;
     uint editorReward = 500;
     uint linkedArticlesReward = 750;
     uint invalidationWorkReward = 1000;
-
-    // rewards for the reviews saved in arrays, specifiable reward for every round.
-    // if rounds not needed, returned back to author
-    // if max reviewer amount is not reached, not used rewards is returned to author
-    uint constant maxReviewRounds = 3;
-    uint[maxReviewRounds] editorApprovedReviewerRewardPerReviewer;
-    uint[maxReviewRounds] communityReviewerRewardPerReviewer;
-    uint[maxReviewRounds] secondReviewerRewardPerReviewer;
-
-    // resulting submission fee
-    uint public submissionFee;
-
-
-//    constructor(address _eurekaTokenContractAddress) public {
-        constructor() public {
-        
-//        eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
-
-        contractOwner = msg.sender;
-
-        editorApprovedReviewerRewardPerReviewer[0] = 150;
-        editorApprovedReviewerRewardPerReviewer[1] = 75;
-        editorApprovedReviewerRewardPerReviewer[2] = 25;
-
-        communityReviewerRewardPerReviewer[0] = 60;
-        communityReviewerRewardPerReviewer[1] = 30;
-        communityReviewerRewardPerReviewer[2] = 10;
-
-        secondReviewerRewardPerReviewer[0] = 30;
-        secondReviewerRewardPerReviewer[1] = 15;
-        secondReviewerRewardPerReviewer[2] = 5;
-
-        submissionFee =
+    
+    uint editorApprovedReviewerRewardPerReviewer = 250;
+    uint communityReviewerRewardPerReviewer = 50;
+    uint secondReviewerRewardPerReviewer = 25;
+    
+    uint public submissionFee =
         sciencemattersFoundationReward
         + editorReward
         + linkedArticlesReward
         + invalidationWorkReward
-        + maxAmountOfRewardedEditorApprovedReviews * editorApprovedReviewerRewardPerReviewer[0]
-        + maxAmountOfRewardedEditorApprovedReviews * editorApprovedReviewerRewardPerReviewer[1]
-        + maxAmountOfRewardedEditorApprovedReviews * editorApprovedReviewerRewardPerReviewer[2]
-        + maxAmountOfRewardedCommunityReviews * communityReviewerRewardPerReviewer[0]
-        + maxAmountOfRewardedCommunityReviews * communityReviewerRewardPerReviewer[1]
-        + maxAmountOfRewardedCommunityReviews * communityReviewerRewardPerReviewer[2]
-        + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer[0]
-        + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer[1]
-        + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer[2];
+        + maxAmountOfRewardedEditorApprovedReviews * editorApprovedReviewerRewardPerReviewer
+        + maxAmountOfRewardedCommunityReviews * communityReviewerRewardPerReviewer
+        + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer;
 
+    uint constant maxReviewRounds = 3;
+
+
+//    constructor(address _eurekaTokenContractAddress) public {
+    constructor() public {
+        
+//        eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
+        contractOwner = msg.sender;
     }
     
 
@@ -186,6 +161,9 @@ contract EurekaPlatform {
         
         uint8 score1;
         uint8 score2;
+        
+        // address of the reviewer who reviewed this review (if at state ACCEPTED or DECLINED)
+        address reviewedBy;
     }
 
     function getLinkedArticles(bytes32 hash) public view returns (bytes32[] linkedArticles) {
@@ -440,6 +418,7 @@ contract EurekaPlatform {
 
         review.reviewState = ReviewState.ACCEPTED;
         review.stateTimestamp = block.timestamp;
+        review.reviewedBy = msg.sender;
     }
 
     function declineReview(bytes32 _articleHash, address _reviewerAddress) public {
@@ -455,6 +434,7 @@ contract EurekaPlatform {
 
         review.reviewState = ReviewState.DECLINED;
         review.stateTimestamp = block.timestamp;
+        review.reviewedBy = msg.sender;
     }
 
     function acceptArticleVersion(bytes32 _articleHash) public {
@@ -501,19 +481,10 @@ contract EurekaPlatform {
 
         article.versionState = ArticleVersionState.DECLINED;
 
-        if (countReviewRounds(article.submissionId) >= maxReviewRounds)
+        if (countDeclinedReviewRounds(article.submissionId) >= maxReviewRounds)
             closeSubmissionProcess(article.submissionId);
         else
             requestNewReviewRound(article.submissionId);
-    }
-
-    function rewardReviewer(ArticleVersion _article, Review _review) private {
-        if (_review.isEditorApprovedReview)
-            if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfRewardedEditorApprovedReviews)
-                eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer[0]);  //TODO: handle reward
-            else
-                if (countAcceptedReviews(_article.communityReviews) < maxAmountOfRewardedCommunityReviews)
-                    eurekaTokenContract.transfer(_review.reviewer, communityReviewerRewardPerReviewer[0]);  //TODO: handle reward
     }
 
     function countAcceptedReviewInvitations(Review[] _reviews) pure private returns (uint count) {
@@ -543,7 +514,7 @@ contract EurekaPlatform {
 
     // only counts the articles which went through a review process and therefore have the state DECLINED
     // does not consider the versions with state DECLINED_SANITY_NOTOK
-    function countReviewRounds(uint256 _submissionId) view private returns (uint count) {
+    function countDeclinedReviewRounds(uint256 _submissionId) view private returns (uint count) {
         ArticleVersion[] storage versions = articleSubmissions[_submissionId].versions;
         for (uint i = 0; i < versions.length; i++) {
             if (versions[i].versionState == ArticleVersionState.DECLINED)
@@ -552,32 +523,24 @@ contract EurekaPlatform {
         return count;
     }
 
-    // TODO: should it be possible to close a submission process before reaching maxReviewRounds ??
-    function closeSubmissionProcess(uint256 _submissionId) private {
-
-        // TODO transfer all rewards
-
-        articleSubmissions[_submissionId].submissionState = SubmissionState.CLOSED;
-    }
-
     function requestNewReviewRound(uint256 _submissionId) private {
-
-        // maybe TODO transfer all rewards
-
+        
         articleSubmissions[_submissionId].submissionState = SubmissionState.NEW_REVIEW_ROUND_REQUESTED;
+        articleSubmissions[_submissionId].stateTimestamp = block.timestamp;
     }
 
     function openNewReviewRound(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
         uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) public {
 
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
-        require(msg.sender == submission.submissionOwner, "only the submission process owner can submit articles.");
+        require(msg.sender == submission.submissionOwner, "only the submission process owner can submit a new article version.");
         require(submission.submissionState == SubmissionState.NEW_REVIEW_ROUND_REQUESTED,
             "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
 
         submitArticleVersion(_submissionId, _articleHash, _articleURL, _authors, _authorContributionRatios, _linkedArticles, _linkedArticlesSplitRatios);
 
         submission.submissionState = SubmissionState.OPEN;
+        submission.stateTimestamp = block.timestamp;
     }
 
     function declineNewReviewRound(uint256 _submissionId) public {
@@ -588,5 +551,70 @@ contract EurekaPlatform {
             "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
 
         closeSubmissionProcess(_submissionId);
+    }
+
+    // TODO: should it be possible to close a submission process before reaching maxReviewRounds ??
+    function closeSubmissionProcess(uint256 _submissionId) private {
+
+        ArticleSubmission submission = articleSubmissions[_submissionId];
+        
+        // transfer all rewards
+        require(eurekaTokenContract.transfer(contractOwner, sciencemattersFoundationReward));
+        require(eurekaTokenContract.transfer(submission.editor, editorReward));
+        
+        // counts how many reviewRounds happened to devide the reward later
+        uint reviewRounds = countDeclinedReviewRounds(_submissionId) + 1;
+        for(uint i=0; i < submission.versions.length; i++) {
+            if (submission.versions[i].versionState == ArticleVersionState.DECLINED
+                || submission.versions[i].versionState == ArticleVersionState.ACCEPTED) {
+                
+                rewardEditorApprovedReviews(submission.versions[i].editorApprovedReviews, reviewRounds);
+                //rewardReviewers(submission.versions[i].communityReviews, reviewRounds);
+            }
+        }
+
+        submission.submissionState = SubmissionState.CLOSED;
+        submission.stateTimestamp = block.timestamp;
+    }
+
+    function rewardEditorApprovedReviews(Review[] _editorApprovedReviews, uint _reviewRounds) private {
+        uint rewardedReviewers = 0;
+        for(uint i=0; i < _editorApprovedReviews.length; i++) {
+            if (rewardedReviewers < maxAmountOfRewardedEditorApprovedReviews) {
+                if (_editorApprovedReviews[i].reviewState == ReviewState.ACCEPTED) {
+                    require(
+                        eurekaTokenContract.transfer(
+                            _editorApprovedReviews[i].reviewer, 
+                            editorApprovedReviewerRewardPerReviewer.div(_reviewRounds)
+                        ));
+                    rewardedReviewers++;
+                }
+            }
+            else
+                return;
+        }
+    }
+    
+    function rewardCommunityReviews(Review[] _communityReviews, uint _reviewRounds) private {
+        uint rewardedReviewers = 0;
+        for(uint i=0; i < _communityReviews.length; i++) {
+            if (rewardedReviewers < maxAmountOfRewardedCommunityReviews) {
+                if (_communityReviews[i].reviewState == ReviewState.ACCEPTED) {
+                    require(
+                        eurekaTokenContract.transfer(
+                            _communityReviews[i].reviewer, 
+                            communityReviewerRewardPerReviewer.div(_reviewRounds)
+                        ));
+                    require(
+                        eurekaTokenContract.transfer(
+                            _communityReviews[i].reviewedBy, 
+                            secondReviewerRewardPerReviewer.div(_reviewRounds)
+                        ));
+                    rewardedReviewers++;
+                }
+            }
+            else
+                return;
+        }
     }
 }
