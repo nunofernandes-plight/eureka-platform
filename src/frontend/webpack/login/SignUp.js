@@ -97,7 +97,8 @@ class SignUp extends Component {
           } else {
             this.setState({
               errorMessage: response.error,
-              loading: false
+              loading: false,
+              inputStatus: null
             });
           }
         })
@@ -105,7 +106,8 @@ class SignUp extends Component {
           console.log(err);
           this.setState({
             errorMessage: 'Ouh. Something went wrong.',
-            loading: false
+            loading: false,
+            inputStatus: null
           });
         });
     }
