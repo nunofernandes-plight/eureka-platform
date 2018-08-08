@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Switch, Route} from 'react-router';
-import {BrowserRouter} from 'react-router-dom';
+import {BrowserRouter, Redirect} from 'react-router-dom';
 import WelcomePage from './webpack/login/WelcomePage';
 import Header from './webpack/Header/Header';
 import Login from './webpack/login/Login';
@@ -8,6 +8,7 @@ import MetaMaskGuide from './webpack/MetaMaskGuide';
 import MainScreen from './webpack/dashboard/MainScreen.js';
 import {getDomain} from '../helpers/getDomain.js';
 import SignUp from './webpack/login/SignUp.js';
+import {LoginGuard} from './webpack/guards/Guards.js';
 
 class Router extends Component {
   constructor() {
@@ -100,14 +101,20 @@ class Router extends Component {
                 path="/dashboard"
                 exact
                 render={() => (
-                  <MainScreen
-                    provider={this.props.provider}
-                    web3={this.props.web3}
-                    metaMaskStatus={this.props.metaMaskStatus}
-                    accounts={this.props.accounts}
-                    isAuthenticated={this.state.isAuthenticated}
-                    userAddress={this.state.userAddress}
-                  />
+                  <div>
+                    {this.state.isAuthenticated ? (
+                      <MainScreen
+                        provider={this.props.provider}
+                        web3={this.props.web3}
+                        metaMaskStatus={this.props.metaMaskStatus}
+                        accounts={this.props.accounts}
+                        isAuthenticated={this.state.isAuthenticated}
+                        userAddress={this.state.userAddress}
+                      />
+                    ) : (
+                      <Redirect to={'/login'} />
+                    )}
+                  </div>
                 )}
               />
               <Route
@@ -133,21 +140,28 @@ class Router extends Component {
                 path="/login"
                 exact
                 render={() => (
-                  <Login
-                    provider={this.props.provider}
-                    web3={this.props.web3}
-                    metaMaskStatus={this.props.metaMaskStatus}
-                    accounts={this.props.accounts}
-                    selectedAccount={this.props.selectedAccount}
-                    changeAccount={selectedAccount => {
-                      this.props.changeAccount(selectedAccount);
-                    }}
-                    authenticate={isAuthenticated => {
-                      this.authenticate();
-                    }}
-                  />
+                  <div>
+                    {!this.state.isAuthenticated ? (
+                      <Login
+                        provider={this.props.provider}
+                        web3={this.props.web3}
+                        metaMaskStatus={this.props.metaMaskStatus}
+                        accounts={this.props.accounts}
+                        selectedAccount={this.props.selectedAccount}
+                        changeAccount={selectedAccount => {
+                          this.props.changeAccount(selectedAccount);
+                        }}
+                        authenticate={isAuthenticated => {
+                          this.authenticate();
+                        }}
+                      />
+                    ) : (
+                      <Redirect to={'/dashboard'} />
+                    )}
+                  </div>
                 )}
               />
+
               <Route path="/" exact render={() => <WelcomePage />} />
             </Switch>
           </BrowserRouter>
