@@ -25,6 +25,11 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: false
     },
+    avatar: {
+      type: String,
+      required: true,
+      unique: false
+    },
     isEditor: {
       type: Boolean
     },
@@ -34,9 +39,7 @@ const userSchema = mongoose.Schema(
         enum: Object.values(Roles)
       }
     ],
-    articleSubmissions: [
-      articleSubmissionSchema
-    ],
+    articleSubmissions: [articleSubmissionSchema]
   },
   {collection: 'users'}
 );
