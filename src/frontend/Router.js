@@ -8,7 +8,7 @@ import MetaMaskGuide from './webpack/MetaMaskGuide';
 import MainScreen from './webpack/dashboard/MainScreen.js';
 import {getDomain} from '../helpers/getDomain.js';
 import SignUp from './webpack/login/SignUp.js';
-import {LoginGuard} from './webpack/guards/Guards.js';
+import MyAccount from './webpack/dashboard/MyAccount.js';
 
 class Router extends Component {
   constructor() {
@@ -117,6 +117,9 @@ class Router extends Component {
                   </div>
                 )}
               />
+
+              <Route exactly path="/dashboard/account" component={MyAccount} />
+
               <Route
                 path="/signup"
                 exact
