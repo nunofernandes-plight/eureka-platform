@@ -21,6 +21,7 @@ import {
   LoginRow
 } from './SharedForms.js';
 import TopAlertContainer from './TopAlertContainer.js';
+import {getRandomAvatar} from './getRandomAvatar.js';
 
 class SignUp extends Component {
   constructor() {
@@ -81,7 +82,8 @@ class SignUp extends Component {
         body: JSON.stringify({
           email: this.state.email,
           password: this.state.signature,
-          ethereumAddress: this.props.selectedAccount.address
+          ethereumAddress: this.props.selectedAccount.address,
+          avatar: getRandomAvatar()
         })
       })
         .then(response => response.json())
