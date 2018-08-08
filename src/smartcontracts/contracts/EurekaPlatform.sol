@@ -487,17 +487,6 @@ contract EurekaPlatform {
             requestNewReviewRound(article.submissionId);
     }
 
-    function rewardReviewer(ArticleVersion _article, Review _review) private {
-        if (_review.isEditorApprovedReview) {
-            if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfRewardedEditorApprovedReviews)
-                eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer);  //TODO: handle reward
-        }
-        else {
-            if (countAcceptedReviews(_article.communityReviews) < maxAmountOfRewardedCommunityReviews)
-                eurekaTokenContract.transfer(_review.reviewer, communityReviewerRewardPerReviewer);  //TODO: handle reward
-        }
-    }
-
     function countAcceptedReviewInvitations(Review[] _reviews) pure private returns (uint count) {
         for (uint i = 0; i < _reviews.length; i++) {
             if (_reviews[i].reviewState == ReviewState.INVITATION_ACCEPTED)
@@ -534,18 +523,8 @@ contract EurekaPlatform {
         return count;
     }
 
-    // TODO: should it be possible to close a submission process before reaching maxReviewRounds ??
-    function closeSubmissionProcess(uint256 _submissionId) private {
-
-        // TODO transfer all rewards
-
-        articleSubmissions[_submissionId].submissionState = SubmissionState.CLOSED;
-    }
-
     function requestNewReviewRound(uint256 _submissionId) private {
-
-        // maybe TODO transfer all rewards
-
+        
         articleSubmissions[_submissionId].submissionState = SubmissionState.NEW_REVIEW_ROUND_REQUESTED;
     }
 
@@ -570,5 +549,25 @@ contract EurekaPlatform {
             "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
 
         closeSubmissionProcess(_submissionId);
+    }
+
+    // TODO: should it be possible to close a submission process before reaching maxReviewRounds ??
+    function closeSubmissionProcess(uint256 _submissionId) private {
+
+        // TODO transfer all rewards
+
+        articleSubmissions[_submissionId].submissionState = SubmissionState.CLOSED;
+        articleSubmissions[_submissionId].stateTimestamp = block.timestamp;
+    }
+
+    function rewardReviewer(ArticleVersion _article, Review _review) private {
+        if (_review.isEditorApprovedReview) {
+            if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfRewardedEditorApprovedReviews)
+                eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer);  //TODO: handle reward
+        }
+        else {
+            if (countAcceptedReviews(_article.communityReviews) < maxAmountOfRewardedCommunityReviews)
+                eurekaTokenContract.transfer(_review.reviewer, communityReviewerRewardPerReviewer);  //TODO: handle reward
+        }
     }
 }
