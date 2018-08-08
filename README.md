@@ -10,11 +10,27 @@ utility token and is a ERC20 combined with ERC667 token, thus it will follow
 token standards provided by the Ethereum protocol, meaning it can be sent and
 received in transactions on the Ethereum ecosystem.
 
-## Prerequisites
+## Our Social Media
+> Medium: https://medium.com/eureka-token/
+
+> Twitter: https://twitter.com/TokenEureka/
+
+> Facebook: https://www.facebook.com/TokenEureka/
+
+> Instagram: https://www.instagram.com/tokeneureka/
+
+> Linkedin: https://www.linkedin.com/company/eurekatoken/
+
+
 
 ## Website
 
 > EUREKA token (EKA) description: https://eurekatoken.io
+
+
+
+
+# Prerequisites
 
 ## How to build
 
