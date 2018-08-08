@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
-import styled from 'styled-components';
 import {Link, Redirect} from 'react-router-dom';
 import {Row} from '../../helpers/layout.js';
-import {__ALERT_WARNING, __FOURTH, __THIRD} from '../../helpers/colors.js';
 import MetaMaskLogo from '../icons/MetaMaskLogo.js';
 import EurekaLogo from '../icons/EurekaLogo.js';
 import Web3Providers from '../../web3/Web3Providers.js';
@@ -14,71 +12,19 @@ import {InputField} from '../design-components/Inputs.js';
 import Alert from '../design-components/Alerts.js';
 import EurekaSpinner from '../../webpack/spinners/EurekaSpinner.js';
 import {getDomain} from '../../../helpers/getDomain.js';
-
-const Container = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-`;
-const Title = styled.h1`
-  color: ${__THIRD};
-  margin-top: 1.5em;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-`;
-
-const LoginContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  border-radius: 5px;
-  max-width: 600px;
-  min-width: 517px;
-  position: relative;
-`;
-
-const Button = styled.button`
-  background: -webkit-linear-gradient(0deg, ${__THIRD} 0%, ${__FOURTH} 100%);
-  align-self: center;
-`;
-
-const AlertContainer = styled.div`
-  word-break: break-word;
-  width: 700px;
-  margin-bottom: 40px;
-`;
-
-const TitleRow = Row.extend`
-  flex-direction: column;
-`;
-const LoginRow = styled.div`
-  margin: 10px 0;
-`;
-
-const ButtonRow = styled.div`
-  align-self: center;
-  margin: 15px 0;
-`;
-
-const SignUp = styled.p``;
-
-const AlertDevContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 20px;
-  max-width: 900px;
-  color: white;
-  border-radius: 4px;
-`;
-
-const SubTitle = styled.h2`
-  text-align: center;
-`;
+import {
+  Container,
+  AlertContainer,
+  SignUp,
+  SubTitle,
+  Title,
+  AlertDevContainer,
+  Button,
+  ButtonRow,
+  LoginContainer,
+  LoginRow,
+  TitleRow
+} from './SharedForms.js';
 
 class Login extends Component {
   constructor() {
