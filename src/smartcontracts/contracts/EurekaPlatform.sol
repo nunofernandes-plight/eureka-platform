@@ -594,4 +594,27 @@ contract EurekaPlatform {
                 return;
         }
     }
+    
+    function rewardCommunityReviews(Review[] _communityReviews, uint _reviewRounds) private {
+        uint rewardedReviewers = 0;
+        for(uint i=0; i < _communityReviews.length; i++) {
+            if (rewardedReviewers < maxAmountOfRewardedCommunityReviews) {
+                if (_communityReviews[i].reviewState == ReviewState.ACCEPTED) {
+                    require(
+                        eurekaTokenContract.transfer(
+                            _communityReviews[i].reviewer, 
+                            communityReviewerRewardPerReviewer.div(_reviewRounds)
+                        ));
+                    require(
+                        eurekaTokenContract.transfer(
+                            _communityReviews[i].reviewedBy, 
+                            secondReviewerRewardPerReviewer.div(_reviewRounds)
+                        ));
+                    rewardedReviewers++;
+                }
+            }
+            else
+                return;
+        }
+    }
 }
