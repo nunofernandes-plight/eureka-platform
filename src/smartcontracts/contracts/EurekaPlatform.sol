@@ -22,60 +22,35 @@ contract EurekaPlatform {
     uint maxAmountOfRewardedEditorApprovedReviews = 3;
 
     uint minAmountOfCommunityReviews = 0;
-    uint maxAmountOfRewardedCommunityReviews = 5;
+    uint maxAmountOfRewardedCommunityReviews = 10;
 
     // rewards amount
     uint sciencemattersFoundationReward = 1250;
     uint editorReward = 500;
     uint linkedArticlesReward = 750;
     uint invalidationWorkReward = 1000;
-
-    // rewards for the reviews saved in arrays, specifiable reward for every round.
-    // if rounds not needed, returned back to author
-    // if max reviewer amount is not reached, not used rewards is returned to author
-    uint constant maxReviewRounds = 3;
-    uint[maxReviewRounds] editorApprovedReviewerRewardPerReviewer;
-    uint[maxReviewRounds] communityReviewerRewardPerReviewer;
-    uint[maxReviewRounds] secondReviewerRewardPerReviewer;
-
-    // resulting submission fee
-    uint public submissionFee;
-
-
-//    constructor(address _eurekaTokenContractAddress) public {
-        constructor() public {
-        
-//        eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
-
-        contractOwner = msg.sender;
-
-        editorApprovedReviewerRewardPerReviewer[0] = 150;
-        editorApprovedReviewerRewardPerReviewer[1] = 75;
-        editorApprovedReviewerRewardPerReviewer[2] = 25;
-
-        communityReviewerRewardPerReviewer[0] = 60;
-        communityReviewerRewardPerReviewer[1] = 30;
-        communityReviewerRewardPerReviewer[2] = 10;
-
-        secondReviewerRewardPerReviewer[0] = 30;
-        secondReviewerRewardPerReviewer[1] = 15;
-        secondReviewerRewardPerReviewer[2] = 5;
-
-        submissionFee =
+    
+    uint editorApprovedReviewerRewardPerReviewer = 250;
+    uint communityReviewerRewardPerReviewer = 50;
+    uint secondReviewerRewardPerReviewer = 25;
+    
+    uint public submissionFee =
         sciencemattersFoundationReward
         + editorReward
         + linkedArticlesReward
         + invalidationWorkReward
-        + maxAmountOfRewardedEditorApprovedReviews * editorApprovedReviewerRewardPerReviewer[0]
-        + maxAmountOfRewardedEditorApprovedReviews * editorApprovedReviewerRewardPerReviewer[1]
-        + maxAmountOfRewardedEditorApprovedReviews * editorApprovedReviewerRewardPerReviewer[2]
-        + maxAmountOfRewardedCommunityReviews * communityReviewerRewardPerReviewer[0]
-        + maxAmountOfRewardedCommunityReviews * communityReviewerRewardPerReviewer[1]
-        + maxAmountOfRewardedCommunityReviews * communityReviewerRewardPerReviewer[2]
-        + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer[0]
-        + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer[1]
-        + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer[2];
+        + maxAmountOfRewardedEditorApprovedReviews * editorApprovedReviewerRewardPerReviewer
+        + maxAmountOfRewardedCommunityReviews * communityReviewerRewardPerReviewer
+        + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer;
 
+    uint constant maxReviewRounds = 3;
+
+
+//    constructor(address _eurekaTokenContractAddress) public {
+    constructor() public {
+        
+//        eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
+        contractOwner = msg.sender;
     }
     
 
@@ -512,8 +487,12 @@ contract EurekaPlatform {
             if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfRewardedEditorApprovedReviews)
                 eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer[0]);  //TODO: handle reward
             else
-                if (countAcceptedReviews(_article.communityReviews) < maxAmountOfRewardedCommunityReviews)
-                    eurekaTokenContract.transfer(_review.reviewer, communityReviewerRewardPerReviewer[0]);  //TODO: handle reward
+                eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer);  //TODO: handle reward
+        }
+        else {
+            if (countAcceptedReviews(_article.communityReviews) < maxAmountOfRewardedCommunityReviews)
+                eurekaTokenContract.transfer(_review.reviewer, communityReviewerRewardPerReviewer);  //TODO: handle reward
+        }
     }
 
     function countAcceptedReviewInvitations(Review[] _reviews) pure private returns (uint count) {
