@@ -20,11 +20,12 @@ export default {
    * @param email
    * @returns {Promise<Model>}
    */
-  createUser: async (password, email, ethereumAddress) => {
-
+  createUser: async (password, email, ethereumAddress, avatar) => {
     let user = await userService.getUserByEthereumAddress(ethereumAddress);
     if (user) {
-      let error = new Error('User with address ' + ethereumAddress + ' already exists.');
+      let error = new Error(
+        'User with address ' + ethereumAddress + ' already exists.'
+      );
       error.status = 409;
       throw error;
     }
@@ -36,7 +37,9 @@ export default {
     }
 
     if (!isValidAddress(ethereumAddress)) {
-      let error = new Error('Checks sum for the address ' + ethereumAddress + ' failed.');
+      let error = new Error(
+        'Checks sum for the address ' + ethereumAddress + ' failed.'
+      );
       error.status = 400;
       throw error;
     }
@@ -47,6 +50,7 @@ export default {
       ethereumAddress,
       password: hashedPassword,
       email,
+      avatar,
       isEditor: false //default not an editor
     });
 
@@ -130,24 +134,32 @@ export default {
    * @returns {Promise<void>}
    */
   addArticleSubmission: async (ethereumAddress, submissionId) => {
-    let articleSubmission = await ArticleSubmission.findById((submissionId));
+    let articleSubmission = await ArticleSubmission.findById(submissionId);
     if (!articleSubmission) {
       let error = new Error('ArticleSubmission could not be found in DB');
       error.status = 400;
       throw error;
     }
 
-    User.findOneAndUpdate({ethereumAddress: ethereumAddress},
+    User.findOneAndUpdate(
+      {ethereumAddress: ethereumAddress},
       {$push: {articleSubmissions: articleSubmission}},
       (err, user) => {
         if (err) {
-          let error = new Error('Could not update user ' + ethereumAddress + ': ' + err);
+          let error = new Error(
+            'Could not update user ' + ethereumAddress + ': ' + err
+          );
           error.status = 400;
           throw error;
         }
-        console.log('User ' + user.ethereumAddress + ' got the submission with ID: ' + articleSubmission._id);
+        console.log(
+          'User ' +
+            user.ethereumAddress +
+            ' got the submission with ID: ' +
+            articleSubmission._id
+        );
         return user;
-      });
+      }
+    );
   }
-
 };

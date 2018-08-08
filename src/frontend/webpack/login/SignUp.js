@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, Redirect, withRouter} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import {Row} from '../../helpers/layout.js';
 import MetaMaskLogo from '../icons/MetaMaskLogo.js';
 import {signPrivateKey} from '../../web3/Helpers.js';
@@ -7,6 +7,8 @@ import Web3Providers from '../../web3/Web3Providers.js';
 import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
 import Modal from '../design-components/Modal.js';
 import AccountBalance from '../../web3/AccountBalance.js';
+import {isEmailValid} from '../../../helpers/emailValidator.js';
+import {InputField} from '../design-components/Inputs.js';
 import EurekaSpinner from '../../webpack/spinners/EurekaSpinner.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import {
@@ -19,13 +21,17 @@ import {
   LoginRow
 } from './SharedForms.js';
 import TopAlertContainer from './TopAlertContainer.js';
+import {getRandomAvatar} from './getRandomAvatar.js';
 
-class Login extends Component {
+class SignUp extends Component {
   constructor() {
     super();
     this.state = {
+      username: null,
+      email: null,
       isShowed: false,
       signature: null,
+      inputStatus: null,
       isEmailValidModal: false,
       submitted: false,
       errorMessage: null,
@@ -35,6 +41,11 @@ class Login extends Component {
 
   async register(props) {
     this.setState({submitted: true});
+
+    if (!isEmailValid(this.state.email)) {
+      this.setState({isEmailValidModal: true});
+      return;
+    }
 
     // DEV ENVIRONMENT
     if (props.provider === Web3Providers.LOCALHOST) {
@@ -62,25 +73,29 @@ class Login extends Component {
 
     if (signature) {
       this.setState({loading: true});
-      fetch(`${getDomain()}/api/login`, {
+      fetch(`${getDomain()}/api/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         credentials: 'include',
         body: JSON.stringify({
+          email: this.state.email,
           password: this.state.signature,
-          ethereumAddress: this.props.selectedAccount.address
+          ethereumAddress: this.props.selectedAccount.address,
+          avatar: 'img/icons/avatars/' + getRandomAvatar()
         })
       })
         .then(response => response.json())
         .then(response => {
           if (response.success) {
             this.props.history.push('/dashboard');
+            this.props.authenticate(); 
           } else {
             this.setState({
               errorMessage: response.error,
-              loading: false
+              loading: false,
+              inputStatus: null
             });
           }
         })
@@ -88,7 +103,8 @@ class Login extends Component {
           console.log(err);
           this.setState({
             errorMessage: 'Ouh. Something went wrong.',
-            loading: false
+            loading: false,
+            inputStatus: null
           });
         });
     }
@@ -110,6 +126,15 @@ class Login extends Component {
         message
       );
     }
+  }
+
+  handleInput(stateKey, e) {
+    if (isEmailValid(e.target.value)) {
+      this.setState({inputStatus: 'valid'});
+    } else {
+      this.setState({inputStatus: 'error'});
+    }
+    this.setState({[stateKey]: e.target.value});
   }
 
   renderModals() {
@@ -159,7 +184,6 @@ class Login extends Component {
   render() {
     return (
       <div>
-        {this.props.authed ? <Redirect to={'/dashboard'} /> : null}
         <div>
           {this.state.loading ? (
             <EurekaSpinner />
@@ -171,7 +195,21 @@ class Login extends Component {
 
                 <Row>
                   <LoginContainer provider={this.props.provider}>
-                    <SubTitle>Please Login</SubTitle>
+                    <SubTitle>Please Register</SubTitle>
+                    <LoginRow>
+                      <InputField
+                        placeholder={'email address'}
+                        status={
+                          this.state.email ? this.state.inputStatus : null
+                        }
+                        onChange={e => this.handleInput('email', e)}
+                        onKeyPress={e => {
+                          if (e.key === 'Enter') {
+                            this.register(this.props);
+                          }
+                        }}
+                      />
+                    </LoginRow>
 
                     {this.props.accounts ? (
                       <LoginRow>
@@ -191,7 +229,7 @@ class Login extends Component {
                           this.register(this.props);
                         }}
                       >
-                        Login with Metamask{' '}
+                        Register with Metamask{' '}
                         <MetaMaskLogo width={20} height={20} />
                       </Button>
                     </ButtonRow>
@@ -199,8 +237,8 @@ class Login extends Component {
                 </Row>
                 <Row>
                   <Paragraph>
-                    Don't have an <strong>account</strong>? Please{' '}
-                    <Link to="/login">sign up here.</Link>
+                    Already have an <strong>account</strong>? Please{' '}
+                    <Link to="/login">log in here.</Link>
                   </Paragraph>
                 </Row>
               </Container>
@@ -212,4 +250,4 @@ class Login extends Component {
   }
 }
 
-export default withRouter(Login);
+export default withRouter(SignUp);

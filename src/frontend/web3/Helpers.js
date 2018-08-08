@@ -79,3 +79,14 @@ export const getNetwork = async web3 => {
     }
   }
 };
+
+export const signPrivateKey = async (web3, address, message) => {
+  if (web3.utils.isAddress(address)) {
+    return web3.eth.personal
+      .sign(message, address)
+      .then(signedKey => {
+        return signedKey;
+      })
+      .catch(err => console.log(err));
+  }
+};

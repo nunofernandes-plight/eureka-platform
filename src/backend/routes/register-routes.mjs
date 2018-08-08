@@ -13,7 +13,7 @@ router.get('/', function(req, res) {
 router.post('/',
   asyncHandler(async (req, res) => {
     let newUserInDB = await userService.createUser(req.body.password,
-      req.body.email, req.body.ethereumAddress);
+      req.body.email, req.body.ethereumAddress, req.body.avatar);
 
     return req.login(newUserInDB, function(err) {
       if (err) {

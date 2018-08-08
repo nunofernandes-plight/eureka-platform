@@ -46,6 +46,15 @@ class App extends Component {
     const network = await getNetwork(this.state.web3);
     const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
     const accounts = await getAllAccounts(this.state.web3);
+
+    // default account for MetaMask
+    if (this.state.provider === Web3Providers.META_MASK) {
+      let selectedAccount = {...this.state.selectedAccount};
+      selectedAccount.address = Array.from(accounts.keys())[0];
+      selectedAccount.balance = accounts.get(selectedAccount.address);
+      this.setState({selectedAccount});
+    }
+
     this.setState({network, metaMaskStatus, accounts});
     this.interval = setInterval(async () => {
       const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
