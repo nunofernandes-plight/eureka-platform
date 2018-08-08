@@ -51,7 +51,7 @@ export const ButtonRow = styled.div`
   margin: 15px 0;
 `;
 
-export const SignUp = styled.p``;
+export const Paragraph = styled.p``;
 
 export const AlertDevContainer = styled.div`
   display: flex;

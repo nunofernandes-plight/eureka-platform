@@ -8,6 +8,7 @@ import MetaMaskGuide from './webpack/MetaMaskGuide';
 import MainScreen from './webpack/dashboard/MainScreen.js';
 import {LoginGuard} from './webpack/guards/Guards.js';
 import {getDomain} from '../helpers/getDomain.js';
+import SignUp from './webpack/login/SignUp.js';
 
 class Router extends Component {
   constructor() {
@@ -73,10 +74,10 @@ class Router extends Component {
                 )}
               />
               <Route
-                path="/login"
+                path="/signup"
                 exact
                 render={() => (
-                  <Login
+                  <SignUp
                     provider={this.props.provider}
                     web3={this.props.web3}
                     metaMaskStatus={this.props.metaMaskStatus}

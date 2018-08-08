@@ -15,7 +15,7 @@ import {getDomain} from '../../../helpers/getDomain.js';
 import {
   Container,
   AlertContainer,
-    Paragraph,
+  Paragraph,
   SubTitle,
   Title,
   AlertDevContainer,
@@ -26,7 +26,7 @@ import {
   TitleRow
 } from './SharedForms.js';
 
-class Login extends Component {
+class SignUp extends Component {
   constructor() {
     super();
     this.state = {
@@ -43,7 +43,7 @@ class Login extends Component {
     };
   }
 
-  async login(props) {
+  async register(props) {
     this.setState({submitted: true});
 
     if (!isEmailValid(this.state.email)) {
@@ -124,7 +124,7 @@ class Login extends Component {
     }
 
     const message =
-      'EUREKA Login Authentication for the email: ' +
+      'EUREKA Register Authentication for the email: ' +
       this.state.email +
       '  - Please click to the Sign Button below.';
 
@@ -162,7 +162,7 @@ class Login extends Component {
             this.state.isShowed &&
             this.props.metaMaskStatus !== MetaMaskStatus.DETECTED_LOGGED_IN
           }
-          title={'Login using MetaMask - INFORMATION'}
+          title={'Register using MetaMask - INFORMATION'}
         >
           Please be sure to have MetaMask<MetaMaskLogo width={15} height={15} />{' '}
           installed in your browser! If you already have installed it, open the
@@ -232,7 +232,7 @@ class Login extends Component {
 
                 <Row>
                   <LoginContainer provider={this.props.provider}>
-                    <SubTitle>Please login</SubTitle>
+                    <SubTitle>Please Register</SubTitle>
                     <LoginRow>
                       <InputField
                         placeholder={'email address'}
@@ -242,7 +242,7 @@ class Login extends Component {
                         onChange={e => this.handleInput('email', e)}
                         onKeyPress={e => {
                           if (e.key === 'Enter') {
-                            this.login(this.props);
+                            this.register(this.props);
                           }
                         }}
                       />
@@ -263,7 +263,7 @@ class Login extends Component {
                     <ButtonRow>
                       <Button
                         onClick={() => {
-                          this.login(this.props);
+                          this.register(this.props);
                         }}
                       >
                         Login with Metamask{' '}
@@ -287,4 +287,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default SignUp;
