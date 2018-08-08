@@ -83,13 +83,14 @@ class SignUp extends Component {
           email: this.state.email,
           password: this.state.signature,
           ethereumAddress: this.props.selectedAccount.address,
-          avatar: getRandomAvatar()
+          avatar: 'img/icons/avatars/' + getRandomAvatar()
         })
       })
         .then(response => response.json())
         .then(response => {
           if (response.success) {
             this.props.history.push('/dashboard');
+            this.props.setAuth(true);
           } else {
             this.setState({
               errorMessage: response.error,

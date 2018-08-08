@@ -1,5 +1,7 @@
 export const getRandomAvatar = () => {
-  let number = Math.random() * (49 - 1) + 1;
+  let number = Math.floor(Math.random() * (49 - 1 + 1)) + 1;
+
+  console.log(number);
   switch (number) {
     case 1:
       return 'assistant.svg';

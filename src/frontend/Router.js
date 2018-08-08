@@ -34,8 +34,6 @@ class Router extends Component {
             userAddress: response.data.user,
             isAuthenticated: response.data.isAuthenticated
           });
-
-
         } else {
           this.setState({
             isAuthenticated: false
@@ -49,7 +47,7 @@ class Router extends Component {
 
   componentWillReceiveProps(nextProps) {
     const selectedAddress = nextProps.selectedAccount.address;
-      // check if user changed address during the session
+    // check if user changed address during the session
     if (this.state.userAddress !== selectedAddress) {
       this.setState({
         isAuthenticated: false
@@ -64,6 +62,7 @@ class Router extends Component {
           provider={this.props.provider}
           metaMaskStatus={this.props.metaMaskStatus}
           network={this.props.network}
+          isAuthenticated={this.state.isAuthenticated}
         />
         <div style={{paddingTop: 100}}>
           <BrowserRouter>
@@ -92,7 +91,6 @@ class Router extends Component {
                     web3={this.props.web3}
                     metaMaskStatus={this.props.metaMaskStatus}
                     accounts={this.props.accounts}
-                    authed={this.state.authed}
                     selectedAccount={this.props.selectedAccount}
                     changeAccount={selectedAccount => {
                       this.props.changeAccount(selectedAccount);
