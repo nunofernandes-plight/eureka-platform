@@ -574,6 +574,11 @@ contract EurekaPlatform {
             }
         }
 
+        if (submission.versions[submission.versions.length-1].versionState == ArticleVersionState.ACCEPTED) {
+            //TODO: reward linkedArticles authors and invalidation work
+            // check also if time is already up
+        }
+
         submission.submissionState = SubmissionState.CLOSED;
         submission.stateTimestamp = block.timestamp;
     }
