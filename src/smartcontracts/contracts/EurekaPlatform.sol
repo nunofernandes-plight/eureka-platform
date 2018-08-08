@@ -20,11 +20,11 @@ contract EurekaPlatform {
     mapping(address => bool) isEditor;
 
     // amount of rewarded reviewers
-    uint minAmountOfEditorApprovedReviewer = 2;
-    uint maxAmountOfEditorApprovedReviewer = 3;
+    uint minAmountOfEditorApprovedReviews = 2;
+    uint maxAmountOfRewardedEditorApprovedReviews = 3;
 
-    uint minAmountOfCommunityReviewer = 0;
-    uint maxAmountOfCommunityReviewer = 5;
+    uint minAmountOfCommunityReviews = 0;
+    uint maxAmountOfRewardedCommunityReviews = 5;
 
     // rewards amount
     uint sciencemattersFoundationReward = 1250;
@@ -68,15 +68,15 @@ contract EurekaPlatform {
         + editorReward
         + linkedArticlesReward
         + invalidationWorkReward
-        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[0]
-        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[1]
-        + maxAmountOfEditorApprovedReviewer * editorApprovedReviewerRewardPerReviewer[2]
-        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[0]
-        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[1]
-        + maxAmountOfCommunityReviewer * communityReviewerRewardPerReviewer[2]
-        + maxAmountOfCommunityReviewer * secondReviewerRewardPerReviewer[0]
-        + maxAmountOfCommunityReviewer * secondReviewerRewardPerReviewer[1]
-        + maxAmountOfCommunityReviewer * secondReviewerRewardPerReviewer[2];
+        + maxAmountOfRewardedEditorApprovedReviews * editorApprovedReviewerRewardPerReviewer[0]
+        + maxAmountOfRewardedEditorApprovedReviews * editorApprovedReviewerRewardPerReviewer[1]
+        + maxAmountOfRewardedEditorApprovedReviews * editorApprovedReviewerRewardPerReviewer[2]
+        + maxAmountOfRewardedCommunityReviews * communityReviewerRewardPerReviewer[0]
+        + maxAmountOfRewardedCommunityReviews * communityReviewerRewardPerReviewer[1]
+        + maxAmountOfRewardedCommunityReviews * communityReviewerRewardPerReviewer[2]
+        + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer[0]
+        + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer[1]
+        + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer[2];
 
     }
 
@@ -338,7 +338,7 @@ contract EurekaPlatform {
         //TODO: maybe not necessary anymore
         require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
         //TODO: handle accepted but not responding reviewers
-        require(article.editorApprovedReviews.length < maxAmountOfEditorApprovedReviewer, "the max amount of editor approved reviews is already reached.");
+        require(article.editorApprovedReviews.length < maxAmountOfRewardedEditorApprovedReviews, "the max amount of editor approved reviews is already reached.");
 
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState == ReviewState.INVITED, "this method can't be called, the review state needs to be in INVITED.");
@@ -440,10 +440,10 @@ contract EurekaPlatform {
     
     function rewardReviewer(ArticleVersion _article, Review _review) private {
         if (_review.isEditorApprovedReview)
-            if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfEditorApprovedReviewer)
+            if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfRewardedEditorApprovedReviews)
                 eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer[0]);  //TODO: handle reward
         else 
-            if (countAcceptedReviews(_article.communityReviews) < maxAmountOfCommunityReviewer)
+            if (countAcceptedReviews(_article.communityReviews) < maxAmountOfRewardedCommunityReviews)
                 eurekaTokenContract.transfer(_review.reviewer, communityReviewerRewardPerReviewer[0]);  //TODO: handle reward
     }
 
@@ -469,9 +469,9 @@ contract EurekaPlatform {
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
 
-        require(countAcceptedReviews(article.editorApprovedReviews) >= minAmountOfEditorApprovedReviewer,
+        require(countAcceptedReviews(article.editorApprovedReviews) >= minAmountOfEditorApprovedReviews,
             "the article doesn't have enough accepted editor approved reviews to get accepted.");
-        require(countAcceptedReviews(article.communityReviews) >= minAmountOfCommunityReviewer,
+        require(countAcceptedReviews(article.communityReviews) >= minAmountOfCommunityReviews,
             "the article doesn't have enough community reviews to get accepted.");
             
         require(countReviewsAskingForCorrection(article.editorApprovedReviews) == 0,
