@@ -18,40 +18,6 @@ const PanelLeftFlex = styled.div`
 const Response = styled.div``;
 
 class MainScreen extends Component {
-  constructor() {
-    super();
-    this.state = {
-      user: null,
-      isAuthenticated: false
-    };
-  }
-
-  componentDidMount() {
-    fetch(`${getDomain()}/api/welcome`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    })
-      .then(response => response.json())
-      .then(response => {
-        console.log('fetching works');
-        if (response.success) {
-          this.props.setAuth({authed: true});
-          this.setState({
-            user: response.data.user,
-            isAuthenticated: response.data.isAuthenticated
-          });
-          console.log(response);
-        } else {
-          // to be written
-        }
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
 
   render() {
     return (
@@ -59,7 +25,7 @@ class MainScreen extends Component {
         <PanelLeft/>
         <Container>
           <PanelRight>
-            <Response> {this.state.isAuthenticated ? this.state.user + ' is logged in' : 'Not logged in!!'}</Response>
+            <Response> {this.props.isAuthenticated ? this.props.userAddress + ' is logged in' : 'Not logged in!!'}</Response>
           </PanelRight>
         </Container>
       </div>

@@ -13,11 +13,37 @@ class Router extends Component {
   constructor() {
     super();
     this.state = {
-      authed: false
+      isAuthenticated: false,
+      userAddress: null
     };
   }
 
   componentDidMount() {
+    fetch(`${getDomain()}/api/welcome`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(response => {
+        console.log('fetching works');
+        if (response.success) {
+          this.setState({
+            userAddress: response.data.user,
+            isAuthenticated: response.data.isAuthenticated
+          });
+          console.log(response);
+        } else {
+          this.setState({
+            isAuthenticated: false
+          });
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
   render() {
@@ -31,22 +57,21 @@ class Router extends Component {
         <div style={{paddingTop: 100}}>
           <BrowserRouter>
             <Switch>
-              <Route path="/metamask" exact render={() => <MetaMaskGuide/>}/>
+              <Route path="/metamask" exact render={() => <MetaMaskGuide />} />
               <Route
                 path="/dashboard"
                 exact
                 render={() => (
-                  //<LoginGuard authed={this.state.authed}>
-                  <MainScreen
-                    provider={this.props.provider}
-                    web3={this.props.web3}
-                    metaMaskStatus={this.props.metaMaskStatus}
-                    accounts={this.props.accounts}
-                    setAuth={authed => {
-                      this.setState({authed});
-                    }}
-                  />
-                  // </LoginGuard>
+                  <LoginGuard isAuthenticated={this.state.isAuthenticated}>
+                    <MainScreen
+                      provider={this.props.provider}
+                      web3={this.props.web3}
+                      metaMaskStatus={this.props.metaMaskStatus}
+                      accounts={this.props.accounts}
+                      isAuthenticated={this.state.isAuthenticated}
+                      userAddress={this.state.userAddress}
+                    />
+                  </LoginGuard>
                 )}
               />
               <Route
@@ -69,7 +94,7 @@ class Router extends Component {
                   />
                 )}
               />
-              <Route path="/" exact render={() => <WelcomePage/>}/>
+              <Route path="/" exact render={() => <WelcomePage />} />
             </Switch>
           </BrowserRouter>
         </div>
