@@ -36,7 +36,8 @@ const LoginContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   border-radius: 5px;
-  width: 450px;
+  max-width: 600px;
+  min-width: 517px;
   position: relative;
 `;
 
@@ -92,8 +93,7 @@ class Login extends Component {
       isEmailValidModal: false,
       submitted: false,
       errorMessage: null,
-      loading: false,
-      authenticated: false
+      loading: false
     };
   }
 
@@ -146,7 +146,6 @@ class Login extends Component {
         .then(response => response.json())
         .then(response => {
           if (response.success) {
-            console.log(response.headers);
             this.props.setAuth(true);
           } else {
             this.setState({
@@ -156,8 +155,9 @@ class Login extends Component {
           }
         })
         .catch(err => {
+          console.log(err);
           this.setState({
-            errorMessage: err,
+            errorMessage: 'Ouh. Something went wrong.',
             loading: false
           });
         });

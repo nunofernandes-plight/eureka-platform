@@ -13,6 +13,7 @@ const Parent = styled.div`
 const Container = styled.div`
   display: flex;
   margin: 10px 0;
+  justify-content: center;
 `;
 
 const ColumnLeft = styled.div`
