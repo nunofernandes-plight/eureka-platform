@@ -12,6 +12,7 @@ import Icon from '../icons/Icon.js';
 import MetaMaskLogo from '../icons/MetaMaskLogo.js';
 import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
 import RenderNetwork from '../../web3/RenderNetwork.js';
+import Avatar from './Avatar.js';
 
 const Parent = styled.div`
   box-shadow: -21.213px 21.213px 30px 0px rgba(158, 158, 158, 0.3);
@@ -76,6 +77,13 @@ const MetaMaskDetectedLoggedIn = MetaMask.extend`
 `;
 
 const SignUp = Item.extend`
+  &:hover {
+    border: 1px solid ${__THIRD};
+    background: ${__THIRD};
+    color: white;
+  }
+  cursor: pointer;
+  transition: all 0.15s ease;
   border: 1px solid ${__THIRD};
   padding: 8px 12px;
   border-radius: 4px;
@@ -129,13 +137,25 @@ const renderMiddle = props => {
   );
 };
 
-const renderRight = () => {
-  return (
-    <RightContainer>
-      <Item>Login</Item>
-      <SignUp>Sign Up</SignUp>
-    </RightContainer>
-  );
+const renderRight = props => {
+  if (!props.isAuthenticated) {
+    return (
+      <RightContainer>
+        <Item style={{cursor: 'pointer'}}>Login</Item>
+        <SignUp>Sign Up</SignUp>
+      </RightContainer>
+    );
+  } else if (props.isAuthenticated) {
+    return (
+      <div>
+        <Avatar
+          avatar={'img/icons/avatars/assistant.svg'}
+          width={40}
+          height={40}
+        />
+      </div>
+    );
+  }
 };
 
 class Header extends Component {
