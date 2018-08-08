@@ -17,8 +17,6 @@ contract EurekaPlatform {
     *   journal parameters
     */
 
-    mapping(address => bool) isEditor;
-
     // amount of rewarded reviewers
     uint minAmountOfEditorApprovedReviews = 2;
     uint maxAmountOfRewardedEditorApprovedReviews = 3;
@@ -79,7 +77,9 @@ contract EurekaPlatform {
         + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer[2];
 
     }
+    
 
+    mapping(address => bool) isEditor;
 
     // primary key mappings
     uint256 submissionCounter;
@@ -462,19 +462,20 @@ contract EurekaPlatform {
         require(isEditor[msg.sender], "msg.sender needs to be an editor.");
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
-
+        require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        
         require(countAcceptedReviews(article.editorApprovedReviews) >= minAmountOfEditorApprovedReviews,
             "the article doesn't have enough accepted editor approved reviews to get accepted.");
         require(countAcceptedReviews(article.communityReviews) >= minAmountOfCommunityReviews,
             "the article doesn't have enough community reviews to get accepted.");
+
+        require(countAcceptedReviewInvitations(article.editorApprovedReviews) == 0,
+            "there are still people working on reviews.");
             
         require(countReviewsWithMajorIssues(article.editorApprovedReviews) == 0,
             "the article needs to be corrected.");
         require(countReviewsWithMajorIssues(article.communityReviews) == 0,
             "the article needs to be corrected.");
-
-        // TODO if accept method is called to early, other reviewers could be rewarded.
 
         article.versionState = ArticleVersionState.ACCEPTED;
         article.stateTimestamp = block.timestamp;
@@ -487,13 +488,20 @@ contract EurekaPlatform {
         require(isEditor[msg.sender], "msg.sender needs to be an editor.");
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
+        require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be EDITOR_CHECKED.");
 
-        // TODO if accept method is called to early, other reviewers could be rewarded.
+
+        require(countAcceptedReviews(article.editorApprovedReviews) >= minAmountOfEditorApprovedReviews,
+            "the article doesn't have enough accepted editor approved reviews to get accepted.");
+        require(countAcceptedReviews(article.communityReviews) >= minAmountOfCommunityReviews,
+            "the article doesn't have enough community reviews to get accepted.");
+
+        require(countAcceptedReviewInvitations(article.editorApprovedReviews) == 0,
+            "there are still people working on reviews.");
 
         article.versionState = ArticleVersionState.DECLINED;
 
-        if (countDeclinedArticles(article.submissionId) >= maxReviewRounds)
+        if (countReviewRounds(article.submissionId) >= maxReviewRounds)
             closeSubmissionProcess(article.submissionId);
         else
             requestNewReviewRound(article.submissionId);
@@ -506,6 +514,14 @@ contract EurekaPlatform {
             else
                 if (countAcceptedReviews(_article.communityReviews) < maxAmountOfRewardedCommunityReviews)
                     eurekaTokenContract.transfer(_review.reviewer, communityReviewerRewardPerReviewer[0]);  //TODO: handle reward
+    }
+
+    function countAcceptedReviewInvitations(Review[] _reviews) pure private returns (uint count) {
+        for (uint i = 0; i < _reviews.length; i++) {
+            if (_reviews[i].reviewState == ReviewState.INVITATION_ACCEPTED)
+                count++;
+        }
+        return count;
     }
 
     function countAcceptedReviews(Review[] _reviews) pure private returns (uint count) {
@@ -527,7 +543,7 @@ contract EurekaPlatform {
 
     // only counts the articles which went through a review process and therefore have the state DECLINED
     // does not consider the versions with state DECLINED_SANITY_NOTOK
-    function countDeclinedArticles(uint256 _submissionId) view private returns (uint count) {
+    function countReviewRounds(uint256 _submissionId) view private returns (uint count) {
         ArticleVersion[] storage versions = articleSubmissions[_submissionId].versions;
         for (uint i = 0; i < versions.length; i++) {
             if (versions[i].versionState == ArticleVersionState.DECLINED)
