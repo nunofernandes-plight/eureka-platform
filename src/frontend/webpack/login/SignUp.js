@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, Redirect} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import {Row} from '../../helpers/layout.js';
 import MetaMaskLogo from '../icons/MetaMaskLogo.js';
 import {signPrivateKey} from '../../web3/Helpers.js';
@@ -29,7 +29,7 @@ class SignUp extends Component {
       username: null,
       email: null,
       isShowed: false,
-      signedKey: null,
+      signature: null,
       inputStatus: null,
       isEmailValidModal: false,
       submitted: false,
@@ -80,14 +80,14 @@ class SignUp extends Component {
         credentials: 'include',
         body: JSON.stringify({
           email: this.state.email,
-          password: this.state.signedKey,
+          password: this.state.signature,
           ethereumAddress: this.props.selectedAccount.address
         })
       })
         .then(response => response.json())
         .then(response => {
           if (response.success) {
-            this.props.setAuth(true);
+            this.props.history.push('/dashboard');
           } else {
             this.setState({
               errorMessage: response.error,
@@ -181,7 +181,6 @@ class SignUp extends Component {
   render() {
     return (
       <div>
-        {this.props.authed ? <Redirect to={'/dashboard'} /> : null}
         <div>
           {this.state.loading ? (
             <EurekaSpinner />
@@ -248,4 +247,4 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp;
+export default withRouter(SignUp);

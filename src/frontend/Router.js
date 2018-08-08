@@ -6,7 +6,6 @@ import Header from './webpack/Header/Header';
 import Login from './webpack/login/Login';
 import MetaMaskGuide from './webpack/MetaMaskGuide';
 import MainScreen from './webpack/dashboard/MainScreen.js';
-import {LoginGuard} from './webpack/guards/Guards.js';
 import {getDomain} from '../helpers/getDomain.js';
 import SignUp from './webpack/login/SignUp.js';
 
@@ -83,6 +82,25 @@ class Router extends Component {
                     metaMaskStatus={this.props.metaMaskStatus}
                     accounts={this.props.accounts}
                     authed={this.state.authed}
+                    selectedAccount={this.props.selectedAccount}
+                    changeAccount={selectedAccount => {
+                      this.props.changeAccount(selectedAccount);
+                    }}
+                    setAuth={authed => {
+                      this.setState({authed});
+                    }}
+                  />
+                )}
+              />
+              <Route
+                path="/login"
+                exact
+                render={() => (
+                  <Login
+                    provider={this.props.provider}
+                    web3={this.props.web3}
+                    metaMaskStatus={this.props.metaMaskStatus}
+                    accounts={this.props.accounts}
                     selectedAccount={this.props.selectedAccount}
                     changeAccount={selectedAccount => {
                       this.props.changeAccount(selectedAccount);
