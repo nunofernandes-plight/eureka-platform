@@ -14,11 +14,16 @@ class Router extends Component {
     super();
     this.state = {
       isAuthenticated: false,
-      userAddress: null
+      userAddress: null,
+      user: null
     };
   }
 
   componentDidMount() {
+    this.authenticate();
+  }
+
+  authenticate() {
     fetch(`${getDomain()}/api/welcome`, {
       method: 'GET',
       headers: {
@@ -34,8 +39,6 @@ class Router extends Component {
             userAddress: response.data.user,
             isAuthenticated: response.data.isAuthenticated
           });
-
-
         } else {
           this.setState({
             isAuthenticated: false
@@ -45,11 +48,33 @@ class Router extends Component {
       .catch(err => {
         console.error(err);
       });
+    this.getUserData();
+  }
+
+  getUserData() {
+    fetch(`${getDomain()}/api/users/data`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          let user = response.data;
+          console.log(response);
+          this.setState({user});
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
   componentWillReceiveProps(nextProps) {
     const selectedAddress = nextProps.selectedAccount.address;
-      // check if user changed address during the session
+    // check if user changed address during the session
     if (this.state.userAddress !== selectedAddress) {
       this.setState({
         isAuthenticated: false
@@ -64,6 +89,8 @@ class Router extends Component {
           provider={this.props.provider}
           metaMaskStatus={this.props.metaMaskStatus}
           network={this.props.network}
+          isAuthenticated={this.state.isAuthenticated}
+          user={this.state.user}
         />
         <div style={{paddingTop: 100}}>
           <BrowserRouter>
@@ -92,13 +119,12 @@ class Router extends Component {
                     web3={this.props.web3}
                     metaMaskStatus={this.props.metaMaskStatus}
                     accounts={this.props.accounts}
-                    authed={this.state.authed}
                     selectedAccount={this.props.selectedAccount}
                     changeAccount={selectedAccount => {
                       this.props.changeAccount(selectedAccount);
                     }}
-                    setAuth={isAuthenticated => {
-                      this.setState({isAuthenticated});
+                    authenticate={isAuthenticated => {
+                      this.authenticate();
                     }}
                   />
                 )}
@@ -116,8 +142,8 @@ class Router extends Component {
                     changeAccount={selectedAccount => {
                       this.props.changeAccount(selectedAccount);
                     }}
-                    setAuth={isAuthenticated => {
-                      this.setState({isAuthenticated});
+                    authenticate={isAuthenticated => {
+                      this.authenticate();
                     }}
                   />
                 )}
