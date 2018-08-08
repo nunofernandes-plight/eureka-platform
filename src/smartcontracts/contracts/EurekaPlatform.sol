@@ -44,9 +44,10 @@ contract EurekaPlatform {
     uint public submissionFee;
 
 
-    constructor(address _eurekaTokenContractAddress) public {
+//    constructor(address _eurekaTokenContractAddress) public {
+        constructor() public {
         
-        eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
+//        eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
 
         contractOwner = msg.sender;
 
@@ -209,7 +210,7 @@ contract EurekaPlatform {
         bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
         uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) public {
 
-        require(msg.sender == address(eurekaTokenContract));
+//        require(msg.sender == address(eurekaTokenContract));
 //        require(_value == submissionFee, 'transferred amount needs to equal the submission fee');
 
         uint submissionId = submissionCounter++;
