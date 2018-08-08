@@ -34,7 +34,8 @@ class Router extends Component {
             userAddress: response.data.user,
             isAuthenticated: response.data.isAuthenticated
           });
-          console.log(response);
+
+
         } else {
           this.setState({
             isAuthenticated: false
@@ -44,6 +45,16 @@ class Router extends Component {
       .catch(err => {
         console.error(err);
       });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const selectedAddress = nextProps.selectedAccount.address;
+      // check if user changed address during the session
+    if (this.state.userAddress !== selectedAddress) {
+      this.setState({
+        isAuthenticated: false
+      });
+    }
   }
 
   render() {
@@ -86,8 +97,8 @@ class Router extends Component {
                     changeAccount={selectedAccount => {
                       this.props.changeAccount(selectedAccount);
                     }}
-                    setAuth={authed => {
-                      this.setState({authed});
+                    setAuth={isAuthenticated => {
+                      this.setState({isAuthenticated});
                     }}
                   />
                 )}
@@ -105,8 +116,8 @@ class Router extends Component {
                     changeAccount={selectedAccount => {
                       this.props.changeAccount(selectedAccount);
                     }}
-                    setAuth={authed => {
-                      this.setState({authed});
+                    setAuth={isAuthenticated => {
+                      this.setState({isAuthenticated});
                     }}
                   />
                 )}
