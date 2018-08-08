@@ -472,6 +472,11 @@ contract EurekaPlatform {
             "the article doesn't have enough accepted editor approved reviews to get accepted.");
         require(countAcceptedReviews(article.communityReviews) >= minAmountOfCommunityReviewer,
             "the article doesn't have enough community reviews to get accepted.");
+            
+        require(countReviewsAskingForCorrection(article.editorApprovedReviews) == 0,
+            "the article needs to be corrected.");
+        require(countReviewsAskingForCorrection(article.communityReviews) == 0,
+            "the article needs to be corrected.");
 
         // TODO if accept method is called to early, other reviewers could be rewarded.
 
@@ -500,6 +505,15 @@ contract EurekaPlatform {
     function countAcceptedReviews(Review[] _reviews) pure private returns (uint count) {
         for (uint i = 0; i < _reviews.length; i++) {
             if (_reviews[i].reviewState == ReviewState.ACCEPTED)
+                count++;
+        }
+        return count;
+    }
+    
+    function countReviewsAskingForCorrection(Review[] _reviews) pure private returns (uint count) {
+        for (uint i = 0; i < _reviews.length; i++) {
+            if (_reviews[i].reviewState == ReviewState.ACCEPTED
+                && _reviews[i].needForCorrection)
                 count++;
         }
         return count;
