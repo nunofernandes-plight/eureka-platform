@@ -178,8 +178,11 @@ contract EurekaPlatform {
 
         bytes32 reviewHash;
         uint256 reviewedTimestamp;
-        
-        bool needForCorrection;
+
+        // if set to true, the editor cannot accept the article if he/she accepts this review
+        bool articleHasMajorIssues;
+        // acceptance of article is still possible although set to true
+        bool articleHasMinorIssues;
         
         uint8 score1;
         uint8 score2;
@@ -349,7 +352,7 @@ contract EurekaPlatform {
         article.editorApprovedReviews.push(review);
     }
 
-    function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, uint8 _score1, bool _needForCorrection, uint8 _score2) public {
+    function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
@@ -368,7 +371,8 @@ contract EurekaPlatform {
         review.isEditorApprovedReview = true;
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
-        review.needForCorrection = _needForCorrection;
+        review.articleHasMajorIssues = _articleHasMajorIssues;
+        review.articleHasMinorIssues = _articleHasMinorIssues;
         review.score1 = _score1;
         review.score2 = _score2;
 
@@ -376,7 +380,7 @@ contract EurekaPlatform {
         review.stateTimestamp = block.timestamp;
     }
 
-    function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, bool _needForCorrection, uint8 _score1, uint8 _score2) public {
+    function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.SUBMITTED
@@ -391,7 +395,8 @@ contract EurekaPlatform {
         review.isEditorApprovedReview = false;
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
-        review.needForCorrection = _needForCorrection;
+        review.articleHasMajorIssues = _articleHasMajorIssues;
+        review.articleHasMinorIssues = _articleHasMinorIssues;
         review.score1 = _score1;
         review.score2 = _score2;
 
@@ -400,7 +405,7 @@ contract EurekaPlatform {
         review.stateTimestamp = block.timestamp;
     }
 
-    function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _needForCorrection, uint8 _score1, uint8 _score2) public {
+    function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.SUBMITTED
@@ -413,7 +418,8 @@ contract EurekaPlatform {
 
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
-        review.needForCorrection = _needForCorrection;
+        review.articleHasMajorIssues = _articleHasMajorIssues;
+        review.articleHasMinorIssues = _articleHasMinorIssues;
         review.score1 = _score1;
         review.score2 = _score2;
 
@@ -474,9 +480,9 @@ contract EurekaPlatform {
         require(countAcceptedReviews(article.communityReviews) >= minAmountOfCommunityReviews,
             "the article doesn't have enough community reviews to get accepted.");
             
-        require(countReviewsAskingForCorrection(article.editorApprovedReviews) == 0,
+        require(countReviewsWithMajorIssues(article.editorApprovedReviews) == 0,
             "the article needs to be corrected.");
-        require(countReviewsAskingForCorrection(article.communityReviews) == 0,
+        require(countReviewsWithMajorIssues(article.communityReviews) == 0,
             "the article needs to be corrected.");
 
         // TODO if accept method is called to early, other reviewers could be rewarded.
@@ -511,10 +517,10 @@ contract EurekaPlatform {
         return count;
     }
     
-    function countReviewsAskingForCorrection(Review[] _reviews) pure private returns (uint count) {
+    function countReviewsWithMajorIssues(Review[] _reviews) pure private returns (uint count) {
         for (uint i = 0; i < _reviews.length; i++) {
             if (_reviews[i].reviewState == ReviewState.ACCEPTED
-                && _reviews[i].needForCorrection)
+                && _reviews[i].articleHasMajorIssues)
                 count++;
         }
         return count;
