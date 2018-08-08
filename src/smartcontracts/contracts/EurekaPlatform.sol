@@ -526,19 +526,21 @@ contract EurekaPlatform {
     function requestNewReviewRound(uint256 _submissionId) private {
         
         articleSubmissions[_submissionId].submissionState = SubmissionState.NEW_REVIEW_ROUND_REQUESTED;
+        articleSubmissions[_submissionId].stateTimestamp = block.timestamp;
     }
 
     function openNewReviewRound(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
         uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) public {
 
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
-        require(msg.sender == submission.submissionOwner, "only the submission process owner can submit articles.");
+        require(msg.sender == submission.submissionOwner, "only the submission process owner can submit a new article version.");
         require(submission.submissionState == SubmissionState.NEW_REVIEW_ROUND_REQUESTED,
             "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
 
         submitArticleVersion(_submissionId, _articleHash, _articleURL, _authors, _authorContributionRatios, _linkedArticles, _linkedArticlesSplitRatios);
 
         submission.submissionState = SubmissionState.OPEN;
+        submission.stateTimestamp = block.timestamp;
     }
 
     function declineNewReviewRound(uint256 _submissionId) public {
