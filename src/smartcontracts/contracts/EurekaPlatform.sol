@@ -440,17 +440,6 @@ contract EurekaPlatform {
 
         review.reviewState = ReviewState.ACCEPTED;
         review.stateTimestamp = block.timestamp;
-        
-        rewardReviewer(article, review);
-    }
-    
-    function rewardReviewer(ArticleVersion _article, Review _review) private {
-        if (_review.isEditorApprovedReview)
-            if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfRewardedEditorApprovedReviews)
-                eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer[0]);  //TODO: handle reward
-        else 
-            if (countAcceptedReviews(_article.communityReviews) < maxAmountOfRewardedCommunityReviews)
-                eurekaTokenContract.transfer(_review.reviewer, communityReviewerRewardPerReviewer[0]);  //TODO: handle reward
     }
 
     function declineReview(bytes32 _articleHash, address _reviewerAddress) public {
@@ -508,6 +497,15 @@ contract EurekaPlatform {
             closeSubmissionProcess(article.submissionId);
         else
             requestNewReviewRound(article.submissionId);
+    }
+
+    function rewardReviewer(ArticleVersion _article, Review _review) private {
+        if (_review.isEditorApprovedReview)
+            if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfRewardedEditorApprovedReviews)
+                eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer[0]);  //TODO: handle reward
+            else
+                if (countAcceptedReviews(_article.communityReviews) < maxAmountOfRewardedCommunityReviews)
+                    eurekaTokenContract.transfer(_review.reviewer, communityReviewerRewardPerReviewer[0]);  //TODO: handle reward
     }
 
     function countAcceptedReviews(Review[] _reviews) pure private returns (uint count) {
