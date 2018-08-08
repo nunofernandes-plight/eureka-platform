@@ -161,6 +161,9 @@ contract EurekaPlatform {
         
         uint8 score1;
         uint8 score2;
+        
+        // address of the reviewer who reviewed this review (if at state ACCEPTED or DECLINED)
+        address reviewedBy;
     }
 
     function getLinkedArticles(bytes32 hash) public view returns (bytes32[] linkedArticles) {
@@ -415,6 +418,7 @@ contract EurekaPlatform {
 
         review.reviewState = ReviewState.ACCEPTED;
         review.stateTimestamp = block.timestamp;
+        review.reviewedBy = msg.sender;
     }
 
     function declineReview(bytes32 _articleHash, address _reviewerAddress) public {
@@ -430,6 +434,7 @@ contract EurekaPlatform {
 
         review.reviewState = ReviewState.DECLINED;
         review.stateTimestamp = block.timestamp;
+        review.reviewedBy = msg.sender;
     }
 
     function acceptArticleVersion(bytes32 _articleHash) public {
@@ -486,7 +491,6 @@ contract EurekaPlatform {
         if (_review.isEditorApprovedReview)
             if (countAcceptedReviews(_article.editorApprovedReviews) < maxAmountOfRewardedEditorApprovedReviews)
                 eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer[0]);  //TODO: handle reward
-            else
                 eurekaTokenContract.transfer(_review.reviewer, editorApprovedReviewerRewardPerReviewer);  //TODO: handle reward
         }
         else {
