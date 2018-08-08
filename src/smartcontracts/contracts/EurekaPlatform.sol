@@ -501,7 +501,7 @@ contract EurekaPlatform {
 
         article.versionState = ArticleVersionState.DECLINED;
 
-        if (countDeclinedArticles(article.submissionId) >= maxReviewRounds)
+        if (countReviewRounds(article.submissionId) >= maxReviewRounds)
             closeSubmissionProcess(article.submissionId);
         else
             requestNewReviewRound(article.submissionId);
@@ -543,7 +543,7 @@ contract EurekaPlatform {
 
     // only counts the articles which went through a review process and therefore have the state DECLINED
     // does not consider the versions with state DECLINED_SANITY_NOTOK
-    function countDeclinedArticles(uint256 _submissionId) view private returns (uint count) {
+    function countReviewRounds(uint256 _submissionId) view private returns (uint count) {
         ArticleVersion[] storage versions = articleSubmissions[_submissionId].versions;
         for (uint i = 0; i < versions.length; i++) {
             if (versions[i].versionState == ArticleVersionState.DECLINED)
