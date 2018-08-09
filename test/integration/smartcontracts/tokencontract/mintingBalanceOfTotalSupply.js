@@ -1,12 +1,12 @@
 import test from 'ava';
-import deployContracts from '../../../src/backend/web3/index.mjs';
-import getAccounts from '../../../src/backend/web3/get-accounts.mjs';
+import deployContracts from '../../../../src/backend/web3/index.mjs';
+import getAccounts from '../../../../src/backend/web3/get-accounts.mjs';
 import {
   finishMinting,
   getBalanceOf,
   getTotalSupplyOf,
   mintEurekaTokens
-} from "../../../src/backend/web3/web3-token-contract-methods.mjs";
+} from '../../../../src/backend/web3/web3-token-contract-methods.mjs';
 
 let EurekaPlatformContract = undefined;
 let EurekaTokenContract = undefined;

@@ -1,11 +1,11 @@
 import test from 'ava';
-import userService from '../src/backend/db/user-service.mjs';
-import articleSubmissionService from '../src/backend/db/article-submission-service.mjs';
-import authorService from '../src/backend/db/author-service.mjs';
-import reviewService from '../src/backend/db/review-service.mjs';
-import Roles from '../src/backend/schema/roles-enum.mjs';
-import app from '../src/backend/api/api.mjs';
-import {cleanDB} from './helpers';
+import userService from '../../src/backend/db/user-service.mjs';
+import articleSubmissionService from '../../src/backend/db/article-submission-service.mjs';
+import authorService from '../../src/backend/db/author-service.mjs';
+import reviewService from '../../src/backend/db/review-service.mjs';
+import Roles from '../../src/backend/schema/roles-enum.mjs';
+import app from '../../src/backend/api/api.mjs';
+import {cleanDB} from '.././helpers';
 
 const PRETEXT = 'DB-USER: ';
 

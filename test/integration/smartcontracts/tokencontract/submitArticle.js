@@ -1,19 +1,19 @@
 import test from 'ava';
-import web3 from '../../../src/backend/web3/web3Instance.mjs';
-import deployContracts from '../../../src/backend/web3/index.mjs';
-import getAccounts from '../../../src/backend/web3/get-accounts.mjs';
+import web3 from '../../../../src/backend/web3/web3Instance.mjs';
+import deployContracts from '../../../../src/backend/web3/index.mjs';
+import getAccounts from '../../../../src/backend/web3/get-accounts.mjs';
 import {
   finishMinting,
   getBalanceOf,
   mintEurekaTokens, submitArticle
-} from "../../../src/backend/web3/web3-token-contract-methods.mjs";
-import getArticleHex from "../../../src/backend/web3/get-articleHex.mjs";
+} from '../../../../src/backend/web3/web3-token-contract-methods.mjs';
+import getArticleHex from '../../../../src/backend/web3/get-articleHex.mjs';
 import {
   getAuthors,
   getLinkedArticles,
   getSubmissionProcess,
   getUrl
-} from "../../../src/backend/web3/web3-platform-contract-methods.mjs";
+} from '../../../../src/backend/web3/web3-platform-contract-methods.mjs';
 
 let EurekaPlatformContract = undefined;
 let EurekaTokenContract = undefined;
