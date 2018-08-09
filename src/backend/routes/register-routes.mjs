@@ -10,41 +10,20 @@ router.get('/', function(req, res) {
   res.sendFile(path.join(__dirname + '/src/backend/view/register.html'));
 });
 
-router.post('/',
-  asyncHandler(async (req, res) => {
-    let newUserInDB = await userService.createUser(req.body.password,
-      req.body.email, req.body.ethereumAddress, req.body.avatar);
+router.post('/', asyncHandler(async (req, res) => {
+  let newUserInDB = await userService.createUser(req.body.password,
+    req.body.email, req.body.ethereumAddress, req.body.avatar);
 
-    return req.login(newUserInDB, function(err) {
+  return new Promise((resolve, reject) =>
+    req.login(newUserInDB, (err) => {
       if (err) {
         let error = new Error('Login did not work!');
         error.status = 401;
-        throw error;
+        reject(error);
       } else {
-        return newUserInDB;
-        // res.status = 201; TODO fix problem with setting headers after res has ben sent
-        // res.json({
-        //   data: newUserInDB
-        // });
+        resolve(newUserInDB);
       }
-    });
-    // return userService
-    //   .createUser(req.body.password, req.body.email, req.body.ethereumAddress)
-    //   .then(newUserInDB => {
-    //     req.login(newUserInDB, function(err) {
-    //       if (err) {
-    //         let error = new Error('Login did not work!');
-    //         error.status = 401;
-    //         throw error;
-    //       } else {
-    //         res.json({
-    //           status: 201,
-    //           data: newUserInDB
-    //         });
-    //       }
-    //     });
-    //   });
-  })
-);
+    })(req, res));
+}));
 
 export default router;

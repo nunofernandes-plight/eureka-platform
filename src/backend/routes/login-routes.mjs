@@ -27,7 +27,7 @@ router.post('/', asyncHandler(async (req, res) => {
       } else {
         req.login(user, (err) => {
           if (err) {
-            let error = new Error('Login errror');
+            let error = new Error('Login error');
             error.status = 500;
             reject(error);
           }
