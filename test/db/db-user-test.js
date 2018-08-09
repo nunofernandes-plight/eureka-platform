@@ -35,7 +35,7 @@ test(PRETEXT + 'create a User', async t => {
   t.is((await userService.getAllUsers()).length, 0);
 
   const user = await userService.createUser('test', 'test@test@test.ch',
-    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac');
+    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac', 'test-avatar');
 
   t.is((await userService.getAllUsers()).length, 1);
 
@@ -50,7 +50,7 @@ test(PRETEXT + 'add roles to a user', async t => {
   t.is((await userService.getAllUsers()).length, 0);
 
   const user = await userService.createUser('test', 'test@test@test.ch',
-    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac');
+    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac', 'test-avatar');
 
   //test roles
   let dbUser = await userService.getUserByEthereumAddress(user.ethereumAddress);
@@ -66,7 +66,7 @@ test(PRETEXT + 'create submission and add it to a user', async t => {
   //test user creation
   t.is((await userService.getAllUsers()).length, 0);
   let user = await userService.createUser('test', 'test@test@test.ch',
-    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac');
+    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac', 'test-avatar');
   t.is((await userService.getAllUsers()).length, 1);
 
   //test submission creation
