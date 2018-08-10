@@ -55,40 +55,66 @@ class PanelLeft extends Component {
         </TopLogo>
         <Items>
           <Separator text={'General'} />
-          <NavItem status="active" icon={'dashboard'} width={20} height={20}>
-            {' '}
-            <Link to={`${this.props.base}/dashboard`}>Dashboard</Link>
-          </NavItem>
-          <NavItem icon={'article'} width={20} height={20}>
-            {' '}
-            My Articles
-          </NavItem>
-          <NavItem icon={'review'} width={20} height={20}>
-            {' '}
-            My Reviews
-          </NavItem>
-
-          <NavItem icon={'link'} width={20} height={20}>
-            {' '}
-            My linked Articles
-          </NavItem>
-
+          <Link
+            style={{textDecoration: 'none'}}
+            to={`${this.props.base}/dashboard`}
+          >
+            <NavItem status="active" icon={'dashboard'} width={20} height={20}>
+              {' '}
+              Dashboard
+            </NavItem>
+          </Link>
+          <Link
+            style={{textDecoration: 'none'}}
+            to={`${this.props.base}/articles`}
+          >
+            <NavItem icon={'article'} width={20} height={20}>
+              My Articles
+            </NavItem>
+          </Link>{' '}
+          <Link
+            style={{textDecoration: 'none'}}
+            to={`${this.props.base}/reviews`}
+          >
+            <NavItem icon={'review'} width={20} height={20}>
+              My Reviews
+            </NavItem>
+          </Link>{' '}
+          <Link
+            style={{textDecoration: 'none'}}
+            to={`${this.props.base}/linked`}
+          >
+            <NavItem icon={'link'} width={20} height={20}>
+              My Linked articles
+            </NavItem>
+          </Link>
           <Separator text={'Personal'} />
-          <NavItem icon={'wallet'} width={20} height={20}>
-            {' '}
-            My Wallet
-          </NavItem>
-          <NavItem icon={'account'} width={20} height={20}>
-            <Link to={'/dashboard/account'}>MyAccount</Link>
-          </NavItem>
-
+          <Link
+            style={{textDecoration: 'none'}}
+            to={`${this.props.base}/wallet`}
+          >
+            <NavItem icon={'wallet'} width={20} height={20}>
+              My Wallet
+            </NavItem>
+          </Link>
+          <Link
+            style={{textDecoration: 'none'}}
+            to={`${this.props.base}/account`}
+          >
+            <NavItem icon={'account'} width={20} height={20}>
+              My Account
+            </NavItem>
+          </Link>
           <Separator text={'History'} />
-          <NavItem icon={'ethereum'} width={20} height={20}>
-            {' '}
-            My Actions
-          </NavItem>
+          <Link
+            style={{textDecoration: 'none'}}
+            to={`${this.props.base}/actions`}
+          >
+            <NavItem icon={'ethereum'} width={20} height={20}>
+              My Actions
+            </NavItem>
+          </Link>
         </Items>
-
       </Container>
     );
   }
