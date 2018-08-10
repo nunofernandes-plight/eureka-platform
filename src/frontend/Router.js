@@ -8,7 +8,7 @@ import MetaMaskGuide from './webpack/MetaMaskGuide';
 import MainScreen from './webpack/dashboard/MainScreen.js';
 import {getDomain} from '../helpers/getDomain.js';
 import SignUp from './webpack/login/SignUp.js';
-import MyAccount from './webpack/dashboard/MyAccount.js';
+import PanelLeft from './webpack/dashboard/PanelLeft.js';
 import {LoginGuard} from './webpack/guards/Guards.js';
 
 class Router extends Component {
@@ -16,7 +16,6 @@ class Router extends Component {
     super();
     this.state = {
       isAuthenticated: null,
-      userAddress: null,
       user: null
     };
   }
@@ -38,7 +37,7 @@ class Router extends Component {
         console.log('fetching works');
         if (response.success) {
           this.setState({
-            userAddress: response.data.user,
+            user: response.data.user,
             isAuthenticated: response.data.isAuthenticated
           });
         } else {
@@ -52,15 +51,16 @@ class Router extends Component {
       });
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   const selectedAddress = nextProps.selectedAccount.address;
-  //   // check if user changed address during the session
-  //   if (this.state.userAddress !== selectedAddress) {
-  //     this.setState({
-  //       isAuthenticated: false
-  //     });
-  //   }
-  // }
+  componentWillReceiveProps(nextProps) {
+    const selectedAddress = nextProps.selectedAccount.address;
+    const loadedAddress = this.state.user.ethereumAddress;
+    // check if user changed address during the session
+    if (loadedAddress !== selectedAddress) {
+      this.setState({
+        isAuthenticated: false
+      });
+    }
+  }
 
   render() {
     return (
@@ -82,6 +82,7 @@ class Router extends Component {
                 render={() => (
                   <div>
                     <LoginGuard isAuthenticated={this.state.isAuthenticated}>
+                      <PanelLeft />
                       <MainScreen
                         provider={this.props.provider}
                         web3={this.props.web3}

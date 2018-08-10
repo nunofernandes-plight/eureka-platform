@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Switch, Route} from 'react-router';
-import PanelLeft from './PanelLeft.js';
+
 import MyAccount from './MyAccount.js';
 
 const Container = styled.div`
@@ -21,20 +21,12 @@ class MainScreen extends Component {
   render() {
     return (
       <div>
-        <PanelLeft />
+
 
         <PanelRight>
-            asjajosgoas
-          {/*<Container>*/}
-          {/*<PanelRight>*/}
-          {/*<Response>*/}
-          {/*{' '}*/}
-          {/*{this.props.isAuthenticated*/}
-          {/*? this.props.userAddress + ' is logged in'*/}
-          {/*: 'Not logged in!!'}*/}
-          {/*</Response>*/}
-          {/*</PanelRight>*/}
-          {/*</Container>*/}
+          <Container>
+            <PanelRight>asjajosgoas</PanelRight>
+          </Container>
         </PanelRight>
       </div>
     );

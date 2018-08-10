@@ -3,7 +3,6 @@ import {Redirect} from 'react-router-dom';
 import EurekaSpinner from '../../webpack/spinners/EurekaSpinner.js';
 
 export const LoginGuard = props => {
-  console.log(props);
   if (props.isAuthenticated === null) {
     return <EurekaSpinner />;
   } else {
