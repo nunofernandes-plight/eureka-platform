@@ -1,21 +1,21 @@
-import {signUpEditor} from '../src/backend/web3/web3-platform-contract-methods.mjs';
+import {signUpEditor} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import {
   mintEurekaTokens,
   finishMinting,
   submitArticle,
   getBalanceOf
-} from '../src/backend/web3/web3-token-contract-methods.mjs';
+} from '../../src/backend/web3/web3-token-contract-methods.mjs';
 import test from 'ava';
-import app from '../src/backend/api/api.mjs';
-import deployContracts from '../src/backend/web3/index.mjs';
-import getAccounts from '../src/backend/web3/get-accounts.mjs';
-import User from '../src/backend/schema/user.mjs';
-import ArticleSubmission from '../src/backend/schema/article-submission.mjs';
-import userService from '../src/backend/db/user-service.mjs';
-import articleSubmissionService from '../src/backend/db/article-submission-service.mjs';
-import getArticleHex from '../src/backend/web3/get-articleHex.mjs';
-import {getLinkedArticles} from '../src/backend/web3/web3-platform-contract-methods.mjs';
-import {getAuthors} from '../src/backend/web3/web3-platform-contract-methods.mjs';
+import app from '../../src/backend/api/api.mjs';
+import deployContracts from '../../src/backend/web3/index.mjs';
+import getAccounts from '../../src/backend/web3/get-accounts.mjs';
+import User from '../../src/backend/schema/user.mjs';
+import ArticleSubmission from '../../src/backend/schema/article-submission.mjs';
+import userService from '../../src/backend/db/user-service.mjs';
+import articleSubmissionService from '../../src/backend/db/article-submission-service.mjs';
+import getArticleHex from '../../src/backend/web3/get-articleHex.mjs';
+import {getLinkedArticles} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
+import {getAuthors} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;

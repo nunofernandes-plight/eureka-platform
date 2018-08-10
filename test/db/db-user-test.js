@@ -1,11 +1,11 @@
 import test from 'ava';
-import userService from '../src/backend/db/user-service.mjs';
-import articleSubmissionService from '../src/backend/db/article-submission-service.mjs';
-import authorService from '../src/backend/db/author-service.mjs';
-import reviewService from '../src/backend/db/review-service.mjs';
-import Roles from '../src/backend/schema/roles-enum.mjs';
-import app from '../src/backend/api/api.mjs';
-import {cleanDB} from './helpers';
+import userService from '../../src/backend/db/user-service.mjs';
+import articleSubmissionService from '../../src/backend/db/article-submission-service.mjs';
+import authorService from '../../src/backend/db/author-service.mjs';
+import reviewService from '../../src/backend/db/review-service.mjs';
+import Roles from '../../src/backend/schema/roles-enum.mjs';
+import app from '../../src/backend/api/api.mjs';
+import {cleanDB} from '.././helpers';
 
 const PRETEXT = 'DB-USER: ';
 
@@ -35,7 +35,7 @@ test(PRETEXT + 'create a User', async t => {
   t.is((await userService.getAllUsers()).length, 0);
 
   const user = await userService.createUser('test', 'test@test@test.ch',
-    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac');
+    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac', 'test-avatar');
 
   t.is((await userService.getAllUsers()).length, 1);
 
@@ -50,7 +50,7 @@ test(PRETEXT + 'add roles to a user', async t => {
   t.is((await userService.getAllUsers()).length, 0);
 
   const user = await userService.createUser('test', 'test@test@test.ch',
-    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac');
+    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac', 'test-avatar');
 
   //test roles
   let dbUser = await userService.getUserByEthereumAddress(user.ethereumAddress);
@@ -66,7 +66,7 @@ test(PRETEXT + 'create submission and add it to a user', async t => {
   //test user creation
   t.is((await userService.getAllUsers()).length, 0);
   let user = await userService.createUser('test', 'test@test@test.ch',
-    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac');
+    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac', 'test-avatar');
   t.is((await userService.getAllUsers()).length, 1);
 
   //test submission creation

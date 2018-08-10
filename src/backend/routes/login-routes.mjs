@@ -1,10 +1,7 @@
 import express from 'express';
 import path from 'path';
 import {asyncHandler} from '../api/requestHandler.mjs';
-import userService from '../db/user-service.mjs';
 import passport from '../helpers/local-passport.mjs';
-import User from '../schema/user';
-import bcryptHasher from '../helpers/bcrypt-hasher.mjs';
 
 
 const router = express.Router();
@@ -27,7 +24,7 @@ router.post('/', asyncHandler(async (req, res) => {
       } else {
         req.login(user, (err) => {
           if (err) {
-            let error = new Error('Login errror');
+            let error = new Error('Login error');
             error.status = 500;
             reject(error);
           }

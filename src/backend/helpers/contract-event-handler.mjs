@@ -3,12 +3,14 @@ import articleSubmissionService from '../db/article-submission-service.mjs';
 
 export default {
   setup: EurekaPlatformContract => {
-    //sign in for events
+
+    /** Editor Sign up **/
     EurekaPlatformContract.events.EditorSignUp(undefined, (error, event) => {
       if (error) throw error;
       userService.makeEditor(event.returnValues.editorAddress);
     });
 
+    /** Submission Process Start **/
     EurekaPlatformContract.events.SubmissionProcessStart(
       undefined,
       (error, event) => {

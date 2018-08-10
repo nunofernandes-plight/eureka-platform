@@ -4,7 +4,6 @@ import Roles from '../schema/roles-enum.mjs';
 import ArticleSubmission from '../schema/article-submission.mjs';
 import {isValidAddress} from '../../helpers/isValidEthereumAddress.mjs';
 import userService from '../db/user-service.mjs';
-import {asyncHandler} from '../api/requestHandler.mjs';
 
 export default {
   /**
