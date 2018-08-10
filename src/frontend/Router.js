@@ -9,7 +9,7 @@ import {getDomain} from '../helpers/getDomain.js';
 import SignUp from './webpack/login/SignUp.js';
 import PanelLeft from './webpack/dashboard/PanelLeft.js';
 import {LoginGuard} from './webpack/guards/Guards.js';
-import Dashboard from './webpack/dashboard/Dashboard.js';
+import DashboardRouter from './webpack/dashboard/DashboardRouter.js';
 
 class Router extends Component {
   constructor() {
@@ -83,15 +83,7 @@ class Router extends Component {
                     <LoginGuard isAuthenticated={this.state.isAuthenticated}>
                       <PanelLeft base={'/app'} />
                       <div style={{paddingLeft: 240}}>
-                        <Route
-                          exact
-                          path={'/app/dashboard'}
-                          render={() => (
-                            <div>
-                              <Dashboard />
-                            </div>
-                          )}
-                        />
+                        <DashboardRouter base={'/app'} />
                       </div>
                     </LoginGuard>
                   </div>
