@@ -89,6 +89,19 @@ const SignUp = Item.extend`
   border-radius: 4px;
 `;
 
+const ProfileContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+`;
+
+const Email = styled.div`
+  right: -12px;
+  top: 36px;
+  font-size: 9px;
+  position: absolute;
+`;
 const renderMetaMaskStatus = props => {
   const status = props.metaMaskStatus;
   if (status === MetaMaskStatus.DETECTED_NO_LOGGED_IN) {
@@ -136,13 +149,23 @@ const renderMiddle = props => {
     </MiddleContainer>
   );
 };
+const renderEmail = props => {
+  const maxLength = 12;
+  // render email with different length
+  return props.user.email.length > maxLength
+    ? props.user.email.toString().substr(0, maxLength - 1) + '..'
+    : props.user.email.toString();
+};
 
 const renderRight = props => {
   if (props.isAuthenticated && props.user) {
     return (
-      <div>
-        <Avatar avatar={props.user.avatar} width={40} height={40} />
-      </div>
+      <ProfileContainer>
+        <div>
+          <Avatar avatar={props.user.avatar} width={40} height={40} />
+        </div>
+        <Email>{renderEmail(props)}</Email>
+      </ProfileContainer>
     );
   } else {
     return (
