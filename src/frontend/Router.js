@@ -134,8 +134,14 @@ class Router extends Component {
                   </div>
                 )}
               />
-
+              {/*
+            Startsite always needs to be at the bottom!
+            It otherwise matches sub routes
+          */}
               <Route path="/" exact render={() => <WelcomePage />} />
+              <Route
+                render={() => <div>TODO: IMPLEMENT 404 NOT FOUND PAGE </div>}
+              />
             </Switch>
           </BrowserRouter>
         </div>

@@ -12,7 +12,7 @@ const Img = styled.img`
   margin-top: ${props => (props.top ? props.top + 'px' : null)};
 `;
 const Avatar = props => {
-  return <Img src={props.avatar} {...props} />;
+  return <Img src={`/${props.avatar}`} {...props} />;
 };
 
 export default Avatar;
