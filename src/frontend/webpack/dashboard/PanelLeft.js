@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
+import {Link} from 'react-router-dom';
 import {__GRAY_200} from '../../helpers/colors.js';
 import EurekaLogo from '../icons/EurekaLogo.js';
 import {NavItem, Separator} from './NavItem.js';
@@ -76,8 +77,7 @@ class PanelLeft extends Component {
             My Wallet
           </NavItem>
           <NavItem icon={'account'} width={20} height={20}>
-            {' '}
-            My Account
+            <Link to={'/dashboard/account'}>MyAccount</Link>
           </NavItem>
 
           <Separator text={'History'} />

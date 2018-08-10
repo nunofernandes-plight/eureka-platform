@@ -9,12 +9,13 @@ import MainScreen from './webpack/dashboard/MainScreen.js';
 import {getDomain} from '../helpers/getDomain.js';
 import SignUp from './webpack/login/SignUp.js';
 import MyAccount from './webpack/dashboard/MyAccount.js';
+import {LoginGuard} from './webpack/guards/Guards.js';
 
 class Router extends Component {
   constructor() {
     super();
     this.state = {
-      isAuthenticated: false,
+      isAuthenticated: null,
       userAddress: null,
       user: null
     };
@@ -49,39 +50,17 @@ class Router extends Component {
       .catch(err => {
         console.error(err);
       });
-    this.getUserData();
   }
 
-  getUserData() {
-    fetch(`${getDomain()}/api/users/data`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    })
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          let user = response.data;
-          console.log(response);
-          this.setState({user});
-        }
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const selectedAddress = nextProps.selectedAccount.address;
-    // check if user changed address during the session
-    if (this.state.userAddress !== selectedAddress) {
-      this.setState({
-        isAuthenticated: false
-      });
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   const selectedAddress = nextProps.selectedAccount.address;
+  //   // check if user changed address during the session
+  //   if (this.state.userAddress !== selectedAddress) {
+  //     this.setState({
+  //       isAuthenticated: false
+  //     });
+  //   }
+  // }
 
   render() {
     return (
@@ -102,7 +81,7 @@ class Router extends Component {
                 exact
                 render={() => (
                   <div>
-                    {this.state.isAuthenticated ? (
+                    <LoginGuard isAuthenticated={this.state.isAuthenticated}>
                       <MainScreen
                         provider={this.props.provider}
                         web3={this.props.web3}
@@ -111,14 +90,10 @@ class Router extends Component {
                         isAuthenticated={this.state.isAuthenticated}
                         userAddress={this.state.userAddress}
                       />
-                    ) : (
-                      <Redirect to={'/login'} />
-                    )}
+                    </LoginGuard>
                   </div>
                 )}
               />
-
-              <Route exactly path="/dashboard/account" component={MyAccount} />
 
               <Route
                 path="/signup"
