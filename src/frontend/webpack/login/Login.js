@@ -76,7 +76,7 @@ class Login extends Component {
         .then(response => response.json())
         .then(response => {
           if (response.success) {
-            this.props.history.push('/dashboard');
+            this.props.history.push('/app');
           } else {
             this.setState({
               errorMessage: response.error,

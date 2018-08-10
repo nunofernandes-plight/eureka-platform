@@ -5,11 +5,11 @@ import WelcomePage from './webpack/login/WelcomePage';
 import Header from './webpack/Header/Header';
 import Login from './webpack/login/Login';
 import MetaMaskGuide from './webpack/MetaMaskGuide';
-import MainScreen from './webpack/dashboard/MainScreen.js';
 import {getDomain} from '../helpers/getDomain.js';
 import SignUp from './webpack/login/SignUp.js';
 import PanelLeft from './webpack/dashboard/PanelLeft.js';
 import {LoginGuard} from './webpack/guards/Guards.js';
+import Dashboard from './webpack/dashboard/Dashboard.js';
 
 class Router extends Component {
   constructor() {
@@ -77,20 +77,22 @@ class Router extends Component {
             <Switch>
               <Route path="/metamask" exact render={() => <MetaMaskGuide />} />
               <Route
-                path="/dashboard"
-                exact
+                path="/app"
                 render={() => (
                   <div>
                     <LoginGuard isAuthenticated={this.state.isAuthenticated}>
-                      <PanelLeft />
-                      <MainScreen
-                        provider={this.props.provider}
-                        web3={this.props.web3}
-                        metaMaskStatus={this.props.metaMaskStatus}
-                        accounts={this.props.accounts}
-                        isAuthenticated={this.state.isAuthenticated}
-                        userAddress={this.state.userAddress}
-                      />
+                      <PanelLeft base={'/app'} />
+                      <div style={{paddingLeft: 240}}>
+                        <Route
+                          exact
+                          path={'/app/dashboard'}
+                          render={() => (
+                            <div>
+                              <Dashboard />
+                            </div>
+                          )}
+                        />
+                      </div>
                     </LoginGuard>
                   </div>
                 )}

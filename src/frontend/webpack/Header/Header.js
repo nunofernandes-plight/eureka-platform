@@ -158,6 +158,7 @@ const renderEmail = props => {
 };
 
 const renderRight = props => {
+    console.log(props);
   if (props.isAuthenticated && props.user) {
     return (
       <ProfileContainer>

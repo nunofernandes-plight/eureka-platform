@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
+import {Route} from 'react-router';
 import {Link} from 'react-router-dom';
 import {__GRAY_200} from '../../helpers/colors.js';
 import EurekaLogo from '../icons/EurekaLogo.js';
 import {NavItem, Separator} from './NavItem.js';
+import Dashboard from './Dashboard.js';
 
 const Container = styled.div`
   display: flex;
@@ -55,7 +57,7 @@ class PanelLeft extends Component {
           <Separator text={'General'} />
           <NavItem status="active" icon={'dashboard'} width={20} height={20}>
             {' '}
-            Dashboard
+            <Link to={`${this.props.base}/dashboard`}>Dashboard</Link>
           </NavItem>
           <NavItem icon={'article'} width={20} height={20}>
             {' '}
@@ -86,6 +88,7 @@ class PanelLeft extends Component {
             My Actions
           </NavItem>
         </Items>
+
       </Container>
     );
   }
