@@ -77,6 +77,7 @@ class Login extends Component {
         .then(response => {
           if (response.success) {
             this.props.history.push('/app');
+              this.props.authenticate();
           } else {
             this.setState({
               errorMessage: response.error,

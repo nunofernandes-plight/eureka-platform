@@ -105,7 +105,7 @@ class Router extends Component {
                     changeAccount={selectedAccount => {
                       this.props.changeAccount(selectedAccount);
                     }}
-                    authenticate={isAuthenticated => {
+                    authenticate={() => {
                       this.authenticate();
                     }}
                   />
@@ -126,7 +126,7 @@ class Router extends Component {
                         changeAccount={selectedAccount => {
                           this.props.changeAccount(selectedAccount);
                         }}
-                        authenticate={isAuthenticated => {
+                        authenticate={() => {
                           this.authenticate();
                         }}
                       />
