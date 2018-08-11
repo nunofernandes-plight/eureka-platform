@@ -13,6 +13,7 @@ import MetaMaskLogo from '../icons/MetaMaskLogo.js';
 import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
 import RenderNetwork from '../../web3/RenderNetwork.js';
 import Avatar from './Avatar.js';
+import CircleSpinner from '../spinners/CircleSpinner.js';
 
 const Parent = styled.div`
   box-shadow: -21.213px 21.213px 30px 0px rgba(158, 158, 158, 0.3);
@@ -145,14 +146,14 @@ const renderMiddle = props => {
       {props.metaMaskStatus ? (
         <div>{renderMetaMaskStatus(props)}</div>
       ) : (
-        <div>loading..</div>
+        <CircleSpinner />
       )}
 
       <div>
         {props.network ? (
           <RenderNetwork network={props.network} />
         ) : (
-          <div>loading..</div>
+          <CircleSpinner />
         )}
       </div>
     </MiddleContainer>
