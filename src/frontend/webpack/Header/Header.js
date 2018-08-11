@@ -103,6 +103,11 @@ const Email = styled.div`
   font-size: 9px;
   position: absolute;
 `;
+
+const Flex = styled.div`
+  display: flex;
+  align-items: center;
+`;
 const renderMetaMaskStatus = props => {
   const status = props.metaMaskStatus;
   if (status === MetaMaskStatus.DETECTED_NO_LOGGED_IN) {
@@ -137,25 +142,26 @@ const renderLeft = () => {
   );
 };
 
+const renderStatus = props => {
+  if (!props.metaMaskStatus || !props.network) {
+    return <CircleSpinner />;
+  } else {
+    return (
+      <Flex>
+        <div>{renderMetaMaskStatus(props)}</div>
+        <RenderNetwork network={props.network} />
+      </Flex>
+    );
+  }
+};
+
 const renderMiddle = props => {
   return (
     <MiddleContainer>
       <Item>
         Products <Icon icon="chevron-down" width={15} height={15} />
       </Item>
-      {props.metaMaskStatus ? (
-        <div>{renderMetaMaskStatus(props)}</div>
-      ) : (
-        <CircleSpinner />
-      )}
-
-      <div>
-        {props.network ? (
-          <RenderNetwork network={props.network} />
-        ) : (
-          <CircleSpinner />
-        )}
-      </div>
+      {renderStatus(props)}
     </MiddleContainer>
   );
 };

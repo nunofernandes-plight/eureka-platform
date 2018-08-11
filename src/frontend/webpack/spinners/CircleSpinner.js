@@ -1,11 +1,13 @@
 import React from 'react';
-import styled from 'styled-components';
 import './circle.css';
 
-const Spinner = styled.div``;
-
 const CircleSpinner = () => {
-  return <Spinner className="lds-hourglass" />;
+  return (
+    <div className="lds-ripple">
+      <div />
+      <div />
+    </div>
+  );
 };
 
 export default CircleSpinner;
