@@ -11,7 +11,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: fixed;
-  width: 240px;
+  width: 270px;
   height: 100%;
   left: 0;
   top: 135px;

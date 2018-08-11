@@ -142,9 +142,18 @@ const renderMiddle = props => {
       <Item>
         Products <Icon icon="chevron-down" width={15} height={15} />
       </Item>
-      <div>{renderMetaMaskStatus(props)}</div>
+      {props.metaMaskStatus ? (
+        <div>{renderMetaMaskStatus(props)}</div>
+      ) : (
+        <div>loading..</div>
+      )}
+
       <div>
-        {props.network ? <RenderNetwork network={props.network} /> : null}
+        {props.network ? (
+          <RenderNetwork network={props.network} />
+        ) : (
+          <div>loading..</div>
+        )}
       </div>
     </MiddleContainer>
   );
@@ -158,7 +167,7 @@ const renderEmail = props => {
 };
 
 const renderRight = props => {
-    console.log(props);
+  console.log(props);
   if (props.isAuthenticated && props.user) {
     return (
       <ProfileContainer>
