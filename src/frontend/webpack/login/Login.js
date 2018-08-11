@@ -96,9 +96,7 @@ class Login extends Component {
 
   async signPrivateKey() {
     const message =
-      'EUREKA Register Authentication for the email: ' +
-      this.state.email +
-      '  - Please click to the Sign Button below.';
+      'EUREKA Register Authentication - Please click to the Sign Button below.';
 
     if (this.props.provider === Web3Providers.LOCALHOST) {
       // FAKE PASSWORD FOR DEV
