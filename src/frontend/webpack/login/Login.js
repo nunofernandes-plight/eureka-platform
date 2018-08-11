@@ -200,7 +200,7 @@ class Login extends Component {
                 <Row>
                   <Paragraph>
                     Don't have an <strong>account</strong>? Please{' '}
-                    <Link to="/login">sign up here.</Link>
+                    <Link to="/signup">sign up here.</Link>
                   </Paragraph>
                 </Row>
               </Container>
