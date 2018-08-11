@@ -53,12 +53,14 @@ class Router extends Component {
 
   componentWillReceiveProps(nextProps) {
     const selectedAddress = nextProps.selectedAccount.address;
-    const loadedAddress = this.state.user.ethereumAddress;
-    // check if user changed address during the session
-    if (loadedAddress !== selectedAddress) {
-      this.setState({
-        isAuthenticated: false
-      });
+    if (this.state.user) {
+      const loadedAddress = this.state.user.ethereumAddress;
+      // check if user changed address during the session
+      if (loadedAddress !== selectedAddress) {
+        this.setState({
+          isAuthenticated: false
+        });
+      }
     }
   }
 
