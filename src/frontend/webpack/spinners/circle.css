@@ -1,8 +1,9 @@
 .lds-ripple {
     display: inline-block;
     position: relative;
-    width: 64px;
-    height: 64px;
+    width: 45px;
+    height: 45px;
+    top: -5px;
 }
 .lds-ripple div {
     position: absolute;

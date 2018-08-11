@@ -131,7 +131,7 @@ class Router extends Component {
                         }}
                       />
                     ) : (
-                      <Redirect to={'/dashboard'} />
+                      <Redirect to={'/app'} />
                     )}
                   </div>
                 )}
