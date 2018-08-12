@@ -29,6 +29,14 @@ const Container = Row.extend`
   padding: 25px;
   align-items: center;
   justify-content: space-between;
+  max-height: ${props => {
+    const isApp = props.user && props.isAuthenticated;
+    if (isApp) {
+      return '55px';
+    } else {
+      return null;
+    }
+  }};
 `;
 const LeftContainer = styled.div`
   display: flex;
@@ -134,10 +142,15 @@ const renderMetaMaskStatus = props => {
   }
 };
 
-const renderLeft = () => {
+const renderLeft = props => {
+  const isApp = props.user && props.isAuthenticated;
   return (
     <LeftContainer>
-      <EurekaLogo height={44} blue />
+      {isApp ? (
+        <EurekaLogo app height={44} blue />
+      ) : (
+        <EurekaLogo height={44} blue />
+      )}
     </LeftContainer>
   );
 };
@@ -197,7 +210,7 @@ class Header extends Component {
   render() {
     return (
       <Parent>
-        <Container>
+        <Container {...this.props}>
           {renderLeft(this.props)}
           {renderMiddle(this.props)}
           {renderRight(this.props)}

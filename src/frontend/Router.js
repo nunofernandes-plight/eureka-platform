@@ -64,6 +64,14 @@ class Router extends Component {
     }
   }
 
+  getPaddingTop() {
+    if (this.state.isAuthenticated) {
+      return 55;
+    } else {
+      return 100;
+    }
+  }
+
   render() {
     return (
       <div>
@@ -74,7 +82,7 @@ class Router extends Component {
           isAuthenticated={this.state.isAuthenticated}
           user={this.state.user}
         />
-        <div style={{paddingTop: 100}}>
+        <div style={{paddingTop: this.getPaddingTop()}}>
           <BrowserRouter>
             <Switch>
               <Route path="/metamask" exact render={() => <MetaMaskGuide />} />

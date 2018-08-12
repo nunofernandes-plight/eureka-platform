@@ -4,6 +4,7 @@ import styled from 'styled-components';
 const Logo = styled.img`
   height: ${props => (props.height ? props.height + 'px' : null)};
   width: ${props => (props.width ? props.width + 'px' : null)};
+  display: ${props => (props.app ? 'none' : 'flex')};
 `;
 
 const renderLogo = props => {
