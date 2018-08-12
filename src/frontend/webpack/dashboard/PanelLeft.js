@@ -4,6 +4,7 @@ import {Route} from 'react-router';
 import {Link, withRouter} from 'react-router-dom';
 import EurekaLogo from '../icons/EurekaLogo.js';
 import {NavItem, Separator} from './NavItem.js';
+import {Routes} from './Routes.js';
 
 const Container = styled.div`
   display: flex;
@@ -51,8 +52,8 @@ class PanelLeft extends Component {
   }
 
   componentDidMount() {
-      const pathArray = window.location.href.toString().split("app");
-      const path = pathArray[pathArray.length-1];
+    const pathArray = window.location.href.toString().split('app');
+    const path = pathArray[pathArray.length - 1];
   }
   render() {
     return (
@@ -62,66 +63,27 @@ class PanelLeft extends Component {
           <EurekaLogo height={40} />
         </TopLogo>
         <Items>
-          <Separator text={'General'} />
-          <Link
-            style={{textDecoration: 'none'}}
-            to={`${this.props.base}/dashboard`}
-          >
-            <NavItem status="active" icon={'dashboard'} width={20} height={20}>
-              {' '}
-              Dashboard
-            </NavItem>
-          </Link>
-          <Link
-            style={{textDecoration: 'none'}}
-            to={`${this.props.base}/articles`}
-          >
-            <NavItem icon={'article'} width={20} height={20}>
-              My Articles
-            </NavItem>
-          </Link>{' '}
-          <Link
-            style={{textDecoration: 'none'}}
-            to={`${this.props.base}/reviews`}
-          >
-            <NavItem icon={'review'} width={20} height={20}>
-              My Reviews
-            </NavItem>
-          </Link>{' '}
-          <Link
-            style={{textDecoration: 'none'}}
-            to={`${this.props.base}/linked`}
-          >
-            <NavItem icon={'link'} width={20} height={20}>
-              My Linked articles
-            </NavItem>
-          </Link>
-          <Separator text={'Personal'} />
-          <Link
-            style={{textDecoration: 'none'}}
-            to={`${this.props.base}/wallet`}
-          >
-            <NavItem icon={'wallet'} width={20} height={20}>
-              My Wallet
-            </NavItem>
-          </Link>
-          <Link
-            style={{textDecoration: 'none'}}
-            to={`${this.props.base}/account`}
-          >
-            <NavItem icon={'account'} width={20} height={20}>
-              My Account
-            </NavItem>
-          </Link>
-          <Separator text={'History'} />
-          <Link
-            style={{textDecoration: 'none'}}
-            to={`${this.props.base}/actions`}
-          >
-            <NavItem icon={'ethereum'} width={20} height={20}>
-              My Actions
-            </NavItem>
-          </Link>
+          {Routes.map((route, i) => {
+            return (
+              <div key={i}>
+                {route.separator ? <Separator text={route.separator} /> : null}
+                <Link
+                  style={{textDecoration: 'none'}}
+                  to={`${this.props.base}/${route.path}`}
+                >
+                  <NavItem
+                    status={'tbd'}
+                    icon={route.icon}
+                    width={20}
+                    height={20}
+                  >
+                    {' '}
+                    {route.name}
+                  </NavItem>
+                </Link>
+              </div>
+            );
+          })}
         </Items>
       </Container>
     );
