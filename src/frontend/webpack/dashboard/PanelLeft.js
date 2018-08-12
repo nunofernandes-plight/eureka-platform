@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Route} from 'react-router';
-import {Link} from 'react-router-dom';
-import {__GRAY_200} from '../../helpers/colors.js';
+import {Link, withRouter} from 'react-router-dom';
 import EurekaLogo from '../icons/EurekaLogo.js';
 import {NavItem, Separator} from './NavItem.js';
-import Dashboard from './Dashboard.js';
 
 const Container = styled.div`
   display: flex;
@@ -21,7 +19,6 @@ const Container = styled.div`
   transition-timing-function: ease-in-out;
   transition-property: width;
   flex: 1 1 auto;
-  border-right: 1px solid ${__GRAY_200};
   overflow-x: hidden;
 `;
 
@@ -46,6 +43,17 @@ const NotificationBell = styled.div`
 `;
 
 class PanelLeft extends Component {
+  constructor() {
+    super();
+    this.state = {
+      status: null
+    };
+  }
+
+  componentDidMount() {
+      const pathArray = window.location.href.toString().split("app");
+      const path = pathArray[pathArray.length-1];
+  }
   render() {
     return (
       <Container>
@@ -120,4 +128,4 @@ class PanelLeft extends Component {
   }
 }
 
-export default PanelLeft;
+export default withRouter(PanelLeft);
