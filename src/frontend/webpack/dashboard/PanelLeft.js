@@ -45,10 +45,11 @@ const NotificationBell = styled.div`
 
 const NotificationNumber = styled.div`
   color: white;
-  position: absolute;
-  font-weight: bold;
-  left: 6.6px;
-  bottom: -2px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  align-items: center;
+  margin-top: -2.3px;
 `;
 
 class PanelLeft extends Component {

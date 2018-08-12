@@ -54,7 +54,13 @@ class RenderNetwork extends Component {
         {this.props.network === Network.GANACHE ? (
           <GanacheLogo src="img/logos/ganache.png" />
         ) : (
-          <Icon icon={'internet'} width={15} height={15} color={'white'} />
+          <Icon
+            icon={'ethereum'}
+            width={15}
+            height={15}
+            color={'white'}
+            bottom={3}
+          />
         )}
       </NetworkContainer>
     );
