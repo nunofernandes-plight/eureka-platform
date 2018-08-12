@@ -38,9 +38,17 @@ const NotificationBell = styled.div`
   position: absolute;
   border-radius: 50%;
   background: red;
-  margin-left: 8px;
-  width: 20px;
-  height: 20px;
+  margin-left: 14px;
+  width: 18px;
+  height: 18px;
+`;
+
+const NotificationNumber = styled.div`
+  color: white;
+  position: absolute;
+  font-weight: bold;
+  left: 6.6px;
+  bottom: -2px;
 `;
 
 class PanelLeft extends Component {
@@ -61,7 +69,9 @@ class PanelLeft extends Component {
     return (
       <Container>
         <TopLogo>
-          <NotificationBell />
+          <NotificationBell>
+            <NotificationNumber>1</NotificationNumber>
+          </NotificationBell>
           <EurekaLogo height={40} />
         </TopLogo>
         <Items>
