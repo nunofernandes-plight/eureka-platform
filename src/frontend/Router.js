@@ -93,7 +93,7 @@ class Router extends Component {
                     <LoginGuard isAuthenticated={this.state.isAuthenticated}>
                       <PanelLeft base={'/app'} />
                       <div style={{paddingLeft: 270}}>
-                        <DashboardRouter base={'/app'} />
+                        <DashboardRouter base={'/app'} user={this.state.user} />
                       </div>
                     </LoginGuard>
                   </div>
