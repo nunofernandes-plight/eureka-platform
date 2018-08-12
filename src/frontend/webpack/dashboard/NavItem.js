@@ -15,9 +15,9 @@ const Nav = styled.div`
     cursor: pointer;
   }
 
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
-  padding: 1rem;
+  padding: 0.75rem;
   transition: all 0.15s ease;
   color: ${props => (props.status === 'active' ? 'white' : `${__THIRD}`)};
   background-color: ${props =>
