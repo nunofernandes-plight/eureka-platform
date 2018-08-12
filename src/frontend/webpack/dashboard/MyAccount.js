@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import {Row} from '../../helpers/layout.js';
 import {__MAIN, __SECOND, __THIRD} from '../../helpers/colors.js';
 
 const Container = styled.div`
@@ -7,32 +8,31 @@ const Container = styled.div`
   flex-direction: column;
 `;
 const TopContainer = styled.div`
-  min-height: 220px;
+  min-height: 270px;
   background: linear-gradient(
     150deg,
     ${__THIRD} 15%,
     ${__SECOND} 70%,
     ${__MAIN} 94%
   );
-  position: relative;
 `;
 
-const CardContainer = styled.div`
+const CardContainer = Row.extend`
   transition: all 0.15s ease;
-  position: absolute;
-  margin-top: -200px !important;
 `;
 
 const Card = styled.div`
-  min-width: 800px;
   display: flex;
   flex-direction: column;
-  min-height: 200px;
   word-wrap: break-word;
   border: 0.0625rem solid rgba(0, 0, 0, 0.05);
   border-radius: 0.25rem;
-  background-color: #fff;
+  background-color: black;
   background-clip: border-box;
+  min-height: 300px;
+  min-width: 800px;
+  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
+  margin-top: -130px !important;
 `;
 
 class MyAccount extends React.Component {

@@ -193,7 +193,7 @@ const renderRight = props => {
         <div>
           <Avatar avatar={props.user.avatar} width={40} height={40} />
         </div>
-        <Email>{renderEmail(props)}</Email>
+        {/*<Email>{renderEmail(props)}</Email>*/}
       </ProfileContainer>
     );
   } else {
