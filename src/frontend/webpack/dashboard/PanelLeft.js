@@ -47,14 +47,16 @@ class PanelLeft extends Component {
   constructor() {
     super();
     this.state = {
-      status: null
+      activePath: PanelLeft.computeActiveRoute()
     };
   }
 
-  componentDidMount() {
+  static computeActiveRoute() {
     const pathArray = window.location.href.toString().split('app');
-    const path = pathArray[pathArray.length - 1];
+    const path = pathArray[pathArray.length - 1]; // e.g. /account
+    return path.replace(/[^a-zA-Z ]/g, '');
   }
+
   render() {
     return (
       <Container>
@@ -72,7 +74,9 @@ class PanelLeft extends Component {
                   to={`${this.props.base}/${route.path}`}
                 >
                   <NavItem
-                    status={'tbd'}
+                    status={
+                      route.path === this.state.activePath ? 'active' : null
+                    }
                     icon={route.icon}
                     width={20}
                     height={20}
