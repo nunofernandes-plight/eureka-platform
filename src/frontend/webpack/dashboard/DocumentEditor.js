@@ -4,9 +4,34 @@ import {TopContainer} from './TopContainer.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import GridSpinner from '../../webpack/spinners/GridSpinner.js';
 
+
 const Parent = styled.div`
   display: flex;
   flex-direction: column;
+`;
+const Container = styled.div`
+  transition: all 0.5s;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0 20px;
+`;
+const EditorCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  word-wrap: break-word;
+  border: 0.0625rem solid rgba(0, 0, 0, 0.05);
+  border-radius: 0.25rem;
+  background-color: #ffffff;
+  background-clip: border-box;
+  min-height: 420px;
+  min-width: 80%;
+  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
+  margin-top: -130px !important;
+`;
+
+const Title = styled.h1`
+  text-align: center;
 `;
 
 class DocumentEditor extends Component {
@@ -47,6 +72,7 @@ class DocumentEditor extends Component {
         });
       });
   }
+
   render() {
     return (
       <div>
@@ -55,7 +81,14 @@ class DocumentEditor extends Component {
         ) : (
           <Parent>
             <TopContainer />
-            Route works
+            <Container>
+              <EditorCard>
+                <Title>Write your article</Title>
+                <div>
+
+                </div>
+              </EditorCard>
+            </Container>
           </Parent>
         )}
       </div>
