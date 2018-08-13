@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {TopContainer} from './TopContainer.js';
-import {Link} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import Icon from '../icons/Icon.js';
 import {__THIRD} from '../../helpers/colors.js';
+import {getDomain} from '../../../helpers/getDomain.js';
 
 const Parent = styled.div`
   display: flex;
@@ -84,21 +85,71 @@ const IContainer = styled.div`
 `;
 
 class MyArticles extends Component {
+  constructor() {
+    super();
+    this.state = {
+      loading: false,
+      errorMessage: null
+    };
+  }
+  createNewArticle() {
+    this.setState({loading: true});
+    fetch(`${getDomain()}/api/articles/new`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        ethereumAddress: this.props.selectedAccount.address
+      })
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.props.history.push(`${this.props.base}` + '/' + response.id);
+        } else {
+          this.setState({
+            errorMessage: response.error,
+            loading: false
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.',
+          loading: false
+        });
+      });
+  }
+
+  renderModal() {
+    return (
+      <Modal
+        type={'notification'}
+        toggle={isErrorMessage => {
+          this.setState({errorMessage: null});
+        }}
+        show={this.state.errorMessage}
+        title={'You got the following error'}
+      >
+        {this.state.errorMessage}
+      </Modal>
+    );
+  }
+
   render() {
     return (
       <Parent>
+        {this.renderModal()}
         <TopContainer />
         <CardContainer>
           <LeftCard>
             <h2>Submit an Article</h2>
-            <Link
-              style={{textDecoration: 'none'}}
-              to={`${this.props.base}/1241241241241`}
-            >
-              <IconContainer>
-                <Icon icon={'plus'} width={40} height={40} />
-              </IconContainer>
-            </Link>
+            <IconContainer onClick={() => this.createNewArticle()}>
+              <Icon icon={'plus'} width={40} height={40} />
+            </IconContainer>
             <Paragraph>Create your narrative bit by bit.</Paragraph>
             <List>
               <Bullet>
@@ -156,4 +207,4 @@ class MyArticles extends Component {
   }
 }
 
-export default MyArticles;
+export default withRouter(MyArticles);
