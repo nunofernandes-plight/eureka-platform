@@ -26,4 +26,9 @@ router.post(
   })
 );
 
+router.get('/:draftId',
+  asyncHandler(async req => {
+
+  }));
+
 export default router;
