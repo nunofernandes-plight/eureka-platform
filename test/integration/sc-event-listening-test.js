@@ -128,7 +128,7 @@ test(PRETEXT + 'Submit Article', async t => {
   t.is(user.articleSubmissions[0]._id.toString(), articleSubmissions[0].id.toString());
 });
 
-test(PRETEXT + 'Assignment for Submission Process', async t => {
+test(PRETEXT + 'Assignment for Submission Process & Remove editor afterwards from submission', async t => {
   // create author and editor
   let testAccounts = await getAccounts();
   let author = await userService.createUser('testEditor', 'editor@test.test', contractOwner, 'test-editor-avatar');
@@ -152,4 +152,8 @@ test(PRETEXT + 'Assignment for Submission Process', async t => {
   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[0]._id, editor.ethereumAddress);
   let articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
   t.is(articleSubmission.editor, editor.ethereumAddress);
+
+  await
 });
+
+

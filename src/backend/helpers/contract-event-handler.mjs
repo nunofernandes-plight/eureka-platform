@@ -32,5 +32,15 @@ export default {
         );
       }
     );
+
+    /** Remove editor from submission process **/
+    EurekaPlatformContract.events.RemovedEditorFromSubmission(
+      undefined,
+      (error, event) => {
+        if(error) throw error;
+
+        console.log('REMOVE EDITOR TRIGGERED');
+      }
+    );
   }
 };
