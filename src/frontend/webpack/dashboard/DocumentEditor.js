@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import {TopContainer} from './TopContainer.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import GridSpinner from '../../webpack/spinners/GridSpinner.js';
-
+import Toolbar from './editor/Toolbar.js';
+import {__GRAY_500} from "../../helpers/colors.js";
 
 const Parent = styled.div`
   display: flex;
@@ -32,8 +33,13 @@ const EditorCard = styled.div`
 
 const Title = styled.h1`
   text-align: center;
+  color: ${__GRAY_500}; 
 `;
 
+const EditorContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`
 class DocumentEditor extends Component {
   constructor() {
     super();
@@ -84,9 +90,9 @@ class DocumentEditor extends Component {
             <Container>
               <EditorCard>
                 <Title>Write your article</Title>
-                <div>
-
-                </div>
+                <EditorContent>
+                  <Toolbar />
+                </EditorContent>
               </EditorCard>
             </Container>
           </Parent>
