@@ -1,4 +1,5 @@
 import ArticleDraft from '../schema/article-draft';
+import errorThrower from '../helpers/error-thrower.mjs';
 
 export default {
   getAllArticleDrafts: () => {
@@ -10,9 +11,7 @@ export default {
     });
     let dbDraft =  await newDraft.save();
     if(!dbDraft) {
-      let error = new Error('Could not create draft within DB');
-      error.status = 500;
-      throw error;
+      errorThrower.noCreationOfEntry('Article Draft');
     }
 
     return dbDraft;
@@ -21,14 +20,10 @@ export default {
   getDraftById: async (userAddress, draftId) => {
     let draft = await ArticleDraft.findById(draftId);
     if(!draft) {
-      let error = new Error('Could not find the draft with the provided ID');
-      error.status = 400;
-      throw error;
+      errorThrower.noEntryFoundById(draftId);
     }
     if(draft.ownerAddress !== userAddress) {
-      let error = new Error('Access denied, provided ethereum-address does not match owner-address of draft');
-      error.status = 403;
-      throw error;
+      errorThrower.notCorrectEthereumAddress();
     }
     return draft;
   }
