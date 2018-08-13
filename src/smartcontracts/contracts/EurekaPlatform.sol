@@ -250,10 +250,9 @@ contract EurekaPlatform {
 
     event RemovedEditorFromSubmission(uint submissionId);
     function removeEditorFromSubmissionProcess(uint256 _submissionId) public {
+        ArticleSubmission storage submission = articleSubmissions[_submissionId];
 
         require(submission.submissionState == SubmissionState.EDITOR_ASSIGNED, "an editor needs to be assigned to call this function.");
-
-        ArticleSubmission storage submission = articleSubmissions[_submissionId];
         require(msg.sender == contractOwner
         || msg.sender == submission.editor, "an editor can only be removed by the contract owner or itself.");
 

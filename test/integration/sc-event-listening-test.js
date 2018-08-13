@@ -14,7 +14,7 @@ import ArticleSubmission from '../../src/backend/schema/article-submission.mjs';
 import userService from '../../src/backend/db/user-service.mjs';
 import articleSubmissionService from '../../src/backend/db/article-submission-service.mjs';
 import getArticleHex from '../../src/backend/web3/get-articleHex.mjs';
-import {getLinkedArticles, assignForSubmissionProcess} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
+import {getLinkedArticles, assignForSubmissionProcess, removeEditorFromSubmissionProcess} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import {getAuthors} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 
 let eurekaTokenContract;
@@ -86,47 +86,47 @@ async function cleanDB() {
   await ArticleSubmission.remove({});
 }
 
-test(PRETEXT + 'Sign up Editor', async t => {
-  await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
-
-  let user = await userService.getUserByEthereumAddress(contractOwner);
-  t.is(user.isEditor, false);
-
-  await signUpEditor(eurekaPlatformContract, contractOwner, contractOwner);
-
-  user = await userService.getUserByEthereumAddress(contractOwner);
-  t.is(user.isEditor, true);
-});
-
-test(PRETEXT + 'Submit Article', async t => {
-  // create user on DB
-  t.is((await userService.getAllUsers()).length, 0);
-  await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
-  t.is((await userService.getAllUsers()).length, 1);
-
-  //submit article on SC
-  t.is((await articleSubmissionService.getAllSubmissions()).length, 0);
-  await submitArticle(
-    eurekaTokenContract,
-    contractOwner,
-    eurekaPlatformContract.options.address,
-    5000,
-    ARTICLE1_DATA_IN_HEX
-  );
-
-  //SC tests
-  let balance = await getBalanceOf(eurekaTokenContract, eurekaPlatformContract.options.address);
-  t.is('5000', balance);
-  t.is(3, (await getLinkedArticles(eurekaPlatformContract, ARTICLE1_HASH_HEX, contractOwner)).length);
-  t.is(2, (await getAuthors(eurekaPlatformContract, ARTICLE1_HASH_HEX, contractOwner)).length);
-
-  // DB tests
-  let articleSubmissions = await articleSubmissionService.getAllSubmissions();
-  t.is(articleSubmissions.length, 1);
-
-  let user = await userService.getUserByEthereumAddress(contractOwner);
-  t.is(user.articleSubmissions[0]._id.toString(), articleSubmissions[0].id.toString());
-});
+// test(PRETEXT + 'Sign up Editor', async t => {
+//   await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
+//
+//   let user = await userService.getUserByEthereumAddress(contractOwner);
+//   t.is(user.isEditor, false);
+//
+//   await signUpEditor(eurekaPlatformContract, contractOwner, contractOwner);
+//
+//   user = await userService.getUserByEthereumAddress(contractOwner);
+//   t.is(user.isEditor, true);
+// });
+//
+// test(PRETEXT + 'Submit Article', async t => {
+//   // create user on DB
+//   t.is((await userService.getAllUsers()).length, 0);
+//   await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
+//   t.is((await userService.getAllUsers()).length, 1);
+//
+//   //submit article on SC
+//   t.is((await articleSubmissionService.getAllSubmissions()).length, 0);
+//   await submitArticle(
+//     eurekaTokenContract,
+//     contractOwner,
+//     eurekaPlatformContract.options.address,
+//     5000,
+//     ARTICLE1_DATA_IN_HEX
+//   );
+//
+//   //SC tests
+//   let balance = await getBalanceOf(eurekaTokenContract, eurekaPlatformContract.options.address);
+//   t.is('5000', balance);
+//   t.is(3, (await getLinkedArticles(eurekaPlatformContract, ARTICLE1_HASH_HEX, contractOwner)).length);
+//   t.is(2, (await getAuthors(eurekaPlatformContract, ARTICLE1_HASH_HEX, contractOwner)).length);
+//
+//   // DB tests
+//   let articleSubmissions = await articleSubmissionService.getAllSubmissions();
+//   t.is(articleSubmissions.length, 1);
+//
+//   let user = await userService.getUserByEthereumAddress(contractOwner);
+//   t.is(user.articleSubmissions[0]._id.toString(), articleSubmissions[0].id.toString());
+// });
 
 test(PRETEXT + 'Assignment for Submission Process & Remove editor afterwards from submission', async t => {
   // create author and editor
@@ -152,8 +152,8 @@ test(PRETEXT + 'Assignment for Submission Process & Remove editor afterwards fro
   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[0]._id, editor.ethereumAddress);
   let articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
   t.is(articleSubmission.editor, editor.ethereumAddress);
-
-  await
+  
+  await removeEditorFromSubmissionProcess(eurekaPlatformContract, articleSubmission._id, editor.ethereumAddress);
 });
 
 

@@ -40,7 +40,7 @@ export default {
       }, (err, submission) => {
         if (err) throw err;
         else {
-          console.log('Submission ' + submission._id + ' has got the editor ' + submission.editor);
+          console.log('Submission ' + submission._id + ' has got the editor ' + _editor);
           return submission;
         }
       });
