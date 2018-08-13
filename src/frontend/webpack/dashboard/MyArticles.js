@@ -113,7 +113,7 @@ class MyArticles extends Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          this.props.history.push(`${this.props.base}` + '/' + response.data.id);
+          this.props.history.push(`${this.props.base}` + '/' + response.data._id);
         } else {
           this.setState({
             errorMessage: response.error,
