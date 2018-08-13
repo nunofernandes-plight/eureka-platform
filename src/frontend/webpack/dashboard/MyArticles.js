@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {TopContainer} from './TopContainer.js';
-import {Row} from '../../helpers/layout.js';
+import {Link} from 'react-router-dom';
 import Icon from '../icons/Icon.js';
-import {__ALERT_INFO, __ALERT_SUCCESS, __THIRD} from '../../helpers/colors.js';
+import {__THIRD} from '../../helpers/colors.js';
 
 const Parent = styled.div`
   display: flex;
@@ -91,9 +91,14 @@ class MyArticles extends Component {
         <CardContainer>
           <LeftCard>
             <h2>Submit an Article</h2>
-            <IconContainer>
-              <Icon icon={'plus'} width={40} height={40} />
-            </IconContainer>
+            <Link
+              style={{textDecoration: 'none'}}
+              to={`${this.props.base}/1241241241241`}
+            >
+              <IconContainer>
+                <Icon icon={'plus'} width={40} height={40} />
+              </IconContainer>
+            </Link>
             <Paragraph>Create your narrative bit by bit.</Paragraph>
             <List>
               <Bullet>

@@ -4,6 +4,7 @@ import {Redirect} from 'react-router-dom';
 import Dashboard from './Dashboard.js';
 import MyAccount from './MyAccount.js';
 import MyArticles from './MyArticles.js';
+import DocumentEditor from './DocumentEditor.js';
 
 class DashboardRouter extends Component {
   render() {
@@ -24,7 +25,18 @@ class DashboardRouter extends Component {
         <Route
           exact
           path={`${this.props.base}/articles`}
-          render={() => <MyArticles user={this.props.user} />}
+          render={() => (
+            <MyArticles
+              base={`${this.props.base}/articles`}
+              user={this.props.user}
+            />
+          )}
+        />
+
+        <Route
+          exactly
+          path={`${this.props.base}/articles/:id`}
+          render={() => <DocumentEditor user={this.props.user} />}
         />
 
         <Route
