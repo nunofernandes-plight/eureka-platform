@@ -14,11 +14,14 @@ router.get(
 router.post(
   '/',
   asyncHandler(async (req) => {
-    if(!req.ethereumAddress) {
+    if(!req.body.ethereumAddress) {
       let error = new Error('No ethereum address provided');
       error.status= 400;
       throw error;
     }
-    return await articleDraftService.createDraft(req.ethereumAddress);
+
+    return await articleDraftService.createDraft(req.body.ethereumAddress);
   })
 );
+
+export default router;

@@ -4,13 +4,15 @@ export default {
   getAllArticleDrafts: () => {
     return ArticleDraft.find({});
   },
-  createDraft: ({ethereumAddress}) => {
+  createDraft: async (ethereumAddress) => {
+    console.log(ethereumAddress);
     const newDraft = new ArticleDraft({
       ownerAddress: ethereumAddress
     });
-    return newDraft.save( err => {
+    let dbDraft =  await newDraft.save( err => {
       if (err) throw  err;
       console.log('Created new article draft on DB done');
     });
+    return dbDraft;
   }
 }
