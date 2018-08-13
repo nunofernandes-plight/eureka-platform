@@ -34,9 +34,7 @@ export default {
   updateEditorToSubmission: async (_submissionId, _editor) => {
     ArticleSubmission.findByIdAndUpdate(_submissionId,
       {
-        $addToSet: {
-          editor: _editor
-        }
+        editor: _editor
       }, (err, submission) => {
         if (err) throw err;
         else {

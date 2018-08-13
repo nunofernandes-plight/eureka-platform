@@ -44,5 +44,20 @@ export default {
         );
       }
     );
+
+    /** Change editor from submission process **/
+    EurekaPlatformContract.events.ChangedEditorFromSubmission(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+
+        console.log('CHANGING TO ' + event.returnValues.newEditor);
+        await articleSubmissionService.updateEditorToSubmission(
+          event.returnValues.submissionId,
+          event.returnValues.newEditor
+        );
+      }
+    );
+
   }
 };
