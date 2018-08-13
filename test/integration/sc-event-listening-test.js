@@ -14,7 +14,7 @@ import ArticleSubmission from '../../src/backend/schema/article-submission.mjs';
 import userService from '../../src/backend/db/user-service.mjs';
 import articleSubmissionService from '../../src/backend/db/article-submission-service.mjs';
 import getArticleHex from '../../src/backend/web3/get-articleHex.mjs';
-import {getLinkedArticles} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
+import {getLinkedArticles, assignForSubmissionProcess} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import {getAuthors} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 
 let eurekaTokenContract;
@@ -23,7 +23,6 @@ let accounts;
 let contractOwner;
 
 const PRETEXT = 'INTEGRATION: ';
-
 const ARTICLE1 = {
   articleHash: '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
   url: 'hoihoi',
@@ -31,13 +30,13 @@ const ARTICLE1 = {
     '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88',
     '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'
   ],
-  contributorRatios: [4000,6000],
+  contributorRatios: [4000, 6000],
   linkedArticles: [
     '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
     '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
     'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
   ],
-  linkedArticlesSplitRatios: [3334,3333,3333]
+  linkedArticlesSplitRatios: [3334, 3333, 3333]
 };
 const ARTICLE1_DATA_IN_HEX = getArticleHex(ARTICLE1);
 const ARTICLE1_HASH_HEX = '0x' + ARTICLE1.articleHash;
@@ -60,11 +59,10 @@ test.afterEach(async () => {
   await cleanDB();
 });
 
-test.after( () => {
-  app.close();
+test.after(() => {
 });
 
-async function setupContract  (eurekaContract, platformContract){
+async function setupContract(eurekaContract, platformContract) {
   accounts = await getAccounts();
   contractOwner = accounts[0];
   eurekaTokenContract = eurekaContract;
@@ -88,8 +86,8 @@ async function cleanDB() {
   await ArticleSubmission.remove({});
 }
 
-test( PRETEXT + 'Sign up Editor', async t => {
-  await userService.createUser('test', 'test@test.test', contractOwner);
+test(PRETEXT + 'Sign up Editor', async t => {
+  await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
 
   let user = await userService.getUserByEthereumAddress(contractOwner);
   t.is(user.isEditor, false);
@@ -100,32 +98,57 @@ test( PRETEXT + 'Sign up Editor', async t => {
   t.is(user.isEditor, true);
 });
 
-test(PRETEXT + 'Submit Article', async t => {
-  // create user on DB
-  t.is((await userService.getAllUsers()).length, 0);
-  await userService.createUser('test', 'test@test.test', contractOwner);
-  t.is((await userService.getAllUsers()).length, 1);
+// test(PRETEXT + 'Submit Article', async t => {
+//   // create user on DB
+//   t.is((await userService.getAllUsers()).length, 0);
+//   await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
+//   t.is((await userService.getAllUsers()).length, 1);
+//
+//   //submit article on SC
+//   t.is((await articleSubmissionService.getAllSubmissions()).length, 0);
+//   await submitArticle(
+//     eurekaTokenContract,
+//     contractOwner,
+//     eurekaPlatformContract.options.address,
+//     5000,
+//     ARTICLE1_DATA_IN_HEX
+//   );
+//
+//   //SC tests
+//   let balance = await getBalanceOf(eurekaTokenContract, eurekaPlatformContract.options.address);
+//   t.is('5000', balance);
+//   t.is(3, (await getLinkedArticles(eurekaPlatformContract, ARTICLE1_HASH_HEX, contractOwner)).length);
+//   t.is(2, (await getAuthors(eurekaPlatformContract, ARTICLE1_HASH_HEX, contractOwner)).length);
+//
+//   // DB tests
+//   let articleSubmissions = await articleSubmissionService.getAllSubmissions();
+//   t.is(articleSubmissions.length, 1);
+//
+//   let user = await userService.getUserByEthereumAddress(contractOwner);
+//   t.is(user.articleSubmissions[0]._id.toString(), articleSubmissions[0].id.toString());
+// });
 
-  //submit article on SC
-  t.is((await articleSubmissionService.getAllSubmissions()).length, 0);
+test(PRETEXT + 'Assignment for Submission Process', async t => {
+  // create author and editor
+  let testAccounts = await getAccounts();
+  let author = await userService.createUser('testEditor', 'editor@test.test', contractOwner, 'test-editor-avatar');
+  let editor = await userService.createUser('testAuthor', 'author@test.test', testAccounts[2], 'test-author-avatar');
+
+  await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
+
   await submitArticle(
     eurekaTokenContract,
-    contractOwner,
+    author.ethereumAddress,
     eurekaPlatformContract.options.address,
     5000,
     ARTICLE1_DATA_IN_HEX
   );
 
-  //SC tests
-  let balance = await getBalanceOf(eurekaTokenContract, eurekaPlatformContract.options.address);
-  t.is('5000', balance);
-  t.is(3, (await getLinkedArticles(eurekaPlatformContract, ARTICLE1_HASH_HEX, contractOwner)).length);
-  t.is(2, (await getAuthors(eurekaPlatformContract, ARTICLE1_HASH_HEX, contractOwner)).length);
-
-  // DB tests
   let articleSubmissions = await articleSubmissionService.getAllSubmissions();
   t.is(articleSubmissions.length, 1);
 
-  let user = await userService.getUserByEthereumAddress(contractOwner);
-  t.is(user.articleSubmissions[0]._id.toString(), articleSubmissions[0].id.toString());
+  await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[0]._id, editor.ethereumAddress);
+
+  //TODO test the assignement saved in DB
+  t.is(true, true);
 });

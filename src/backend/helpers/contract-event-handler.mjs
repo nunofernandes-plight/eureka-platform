@@ -19,5 +19,16 @@ export default {
           event.returnValues.submissionId, event.returnValues.submissionOwner);
       }
     );
+
+    /** Assignement for Submission process **/
+    EurekaPlatformContract.events.AssignmentForSubmissionProcess(
+      undefined,
+      (error, event) => {
+        if (error) throw error;
+        //TODO implement backend handling
+        console.log('ASSIGNMENT WORKS!');
+        console.log(event.returnValues.assignerAddress);
+      }
+    );
   }
 };
