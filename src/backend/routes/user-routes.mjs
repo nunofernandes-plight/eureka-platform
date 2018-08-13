@@ -15,7 +15,7 @@ router.get(
   '/data',
   asyncHandler(async (req, res) => {
     if(!req.user) {
-      let error = new Error('Not logged in Backend');
+      let error = new Error('Not logged in  in Backend');
       error.status= 401;
       throw error;
     }
