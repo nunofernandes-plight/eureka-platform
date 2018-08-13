@@ -9,9 +9,9 @@ export const signUpEditor = (contract, editor, _from) => {
     .then(receipt => {
       console.log(
         'The editor sign up for account ' +
-          editor +
-          ' exited with the TX status: ' +
-          receipt.status
+        editor +
+        ' exited with the TX status: ' +
+        receipt.status
       );
       return receipt;
     })
@@ -36,6 +36,26 @@ export const assignForSubmissionProcess = (contract, _submissionId, _from) => {
       return receipt;
     })
     .catch(err => {
+      console.error(err);
+    });
+};
+
+export const removeEditorFromSubmissionProcess = (contract, _submissionId, _from) => {
+  return contract.methods
+    .removeEditorFromSubmissionProcess(_submissionId)
+    .send({
+      from: _from
+    })
+    .then(receipt => {
+      console.log(
+        'Removement of Editor on the Submission Process with ID ' +
+        _submissionId +
+        ' exited with the TX status: ' +
+        receipt.status
+      );
+      return receipt;
+    })
+    .catch( err => {
       console.error(err);
     });
 };
