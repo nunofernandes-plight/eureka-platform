@@ -15,7 +15,10 @@ export default {
 
     //not logged in
     res.status(401);
-    res.send('Not logged in');
+    res.send({
+      'success': false,
+      'error': 'Not logged in'
+    });
   },
 
   adminOnly: (req, res, next) => {

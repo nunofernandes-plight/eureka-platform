@@ -1,9 +1,10 @@
 import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
-
+import accesController from '../helpers/acess-controller.mjs';
 const router = express.Router();
 import articleDraftService from '../db/article-draft-service.mjs';
 
+router.use(accesController.loggedInOnly);
 router.get(
   '/',
   asyncHandler(async () => {
