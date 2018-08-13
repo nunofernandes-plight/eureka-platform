@@ -20,6 +20,25 @@ export const signUpEditor = (contract, editor, _from) => {
     });
 };
 
+export const assignForSubmissionProcess = (contract, _submissionId, _from) => {
+  return contract.methods
+    .assignForSubmissionProcess(_submissionId)
+    .send({
+      from: _from
+    })
+    .then(receipt => {
+      console.log(
+        'The assignement on the Submission Process with ID ' +
+        _submissionId +
+        ' exited with the TX status: ' +
+        receipt.status
+      );
+      return receipt;
+    })
+    .catch(err => {
+      console.error(err);
+    });
+};
 /*
   Getters
  */
