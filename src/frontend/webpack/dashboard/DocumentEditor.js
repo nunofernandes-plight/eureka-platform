@@ -39,6 +39,7 @@ const EditorCard = styled.div`
   min-width: 80%;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
   margin-top: -130px !important;
+  padding: 30px;
 `;
 
 const Title = styled.h1`
@@ -55,16 +56,20 @@ const EditorContent = styled.div`
 
 const Line = styled.div`
   margin: 20px 0;
+  font-size: 2em;
 `;
 
 const TitleContainer = styled.div`
-  font-size: 2em;
   color: inherit;
 `;
 const ButtonContainer = styled.div`
   align-self: center;
-`
+`;
 const Button = styled.button``;
+
+const Authors = styled.div`
+  font-size: 18px;
+`;
 class DocumentEditor extends Component {
   constructor() {
     super();
@@ -138,11 +143,11 @@ class DocumentEditor extends Component {
     return (
       <TitleContainer>
         <TitleWithHelper
-          field="keywords"
+          field="title"
           requirement={{required: true, hint: 'this is a test rqureiaijsfijas'}}
           document={{title: 'test'}}
-          title="Keywords"
-          id="keywords"
+          title="Title"
+          id="title"
         />
         <Editor
           plugins={[singleLinePlugin]}
@@ -154,6 +159,22 @@ class DocumentEditor extends Component {
           customStyleMap={customStyleMap}
         />
       </TitleContainer>
+    );
+  }
+
+  renderAuthors() {
+    return (
+      <div>
+        {' '}
+        <TitleWithHelper
+          field="authors"
+          requirement={{required: true, hint: 'this is a test rqureiaijsfijas'}}
+          document={{title: 'test'}}
+          title="Authors"
+          id="authors"
+        />
+        <Authors>{this.props.selectedAccount.address}</Authors>
+      </div>
     );
   }
 
@@ -171,6 +192,7 @@ class DocumentEditor extends Component {
                 <Toolbar />
                 <EditorContent>
                   <Line>{this.renderTitle()}</Line>
+                  <Line>{this.renderAuthors()}</Line>
                 </EditorContent>
                 <ButtonContainer>
                   <Button>Submit Article</Button>

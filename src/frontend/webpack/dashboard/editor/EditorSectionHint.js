@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import  NewPopover from './NewPopover.js'
+import NewPopover from './NewPopover.js';
+import Icon from '../../icons/Icon.js';
 
 const Container = styled.div`
   color: gray;
@@ -73,7 +74,6 @@ const renderHint = ({requirement}) => {
   );
 };
 
-
 const renderContent = ({requirement, content}) => {
   if (content) {
     return <Content pure>{content}</Content>;
@@ -114,7 +114,7 @@ class EditorSectionHint extends Component {
           arrow="center"
         >
           <Container>
-            ?{/*<Icon icon={'help_outline'} />*/}
+            <Icon icon={'question-circle'} width={18} height={18} />
           </Container>
         </NewPopover>
       </div>
