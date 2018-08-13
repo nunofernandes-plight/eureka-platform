@@ -1,10 +1,10 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
-import EurekaSpinner from '../../webpack/spinners/EurekaSpinner.js';
+import GridSpinner from '../../webpack/spinners/GridSpinner.js';
 
-export const LoginGuard = props => {
+export const DashBoardGuard = props => {
   if (props.isAuthenticated === null) {
-    return <EurekaSpinner />;
+    return <GridSpinner />;
   } else {
     if (!props.isAuthenticated) {
       return (

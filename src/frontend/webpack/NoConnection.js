@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import EurekaSpinner from '../webpack/spinners/EurekaSpinner.js'
+import GridSpinner from '../webpack/spinners/GridSpinner.js'
 
 const Container = styled.div`
   display: flex;
@@ -23,7 +23,7 @@ class NoConnection extends Component {
           It seems like your are offline. In order to use EUREKA please be sure
           to have a valid Internet connection.
         </SubTitle>
-        <EurekaSpinner />
+        <GridSpinner />
       </Container>
     );
   }

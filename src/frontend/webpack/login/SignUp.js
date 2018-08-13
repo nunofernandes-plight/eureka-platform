@@ -9,7 +9,7 @@ import Modal from '../design-components/Modal.js';
 import AccountBalance from '../../web3/AccountBalance.js';
 import {isEmailValid} from '../../../helpers/emailValidator.js';
 import {InputField} from '../design-components/Inputs.js';
-import EurekaSpinner from '../../webpack/spinners/EurekaSpinner.js';
+import GridSpinner from '../../webpack/spinners/GridSpinner.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import {
   Container,
@@ -184,7 +184,7 @@ class SignUp extends Component {
       <div>
         <div>
           {this.state.loading ? (
-            <EurekaSpinner />
+            <GridSpinner />
           ) : (
             <div>
               {this.renderModals()}
