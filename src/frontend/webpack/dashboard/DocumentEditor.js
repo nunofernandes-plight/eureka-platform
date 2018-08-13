@@ -1,9 +1,18 @@
+import {EditorState} from 'draft-js';
+import Editor from 'draft-js-plugins-editor';
+import createSingleLinePlugin from 'draft-js-single-line-plugin';
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {TopContainer} from './TopContainer.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import GridSpinner from '../../webpack/spinners/GridSpinner.js';
+import Toolbar from './editor/Toolbar.js';
+import {__GRAY_500} from '../../helpers/colors.js';
+import {customStyleMap} from './editor/customStyleMap.js';
+// import './editor/new-article.css';
+import 'draft-js/dist/Draft.css';
 
+const titleStyle = () => 'new-article-title';
 
 const Parent = styled.div`
   display: flex;
@@ -32,15 +41,52 @@ const EditorCard = styled.div`
 
 const Title = styled.h1`
   text-align: center;
+  color: ${__GRAY_500};
 `;
 
+const EditorContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 1070px;
+  margin: 0 auto;
+`;
+
+const TitleContainer = styled.div`
+  font-size: 2em;
+  color: inherit;
+`;
 class DocumentEditor extends Component {
   constructor() {
     super();
     this.state = {
       errorMessage: null,
-      loading: false
+      loading: false,
+      editorState: EditorState.createEmpty()
     };
+
+    this.onChange = editorState => this.setState({editorState});
+
+    this.onTitleChange = title => {
+      this.updateDocument({
+        document: {
+          ...this.state.document,
+          title
+        }
+      });
+    };
+  }
+
+  updateDocument() {
+    const newDocument = {
+      ...this.state.document
+    };
+    this.setState({
+      document: newDocument
+    });
+  }
+
+  onChange(editorState) {
+    this.setState({editorState});
   }
 
   componentDidMount() {
@@ -73,6 +119,24 @@ class DocumentEditor extends Component {
       });
   }
 
+  renderTitle() {
+    const singleLinePlugin = createSingleLinePlugin();
+    return (
+      <TitleContainer>
+
+        <Editor
+          plugins={[singleLinePlugin]}
+          editorState={this.state.editorState}
+          onChange={this.onChange}
+          blockStyleFn={titleStyle}
+          blockRenderMap={singleLinePlugin.blockRenderMap}
+          placeholder="Please enter your title..."
+          customStyleMap={customStyleMap}
+        />
+      </TitleContainer>
+    );
+  }
+
   render() {
     return (
       <div>
@@ -84,9 +148,12 @@ class DocumentEditor extends Component {
             <Container>
               <EditorCard>
                 <Title>Write your article</Title>
-                <div>
+                <Toolbar />
+                <EditorContent>
 
-                </div>
+
+                  <div>{this.renderTitle()}</div>
+                </EditorContent>
               </EditorCard>
             </Container>
           </Parent>
