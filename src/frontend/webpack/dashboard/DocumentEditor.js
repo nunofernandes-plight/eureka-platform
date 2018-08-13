@@ -1,5 +1,6 @@
-import {EditorState} from 'draft-js';
+import {EditorState, convertToRaw} from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
+import {stateToHTML} from 'draft-js-export-html';
 import createSingleLinePlugin from 'draft-js-single-line-plugin';
 import React, {Component} from 'react';
 import styled from 'styled-components';
@@ -11,6 +12,8 @@ import {__GRAY_500} from '../../helpers/colors.js';
 import {customStyleMap} from './editor/customStyleMap.js';
 // import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
+import TitleWithHelper from './editor/TitleWithHelper.js';
+import Select from 'react-select';
 
 const titleStyle = () => 'new-article-title';
 
@@ -34,9 +37,10 @@ const EditorCard = styled.div`
   background-color: #ffffff;
   background-clip: border-box;
   min-height: 420px;
-  min-width: 80%;
+  min-width: 90%;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
   margin-top: -130px !important;
+  padding: 40px;
 `;
 
 const Title = styled.h1`
@@ -51,9 +55,21 @@ const EditorContent = styled.div`
   margin: 0 auto;
 `;
 
-const TitleContainer = styled.div`
+const Line = styled.div`
+  margin: 20px 0;
   font-size: 2em;
+`;
+
+const TitleContainer = styled.div`
   color: inherit;
+`;
+const ButtonContainer = styled.div`
+  align-self: center;
+`;
+const Button = styled.button``;
+
+const Authors = styled.div`
+  font-size: 18px;
 `;
 class DocumentEditor extends Component {
   constructor() {
@@ -64,7 +80,15 @@ class DocumentEditor extends Component {
       editorState: EditorState.createEmpty()
     };
 
-    this.onChange = editorState => this.setState({editorState});
+    this.onChange = editorState => {
+      const field = editorState.getCurrentContent();
+      const raw = convertToRaw(field);
+
+      console.log(raw.blocks[0].text);
+      // let html = stateToHTML(title);
+      // console.log(html);
+      this.setState({editorState});
+    };
 
     this.onTitleChange = title => {
       this.updateDocument({
@@ -83,10 +107,6 @@ class DocumentEditor extends Component {
     this.setState({
       document: newDocument
     });
-  }
-
-  onChange(editorState) {
-    this.setState({editorState});
   }
 
   componentDidMount() {
@@ -123,7 +143,13 @@ class DocumentEditor extends Component {
     const singleLinePlugin = createSingleLinePlugin();
     return (
       <TitleContainer>
-
+        <TitleWithHelper
+          field="title"
+          requirement={{required: true, hint: 'this is a test rqureiaijsfijas'}}
+          document={{title: 'test'}}
+          title="Title"
+          id="title"
+        />
         <Editor
           plugins={[singleLinePlugin]}
           editorState={this.state.editorState}
@@ -134,6 +160,48 @@ class DocumentEditor extends Component {
           customStyleMap={customStyleMap}
         />
       </TitleContainer>
+    );
+  }
+
+  renderAuthors() {
+    return (
+      <div>
+        {' '}
+        <TitleWithHelper
+          field="authors"
+          requirement={{required: true, hint: 'this is a test rqureiaijsfijas'}}
+          document={{title: 'test'}}
+          title="Authors"
+          id="authors"
+        />
+        <Authors>{this.props.selectedAccount.address}</Authors>
+      </div>
+    );
+  }
+
+  renderMainDiscipline() {
+    return (
+      <div>
+        {' '}
+        <TitleWithHelper
+          field="mainDiscipline"
+          requirement={{required: true, hint: 'this is a test rqureiaijsfijas'}}
+          document={{title: 'test'}}
+          title="Main Discipline"
+          id="mainDiscipline"
+        />
+        <div style={{fontSize: 16, width: '50%'}}>
+          <Select
+            // onChange={value => props.onChange(value.map(v => v.value))}
+            // options={getOptions(props.type)}
+            // value={props.value.join(',')}
+            // delimiter=","
+            clearable={false}
+            placeholder="Select main discipline..."
+            multi
+          />
+        </div>
+      </div>
     );
   }
 
@@ -150,10 +218,13 @@ class DocumentEditor extends Component {
                 <Title>Write your article</Title>
                 <Toolbar />
                 <EditorContent>
-
-
-                  <div>{this.renderTitle()}</div>
+                  <Line>{this.renderTitle()}</Line>
+                  <Line>{this.renderAuthors()}</Line>
+                  <Line>{this.renderMainDiscipline()}</Line>
                 </EditorContent>
+                <ButtonContainer>
+                  <Button>Submit Article</Button>
+                </ButtonContainer>
               </EditorCard>
             </Container>
           </Parent>
