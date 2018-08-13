@@ -13,6 +13,9 @@ export const articleSubmissionSchema = mongoose.Schema(
       type: String,
       required: true
     },
+    editor: {
+      type: String
+    },
     articleVersions: [articleVersionSchema]
   },
   {collection: 'articleSubmissions'}

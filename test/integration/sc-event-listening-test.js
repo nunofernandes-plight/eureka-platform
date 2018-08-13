@@ -134,8 +134,8 @@ test(PRETEXT + 'Assignment for Submission Process', async t => {
   let author = await userService.createUser('testEditor', 'editor@test.test', contractOwner, 'test-editor-avatar');
   let editor = await userService.createUser('testAuthor', 'author@test.test', testAccounts[2], 'test-author-avatar');
 
+  // signup editor and submit article
   await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
-
   await submitArticle(
     eurekaTokenContract,
     author.ethereumAddress,
@@ -147,8 +147,9 @@ test(PRETEXT + 'Assignment for Submission Process', async t => {
   let articleSubmissions = await articleSubmissionService.getAllSubmissions();
   t.is(articleSubmissions.length, 1);
 
-  await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[0]._id, editor.ethereumAddress);
 
-  //TODO test the assignement saved in DB
-  t.is(true, true);
+  // assign editor to the submission
+  await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[0]._id, editor.ethereumAddress);
+  let articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+  t.is(articleSubmission.editor, editor.ethereumAddress);
 });

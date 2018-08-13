@@ -21,10 +21,30 @@ export default {
    * @returns {Promise<Query|void|*|ThenPromise<Object>|Promise<TSchema | null>|Promise>}
    */
   getSubmissionById: async _submissionId => {
-    return ArticleSubmission.findOne({submissionId: _submissionId});
+    return ArticleSubmission.findById(_submissionId);
   },
 
 
+  /**
+   * Add the editor to the submission given by the ID
+   * @param _submissionId
+   * @param _editor
+   * @returns {Promise<void>}
+   */
+  addEditorToSubmission: async (_submissionId, _editor) => {
+    ArticleSubmission.findByIdAndUpdate(_submissionId,
+      {
+        $addToSet: {
+          editor: _editor
+        }
+      }, (err, submission) => {
+        if (err) throw err;
+        else {
+          console.log('Submission ' + submission._id + ' has got the editor ' + submission.editor);
+          return submission;
+        }
+      });
+  },
   /**
    * Push a new article version to the given submission
    * @param _submissionId

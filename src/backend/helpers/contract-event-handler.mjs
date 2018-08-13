@@ -25,9 +25,11 @@ export default {
       undefined,
       (error, event) => {
         if (error) throw error;
-        //TODO implement backend handling
-        console.log('ASSIGNMENT WORKS!');
-        console.log(event.returnValues.assignerAddress);
+
+        articleSubmissionService.addEditorToSubmission(
+          event.returnValues.submissionId,
+          event.returnValues.assignerAddress
+        );
       }
     );
   }
