@@ -263,6 +263,7 @@ contract EurekaPlatform {
     }
 
     // is it a good idea that the current editor can assign another editor? or should only removing (method below) be possible?
+    event ChangedEditorFromSubmission(uint submissionId, address newEditor);
     function changeEditorFromSubmissionProcess(uint256 _submissionId, address _newEditor) public {
 
         require(submission.submissionState == SubmissionState.EDITOR_ASSIGNED, "an editor needs to be assigned to call this function.");
@@ -274,6 +275,7 @@ contract EurekaPlatform {
 
         submission.editor = _newEditor;
         submission.stateTimestamp = block.timestamp;
+        emit ChangedEditorFromSubmission(_submissionId, newEditor);
     }
 
     function sanityIsOk(bytes32 _articleHash) public {
