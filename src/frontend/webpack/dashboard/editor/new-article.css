@@ -1,0 +1,143 @@
+.new-article-menu {
+  opacity: 0;
+  transition: 0.3s opacity ease-in-out;
+}
+.new-article-menu.menu-shown-true {
+  opacity: 1;
+}
+.new-article-text {
+  text-align: justify;
+  font-size: inherit;
+  line-height: 1.58;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-family: inherit;
+  color: rgba(0, 0, 0, 0.8);
+  word-break: break-word;
+}
+.new-article-text ul,
+.new-article-text ol {
+  font-size: inherit;
+  line-height: inherit;
+}
+.new-article-text .sos-comment {
+  background: none;
+}
+.new-article-text div:not(:empty),
+.new-article-text p:not(:empty) {
+  font-size: inherit;
+  margin-bottom: 9px;
+}
+.new-article-text h1,
+.new-article-text h2,
+.new-article-text h3,
+.new-article-text h4,
+.new-article-text h5,
+.new-article-text h6 {
+  color: black;
+  font-family: inherit;
+  line-height: 24px;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+.new-article-text h1,
+.new-article-text h2,
+.new-article-text h3 {
+  font-weight: bold;
+}
+.new-article-text h1 {
+  font-size: 24px;
+}
+.new-article-text h2 {
+  font-size: 18px;
+}
+.new-article-text h5 {
+  color: gray;
+}
+.new-article-title {
+  color: inherit;
+  font-family: inherit;
+  font-size: 1em;
+  font-weight: bold;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+.new-editor-title .public-DraftEditorPlaceholder-root {
+  color: inherit;
+  font-family: inherit;
+  font-size: 2em;
+  font-weight: bold;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  margin: 0 0 -37px;
+  opacity: 0.3;
+}
+.new-editor-block-text {
+  text-align: justify;
+  font-size: inherit;
+  line-height: 1.58;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-family: inherit;
+  color: rgba(0, 0, 0, 0.8);
+  word-break: break-word;
+}
+.new-editor-block-text ul,
+.new-editor-block-text ol {
+  font-size: inherit;
+  line-height: inherit;
+}
+.new-editor-block-text .sos-comment {
+  background: none;
+}
+.new-editor-block-text div:not(:empty),
+.new-editor-block-text p:not(:empty) {
+  font-size: inherit;
+  margin-bottom: 9px;
+}
+.new-editor-block-text h1,
+.new-editor-block-text h2,
+.new-editor-block-text h3,
+.new-editor-block-text h4,
+.new-editor-block-text h5,
+.new-editor-block-text h6 {
+  color: black;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 24px;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+.new-editor-block-text h1,
+.new-editor-block-text h2,
+.new-editor-block-text h3 {
+  font-weight: bold;
+}
+.new-editor-block-text h1 {
+  font-size: 24px;
+}
+.new-editor-block-text h2 {
+  font-size: 18px;
+}
+.new-editor-block-text h5 {
+  color: gray;
+}
+.new-editor-block-text .public-DraftEditorPlaceholder-root {
+  margin: 0 0 -32px !important;
+  opacity: 0.4;
+  pointer-events: none;
+}
+.new-editor-block-text .public-DraftEditor-content {
+  min-height: 100px;
+}
+.public-DraftEditor-content div ~ cite {
+  float: left;
+}
+
+.DraftEditor-root {
+  position: relative;
+}
+
+.public-DraftEditorPlaceholder-root {
+  position: absolute;
+}
