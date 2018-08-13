@@ -265,11 +265,10 @@ contract EurekaPlatform {
     // is it a good idea that the current editor can assign another editor? or should only removing (method below) be possible?
     event ChangedEditorFromSubmission(uint submissionId, address newEditor);
     function changeEditorFromSubmissionProcess(uint256 _submissionId, address _newEditor) public {
-
+        ArticleSubmission storage submission = articleSubmissions[_submissionId];
         require(submission.submissionState == SubmissionState.EDITOR_ASSIGNED, "an editor needs to be assigned to call this function.");
         require(isEditor[_newEditor], 'the new editor must be an allowed editor.');
 
-        ArticleSubmission storage submission = articleSubmissions[_submissionId];
         require(msg.sender == contractOwner
         || msg.sender == submission.editor, "an editor can only be changed by the contract owner or the current editor.");
 

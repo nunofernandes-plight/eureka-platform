@@ -41,7 +41,6 @@ export const assignForSubmissionProcess = (contract, _submissionId, _from) => {
 };
 
 export const removeEditorFromSubmissionProcess = (contract, _submissionId, _from) => {
-  console.log(_from);
   return contract.methods
     .removeEditorFromSubmissionProcess(_submissionId)
     .send({
@@ -57,7 +56,27 @@ export const removeEditorFromSubmissionProcess = (contract, _submissionId, _from
       return receipt;
     })
     .catch( err => {
-      console.log('TTEEESTING IS NOT WORKING HEEEERE!!!');
+      console.error(err);
+    });
+};
+
+export const changeEditorFromSubmissionProcess = (contract, _submissionId, _newEditor, _from) => {
+  return contract.methods
+    .changeEditorFromSubmissionProcess(_submissionId, _newEditor)
+    .send({
+      from: _from
+    })
+    .then(receipt => {
+      console.log(
+        'Changing Editor on the Submission Process with ID ' +
+        _submissionId +
+        ' to ' + _newEditor +
+        ' exited with the TX status: ' +
+        receipt.status
+      );
+      return receipt;
+    })
+    .catch( err => {
       console.error(err);
     });
 };
