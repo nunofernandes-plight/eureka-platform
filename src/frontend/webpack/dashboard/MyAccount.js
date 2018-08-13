@@ -1,20 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Row} from '../../helpers/layout.js';
-import {__MAIN, __SECOND, __THIRD} from '../../helpers/colors.js';
+import {TopContainer} from './TopContainer.js';
+import {__THIRD} from '../../helpers/colors.js';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-`;
-const TopContainer = styled.div`
-  min-height: 270px;
-  background: linear-gradient(
-    150deg,
-    ${__THIRD} 15%,
-    ${__SECOND} 70%,
-    ${__MAIN} 94%
-  );
 `;
 
 const CardContainer = Row.extend`
