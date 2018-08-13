@@ -20,7 +20,9 @@ router.post(
       throw error;
     }
 
-    return await articleDraftService.createDraft(req.body.ethereumAddress);
+    let newDraft =  await articleDraftService.createDraft(req.body.ethereumAddress);
+    console.log(newDraft);
+    return newDraft;
   })
 );
 

@@ -9,10 +9,13 @@ export default {
     const newDraft = new ArticleDraft({
       ownerAddress: ethereumAddress
     });
-    let dbDraft =  await newDraft.save( err => {
-      if (err) throw  err;
-      console.log('Created new article draft on DB done');
-    });
+    let dbDraft =  await newDraft.save();
+    if(!dbDraft) {
+      let error = new Error('Could not create draft within DB');
+      error.status = 500;
+      throw error;
+    }
+
     return dbDraft;
   }
-}
+};
