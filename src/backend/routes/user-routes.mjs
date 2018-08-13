@@ -1,28 +1,29 @@
 import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
-
+import errorThrower from '../helpers/error-thrower.mjs';
 const router = express.Router();
 import userService from '../db/user-service.mjs';
+import accesController from '../helpers/acess-controller';
+import Roles from '../schema/roles-enum';
 
-router.get(
-  '/',
-  asyncHandler(async () => {
-    return userService.getAllUsers();
-  })
-);
+router.use(accesController.loggedInOnly);
 
 router.get(
   '/data',
   asyncHandler(async (req, res) => {
     if(!req.user) {
-      let error = new Error('Not logged in  in Backend');
-      error.status= 401;
-      throw error;
+      errorThrower.notLoggedIn();
     }
 
-    return await userService.getUserByEthereumAddress(req.user);
+    const requesterAddress = req.session.passport.user.ethereumAddress;
+    if(requesterAddress !== req.user.ethereumAddress) {
+      errorThrower.notCorrectEthereumAddress();
+    }
+    return await userService.getUserByEthereumAddress(req.user.ethereumAddress);
   })
 );
+
+router.use(accesController.rolesOnly(Roles.ADMIN));
 
 router.post(
   '/addRole',
@@ -35,6 +36,13 @@ router.post(
   '/makeEditor',
   asyncHandler(async req => {
     return userService.makeEditor(req.body.user_id);
+  })
+);
+
+router.get(
+  '/',
+  asyncHandler(async () => {
+    return userService.getAllUsers();
   })
 );
 
