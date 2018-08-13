@@ -1,5 +1,6 @@
-import {EditorState} from 'draft-js';
+import {EditorState, convertToRaw} from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
+import {stateToHTML} from 'draft-js-export-html';
 import createSingleLinePlugin from 'draft-js-single-line-plugin';
 import React, {Component} from 'react';
 import styled from 'styled-components';
@@ -11,6 +12,7 @@ import {__GRAY_500} from '../../helpers/colors.js';
 import {customStyleMap} from './editor/customStyleMap.js';
 // import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
+import TitleWithHelper from './editor/TitleWithHelper.js';
 
 const titleStyle = () => 'new-article-title';
 
@@ -51,10 +53,18 @@ const EditorContent = styled.div`
   margin: 0 auto;
 `;
 
+const Line = styled.div`
+  margin: 20px 0;
+`;
+
 const TitleContainer = styled.div`
   font-size: 2em;
   color: inherit;
 `;
+const ButtonContainer = styled.div`
+  align-self: center;
+`
+const Button = styled.button``;
 class DocumentEditor extends Component {
   constructor() {
     super();
@@ -64,7 +74,15 @@ class DocumentEditor extends Component {
       editorState: EditorState.createEmpty()
     };
 
-    this.onChange = editorState => this.setState({editorState});
+    this.onChange = editorState => {
+      const field = editorState.getCurrentContent();
+      const raw = convertToRaw(field);
+
+      console.log(raw.blocks[0].text);
+      // let html = stateToHTML(title);
+      // console.log(html);
+      this.setState({editorState});
+    };
 
     this.onTitleChange = title => {
       this.updateDocument({
@@ -83,10 +101,6 @@ class DocumentEditor extends Component {
     this.setState({
       document: newDocument
     });
-  }
-
-  onChange(editorState) {
-    this.setState({editorState});
   }
 
   componentDidMount() {
@@ -123,7 +137,13 @@ class DocumentEditor extends Component {
     const singleLinePlugin = createSingleLinePlugin();
     return (
       <TitleContainer>
-
+        <TitleWithHelper
+          field="keywords"
+          requirement={{required: true, hint: 'this is a test rqureiaijsfijas'}}
+          document={{title: 'test'}}
+          title="Keywords"
+          id="keywords"
+        />
         <Editor
           plugins={[singleLinePlugin]}
           editorState={this.state.editorState}
@@ -150,10 +170,11 @@ class DocumentEditor extends Component {
                 <Title>Write your article</Title>
                 <Toolbar />
                 <EditorContent>
-
-
-                  <div>{this.renderTitle()}</div>
+                  <Line>{this.renderTitle()}</Line>
                 </EditorContent>
+                <ButtonContainer>
+                  <Button>Submit Article</Button>
+                </ButtonContainer>
               </EditorCard>
             </Container>
           </Parent>
