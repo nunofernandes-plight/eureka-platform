@@ -19,5 +19,11 @@ export default {
           event.returnValues.submissionId, event.returnValues.submissionOwner);
       }
     );
+
+    // /** Article version submitted**/
+    // EurekaPlatformContract.events.ArticleVersionSubmitted(undefined, (error, event) => {
+    //   if(error) throw error;
+    //
+    // })
   }
 };

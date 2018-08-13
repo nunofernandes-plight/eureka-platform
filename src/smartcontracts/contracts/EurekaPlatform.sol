@@ -207,6 +207,8 @@ contract EurekaPlatform {
         emit SubmissionProcessStart(submission.submissionId, tx.origin);
     }
 
+    event ArticleVersionSubmitted(uint256 submissionId, bytes32 _articleHash, bytes32 _articleURL);
+
     function submitArticleVersion(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL,
         address[] _authors, uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) private {
 
@@ -227,6 +229,7 @@ contract EurekaPlatform {
         articleSubmissions[_submissionId].versions.push(article);
         article.versionState = ArticleVersionState.SUBMITTED;
         article.stateTimestamp = block.timestamp;
+        emit ArticleVersionSubmitted(article.submissionId, article.articleHash, article.articleUrl);
     }
 
     // a journal editor can assign him/herself to an article submission process
