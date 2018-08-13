@@ -15,7 +15,10 @@ export default {
 
     //not logged in
     res.status(401);
-    res.send('Not logged in');
+    res.send({
+      'success': false,
+      'error': 'Not logged in'
+    });
   },
 
   adminOnly: (req, res, next) => {
@@ -55,14 +58,10 @@ export default {
             }
             if (authorized) next();
             else {
-              res.status(403).json({
-                error: 'Not authorized'
-              });
+              notCorrectRoleError(res, roles);
             }
           } else {
-            res.status(403).json({
-              error: 'Not authorized'
-            });
+            notCorrectRoleError(res, roles);
           }
         })
         .catch(err => {
@@ -73,3 +72,11 @@ export default {
     };
   }
 };
+
+function notCorrectRoleError(res, roles) {
+  res.status = 403;
+  res.send({
+    'succes': false,
+    'error': 'Authorization failed - Access denied for provided role, Roles granted route: ' + roles
+  });
+}
