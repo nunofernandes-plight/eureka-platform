@@ -13,6 +13,7 @@ import {customStyleMap} from './editor/customStyleMap.js';
 // import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
 import TitleWithHelper from './editor/TitleWithHelper.js';
+import Select from 'react-select';
 
 const titleStyle = () => 'new-article-title';
 
@@ -36,10 +37,10 @@ const EditorCard = styled.div`
   background-color: #ffffff;
   background-clip: border-box;
   min-height: 420px;
-  min-width: 80%;
+  min-width: 90%;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
   margin-top: -130px !important;
-  padding: 30px;
+  padding: 40px;
 `;
 
 const Title = styled.h1`
@@ -178,6 +179,32 @@ class DocumentEditor extends Component {
     );
   }
 
+  renderMainDiscipline() {
+    return (
+      <div>
+        {' '}
+        <TitleWithHelper
+          field="mainDiscipline"
+          requirement={{required: true, hint: 'this is a test rqureiaijsfijas'}}
+          document={{title: 'test'}}
+          title="Main Discipline"
+          id="mainDiscipline"
+        />
+        <div style={{fontSize: 16, width: '50%'}}>
+          <Select
+            // onChange={value => props.onChange(value.map(v => v.value))}
+            // options={getOptions(props.type)}
+            // value={props.value.join(',')}
+            // delimiter=","
+            clearable={false}
+            placeholder="Select main discipline..."
+            multi
+          />
+        </div>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div>
@@ -193,6 +220,7 @@ class DocumentEditor extends Component {
                 <EditorContent>
                   <Line>{this.renderTitle()}</Line>
                   <Line>{this.renderAuthors()}</Line>
+                  <Line>{this.renderMainDiscipline()}</Line>
                 </EditorContent>
                 <ButtonContainer>
                   <Button>Submit Article</Button>
