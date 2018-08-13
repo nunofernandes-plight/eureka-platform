@@ -2,8 +2,6 @@ import mongoose from 'mongoose';
 import {articleSubmissionSchema} from './article-submission.mjs';
 import Roles from './roles-enum.mjs';
 
-const Schema = mongoose.Schema;
-
 /**
  * User of the eureka platform
  * Model is used for the local user authentication with passport

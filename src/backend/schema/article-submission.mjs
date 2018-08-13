@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import {articleVersionSchema} from './article-version.mjs';
 
 /**
  * ArticleSubmission for an article on the eureka platform
@@ -12,7 +13,7 @@ export const articleSubmissionSchema = mongoose.Schema(
       type: String,
       required: true
     },
-
+    articleVersions: [articleVersionSchema]
   },
   {collection: 'articleSubmissions'}
 );
