@@ -31,5 +31,12 @@ export default {
     }
     error.status = 500;
     throw error;
+  },
+
+  missingParameter: (param) => {
+    let error = new Error('Missing parameter was not provided: ' + param);
+    error.status = 400;
+    throw error;
+
   }
 }
