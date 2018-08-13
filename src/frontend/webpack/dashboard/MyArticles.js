@@ -5,6 +5,8 @@ import {withRouter} from 'react-router-dom';
 import Icon from '../icons/Icon.js';
 import {__THIRD} from '../../helpers/colors.js';
 import {getDomain} from '../../../helpers/getDomain.js';
+import Modal from '../design-components/Modal.js';
+
 
 const Parent = styled.div`
   display: flex;
@@ -12,7 +14,7 @@ const Parent = styled.div`
 `;
 
 const CardContainer = styled.div`
-  transition: all 0.5s 
+  transition: all 0.5s; 
   display: flex;
   width: 100%;
   justify-content: space-evenly;
@@ -92,9 +94,13 @@ class MyArticles extends Component {
       errorMessage: null
     };
   }
+
+  componentDidMount() {
+    console.log(this.props);
+  }
   createNewArticle() {
     this.setState({loading: true});
-    fetch(`${getDomain()}/api/articles/new`, {
+    fetch(`${getDomain()}/api/articles/drafts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -107,7 +113,7 @@ class MyArticles extends Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          this.props.history.push(`${this.props.base}` + '/' + response.id);
+          this.props.history.push(`${this.props.base}` + '/' + response.data.id);
         } else {
           this.setState({
             errorMessage: response.error,
