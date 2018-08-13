@@ -97,7 +97,9 @@ const CloseButton = styled.div`
   cursor: pointer;
 `;
 
-const Content = styled.p``;
+const Content = styled.p`
+  text-align: center;
+`;
 
 const ActionButton = styled.button`
   margin: 0 0 0 auto;

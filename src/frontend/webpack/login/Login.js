@@ -7,7 +7,7 @@ import Web3Providers from '../../web3/Web3Providers.js';
 import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
 import Modal from '../design-components/Modal.js';
 import AccountBalance from '../../web3/AccountBalance.js';
-import EurekaSpinner from '../../webpack/spinners/EurekaSpinner.js';
+import GridSpinner from '../../webpack/spinners/GridSpinner.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import {
   Container,
@@ -161,7 +161,7 @@ class Login extends Component {
         {this.props.authed ? <Redirect to={'/dashboard'} /> : null}
         <div>
           {this.state.loading ? (
-            <EurekaSpinner />
+            <GridSpinner />
           ) : (
             <div>
               {this.renderModals()}

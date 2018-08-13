@@ -8,7 +8,7 @@ import MetaMaskGuide from './webpack/MetaMaskGuide';
 import {getDomain} from '../helpers/getDomain.js';
 import SignUp from './webpack/login/SignUp.js';
 import PanelLeft from './webpack/dashboard/PanelLeft.js';
-import {LoginGuard} from './webpack/guards/Guards.js';
+import {DashBoardGuard} from './webpack/guards/Guards.js';
 import DashboardRouter from './webpack/dashboard/DashboardRouter.js';
 
 class Router extends Component {
@@ -90,12 +90,16 @@ class Router extends Component {
                 path="/app"
                 render={() => (
                   <div>
-                    <LoginGuard isAuthenticated={this.state.isAuthenticated}>
+                    <DashBoardGuard isAuthenticated={this.state.isAuthenticated}>
                       <PanelLeft base={'/app'} />
                       <div style={{paddingLeft: 270}}>
-                        <DashboardRouter base={'/app'} user={this.state.user} />
+                        <DashboardRouter
+                          base={'/app'}
+                          user={this.state.user}
+                          selectedAccount={this.props.selectedAccount}
+                        />
                       </div>
-                    </LoginGuard>
+                    </DashBoardGuard>
                   </div>
                 )}
               />

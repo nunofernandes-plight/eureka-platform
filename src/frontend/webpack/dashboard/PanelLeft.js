@@ -86,7 +86,7 @@ class PanelLeft extends Component {
                 >
                   <NavItem
                     status={
-                      route.path === this.state.activePath ? 'active' : null
+                      this.state.activePath.toString().includes(route.path) ? 'active' : null
                     }
                     icon={route.icon}
                     width={20}
