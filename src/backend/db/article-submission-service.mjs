@@ -31,7 +31,7 @@ export default {
    * @param _editor
    * @returns {Promise<void>}
    */
-  addEditorToSubmission: async (_submissionId, _editor) => {
+  updateEditorToSubmission: async (_submissionId, _editor) => {
     ArticleSubmission.findByIdAndUpdate(_submissionId,
       {
         $addToSet: {
@@ -41,6 +41,21 @@ export default {
         if (err) throw err;
         else {
           console.log('Submission ' + submission._id + ' has got the editor ' + _editor);
+          return submission;
+        }
+      });
+  },
+
+  removeEditorFromSubmission: async (_submissionId) => {
+    ArticleSubmission.findByIdAndUpdate(_submissionId,
+      {
+        $unset: {
+          editor: 1
+        }
+      }, (err, submission) => {
+        if (err) throw err;
+        else {
+          console.log('Submission ' + submission._id + ' has the editor removed');
           return submission;
         }
       });
