@@ -66,6 +66,8 @@ const Element = styled.div`
 
 const Bullet = styled.li`
   padding-bottom: 0.5rem !important;
+  padding-left: 15px;
+  padding-right: 15px;
 `;
 
 const Text = styled.div``;
