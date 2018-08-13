@@ -13,7 +13,7 @@ const Container = styled.div`
   width: 270px;
   height: 100%;
   left: 0;
-  top: 135px;
+  top: 105px;
   z-index: 600;
   background: white;
   transition-duration: 0.15s;

@@ -16,6 +16,7 @@ export const Title = styled.h1`
   text-align: center;
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 export const LoginContainer = styled.div`
