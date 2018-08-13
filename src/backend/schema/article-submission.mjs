@@ -12,6 +12,7 @@ export const articleSubmissionSchema = mongoose.Schema(
       type: String,
       required: true
     },
+
   },
   {collection: 'articleSubmissions'}
 );
