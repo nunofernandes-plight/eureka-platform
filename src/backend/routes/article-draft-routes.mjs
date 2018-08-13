@@ -28,7 +28,13 @@ router.post(
 
 router.get('/:draftId',
   asyncHandler(async req => {
+    if(!req.params.draftId) {
+      let error = new Error('No draft ID provided');
+      error.status= 400;
+      throw error;
+    }
 
+    return await articleDraftService.getDraftById(req.params.draftId);
   }));
 
 export default router;

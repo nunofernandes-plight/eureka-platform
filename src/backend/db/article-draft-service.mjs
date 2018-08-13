@@ -5,7 +5,6 @@ export default {
     return ArticleDraft.find({});
   },
   createDraft: async (ethereumAddress) => {
-    console.log(ethereumAddress);
     const newDraft = new ArticleDraft({
       ownerAddress: ethereumAddress
     });
@@ -17,5 +16,15 @@ export default {
     }
 
     return dbDraft;
+  },
+
+  getDraftById: async (draftId) => {
+    let draft = await ArticleDraft.findById(draftId);
+    if(!draft) {
+      let error = new Error('Could not find the draft with the provided ID');
+      error.status = 400;
+      throw error;
+    }
+    return draft;
   }
 };
