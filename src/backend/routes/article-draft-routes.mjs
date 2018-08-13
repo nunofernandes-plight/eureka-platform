@@ -3,14 +3,9 @@ import {asyncHandler} from '../api/requestHandler.mjs';
 import accesController from '../helpers/acess-controller.mjs';
 const router = express.Router();
 import articleDraftService from '../db/article-draft-service.mjs';
+import Roles from '../schema/roles-enum';
 
 router.use(accesController.loggedInOnly);
-router.get(
-  '/',
-  asyncHandler(async () => {
-    return articleDraftService.getAllArticleDrafts();
-  })
-);
 
 router.post(
   '/',
@@ -37,6 +32,16 @@ router.get('/:draftId',
 
     const requesterAddress = req.session.passport.user.ethereumAddress;
     return await articleDraftService.getDraftById(requesterAddress, req.params.draftId);
-  }));
+  })
+);
+
+
+router.use(accesController.rolesOnly(Roles.ADMIN));
+router.get(
+  '/',
+  asyncHandler(async () => {
+    return articleDraftService.getAllArticleDrafts();
+  })
+);
 
 export default router;
