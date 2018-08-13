@@ -150,14 +150,15 @@ export default {
           );
           error.status = 400;
           throw error;
-        }
-        console.log(
-          'User ' +
+        } else {
+          console.log(
+            'User ' +
             user.ethereumAddress +
             ' got the submission with ID: ' +
             articleSubmission._id
-        );
-        return user;
+          );
+          return user;
+        }
       }
     );
   }

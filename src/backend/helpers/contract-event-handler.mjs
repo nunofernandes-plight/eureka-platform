@@ -19,5 +19,28 @@ export default {
           event.returnValues.submissionId, event.returnValues.submissionOwner);
       }
     );
+
+    /** Assignement for Submission process **/
+    EurekaPlatformContract.events.AssignmentForSubmissionProcess(
+      undefined,
+      (error, event) => {
+        if (error) throw error;
+
+        articleSubmissionService.addEditorToSubmission(
+          event.returnValues.submissionId,
+          event.returnValues.assignerAddress
+        );
+      }
+    );
+
+    /** Remove editor from submission process **/
+    EurekaPlatformContract.events.RemovedEditorFromSubmission(
+      undefined,
+      (error, event) => {
+        if(error) throw error;
+
+        console.log('REMOVE EDITOR TRIGGERED');
+      }
+    );
   }
 };

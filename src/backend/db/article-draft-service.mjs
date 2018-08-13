@@ -1,4 +1,4 @@
-import ArticleDraft from '../schema/article-draft';
+import ArticleDraft from '../schema/article-draft.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 
 export default {
