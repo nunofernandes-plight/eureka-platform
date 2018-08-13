@@ -207,7 +207,7 @@ contract EurekaPlatform {
         emit SubmissionProcessStart(submission.submissionId, tx.origin);
     }
 
-    event ArticleVersionSubmitted(uint256 submissionId, bytes32 _articleHash, bytes32 _articleURL);
+    event ArticleVersionSubmitted(uint256 submissionId, bytes32 articleHash, bytes32 articleURL);
 
     function submitArticleVersion(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL,
         address[] _authors, uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) private {

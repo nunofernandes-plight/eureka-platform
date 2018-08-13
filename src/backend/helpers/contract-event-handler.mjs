@@ -20,10 +20,11 @@ export default {
       }
     );
 
-    // /** Article version submitted**/
-    // EurekaPlatformContract.events.ArticleVersionSubmitted(undefined, (error, event) => {
-    //   if(error) throw error;
-    //
-    // })
+    /** Article version submitted**/
+    EurekaPlatformContract.events.ArticleVersionSubmitted(undefined, (error, event) => {
+      if(error) throw error;
+      articleSubmissionService.submitArticleVersion(
+        event.returnValues.submissionId, event.returnValues.articleHash, event.returnValues.articleUrl);
+    });
   }
 };
