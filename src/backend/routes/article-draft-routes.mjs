@@ -35,7 +35,8 @@ router.get('/:draftId',
       throw error;
     }
 
-    return await articleDraftService.getDraftById(req.params.draftId);
+    const requesterAddress = req.session.passport.user.ethereumAddress;
+    return await articleDraftService.getDraftById(requesterAddress, req.params.draftId);
   }));
 
 export default router;
