@@ -1,22 +1,22 @@
 import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
 import accesController from '../helpers/acess-controller.mjs';
+
 const router = express.Router();
 import articleDraftService from '../db/article-draft-service.mjs';
 import Roles from '../schema/roles-enum';
+import errorThrower from '../helpers/error-thrower.mjs';
 
 router.use(accesController.loggedInOnly);
 
 router.post(
   '/',
   asyncHandler(async (req) => {
-    if(!req.body.ethereumAddress) {
-      let error = new Error('No ethereum address provided');
-      error.status= 400;
-      throw error;
+    if (!req.body.ethereumAddress) {
+      errorThrower.missingParameter('ethereumAddress');
     }
 
-    let newDraft =  await articleDraftService.createDraft(req.body.ethereumAddress);
+    let newDraft = await articleDraftService.createDraft(req.body.ethereumAddress);
     console.log(newDraft);
     return newDraft;
   })
@@ -24,10 +24,8 @@ router.post(
 
 router.get('/:draftId',
   asyncHandler(async req => {
-    if(!req.params.draftId) {
-      let error = new Error('No draft ID provided');
-      error.status= 400;
-      throw error;
+    if (!req.params.draftId) {
+      errorThrower.missingParameter('draftId');
     }
 
     const requesterAddress = req.session.passport.user.ethereumAddress;
