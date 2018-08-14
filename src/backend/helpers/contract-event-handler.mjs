@@ -99,6 +99,13 @@ export default {
         //TODO write in user --> they are invited for become reviewer
         //TODO createReviews
 
+
+        await articleSubmissionService.changeArticleVersionState(
+          event.returnValues.submissionId,
+          event.returnValues.articleHash,
+          ArticleVersionState.REVIEWERS_INVITED
+        );
+
       }
     );
   }

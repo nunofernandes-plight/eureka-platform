@@ -283,8 +283,13 @@ test(PRETEXT + 'Invite reviewers for review article', async t => {
   const articleHash = articleSubmission.articleVersions[0].articleHash;
   await setSanityToOk(eurekaPlatformContract, articleHash, editor.ethereumAddress);
 
+
   // Invite users as editoral-approved reviewers
+  articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+  t.is(articleSubmission.articleVersions[0].articleVersionState, ArticleVersionState.EDITOR_CHECKED);
   await inviteReviewersForArticle(eurekaPlatformContract, articleHash,
     [reviewer1.ethereumAddress, reviewer2.ethereumAddress], editor.ethereumAddress);
+  articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+  t.is(articleSubmission.articleVersions[0].articleVersionState, ArticleVersionState.REVIEWERS_INVITED);
 });
 
