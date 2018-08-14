@@ -1,17 +1,22 @@
 import mongoose from 'mongoose';
 import ReviewState from './review-state-enum.mjs';
 
-const reviewSchema = mongoose.Schema(
+export const reviewSchema = mongoose.Schema(
   {
     //submission it belongs to
     submissionId: {
       type: Number,
       required: true
     },
+    // article hash it belongs to
+    articleHash: {
+      type: String,
+      required: true
+    },
     reviewState: {
       type: String,
       enum: Object.values(ReviewState),
-      default: ReviewState.NOT_EXISTING
+      default: ReviewState.INVITED
     },
     stateTimestamp: {
       type: String,

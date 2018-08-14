@@ -1,5 +1,5 @@
 import ArticleSubmission from '../schema/article-submission.mjs';
-import ArticleVersion from '../schema/article-version-state.mjs';
+import ArticleVersion from '../schema/article-version.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import userService from './user-service.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
@@ -85,7 +85,7 @@ export default {
   },
 
   changeArticleVersionState: async (_submissionId, _articleHash, versionState) => {
-    if(!(versionState in ArticleVersionState)) {
+    if (!(versionState in ArticleVersionState)) {
       let error = new Error('Internal error: Provided param "versionState" is not a actual ArticleVersionState');
       error.status = 500;
       throw error;
@@ -96,7 +96,7 @@ export default {
     }
 
     //get position within article-version array
-    const articleVersionPosition = submission.articleVersions.findIndex( (entry) => {
+    const articleVersionPosition = submission.articleVersions.findIndex((entry) => {
       return entry.articleHash === _articleHash;
     });
 
@@ -105,4 +105,22 @@ export default {
     return submission;
 
   },
+
+  pushReviewIntoArticleVersion: async (_submissionId, _articleHash, review) => {
+    console.log('PUSHING');
+    let submission = await ArticleSubmission.findById(_submissionId);
+    if (!submission) {
+      errorThrower.noEntryFoundById('_submissionId');
+    }
+
+    //get position within article-version array
+    const articleVersionPosition = submission.articleVersions.findIndex( (entry) => {
+      return entry.articleHash === _articleHash;
+    });
+
+    submission.articleVersions[articleVersionPosition].reviews.push(review);
+    await submission.save();
+    console.log(submission.articleVersions[articleVersionPosition].reviews);
+    return submission;
+  }
 };

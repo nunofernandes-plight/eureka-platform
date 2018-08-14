@@ -309,7 +309,7 @@ contract EurekaPlatform {
         emit SanityIsNotOk(articleVersions[_articleHash].submissionId, _articleHash);
     }
 
-    event ReviewersAreInvited(uint256 submissionId, bytes32 articleHash, address[] editorApprovedReviewers);
+    event ReviewersAreInvited(uint256 submissionId, bytes32 articleHash, address[] editorApprovedReviewers, uint256 stateTimestamp);
     function inviteReviewers(bytes32 _articleHash, address[] _allowedEditorApprovedReviewers) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
@@ -324,7 +324,7 @@ contract EurekaPlatform {
         }
         article.versionState = ArticleVersionState.REVIEWERS_INVITED;
         article.stateTimestamp = block.timestamp;
-        emit ReviewersAreInvited(articleVersions[_articleHash].submissionId, _articleHash, _allowedEditorApprovedReviewers);
+        emit ReviewersAreInvited(articleVersions[_articleHash].submissionId, _articleHash, _allowedEditorApprovedReviewers, block.timestamp);
     }
 
     function acceptReviewInvitation(bytes32 _articleHash) public {

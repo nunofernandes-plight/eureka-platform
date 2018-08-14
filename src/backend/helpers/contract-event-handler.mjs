@@ -1,5 +1,6 @@
 import userService from '../db/user-service.mjs';
 import articleSubmissionService from '../db/article-submission-service.mjs';
+import reviewService from '../db/review-service.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 
 export default {
@@ -96,9 +97,10 @@ export default {
       async (error, event) => {
         if(error) throw error;
         //TODO write in article-version --> reviewers
-        //TODO write in user --> they are invited for become reviewer
-        //TODO createReviews
-
+        const approvedReviewers = event.returnValues.editorApprovedReviewers;
+        const submissionId = event.returnValues.submissionId;
+        const articleHash = event.returnValues.articleHash;
+        const timestamp = event.returnValues.stateTimestamp;
 
         await articleSubmissionService.changeArticleVersionState(
           event.returnValues.submissionId,
@@ -106,6 +108,19 @@ export default {
           ArticleVersionState.REVIEWERS_INVITED
         );
 
+
+        // create reviews in ArticleVersion
+        for(let i = 0; i < approvedReviewers.length; i++) {
+          console.log('APPROVED REVIEWER: ' + approvedReviewers[i]);
+          let review = await reviewService.createReviewAndReturn(submissionId, articleHash, timestamp);
+          await articleSubmissionService.pushReviewIntoArticleVersion(submissionId, articleHash, review);
+          //console.log(review);
+        }
+
+        //TODO write in user --> they are invited for become reviewer
+        //TODO createReviews
+
+        return 'done';
       }
     );
   }
