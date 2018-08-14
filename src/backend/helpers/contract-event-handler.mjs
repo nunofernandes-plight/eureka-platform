@@ -1,5 +1,6 @@
 import userService from '../db/user-service.mjs';
 import articleSubmissionService from '../db/article-submission-service.mjs';
+import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 
 export default {
   setup: EurekaPlatformContract => {
@@ -63,17 +64,30 @@ export default {
       }
     );
 
-    /** SanityChek of an Editor on a article version **/
+    /** SanityCheck got accepted from an Editor on an article version **/
     EurekaPlatformContract.events.SanityIsOk(
       undefined,
       async (error, event) => {
         if (error) throw error;
-
-        console.log('SANITY IS OK: ');
-        console.log(event.returnValues.submissionId);
-        console.log(event.returnValues.articleHash);
+        await articleSubmissionService.changeArticleVersionState(
+          event.returnValues.submissionId,
+          event.returnValues.articleHash,
+          ArticleVersionState.EDITOR_CHECKED
+        );
       }
     );
 
+    /** SanityCheck got declined from an Editor on an article version **/
+    EurekaPlatformContract.events.SanityIsNotOk(
+      undefined,
+      async (error, event) => {
+        if(error) throw error;
+        await articleSubmissionService.changeArticleVersionState(
+          event.returnValues.submissionId,
+          event.returnValues.articleHash,
+          ArticleVersionState.DECLINED_SANITY_NOTOK
+        );
+      }
+    );
   }
 };

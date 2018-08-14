@@ -55,7 +55,47 @@ export const removeEditorFromSubmissionProcess = (contract, _submissionId, _from
       );
       return receipt;
     })
-    .catch( err => {
+    .catch(err => {
+      console.error(err);
+    });
+};
+
+export const setSanityToOk = (contract, _articleHash, _from) => {
+  return contract.methods
+    .sanityIsOk(_articleHash)
+    .send({
+      from: _from
+    })
+    .then(receipt => {
+      console.log(
+        'Sanity check for Article ' +
+        _articleHash +
+        ' is got accepted with the TX status: ' +
+        receipt.status
+      );
+      return receipt;
+    })
+    .catch(err => {
+      console.error(err);
+    });
+};
+
+export const setSanityIsNotOk = (contract, _articleHash, _from) => {
+  return contract.methods
+    .sanityIsNotOk(_articleHash)
+    .send({
+      from: _from
+    })
+    .then(receipt => {
+      console.log(
+        'Sanity check for Article ' +
+        _articleHash +
+        ' is got declined with the TX status: ' +
+        receipt.status
+      );
+      return receipt;
+    })
+    .catch(err => {
       console.error(err);
     });
 };
@@ -76,7 +116,7 @@ export const changeEditorFromSubmissionProcess = (contract, _submissionId, _newE
       );
       return receipt;
     })
-    .catch( err => {
+    .catch(err => {
       console.error(err);
     });
 };

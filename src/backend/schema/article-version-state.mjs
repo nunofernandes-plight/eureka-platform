@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import ArticleVersionState from './article-version-state-enum.mjs';
 /**
  * ArticleVersion for an submission on the eureka platform
  */
@@ -17,13 +17,14 @@ export const articleVersionSchema = mongoose.Schema(
       type: String,
       required: true
     },
-    editorChecked: {
-      type: Boolean,
-      default: false
+    articleVersionState: {
+      type: String,
+      enum: Object.values(ArticleVersionState),
+      default: ArticleVersionState.SUBMITTED
     }
 
   },
-  {collection: 'articleVersion'}
+  {collection: 'articleVersionState'}
 );
 
 const ArticleVersions = mongoose.model('ArticleVersion', articleVersionSchema, 'articleVersions');

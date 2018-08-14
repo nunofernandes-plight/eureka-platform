@@ -290,6 +290,7 @@ contract EurekaPlatform {
         emit SanityIsOk(articleVersions[_articleHash].submissionId, _articleHash);
     }
 
+    event SanityIsNotOk(uint256 submissionId, bytes32 articleHash);
     function sanityIsNotOk(bytes32 _articleHash) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
@@ -301,6 +302,7 @@ contract EurekaPlatform {
         article.stateTimestamp = block.timestamp;
         // TODO handle difference between review rounds and article versions, maybe not every new version is a review round, according to max Review rounds
         requestNewReviewRound(article.submissionId);
+        emit SanityIsNotOk(articleVersions[_articleHash].submissionId, _articleHash);
     }
 
     function inviteReviewers(bytes32 _articleHash, address[] _allowedEditorApprovedReviewers) public {
