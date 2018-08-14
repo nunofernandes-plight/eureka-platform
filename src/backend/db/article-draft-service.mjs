@@ -11,6 +11,7 @@ export default {
   createDraft: async ethereumAddress => {
     //createNewEmpty()
     const document = new Document(serializeDocument(createNewEmpty()));
+    document.authors.push(ethereumAddress);
 
     const newDraft = new ArticleDraft({
       ownerAddress: ethereumAddress,
