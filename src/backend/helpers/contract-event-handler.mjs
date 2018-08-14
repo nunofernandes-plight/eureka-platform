@@ -95,8 +95,10 @@ export default {
       undefined,
       async (error, event) => {
         if(error) throw error;
-        //TODO implement backend action
-        console.log('REVIEWERS ARE INVITED');
+        //TODO write in article-version --> reviewers
+        //TODO write in user --> they are invited for become reviewer
+        //TODO createReviews
+
       }
     );
   }
