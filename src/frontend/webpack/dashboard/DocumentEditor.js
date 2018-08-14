@@ -1,6 +1,5 @@
 import {EditorState, convertToRaw} from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
-import {stateToHTML} from 'draft-js-export-html';
 import createSingleLinePlugin from 'draft-js-single-line-plugin';
 import React, {Component} from 'react';
 import styled from 'styled-components';
@@ -14,6 +13,7 @@ import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
 import TitleWithHelper from './editor/TitleWithHelper.js';
 import Select from 'react-select';
+import Document from '../../../models/Document.mjs';
 
 const titleStyle = () => 'title';
 
@@ -41,7 +41,7 @@ const EditorCard = styled.div`
   width: 1180px;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
   margin-top: -130px !important;
-  padding: 40px;
+  padding: 40px 80px;
 `;
 
 const Title = styled.h2`
@@ -75,6 +75,7 @@ class DocumentEditor extends Component {
     this.state = {
       errorMessage: null,
       loading: false,
+      document: null,
       editorState: EditorState.createEmpty()
     };
 
@@ -82,21 +83,10 @@ class DocumentEditor extends Component {
       const field = editorState.getCurrentContent();
       const raw = convertToRaw(field);
 
-      console.log(raw);
-
       // console.log(raw.blocks[0].text);
       // let html = stateToHTML(title);
       // console.log(html);
       this.setState({editorState});
-    };
-
-    this.onTitleChange = title => {
-      this.updateDocument({
-        document: {
-          ...this.state.document,
-          title
-        }
-      });
     };
   }
 
@@ -110,8 +100,8 @@ class DocumentEditor extends Component {
   }
 
   componentDidMount() {
-    const draftId = this.props.match.params.id;
     this.setState({loading: true});
+    const draftId = this.props.match.params.id;
     fetch(`${getDomain()}/api/articles/drafts/${draftId}`, {
       method: 'GET',
       headers: {
@@ -122,7 +112,9 @@ class DocumentEditor extends Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          console.log(response.data);
+          // this.setState({document: response.data.document});
+          let document = new Document(response.data.document);
+          console.log(document);
         } else {
           this.setState({
             errorMessage: response.error

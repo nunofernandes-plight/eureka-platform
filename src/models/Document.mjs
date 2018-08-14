@@ -1,6 +1,6 @@
 import _ from 'underscore';
-import {DRAFT} from '../models/ArticleStates.js';
-import {DEFAULT_NUMBER_OF_ROUNDS} from "./StateMachine.js";
+import {DRAFT} from './ArticleStates.mjs';
+import {DEFAULT_NUMBER_OF_ROUNDS} from "./StateMachine.mjs";
 
 class Document {
   constructor(obj) {

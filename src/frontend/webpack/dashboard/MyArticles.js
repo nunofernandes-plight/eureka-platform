@@ -6,7 +6,6 @@ import Icon from '../icons/Icon.js';
 import {__THIRD} from '../../helpers/colors.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import Modal from '../design-components/Modal.js';
-import Document from './editor/models/Document.js';
 
 const Parent = styled.div`
   display: flex;
@@ -96,19 +95,17 @@ class MyArticles extends Component {
   }
 
 
-  createNewArticle() {
-    const document = new Document();
+  createNewArticle() {;
 
     this.setState({loading: true});
-    fetch(`${getDomain()}/api/articles/drafts`, {
+    fetch(`${getDomain()}/api/articles/drafts/new`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       credentials: 'include',
       body: JSON.stringify({
-        ethereumAddress: this.props.selectedAccount.address,
-        document
+        ethereumAddress: this.props.selectedAccount.address
       })
     })
       .then(response => response.json())

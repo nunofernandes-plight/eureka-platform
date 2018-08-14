@@ -10,29 +10,29 @@ const router = express.Router();
 router.use(accesController.loggedInOnly);
 
 router.post(
-  '/',
-  asyncHandler(async (req) => {
+  '/new',
+  asyncHandler(async req => {
     if (!req.body.ethereumAddress) {
       errorThrower.missingParameter('ethereumAddress');
     }
-
-    let newDraft = await articleDraftService.createDraft(req.body.ethereumAddress, req.body.document);
-    console.log(newDraft);
-    return newDraft;
+    return await articleDraftService.createDraft(req.body.ethereumAddress);
   })
 );
 
-router.get('/:draftId',
+router.get(
+  '/:draftId',
   asyncHandler(async req => {
     if (!req.params.draftId) {
       errorThrower.missingParameter('draftId');
     }
 
     const requesterAddress = req.session.passport.user.ethereumAddress;
-    return await articleDraftService.getDraftById(requesterAddress, req.params.draftId);
+    return await articleDraftService.getDraftById(
+      requesterAddress,
+      req.params.draftId
+    );
   })
 );
-
 
 router.use(accesController.rolesOnly(Roles.ADMIN));
 router.get(

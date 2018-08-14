@@ -1,15 +1,22 @@
 import ArticleDraft from '../schema/article-draft.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
+import Document from '../../models/Document.mjs';
 
 export default {
   getAllArticleDrafts: () => {
     return ArticleDraft.find({});
   },
-  createDraft: async (ethereumAddress, document) => {
+  createDraft: async (ethereumAddress) => {
+
+
+    const document = new Document();
+
     const newDraft = new ArticleDraft({
       ownerAddress: ethereumAddress,
-      document
+        document
     });
+
+
     let dbDraft = await newDraft.save();
     if (!dbDraft) {
       errorThrower.noCreationOfEntry('Article Draft');
