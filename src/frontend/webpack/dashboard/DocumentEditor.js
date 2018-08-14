@@ -37,13 +37,13 @@ const EditorCard = styled.div`
   background-color: #ffffff;
   background-clip: border-box;
   min-height: 420px;
-  min-width: 90%;
+  width: 80%;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
   margin-top: -130px !important;
   padding: 40px;
 `;
 
-const Title = styled.h1`
+const Title = styled.h2`
   text-align: center;
   color: ${__GRAY_500};
 `;
@@ -57,7 +57,6 @@ const EditorContent = styled.div`
 
 const Line = styled.div`
   margin: 20px 0;
-  font-size: 2em;
 `;
 
 const TitleContainer = styled.div`
@@ -69,7 +68,6 @@ const ButtonContainer = styled.div`
 const Button = styled.button``;
 
 const Authors = styled.div`
-  font-size: 18px;
 `;
 class DocumentEditor extends Component {
   constructor() {
@@ -190,7 +188,7 @@ class DocumentEditor extends Component {
           title="Main Discipline"
           id="mainDiscipline"
         />
-        <div style={{fontSize: 16, width: '50%'}}>
+        <div style={{width: '50%'}}>
           <Select
             // onChange={value => props.onChange(value.map(v => v.value))}
             // options={getOptions(props.type)}
