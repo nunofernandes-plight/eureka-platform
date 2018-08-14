@@ -17,6 +17,11 @@ export default {
         if (error) throw error;
         await articleSubmissionService.createSubmission(
           event.returnValues.submissionId, event.returnValues.submissionOwner);
+        await articleSubmissionService.submitArticleVersion(
+          event.returnValues.submissionId,
+          event.returnValues.articleHash,
+          event.returnValues.articleURL
+        );
       }
     );
 
