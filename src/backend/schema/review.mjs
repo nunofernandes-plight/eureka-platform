@@ -21,6 +21,10 @@ export const reviewSchema = mongoose.Schema(
     stateTimestamp: {
       type: String,
       required: true
+    },
+    reviewerAddress: {
+      type: String,
+      required: true
     }
   },
   {collection: 'reviews'}

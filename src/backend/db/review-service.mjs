@@ -11,7 +11,7 @@ export default {
       console.log('Created new review on DB done');
     });
   },
-  createReviewAndReturn: async (submissionId, articleHash, stateTimestamp) => {
-    return new Review({submissionId, articleHash, stateTimestamp});
+  createReviewAndReturn: async (submissionId, articleHash, stateTimestamp, reviewerAddress) => {
+    return new Review({submissionId, articleHash, stateTimestamp, reviewerAddress});
   }
 };

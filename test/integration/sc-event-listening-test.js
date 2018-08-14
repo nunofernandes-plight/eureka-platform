@@ -293,8 +293,30 @@ test(PRETEXT + 'Invite reviewers for review article', async t => {
     [reviewer1.ethereumAddress, reviewer2.ethereumAddress], editor.ethereumAddress);
 
   // check status after invitation of reviewers
+
+
   articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
   t.is(articleSubmission.articleVersions[0].articleVersionState, ArticleVersionState.REVIEWERS_INVITED);
+
+  let counter = 0;
+
+  // try 5 times to call DB as it can take some time to write all into DB
+  // TODO write it more nicely, but it works
+  while (articleSubmission.articleVersions[0].reviews.length < 2 && counter < 5) {
+    sleep(5000);
+    articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+    console.log('Looper for the ' + (counter+1) + ' time');
+    counter++;
+  }
   t.is(articleSubmission.articleVersions[0].reviews.length, 2);
 });
 
+//TODO move to helpers
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds) {
+      break;
+    }
+  }
+}

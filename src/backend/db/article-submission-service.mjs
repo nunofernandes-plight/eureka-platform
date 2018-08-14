@@ -101,9 +101,7 @@ export default {
     });
 
     submission.articleVersions[articleVersionPosition].articleVersionState = versionState;
-    await submission.save();
-    return submission;
-
+    return await submission.save();
   },
 
   pushReviewIntoArticleVersion: async (_submissionId, _articleHash, review) => {
@@ -119,8 +117,7 @@ export default {
     });
 
     submission.articleVersions[articleVersionPosition].reviews.push(review);
-    await submission.save();
-    console.log(submission.articleVersions[articleVersionPosition].reviews);
-    return submission;
+
+    return await submission.save();
   }
 };
