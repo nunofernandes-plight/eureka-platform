@@ -1,5 +1,6 @@
 import ArticleSubmission from '../schema/article-submission.mjs';
-import ArticleVersion from '../schema/article-version.mjs';
+import ArticleVersion from '../schema/article-version-state.mjs';
+import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import userService from './user-service.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 
@@ -83,7 +84,7 @@ export default {
     return submission;
   },
 
-  setSanityCheckedToTrue: async (_submissionId, _articleHash) => {
+  setVersionToEditorChecked: async (_submissionId, _articleHash) => {
     let submission = await ArticleSubmission.findById(_submissionId);
     if (!submission) {
       errorThrower.noEntryFoundById('_submissionId');
@@ -94,7 +95,7 @@ export default {
       return entry.articleHash === _articleHash;
     });
 
-    submission.articleVersions[articleVersionPosition].editorChecked = true;
+    submission.articleVersions[articleVersionPosition].articleVersionState = ArticleVersionState.EDITOR_CHECKED;
     await submission.save();
     return submission;
   }

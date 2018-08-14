@@ -11,6 +11,7 @@ import deployContracts from '../../src/backend/web3/index.mjs';
 import getAccounts from '../../src/backend/web3/get-accounts.mjs';
 import User from '../../src/backend/schema/user.mjs';
 import ArticleSubmission from '../../src/backend/schema/article-submission.mjs';
+import ArticleVersionState from '../../src/backend/schema/article-version-state-enum.mjs';
 import userService from '../../src/backend/db/user-service.mjs';
 import articleSubmissionService from '../../src/backend/db/article-submission-service.mjs';
 import getArticleHex from '../../src/backend/web3/get-articleHex.mjs';
@@ -207,9 +208,9 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
 
   //Accept sanity check as editor
   const articleHash = articleSubmission.articleVersions[0].articleHash;
-  t.is(articleSubmission.articleVersions[0].editorChecked, false);
+  t.is(articleSubmission.articleVersions[0].articleVersionState, ArticleVersionState.SUBMITTED);
   await setSanityToOk(eurekaPlatformContract, articleHash, editor.ethereumAddress);
   articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
-  t.is(articleSubmission.articleVersions[0].editorChecked, true);
+  t.is(articleSubmission.articleVersions[0].articleVersionState, ArticleVersionState.EDITOR_CHECKED);
 });
 

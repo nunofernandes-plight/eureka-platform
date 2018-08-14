@@ -68,7 +68,7 @@ export default {
       undefined,
       async (error, event) => {
         if (error) throw error;
-        await articleSubmissionService.setSanityCheckedToTrue(
+        await articleSubmissionService.setVersionToEditorChecked(
           event.returnValues.submissionId,
           event.returnValues.articleHash
         );

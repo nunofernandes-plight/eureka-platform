@@ -1,15 +1,31 @@
+import mongoose from 'mongoose';
+import ArticleVersionState from './article-version-state-enum.mjs';
 /**
- * Different Articel versions a article version within an article submission can have
+ * ArticleVersion for an submission on the eureka platform
  */
-const ARTICLE_VERSION_STATE = Object.freeze({
-  NOT_EXISTING: 'NOT_EXISTING',
-  SUBMITTED: 'SUBMITTED',
-  EDITOR_CHECKED: 'EDITOR_CHECKED',
-  REVIEWERS_INVITED: 'REVIEWERS_INVITED',
-  NOT_ENOUGH_REVIEWERS: 'NOT_ENOUGH_REVIEWERS',
-  DECLINED_SANITY_NOTOK: 'DECLINED_SANITY_NOTOK',
-  DECLINED:'DECLINED',
-  ACCEPTED: 'ACCEPTED'
-});
+export const articleVersionSchema = mongoose.Schema(
+  {
+    submissionId: {
+      type: Number,
+      required: true
+    },
+    articleHash: {
+      type: String,
+      required: true
+    },
+    articleUrl: {
+      type: String,
+      required: true
+    },
+    articleVersionState: {
+      type: String,
+      enum: Object.values(ArticleVersionState),
+      default: ArticleVersionState.SUBMITTED
+    }
 
-export default ARTICLE_VERSION_STATE;
+  },
+  {collection: 'articleVersionState'}
+);
+
+const ArticleVersions = mongoose.model('ArticleVersion', articleVersionSchema, 'articleVersions');
+export default ArticleVersions;
