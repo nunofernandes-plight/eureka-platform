@@ -1,21 +1,21 @@
 import ArticleDraft from '../schema/article-draft.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import Document from '../../models/Document.mjs';
+import {serializeDocument} from '../../helpers/documentSerializer.mjs';
+import createNewEmpty from '../../helpers/createEditorDocument.mjs';
 
 export default {
   getAllArticleDrafts: () => {
     return ArticleDraft.find({});
   },
-  createDraft: async (ethereumAddress) => {
-
-
-    const document = new Document();
+  createDraft: async ethereumAddress => {
+    //createNewEmpty()
+    const document = new Document(serializeDocument(createNewEmpty()));
 
     const newDraft = new ArticleDraft({
       ownerAddress: ethereumAddress,
-        document
+      document
     });
-
 
     let dbDraft = await newDraft.save();
     if (!dbDraft) {
