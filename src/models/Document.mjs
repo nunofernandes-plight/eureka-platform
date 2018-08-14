@@ -1,6 +1,8 @@
+import React from 'react';
 import _ from 'underscore';
 import {DRAFT} from './ArticleStates.mjs';
-import {DEFAULT_NUMBER_OF_ROUNDS} from "./StateMachine.mjs";
+import {DEFAULT_NUMBER_OF_ROUNDS} from './StateMachine.mjs';
+import {options as documentTypes} from '../helpers/documentTypes.mjs';
 
 class Document {
   constructor(obj) {
@@ -172,6 +174,74 @@ class Document {
       coi_declaration: ''
     };
   }
+  getAllFields() {
+    const document = new Document();
+    const allFields = documentTypes.map(d => {
+      return document.getFormat(d.value);
+    });
+    return _.uniq(_.flatten(allFields));
+  }
+
+  getFormat(type = this.type) {
+    if (type === 'hypothesis') {
+      return [
+        'accepts_ethic',
+        'title',
+        'authors',
+        'metadata',
+        'abstract',
+        'figure',
+        'figure_text',
+        'introduction',
+        'hypothesis',
+        'supportive_evidence_of_the_hypothesis',
+        'proposed_evaluation_of_hypothesis',
+        'alternative_hypotheses',
+        'significance',
+        'conclusions',
+        'funding_statement',
+        'acknowledgements',
+        'methods_easy',
+        'ethics_statement'
+      ];
+    }
+    if (type === 'abstract') {
+      return [
+        'title',
+        'authors',
+        'metadata',
+        'abstract',
+        'introduction',
+        'figure',
+        'figure_text',
+        'results_discussion',
+        'funding_statement',
+        'acknowledgements',
+        'ethics_statement'
+      ];
+    }
+    return [
+      'accepts_ethic',
+      'title',
+      'authors',
+      'metadata',
+      'abstract',
+      'figure',
+      'figure_text',
+      'introduction',
+      'objective',
+      'results_discussion',
+      'conclusions',
+      'limitations',
+      'alternative_explanations',
+      'conjectures',
+      'funding_statement',
+      'acknowledgements',
+      'ethics_statement',
+      'methods_easy'
+    ];
+  }
+
   static reviewsNeeded(document) {
     if (document && _.isNumber(document.reviews_needed)) {
       return document.reviews_needed;
