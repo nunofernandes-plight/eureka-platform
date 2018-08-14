@@ -76,8 +76,7 @@ class DocumentEditor extends Component {
     this.state = {
       errorMessage: null,
       loading: false,
-      document: null,
-      editorState: EditorState.createEmpty()
+      document: null
     };
 
     this.onChange = editorState => {
@@ -116,7 +115,9 @@ class DocumentEditor extends Component {
           // this.setState({document: response.data.document});
           let document = new Document(response.data.document);
           let deserialized = deserializeDocument(document);
-          console.log(deserialized);
+          this.setState({
+            document: deserialized
+          });
         } else {
           this.setState({
             errorMessage: response.error
@@ -146,7 +147,7 @@ class DocumentEditor extends Component {
         />
         <Editor
           plugins={[singleLinePlugin]}
-          editorState={this.state.editorState}
+          editorState={this.state.document.title}
           onChange={this.onChange}
           blockStyleFn={titleStyle}
           blockRenderMap={singleLinePlugin.blockRenderMap}
@@ -202,7 +203,7 @@ class DocumentEditor extends Component {
   render() {
     return (
       <div>
-        {this.state.loading ? (
+        {this.state.loading || !this.state.document ? (
           <GridSpinner />
         ) : (
           <Parent>
