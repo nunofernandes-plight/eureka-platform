@@ -89,5 +89,15 @@ export default {
         );
       }
     );
+
+    /** Reviewers are assigned as editor-approved on an article **/
+    EurekaPlatformContract.events.ReviewersAreInvited(
+      undefined,
+      async (error, event) => {
+        if(error) throw error;
+        //TODO implement backend action
+        console.log('REVIEWERS ARE INVITED');
+      }
+    );
   }
 };

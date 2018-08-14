@@ -249,6 +249,7 @@ contract EurekaPlatform {
     }
 
     event RemovedEditorFromSubmission(uint submissionId);
+
     function removeEditorFromSubmissionProcess(uint256 _submissionId) public {
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
 
@@ -264,6 +265,7 @@ contract EurekaPlatform {
 
     // is it a good idea that the current editor can assign another editor? or should only removing (method below) be possible?
     event ChangedEditorFromSubmission(uint256 submissionId, address newEditor);
+
     function changeEditorFromSubmissionProcess(uint256 _submissionId, address _newEditor) public {
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
         require(submission.submissionState == SubmissionState.EDITOR_ASSIGNED, "an editor needs to be assigned to call this function.");
@@ -278,6 +280,7 @@ contract EurekaPlatform {
     }
 
     event SanityIsOk(uint256 submissionId, bytes32 articleHash);
+
     function sanityIsOk(bytes32 _articleHash) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
@@ -291,6 +294,7 @@ contract EurekaPlatform {
     }
 
     event SanityIsNotOk(uint256 submissionId, bytes32 articleHash);
+
     function sanityIsNotOk(bytes32 _articleHash) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
@@ -305,6 +309,7 @@ contract EurekaPlatform {
         emit SanityIsNotOk(articleVersions[_articleHash].submissionId, _articleHash);
     }
 
+    event ReviewersAreInvited(uint256 submissionId, bytes32 articleHash, address[] editorApprovedReviewers);
     function inviteReviewers(bytes32 _articleHash, address[] _allowedEditorApprovedReviewers) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
@@ -319,6 +324,7 @@ contract EurekaPlatform {
         }
         article.versionState = ArticleVersionState.REVIEWERS_INVITED;
         article.stateTimestamp = block.timestamp;
+        emit ReviewersAreInvited(articleVersions[_articleHash].submissionId, _articleHash, _allowedEditorApprovedReviewers);
     }
 
     function acceptReviewInvitation(bytes32 _articleHash) public {
