@@ -95,8 +95,7 @@ class MyArticles extends Component {
   }
 
 
-  createNewArticle() {;
-
+  createNewArticle() {
     this.setState({loading: true});
     fetch(`${getDomain()}/api/articles/drafts/new`, {
       method: 'POST',

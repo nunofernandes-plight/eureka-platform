@@ -60,7 +60,23 @@ export const convertJSToField = (field = null, js) => {
   const content = convertFromRaw(noEmptyBlocks);
   const state = EditorState.createWithContent(
     content,
-    field === 'title' ? null : decorator
+    field === 'title' ? null : null // TODO: insert here decorator
   );
   return state;
+};
+
+export const deserializeDocument = document => {
+  const fields = document.getAllFields();
+  const mapped = fields.map(field => {
+    if (document[field]) {
+      if (document[field]['blocks'] && !document[field]['entityMap']) {
+        document[field]['entityMap'] = {};
+      }
+    }
+    return convertJSToField(field, document[field]);
+  });
+  const documentDeserialized = Object.assign({}, document, {
+    ...zipObject(fields, mapped)
+  });
+  return new Document(documentDeserialized);
 };

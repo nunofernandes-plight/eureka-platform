@@ -14,6 +14,7 @@ import 'draft-js/dist/Draft.css';
 import TitleWithHelper from './editor/TitleWithHelper.js';
 import Select from 'react-select';
 import Document from '../../../models/Document.mjs';
+import {deserializeDocument} from '../../../helpers/documentSerializer.mjs';
 
 const titleStyle = () => 'title';
 
@@ -114,7 +115,8 @@ class DocumentEditor extends Component {
         if (response.success) {
           // this.setState({document: response.data.document});
           let document = new Document(response.data.document);
-          console.log(document);
+          let deserialized = deserializeDocument(document);
+          console.log(deserialized);
         } else {
           this.setState({
             errorMessage: response.error
