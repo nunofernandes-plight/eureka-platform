@@ -5,12 +5,13 @@ export default {
   getAllArticleDrafts: () => {
     return ArticleDraft.find({});
   },
-  createDraft: async (ethereumAddress) => {
+  createDraft: async (ethereumAddress, document) => {
     const newDraft = new ArticleDraft({
-      ownerAddress: ethereumAddress
+      ownerAddress: ethereumAddress,
+      document
     });
-    let dbDraft =  await newDraft.save();
-    if(!dbDraft) {
+    let dbDraft = await newDraft.save();
+    if (!dbDraft) {
       errorThrower.noCreationOfEntry('Article Draft');
     }
 
@@ -19,10 +20,10 @@ export default {
 
   getDraftById: async (userAddress, draftId) => {
     let draft = await ArticleDraft.findById(draftId);
-    if(!draft) {
+    if (!draft) {
       errorThrower.noEntryFoundById(draftId);
     }
-    if(draft.ownerAddress !== userAddress) {
+    if (draft.ownerAddress !== userAddress) {
       errorThrower.notCorrectEthereumAddress();
     }
     return draft;

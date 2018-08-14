@@ -14,7 +14,7 @@ const Parent = styled.div`
 `;
 
 const CardContainer = styled.div`
-  transition: all 0.5s; 
+  transition: all 0.5s;
   display: flex;
   width: 100%;
   justify-content: space-evenly;
@@ -95,12 +95,10 @@ class MyArticles extends Component {
     };
   }
 
-  componentDidMount() {
-    console.log(this.props);
-  }
+
   createNewArticle() {
     const document = new Document();
-    console.log(document);
+
     this.setState({loading: true});
     fetch(`${getDomain()}/api/articles/drafts`, {
       method: 'POST',
@@ -109,13 +107,16 @@ class MyArticles extends Component {
       },
       credentials: 'include',
       body: JSON.stringify({
-        ethereumAddress: this.props.selectedAccount.address
+        ethereumAddress: this.props.selectedAccount.address,
+        document
       })
     })
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          this.props.history.push(`${this.props.base}` + '/' + response.data._id);
+          this.props.history.push(
+            `${this.props.base}` + '/' + response.data._id
+          );
         } else {
           this.setState({
             errorMessage: response.error,

@@ -16,7 +16,7 @@ router.post(
       errorThrower.missingParameter('ethereumAddress');
     }
 
-    let newDraft = await articleDraftService.createDraft(req.body.ethereumAddress);
+    let newDraft = await articleDraftService.createDraft(req.body.ethereumAddress, req.body.document);
     console.log(newDraft);
     return newDraft;
   })
