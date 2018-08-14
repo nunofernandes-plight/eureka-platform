@@ -37,7 +37,7 @@ const EditorCard = styled.div`
   background-color: #ffffff;
   background-clip: border-box;
   min-height: 420px;
-  width: 80%;
+  width: 1070px;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
   margin-top: -130px !important;
   padding: 40px;
@@ -51,12 +51,12 @@ const Title = styled.h2`
 const EditorContent = styled.div`
   display: flex;
   flex-direction: column;
-  width: 1070px;
   margin: 0 auto;
+  width: 100%;
 `;
 
 const Line = styled.div`
-  margin: 20px 0;
+  margin: 15px 0;
 `;
 
 const TitleContainer = styled.div`

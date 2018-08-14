@@ -5,7 +5,6 @@ import {__THIRD} from '../../../helpers/colors.js';
 
 const Container = styled.div`
   display: flex;
-  margin: 12px 0;
   align-items: flex-end;
 `;
 
