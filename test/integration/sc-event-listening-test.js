@@ -21,7 +21,8 @@ import {
   removeEditorFromSubmissionProcess,
   changeEditorFromSubmissionProcess,
   setSanityToOk,
-  setSanityIsNotOk
+  setSanityIsNotOk,
+  inviteReviewersForArticle
 } from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import {getAuthors} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import web3 from 'web3';
@@ -257,6 +258,9 @@ test(PRETEXT + 'Invite reviewers for review article', async t => {
   let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
   let editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[4], 'test-editor-avatar');
 
+  let reviewer1 = await userService.createUser('testReviewer1', 'reviewer1@test.test', testAccounts[5], 'test-reviewer-avatar');
+  let reviewer2 = await userService.createUser('testReviewer2', 'reviewer2@test.test', testAccounts[6], 'test-reviewer-avatar');
+
   // signup editor and submit article 1
   await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
   await submitArticle(
@@ -275,8 +279,12 @@ test(PRETEXT + 'Invite reviewers for review article', async t => {
   let articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
   t.is(articleSubmission.editor, editor.ethereumAddress);
 
-  //Accept sanity check for article 1
+  // Accept sanity check for article 1
   const articleHash = articleSubmission.articleVersions[0].articleHash;
   await setSanityToOk(eurekaPlatformContract, articleHash, editor.ethereumAddress);
+
+  // Invite users as editoral-approved reviewers
+  await inviteReviewersForArticle(eurekaPlatformContract, articleHash,
+    [reviewer1.ethereumAddress, reviewer2.ethereumAddress], editor.ethereumAddress);
 });
 
