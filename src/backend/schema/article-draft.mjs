@@ -9,12 +9,14 @@ export const articleDraftSchema = mongoose.Schema(
       type: String,
       required: true
     },
-    title: {
-      type: String,
-    }
+    document: {}
   },
   {collection: 'articleDraft'}
 );
 
-const ArticleDraft = mongoose.model('ArticleDraft', articleDraftSchema, 'articleDrafts');
+const ArticleDraft = mongoose.model(
+  'ArticleDraft',
+  articleDraftSchema,
+  'articleDrafts'
+);
 export default ArticleDraft;

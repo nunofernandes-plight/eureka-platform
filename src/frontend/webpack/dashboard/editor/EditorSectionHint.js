@@ -13,7 +13,7 @@ const Container = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 0.9em;
+  font-size: 1em;
   opacity: 0.6;
 `;
 
