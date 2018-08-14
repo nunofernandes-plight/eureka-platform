@@ -82,7 +82,9 @@ class DocumentEditor extends Component {
       const field = editorState.getCurrentContent();
       const raw = convertToRaw(field);
 
-      console.log(raw.blocks[0].text);
+      console.log(raw);
+
+      // console.log(raw.blocks[0].text);
       // let html = stateToHTML(title);
       // console.log(html);
       this.setState({editorState});
