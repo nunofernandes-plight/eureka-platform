@@ -16,6 +16,10 @@ export const articleVersionSchema = mongoose.Schema(
     articleUrl: {
       type: String,
       required: true
+    },
+    editorChecked: {
+      type: Boolean,
+      default: false
     }
 
   },

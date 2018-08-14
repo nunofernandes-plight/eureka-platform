@@ -1,6 +1,7 @@
 import ArticleSubmission from '../schema/article-submission.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
 import userService from './user-service.mjs';
+import errorThrower from '../helpers/error-thrower.mjs';
 
 export default {
   getAllSubmissions: () => {
@@ -66,11 +67,9 @@ export default {
    * @returns {Promise<*>}
    */
   submitArticleVersion: async (_submissionId, _articleHash, _articleUrl) => {
-    let submission = await this.getSubmissionById(_submissionId);
+    let submission = await ArticleSubmission.findById(_submissionId);
     if (!submission) {
-      let error = new Error('No Article-Submission with the given submission Id found');
-      error.status = 400;
-      throw error;
+      errorThrower.noEntryFoundById('_submissionId');
     }
 
     const articleVersion = new ArticleVersion({
