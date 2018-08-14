@@ -1,9 +1,22 @@
 import mongoose from 'mongoose';
+import ReviewState from './review-state-enum.mjs';
 
 const reviewSchema = mongoose.Schema(
   {
-    rating: Number,
-    text: String
+    //submission it belongs to
+    submissionId: {
+      type: Number,
+      required: true
+    },
+    reviewState: {
+      type: String,
+      enum: Object.values(ReviewState),
+      default: ReviewState.NOT_EXISTING
+    },
+    stateTimestamp: {
+      type: String,
+      required: true
+    }
   },
   {collection: 'reviews'}
 );
