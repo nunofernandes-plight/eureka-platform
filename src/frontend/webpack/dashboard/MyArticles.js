@@ -6,7 +6,7 @@ import Icon from '../icons/Icon.js';
 import {__THIRD} from '../../helpers/colors.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import Modal from '../design-components/Modal.js';
-
+import Document from './editor/models/Document.js';
 
 const Parent = styled.div`
   display: flex;
@@ -99,6 +99,8 @@ class MyArticles extends Component {
     console.log(this.props);
   }
   createNewArticle() {
+    const document = new Document();
+    console.log(document);
     this.setState({loading: true});
     fetch(`${getDomain()}/api/articles/drafts`, {
       method: 'POST',
