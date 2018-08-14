@@ -68,10 +68,10 @@ export default {
       undefined,
       async (error, event) => {
         if (error) throw error;
-
-        console.log('SANITY IS OK: ');
-        console.log(event.returnValues.submissionId);
-        console.log(event.returnValues.articleHash);
+        await articleSubmissionService.setSanityCheckedToTrue(
+          event.returnValues.submissionId,
+          event.returnValues.articleHash
+        );
       }
     );
 

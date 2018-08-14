@@ -207,7 +207,9 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
 
   //Accept sanity check as editor
   const articleHash = articleSubmission.articleVersions[0].articleHash;
-  console.log('ArticleHash: ' + articleHash);
+  t.is(articleSubmission.articleVersions[0].editorChecked, false);
   await setSanityToOk(eurekaPlatformContract, articleHash, editor.ethereumAddress);
+  articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+  t.is(articleSubmission.articleVersions[0].editorChecked, true);
 });
 

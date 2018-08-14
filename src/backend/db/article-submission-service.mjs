@@ -81,5 +81,21 @@ export default {
     submission.articleVersions.push(articleVersion);
     await submission.save();
     return submission;
+  },
+
+  setSanityCheckedToTrue: async (_submissionId, _articleHash) => {
+    let submission = await ArticleSubmission.findById(_submissionId);
+    if (!submission) {
+      errorThrower.noEntryFoundById('_submissionId');
+    }
+
+    //get position within article-version array
+    const articleVersionPosition = submission.articleVersions.findIndex( (entry) => {
+      return entry.articleHash === _articleHash;
+    });
+
+    submission.articleVersions[articleVersionPosition].editorChecked = true;
+    await submission.save();
+    return submission;
   }
 };
