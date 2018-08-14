@@ -277,7 +277,7 @@ contract EurekaPlatform {
         emit ChangedEditorFromSubmission(_submissionId, _newEditor);
     }
 
-    // event SanityIsOk(uint256 submissionId);
+    event SanityIsOk(uint256 submissionId, bytes32 articleHash);
     function sanityIsOk(bytes32 _articleHash) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
@@ -287,6 +287,7 @@ contract EurekaPlatform {
 
         article.versionState = ArticleVersionState.EDITOR_CHECKED;
         article.stateTimestamp = block.timestamp;
+        emit SanityIsOk(articleVersions[_articleHash].submissionId, _articleHash);
     }
 
     function sanityIsNotOk(bytes32 _articleHash) public {

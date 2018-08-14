@@ -56,11 +56,22 @@ export default {
       async (error, event) => {
         if (error) throw error;
 
-        console.log('CHANGING TO ' + event.returnValues.newEditor);
         await articleSubmissionService.updateEditorToSubmission(
           event.returnValues.submissionId,
           event.returnValues.newEditor
         );
+      }
+    );
+
+    /** SanityChek of an Editor on a article version **/
+    EurekaPlatformContract.events.SanityIsOk(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+
+        console.log('SANITY IS OK: ');
+        console.log(event.returnValues.submissionId);
+        console.log(event.returnValues.articleHash);
       }
     );
 
