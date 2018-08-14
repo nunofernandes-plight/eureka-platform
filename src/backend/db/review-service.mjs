@@ -4,11 +4,14 @@ export default {
   getAllReviews: () => {
     return Review.find({});
   },
-  createReview: ({rating, text}) => {
-    const review = new Review({rating: rating, text: text});
-    return review.save(function(err) {
+  createReview: async (submissionId, articleHash, stateTimestamp) => {
+    const review = new Review({submissionId, articleHash, stateTimestamp});
+    return review.save(err => {
       if (err) return console.error(err);
       console.log('Created new review on DB done');
     });
+  },
+  createReviewAndReturn: async (submissionId, articleHash, stateTimestamp) => {
+    return new Review({submissionId, articleHash, stateTimestamp});
   }
 };

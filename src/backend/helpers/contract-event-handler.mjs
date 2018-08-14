@@ -1,5 +1,6 @@
 import userService from '../db/user-service.mjs';
 import articleSubmissionService from '../db/article-submission-service.mjs';
+import reviewService from '../db/review-service.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 
 export default {
@@ -87,6 +88,39 @@ export default {
           event.returnValues.articleHash,
           ArticleVersionState.DECLINED_SANITY_NOTOK
         );
+      }
+    );
+
+    /** Reviewers are assigned as editor-approved on an article **/
+    EurekaPlatformContract.events.ReviewersAreInvited(
+      undefined,
+      async (error, event) => {
+        if(error) throw error;
+        //TODO write in article-version --> reviewers
+        const approvedReviewers = event.returnValues.editorApprovedReviewers;
+        const submissionId = event.returnValues.submissionId;
+        const articleHash = event.returnValues.articleHash;
+        const timestamp = event.returnValues.stateTimestamp;
+
+        await articleSubmissionService.changeArticleVersionState(
+          event.returnValues.submissionId,
+          event.returnValues.articleHash,
+          ArticleVersionState.REVIEWERS_INVITED
+        );
+
+
+        // create reviews in ArticleVersion
+        for(let i = 0; i < approvedReviewers.length; i++) {
+          console.log('APPROVED REVIEWER: ' + approvedReviewers[i]);
+          let review = await reviewService.createReviewAndReturn(submissionId, articleHash, timestamp);
+          await articleSubmissionService.pushReviewIntoArticleVersion(submissionId, articleHash, review);
+          //console.log(review);
+        }
+
+        //TODO write in user --> they are invited for become reviewer
+        //TODO createReviews
+
+        return 'done';
       }
     );
   }
