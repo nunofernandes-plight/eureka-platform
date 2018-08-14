@@ -248,6 +248,6 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   const articleHash2 = articleSubmission2.articleVersions[0].articleHash;
   await setSanityIsNotOk(eurekaPlatformContract, articleHash2, editor.ethereumAddress);
   articleSubmission2 = await articleSubmissionService.getSubmissionById(articleSubmissions[1]._id);
-  //t.is(articleSubmission1.articleVersions[1].articleVersionState, ArticleVersionState.EDITOR_CHECKED);
+  t.is(articleSubmission2.articleVersions[0].articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
 });
 
