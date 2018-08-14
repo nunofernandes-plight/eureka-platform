@@ -10,16 +10,17 @@ import GridSpinner from '../../webpack/spinners/GridSpinner.js';
 import Toolbar from './editor/Toolbar.js';
 import {__GRAY_500} from '../../helpers/colors.js';
 import {customStyleMap} from './editor/customStyleMap.js';
-// import './editor/new-article.css';
+import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
 import TitleWithHelper from './editor/TitleWithHelper.js';
 import Select from 'react-select';
 
-const titleStyle = () => 'new-article-title';
+const titleStyle = () => 'title';
 
 const Parent = styled.div`
   display: flex;
   flex-direction: column;
+  font-family: 'Roboto', sans-serif;
 `;
 const Container = styled.div`
   transition: all 0.5s;
@@ -37,7 +38,7 @@ const EditorCard = styled.div`
   background-color: #ffffff;
   background-clip: border-box;
   min-height: 420px;
-  width: 1070px;
+  width: 1180px;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
   margin-top: -130px !important;
   padding: 40px;
@@ -67,8 +68,7 @@ const ButtonContainer = styled.div`
 `;
 const Button = styled.button``;
 
-const Authors = styled.div`
-`;
+const Authors = styled.div``;
 class DocumentEditor extends Component {
   constructor() {
     super();
@@ -140,7 +140,7 @@ class DocumentEditor extends Component {
   renderTitle() {
     const singleLinePlugin = createSingleLinePlugin();
     return (
-      <TitleContainer>
+      <TitleContainer className="title">
         <TitleWithHelper
           field="title"
           requirement={{required: true, hint: 'this is a test rqureiaijsfijas'}}

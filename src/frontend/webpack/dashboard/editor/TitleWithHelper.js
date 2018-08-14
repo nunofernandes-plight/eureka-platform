@@ -16,7 +16,8 @@ const Left = styled.div`
 export const Title = styled.div`
   color: ${__THIRD};
   font-weight: bold;
-  font-size: 0.65em;
+  font-size: 1em;
+  margin: 8px 0; 
 `;
 
 const RequiredStar = styled.span.attrs({
