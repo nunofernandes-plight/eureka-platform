@@ -19,6 +19,7 @@
     "express-session": "^1.15.6",
     "fs": "^0.0.1-security",
     "js-cookie": "^2.2.0",
+    "lodash": "^4.17.10",
     "material-design-icons": "^3.0.1",
     "mongoose": "^5.2.2",
     "nodemailer": "^4.6.7",
