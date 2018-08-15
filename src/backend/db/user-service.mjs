@@ -4,6 +4,7 @@ import Roles from '../schema/roles-enum.mjs';
 import ArticleSubmission from '../schema/article-submission.mjs';
 import {isValidAddress} from '../../helpers/isValidEthereumAddress.mjs';
 import userService from '../db/user-service.mjs';
+import errorThrower from '../helpers/error-thrower.mjs';
 
 export default {
   /**
@@ -160,6 +161,23 @@ export default {
           return user;
         }
       }
+    );
+  },
+
+  /**
+   * Adds a reviewerInvitation to the array of reviewerInvitation
+   * @param ethereumAddress
+   * @param review
+   * @returns {Promise<void>}
+   */
+  addReviewInvitation: async (ethereumAddress, review) => {
+    let user = await User.find({ethereumAddress: ethereumAddress});
+    if (!user) errorThrower.noEntryFoundById(ethereumAddress);
+
+    user.reviewerInvitation.push(review);
+    User.findOneAndUpdate(
+      {ethereumAddress: ethereumAddress},
+      user
     );
   }
 };

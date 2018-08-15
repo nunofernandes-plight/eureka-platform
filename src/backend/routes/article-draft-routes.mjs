@@ -1,6 +1,6 @@
 import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
-import accesController from '../helpers/acess-controller.mjs';
+import accesController from '../controller/acess-controller.mjs';
 import articleDraftService from '../db/article-draft-service.mjs';
 import Roles from '../schema/roles-enum.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';

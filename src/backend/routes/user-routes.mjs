@@ -3,7 +3,7 @@ import {asyncHandler} from '../api/requestHandler.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 const router = express.Router();
 import userService from '../db/user-service.mjs';
-import accesController from '../helpers/acess-controller.mjs';
+import accesController from '../controller/acess-controller.mjs';
 import Roles from '../schema/roles-enum.mjs';
 
 router.use(accesController.loggedInOnly);

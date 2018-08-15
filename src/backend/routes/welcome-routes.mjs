@@ -2,7 +2,7 @@
  * Testing routes
  */
 import express from 'express';
-import authenticationCheck from '../helpers/acess-controller.mjs';
+import authenticationCheck from '../controller/acess-controller.mjs';
 import Roles from '../schema/roles-enum.mjs';
 import {asyncHandler} from '../api/requestHandler.mjs';
 
