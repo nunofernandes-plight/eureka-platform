@@ -13,9 +13,11 @@ export default {
     const document = new Document(serializeDocument(createNewEmpty()));
     document.authors.push(ethereumAddress);
 
+    const timestamp = new Date().getTime();
     const newDraft = new ArticleDraft({
       ownerAddress: ethereumAddress,
-      document
+      document,
+      timestamp
     });
 
     let dbDraft = await newDraft.save();
@@ -95,9 +97,9 @@ export default {
     for (let property in document) {
       if (document.hasOwnProperty(property)) {
         draft.document[property] = document[property];
-        draft.timestamp = Date.now;
       }
     }
+    draft.timestamp = new Date().getTime();
     return await ArticleDraft.findByIdAndUpdate(draftId, draft);
   },
 
