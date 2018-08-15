@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.use(accesController.loggedInOnly);
 /**
- * Get all drafts belonging to the user
+ * Get some infos about all the drafts belonging to the user
  */
 router.get(
   '/',
@@ -54,6 +54,9 @@ router.get(
   })
 );
 
+/**
+ * Updates the whole document of a draft by replacing it with the provided document
+ */
 // router.put(
 //   '/:draftId',
 //   asyncHandler(async req => {
@@ -71,6 +74,9 @@ router.get(
 //   })
 // );
 
+/**
+ * Updates the document of a draft with set all the variables provided
+ */
 router.put(
   '/:draftId',
   asyncHandler(async req => {
