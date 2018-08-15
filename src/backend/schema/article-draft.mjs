@@ -11,8 +11,7 @@ export const articleDraftSchema = mongoose.Schema(
     },
     document: {},
     timestamp: {
-      type: Number,
-      default: Date.now
+      type: Number
     }
   },
   {
