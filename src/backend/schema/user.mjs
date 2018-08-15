@@ -41,6 +41,9 @@ const userSchema = mongoose.Schema(
     reviewerInvitation: [
       reviewSchema
     ],
+    acceptedReviewerInvitation: [
+      reviewSchema
+    ],
     articleSubmissions: [articleSubmissionSchema]
   },
   {collection: 'users'}
