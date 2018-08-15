@@ -2,14 +2,15 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import NewPopover from './NewPopover.js';
 import Icon from '../../icons/Icon.js';
+import {__GRAY_500} from "../../../helpers/colors.js";
 
 const Container = styled.div`
-  color: gray;
-  margin-top: 2px;
-  display: inline-block;
+  color: ${__GRAY_500};
+  margin-bottom: 7px;
+  display: flex;
   text-align: center;
-  margin-left: 8px;
   cursor: default;
+  margin-right: 2px;
 `;
 
 const Title = styled.div`

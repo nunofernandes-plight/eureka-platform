@@ -197,7 +197,7 @@ class DocumentEditor extends Component {
           title="Main Discipline"
           id="mainDiscipline"
         />
-        <div style={{width: '50%'}}>
+        <div>
           <Select
             // onChange={value => props.onChange(value.map(v => v.value))}
             // options={getOptions(props.type)}
