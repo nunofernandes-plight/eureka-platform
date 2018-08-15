@@ -42,6 +42,7 @@ export default {
       draftInfo._id = draft._id;
       draftInfo.document.title = draft.document.title;
       draftInfo.document.authors = draft.document.authors;
+      draftInfo.timestamp = draft.timestamp;
       draftInfos.push(draftInfo);
     });
     return draftInfos;
@@ -93,6 +94,7 @@ export default {
     for (let property in document) {
       if (document.hasOwnProperty(property)) {
         draft.document[property] = document[property];
+        draft.timestamp = Date.now;
       }
     }
     return await ArticleDraft.findByIdAndUpdate(draftId, draft);
