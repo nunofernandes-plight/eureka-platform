@@ -94,18 +94,14 @@ class MyArticles extends Component {
     };
   }
 
-
   createNewArticle() {
     this.setState({loading: true});
     fetch(`${getDomain()}/api/articles/drafts/new`, {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json'
       },
-      credentials: 'include',
-      body: JSON.stringify({
-        ethereumAddress: this.props.selectedAccount.address
-      })
+      credentials: 'include'
     })
       .then(response => response.json())
       .then(response => {

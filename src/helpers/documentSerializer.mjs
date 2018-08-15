@@ -73,6 +73,18 @@ export const deserializeDocument = document => {
     }
     return convertJSToField(field, document[field]);
   });
-  const documentDeserialized = Object.assign({}, document, zipObject(fields, mapped));
+  const documentDeserialized = Object.assign(
+    {},
+    document,
+    zipObject(fields, mapped)
+  );
   return new Document(documentDeserialized);
+};
+
+export const serializeSavePatch = documentPatch => {
+  return mapValues(documentPatch, (value, key) => convertFieldToJS(key, value));
+};
+
+export const deserializePatch = documentPatch => {
+  return mapValues(documentPatch, (value, key) => convertJSToField(key, value));
 };
