@@ -114,6 +114,20 @@ export default {
         });
       }
     );
+
+    /** Acception of Reviewer Invitation**/
+    EurekaPlatformContract.events.InvitationIsAccepted(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+
+        console.log('INVITATION ACCEPTED on' +
+          event.returnValues.articleHash +
+          ' by ' +
+          event.returnValues.reviewerAddress
+        );
+      }
+    );
   }
 };
 

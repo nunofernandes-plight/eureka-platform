@@ -320,6 +320,6 @@ test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitatio
   t.is(dbReviewer2.reviewerInvitation.length, 1);
 
   /** Acception of Invitation **/
-  await acceptReviewerInvitation(eurekaPlatformContract, articleHash, reviewer1);
+  await acceptReviewerInvitation(eurekaPlatformContract, articleHash, reviewer1.ethereumAddress);
 });
 
