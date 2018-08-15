@@ -33,7 +33,15 @@ export default {
     if (!drafts) {
       errorThrower.noEntryFoundById('ethereumAddress');
     }
-    return drafts;
+
+    let draftInfos = [];
+    drafts.map( draft => {
+      let draftInfo = {};
+      draftInfo._id = draft._id;
+      draftInfo.title = draft.title;
+      draftInfos.push(draftInfo);
+    });
+    return draftInfos;
   },
 
   getDraftById: async (userAddress, draftId) => {
