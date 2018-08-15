@@ -36,9 +36,12 @@ export default {
 
     let draftInfos = [];
     drafts.map( draft => {
-      let draftInfo = {};
+      let draftInfo = {
+        document: {}
+      };
       draftInfo._id = draft._id;
-      draftInfo.title = draft.title;
+      draftInfo.document.title = draft.document.title;
+      draftInfo.document.authors = draft.document.authors;
       draftInfos.push(draftInfo);
     });
     return draftInfos;
