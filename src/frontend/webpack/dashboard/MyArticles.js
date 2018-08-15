@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {TopContainer} from './TopContainer.js';
-import {withRouter} from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 import Icon from '../icons/Icon.js';
-import {__GRAY_200, __THIRD} from '../../helpers/colors.js';
+import {__ALERT_WARNING, __GRAY_200, __THIRD} from '../../helpers/colors.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import Modal from '../design-components/Modal.js';
 import {renderField} from './editor/DocumentRenderer.js';
@@ -91,7 +91,7 @@ const IContainer = styled.div`
 `;
 
 const DraftsContainer = styled.div`
-  font-size: 13px;
+  font-size: 14px;
   width: 100%;
   padding: 2em;
 `;
@@ -114,6 +114,16 @@ const Tr = styled.tr`
     background: ${__GRAY_200};
   }
   transition: 0.5s all;
+`;
+
+const MyLink = styled(Link)`
+  &:hover {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+  
+  transition: 0.25s all;
+  text-decoration: none;
 `;
 
 class MyArticles extends Component {
@@ -243,7 +253,11 @@ class MyArticles extends Component {
                         <td style={{padding: '20px 15px'}}>
                           <Icon icon={'file'} width={20} height={20} />
                         </td>
-                        <td>{renderField(draft.document, 'title')}</td>
+                        <td>
+                          <MyLink to={`${this.props.base}/${draft._id}`}>
+                            {renderField(draft.document, 'title')}
+                          </MyLink>
+                        </td>
                         <td>{draft._id}</td>
 
                         <td>url</td>
