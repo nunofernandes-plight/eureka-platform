@@ -90,27 +90,6 @@ class DocumentEditor extends Component {
     // };
   }
 
-  onTitleChange = title => {
-    this.updateDocument({
-      document: {
-        ...this.state.document,
-        title
-      }
-    });
-  };
-
-  updateDocument({
-    document,
-    otherStatesToSet = {},
-    modifications = true,
-    citationsToRemove = []
-  }) {
-    this.setState({
-      document,
-      ...otherStatesToSet
-    });
-  }
-
   componentDidMount() {
     this.setState({loading: true});
     const draftId = this.props.match.params.id;
@@ -144,6 +123,27 @@ class DocumentEditor extends Component {
           loading: false
         });
       });
+  }
+
+  onTitleChange = title => {
+    this.updateDocument({
+      document: {
+        ...this.state.document,
+        title
+      }
+    });
+  };
+
+  updateDocument({
+    document,
+    otherStatesToSet = {},
+    modifications = true,
+    citationsToRemove = []
+  }) {
+    this.setState({
+      document,
+      ...otherStatesToSet
+    });
   }
 
   renderTitle() {
@@ -181,7 +181,7 @@ class DocumentEditor extends Component {
           title="Authors"
           id="authors"
         />
-        <Authors>{this.props.selectedAccount.address}</Authors>
+        <Authors>{this.state.document.authors}</Authors>
       </div>
     );
   }
