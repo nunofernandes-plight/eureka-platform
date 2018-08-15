@@ -98,5 +98,20 @@ export default {
       }
     }
     return await ArticleDraft.findByIdAndUpdate(draftId, draft);
+  },
+
+  deleteDraftById: async (userAddress, draftId) => {
+    let draft = await ArticleDraft.findById(draftId);
+    if (!draft) {
+      errorThrower.noEntryFoundById(draftId);
+    }
+    if (draft.ownerAddress !== userAddress) {
+      errorThrower.notCorrectEthereumAddress();
+    }
+
+    await ArticleDraft.findByIdAndDelete(draftId);
+    return 'Article Draft with ID ' +
+      draftId +
+      ' has been deleted';
   }
 };
