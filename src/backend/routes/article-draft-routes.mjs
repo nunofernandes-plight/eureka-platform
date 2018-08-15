@@ -8,17 +8,36 @@ import errorThrower from '../helpers/error-thrower.mjs';
 const router = express.Router();
 
 router.use(accesController.loggedInOnly);
-
-router.post(
+/**
+ * Get all drafts belonging to the user
+ */
+router.get(
+  '/',
+  asyncHandler(async req => {
+    const ethereumAddress = req.session.passport.user.ethereumAddress;
+    if (!ethereumAddress) {
+      errorThrower.notLoggedIn();
+    }
+    return await articleDraftService.getDraftsOfUser(ethereumAddress);
+  }));
+/**
+ * Create a new article draft
+ */
+router.get(
   '/new',
   asyncHandler(async req => {
-    if (!req.body.ethereumAddress) {
-      errorThrower.missingParameter('ethereumAddress');
+    const ethereumAddress = req.session.passport.user.ethereumAddress;
+    if (!ethereumAddress) {
+      errorThrower.notLoggedIn();
     }
-    return await articleDraftService.createDraft(req.body.ethereumAddress);
+    return await articleDraftService.createDraft(ethereumAddress);
   })
 );
 
+
+/**
+ * Get specific draft by draftId
+ */
 router.get(
   '/:draftId',
   asyncHandler(async req => {
