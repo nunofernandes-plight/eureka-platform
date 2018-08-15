@@ -3,9 +3,11 @@ import styled from 'styled-components';
 import {TopContainer} from './TopContainer.js';
 import {withRouter} from 'react-router-dom';
 import Icon from '../icons/Icon.js';
-import {__THIRD} from '../../helpers/colors.js';
+import {__GRAY_200, __THIRD} from '../../helpers/colors.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import Modal from '../design-components/Modal.js';
+import {renderField} from './editor/DocumentRenderer.js';
+import CircleSpinner from '../spinners/CircleSpinner.js';
 
 const Parent = styled.div`
   display: flex;
@@ -15,9 +17,10 @@ const Parent = styled.div`
 const CardContainer = styled.div`
   transition: all 0.5s;
   display: flex;
-  width: 100%;
-  justify-content: space-evenly;
-  padding: 0 20px;
+  flex-direction: column;
+  max-width: 1200px;
+  justify-content: center;
+  margin: 0 auto;
 `;
 
 const Card = styled.div`
@@ -28,10 +31,9 @@ const Card = styled.div`
   border-radius: 0.25rem;
   background-color: #ffffff;
   background-clip: border-box;
-  min-height: 200px;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
-  margin-top: -130px !important;
   align-items: center;
+  padding: 1.5em;
 `;
 
 const IconContainer = styled.div`
@@ -48,11 +50,14 @@ const IconContainer = styled.div`
 
 const Paragraph = styled.p``;
 const LeftCard = Card.extend`
-  min-width: 25%;
+  width: 500px;
+  align-self: center;
+  margin-top: 2em;
 `;
 
 const RightCard = Card.extend`
-  min-width: 50%;
+  width: 1160px;
+  margin-top: -130px !important;
 `;
 
 const List = styled.ul`
@@ -85,13 +90,45 @@ const IContainer = styled.div`
   margin-right: 10px;
 `;
 
+const DraftsContainer = styled.div`
+  font-size: 13px;
+  width: 100%;
+  padding: 2em;
+`;
+
+const Drafts = styled.table`
+  width: 100%;
+  text-align: left;
+  position: relative;
+  border-collapse: collapse;
+  white-space: nowrap;
+`;
+
+const TableTitle = styled.p`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const Tr = styled.tr`
+  &:hover {
+    background: ${__GRAY_200};
+  }
+  transition: 0.5s all;
+`;
+
 class MyArticles extends Component {
   constructor() {
     super();
     this.state = {
       loading: false,
-      errorMessage: null
+      fetchingArticlesLoading: true,
+      errorMessage: null,
+      drafts: null
     };
+  }
+
+  componentDidMount() {
+    this.fetchYourArticles();
   }
 
   createNewArticle() {
@@ -125,6 +162,35 @@ class MyArticles extends Component {
       });
   }
 
+  fetchYourArticles() {
+    fetch(`${getDomain()}/api/articles/drafts`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          console.log(response.data);
+          this.setState({drafts: response.data});
+        } else {
+          this.setState({
+            errorMessage: response.error,
+            fetchingArticlesLoading: false
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.',
+          fetchingArticlesLoading: false
+        });
+      });
+  }
+
   renderModal() {
     return (
       <Modal
@@ -145,7 +211,57 @@ class MyArticles extends Component {
       <Parent>
         {this.renderModal()}
         <TopContainer />
+
         <CardContainer>
+          <RightCard>
+            <h2>Your Drafts</h2>
+            {this.state.drafts ? (
+              <DraftsContainer>
+                <Drafts>
+                  <tbody>
+                    <tr>
+                      <th />
+                      <th>
+                        <TableTitle>Name</TableTitle>
+                      </th>
+                      <th>
+                        <TableTitle>Title</TableTitle>
+                      </th>
+                      <th>
+                        <TableTitle>URL</TableTitle>
+                      </th>
+                      <th>
+                        <TableTitle>Edit</TableTitle>
+                      </th>
+                      <th />
+                    </tr>
+                  </tbody>
+
+                  <tbody>
+                    {this.state.drafts.map(draft => (
+                      <Tr key={draft._id}>
+                        <td style={{padding: '20px 15px'}}>
+                          <Icon icon={'file'} width={20} height={20} />
+                        </td>
+                        <td>{renderField(draft.document, 'title')}</td>
+                        <td>{draft._id}</td>
+
+                        <td>url</td>
+                        <td />
+                      </Tr>
+                    ))}
+                  </tbody>
+                </Drafts>
+              </DraftsContainer>
+            ) : (
+              <div style={{marginTop: 25}}>
+                <CircleSpinner />
+              </div>
+            )}
+
+            {/*<Drafts>{this.state.drafs}</Drafts>*/}
+          </RightCard>
+
           <LeftCard>
             <h2>Submit an Article</h2>
             <IconContainer onClick={() => this.createNewArticle()}>
@@ -199,9 +315,6 @@ class MyArticles extends Component {
               </Bullet>
             </List>
           </LeftCard>
-          <RightCard>
-            <h2>Your Articles</h2>
-          </RightCard>
         </CardContainer>
       </Parent>
     );
