@@ -138,9 +138,11 @@ class MyArticles extends Component {
     super();
     this.state = {
       loading: false,
-      fetchingArticlesLoading: true,
+      fetchingArticlesLoading: false,
       errorMessage: null,
-      drafts: null
+      drafts: null,
+      showDeleteModal: false,
+      draftToDelete: null
     };
   }
 
@@ -180,6 +182,7 @@ class MyArticles extends Component {
   }
 
   fetchYourArticles() {
+    this.setState({fetchingArticlesLoading: true});
     fetch(`${getDomain()}/api/articles/drafts`, {
       method: 'GET',
       headers: {
@@ -208,18 +211,64 @@ class MyArticles extends Component {
       });
   }
 
+  deleteDraft() {
+    fetch(`${getDomain()}/api/articles/drafts/${this.state.draftToDelete}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.fetchYourArticles();
+        } else {
+          this.setState({
+            errorMessage: response.error,
+            fetchingArticlesLoading: false
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.',
+          fetchingArticlesLoading: false
+        });
+      });
+  }
+
   renderModal() {
     return (
-      <Modal
-        type={'notification'}
-        toggle={isErrorMessage => {
-          this.setState({errorMessage: null});
-        }}
-        show={this.state.errorMessage}
-        title={'You got the following error'}
-      >
-        {this.state.errorMessage}
-      </Modal>
+      <div>
+        <Modal
+          type={'notification'}
+          toggle={isErrorMessage => {
+            this.setState({errorMessage: null});
+          }}
+          show={this.state.errorMessage}
+          title={'You got the following error'}
+        >
+          {this.state.errorMessage}
+        </Modal>
+        <Modal
+          action
+          type={'notification'}
+          callback={() => {
+            this.setState({showDeleteModal: false});
+            this.deleteDraft();
+          }}
+          toggle={showDeleteModal => {
+            this.setState({showDeleteModal});
+          }}
+          show={this.state.showDeleteModal}
+          title={'Delete Draft'}
+        >
+          Are you sure you want to delete this draft? This action will be
+          permanent.
+        </Modal>
+      </div>
     );
   }
 
@@ -242,7 +291,7 @@ class MyArticles extends Component {
                         <TableTitle>Name</TableTitle>
                       </th>
                       <th>
-                        <TableTitle>Title</TableTitle>
+                        <TableTitle>Authors</TableTitle>
                       </th>
                       <th>
                         <TableTitle>Last changed</TableTitle>
@@ -262,10 +311,20 @@ class MyArticles extends Component {
                             {renderField(draft.document, 'title')}
                           </MyLink>
                         </td>
-                        <td>{draft._id}</td>
+                        <td>{draft.document.authors}</td>
                         <td>{renderTimestamp(draft.timestamp)}</td>
                         <td>
-                          <Icon icon={'delete'} width={20} height={20} />
+                          <Icon
+                            icon={'delete'}
+                            width={20}
+                            height={20}
+                            onClick={() => {
+                              this.setState({
+                                showDeleteModal: true,
+                                draftToDelete: draft._id
+                              });
+                            }}
+                          />
                         </td>
                       </Tr>
                     ))}
