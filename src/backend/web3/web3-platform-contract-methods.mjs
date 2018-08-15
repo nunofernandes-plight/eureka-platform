@@ -60,6 +60,27 @@ export const removeEditorFromSubmissionProcess = (contract, _submissionId, _from
     });
 };
 
+export const changeEditorFromSubmissionProcess = (contract, _submissionId, _newEditor, _from) => {
+  return contract.methods
+    .changeEditorFromSubmissionProcess(_submissionId, _newEditor)
+    .send({
+      from: _from
+    })
+    .then(receipt => {
+      console.log(
+        'Changing Editor on the Submission Process with ID ' +
+        _submissionId +
+        ' to ' + _newEditor +
+        ' exited with the TX status: ' +
+        receipt.status
+      );
+      return receipt;
+    })
+    .catch(err => {
+      console.error(err);
+    });
+};
+
 export const setSanityToOk = (contract, _articleHash, _from) => {
   return contract.methods
     .sanityIsOk(_articleHash)
@@ -120,18 +141,17 @@ export const inviteReviewersForArticle = (contract, _articleHash, _editorApprove
     });
 };
 
-export const changeEditorFromSubmissionProcess = (contract, _submissionId, _newEditor, _from) => {
+export const acceptReviewerInvitation = (contract, _articleHash, _from) => {
   return contract.methods
-    .changeEditorFromSubmissionProcess(_submissionId, _newEditor)
+    .acceptReviewInvitation(_articleHash)
     .send({
       from: _from
     })
     .then(receipt => {
       console.log(
-        'Changing Editor on the Submission Process with ID ' +
-        _submissionId +
-        ' to ' + _newEditor +
-        ' exited with the TX status: ' +
+        'Acception for ReviewInvitation on article ' +
+        _articleHash +
+        ' is sent out with the TX status: ' +
         receipt.status
       );
       return receipt;
@@ -140,6 +160,7 @@ export const changeEditorFromSubmissionProcess = (contract, _submissionId, _newE
       console.error(err);
     });
 };
+
 /*
   Getters
  */

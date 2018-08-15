@@ -22,7 +22,8 @@ import {
   changeEditorFromSubmissionProcess,
   setSanityToOk,
   setSanityIsNotOk,
-  inviteReviewersForArticle
+  inviteReviewersForArticle,
+  acceptReviewerInvitation
 } from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import {sleepSync} from '../helpers.js';
 import {getAuthors} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
@@ -253,7 +254,7 @@ async function cleanDB() {
 //   t.is(articleSubmission2.articleVersions[0].articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
 // });
 
-test(PRETEXT + 'Invite reviewers for review article', async t => {
+test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
   // create author and editor
   let testAccounts = await getAccounts();
   let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
@@ -262,6 +263,7 @@ test(PRETEXT + 'Invite reviewers for review article', async t => {
   let reviewer1 = await userService.createUser('testReviewer1', 'reviewer1@test.test', testAccounts[5], 'test-reviewer-avatar');
   let reviewer2 = await userService.createUser('testReviewer2', 'reviewer2@test.test', testAccounts[6], 'test-reviewer-avatar');
 
+  /** Sign-up and submission **/
   // signup editor and submit article 1
   await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
   await submitArticle(
@@ -284,8 +286,8 @@ test(PRETEXT + 'Invite reviewers for review article', async t => {
   const articleHash = articleSubmission.articleVersions[0].articleHash;
   await setSanityToOk(eurekaPlatformContract, articleHash, editor.ethereumAddress);
 
-
-  // check status before invitation of reviewers
+  /** Invite Rerviewers **/
+  // Status befor Invitation
   articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
   t.is(articleSubmission.articleVersions[0].articleVersionState, ArticleVersionState.EDITOR_CHECKED);
   t.is(articleSubmission.articleVersions[0].reviews.length, 0);
@@ -293,7 +295,7 @@ test(PRETEXT + 'Invite reviewers for review article', async t => {
   await inviteReviewersForArticle(eurekaPlatformContract, articleHash,
     [reviewer1.ethereumAddress, reviewer2.ethereumAddress], editor.ethereumAddress);
 
-  // check status after invitation of reviewers
+  // Status after invitation
   articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
   let dbReviewer1 = await userService.getUserByEthereumAddress(reviewer1.ethereumAddress);
   let dbReviewer2 = await userService.getUserByEthereumAddress(reviewer2.ethereumAddress);
@@ -316,4 +318,8 @@ test(PRETEXT + 'Invite reviewers for review article', async t => {
   t.is(articleSubmission.articleVersions[0].reviews.length, 2);
   t.is(dbReviewer1.reviewerInvitation.length, 1);
   t.is(dbReviewer2.reviewerInvitation.length, 1);
+
+  /** Acception of Invitation **/
+  await acceptReviewerInvitation(eurekaPlatformContract, articleHash, reviewer1);
 });
+
