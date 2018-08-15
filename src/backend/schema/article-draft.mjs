@@ -9,7 +9,11 @@ export const articleDraftSchema = mongoose.Schema(
       type: String,
       required: true
     },
-    document: {}
+    document: {},
+    timestamp: {
+      type: Date,
+      default: Date.now
+    }
   },
   {collection: 'articleDraft'}
 );

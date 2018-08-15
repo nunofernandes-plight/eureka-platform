@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import {articleSubmissionSchema} from './article-submission.mjs';
+import {reviewSchema} from './review.mjs';
 import Roles from './roles-enum.mjs';
 
 /**
@@ -36,6 +37,9 @@ const userSchema = mongoose.Schema(
         type: String,
         enum: Object.values(Roles)
       }
+    ],
+    reviewerInvitation: [
+      reviewSchema
     ],
     articleSubmissions: [articleSubmissionSchema]
   },

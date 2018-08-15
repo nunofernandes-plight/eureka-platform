@@ -42,6 +42,7 @@ export default {
       draftInfo._id = draft._id;
       draftInfo.document.title = draft.document.title;
       draftInfo.document.authors = draft.document.authors;
+      draftInfo.timestamp = draft.timestamp;
       draftInfos.push(draftInfo);
     });
     return draftInfos;
@@ -93,8 +94,24 @@ export default {
     for (let property in document) {
       if (document.hasOwnProperty(property)) {
         draft.document[property] = document[property];
+        draft.timestamp = Date.now;
       }
     }
     return await ArticleDraft.findByIdAndUpdate(draftId, draft);
+  },
+
+  deleteDraftById: async (userAddress, draftId) => {
+    let draft = await ArticleDraft.findById(draftId);
+    if (!draft) {
+      errorThrower.noEntryFoundById(draftId);
+    }
+    if (draft.ownerAddress !== userAddress) {
+      errorThrower.notCorrectEthereumAddress();
+    }
+
+    await ArticleDraft.findByIdAndDelete(draftId);
+    return 'Article Draft with ID ' +
+      draftId +
+      ' has been deleted';
   }
 };

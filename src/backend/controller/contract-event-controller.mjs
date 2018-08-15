@@ -108,22 +108,41 @@ export default {
           ArticleVersionState.REVIEWERS_INVITED
         );
 
-        await createReviews(approvedReviewers, submissionId, articleHash, timestamp);
+        const reviews = await createReviews(approvedReviewers, submissionId, articleHash, timestamp);
+        reviews.forEach(review => {
+          userService.addReviewInvitation(review.reviewerAddress, review);
+        });
+      }
+    );
 
-        //TODO write in user --> they are invited for become reviewer
-        //TODO createReviews
+    /** Acception of Reviewer Invitation**/
+    EurekaPlatformContract.events.InvitationIsAccepted(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+
+        console.log('INVITATION ACCEPTED on' +
+          event.returnValues.articleHash +
+          ' by ' +
+          event.returnValues.reviewerAddress
+        );
       }
     );
   }
 };
 
 async function createReviews(approvedReviewers, submissionId, articleHash, timestamp) {
-  approvedReviewers.forEach(async (approvedReviewer) => {
-    await createReview(approvedReviewer, submissionId, articleHash, timestamp);
-  });
+  let reviews = [];
+
+  for (const approvedReviewer of approvedReviewers) {
+    const review = await createReview(approvedReviewer, submissionId, articleHash, timestamp);
+    reviews.push(review);
+  }
+  return reviews;
 }
 
 async function createReview(reviewerAddress, submissionId, articleHash, timestamp) {
   let review = await reviewService.createReviewAndReturn(submissionId, articleHash, timestamp, reviewerAddress);
-  return await articleSubmissionService.pushReviewIntoArticleVersion(submissionId, articleHash, review);
+  await articleSubmissionService.pushReviewIntoArticleVersion(submissionId, articleHash, review);
+  return review;
 }

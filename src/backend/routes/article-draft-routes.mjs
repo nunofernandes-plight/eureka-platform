@@ -1,6 +1,6 @@
 import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
-import accesController from '../helpers/acess-controller.mjs';
+import accesController from '../controller/acess-controller.mjs';
 import articleDraftService from '../db/article-draft-service.mjs';
 import Roles from '../schema/roles-enum.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.use(accesController.loggedInOnly);
 /**
- * Get all drafts belonging to the user
+ * Get some infos about all the drafts belonging to the user
  */
 router.get(
   '/',
@@ -54,6 +54,9 @@ router.get(
   })
 );
 
+/**
+ * Updates the whole document of a draft by replacing it with the provided document
+ */
 // router.put(
 //   '/:draftId',
 //   asyncHandler(async req => {
@@ -71,6 +74,9 @@ router.get(
 //   })
 // );
 
+/**
+ * Updates the document of a draft with set all the variables provided
+ */
 router.put(
   '/:draftId',
   asyncHandler(async req => {
@@ -88,6 +94,23 @@ router.put(
     return 'Document with ID ' + draftId + ' updated';
   })
 );
+
+router.delete(
+  '/:draftId',
+  asyncHandler(async req => {
+    const draftId = req.params.draftId;
+    if (!req.params.draftId) {
+      errorThrower.missingParameter('draftId');
+    }
+
+    const ethereumAddress = req.session.passport.user.ethereumAddress;
+    if (!ethereumAddress) {
+      errorThrower.notLoggedIn();
+    }
+
+    return await articleDraftService.deleteDraftById(ethereumAddress, draftId);
+  })
+)
 
 
 
