@@ -39,7 +39,7 @@ const EditorCard = styled.div`
   background-color: #ffffff;
   background-clip: border-box;
   min-height: 420px;
-  width: 1180px;
+  width: 1070px;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
   margin-top: -130px !important;
   padding: 40px 80px;
@@ -78,24 +78,40 @@ class DocumentEditor extends Component {
       loading: false,
       document: null
     };
+    //
+    // this.onChange = editorState => {
+    //   const field = editorState.getCurrentContent();
+    //   const raw = convertToRaw(field);
+    //
+    //   // console.log(raw.blocks[0].text);
+    //   // let html = stateToHTML(title);
+    //   // console.log(html);
+    //   this.setState({editorState});
+    // };
 
-    this.onChange = editorState => {
-      const field = editorState.getCurrentContent();
-      const raw = convertToRaw(field);
-
-      // console.log(raw.blocks[0].text);
-      // let html = stateToHTML(title);
-      // console.log(html);
-      this.setState({editorState});
+    this.onTitleChange = title => {
+      this.updateDocument({
+        document: {
+          ...this.state.document,
+          title
+        }
+      });
     };
   }
 
-  updateDocument() {
-    const newDocument = {
-      ...this.state.document
-    };
+  updateDocument({
+    document,
+    otherStatesToSet = {},
+    modifications = true,
+    citationsToRemove = []
+  }) {
+    // const newDocument = {
+    //   ...this.state.document
+    // };
+
     this.setState({
-      document: newDocument
+      document,
+      ...otherStatesToSet
     });
   }
 
@@ -148,7 +164,7 @@ class DocumentEditor extends Component {
         <Editor
           plugins={[singleLinePlugin]}
           editorState={this.state.document.title}
-          onChange={this.onChange}
+          onChange={this.onTitleChange}
           blockStyleFn={titleStyle}
           blockRenderMap={singleLinePlugin.blockRenderMap}
           placeholder="Please enter your title..."
