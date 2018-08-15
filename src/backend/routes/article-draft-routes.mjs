@@ -84,7 +84,8 @@ router.put(
       errorThrower.notLoggedIn();
     }
 
-    return await articleDraftService.updateDraftVarsById(ethereumAddress, draftId, req.body.document);
+    await articleDraftService.updateDraftVarsById(ethereumAddress, draftId, req.body.document);
+    return 'Document with ID ' + draftId + ' updated';
   })
 );
 
