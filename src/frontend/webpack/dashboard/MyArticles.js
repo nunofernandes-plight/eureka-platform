@@ -253,7 +253,7 @@ class MyArticles extends Component {
           {this.state.errorMessage}
         </Modal>
         <Modal
-          action
+          action={'DELETE'}
           type={'notification'}
           callback={() => {
             this.setState({showDeleteModal: false});

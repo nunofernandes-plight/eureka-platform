@@ -101,8 +101,26 @@ const Content = styled.p`
   text-align: center;
 `;
 
-const ActionButton = styled.button`
+const ActionButton = styled.div`
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+  }
+  cursor: pointer;
   margin: 0 0 0 auto;
+  color: #212529;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  font-weight: 600;
+  line-height: 1.5;
+  display: inline-block;
+  padding: 0.625rem 1.25rem;
+  transition: 0.5s all; 
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
 `;
 
 class Modal extends Component {
@@ -144,7 +162,7 @@ class Modal extends Component {
                 <CloseButton onClick={() => this.toggle()}>CLOSE</CloseButton>
                 {this.props.action ? (
                   <ActionButton onClick={() => this.props.callback()}>
-                    Continue
+                    {this.props.action}
                   </ActionButton>
                 ) : null}
               </MyModalFooter>
