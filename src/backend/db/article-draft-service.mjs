@@ -30,7 +30,7 @@ export default {
     let drafts = await ArticleDraft.find({
       ownerAddress: userAddress
     });
-    if(!drafts) {
+    if (!drafts) {
       errorThrower.noEntryFoundById('ethereumAddress');
     }
     return drafts;
@@ -47,6 +47,13 @@ export default {
     return draft;
   },
 
+  /**
+   * Update the doc by replacing the whole document with a new one
+   * @param userAddress
+   * @param draftId
+   * @param document
+   * @returns {Promise<*>}
+   */
   updateDraftById: async (userAddress, draftId, document) => {
     let draft = await ArticleDraft.findById(draftId);
     if (!draft) {
@@ -58,5 +65,25 @@ export default {
 
     draft.document = document;
     return await draft.save();
+  },
+
+  /**
+   * Update the doc by changing only the vars provided by request
+   */
+  updateDraftVarsById: async (userAddress, draftId, document) => {
+    let draft = await ArticleDraft.findById(draftId);
+    if (!draft) {
+      errorThrower.noEntryFoundById(draftId);
+    }
+    if (draft.ownerAddress !== userAddress) {
+      errorThrower.notCorrectEthereumAddress();
+    }
+
+    for (let property in document) {
+      if (document.hasOwnProperty(property)) {
+        draft.document[property] = document[property];
+      }
+    }
+    return await ArticleDraft.findByIdAndUpdate(draftId, draft);
   }
 };

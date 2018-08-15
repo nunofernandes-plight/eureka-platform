@@ -38,5 +38,10 @@ export default {
     error.status = 400;
     throw error;
 
+  },
+  internalError: (message) => {
+    let error = new Error(message);
+    error.status = 500;
+    throw error;
   }
 }

@@ -54,6 +54,23 @@ router.get(
   })
 );
 
+// router.put(
+//   '/:draftId',
+//   asyncHandler(async req => {
+//     const draftId = req.params.draftId;
+//     if (!req.params.draftId) {
+//       errorThrower.missingParameter('draftId');
+//     }
+//
+//     const ethereumAddress = req.session.passport.user.ethereumAddress;
+//     if (!ethereumAddress) {
+//       errorThrower.notLoggedIn();
+//     }
+//
+//     return await articleDraftService.updateDraftById(ethereumAddress, draftId, req.body.document);
+//   })
+// );
+
 router.put(
   '/:draftId',
   asyncHandler(async req => {
@@ -67,9 +84,11 @@ router.put(
       errorThrower.notLoggedIn();
     }
 
-    return await articleDraftService.updateDraftById(ethereumAddress, draftId, req.body.document);
+    return await articleDraftService.updateDraftVarsById(ethereumAddress, draftId, req.body.document);
   })
 );
+
+
 
 
 /** ADMIN AREA **/
