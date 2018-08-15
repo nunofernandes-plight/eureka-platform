@@ -18,6 +18,19 @@ export async function cleanDB() {
   await Author.remove({});
 }
 
+/**
+ * Used for sleeping befor e.g. testing
+ * @param milliseconds
+ */
+export function sleepSync(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds) {
+      break;
+    }
+  }
+}
+
 test('foo', t => {
   t.pass();
 });

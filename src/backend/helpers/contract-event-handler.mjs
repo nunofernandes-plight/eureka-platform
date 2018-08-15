@@ -96,26 +96,17 @@ export default {
       undefined,
       async (error, event) => {
         if (error) throw error;
-        //TODO write in article-version --> reviewers
+
         const approvedReviewers = event.returnValues.editorApprovedReviewers;
         const submissionId = event.returnValues.submissionId;
         const articleHash = event.returnValues.articleHash;
         const timestamp = event.returnValues.stateTimestamp;
 
-        // create reviews in ArticleVersion
-        // for (let i = 0; i < approvedReviewers.length; i++) {
-        //   console.log('APPROVED REVIEWER: ' + approvedReviewers[i]);
-        //   let review = await reviewService.createReviewAndReturn(submissionId, articleHash, timestamp);
-        //   articleSubmissionService.pushReviewIntoArticleVersion(submissionId, articleHash, review);
-        //   //console.log(review);
-        // }
         await articleSubmissionService.changeArticleVersionState(
           event.returnValues.submissionId,
           event.returnValues.articleHash,
           ArticleVersionState.REVIEWERS_INVITED
         );
-
-
 
         await createReviews(approvedReviewers, submissionId, articleHash, timestamp);
 
@@ -133,7 +124,6 @@ async function createReviews(approvedReviewers, submissionId, articleHash, times
 }
 
 async function createReview(reviewerAddress, submissionId, articleHash, timestamp) {
-  console.log('AAADDDRESSS: ' +reviewerAddress);
   let review = await reviewService.createReviewAndReturn(submissionId, articleHash, timestamp, reviewerAddress);
   return await articleSubmissionService.pushReviewIntoArticleVersion(submissionId, articleHash, review);
 }
