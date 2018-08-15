@@ -100,7 +100,7 @@ const IContainer = styled.div`
 const DraftsContainer = styled.div`
   font-size: 14px;
   width: 100%;
-  padding: 2em;
+  padding: 10px 25px;
 `;
 
 const Drafts = styled.table`
