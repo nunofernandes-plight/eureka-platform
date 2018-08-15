@@ -19,7 +19,8 @@ router.get(
       errorThrower.notLoggedIn();
     }
     return await articleDraftService.getDraftsOfUser(ethereumAddress);
-  }));
+  })
+);
 /**
  * Create a new article draft
  */
@@ -53,6 +54,25 @@ router.get(
   })
 );
 
+router.put(
+  '/:draftId',
+  asyncHandler(async req => {
+    const draftId = req.params.draftId;
+    if (!req.params.draftId) {
+      errorThrower.missingParameter('draftId');
+    }
+
+    const ethereumAddress = req.session.passport.user.ethereumAddress;
+    if (!ethereumAddress) {
+      errorThrower.notLoggedIn();
+    }
+
+    return await articleDraftService.updateDraftById(ethereumAddress, draftId, req.body.document);
+  })
+);
+
+
+/** ADMIN AREA **/
 router.use(accesController.rolesOnly(Roles.ADMIN));
 router.get(
   '/',

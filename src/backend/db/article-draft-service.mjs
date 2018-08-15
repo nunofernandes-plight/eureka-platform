@@ -45,5 +45,18 @@ export default {
       errorThrower.notCorrectEthereumAddress();
     }
     return draft;
+  },
+
+  updateDraftById: async (userAddress, draftId, document) => {
+    let draft = await ArticleDraft.findById(draftId);
+    if (!draft) {
+      errorThrower.noEntryFoundById(draftId);
+    }
+    if (draft.ownerAddress !== userAddress) {
+      errorThrower.notCorrectEthereumAddress();
+    }
+
+    draft.document = document;
+    return await draft.save();
   }
 };
