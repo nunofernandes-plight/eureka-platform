@@ -109,10 +109,9 @@ export default {
         );
 
         const reviews = await createReviews(approvedReviewers, submissionId, articleHash, timestamp);
-
-
-        //TODO write in user --> they are invited for become reviewer
-        //TODO createReviews
+        reviews.forEach(review => {
+          userService.addReviewInvitation(review.reviewerAddress, review);
+        });
       }
     );
   }
@@ -120,10 +119,11 @@ export default {
 
 async function createReviews(approvedReviewers, submissionId, articleHash, timestamp) {
   let reviews = [];
-  approvedReviewers.forEach(async (approvedReviewer) => {
+
+  for (const approvedReviewer of approvedReviewers) {
     const review = await createReview(approvedReviewer, submissionId, articleHash, timestamp);
     reviews.push(review);
-  });
+  }
   return reviews;
 }
 

@@ -295,14 +295,25 @@ test(PRETEXT + 'Invite reviewers for review article', async t => {
 
   // check status after invitation of reviewers
   articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+  let dbReviewer1 = await userService.getUserByEthereumAddress(reviewer1.ethereumAddress);
+  let dbReviewer2 = await userService.getUserByEthereumAddress(reviewer2.ethereumAddress);
   t.is(articleSubmission.articleVersions[0].articleVersionState, ArticleVersionState.REVIEWERS_INVITED);
   let counter = 0;
   //try 5 times to call DB as it can take some time to write all into DB
-  while (articleSubmission.articleVersions[0].reviews.length < 2 && counter < 5) {
+  while (
+    (articleSubmission.articleVersions[0].reviews.length < 2 ||
+      dbReviewer1.reviewerInvitation.length < 1 ||
+      dbReviewer2.reviewerInvitation.length < 1)
+    &&
+    counter < 5) {
     sleepSync(5000);
     articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
-    console.log('Looper for the ' + (counter+1) + ' time');
+    dbReviewer1 = await userService.getUserByEthereumAddress(reviewer1.ethereumAddress);
+    dbReviewer2 = await userService.getUserByEthereumAddress(reviewer2.ethereumAddress);
+    console.log('Looper for the ' + (counter + 1) + ' time');
     counter++;
   }
   t.is(articleSubmission.articleVersions[0].reviews.length, 2);
+  t.is(dbReviewer1.reviewerInvitation.length, 1);
+  t.is(dbReviewer2.reviewerInvitation.length, 1);
 });

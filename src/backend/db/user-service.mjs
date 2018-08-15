@@ -171,13 +171,14 @@ export default {
    * @returns {Promise<void>}
    */
   addReviewInvitation: async (ethereumAddress, review) => {
-    let user = await User.find({ethereumAddress: ethereumAddress});
+    let user = await User.findOne({ethereumAddress: ethereumAddress});
     if (!user) errorThrower.noEntryFoundById(ethereumAddress);
 
     user.reviewerInvitation.push(review);
-    User.findOneAndUpdate(
+    await User.findOneAndUpdate(
       {ethereumAddress: ethereumAddress},
       user
     );
+    return 'ReviewerInvitation for Review ' + review._id + ' is added to User ' + ethereumAddress;
   }
 };
