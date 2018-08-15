@@ -110,7 +110,7 @@ router.delete(
 
     return await articleDraftService.deleteDraftById(ethereumAddress, draftId);
   })
-)
+);
 
 
 

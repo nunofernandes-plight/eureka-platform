@@ -121,6 +121,9 @@ export default {
       async (error, event) => {
         if (error) throw error;
 
+        // TODO: update review state to invitation_accepted & stateTimestamp
+        // TODO update submission/article-version/
+        // TODO
         console.log('INVITATION ACCEPTED on' +
           event.returnValues.articleHash +
           ' by ' +
