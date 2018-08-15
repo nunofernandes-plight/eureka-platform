@@ -88,16 +88,16 @@ class DocumentEditor extends Component {
     //   // console.log(html);
     //   this.setState({editorState});
     // };
-
-    this.onTitleChange = title => {
-      this.updateDocument({
-        document: {
-          ...this.state.document,
-          title
-        }
-      });
-    };
   }
+
+  onTitleChange = title => {
+    this.updateDocument({
+      document: {
+        ...this.state.document,
+        title
+      }
+    });
+  };
 
   updateDocument({
     document,
@@ -105,10 +105,6 @@ class DocumentEditor extends Component {
     modifications = true,
     citationsToRemove = []
   }) {
-    // const newDocument = {
-    //   ...this.state.document
-    // };
-
     this.setState({
       document,
       ...otherStatesToSet
@@ -164,7 +160,7 @@ class DocumentEditor extends Component {
         <Editor
           plugins={[singleLinePlugin]}
           editorState={this.state.document.title}
-          onChange={this.onTitleChange}
+          onChange={this.onTitleChange.bind(this)}
           blockStyleFn={titleStyle}
           blockRenderMap={singleLinePlugin.blockRenderMap}
           placeholder="Please enter your title..."
