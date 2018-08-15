@@ -92,7 +92,7 @@ class Router extends Component {
                   <div>
                     <DashBoardGuard isAuthenticated={this.state.isAuthenticated}>
                       <PanelLeft base={'/app'} />
-                      <div style={{paddingLeft: 270}}>
+                      <div style={{paddingLeft: 180}}>
                         <DashboardRouter
                           base={'/app'}
                           user={this.state.user}

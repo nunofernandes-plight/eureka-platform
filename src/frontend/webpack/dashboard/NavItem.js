@@ -15,7 +15,7 @@ const Nav = styled.div`
     cursor: pointer;
   }
 
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 500;
   padding: 0.75rem;
   transition: all 0.15s ease;
@@ -37,7 +37,7 @@ const SeparatorDiv = styled.div`
 
 const SeparatorText = styled.div`
   color: ${__GRAY_500}
-  font-size: 18px;
+  font-size: 16px;
   text-transform: uppercase !important;
   font-weight: bold;
   margin: 0 10px;

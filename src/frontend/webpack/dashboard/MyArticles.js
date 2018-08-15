@@ -100,7 +100,7 @@ const IContainer = styled.div`
 const DraftsContainer = styled.div`
   font-size: 14px;
   width: 100%;
-  padding: 2em;
+  padding: 10px 25px;
 `;
 
 const Drafts = styled.table`
@@ -263,8 +263,7 @@ class MyArticles extends Component {
                           </MyLink>
                         </td>
                         <td>{draft._id}</td>
-
-                        <td>{draft.timestamp}</td>
+                        <td>{renderTimestamp(draft.timestamp)}</td>
                         <td>
                           <Icon icon={'delete'} width={20} height={20} />
                         </td>

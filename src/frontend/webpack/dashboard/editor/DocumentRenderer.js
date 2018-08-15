@@ -18,9 +18,17 @@ export const renderField = (document, field) => {
 };
 
 const renderTitle = (deserialized, field) => {
+  const maxLenght = 30;
   // TODO: change the render with EditorState --> at the moment deserialize makes no sense
   const content = deserialized[field].getCurrentContent();
   const raw = convertToRaw(content);
   const firstBlock = raw.blocks[0];
-  return firstBlock.text.length > 0 ? firstBlock.text : 'Untitled document';
+
+  if (firstBlock.text.length === 0) {
+    return 'Untitled document';
+  }
+
+  return firstBlock.text.length > maxLenght
+    ? firstBlock.text.substring(0, maxLenght - 1) + ' ...'
+    : firstBlock.text;
 };
