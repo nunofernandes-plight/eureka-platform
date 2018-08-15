@@ -327,6 +327,7 @@ contract EurekaPlatform {
         emit ReviewersAreInvited(articleVersions[_articleHash].submissionId, _articleHash, _allowedEditorApprovedReviewers, block.timestamp);
     }
 
+    event InvitationIsAccepted(bytes32 articleHash, address reviewerAddress);
     function acceptReviewInvitation(bytes32 _articleHash) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
@@ -344,7 +345,9 @@ contract EurekaPlatform {
         review.reviewer = msg.sender;
 
         article.editorApprovedReviews.push(review);
+        emit InvitationIsAccepted(_articleHash, msg.sender);
     }
+
 
     function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
