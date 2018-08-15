@@ -14,7 +14,9 @@ import 'draft-js/dist/Draft.css';
 import TitleWithHelper from './editor/TitleWithHelper.js';
 import Select from 'react-select';
 import Document from '../../../models/Document.mjs';
-import {deserializeDocument} from '../../../helpers/documentSerializer.mjs';
+import {deserializeDocument, serializeSavePatch} from '../../../helpers/documentSerializer.mjs';
+import getChangedFields from '../../../helpers/compareDocuments.js';
+import {pick} from 'underscore';
 
 const titleStyle = () => 'title';
 
@@ -103,11 +105,11 @@ class DocumentEditor extends Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          // this.setState({document: response.data.document});
           let document = new Document(response.data.document);
           let deserialized = deserializeDocument(document);
           this.setState({
-            document: deserialized
+            document: deserialized,
+            lastSavedVersion: deserialized
           });
         } else {
           this.setState({
@@ -144,6 +146,55 @@ class DocumentEditor extends Component {
       document,
       ...otherStatesToSet
     });
+  }
+
+  getModifiedFields() {
+    if (!this.state.lastSavedVersion) {
+      return [];
+    }
+    return getChangedFields(this.state.lastSavedVersion, this.state.document);
+  }
+
+  save() {
+    const changedFields = this.getModifiedFields();
+    const toSave = new Document(this.state.document);
+    const patch = pick(toSave, ...changedFields);
+    const draftId = this.props.match.params.id;
+
+    fetch(`${getDomain()}/api/articles/drafts/${draftId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        document: serializeSavePatch(patch)
+      })
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          // this.setState({document: response.data.document});
+          // // let document = new Document(response.data.document);
+          // // let deserialized = deserializeDocument(document);
+          // this.setState({
+          //   document: deserialized
+          // });
+          console.log(response);
+        } else {
+          this.setState({
+            errorMessage: response.error
+          });
+        }
+        this.setState({loading: false});
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.',
+          loading: false
+        });
+      });
   }
 
   renderTitle() {
@@ -230,6 +281,7 @@ class DocumentEditor extends Component {
                   <Line>{this.renderMainDiscipline()}</Line>
                 </EditorContent>
                 <ButtonContainer>
+                  <Button onClick={() => this.save()}>Save</Button>
                   <Button>Submit Article</Button>
                 </ButtonContainer>
               </EditorCard>
