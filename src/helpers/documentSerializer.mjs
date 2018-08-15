@@ -1,6 +1,7 @@
 import draftjs from 'draft-js';
 import lodash from 'lodash';
 import Document from '../models/Document.mjs';
+
 const convertToRaw = draftjs.convertToRaw;
 const EditorState = draftjs.EditorState;
 const convertFromRaw = draftjs.convertFromRaw;
@@ -12,10 +13,7 @@ export const serializeDocument = document => {
   const mapped = fields.map(field => {
     return convertFieldToJS(field, document[field]);
   });
-  const documentSerialized = Object.assign({}, document, {
-    ...zipObject(fields, mapped)
-  });
-  return documentSerialized;
+  return Object.assign({}, document, zipObject(fields, mapped));
 };
 
 const fieldIsRaw = field => {
@@ -75,8 +73,6 @@ export const deserializeDocument = document => {
     }
     return convertJSToField(field, document[field]);
   });
-  const documentDeserialized = Object.assign({}, document, {
-    ...zipObject(fields, mapped)
-  });
+  const documentDeserialized = Object.assign({}, document, zipObject(fields, mapped));
   return new Document(documentDeserialized);
 };

@@ -100,6 +100,26 @@ export const setSanityIsNotOk = (contract, _articleHash, _from) => {
     });
 };
 
+export const inviteReviewersForArticle = (contract, _articleHash, _editorApprovedReviewers, _from) => {
+  return contract.methods
+    .inviteReviewers(_articleHash, _editorApprovedReviewers)
+    .send({
+      from: _from
+    })
+    .then(receipt => {
+      console.log(
+        'Invitation for Reviewers on' +
+        _articleHash +
+        ' is sent out with the TX status: ' +
+        receipt.status
+      );
+      return receipt;
+    })
+    .catch(err => {
+      console.error(err);
+    });
+};
+
 export const changeEditorFromSubmissionProcess = (contract, _submissionId, _newEditor, _from) => {
   return contract.methods
     .changeEditorFromSubmissionProcess(_submissionId, _newEditor)

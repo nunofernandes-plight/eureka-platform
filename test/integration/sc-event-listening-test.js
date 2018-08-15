@@ -21,7 +21,8 @@ import {
   removeEditorFromSubmissionProcess,
   changeEditorFromSubmissionProcess,
   setSanityToOk,
-  setSanityIsNotOk
+  setSanityIsNotOk,
+  inviteReviewersForArticle
 } from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import {getAuthors} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import web3 from 'web3';
@@ -198,14 +199,69 @@ async function cleanDB() {
 //   articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
 //   t.is(articleSubmission.editor, undefined);
 // });
+//
+// test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
+//   // create author and editor
+//   let testAccounts = await getAccounts();
+//   let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
+//   let editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[4], 'test-editor-avatar');
+//
+//   // signup editor and submit article 1 & 2
+//   await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
+//   await submitArticle(
+//     eurekaTokenContract,
+//     author.ethereumAddress,
+//     eurekaPlatformContract.options.address,
+//     5000,
+//     ARTICLE1_DATA_IN_HEX
+//   );
+//   await submitArticle(
+//     eurekaTokenContract,
+//     author.ethereumAddress,
+//     eurekaPlatformContract.options.address,
+//     5000,
+//     ARTICLE2_DATA_IN_HEX
+//   );
+//
+//   let articleSubmissions = await articleSubmissionService.getAllSubmissions();
+//   t.is(articleSubmissions.length, 2);
+//
+//   //TODO try sanity check without being assign first --> expected behavior: must fail
+//
+//   // assign editor for the submission process of article 1 & 2
+//   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[0]._id, editor.ethereumAddress);
+//   let articleSubmission1 = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+//   t.is(articleSubmission1.editor, editor.ethereumAddress);
+//
+//   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[1]._id, editor.ethereumAddress);
+//   let articleSubmission2 = await articleSubmissionService.getSubmissionById(articleSubmissions[1]._id);
+//   t.is(articleSubmission2.editor, editor.ethereumAddress);
+//
+//   //Accept sanity check for article 1
+//   t.is(articleSubmission1.articleVersions[0].articleVersionState, ArticleVersionState.SUBMITTED);
+//   const articleHash1 = articleSubmission1.articleVersions[0].articleHash;
+//   await setSanityToOk(eurekaPlatformContract, articleHash1, editor.ethereumAddress);
+//   articleSubmission1 = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+//   t.is(articleSubmission1.articleVersions[0].articleVersionState, ArticleVersionState.EDITOR_CHECKED);
+//
+//   // Decline sanity check for article 2
+//   t.is(articleSubmission2.articleVersions[0].articleVersionState, ArticleVersionState.SUBMITTED);
+//   const articleHash2 = articleSubmission2.articleVersions[0].articleHash;
+//   await setSanityIsNotOk(eurekaPlatformContract, articleHash2, editor.ethereumAddress);
+//   articleSubmission2 = await articleSubmissionService.getSubmissionById(articleSubmissions[1]._id);
+//   t.is(articleSubmission2.articleVersions[0].articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
+// });
 
-test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
+test(PRETEXT + 'Invite reviewers for review article', async t => {
   // create author and editor
   let testAccounts = await getAccounts();
   let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
   let editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[4], 'test-editor-avatar');
 
-  // signup editor and submit article 1 & 2
+  let reviewer1 = await userService.createUser('testReviewer1', 'reviewer1@test.test', testAccounts[5], 'test-reviewer-avatar');
+  let reviewer2 = await userService.createUser('testReviewer2', 'reviewer2@test.test', testAccounts[6], 'test-reviewer-avatar');
+
+  // signup editor and submit article 1
   await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
   await submitArticle(
     eurekaTokenContract,
@@ -214,40 +270,53 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
     5000,
     ARTICLE1_DATA_IN_HEX
   );
-  await submitArticle(
-    eurekaTokenContract,
-    author.ethereumAddress,
-    eurekaPlatformContract.options.address,
-    5000,
-    ARTICLE2_DATA_IN_HEX
-  );
 
   let articleSubmissions = await articleSubmissionService.getAllSubmissions();
-  t.is(articleSubmissions.length, 2);
-
-  //TODO try sanity check without being assign first --> expected behavior: must fail
+  t.is(articleSubmissions.length, 1);
 
   // assign editor for the submission process of article 1 & 2
   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[0]._id, editor.ethereumAddress);
-  let articleSubmission1 = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
-  t.is(articleSubmission1.editor, editor.ethereumAddress);
+  let articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+  t.is(articleSubmission.editor, editor.ethereumAddress);
 
-  await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[1]._id, editor.ethereumAddress);
-  let articleSubmission2 = await articleSubmissionService.getSubmissionById(articleSubmissions[1]._id);
-  t.is(articleSubmission2.editor, editor.ethereumAddress);
+  // Accept sanity check for article 1
+  const articleHash = articleSubmission.articleVersions[0].articleHash;
+  await setSanityToOk(eurekaPlatformContract, articleHash, editor.ethereumAddress);
 
-  //Accept sanity check for article 1
-  t.is(articleSubmission1.articleVersions[0].articleVersionState, ArticleVersionState.SUBMITTED);
-  const articleHash1 = articleSubmission1.articleVersions[0].articleHash;
-  await setSanityToOk(eurekaPlatformContract, articleHash1, editor.ethereumAddress);
-  articleSubmission1 = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
-  t.is(articleSubmission1.articleVersions[0].articleVersionState, ArticleVersionState.EDITOR_CHECKED);
 
-  // Decline sanity check for article 2
-  t.is(articleSubmission2.articleVersions[0].articleVersionState, ArticleVersionState.SUBMITTED);
-  const articleHash2 = articleSubmission2.articleVersions[0].articleHash;
-  await setSanityIsNotOk(eurekaPlatformContract, articleHash2, editor.ethereumAddress);
-  articleSubmission2 = await articleSubmissionService.getSubmissionById(articleSubmissions[1]._id);
-  t.is(articleSubmission2.articleVersions[0].articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
+  // check status before invitation of reviewers
+  articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+  t.is(articleSubmission.articleVersions[0].articleVersionState, ArticleVersionState.EDITOR_CHECKED);
+  t.is(articleSubmission.articleVersions[0].reviews.length, 0);
+
+  await inviteReviewersForArticle(eurekaPlatformContract, articleHash,
+    [reviewer1.ethereumAddress, reviewer2.ethereumAddress], editor.ethereumAddress);
+
+  // check status after invitation of reviewers
+
+
+  articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+  t.is(articleSubmission.articleVersions[0].articleVersionState, ArticleVersionState.REVIEWERS_INVITED);
+
+  let counter = 0;
+
+  // try 5 times to call DB as it can take some time to write all into DB
+  // TODO write it more nicely, but it works
+  while (articleSubmission.articleVersions[0].reviews.length < 2 && counter < 5) {
+    sleep(5000);
+    articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+    console.log('Looper for the ' + (counter+1) + ' time');
+    counter++;
+  }
+  t.is(articleSubmission.articleVersions[0].reviews.length, 2);
 });
 
+//TODO move to helpers
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds) {
+      break;
+    }
+  }
+}

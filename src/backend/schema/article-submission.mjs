@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import {articleVersionSchema} from './article-version-state.mjs';
+import {articleVersionSchema} from './article-version.mjs';
 
 /**
  * ArticleSubmission for an article on the eureka platform
