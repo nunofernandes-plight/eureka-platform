@@ -26,6 +26,16 @@ export default {
     return dbDraft;
   },
 
+  getDraftsOfUser: async (userAddress) => {
+    let drafts = await ArticleDraft.find({
+      ownerAddress: userAddress
+    });
+    if(!drafts) {
+      errorThrower.noEntryFoundById('ethereumAddress');
+    }
+    return drafts;
+  },
+
   getDraftById: async (userAddress, draftId) => {
     let draft = await ArticleDraft.findById(draftId);
     if (!draft) {
