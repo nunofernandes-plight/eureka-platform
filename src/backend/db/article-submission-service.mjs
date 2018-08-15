@@ -105,7 +105,6 @@ export default {
   },
 
   pushReviewIntoArticleVersion: async (_submissionId, _articleHash, review) => {
-    console.log('PUSHING');
     let submission = await ArticleSubmission.findById(_submissionId);
     if (!submission) {
       errorThrower.noEntryFoundById('_submissionId');
