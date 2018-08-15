@@ -11,11 +11,14 @@ export const articleDraftSchema = mongoose.Schema(
     },
     document: {},
     timestamp: {
-      type: Date,
+      type: Number,
       default: Date.now
     }
   },
-  {collection: 'articleDraft'}
+  {
+    collection: 'articleDraft',
+    timestamps: true
+  }
 );
 
 const ArticleDraft = mongoose.model(

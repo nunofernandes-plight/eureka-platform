@@ -56,6 +56,7 @@ export default {
     if (draft.ownerAddress !== userAddress) {
       errorThrower.notCorrectEthereumAddress();
     }
+    draft.timestamp = 'blabla';
     return draft;
   },
 
