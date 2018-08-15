@@ -3,11 +3,18 @@ import styled from 'styled-components';
 import {TopContainer} from './TopContainer.js';
 import {withRouter, Link} from 'react-router-dom';
 import Icon from '../icons/Icon.js';
-import {__ALERT_WARNING, __GRAY_200, __THIRD} from '../../helpers/colors.js';
+import {
+  __ALERT_WARNING,
+  __GRAY_200,
+  __MAIN,
+  __SECOND,
+  __THIRD
+} from '../../helpers/colors.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import Modal from '../design-components/Modal.js';
 import {renderField} from './editor/DocumentRenderer.js';
 import CircleSpinner from '../spinners/CircleSpinner.js';
+import {renderTimestamp} from '../../helpers/timestampRenderer.js';
 
 const Parent = styled.div`
   display: flex;
@@ -119,9 +126,9 @@ const Tr = styled.tr`
 const MyLink = styled(Link)`
   &:hover {
     text-decoration: underline;
-    font-weight: bold;
   }
   
+  color: ${__THIRD}
   transition: 0.25s all;
   text-decoration: none;
 `;
@@ -238,10 +245,7 @@ class MyArticles extends Component {
                         <TableTitle>Title</TableTitle>
                       </th>
                       <th>
-                        <TableTitle>URL</TableTitle>
-                      </th>
-                      <th>
-                        <TableTitle>Edit</TableTitle>
+                        <TableTitle>Last changed</TableTitle>
                       </th>
                       <th />
                     </tr>
@@ -260,8 +264,10 @@ class MyArticles extends Component {
                         </td>
                         <td>{draft._id}</td>
 
-                        <td>url</td>
-                        <td />
+                        <td>{draft.timestamp}</td>
+                        <td>
+                          <Icon icon={'delete'} width={20} height={20} />
+                        </td>
                       </Tr>
                     ))}
                   </tbody>
