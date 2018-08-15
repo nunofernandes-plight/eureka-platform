@@ -263,8 +263,7 @@ class MyArticles extends Component {
                           </MyLink>
                         </td>
                         <td>{draft._id}</td>
-
-                        <td>{draft.timestamp}</td>
+                        <td>{renderTimestamp(draft.timestamp)}</td>
                         <td>
                           <Icon icon={'delete'} width={20} height={20} />
                         </td>
