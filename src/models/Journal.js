@@ -1,4 +1,5 @@
-import {uniqBy} from 'lodash';
+import lodash from 'lodash';
+const uniqBy = lodash.unionBy;
 
 class Journal {
     static get matters_select() {
