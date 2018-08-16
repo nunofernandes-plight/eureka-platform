@@ -27,11 +27,11 @@ const DocumentObservationTypePicker = props => {
         clearable={false}
         searchable={false}
         placeholder="Choose between Standalone and Followup..."
-        // optionRenderer={option => {
-        //   return (
-        //     <DropdownDetailOption title={option.label} subtitle={option.hint} />
-        //   );
-        // }}
+        optionRenderer={option => {
+          return (
+            <DropdownDetailOption title={option.label} subtitle={option.hint} />
+          );
+        }}
         options={ObservationTypeModel.all.map(o => {
           return Object({value: o.name, label: o.title, hint: o.hint});
         })}

@@ -306,7 +306,7 @@ class DocumentEditor extends Component {
         />
         {['replication'].includes(this.state.document.type) ? null : (
           <ObservationTypePicker
-            // value={this.state.document.link.observation_type}
+            value={this.state.document.link.observation_type}
             document={this.state.document}
             requirement={this.requirementForField('link.observation_type')}
             type={this.state.document.type}
@@ -321,9 +321,6 @@ class DocumentEditor extends Component {
                   }
                 }
               });
-              // const newDoc = {...this.state.document};
-              // link.observation_type = observation_type;
-              // this.setState({document: link});
             }}
           />
         )}
