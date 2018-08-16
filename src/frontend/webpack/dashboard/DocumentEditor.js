@@ -20,6 +20,7 @@ import getChangedFields from '../../../helpers/compareDocuments.js';
 import {pick} from 'underscore';
 import DocumentDisciplinePicker from './editor/DocumentDisciplinePicker.js';
 import Requirement from '../../../models/Requirement.mjs';
+import DocumentSubDisciplinePicker from './editor/DocumentSubDisciplinePicker.js';
 
 const titleStyle = () => 'title';
 
@@ -193,7 +194,6 @@ class DocumentEditor extends Component {
           // this.setState({
           //   document: deserialized
           // });
-          console.log(response);
         } else {
           this.setState({
             errorMessage: response.error
@@ -274,6 +274,34 @@ class DocumentEditor extends Component {
           }}
           type={this.state.document.type}
         />
+        <DocumentSubDisciplinePicker
+          value={this.state.document.discipline}
+          requirement={this.requirementForField('discipline')}
+          document={this.state.document}
+          mainDisciplines={this.state.document.main_discipline}
+          onChange={discipline => {
+            console.log(discipline);
+            this.updateDocument({
+              document: {
+                ...this.state.document,
+                discipline
+              }
+            });
+          }}
+        />
+        {/*<DocumentKeywordsPicker*/}
+        {/*value={this.state.document.keywords}*/}
+        {/*requirement={this.requirementForField('keywords')}*/}
+        {/*document={this.state.document}*/}
+        {/*onChange={keywords => {*/}
+        {/*this.updateDocument({*/}
+        {/*document: {*/}
+        {/*...this.state.document,*/}
+        {/*keywords*/}
+        {/*}*/}
+        {/*});*/}
+        {/*}}*/}
+        {/*/>*/}
       </div>
     );
   }
