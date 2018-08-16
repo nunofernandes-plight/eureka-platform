@@ -48,6 +48,9 @@ class Router extends Component {
       })
       .catch(err => {
         console.error(err);
+        this.setState({
+          isAuthenticated: false
+        });
       });
   }
 
@@ -90,7 +93,9 @@ class Router extends Component {
                 path="/app"
                 render={() => (
                   <div>
-                    <DashBoardGuard isAuthenticated={this.state.isAuthenticated}>
+                    <DashBoardGuard
+                      isAuthenticated={this.state.isAuthenticated}
+                    >
                       <PanelLeft base={'/app'} />
                       <div style={{paddingLeft: 180}}>
                         <DashboardRouter
