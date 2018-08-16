@@ -1,4 +1,3 @@
-import {EditorState, convertToRaw} from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createSingleLinePlugin from 'draft-js-single-line-plugin';
 import React, {Component} from 'react';
@@ -12,11 +11,15 @@ import {customStyleMap} from './editor/customStyleMap.js';
 import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
 import TitleWithHelper from './editor/TitleWithHelper.js';
-import Select from 'react-select';
 import Document from '../../../models/Document.mjs';
-import {deserializeDocument, serializeSavePatch} from '../../../helpers/documentSerializer.mjs';
+import {
+  deserializeDocument,
+  serializeSavePatch
+} from '../../../helpers/documentSerializer.mjs';
 import getChangedFields from '../../../helpers/compareDocuments.js';
 import {pick} from 'underscore';
+import DocumentDisciplinePicker from './editor/DocumentDisciplinePicker.js';
+import Requirement from '../../../models/Requirement.mjs';
 
 const titleStyle = () => 'title';
 
@@ -237,28 +240,29 @@ class DocumentEditor extends Component {
     );
   }
 
+  requirementForField(field) {
+    return (
+      new Document(this.state.document).getTextRequirements()[field] ||
+      new Requirement()
+    );
+  }
+
   renderMainDiscipline() {
     return (
       <div>
-        {' '}
-        <TitleWithHelper
-          field="mainDiscipline"
-          requirement={{required: true, hint: 'this is a test rqureiaijsfijas'}}
-          document={{title: 'test'}}
-          title="Main Discipline"
-          id="mainDiscipline"
+        <DocumentDisciplinePicker
+          document={this.state.document}
+          value={this.state.document.main_discipline}
+          requirement={this.requirementForField('main_discipline')}
+          onChange={main_discipline => {
+            this.updateDocument({
+              document: {
+                main_discipline
+              }
+            });
+          }}
+          type={this.state.document.type}
         />
-        <div>
-          <Select
-            // onChange={value => props.onChange(value.map(v => v.value))}
-            // options={getOptions(props.type)}
-            // value={props.value.join(',')}
-            // delimiter=","
-            clearable={false}
-            placeholder="Select main discipline..."
-            multi
-          />
-        </div>
       </div>
     );
   }
