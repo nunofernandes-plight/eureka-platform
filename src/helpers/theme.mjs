@@ -1,8 +1,8 @@
 import lodash from 'lodash';
+import Journal from '../models/Journal.js';
+import {isProduction} from './isProduction.mjs';
 const filter = lodash.filter;
 const find = lodash.find;
-import Journal from '../models/journal.js';
-import {isProduction} from './isProduction.mjs';
 
 class Division {
   constructor(config) {
