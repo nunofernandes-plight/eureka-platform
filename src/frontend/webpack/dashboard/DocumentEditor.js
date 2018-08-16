@@ -21,6 +21,7 @@ import {pick} from 'underscore';
 import DocumentDisciplinePicker from './editor/DocumentDisciplinePicker.js';
 import Requirement from '../../../models/Requirement.mjs';
 import DocumentSubDisciplinePicker from './editor/DocumentSubDisciplinePicker.js';
+import DocumentKeywordsPicker from './editor/DocumentKeywordsPicker.js';
 
 const titleStyle = () => 'title';
 
@@ -289,19 +290,19 @@ class DocumentEditor extends Component {
             });
           }}
         />
-        {/*<DocumentKeywordsPicker*/}
-        {/*value={this.state.document.keywords}*/}
-        {/*requirement={this.requirementForField('keywords')}*/}
-        {/*document={this.state.document}*/}
-        {/*onChange={keywords => {*/}
-        {/*this.updateDocument({*/}
-        {/*document: {*/}
-        {/*...this.state.document,*/}
-        {/*keywords*/}
-        {/*}*/}
-        {/*});*/}
-        {/*}}*/}
-        {/*/>*/}
+        <DocumentKeywordsPicker
+          value={this.state.document.keywords}
+          requirement={this.requirementForField('keywords')}
+          document={this.state.document}
+          onChange={keywords => {
+            this.updateDocument({
+              document: {
+                ...this.state.document,
+                keywords
+              }
+            });
+          }}
+        />
       </div>
     );
   }

@@ -1,6 +1,6 @@
 import React from 'react';
 import {flatten, uniq} from 'underscore';
-import Select from '../../components/Select.js';
+import {Creatable} from 'react-select';
 import getSubdisciplines from '../../../../helpers/SubDiscipline.js';
 import TitleWithHelper from './TitleWithHelper';
 
@@ -26,7 +26,7 @@ const DocumentSubDisciplinePicker = props => {
         title="Sub Discipline"
         id="main_discipline"
       />
-      <Select
+      <Creatable
         onChange={value => {
           props.onChange(value);
         }}
