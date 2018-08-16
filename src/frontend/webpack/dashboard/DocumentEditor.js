@@ -35,6 +35,7 @@ const Container = styled.div`
   transition: all 0.5s;
   display: flex;
   justify-content: center;
+  position: relative;
   width: 100%;
   padding: 0 20px;
 `;
@@ -78,6 +79,17 @@ const ButtonContainer = styled.div`
 const Button = styled.button``;
 
 const Authors = styled.div``;
+
+const LeftTopContainer = styled.div`
+  padding: 20px 25px;
+  border: 0.0625rem solid rgba(0, 0, 0, 0.05);
+  border-radius: 0.25rem;
+  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
+  background-color: #ffffff;
+  margin-top: -130px !important;
+  margin-right: 20px;
+  height: 100%;
+`;
 class DocumentEditor extends Component {
   constructor() {
     super();
@@ -86,16 +98,6 @@ class DocumentEditor extends Component {
       loading: false,
       document: null
     };
-    //
-    // this.onChange = editorState => {
-    //   const field = editorState.getCurrentContent();
-    //   const raw = convertToRaw(field);
-    //
-    //   // console.log(raw.blocks[0].text);
-    //   // let html = stateToHTML(title);
-    //   // console.log(html);
-    //   this.setState({editorState});
-    // };
   }
 
   componentDidMount() {
@@ -282,7 +284,6 @@ class DocumentEditor extends Component {
           document={this.state.document}
           mainDisciplines={this.state.document.main_discipline}
           onChange={discipline => {
-            console.log(discipline);
             this.updateDocument({
               document: {
                 ...this.state.document,
@@ -311,7 +312,6 @@ class DocumentEditor extends Component {
             requirement={this.requirementForField('link.observation_type')}
             type={this.state.document.type}
             onChange={observation_type => {
-              console.log(observation_type);
               this.updateDocument({
                 document: {
                   ...this.state.document,
@@ -337,9 +337,11 @@ class DocumentEditor extends Component {
           <Parent>
             <TopContainer />
             <Container>
+              <LeftTopContainer>
+                <Toolbar />
+              </LeftTopContainer>
               <EditorCard>
                 <Title>Write your article</Title>
-                <Toolbar />
                 <EditorContent>
                   <Line>{this.renderTitle()}</Line>
                   <Line>{this.renderAuthors()}</Line>

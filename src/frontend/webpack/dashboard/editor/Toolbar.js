@@ -11,56 +11,55 @@ import {
   EQUATION
 } from './EditorStyles.js';
 import Popover from '../../design-components/Popover.js';
-
-const MaterialIcon = styled.i`
-  font-size: 22px;
-  vertical-align: middle;
-`;
+import {__THIRD} from '../../../helpers/colors.js';
 
 const Icon = styled.img`
   width: 24px;
   height: 24px;
+  margin: 7px 0;
   vertical-align: middle;
 `;
 const Button = styled.div`
   opacity: ${props => (props.disabled ? 0.1 : props.active ? 1 : 0.3)};
   cursor: ${props => (props.disabled ? 'default' : 'pointer')};
   pointer-events: ${props => (props.disabled ? 'none' : 'auto')};
-  color: black;
+  color: ${__THIRD};
   vertical-align: middle;
   display: inline-block;
   margin-right: 5px;
   transition: 0.1s opacity;
 `;
 
+const ToolbarContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const getContent = style => {
   if (style === BOLD) {
-    return <MaterialIcon className="material-icons">format_bold</MaterialIcon>;
+    return <Icon src="/img/editor/021-bold.svg" />;
   }
   if (style === ITALIC) {
-    return (
-      <MaterialIcon className="material-icons">format_italic</MaterialIcon>
-    );
+    return <Icon src="/img/editor/020-italic.svg" />;
   }
   if (style === UNDERLINE) {
-    return (
-      <MaterialIcon className="material-icons">format_underline</MaterialIcon>
-    );
+    return <Icon src="/img/editor/019-underline.svg" />;
   }
   if (style === SUPERSCRIPT) {
-    return <Icon src="/img/editor/superscript_black.png" />;
+    return <Icon src="/img/editor/029-superscript.svg" />;
   }
   if (style === SUBSCRIPT) {
-    return <Icon src="/img/editor/subscript_black.png" />;
+    return <Icon src="/img/editor/031-subscript.svg" />;
   }
   if (style === TEX) {
     return <Icon src="/img/editor/subscript_black.png" />;
   }
   if (style === EQUATION) {
-    return <Icon src="/img/editor/format_black.png" />;
+    return <Icon src="/img/editor/046-formula.svg" />;
   }
   if (style === CITATION) {
-    return <MaterialIcon className="material-icons">format_quote</MaterialIcon>;
+    return <Icon src="/img/editor/017-left-quote.svg" />;
   }
   return null;
 };
@@ -89,7 +88,7 @@ const StyledButton = props => {
         content={tooltip}
         id={id}
         arrow="center"
-        position="bottom"
+        position="left"
       >
         {props.children}
       </Popover>
@@ -113,7 +112,7 @@ const InsertTextButton = props => {
 
 const Toolbar = props => {
   return (
-    <div style={{alignSelf: 'center'}}>
+    <ToolbarContainer>
       <InlineStyleButton {...props} style={BOLD} tooltip={`Bold`} />
       <InlineStyleButton {...props} style={ITALIC} tooltip={`Italic`} />
       <InlineStyleButton {...props} style={UNDERLINE} tooltip={`Underline`} />
@@ -136,7 +135,7 @@ const Toolbar = props => {
         tooltip={`Insert equation ($$)`}
         text="$$ e = mc^2 $$"
       />
-    </div>
+    </ToolbarContainer>
   );
 };
 
