@@ -22,6 +22,7 @@ import DocumentDisciplinePicker from './editor/DocumentDisciplinePicker.js';
 import Requirement from '../../../models/Requirement.mjs';
 import DocumentSubDisciplinePicker from './editor/DocumentSubDisciplinePicker.js';
 import DocumentKeywordsPicker from './editor/DocumentKeywordsPicker.js';
+import ObservationTypePicker from './editor/DocumentObservationTypePicker.js';
 
 const titleStyle = () => 'title';
 
@@ -303,6 +304,29 @@ class DocumentEditor extends Component {
             });
           }}
         />
+        {['replication'].includes(this.state.document.type) ? null : (
+          <ObservationTypePicker
+            // value={this.state.document.link.observation_type}
+            document={this.state.document}
+            requirement={this.requirementForField('link.observation_type')}
+            type={this.state.document.type}
+            onChange={observation_type => {
+              console.log(observation_type);
+              this.updateDocument({
+                document: {
+                  ...this.state.document,
+                  link: {
+                    ...this.state.document.link,
+                    observation_type
+                  }
+                }
+              });
+              // const newDoc = {...this.state.document};
+              // link.observation_type = observation_type;
+              // this.setState({document: link});
+            }}
+          />
+        )}
       </div>
     );
   }
