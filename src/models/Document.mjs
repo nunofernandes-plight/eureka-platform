@@ -3,7 +3,12 @@ import _ from 'underscore';
 import {DRAFT} from './ArticleStates.mjs';
 import {DEFAULT_NUMBER_OF_ROUNDS} from './StateMachine.mjs';
 import {options as documentTypes} from '../helpers/documentTypes.mjs';
-
+import {
+  hypothesisRequirements,
+  mattersRequirements,
+  reproducibilityRequirements,
+  abstractRequirements
+} from '../helpers/requirements.mjs';
 class Document {
   constructor(obj) {
     Object.assign(this, Document.create());
@@ -240,6 +245,18 @@ class Document {
       'ethics_statement',
       'methods_easy'
     ];
+  }
+  getTextRequirements(type = this.type) {
+    if (type === 'hypothesis') {
+      return hypothesisRequirements;
+    }
+    if (type === 'replication') {
+      return reproducibilityRequirements;
+    }
+    if (type === 'abstract') {
+      return abstractRequirements;
+    }
+    return mattersRequirements;
   }
 
   static reviewsNeeded(document) {
