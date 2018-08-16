@@ -128,6 +128,16 @@ class DocumentEditor extends Component {
           loading: false
         });
       });
+
+    this.saveInterval = setInterval(() => {
+      this.save();
+    }, 5000);
+  }
+
+  componentWillUnmount() {
+    if (this.saveInterval) {
+      clearInterval(this.saveInterval);
+    }
   }
 
   onTitleChange = title => {
@@ -286,7 +296,6 @@ class DocumentEditor extends Component {
                   <Line>{this.renderMainDiscipline()}</Line>
                 </EditorContent>
                 <ButtonContainer>
-                  <Button onClick={() => this.save()}>Save</Button>
                   <Button>Submit Article</Button>
                 </ButtonContainer>
               </EditorCard>
