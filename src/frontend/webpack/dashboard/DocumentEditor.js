@@ -257,6 +257,7 @@ class DocumentEditor extends Component {
           onChange={main_discipline => {
             this.updateDocument({
               document: {
+                ...this.state.document,
                 main_discipline
               }
             });

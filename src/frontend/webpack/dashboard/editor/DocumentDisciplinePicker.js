@@ -1,6 +1,6 @@
 import React from 'react';
 import Discipline from '../../../../models/Discipline.js';
-import Select from 'react-select';
+import Select from '../../components/Select.js';
 import TitleWithHelper from './TitleWithHelper';
 
 const mapOptions = o => {
@@ -25,13 +25,15 @@ const DocumentDisciplinePicker = props => {
         id="main_discipline"
       />
       <Select
-        onChange={value => props.onChange(value.map(v => v.value))}
+        onChange={value => {
+          props.onChange(value);
+        }}
         options={getOptions(props.type)}
-        value={props.value.join(',')}
+        value={props.value}
         delimiter=","
         clearable={false}
         placeholder="Select main discipline..."
-        multi
+        isMulti
       />
     </div>
   );
