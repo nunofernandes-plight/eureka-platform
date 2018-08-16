@@ -20,11 +20,11 @@ const DocumentSubDisciplinePicker = props => {
   return (
     <div>
       <TitleWithHelper
-        field="main_discipline"
+        field="discipline"
         requirement={props.requirement}
         document={props.document}
         title="Sub Discipline"
-        id="main_discipline"
+        id="discipline"
       />
       <Creatable
         onChange={value => {
@@ -38,7 +38,7 @@ const DocumentSubDisciplinePicker = props => {
         value={props.value}
         delimiter=","
         clearable={true}
-        placeholder="Select sub disciplines..."
+        placeholder="Select subdisciplines or type your own..."
         isMulti
       />
     </div>
