@@ -13,7 +13,7 @@ const Container = styled.div`
   width: 180px;
   height: 100%;
   left: 0;
-  top: 105px;
+  margin-top: 20px;
   z-index: 600;
   background: white;
   transition-duration: 0.15s;
@@ -86,7 +86,9 @@ class PanelLeft extends Component {
                 >
                   <NavItem
                     status={
-                      this.state.activePath.toString().includes(route.path) ? 'active' : null
+                      this.state.activePath.toString().includes(route.path)
+                        ? 'active'
+                        : null
                     }
                     icon={route.icon}
                     width={20}
