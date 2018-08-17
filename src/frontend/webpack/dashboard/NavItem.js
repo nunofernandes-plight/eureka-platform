@@ -20,11 +20,10 @@ const Nav = styled.div`
   padding: 0.75rem;
   transition: all 0.15s ease;
   color: ${props => (props.status === 'active' ? 'white' : `${__THIRD}`)};
-  background-color: ${props =>
-    props.status === 'active' ? `${__THIRD}` : 'white'};
+  background: ${props =>
+    props.status === 'active' ? `linear-gradient( 150deg, #2e3292 15%, #4271ad 69%, #4caef3 0% )` : 'white'};
   //box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   margin: 0;
-  border-radius: 0.5rem;
 `;
 
 const SeparatorDiv = styled.div`

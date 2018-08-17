@@ -69,7 +69,7 @@ class Router extends Component {
 
   getPaddingTop() {
     if (this.state.isAuthenticated) {
-      return 55;
+      return 0;
     } else {
       return 100;
     }
