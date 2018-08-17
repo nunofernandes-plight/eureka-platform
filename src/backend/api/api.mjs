@@ -1,4 +1,3 @@
-
 import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
@@ -10,6 +9,7 @@ import mongooseDB from '../db/mongoose-db.mjs';
 import {isProduction} from '../../helpers/isProduction.mjs';
 import router from '../routes/index.mjs';
 import contractEventListener from '../controller/contract-event-controller.mjs';
+import uploadRouter from '../routes/file-upload.routes.mjs';
 
 if (!isProduction) {
   dotenv.config();
@@ -70,6 +70,7 @@ export default {
     app.use(bodyParser.json());
 
     app.use('/api', router);
+    app.get('/fileupload', uploadRouter);
   },
 
   listenTo: port => {
