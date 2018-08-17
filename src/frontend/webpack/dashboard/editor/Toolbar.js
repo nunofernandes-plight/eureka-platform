@@ -16,8 +16,8 @@ import {__GRAY_900, __THIRD} from '../../../helpers/colors.js';
 import Icon from '../../icons/Icon.js';
 
 const MyIcon = styled.img`
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   margin: 7px 0;
   vertical-align: middle;
 `;
@@ -28,7 +28,6 @@ const Button = styled.div`
   color: ${__THIRD};
   vertical-align: middle;
   display: inline-block;
-  margin-right: 5px;
   transition: 0.1s opacity;
 `;
 
@@ -64,7 +63,7 @@ const getContent = style => {
     return <MyIcon src="/img/editor/017-left-quote.svg" />;
   }
   if (style === SAVE) {
-    return <Icon icon={'save'} width={24} height={24} top={7} bottom={7} color={__GRAY_900}/>;
+    return <Icon icon={'save'} width={20} height={20} top={7} bottom={7} color={__GRAY_900}/>;
   }
   return null;
 };

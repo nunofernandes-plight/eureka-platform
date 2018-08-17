@@ -46,7 +46,7 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   padding: 0 20px;
-  margin-top: -200px !important;
+  margin-top: -275px !important;
 `;
 const EditorCard = styled.div`
   display: flex;
@@ -89,7 +89,7 @@ const Button = styled.button``;
 const Authors = styled.div``;
 
 const LeftTopContainer = styled.div`
-  padding: 20px 25px;
+  padding: 15px;
   border: 0.0625rem solid rgba(0, 0, 0, 0.05);
   border-radius: 0.25rem;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
