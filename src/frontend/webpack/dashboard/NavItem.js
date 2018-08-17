@@ -2,10 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import Icon from '../icons/Icon.js';
 import {
-  __GRAY_200,
-  __GRAY_300,
-  __GRAY_500,
-  __THIRD
+    __GRAY_200,
+    __GRAY_300,
+    __GRAY_500, __SECOND,
+    __THIRD
 } from '../../helpers/colors.js';
 
 const Nav = styled.div`
@@ -21,7 +21,7 @@ const Nav = styled.div`
   transition: all 0.15s ease;
   color: ${props => (props.status === 'active' ? 'white' : `${__THIRD}`)};
   background: ${props =>
-    props.status === 'active' ? `linear-gradient( 150deg, #2e3292 15%, #4271ad 69%, #4caef3 0% )` : 'white'};
+    props.status === 'active' ? `linear-gradient( 150deg, ${__THIRD} 15%, ${__SECOND} 69%, #4caef3 0% )` : 'white'};
   //box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   margin: 0;
 `;

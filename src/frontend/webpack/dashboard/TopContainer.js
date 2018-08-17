@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {__MAIN, __SECOND, __THIRD} from '../../helpers/colors.js';
 
 export const Container = styled.div`
-  min-height: 270px;
+  min-height: 353px;
   background: linear-gradient(
     150deg,
     ${__THIRD} 15%,
@@ -41,7 +41,7 @@ export const TopContainer = () => {
         <Ball left={720} top={50} width={60} intensity={0.05} />
         <Ball right={200} top={180} width={150} intensity={0.15} />
         <Ball right={600} top={60} width={200} intensity={0.3} />
-        <Ball right={300} top={50} width={100} intensity={0.08} />
+        <Ball right={280} top={50} width={100} intensity={0.08} />
         <Ball right={340} top={80} width={70} intensity={0.18} />
       </BallContainer>
     </Container>

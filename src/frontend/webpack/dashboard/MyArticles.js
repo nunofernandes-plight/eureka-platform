@@ -63,7 +63,7 @@ const LeftCard = Card.extend`
 
 const RightCard = Card.extend`
   width: 1160px;
-  margin-top: -130px !important;
+  margin-top: -180px !important;
 `;
 
 const List = styled.ul`
