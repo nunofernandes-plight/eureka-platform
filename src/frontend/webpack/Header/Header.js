@@ -206,16 +206,21 @@ const renderRight = props => {
   }
 };
 
+// do not show the header when the user is authenticated (i.e. is in the main app)
 class Header extends Component {
   render() {
     return (
-      <Parent>
-        <Container {...this.props}>
-          {renderLeft(this.props)}
-          {renderMiddle(this.props)}
-          {renderRight(this.props)}
-        </Container>
-      </Parent>
+      <div>
+        {this.props.isAuthenticated ? null : (
+          <Parent>
+            <Container {...this.props}>
+              {renderLeft(this.props)}
+              {renderMiddle(this.props)}
+              {renderRight(this.props)}
+            </Container>
+          </Parent>
+        )}
+      </div>
     );
   }
 }
