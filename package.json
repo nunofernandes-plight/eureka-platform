@@ -32,6 +32,7 @@
     "react-card-flip": "^0.2.1",
     "react-detect-offline": "^2.1.2",
     "react-dom": "^16.4.1",
+    "react-dropzone": "^4.3.0",
     "react-ga": "^2.5.3",
     "react-portal-tooltip": "^2.4.0",
     "react-router-dom": "^4.3.1",
