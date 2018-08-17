@@ -101,6 +101,8 @@ const DraftsContainer = styled.div`
   font-size: 14px;
   width: 100%;
   padding: 10px 25px;
+  max-height: 400px;
+  overflow: scroll;
 `;
 
 const Drafts = styled.table`
