@@ -6,7 +6,7 @@ import {TopContainer} from './TopContainer.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import GridSpinner from '../../webpack/spinners/GridSpinner.js';
 import Toolbar from './editor/Toolbar.js';
-import {__GRAY_500} from '../../helpers/colors.js';
+import {__GRAY_500, __GRAY_600, __GRAY_800} from '../../helpers/colors.js';
 import {customStyleMap} from './editor/customStyleMap.js';
 import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
@@ -17,12 +17,15 @@ import {
   serializeSavePatch
 } from '../../../helpers/documentSerializer.mjs';
 import getChangedFields from '../../../helpers/compareDocuments.js';
-import {pick} from 'underscore';
+import {pick, debounce} from 'underscore';
 import DocumentDisciplinePicker from './editor/DocumentDisciplinePicker.js';
 import Requirement from '../../../models/Requirement.mjs';
 import DocumentSubDisciplinePicker from './editor/DocumentSubDisciplinePicker.js';
 import DocumentKeywordsPicker from './editor/DocumentKeywordsPicker.js';
 import ObservationTypePicker from './editor/DocumentObservationTypePicker.js';
+import Icon from '../icons/Icon.js';
+import Modal from '../../webpack/design-components/Modal.js';
+import SaveSpinner from '../../webpack/spinners/SaveSpinner.js';
 
 const titleStyle = () => 'title';
 
@@ -31,6 +34,11 @@ const Parent = styled.div`
   flex-direction: column;
   font-family: 'Roboto', sans-serif;
 `;
+
+const EditorParent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 const Container = styled.div`
   transition: all 0.5s;
   display: flex;
@@ -38,6 +46,7 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   padding: 0 20px;
+  margin-top: -200px !important;
 `;
 const EditorCard = styled.div`
   display: flex;
@@ -50,7 +59,6 @@ const EditorCard = styled.div`
   min-height: 420px;
   width: 1070px;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
-  margin-top: -130px !important;
   padding: 40px 80px;
 `;
 
@@ -86,9 +94,26 @@ const LeftTopContainer = styled.div`
   border-radius: 0.25rem;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
   background-color: #ffffff;
-  margin-top: -130px !important;
   margin-right: 20px;
   height: 100%;
+  margin-top: 73px;
+`;
+
+const RightTopContainer = styled.div`
+  padding: 15px 10px;
+  border: 0.0625rem solid rgba(0, 0, 0, 0.05);
+  border-radius: 0.25rem;
+  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
+  background-color: #ffffff;
+  margin-bottom: 20px;
+  align-self: flex-end;
+  width: 200px;
+`;
+
+const SaveChanges = styled.div`
+  color: ${__GRAY_600};
+  display: flex;
+  justify-content: center;
 `;
 class DocumentEditor extends Component {
   constructor() {
@@ -96,8 +121,17 @@ class DocumentEditor extends Component {
     this.state = {
       errorMessage: null,
       loading: false,
-      document: null
+      lastSavedVersion: null,
+      modifiedFields: [],
+      document: null,
+      saving: false,
+      saved: false
     };
+
+    this.updateModifiedFieldsDebounced = debounce(
+      this.updateModifiedFields,
+      200
+    );
   }
 
   componentDidMount() {
@@ -136,13 +170,18 @@ class DocumentEditor extends Component {
 
     this.saveInterval = setInterval(() => {
       this.save();
-    }, 5000);
+    }, 7500);
   }
 
   componentWillUnmount() {
     if (this.saveInterval) {
       clearInterval(this.saveInterval);
     }
+  }
+
+  updateModifiedFields() {
+    const modifiedFields = this.getModifiedFields();
+    this.setState({modifiedFields});
   }
 
   onTitleChange = title => {
@@ -164,6 +203,13 @@ class DocumentEditor extends Component {
       document,
       ...otherStatesToSet
     });
+
+    //TODO: change this
+    const i = Math.floor(Math.random() * 40) % 4;
+    if (i <= 0) {
+      this.save();
+    }
+    this.updateModifiedFieldsDebounced();
   }
 
   getModifiedFields() {
@@ -174,6 +220,7 @@ class DocumentEditor extends Component {
   }
 
   save() {
+    this.setState({saved: false, saving: true});
     const changedFields = this.getModifiedFields();
     const toSave = new Document(this.state.document);
     const patch = pick(toSave, ...changedFields);
@@ -198,12 +245,13 @@ class DocumentEditor extends Component {
           // this.setState({
           //   document: deserialized
           // });
+          this.setState({saved: true, saving: false});
         } else {
           this.setState({
             errorMessage: response.error
           });
+          this.setState({saved: false, saving: false});
         }
-        this.setState({loading: false});
       })
       .catch(err => {
         console.log(err);
@@ -261,7 +309,7 @@ class DocumentEditor extends Component {
     );
   }
 
-  renderMainDiscipline() {
+  renderSelectMenus() {
     return (
       <div>
         <DocumentDisciplinePicker
@@ -275,6 +323,7 @@ class DocumentEditor extends Component {
                 main_discipline
               }
             });
+            this.save();
           }}
           type={this.state.document.type}
         />
@@ -290,6 +339,7 @@ class DocumentEditor extends Component {
                 discipline
               }
             });
+            this.save();
           }}
         />
         <DocumentKeywordsPicker
@@ -303,6 +353,7 @@ class DocumentEditor extends Component {
                 keywords
               }
             });
+            this.save();
           }}
         />
         {['replication'].includes(this.state.document.type) ? null : (
@@ -321,6 +372,7 @@ class DocumentEditor extends Component {
                   }
                 }
               });
+              this.save();
             }}
           />
         )}
@@ -328,9 +380,55 @@ class DocumentEditor extends Component {
     );
   }
 
+  renderModal() {
+    return (
+      <Modal
+        type={'notification'}
+        toggle={isErrorMessage => {
+          this.setState({errorMessage: null});
+        }}
+        show={this.state.errorMessage}
+        title={'You got the following error'}
+      >
+        {this.state.errorMessage}
+      </Modal>
+    );
+  }
+
+  renderSaveButtons() {
+    if (this.state.saving) {
+      return (
+        <div>
+          {' '}
+          <Icon
+            icon={'cloud-upload'}
+            width={20}
+            height={20}
+            color={__GRAY_600}
+          />{' '}
+          Saving...
+        </div>
+      );
+    }
+
+    // if (this.state.modifiedFields.length > 0) {
+    //   return (
+    //     <div>
+    //       <Icon icon={'edit'} width={15} height={15} /> Edited{' '}
+    //     </div>
+    //   );
+    // }
+    return (
+      <div>
+        <Icon icon={'cloud'} width={20} height={20} /> All changed saved{' '}
+      </div>
+    );
+  }
+
   render() {
     return (
       <div>
+        <div>{this.renderModal()}</div>
         {this.state.loading || !this.state.document ? (
           <GridSpinner />
         ) : (
@@ -340,17 +438,23 @@ class DocumentEditor extends Component {
               <LeftTopContainer>
                 <Toolbar />
               </LeftTopContainer>
-              <EditorCard>
-                <Title>Write your article</Title>
-                <EditorContent>
-                  <Line>{this.renderTitle()}</Line>
-                  <Line>{this.renderAuthors()}</Line>
-                  <Line>{this.renderMainDiscipline()}</Line>
-                </EditorContent>
-                <ButtonContainer>
-                  <Button>Submit Article</Button>
-                </ButtonContainer>
-              </EditorCard>
+
+              <EditorParent>
+                <RightTopContainer>
+                  <SaveChanges>{this.renderSaveButtons()}</SaveChanges>
+                </RightTopContainer>
+                <EditorCard>
+                  <Title>Write your article</Title>
+                  <EditorContent>
+                    <Line>{this.renderTitle()}</Line>
+                    <Line>{this.renderAuthors()}</Line>
+                    <Line>{this.renderSelectMenus()}</Line>
+                  </EditorContent>
+                  <ButtonContainer>
+                    <Button>Submit Article</Button>
+                  </ButtonContainer>
+                </EditorCard>
+              </EditorParent>
             </Container>
           </Parent>
         )}
