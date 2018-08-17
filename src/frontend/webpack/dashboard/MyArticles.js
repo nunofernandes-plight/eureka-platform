@@ -194,7 +194,6 @@ class MyArticles extends Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          console.log(response.data);
           this.setState({drafts: response.data});
         } else {
           this.setState({

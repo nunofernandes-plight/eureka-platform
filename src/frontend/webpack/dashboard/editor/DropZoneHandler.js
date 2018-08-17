@@ -4,6 +4,7 @@ import Dropzone from 'react-dropzone';
 import randomstring from 'randomstring';
 import S3Upload from '../../../../helpers/s3upload.js';
 import UploadProgressContainer from './UploadProgressContainer.js';
+import {getDomain} from '../../../../helpers/getDomain.js';
 
 const Container = styled.div`
   display: flex;
@@ -55,10 +56,9 @@ class DropZoneHandler extends Component {
     let new_files = [];
     accepted_files.forEach(file => {
       let {name, type} = file;
-      // TODO: hash the image --> hint: use hashTimeStamp
       let id = randomstring.generate(8);
       let s3upload = new S3Upload({
-        s3_sign_put_url: '/fileupload',
+        s3_sign_put_url: `${getDomain()}/fileupload`,
         onProgress: percent => {
           this.setState({
             uploading: this.state.uploading.map(u => {
