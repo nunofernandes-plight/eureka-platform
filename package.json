@@ -27,6 +27,7 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "polished": "^1.9.3",
+    "randomstring": "^1.1.5",
     "rc-tooltip": "^3.7.2",
     "react": "^16.4.1",
     "react-card-flip": "^0.2.1",
