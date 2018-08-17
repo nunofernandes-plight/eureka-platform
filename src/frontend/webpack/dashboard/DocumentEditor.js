@@ -6,7 +6,12 @@ import {TopContainer} from './TopContainer.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import GridSpinner from '../../webpack/spinners/GridSpinner.js';
 import Toolbar from './editor/Toolbar.js';
-import {__GRAY_500, __GRAY_600, __GRAY_800} from '../../helpers/colors.js';
+import {
+  __ALERT_ERROR,
+  __GRAY_500,
+  __GRAY_600,
+  __GRAY_800
+} from '../../helpers/colors.js';
 import {customStyleMap} from './editor/customStyleMap.js';
 import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
@@ -26,6 +31,7 @@ import ObservationTypePicker from './editor/DocumentObservationTypePicker.js';
 import Icon from '../icons/Icon.js';
 import Modal from '../../webpack/design-components/Modal.js';
 import SaveSpinner from '../../webpack/spinners/SaveSpinner.js';
+import DropZoneHandler from './editor/DropZoneHandler.js';
 
 const titleStyle = () => 'title';
 
@@ -410,17 +416,46 @@ class DocumentEditor extends Component {
         </div>
       );
     }
-
-    // if (this.state.modifiedFields.length > 0) {
-    //   return (
-    //     <div>
-    //       <Icon icon={'edit'} width={15} height={15} /> Edited{' '}
-    //     </div>
-    //   );
-    // }
     return (
       <div>
         <Icon icon={'cloud'} width={20} height={20} /> All changed saved{' '}
+      </div>
+    );
+  }
+
+  renderFigures() {
+    return (
+      <div>
+        <DropZoneHandler
+          onChangeFigure={figure => {
+            console.log(figure);
+            // this.props.addImage(figure, 'featuredIn');
+          }}
+        />
+        {/*{this.state.document.figure ? (*/}
+          {/*<MultiImagesContainer images={this.props.partners}>*/}
+            {/*{this.props.partners.map((partner, i) => {*/}
+              {/*return (*/}
+                {/*<FeaturedInContainer key={i}>*/}
+                  {/*<ImageContainer>*/}
+                    {/*<Image src={partner.imgUrl} />*/}
+                  {/*</ImageContainer>*/}
+                  {/*<RemoveContainer>*/}
+                    {/*<Icon*/}
+                      {/*icon={'delete'}*/}
+                      {/*width={10}*/}
+                      {/*height={10}*/}
+                      {/*color={__ALERT_ERROR}*/}
+                      {/*onClick={() => {*/}
+                        {/*// this.props.removeImage(partner.imgUrl, 'partners');*/}
+                      {/*}}*/}
+                    {/*/>*/}
+                  {/*</RemoveContainer>*/}
+                {/*</FeaturedInContainer>*/}
+              {/*);*/}
+            {/*})}*/}
+          {/*</MultiImagesContainer>*/}
+        {/*) : null}*/}
       </div>
     );
   }
@@ -449,6 +484,7 @@ class DocumentEditor extends Component {
                     <Line>{this.renderTitle()}</Line>
                     <Line>{this.renderAuthors()}</Line>
                     <Line>{this.renderSelectMenus()}</Line>
+                    <Line>{this.renderFigures()}</Line>
                   </EditorContent>
                   <ButtonContainer>
                     <Button>Submit Article</Button>
