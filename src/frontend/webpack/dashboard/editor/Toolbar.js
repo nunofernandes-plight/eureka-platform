@@ -8,12 +8,14 @@ import {
   SUBSCRIPT,
   TEX,
   CITATION,
-  EQUATION
+  EQUATION,
+  SAVE
 } from './EditorStyles.js';
 import Popover from '../../design-components/Popover.js';
-import {__THIRD} from '../../../helpers/colors.js';
+import {__GRAY_900, __THIRD} from '../../../helpers/colors.js';
+import Icon from '../../icons/Icon.js';
 
-const Icon = styled.img`
+const MyIcon = styled.img`
   width: 24px;
   height: 24px;
   margin: 7px 0;
@@ -38,28 +40,31 @@ const ToolbarContainer = styled.div`
 
 const getContent = style => {
   if (style === BOLD) {
-    return <Icon src="/img/editor/021-bold.svg" />;
+    return <MyIcon src="/img/editor/021-bold.svg" />;
   }
   if (style === ITALIC) {
-    return <Icon src="/img/editor/020-italic.svg" />;
+    return <MyIcon src="/img/editor/020-italic.svg" />;
   }
   if (style === UNDERLINE) {
-    return <Icon src="/img/editor/019-underline.svg" />;
+    return <MyIcon src="/img/editor/019-underline.svg" />;
   }
   if (style === SUPERSCRIPT) {
-    return <Icon src="/img/editor/029-superscript.svg" />;
+    return <MyIcon src="/img/editor/029-superscript.svg" />;
   }
   if (style === SUBSCRIPT) {
-    return <Icon src="/img/editor/031-subscript.svg" />;
+    return <MyIcon src="/img/editor/031-subscript.svg" />;
   }
   if (style === TEX) {
-    return <Icon src="/img/editor/subscript_black.png" />;
+    return <MyIcon src="/img/editor/subscript_black.png" />;
   }
   if (style === EQUATION) {
-    return <Icon src="/img/editor/046-formula.svg" />;
+    return <MyIcon src="/img/editor/046-formula.svg" />;
   }
   if (style === CITATION) {
-    return <Icon src="/img/editor/017-left-quote.svg" />;
+    return <MyIcon src="/img/editor/017-left-quote.svg" />;
+  }
+  if (style === SAVE) {
+    return <Icon icon={'save'} width={24} height={24} top={7} bottom={7} color={__GRAY_900}/>;
   }
   return null;
 };
@@ -135,6 +140,7 @@ const Toolbar = props => {
         tooltip={`Insert equation ($$)`}
         text="$$ e = mc^2 $$"
       />
+      <InlineStyleButton style={SAVE} tooltip="Save" />
     </ToolbarContainer>
   );
 };
