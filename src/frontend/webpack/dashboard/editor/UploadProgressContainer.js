@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import GridSpinner from '../../../webpack/spinners/GridSpinner.js';
+import UploadSpinner from '../../../webpack/spinners/UploadSpinner.js';
 
 const Container = styled.div`
   display: flex;
@@ -11,29 +11,11 @@ const Container = styled.div`
   margin-bottom: 36px;
 `;
 
-const Bar = styled.div`
-  width: 100px;
-  background: rgba(0, 0, 0, 0.1);
-  height: 5px;
-  margin-top: 8px;
-  border-radius: 8px;
-  overflow: hidden;
-`;
-
-const Fill = styled.div`
-  width: ${props => props.progress}px;
-  background: ${props => props.theme.mainColor};
-  height: 100%;
-`;
-
-const UploadProgressContainer = props => {
+const UploadProgressContainer = () => {
   return (
     <Container>
       <div style={{display: 'block', alignSelf: 'center'}}>
-        <GridSpinner style={{marginTop: 0}} />
-        <Bar>
-          <Fill progress={props.progress} />
-        </Bar>
+        <UploadSpinner style={{marginTop: 0}} />
       </div>
     </Container>
   );
