@@ -429,6 +429,7 @@ class DocumentEditor extends Component {
         {' '}
         <TitleWithHelper
           field="Figure"
+          document={this.state.document}
           requirement={{required: true, hint: 'this is a test rqureiaijsfijas'}}
           title="Figure"
           id="figure"
@@ -455,8 +456,16 @@ class DocumentEditor extends Component {
           />
           <DocumentFiguresRenderer
             figures={this.state.document.figure}
-            onDelete={id => {
-              // TODO: delete figure
+            onDelete={(figure, index) => {
+              const newFigure = this.state.document.figure.filter(
+                (c, i) => i !== index
+              );
+              this.updateDocument({
+                document: {
+                  ...this.state.document,
+                  figure: newFigure
+                }
+              });
             }}
           />
         </FiguresFlex>
