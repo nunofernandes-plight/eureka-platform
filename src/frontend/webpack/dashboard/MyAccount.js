@@ -68,33 +68,25 @@ const EthereumAddress = styled.div`
   font-size: 1rem;
 `;
 
-class MyAccount extends React.Component {
-  constructor() {
-    super();
-  }
-
-  render() {
-    return (
-      <Container>
-        <TopContainer />
-        <CardContainer>
-          <Card>
-            <PhotoContainer>
-              <Photo src={'/' + this.props.user.avatar} />
-            </PhotoContainer>
-            <EmailContainer>
-              <Email>{this.props.user.email}</Email>
-            </EmailContainer>
-            <ProfileRow style={{margin: 0}}>
-              <EthereumAddress>
-                {this.props.user.ethereumAddress}
-              </EthereumAddress>
-            </ProfileRow>
-          </Card>
-        </CardContainer>
-      </Container>
-    );
-  }
-}
+const MyAccount = props => {
+  return (
+    <Container>
+      <TopContainer />
+      <CardContainer>
+        <Card>
+          <PhotoContainer>
+            <Photo src={'/' + props.user.avatar} />
+          </PhotoContainer>
+          <EmailContainer>
+            <Email>{props.user.email}</Email>
+          </EmailContainer>
+          <ProfileRow style={{margin: 0}}>
+            <EthereumAddress>{props.user.ethereumAddress}</EthereumAddress>
+          </ProfileRow>
+        </Card>
+      </CardContainer>
+    </Container>
+  );
+};
 
 export default MyAccount;

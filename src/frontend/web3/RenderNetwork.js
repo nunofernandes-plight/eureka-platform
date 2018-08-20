@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {
-  __ALERT_WARNING,
-  __GRAY_100,
   __MAIN,
   __SECOND,
   __THIRD

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {Switch, Route} from 'react-router';
 
 const Container = styled.div`
   display: flex;

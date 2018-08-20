@@ -4,16 +4,17 @@ import {TopContainer} from './TopContainer.js';
 import {withRouter, Link} from 'react-router-dom';
 import Icon from '../icons/Icon.js';
 import {
-    __ALERT_DANGER, __ALERT_ERROR,
-    __GRAY_200, __GRAY_600,
-    __THIRD
+  __ALERT_ERROR,
+  __GRAY_200,
+  __GRAY_600,
+  __THIRD
 } from '../../helpers/colors.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import Modal from '../design-components/Modal.js';
 import {renderField} from './editor/DocumentRenderer.js';
 import CircleSpinner from '../spinners/CircleSpinner.js';
 import {renderTimestamp} from '../../helpers/timestampRenderer.js';
-import {CardTitle} from "./Card.js";
+import {CardTitle} from './Card.js';
 
 const Parent = styled.div`
   display: flex;
@@ -163,9 +164,7 @@ class MyArticles extends Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          this.props.history.push(
-            `${this.props.base}` + '/' + response.data._id
-          );
+          this.props.history.push(`${this.props.base}/${response.data._id}`);
         } else {
           this.setState({
             errorMessage: response.error,
@@ -304,7 +303,12 @@ class MyArticles extends Component {
                     {this.state.drafts.map(draft => (
                       <Tr key={draft._id}>
                         <td style={{padding: '20px 15px'}}>
-                          <Icon icon={'file'} width={20} height={20} color={__GRAY_600} />
+                          <Icon
+                            icon={'file'}
+                            width={20}
+                            height={20}
+                            color={__GRAY_600}
+                          />
                         </td>
                         <td>
                           <MyLink to={`${this.props.base}/${draft._id}`}>

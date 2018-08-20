@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {Route} from 'react-router';
 import {Link, withRouter} from 'react-router-dom';
 import EurekaLogo from '../icons/EurekaLogo.js';
 import {NavItem, Separator} from './NavItem.js';

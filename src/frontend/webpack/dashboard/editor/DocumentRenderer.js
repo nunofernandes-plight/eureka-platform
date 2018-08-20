@@ -1,4 +1,3 @@
-import React from 'react';
 import {EditorState, convertToRaw} from 'draft-js';
 import Document from '../../../../models/Document.mjs';
 import {deserializeDocument} from '../../../../helpers/documentSerializer.mjs';

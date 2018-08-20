@@ -1,4 +1,3 @@
-import React from 'react';
 import _ from 'underscore';
 import {DRAFT} from './ArticleStates.mjs';
 import {DEFAULT_NUMBER_OF_ROUNDS} from './StateMachine.mjs';

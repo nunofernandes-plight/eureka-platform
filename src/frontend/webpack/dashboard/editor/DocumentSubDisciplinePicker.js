@@ -1,5 +1,5 @@
 import React from 'react';
-import {flatten, uniq} from 'underscore';
+import {flatten} from 'underscore';
 import {Creatable} from 'react-select';
 import getSubdisciplines from '../../../../helpers/SubDiscipline.js';
 import TitleWithHelper from './TitleWithHelper';

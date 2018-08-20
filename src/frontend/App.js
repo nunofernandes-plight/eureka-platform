@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import Router from './Router';
 import Web3Providers from './web3/Web3Providers.js';
 import Web3 from 'web3';
-import Network from './web3/Network.js';
 import NoConnection from './webpack/NoConnection.js';
 import {Detector} from 'react-detect-offline';
 import {getMetaMaskStatus} from './web3/IsLoggedIn.js';

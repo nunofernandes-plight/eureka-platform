@@ -171,13 +171,6 @@ const renderMiddle = props => {
     </MiddleContainer>
   );
 };
-const renderEmail = props => {
-  const maxLength = 12;
-  // render email with different length
-  return props.user.email.length > maxLength
-    ? props.user.email.toString().substr(0, maxLength - 1) + '..'
-    : props.user.email.toString();
-};
 
 const renderRight = props => {
   if (props.isAuthenticated && props.user) {
