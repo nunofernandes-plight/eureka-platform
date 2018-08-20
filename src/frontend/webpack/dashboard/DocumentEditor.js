@@ -427,7 +427,13 @@ class DocumentEditor extends Component {
             let figure = f.contents[0];
             figure.cdn = fromS3toCdn(f.contents[0].url);
             figures.push(figure);
-            console.log(figures);
+
+            this.updateDocument({
+              document: {
+                ...this.state.document,
+                figure: figures
+              }
+            });
 
             // this.props.addImage(figure, 'featuredIn');
           }}
