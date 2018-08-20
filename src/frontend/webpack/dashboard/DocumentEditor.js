@@ -6,7 +6,7 @@ import {TopContainer} from './TopContainer.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import GridSpinner from '../../webpack/spinners/GridSpinner.js';
 import Toolbar from './editor/Toolbar.js';
-import {__ALERT_ERROR, __GRAY_500, __GRAY_600} from '../../helpers/colors.js';
+import {__ALERT_ERROR, __GRAY_200, __GRAY_500, __GRAY_600} from '../../helpers/colors.js';
 import {customStyleMap} from './editor/customStyleMap.js';
 import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
@@ -35,6 +35,7 @@ const Parent = styled.div`
   display: flex;
   flex-direction: column;
   font-family: 'Roboto', sans-serif;
+  margin-bottom: 5em;
 `;
 
 const EditorParent = styled.div`
@@ -456,7 +457,7 @@ class DocumentEditor extends Component {
           />
           <DocumentFiguresRenderer
             figures={this.state.document.figure}
-            onDelete={(index) => {
+            onDelete={index => {
               const newFigure = this.state.document.figure.filter(
                 (c, i) => i !== index
               );
