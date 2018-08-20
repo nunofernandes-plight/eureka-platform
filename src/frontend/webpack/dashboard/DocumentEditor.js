@@ -224,10 +224,12 @@ class DocumentEditor extends Component {
     this.setState({saved: false, saving: true});
     const changedFields = this.getModifiedFields();
     const toSave = new Document(this.state.document);
-    const patch = pick(toSave, ...changedFields);
+    let patch = pick(toSave, ...changedFields);
     const draftId = this.props.match.params.id;
 
-    console.log(toSave);
+    if (toSave.figure.length > 0) {
+      patch.figure = toSave.figure;
+    }
 
     fetch(`${getDomain()}/api/articles/drafts/${draftId}`, {
       method: 'PUT',
@@ -419,21 +421,14 @@ class DocumentEditor extends Component {
       <div>
         <DropZoneHandler
           onChangeFigure={f => {
-            let figures = this.state.document.figures
-              ? this.state.document.figures
+            let figures = this.state.document.figure
+              ? this.state.document.figure
               : [];
             let figure = f.contents[0];
             figure.cdn = fromS3toCdn(f.contents[0].url);
             figures.push(figure);
-
             console.log(figures);
-            this.updateDocument({
-              document: {
-                ...this.state.document,
-                figures
-              }
-            });
-            this.save();
+
             // this.props.addImage(figure, 'featuredIn');
           }}
         />
