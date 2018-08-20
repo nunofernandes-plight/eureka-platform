@@ -45,15 +45,69 @@ export const TopContainer = props => {
         </div>
       </Profile>
       <BallContainer>
-        <Ball left={50} top={20} width={120} intensity={0.07} />
-        <Ball left={160} top={130} width={90} intensity={0.2} />
-        <Ball left={400} top={90} width={120} intensity={0.15} />
-        <Ball left={670} top={23} width={55} intensity={0.1} />
-        <Ball left={720} top={50} width={60} intensity={0.05} />
-        <Ball right={200} top={180} width={150} intensity={0.15} />
-        <Ball right={600} top={60} width={200} intensity={0.3} />
-        <Ball right={280} top={50} width={100} intensity={0.08} />
-        <Ball right={340} top={80} width={70} intensity={0.18} />
+        <Ball
+          rgb={'255, 255, 255'}
+          left={50}
+          top={20}
+          width={120}
+          intensity={0.07}
+        />
+        <Ball
+          rgb={'255, 255, 255'}
+          left={160}
+          top={130}
+          width={90}
+          intensity={0.2}
+        />
+        <Ball
+          rgb={'255, 255, 255'}
+          left={400}
+          top={90}
+          width={120}
+          intensity={0.15}
+        />
+        <Ball
+          rgb={'255, 255, 255'}
+          left={670}
+          top={23}
+          width={55}
+          intensity={0.1}
+        />
+        <Ball
+          rgb={'255, 255, 255'}
+          left={720}
+          top={50}
+          width={60}
+          intensity={0.05}
+        />
+        <Ball
+          rgb={'255, 255, 255'}
+          right={200}
+          top={180}
+          width={150}
+          intensity={0.15}
+        />
+        <Ball
+          rgb={'255, 255, 255'}
+          right={600}
+          top={60}
+          width={200}
+          intensity={0.3}
+        />
+        <Ball
+          rgb={'255, 255, 255'}
+          right={280}
+          top={50}
+          width={100}
+          intensity={0.08}
+        />
+        <Ball
+          rgb={'255, 255, 255'}
+          right={340}
+          top={80}
+          width={70}
+          intensity={0.18}
+        />
       </BallContainer>
     </Container>
   );

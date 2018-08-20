@@ -4,6 +4,7 @@ import {Redirect} from 'react-router-dom';
 import Dashboard from './Dashboard.js';
 import MyAccount from './MyAccount.js';
 import {TopContainer} from './TopContainer.js';
+import {BottomContainer} from './BottomContainer.js';
 import MyArticles from './MyArticles.js';
 import DocumentEditor from './DocumentEditor.js';
 
@@ -16,47 +17,49 @@ class DashboardRouter extends Component {
           metaMaskStatus={this.props.metaMaskStatus}
           network={this.props.network}
         />
-        <Route
-          exact
-          path={`${this.props.base}/dashboard`}
-          render={() => <Dashboard />}
-        />
+        <BottomContainer>
+          <Route
+            exact
+            path={`${this.props.base}/dashboard`}
+            render={() => <Dashboard />}
+          />
 
-        <Route
-          exact
-          path={`${this.props.base}/account`}
-          render={() => <MyAccount user={this.props.user} />}
-        />
+          <Route
+            exact
+            path={`${this.props.base}/account`}
+            render={() => <MyAccount user={this.props.user} />}
+          />
 
-        <Route
-          exact
-          path={`${this.props.base}/articles`}
-          render={() => (
-            <MyArticles
-              base={`${this.props.base}/articles`}
-              user={this.props.user}
-              selectedAccount={this.props.selectedAccount}
-            />
-          )}
-        />
+          <Route
+            exact
+            path={`${this.props.base}/articles`}
+            render={() => (
+              <MyArticles
+                base={`${this.props.base}/articles`}
+                user={this.props.user}
+                selectedAccount={this.props.selectedAccount}
+              />
+            )}
+          />
 
-        <Route
-          exactly
-          path={`${this.props.base}/articles/:id`}
-          render={props => (
-            <DocumentEditor
-              user={this.props.user}
-              selectedAccount={this.props.selectedAccount}
-              {...props}
-            />
-          )}
-        />
+          <Route
+            exactly
+            path={`${this.props.base}/articles/:id`}
+            render={props => (
+              <DocumentEditor
+                user={this.props.user}
+                selectedAccount={this.props.selectedAccount}
+                {...props}
+              />
+            )}
+          />
 
-        <Route
-          exact
-          path={`${this.props.base}`}
-          render={() => <Redirect to={`${this.props.base}/dashboard`} />}
-        />
+          <Route
+            exact
+            path={`${this.props.base}`}
+            render={() => <Redirect to={`${this.props.base}/dashboard`} />}
+          />
+        </BottomContainer>
       </div>
     );
   }

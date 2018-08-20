@@ -9,7 +9,7 @@ const Ball = styled.span`
   height: ${props => props.width}px;
   border-radius: 50%;
   position: absolute;
-  background: ${props => `rgba(255, 255, 255, ${props.intensity})`};
+  background: ${props => `rgba(${props.rgb}, ${props.intensity})`};
 `;
 
 export default Ball;

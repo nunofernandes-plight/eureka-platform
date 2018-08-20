@@ -40,7 +40,6 @@ const Parent = styled.div`
   display: flex;
   flex-direction: column;
   font-family: 'Roboto', sans-serif;
-  margin-bottom: 5em;
 `;
 
 const EditorParent = styled.div`
