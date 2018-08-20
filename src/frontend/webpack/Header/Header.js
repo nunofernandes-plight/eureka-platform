@@ -105,13 +105,6 @@ const ProfileContainer = styled.div`
   position: relative;
 `;
 
-const Email = styled.div`
-  right: -12px;
-  top: 36px;
-  font-size: 9px;
-  position: absolute;
-`;
-
 const Flex = styled.div`
   display: flex;
   align-items: center;
