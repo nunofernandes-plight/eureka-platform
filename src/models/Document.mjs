@@ -130,7 +130,12 @@ class Document {
       alternative_hypotheses: '',
       supportive_evidence_of_the_hypothesis: '',
       significance: '',
-      figures: [],
+      figure: {
+        height: 200,
+        contents: [],
+        type: 'assembled',
+        url: null
+      },
       introduction: '',
       objective: '',
       results_discussion: '',
