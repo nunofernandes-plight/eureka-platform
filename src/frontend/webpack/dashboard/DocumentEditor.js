@@ -227,6 +227,8 @@ class DocumentEditor extends Component {
     const patch = pick(toSave, ...changedFields);
     const draftId = this.props.match.params.id;
 
+    console.log(toSave);
+
     fetch(`${getDomain()}/api/articles/drafts/${draftId}`, {
       method: 'PUT',
       headers: {
@@ -240,12 +242,6 @@ class DocumentEditor extends Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          // this.setState({document: response.data.document});
-          // // let document = new Document(response.data.document);
-          // // let deserialized = deserializeDocument(document);
-          // this.setState({
-          //   document: deserialized
-          // });
           this.setState({saved: true, saving: false});
         } else {
           this.setState({
@@ -423,14 +419,21 @@ class DocumentEditor extends Component {
       <div>
         <DropZoneHandler
           onChangeFigure={f => {
+            let figures = this.state.document.figures
+              ? this.state.document.figures
+              : [];
             let figure = f.contents[0];
             figure.cdn = fromS3toCdn(f.contents[0].url);
+            figures.push(figure);
+
+            console.log(figures);
             this.updateDocument({
               document: {
                 ...this.state.document,
-                figure
+                figures
               }
             });
+            this.save();
             // this.props.addImage(figure, 'featuredIn');
           }}
         />
