@@ -6,7 +6,7 @@ import {TopContainer} from './TopContainer.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import GridSpinner from '../../webpack/spinners/GridSpinner.js';
 import Toolbar from './editor/Toolbar.js';
-import {__GRAY_500, __GRAY_600} from '../../helpers/colors.js';
+import {__ALERT_ERROR, __GRAY_500, __GRAY_600} from '../../helpers/colors.js';
 import {customStyleMap} from './editor/customStyleMap.js';
 import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
@@ -27,6 +27,7 @@ import Icon from '../icons/Icon.js';
 import Modal from '../../webpack/design-components/Modal.js';
 import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
 import DropZoneHandler from './editor/DropZoneHandler.js';
+import DocumentFiguresRenderer from './editor/DocumentFiguresRenderer.js';
 
 const titleStyle = () => 'title';
 
@@ -116,6 +117,12 @@ const SaveChanges = styled.div`
   display: flex;
   justify-content: center;
 `;
+
+const FiguresFlex = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 class DocumentEditor extends Component {
   constructor() {
     super();
@@ -419,49 +426,40 @@ class DocumentEditor extends Component {
   renderFigures() {
     return (
       <div>
-        <DropZoneHandler
-          onChangeFigure={f => {
-            let figures = this.state.document.figure
-              ? this.state.document.figure
-              : [];
-            let figure = f.contents[0];
-            figure.cdn = fromS3toCdn(f.contents[0].url);
-            figures.push(figure);
-
-            this.updateDocument({
-              document: {
-                ...this.state.document,
-                figure: figures
-              }
-            });
-
-            // this.props.addImage(figure, 'featuredIn');
-          }}
+        {' '}
+        <TitleWithHelper
+          field="Figure"
+          requirement={{required: true, hint: 'this is a test rqureiaijsfijas'}}
+          title="Figure"
+          id="figure"
         />
-        {/*{this.state.document.figure ? (*/}
-        {/*<MultiImagesContainer images={this.props.partners}>*/}
-        {/*{this.props.partners.map((partner, i) => {*/}
-        {/*return (*/}
-        {/*<FeaturedInContainer key={i}>*/}
-        {/*<ImageContainer>*/}
-        {/*<Image src={partner.imgUrl} />*/}
-        {/*</ImageContainer>*/}
-        {/*<RemoveContainer>*/}
-        {/*<Icon*/}
-        {/*icon={'delete'}*/}
-        {/*width={10}*/}
-        {/*height={10}*/}
-        {/*color={__ALERT_ERROR}*/}
-        {/*onClick={() => {*/}
-        {/*// this.props.removeImage(partner.imgUrl, 'partners');*/}
-        {/*}}*/}
-        {/*/>*/}
-        {/*</RemoveContainer>*/}
-        {/*</FeaturedInContainer>*/}
-        {/*);*/}
-        {/*})}*/}
-        {/*</MultiImagesContainer>*/}
-        {/*) : null}*/}
+        <FiguresFlex>
+          <DropZoneHandler
+            onChangeFigure={f => {
+              let figures = this.state.document.figure
+                ? this.state.document.figure
+                : [];
+              let figure = f.contents[0];
+              figure.cdn = fromS3toCdn(f.contents[0].url);
+              figures.push(figure);
+
+              this.updateDocument({
+                document: {
+                  ...this.state.document,
+                  figure: figures
+                }
+              });
+
+              // this.props.addImage(figure, 'featuredIn');
+            }}
+          />
+          <DocumentFiguresRenderer
+            figures={this.state.document.figure}
+            onDelete={id => {
+              // TODO: delete figure
+            }}
+          />
+        </FiguresFlex>
       </div>
     );
   }
