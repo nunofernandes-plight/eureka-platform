@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import {
+  __ALERT_WARNING,
+  __FIFTH,
   __MAIN,
-  __SECOND,
   __THIRD
 } from '../helpers/colors.js';
 import Network from '../web3/Network.js';
@@ -11,7 +12,7 @@ import Icon from '../webpack/icons/Icon.js';
 const NetworkContainer = styled.div`
   box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.1);
   font-size: 13px;
-  padding: 6px 10px;
+  padding: 8px 10px;
   background: ${props => getColor(props.network)};
   border-radius: 6px;
   color: ${props =>
@@ -28,10 +29,10 @@ const GanacheLogo = styled.img`
 const getColor = network => {
   switch (network) {
     case Network.ROPSTEN:
-      return `${__THIRD}`;
+      return `${__ALERT_WARNING}`;
 
     case Network.MAIN:
-      return `${__SECOND}`;
+      return `${__FIFTH}`;
 
     case Network.GANACHE:
       return `white`;
@@ -44,25 +45,23 @@ const getColor = network => {
   }
 };
 
-class RenderNetwork extends Component {
-  render() {
-    return (
-      <NetworkContainer network={this.props.network}>
-        {this.props.network}{' '}
-        {this.props.network === Network.GANACHE ? (
-          <GanacheLogo src="img/logos/ganache.png" />
-        ) : (
-          <Icon
-            icon={'ethereum'}
-            width={15}
-            height={15}
-            color={'white'}
-            bottom={3}
-          />
-        )}
-      </NetworkContainer>
-    );
-  }
-}
+const RenderNetwork = props => {
+  return (
+    <NetworkContainer network={props.network}>
+      {props.network}{' '}
+      {props.network === Network.GANACHE ? (
+        <GanacheLogo src="img/logos/ganache.png" />
+      ) : (
+        <Icon
+          icon={'ethereum'}
+          width={15}
+          height={15}
+          color={'white'}
+          bottom={3}
+        />
+      )}
+    </NetworkContainer>
+  );
+};
 
 export default RenderNetwork;

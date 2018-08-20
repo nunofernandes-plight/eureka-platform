@@ -103,6 +103,7 @@ class Router extends Component {
                           user={this.state.user}
                           selectedAccount={this.props.selectedAccount}
                           metaMaskStatus={this.props.metaMaskStatus}
+                          network={this.props.network}
                         />
                       </div>
                     </DashBoardGuard>

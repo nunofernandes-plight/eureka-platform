@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {__MAIN, __SECOND, __THIRD} from '../../helpers/colors.js';
 import Avatar from '../Header/Avatar.js';
 import MetaMaskLabel from '../views/MetaMaskLabel.js';
+import RenderNetwork from '../../web3/RenderNetwork.js';
 
 export const Container = styled.div`
   min-height: 353px;
@@ -43,6 +44,7 @@ export const TopContainer = props => {
     <Container>
       <Profile>
         <div style={{display: 'flex', marginTop: '12px'}}>
+          <RenderNetwork network={props.network}/>
           <MetaMaskLabel metaMaskStatus={props.metaMaskStatus} />
           <Avatar
             avatar={props.user.avatar}

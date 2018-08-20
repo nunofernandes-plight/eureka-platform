@@ -14,6 +14,7 @@ class DashboardRouter extends Component {
         <TopContainer
           user={this.props.user}
           metaMaskStatus={this.props.metaMaskStatus}
+          network={this.props.network}
         />
         <Route
           exact
