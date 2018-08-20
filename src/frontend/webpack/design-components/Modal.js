@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import styled, {keyframes} from 'styled-components';
-import Icon from '../icons/Icon.js';
+import Icon from '../views/icons/Icon.js';
 
 const getBackColor = props => {
   if (props.type === 'notification') {

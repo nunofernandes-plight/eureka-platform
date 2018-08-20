@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {TopContainer} from './TopContainer.js';
 import {withRouter, Link} from 'react-router-dom';
-import Icon from '../icons/Icon.js';
+import Icon from '../views/icons/Icon.js';
 import {
   __ALERT_ERROR,
   __GRAY_200,
@@ -12,7 +12,7 @@ import {
 import {getDomain} from '../../../helpers/getDomain.js';
 import Modal from '../design-components/Modal.js';
 import {renderField} from './editor/DocumentRenderer.js';
-import CircleSpinner from '../spinners/CircleSpinner.js';
+import CircleSpinner from '../views/spinners/CircleSpinner.js';
 import {renderTimestamp} from '../../helpers/timestampRenderer.js';
 import {CardTitle} from './Card.js';
 

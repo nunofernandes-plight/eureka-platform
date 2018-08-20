@@ -6,7 +6,7 @@ import {
   AlertContainer
 } from './SharedForms.js';
 import Web3Providers from '../../web3/Web3Providers.js';
-import EurekaLogo from '../../webpack/icons/EurekaLogo.js';
+import EurekaLogo from './icons/EurekaLogo.js';
 import Alert from '../design-components/Alerts.js';
 
 const TopAlertContainer = props => {

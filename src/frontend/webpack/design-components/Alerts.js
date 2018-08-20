@@ -7,7 +7,7 @@ import {
   __ALERT_SUCCESS,
   __ALERT_WARNING
 } from '../../helpers/colors.js';
-import Icon from '../icons/Icon.js';
+import Icon from '../views/icons/Icon.js';
 
 const getColor = props => {
   if (props.status === 'success') {

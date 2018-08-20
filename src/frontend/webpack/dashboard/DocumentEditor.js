@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {TopContainer} from './TopContainer.js';
 import {getDomain} from '../../../helpers/getDomain.js';
-import GridSpinner from '../../webpack/spinners/GridSpinner.js';
+import GridSpinner from '../views/spinners/GridSpinner.js';
 import Toolbar from './editor/Toolbar.js';
 import {
   __ALERT_ERROR,
@@ -12,7 +12,7 @@ import {
   __GRAY_500,
   __GRAY_600
 } from '../../helpers/colors.js';
-import {customStyleMap} from './editor/customStyleMap.js';
+import {customStyleMap} from '../../helpers/customStyleMap.js';
 import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
 import TitleWithHelper from './editor/TitleWithHelper.js';
@@ -28,7 +28,7 @@ import Requirement from '../../../models/Requirement.mjs';
 import DocumentSubDisciplinePicker from './editor/DocumentSubDisciplinePicker.js';
 import DocumentKeywordsPicker from './editor/DocumentKeywordsPicker.js';
 import ObservationTypePicker from './editor/DocumentObservationTypePicker.js';
-import Icon from '../icons/Icon.js';
+import Icon from '../views/icons/Icon.js';
 import Modal from '../../webpack/design-components/Modal.js';
 import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
 import DropZoneHandler from './editor/DropZoneHandler.js';

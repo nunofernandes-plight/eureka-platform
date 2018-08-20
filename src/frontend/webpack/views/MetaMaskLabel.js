@@ -6,8 +6,8 @@ import {
   __ALERT_WARNING
 } from '../../helpers/colors.js';
 import styled from 'styled-components';
-import MetaMaskLogo from '../icons/MetaMaskLogo.js';
-import CircleHeaderSpinner from '../../webpack/spinners/CircleHeaderSpinner.js';
+import MetaMaskLogo from './icons/MetaMaskLogo.js';
+import CircleHeaderSpinner from './spinners/CircleHeaderSpinner.js';
 
 const Item = styled.div`
   margin: 0 10px;

@@ -7,7 +7,7 @@ import {
   __THIRD
 } from '../helpers/colors.js';
 import Network from '../web3/Network.js';
-import Icon from '../webpack/icons/Icon.js';
+import Icon from '../webpack/views/icons/Icon.js';
 
 const NetworkContainer = styled.div`
   box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.1);

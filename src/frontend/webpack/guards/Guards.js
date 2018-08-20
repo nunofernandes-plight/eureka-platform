@@ -1,6 +1,6 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
-import GridSpinner from '../../webpack/spinners/GridSpinner.js';
+import GridSpinner from '../views/spinners/GridSpinner.js';
 
 export const DashBoardGuard = props => {
   if (props.isAuthenticated === null) {

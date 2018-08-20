@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {Link, Redirect, withRouter} from 'react-router-dom';
 import {Row} from '../../helpers/layout.js';
-import MetaMaskLogo from '../icons/MetaMaskLogo.js';
+import MetaMaskLogo from '../views/icons/MetaMaskLogo.js';
 import {signPrivateKey} from '../../web3/Helpers.js';
 import Web3Providers from '../../web3/Web3Providers.js';
 import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
 import Modal from '../design-components/Modal.js';
 import AccountBalance from '../../web3/AccountBalance.js';
-import GridSpinner from '../../webpack/spinners/GridSpinner.js';
+import GridSpinner from '../views/spinners/GridSpinner.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import {
   Container,
@@ -17,8 +17,8 @@ import {
   ButtonRow,
   LoginContainer,
   LoginRow
-} from './SharedForms.js';
-import TopAlertContainer from './TopAlertContainer.js';
+} from '../views/SharedForms.js';
+import TopAlertContainer from '../views/TopAlertContainer.js';
 
 class Login extends Component {
   constructor() {

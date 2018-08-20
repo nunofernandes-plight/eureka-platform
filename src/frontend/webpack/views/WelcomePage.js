@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import {Row} from '../../helpers/layout.js';
 import {Link} from 'react-router-dom';
 import {__THIRD} from '../../helpers/colors.js';
-import EurekaLogo from '../icons/EurekaLogo.js';
-import Cards from './WelcomeCard.js';
+import EurekaLogo from './icons/EurekaLogo.js';
+import Cards from '../components/WelcomeCard.js';
 
 const Parent = styled.div`
   display: flex;
@@ -48,27 +48,25 @@ const Footer = styled.div`
   margin-top: 5em;
 `;
 
-class WelcomePage extends Component {
-  render() {
-    return (
-      <Parent>
-        <Container>
-          <Wrapper>
-            <EurekaLogo white width={500} height={80} />
-            <SubTitle>
-              Democratising science through decentralisation and transparency
-            </SubTitle>
-            <Link to="/login">
-              <button>GET STARTED</button>
-            </Link>
-          </Wrapper>
-          <Cards />
-          <Curve />
-        </Container>
-        <Footer />
-      </Parent>
-    );
-  }
-}
+const WelcomePage = () => {
+  return (
+    <Parent>
+      <Container>
+        <Wrapper>
+          <EurekaLogo white width={500} height={80} />
+          <SubTitle>
+            Democratising science through decentralisation and transparency
+          </SubTitle>
+          <Link to="/login">
+            <button>GET STARTED</button>
+          </Link>
+        </Wrapper>
+        <Cards />
+        <Curve />
+      </Container>
+      <Footer />
+    </Parent>
+  );
+};
 
 export default WelcomePage;

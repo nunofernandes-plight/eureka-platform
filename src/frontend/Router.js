@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {Switch, Route} from 'react-router';
 import {BrowserRouter, Redirect} from 'react-router-dom';
-import WelcomePage from './webpack/login/WelcomePage';
-import Header from './webpack/Header/Header';
-import Login from './webpack/login/Login';
+import WelcomePage from './webpack/views/WelcomePage';
+import Header from './webpack/components/Header';
+import Login from './webpack/components/Login';
 import MetaMaskGuide from './webpack/MetaMaskGuide';
 import {getDomain} from '../helpers/getDomain.js';
-import SignUp from './webpack/login/SignUp.js';
+import SignUp from './webpack/components/SignUp.js';
 import PanelLeft from './webpack/dashboard/PanelLeft.js';
 import {DashBoardGuard} from './webpack/guards/Guards.js';
 import DashboardRouter from './webpack/dashboard/DashboardRouter.js';

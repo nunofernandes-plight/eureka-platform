@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import GridSpinner from '../webpack/spinners/GridSpinner.js'
+import GridSpinner from './views/spinners/GridSpinner.js'
 
 const Container = styled.div`
   display: flex;

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import NewPopover from './NewPopover.js';
-import Icon from '../../icons/Icon.js';
+import Icon from '../../views/icons/Icon.js';
 import {__GRAY_500} from "../../../helpers/colors.js";
 
 const Container = styled.div`

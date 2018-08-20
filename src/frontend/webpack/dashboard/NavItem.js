@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Icon from '../icons/Icon.js';
+import Icon from '../views/icons/Icon.js';
 import {
     __GRAY_200,
     __GRAY_300,

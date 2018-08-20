@@ -13,7 +13,7 @@ import {
 } from './EditorStyles.js';
 import Popover from '../../design-components/Popover.js';
 import {__GRAY_900, __THIRD} from '../../../helpers/colors.js';
-import Icon from '../../icons/Icon.js';
+import Icon from '../../views/icons/Icon.js';
 
 const MyIcon = styled.img`
   width: 18px;

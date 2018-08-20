@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {__MAIN, __SECOND, __THIRD} from '../../helpers/colors.js';
-import Avatar from '../Header/Avatar.js';
+import Avatar from '../views/Avatar.js';
 import MetaMaskLabel from '../views/MetaMaskLabel.js';
 import RenderNetwork from '../../web3/RenderNetwork.js';
 import Ball from '../views/Ball.js';

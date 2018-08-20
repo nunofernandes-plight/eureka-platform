@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {__GRAY_100, __GRAY_200, __THIRD} from '../helpers/colors.js';
-import Icon from '../webpack/icons/Icon.js';
+import Icon from '../webpack/views/icons/Icon.js';
 import Web3Providers from './Web3Providers.js';
 import Select from 'react-select';
 

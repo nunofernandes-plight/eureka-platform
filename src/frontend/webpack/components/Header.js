@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Row} from '../../helpers/layout.js';
-import EurekaLogo from '../icons/EurekaLogo.js';
+import EurekaLogo from '../views/icons/EurekaLogo.js';
 import {
   __THIRD
 } from '../../helpers/colors.js';
-import Icon from '../icons/Icon.js';
+import Icon from '../views/icons/Icon.js';
 import RenderNetwork from '../../web3/RenderNetwork.js';
-import Avatar from './Avatar.js';
-import CircleSpinner from '../spinners/CircleSpinner.js';
+import Avatar from '../views/Avatar.js';
+import CircleSpinner from '../views/spinners/CircleSpinner.js';
 import MetaMaskLabel from '../views/MetaMaskLabel.js';
 
 const Parent = styled.div`

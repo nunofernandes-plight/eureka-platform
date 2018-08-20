@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, {keyframes} from 'styled-components';
-import {__MAIN, __THIRD} from '../../helpers/colors.js';
+import {__MAIN, __THIRD} from '../../../helpers/colors.js';
 
 const pulse = keyframes`
   0% {
