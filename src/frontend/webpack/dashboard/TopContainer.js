@@ -4,6 +4,7 @@ import {__MAIN, __SECOND, __THIRD} from '../../helpers/colors.js';
 import Avatar from '../Header/Avatar.js';
 import MetaMaskLabel from '../views/MetaMaskLabel.js';
 import RenderNetwork from '../../web3/RenderNetwork.js';
+import Ball from '../views/Ball.js';
 
 export const Container = styled.div`
   min-height: 353px;
@@ -22,17 +23,6 @@ const BallContainer = styled.div`
   width: 100%;
 `;
 
-const Ball = styled.span`
-  left: ${props => (props.left ? props.left : null)}px;
-  right: ${props => (props.right ? props.right : null)}px;
-  top: ${props => props.top}px;
-  width: ${props => props.width}px;
-  height: ${props => props.width}px;
-  border-radius: 50%;
-  position: absolute;
-  background: ${props => `rgba(255, 255, 255, ${props.intensity})`};
-`;
-
 const Profile = styled.div`
   display: flex;
   width: 100%;
@@ -44,7 +34,7 @@ export const TopContainer = props => {
     <Container>
       <Profile>
         <div style={{display: 'flex', marginTop: '12px'}}>
-          <RenderNetwork network={props.network}/>
+          <RenderNetwork network={props.network} />
           <MetaMaskLabel metaMaskStatus={props.metaMaskStatus} />
           <Avatar
             avatar={props.user.avatar}
