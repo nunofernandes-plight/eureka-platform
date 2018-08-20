@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Row} from '../../helpers/layout.js';
-import {TopContainer} from './TopContainer.js';
 import {__THIRD} from '../../helpers/colors.js';
 
 const Container = styled.div`
@@ -71,7 +70,6 @@ const EthereumAddress = styled.div`
 const MyAccount = props => {
   return (
     <Container>
-      <TopContainer />
       <CardContainer>
         <Card>
           <PhotoContainer>

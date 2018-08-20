@@ -275,8 +275,6 @@ class MyArticles extends Component {
     return (
       <Parent>
         {this.renderModal()}
-        <TopContainer />
-
         <CardContainer>
           <RightCard>
             <CardTitle>Your Drafts</CardTitle>

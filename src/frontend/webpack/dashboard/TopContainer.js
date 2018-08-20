@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import {__MAIN, __SECOND, __THIRD} from '../../helpers/colors.js';
+import Avatar from '../Header/Avatar.js';
+import MetaMaskLabel from '../views/MetaMaskLabel.js';
 
 export const Container = styled.div`
   min-height: 353px;
@@ -30,9 +32,19 @@ const Ball = styled.span`
   background: ${props => `rgba(255, 255, 255, ${props.intensity})`};
 `;
 
-export const TopContainer = () => {
+const Profile = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+`;
+
+export const TopContainer = props => {
   return (
     <Container>
+      <Profile>
+        <MetaMaskLabel {...props} />
+        <Avatar avatar={props.user.avatar} width={40} height={40} right={15} />
+      </Profile>
       <BallContainer>
         <Ball left={50} top={20} width={120} intensity={0.07} />
         <Ball left={160} top={130} width={90} intensity={0.2} />

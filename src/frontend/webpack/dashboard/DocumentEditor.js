@@ -6,7 +6,12 @@ import {TopContainer} from './TopContainer.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import GridSpinner from '../../webpack/spinners/GridSpinner.js';
 import Toolbar from './editor/Toolbar.js';
-import {__ALERT_ERROR, __GRAY_200, __GRAY_500, __GRAY_600} from '../../helpers/colors.js';
+import {
+  __ALERT_ERROR,
+  __GRAY_200,
+  __GRAY_500,
+  __GRAY_600
+} from '../../helpers/colors.js';
 import {customStyleMap} from './editor/customStyleMap.js';
 import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
@@ -482,12 +487,10 @@ class DocumentEditor extends Component {
           <GridSpinner />
         ) : (
           <Parent>
-            <TopContainer />
             <Container>
               <LeftTopContainer>
                 <Toolbar />
               </LeftTopContainer>
-
               <EditorParent>
                 <RightTopContainer>
                   <SaveChanges>{this.renderSaveButtons()}</SaveChanges>

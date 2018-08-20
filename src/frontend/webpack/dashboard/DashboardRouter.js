@@ -3,6 +3,7 @@ import {Route} from 'react-router';
 import {Redirect} from 'react-router-dom';
 import Dashboard from './Dashboard.js';
 import MyAccount from './MyAccount.js';
+import {TopContainer} from "./TopContainer.js";
 import MyArticles from './MyArticles.js';
 import DocumentEditor from './DocumentEditor.js';
 
@@ -10,6 +11,7 @@ class DashboardRouter extends Component {
   render() {
     return (
       <div>
+        <TopContainer user={this.props.user} />
         <Route
           exact
           path={`${this.props.base}/dashboard`}
