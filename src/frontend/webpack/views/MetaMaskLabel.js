@@ -7,6 +7,7 @@ import {
 } from '../../helpers/colors.js';
 import styled from 'styled-components';
 import MetaMaskLogo from '../icons/MetaMaskLogo.js';
+import CircleHeaderSpinner from '../../webpack/spinners/CircleHeaderSpinner.js';
 
 const Item = styled.div`
   margin: 0 10px;
@@ -41,6 +42,9 @@ const MetaMaskDetectedLoggedIn = MetaMask.extend`
 `;
 
 const MetaMaskLabel = props => {
+  if (!props.metaMaskStatus) {
+    return <CircleHeaderSpinner />;
+  }
   const status = props.metaMaskStatus;
   if (status === MetaMaskStatus.DETECTED_NO_LOGGED_IN) {
     return (

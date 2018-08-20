@@ -42,8 +42,15 @@ export const TopContainer = props => {
   return (
     <Container>
       <Profile>
-        <MetaMaskLabel {...props} />
-        <Avatar avatar={props.user.avatar} width={40} height={40} right={15} />
+        <div style={{display: 'flex', marginTop: '12px'}}>
+          <MetaMaskLabel metaMaskStatus={props.metaMaskStatus} />
+          <Avatar
+            avatar={props.user.avatar}
+            width={40}
+            height={40}
+            right={15}
+          />
+        </div>
       </Profile>
       <BallContainer>
         <Ball left={50} top={20} width={120} intensity={0.07} />
