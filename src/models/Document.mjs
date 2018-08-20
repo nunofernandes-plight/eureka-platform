@@ -131,12 +131,7 @@ class Document {
       alternative_hypotheses: '',
       supportive_evidence_of_the_hypothesis: '',
       significance: '',
-      figure: {
-        height: 200,
-        contents: [],
-        type: 'assembled',
-        url: null
-      },
+      figure: [],
       introduction: '',
       objective: '',
       results_discussion: '',
