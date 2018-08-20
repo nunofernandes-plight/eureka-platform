@@ -456,7 +456,7 @@ class DocumentEditor extends Component {
           />
           <DocumentFiguresRenderer
             figures={this.state.document.figure}
-            onDelete={(figure, index) => {
+            onDelete={(index) => {
               const newFigure = this.state.document.figure.filter(
                 (c, i) => i !== index
               );
