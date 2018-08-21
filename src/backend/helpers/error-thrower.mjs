@@ -39,6 +39,11 @@ export default {
     throw error;
 
   },
+  missingBodyValue: (value) => {
+    let error = new Error('Missing body-value was not provided: ' + value);
+    error.status = 400;
+    throw error;
+  },
   internalError: (message) => {
     let error = new Error(message);
     error.status = 500;

@@ -110,7 +110,10 @@ router.put(
     if (!ethereumAddress) errorThrower.notLoggedIn();
 
     const draftId = req.params.draftId;
-    return await articleVersionService.finishDraftById(draftId);
+    if(!req.body.articleHash) errorThrower.missingBodyValue('articleHash');
+    return await articleVersionService.finishDraftById(
+      ethereumAddress, draftId, req.body.articleHash
+    );
   })
 );
 
