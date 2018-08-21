@@ -1,7 +1,6 @@
 import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
 import accesController from '../controller/acess-controller.mjs';
-import articleDraftService from '../db/article-draft-service.mjs';
 import articleSubmissionService from '../db/article-submission-service.mjs';
 import articleVersionService from '../db/article-version-service.mjs';
 import Roles from '../schema/roles-enum.mjs';
@@ -20,7 +19,7 @@ router.get(
     if (!ethereumAddress) {
       errorThrower.notLoggedIn();
     }
-    return await articleDraftService.getDraftsOfUser(ethereumAddress);
+    return await articleVersionService.getDraftsOfUser(ethereumAddress);
   })
 );
 /**
@@ -124,7 +123,7 @@ router.use(accesController.rolesOnly(Roles.ADMIN));
 router.get(
   '/',
   asyncHandler(async () => {
-    return articleDraftService.getAllArticleDrafts();
+    return articleVersionService.getAllArticleVersions();
   })
 );
 

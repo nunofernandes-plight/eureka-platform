@@ -4,7 +4,6 @@ import {serializeDocument} from '../../helpers/documentSerializer';
 import createNewEmpty from '../../helpers/createEditorDocument';
 import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
-import ArticleDraft from '../schema/article-draft';
 
 export default {
   getAllArticleVersions: () => {
