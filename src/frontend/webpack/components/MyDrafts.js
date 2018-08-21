@@ -53,7 +53,6 @@ class MyDrafts extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          console.log(response.data.articleVersionId);
           this.props.history.push(
             `${this.props.base}/${response.data.articleVersionId}`
           );

@@ -166,7 +166,6 @@ class DocumentEditor extends Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          console.log(response);
           let document = new Document(response.data.document);
           let deserialized = deserializeDocument(document);
           this.setState({
