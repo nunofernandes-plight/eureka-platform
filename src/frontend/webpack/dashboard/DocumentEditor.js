@@ -2,16 +2,11 @@ import Editor from 'draft-js-plugins-editor';
 import createSingleLinePlugin from 'draft-js-single-line-plugin';
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {TopContainer} from './TopContainer.js';
+import sha256 from 'js-sha256';
 import {getDomain} from '../../../helpers/getDomain.js';
 import GridSpinner from '../views/spinners/GridSpinner.js';
 import Toolbar from './editor/Toolbar.js';
-import {
-  __ALERT_ERROR,
-  __GRAY_200,
-  __GRAY_500,
-  __GRAY_600
-} from '../../helpers/colors.js';
+import {__GRAY_500, __GRAY_600} from '../../helpers/colors.js';
 import {customStyleMap} from '../../helpers/customStyleMap.js';
 import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
@@ -33,6 +28,7 @@ import Modal from '../../webpack/design-components/Modal.js';
 import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
 import DropZoneHandler from './editor/DropZoneHandler.js';
 import DocumentFiguresRenderer from './editor/DocumentFiguresRenderer.js';
+import SmartContractInputData from '../views/SmartContractInputData.js';
 
 const titleStyle = () => 'title';
 
@@ -136,9 +132,19 @@ class DocumentEditor extends Component {
       loading: false,
       lastSavedVersion: null,
       modifiedFields: [],
+      _id: null,
       document: null,
       saving: false,
-      saved: false
+      saved: false,
+      showSubmitModal: false,
+      inputData: {
+        url: null,
+        hash: null,
+        authors: null,
+        linkedArticles: null,
+        contributorRatios: null,
+        linkedArticlesSplitRatios: null
+      }
     };
 
     this.updateModifiedFieldsDebounced = debounce(
@@ -160,9 +166,11 @@ class DocumentEditor extends Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
+          console.log(response);
           let document = new Document(response.data.document);
           let deserialized = deserializeDocument(document);
           this.setState({
+            _id: response.data._id,
             document: deserialized,
             lastSavedVersion: deserialized
           });
@@ -271,6 +279,20 @@ class DocumentEditor extends Component {
           loading: false
         });
       });
+  }
+
+  submit() {
+    // TODO: check which fields are missing and display the errors
+    const hashedDocument = sha256(JSON.stringify(this.state.document));
+    this.setState({
+      showSubmitModal: true,
+      inputData: {
+        ...this.state.inputData,
+        hash: hashedDocument,
+        authors: this.state.document.authors,
+        url: `${getDomain() + '/' + this.state._id}`
+      }
+    });
   }
 
   renderTitle() {
@@ -391,18 +413,37 @@ class DocumentEditor extends Component {
     );
   }
 
-  renderModal() {
+  renderModals() {
     return (
-      <Modal
-        type={'notification'}
-        toggle={isErrorMessage => {
-          this.setState({errorMessage: null});
-        }}
-        show={this.state.errorMessage}
-        title={'You got the following error'}
-      >
-        {this.state.errorMessage}
-      </Modal>
+      <div>
+        <Modal
+          type={'notification'}
+          toggle={isErrorMessage => {
+            this.setState({errorMessage: null});
+          }}
+          show={this.state.errorMessage}
+          title={'You got the following error'}
+        >
+          {this.state.errorMessage}
+        </Modal>
+        <Modal
+          action={'SUBMIT'}
+          type={'notification'}
+          toggle={showSubmitModal => {
+            this.setState({showSubmitModal});
+          }}
+          callback={() => {
+            // TODO: submit article
+          }}
+          show={this.state.showSubmitModal}
+          title={'Do you want to submit this document to be reviewed?'}
+        >
+          Dear User, this is your input data for our smart contract. Please be
+          aware that even a very small change in the document will result in a
+          new article hash, i.e., a new manuscript version.
+          <SmartContractInputData inputData={this.state.inputData} />
+        </Modal>
+      </div>
     );
   }
 
@@ -481,7 +522,7 @@ class DocumentEditor extends Component {
   render() {
     return (
       <div>
-        <div>{this.renderModal()}</div>
+        <div>{this.renderModals()}</div>
         {this.state.loading || !this.state.document ? (
           <GridSpinner />
         ) : (
@@ -503,7 +544,13 @@ class DocumentEditor extends Component {
                     <Line>{this.renderFigures()}</Line>
                   </EditorContent>
                   <ButtonContainer>
-                    <Button>Submit Article</Button>
+                    <Button
+                      onClick={() => {
+                        this.submit();
+                      }}
+                    >
+                      Submit Article
+                    </Button>
                   </ButtonContainer>
                 </EditorCard>
               </EditorParent>

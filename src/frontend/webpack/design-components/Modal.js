@@ -39,8 +39,8 @@ const modalFade = keyframes`
 
 const MyModal = styled.div`
   min-height: 250px;
-  max-width: 500px;
-  min-width: 300px;
+  max-width: 700px;
+  min-width: 350px;
   margin: 1.75rem auto;
   display: flex;
   flex-direction: column;
@@ -97,7 +97,11 @@ const CloseButton = styled.div`
   cursor: pointer;
 `;
 
-const Content = styled.p`
+const Content = styled.div`
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.6;
+  word-break: break-word;
   text-align: center;
 `;
 
@@ -115,7 +119,7 @@ const ActionButton = styled.div`
   line-height: 1.5;
   display: inline-block;
   padding: 0.625rem 1.25rem;
-  transition: 0.5s all; 
+  transition: 0.5s all;
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
