@@ -6,7 +6,7 @@ import articleVersionService from './article-version-service.mjs';
 
 export default {
   getAllSubmissions: () => {
-    return ArticleSubmission.find({});
+    return ArticleSubmission.find({}).populate('articleVersions');
   },
   createSubmission: async (ownerAddress) => {
     // create first article version

@@ -127,6 +127,25 @@ test(PRETEXT + 'Sign up Editor', async t => {
   user = await userService.getUserByEthereumAddress(contractOwner);
   t.is(user.isEditor, true);
 });
+
+
+test(PRETEXT + 'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED', async t => {
+  // create user on DB
+  t.is((await userService.getAllUsers()).length, 0);
+  let user = await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
+  t.is((await userService.getAllUsers()).length, 1);
+
+  // create an article-draft on DB
+  t.is((await articleSubmissionService.getAllSubmissions()).length, 0);
+  await articleSubmissionService.createSubmission(user.ethereumAddress);
+  let articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+
+  t.is(articleSubmission.articleVersions.length, 1);
+  t.is(articleSubmission.articleVersions.articleVersionState, ArticleVersionState.DRAFT);
+
+  //TODO make submission to SC
+  //TODO check if state of articleversion changes to SUBMITTED
+});
 //
 // test(PRETEXT + 'Submit Article & auto-start of Submit first Article-Version', async t => {
 //   // create user on DB
