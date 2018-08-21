@@ -16,7 +16,7 @@ export const Container = styled.div`
   );
   position: relative;
   z-index: -10;
-  margin-bottom: -180px !important;
+  margin-bottom: -225px !important;
 `;
 
 const BallContainer = styled.div`
