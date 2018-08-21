@@ -17,6 +17,9 @@ const MyIcon = styled.svg`
 `;
 
 const MaterialIcon = styled.div`
+  &:hover {
+    transition: 0.5s;
+  }
   font-size: ${props => props.width}px;
   margin-bottom: ${props => (props.bottom ? props.bottom + 'px' : null)};
   margin-left: ${props => (props.left ? props.left + 'px' : null)};

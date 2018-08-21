@@ -237,8 +237,10 @@ class MyArticles extends Component {
               <Icon
                 style={{marginLeft: 'auto', marginRight: '35px'}}
                 icon={'material'}
-                material={'add_to_photos'}
-                width={40}
+                material={'add_circle_outline'}
+                width={45}
+                color={__THIRD}
+                onClick={() => this.createNewArticle()}
               />
             </TitleContainer>
             {this.state.drafts ? (
