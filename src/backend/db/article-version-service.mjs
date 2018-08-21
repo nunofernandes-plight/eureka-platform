@@ -92,5 +92,20 @@ export default {
     articleVersion.timestamp = new Date().getTime();
     await ArticleVersion.findByIdAndUpdate(articleVersionId, articleVersion);
     return 'Successful updated Article Version with ID: ' + articleVersionId;
+  },
+
+  finishDraftById: async (userAddress, articleVersionId, articleHash) => {
+    // error checking
+    let articleVersion = await ArticleVersion.findById(articleVersionId);
+    if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
+    if (articleVersion.articleVersionState !== ArticleVersionStates.DRAFT)
+      errorThrower.notAnArticleDraft(articleVersionId);
+    if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+
+    articleVersion.articleHash = articleHash;
+    articleVersion.articleVersionState = ArticleVersionStates.FINISHED_DRAFT;
+
+    await articleVersion.save();
+    return 'Succesful finished draft of article-version';
   }
 };

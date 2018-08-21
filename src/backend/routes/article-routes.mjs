@@ -22,9 +22,8 @@ router.get(
     return await articleVersionService.getDraftsOfUser(ethereumAddress);
   })
 );
-/**
- * DRAFTS
- */
+
+/********* DRAFTS *********/
 const DRAFT_BASE = '/drafts';
 
 router.get(DRAFT_BASE,
@@ -47,9 +46,7 @@ router.get(
 );
 
 
-/**
- * Get specific article-version if it is a draft
- */
+/*** Get specific article-version if it is a draft*/
 router.get(
   DRAFT_BASE + '/:draftId',
   asyncHandler(async req => {
@@ -67,7 +64,7 @@ router.get(
 
 router.put(
   DRAFT_BASE + '/:draftId',
-  asyncHandler(async  req => {
+  asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     if (!ethereumAddress) errorThrower.notLoggedIn();
     if (!req.params.draftId) errorThrower.missingParameter('DraftId');
@@ -100,6 +97,20 @@ router.put(
   })
 );
 
+/**
+ * Before submisiion to the SC, the frontend calls the backend providing the articleHash, so the DB can afterwards match SC submission with drafts
+ */
+router.put(
+  DRAFT_BASE + '/:draftId/submit',
+  asyncHandler(async req => {
+    const ethereumAddress = req.session.passport.user.ethereumAddress;
+    if (!ethereumAddress) errorThrower.notLoggedIn();
+
+    const draftId = req.params.draftId;
+    return await articleVersionService.finishDraftById(draftId);
+  })
+);
+
 router.delete(
   DRAFT_BASE + '/:draftId',
   asyncHandler(async req => {
@@ -118,7 +129,7 @@ router.delete(
 );
 
 
-/** ADMIN AREA **/
+/********* ADMIN AREA *********/
 router.use(accesController.rolesOnly(Roles.ADMIN));
 router.get(
   '/',
