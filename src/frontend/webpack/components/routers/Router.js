@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import {Switch, Route} from 'react-router';
 import {BrowserRouter, Redirect} from 'react-router-dom';
-import WelcomePage from './webpack/views/WelcomePage';
-import Header from './webpack/components/Header';
-import Login from './webpack/components/Login';
-import MetaMaskGuide from './webpack/MetaMaskGuide';
-import {getDomain} from '../helpers/getDomain.js';
-import SignUp from './webpack/components/SignUp.js';
-import PanelLeft from './webpack/components/PanelLeft.js';
-import {DashBoardGuard} from './webpack/guards/Guards.js';
-import DashboardRouter from './webpack/components/routers/DashboardRouter.js';
+import WelcomePage from '../../views/WelcomePage';
+import Header from '../Header';
+import Login from '../Login';
+import MetaMaskGuide from '../../MetaMaskGuide';
+import {getDomain} from '../../../../helpers/getDomain.js';
+import SignUp from '../SignUp.js';
+import PanelLeft from '../PanelLeft.js';
+import {DashBoardGuard} from '../guards/Guards.js';
+import DashboardRouter from './DashboardRouter.js';
 
 class Router extends Component {
   constructor() {

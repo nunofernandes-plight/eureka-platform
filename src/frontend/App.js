@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Router from './Router';
+import Router from './webpack/components/routers/Router';
 import Web3Providers from './web3/Web3Providers.js';
 import Web3 from 'web3';
 import NoConnection from './webpack/NoConnection.js';
