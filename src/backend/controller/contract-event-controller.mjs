@@ -17,9 +17,7 @@ export default {
       undefined,
       async (error, event) => {
         if (error) throw error;
-        await articleSubmissionService.createSubmission(
-          event.returnValues.submissionId, event.returnValues.submissionOwner);
-        await articleSubmissionService.submitArticleVersion(
+        await articleSubmissionService.updateSubmissionStartByArticleHash(
           event.returnValues.submissionId,
           event.returnValues.articleHash,
           event.returnValues.articleURL

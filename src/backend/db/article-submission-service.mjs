@@ -51,6 +51,32 @@ export default {
     return ArticleSubmission.findById(_submissionId);
   },
 
+  /**
+   * Gets the submission, which contains an article-version holding the
+   * articleHash provided as param with in it.
+   * @param scSubmissionId
+   * @param articleHash
+   * @param articleUrl
+   * @returns {Promise<void>}
+   */
+  updateSubmissionStartByArticleHash: async (scSubmissionId, articleHash, articleUrl) => {
+    let articleVersion = await ArticleVersion.findOne({articleHash: articleHash});
+
+    // error checking
+    if(!articleVersion) errorThrower.noEntryFoundById(articleHash);
+    if(articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT)
+      errorThrower.notCorrectStatus(ArticleVersionState.FINISHED_DRAFT, articleVersion.articleVersionState);
+
+    articleVersion.articleVersionState = ArticleVersionState.SUBMITTED;
+    await articleVersion.save();
+
+    let articleSubmission = await ArticleSubmission.findOne({articleVersions: articleVersion._id});
+    articleSubmission.scSubmissionID = scSubmissionId;
+    articleSubmission.articleUrl = articleUrl;
+    await articleSubmission.save();
+    return articleSubmission;
+  },
+
 
   deleteSubmissionById: async (userAddress, submissionId) => {
     const articleSubmission = await ArticleSubmission.findByIdAndDelete(submissionId);

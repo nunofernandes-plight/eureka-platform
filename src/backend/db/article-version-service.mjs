@@ -74,12 +74,18 @@ export default {
     return articleVersion;
   },
 
+  getArticleVersionByArticleHash: async (articleHash) => {
+    const articleVersion = await ArticleVersion.findOne(articleHash);
+    if(!articleVersion) errorThrower.noEntryFoundById(articleHash);
+    return articleVersion;
+  },
+
   updateDraftById: async (userAddress, articleVersionId, document) => {
     // error checking
     let articleVersion = await ArticleVersion.findById(articleVersionId);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
     if (articleVersion.articleVersionState !== ArticleVersionStates.DRAFT)
-      errorThrower.notAnArticleDraft(articleVersionId);
+      errorThrower.notCorrectStatus(ArticleVersionStates.DRAFT, articleVersion.articleVersionState);
     if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
 
     // add new document variables
@@ -99,7 +105,7 @@ export default {
     let articleVersion = await ArticleVersion.findById(articleVersionId);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
     if (articleVersion.articleVersionState !== ArticleVersionStates.DRAFT)
-      errorThrower.notAnArticleDraft(articleVersionId);
+      errorThrower.notCorrectStatus(ArticleVersionStates.DRAFT, articleVersion.articleVersionState);
     if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
 
     articleVersion.articleHash = articleHash;
