@@ -1,5 +1,6 @@
 import userService from '../db/user-service.mjs';
 import articleSubmissionService from '../db/article-submission-service.mjs';
+import articleVersionService from '../db/article-version-service.mjs';
 import reviewService from '../db/review-service.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 
@@ -68,8 +69,7 @@ export default {
       undefined,
       async (error, event) => {
         if (error) throw error;
-        await articleSubmissionService.changeArticleVersionState(
-          event.returnValues.submissionId,
+        await articleVersionService.changeArticleVersionState(
           event.returnValues.articleHash,
           ArticleVersionState.EDITOR_CHECKED
         );
@@ -81,69 +81,68 @@ export default {
       undefined,
       async (error, event) => {
         if (error) throw error;
-        await articleSubmissionService.changeArticleVersionState(
-          event.returnValues.submissionId,
+        await articleVersionService.changeArticleVersionState(
           event.returnValues.articleHash,
           ArticleVersionState.DECLINED_SANITY_NOTOK
         );
       }
     );
 
-    /** Reviewers are assigned as editor-approved on an article **/
-    EurekaPlatformContract.events.ReviewersAreInvited(
-      undefined,
-      async (error, event) => {
-        if (error) throw error;
-
-        const approvedReviewers = event.returnValues.editorApprovedReviewers;
-        const submissionId = event.returnValues.submissionId;
-        const articleHash = event.returnValues.articleHash;
-        const timestamp = event.returnValues.stateTimestamp;
-
-        await articleSubmissionService.changeArticleVersionState(
-          event.returnValues.submissionId,
-          event.returnValues.articleHash,
-          ArticleVersionState.REVIEWERS_INVITED
-        );
-
-        const reviews = await createReviews(approvedReviewers, submissionId, articleHash, timestamp);
-        reviews.forEach(review => {
-          userService.addReviewInvitation(review.reviewerAddress, review);
-        });
-      }
-    );
-
-    /** Acception of Reviewer Invitation**/
-    EurekaPlatformContract.events.InvitationIsAccepted(
-      undefined,
-      async (error, event) => {
-        if (error) throw error;
-
-        // TODO: update review state to invitation_accepted & stateTimestamp
-        // TODO update submission/article-version/
-        // TODO
-        console.log('INVITATION ACCEPTED on' +
-          event.returnValues.articleHash +
-          ' by ' +
-          event.returnValues.reviewerAddress
-        );
-      }
-    );
+    // /** Reviewers are assigned as editor-approved on an article **/
+    // EurekaPlatformContract.events.ReviewersAreInvited(
+    //   undefined,
+    //   async (error, event) => {
+    //     if (error) throw error;
+    //
+    //     const approvedReviewers = event.returnValues.editorApprovedReviewers;
+    //     const submissionId = event.returnValues.submissionId;
+    //     const articleHash = event.returnValues.articleHash;
+    //     const timestamp = event.returnValues.stateTimestamp;
+    //
+    //     await articleSubmissionService.changeArticleVersionState(
+    //       event.returnValues.submissionId,
+    //       event.returnValues.articleHash,
+    //       ArticleVersionState.REVIEWERS_INVITED
+    //     );
+    //
+    //     const reviews = await createReviews(approvedReviewers, submissionId, articleHash, timestamp);
+    //     reviews.forEach(review => {
+    //       userService.addReviewInvitation(review.reviewerAddress, review);
+    //     });
+    //   }
+    // );
+    //
+    // /** Acception of Reviewer Invitation**/
+    // EurekaPlatformContract.events.InvitationIsAccepted(
+    //   undefined,
+    //   async (error, event) => {
+    //     if (error) throw error;
+    //
+    //     // TODO: update review state to invitation_accepted & stateTimestamp
+    //     // TODO update submission/article-version/
+    //     // TODO
+    //     console.log('INVITATION ACCEPTED on' +
+    //       event.returnValues.articleHash +
+    //       ' by ' +
+    //       event.returnValues.reviewerAddress
+    //     );
+    //   }
+    // );
   }
 };
 
-async function createReviews(approvedReviewers, submissionId, articleHash, timestamp) {
-  let reviews = [];
-
-  for (const approvedReviewer of approvedReviewers) {
-    const review = await createReview(approvedReviewer, submissionId, articleHash, timestamp);
-    reviews.push(review);
-  }
-  return reviews;
-}
-
-async function createReview(reviewerAddress, submissionId, articleHash, timestamp) {
-  let review = await reviewService.createReviewAndReturn(submissionId, articleHash, timestamp, reviewerAddress);
-  await articleSubmissionService.pushReviewIntoArticleVersion(submissionId, articleHash, review);
-  return review;
-}
+// async function createReviews(approvedReviewers, submissionId, articleHash, timestamp) {
+//   let reviews = [];
+//
+//   for (const approvedReviewer of approvedReviewers) {
+//     const review = await createReview(approvedReviewer, submissionId, articleHash, timestamp);
+//     reviews.push(review);
+//   }
+//   return reviews;
+// }
+//
+// async function createReview(reviewerAddress, submissionId, articleHash, timestamp) {
+//   let review = await reviewService.createReviewAndReturn(submissionId, articleHash, timestamp, reviewerAddress);
+//   await articleSubmissionService.pushReviewIntoArticleVersion(submissionId, articleHash, review);
+//   return review;
+// }

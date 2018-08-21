@@ -116,17 +116,17 @@ async function cleanDB() {
   await ArticleSubmission.remove({});
 }
 
-// test(PRETEXT + 'Sign up Editor', async t => {
-//   await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
-//
-//   let user = await userService.getUserByEthereumAddress(contractOwner);
-//   t.is(user.isEditor, false);
-//
-//   await signUpEditor(eurekaPlatformContract, contractOwner, contractOwner);
-//
-//   user = await userService.getUserByEthereumAddress(contractOwner);
-//   t.is(user.isEditor, true);
-// });
+test(PRETEXT + 'Sign up Editor', async t => {
+  await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
+
+  let user = await userService.getUserByEthereumAddress(contractOwner);
+  t.is(user.isEditor, false);
+
+  await signUpEditor(eurekaPlatformContract, contractOwner, contractOwner);
+
+  user = await userService.getUserByEthereumAddress(contractOwner);
+  t.is(user.isEditor, true);
+});
 //
 // test(PRETEXT + 'Submit Article & auto-start of Submit first Article-Version', async t => {
 //   // create user on DB
@@ -254,72 +254,72 @@ async function cleanDB() {
 //   t.is(articleSubmission2.articleVersions[0].articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
 // });
 
-test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
-  // create author and editor
-  let testAccounts = await getAccounts();
-  let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
-  let editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[4], 'test-editor-avatar');
-
-  let reviewer1 = await userService.createUser('testReviewer1', 'reviewer1@test.test', testAccounts[5], 'test-reviewer-avatar');
-  let reviewer2 = await userService.createUser('testReviewer2', 'reviewer2@test.test', testAccounts[6], 'test-reviewer-avatar');
-
-  /** Sign-up and submission **/
-  // signup editor and submit article 1
-  await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
-  await submitArticle(
-    eurekaTokenContract,
-    author.ethereumAddress,
-    eurekaPlatformContract.options.address,
-    5000,
-    ARTICLE1_DATA_IN_HEX
-  );
-
-  let articleSubmissions = await articleSubmissionService.getAllSubmissions();
-  t.is(articleSubmissions.length, 1);
-
-  // assign editor for the submission process of article 1 & 2
-  await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[0]._id, editor.ethereumAddress);
-  let articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
-  t.is(articleSubmission.editor, editor.ethereumAddress);
-
-  // Accept sanity check for article 1
-  const articleHash = articleSubmission.articleVersions[0].articleHash;
-  await setSanityToOk(eurekaPlatformContract, articleHash, editor.ethereumAddress);
-
-  /** Invite Rerviewers **/
-  // Status befor Invitation
-  articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
-  t.is(articleSubmission.articleVersions[0].articleVersionState, ArticleVersionState.EDITOR_CHECKED);
-  t.is(articleSubmission.articleVersions[0].reviews.length, 0);
-
-  await inviteReviewersForArticle(eurekaPlatformContract, articleHash,
-    [reviewer1.ethereumAddress, reviewer2.ethereumAddress], editor.ethereumAddress);
-
-  // Status after invitation
-  articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
-  let dbReviewer1 = await userService.getUserByEthereumAddress(reviewer1.ethereumAddress);
-  let dbReviewer2 = await userService.getUserByEthereumAddress(reviewer2.ethereumAddress);
-  t.is(articleSubmission.articleVersions[0].articleVersionState, ArticleVersionState.REVIEWERS_INVITED);
-  let counter = 0;
-  //try 5 times to call DB as it can take some time to write all into DB
-  while (
-    (articleSubmission.articleVersions[0].reviews.length < 2 ||
-      dbReviewer1.reviewerInvitation.length < 1 ||
-      dbReviewer2.reviewerInvitation.length < 1)
-    &&
-    counter < 5) {
-    sleepSync(5000);
-    articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
-    dbReviewer1 = await userService.getUserByEthereumAddress(reviewer1.ethereumAddress);
-    dbReviewer2 = await userService.getUserByEthereumAddress(reviewer2.ethereumAddress);
-    console.log('Looper for the ' + (counter + 1) + ' time');
-    counter++;
-  }
-  t.is(articleSubmission.articleVersions[0].reviews.length, 2);
-  t.is(dbReviewer1.reviewerInvitation.length, 1);
-  t.is(dbReviewer2.reviewerInvitation.length, 1);
-
-  /** Acception of Invitation **/
-  await acceptReviewerInvitation(eurekaPlatformContract, articleHash, reviewer1.ethereumAddress);
-});
+// test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
+//   // create author and editor
+//   let testAccounts = await getAccounts();
+//   let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
+//   let editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[4], 'test-editor-avatar');
+//
+//   let reviewer1 = await userService.createUser('testReviewer1', 'reviewer1@test.test', testAccounts[5], 'test-reviewer-avatar');
+//   let reviewer2 = await userService.createUser('testReviewer2', 'reviewer2@test.test', testAccounts[6], 'test-reviewer-avatar');
+//
+//   /** Sign-up and submission **/
+//   // signup editor and submit article 1
+//   await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
+//   await submitArticle(
+//     eurekaTokenContract,
+//     author.ethereumAddress,
+//     eurekaPlatformContract.options.address,
+//     5000,
+//     ARTICLE1_DATA_IN_HEX
+//   );
+//
+//   let articleSubmissions = await articleSubmissionService.getAllSubmissions();
+//   t.is(articleSubmissions.length, 1);
+//
+//   // assign editor for the submission process of article 1 & 2
+//   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[0]._id, editor.ethereumAddress);
+//   let articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+//   t.is(articleSubmission.editor, editor.ethereumAddress);
+//
+//   // Accept sanity check for article 1
+//   const articleHash = articleSubmission.articleVersions[0].articleHash;
+//   await setSanityToOk(eurekaPlatformContract, articleHash, editor.ethereumAddress);
+//
+//   /** Invite Rerviewers **/
+//   // Status befor Invitation
+//   articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+//   t.is(articleSubmission.articleVersions[0].articleVersionState, ArticleVersionState.EDITOR_CHECKED);
+//   t.is(articleSubmission.articleVersions[0].reviews.length, 0);
+//
+//   await inviteReviewersForArticle(eurekaPlatformContract, articleHash,
+//     [reviewer1.ethereumAddress, reviewer2.ethereumAddress], editor.ethereumAddress);
+//
+//   // Status after invitation
+//   articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+//   let dbReviewer1 = await userService.getUserByEthereumAddress(reviewer1.ethereumAddress);
+//   let dbReviewer2 = await userService.getUserByEthereumAddress(reviewer2.ethereumAddress);
+//   t.is(articleSubmission.articleVersions[0].articleVersionState, ArticleVersionState.REVIEWERS_INVITED);
+//   let counter = 0;
+//   //try 5 times to call DB as it can take some time to write all into DB
+//   while (
+//     (articleSubmission.articleVersions[0].reviews.length < 2 ||
+//       dbReviewer1.reviewerInvitation.length < 1 ||
+//       dbReviewer2.reviewerInvitation.length < 1)
+//     &&
+//     counter < 5) {
+//     sleepSync(5000);
+//     articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+//     dbReviewer1 = await userService.getUserByEthereumAddress(reviewer1.ethereumAddress);
+//     dbReviewer2 = await userService.getUserByEthereumAddress(reviewer2.ethereumAddress);
+//     console.log('Looper for the ' + (counter + 1) + ' time');
+//     counter++;
+//   }
+//   t.is(articleSubmission.articleVersions[0].reviews.length, 2);
+//   t.is(dbReviewer1.reviewerInvitation.length, 1);
+//   t.is(dbReviewer2.reviewerInvitation.length, 1);
+//
+//   /** Acception of Invitation **/
+//   await acceptReviewerInvitation(eurekaPlatformContract, articleHash, reviewer1.ethereumAddress);
+// });
 
