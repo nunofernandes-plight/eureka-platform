@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {__ALERT_ERROR} from '../../helpers/colors.js';
 
-const Title = styled.h2`
+export const CardTitle = styled.h2`
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: 0.025em;
@@ -28,7 +28,7 @@ const CardContainer = styled.div`
 export const Card = props => {
   return (
     <CardContainer {...props}>
-      <Title>{props.title}</Title>
+      {props.title ? <CardTitle>{props.title}</CardTitle> : null}
       {props.children}
     </CardContainer>
   );
