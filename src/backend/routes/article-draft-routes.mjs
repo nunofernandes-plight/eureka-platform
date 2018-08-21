@@ -12,21 +12,7 @@ router.use(accesController.loggedInOnly);
 /**
  * Get some infos about all the drafts belonging to the user
  */
-router.get(
-  '/',
-  asyncHandler(async req => {
-    const ethereumAddress = req.session.passport.user.ethereumAddress;
-    if (!ethereumAddress) {
-      errorThrower.notLoggedIn();
-    }
-    return await articleVersionService.getDraftsOfUser(ethereumAddress);
-  })
-);
-
-/********* DRAFTS *********/
-const DRAFT_BASE = '/drafts';
-
-router.get(DRAFT_BASE,
+router.get('/',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     if (!ethereumAddress) errorThrower.notLoggedIn();
@@ -35,7 +21,7 @@ router.get(DRAFT_BASE,
 );
 
 router.get(
-  DRAFT_BASE + '/new',
+  '/new',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     if (!ethereumAddress) {
@@ -45,10 +31,9 @@ router.get(
   })
 );
 
-
 /*** Get specific article-version if it is a draft*/
 router.get(
-  DRAFT_BASE + '/:draftId',
+  '/:draftId',
   asyncHandler(async req => {
     if (!req.params.draftId) {
       errorThrower.missingParameter('draftId');
@@ -63,7 +48,7 @@ router.get(
 );
 
 router.put(
-  DRAFT_BASE + '/:draftId',
+  '/:draftId',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     if (!ethereumAddress) errorThrower.notLoggedIn();
@@ -80,7 +65,7 @@ router.put(
  * Updates the document of a draft with set all the variables provided
  */
 router.put(
-  DRAFT_BASE + '/:draftId',
+  '/:draftId',
   asyncHandler(async req => {
     const draftId = req.params.draftId;
     if (!req.params.draftId) {
@@ -97,22 +82,9 @@ router.put(
   })
 );
 
-/**
- * Before submisiion to the SC, the frontend calls the backend providing the articleHash, so the DB can afterwards match SC submission with drafts
- */
-router.put(
-  DRAFT_BASE + '/:draftId/submit',
-  asyncHandler(async req => {
-    const ethereumAddress = req.session.passport.user.ethereumAddress;
-    if (!ethereumAddress) errorThrower.notLoggedIn();
-
-    const draftId = req.params.draftId;
-    return await articleVersionService.finishDraftById(draftId);
-  })
-);
 
 router.delete(
-  DRAFT_BASE + '/:draftId',
+  '/:draftId',
   asyncHandler(async req => {
     const draftId = req.params.draftId;
     if (!req.params.draftId) {
@@ -125,6 +97,20 @@ router.delete(
     }
 
     return await articleSubmissionService.deleteSubmissionById(ethereumAddress, draftId);
+  })
+);
+
+/**
+ * Before submission to the SC, the frontend calls the backend providing the articleHash, so the DB can afterwards match SC submission with drafts
+ */
+router.put(
+  '/:draftId/submit',
+  asyncHandler(async req => {
+    const ethereumAddress = req.session.passport.user.ethereumAddress;
+    if (!ethereumAddress) errorThrower.notLoggedIn();
+
+    const draftId = req.params.draftId;
+    return await articleVersionService.finishDraftById(draftId);
   })
 );
 

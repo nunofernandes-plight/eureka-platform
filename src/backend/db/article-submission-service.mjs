@@ -29,6 +29,18 @@ export default {
   },
 
 
+  /**
+   * Get all the article-submissions of an user
+   * @param userAddress
+   * @returns {Promise<*>}
+   */
+  getSubmissionsOfUser: async (userAddress) => {
+    const submissions = await ArticleSubmission.find({
+      ownerAddress: userAddress
+    });
+    if(!submissions) errorThrower.noEntryFoundById('EthereumAddress');
+    return submissions;
+  },
 
   /**
    * Get one submission by DB-ID
@@ -38,6 +50,7 @@ export default {
   getSubmissionById: async _submissionId => {
     return ArticleSubmission.findById(_submissionId);
   },
+
 
   deleteSubmissionById: async (userAddress, submissionId) => {
     const articleSubmission = await ArticleSubmission.findByIdAndDelete(submissionId);
