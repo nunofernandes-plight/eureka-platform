@@ -2,6 +2,8 @@ import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
 import accesController from '../controller/acess-controller.mjs';
 import articleDraftService from '../db/article-draft-service.mjs';
+import articleSubmissionService from '../db/article-submission-service.mjs';
+import articleVersionService from '../db/article-version-service.mjs';
 import Roles from '../schema/roles-enum.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 
@@ -22,63 +24,67 @@ router.get(
   })
 );
 /**
- * Create a new article draft
+ * DRAFTS
  */
+const DRAFT_BASE = '/drafts';
+
+router.get(DRAFT_BASE,
+  asyncHandler(async req => {
+    const ethereumAddress = req.session.passport.user.ethereumAddress;
+    if (!ethereumAddress) errorThrower.notLoggedIn();
+    return await articleVersionService.getDraftsOfUser(ethereumAddress);
+  })
+);
+
 router.get(
-  '/new',
+  DRAFT_BASE + '/new',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     if (!ethereumAddress) {
       errorThrower.notLoggedIn();
     }
-    return await articleDraftService.createDraft(ethereumAddress);
+    return await articleSubmissionService.createSubmission(ethereumAddress);
   })
 );
 
 
 /**
- * Get specific draft by draftId
+ * Get specific article-version if it is a draft
  */
 router.get(
-  '/:draftId',
+  DRAFT_BASE + '/:draftId',
   asyncHandler(async req => {
     if (!req.params.draftId) {
       errorThrower.missingParameter('draftId');
     }
 
     const requesterAddress = req.session.passport.user.ethereumAddress;
-    return await articleDraftService.getDraftById(
+    return await articleVersionService.getArticleVersionDraftById(
       requesterAddress,
       req.params.draftId
     );
   })
 );
 
-/**
- * Updates the whole document of a draft by replacing it with the provided document
- */
-// router.put(
-//   '/:draftId',
-//   asyncHandler(async req => {
-//     const draftId = req.params.draftId;
-//     if (!req.params.draftId) {
-//       errorThrower.missingParameter('draftId');
-//     }
-//
-//     const ethereumAddress = req.session.passport.user.ethereumAddress;
-//     if (!ethereumAddress) {
-//       errorThrower.notLoggedIn();
-//     }
-//
-//     return await articleDraftService.updateDraftById(ethereumAddress, draftId, req.body.document);
-//   })
-// );
+router.put(
+  DRAFT_BASE + '/:draftId',
+  asyncHandler(async  req => {
+    const ethereumAddress = req.session.passport.user.ethereumAddress;
+    if (!ethereumAddress) errorThrower.notLoggedIn();
+    if (!req.params.draftId) errorThrower.missingParameter('DraftId');
+    const draftId = req.params.draftId;
+
+    return await articleVersionService.updateDraftById(ethereumAddress, draftId,
+      req.body.document);
+
+  })
+);
 
 /**
  * Updates the document of a draft with set all the variables provided
  */
 router.put(
-  '/:draftId',
+  DRAFT_BASE + '/:draftId',
   asyncHandler(async req => {
     const draftId = req.params.draftId;
     if (!req.params.draftId) {
@@ -90,13 +96,13 @@ router.put(
       errorThrower.notLoggedIn();
     }
 
-    await articleDraftService.updateDraftVarsById(ethereumAddress, draftId, req.body.document);
-    return 'Document with ID ' + draftId + ' updated';
+    await articleVersionService.updateDraftById(ethereumAddress, draftId, req.body.document);
+    return 'ArticleVersion with ID ' + draftId + ' updated';
   })
 );
 
 router.delete(
-  '/:draftId',
+  DRAFT_BASE + '/:draftId',
   asyncHandler(async req => {
     const draftId = req.params.draftId;
     if (!req.params.draftId) {
@@ -108,11 +114,9 @@ router.delete(
       errorThrower.notLoggedIn();
     }
 
-    return await articleDraftService.deleteDraftById(ethereumAddress, draftId);
+    return await articleSubmissionService.deleteSubmissionById(ethereumAddress, draftId);
   })
 );
-
-
 
 
 /** ADMIN AREA **/

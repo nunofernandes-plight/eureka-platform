@@ -6,17 +6,22 @@ import {articleVersionSchema} from './article-version.mjs';
  */
 export const articleSubmissionSchema = mongoose.Schema(
   {
-    _id: {
-      type: Number
-    },
     ownerAddress: {
       type: String,
       required: true
     },
+    scSubmissionID: {
+      type: Number
+    },
     editor: {
       type: String
     },
-    articleVersions: [articleVersionSchema]
+    articleVersions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ArticleVersion'
+      }
+    ]
   },
   {collection: 'articleSubmissions'}
 );

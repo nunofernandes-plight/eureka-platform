@@ -1,34 +1,40 @@
 import mongoose from 'mongoose';
 import ArticleVersionState from './article-version-state-enum.mjs';
-import {reviewSchema} from './review.mjs'
+import {reviewSchema} from './review.mjs';
+
 /**
  * ArticleVersion for an submission on the eureka platform
  */
 export const articleVersionSchema = mongoose.Schema(
   {
-    submissionId: {
-      type: Number,
+    ownerAddress: {
+      type: String,
       required: true
+    },
+    document: {},
+    timestamp: {
+      type: Number
     },
     articleHash: {
-      type: String,
-      required: true
+      type: String
     },
     articleUrl: {
-      type: String,
-      required: true
+      type: String
     },
     articleVersionState: {
       type: String,
       enum: Object.values(ArticleVersionState),
-      default: ArticleVersionState.SUBMITTED
-    },
-    reviews: [
-      reviewSchema
-    ]
+      default: ArticleVersionState.DRAFT
+    }
+    // reviews: [
+    //   reviewSchema
+    // ]
   },
-  {collection: 'articleVersionState'}
+  {
+    collection: 'articleVersionState',
+    timestamps: true
+  }
 );
 
-const ArticleVersions = mongoose.model('ArticleVersion', articleVersionSchema, 'articleVersions');
-export default ArticleVersions;
+const ArticleVersion = mongoose.model('ArticleVersion', articleVersionSchema, 'articleVersions');
+export default ArticleVersion;
