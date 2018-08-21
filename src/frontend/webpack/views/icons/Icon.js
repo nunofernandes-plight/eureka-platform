@@ -16,6 +16,20 @@ const MyIcon = styled.svg`
   margin-top: ${props => (props.top ? props.top + 'px' : null)};
 `;
 
+const MaterialIcon = styled.div`
+  &:hover {
+    transition: 0.5s;
+  }
+  font-size: ${props => props.width}px;
+  margin-bottom: ${props => (props.bottom ? props.bottom + 'px' : null)};
+  margin-left: ${props => (props.left ? props.left + 'px' : null)};
+  margin-right: ${props => (props.right ? props.right + 'px' : null)};
+  margin-top: ${props => (props.top ? props.top + 'px' : null)};
+  vertical-align: middle;
+  color: ${props => (props.color ? props.color : null)};
+  cursor: pointer;
+`;
+
 const Icon = props => {
   switch (props.icon) {
     case 'chevron-down':
@@ -487,6 +501,32 @@ const Icon = props => {
             d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM272 80v80H144V80h128zm122 352H54a6 6 0 0 1-6-6V86a6 6 0 0 1 6-6h42v104c0 13.255 10.745 24 24 24h176c13.255 0 24-10.745 24-24V83.882l78.243 78.243a6 6 0 0 1 1.757 4.243V426a6 6 0 0 1-6 6zM224 232c-48.523 0-88 39.477-88 88s39.477 88 88 88 88-39.477 88-88-39.477-88-88-88zm0 128c-22.056 0-40-17.944-40-40s17.944-40 40-40 40 17.944 40 40-17.944 40-40 40z"
           />
         </MyIcon>
+      );
+
+    case 'fancy-pen':
+      return (
+        <MyIcon
+          {...props}
+          aria-hidden="true"
+          data-prefix="fas"
+          data-icon="pen-fancy"
+          className="svg-inline--fa fa-pen-fancy fa-w-16"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+        >
+          <path
+            fill="currentColor"
+            d="M79.18 282.94a32.005 32.005 0 0 0-20.24 20.24L0 480l4.69 4.69 92.89-92.89c-.66-2.56-1.57-5.03-1.57-7.8 0-17.67 14.33-32 32-32s32 14.33 32 32-14.33 32-32 32c-2.77 0-5.24-.91-7.8-1.57l-92.89 92.89L32 512l176.82-58.94a31.983 31.983 0 0 0 20.24-20.24l33.07-84.07-98.88-98.88-84.07 33.07zM369.25 28.32L186.14 227.81l97.85 97.85 199.49-183.11C568.4 67.48 443.73-55.94 369.25 28.32z"
+          />
+        </MyIcon>
+      );
+
+    case 'material':
+      return (
+        <MaterialIcon className="material-icons" {...props}>
+          {props.material}
+        </MaterialIcon>
       );
     default:
       return <div>default</div>;

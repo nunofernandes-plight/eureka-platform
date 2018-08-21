@@ -49,7 +49,7 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   padding: 0 20px;
-  margin-top: -275px !important;
+  margin-top: -60px !important;
 `;
 const EditorCard = styled.div`
   display: flex;
@@ -99,7 +99,7 @@ const LeftTopContainer = styled.div`
   background-color: #ffffff;
   margin-right: 20px;
   height: 100%;
-  margin-top: 73px;
+  margin-top: 75px;
 `;
 
 const RightTopContainer = styled.div`
@@ -191,7 +191,7 @@ class DocumentEditor extends Component {
 
     this.saveInterval = setInterval(() => {
       this.save();
-    }, 7500);
+    }, 2500);
   }
 
   componentWillUnmount() {
