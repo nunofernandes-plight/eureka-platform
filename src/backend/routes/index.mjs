@@ -7,7 +7,8 @@ import loginRoutes from './login-routes.mjs';
 import logoutRoutes from './logout-routes.mjs';
 import registerRoutes from './register-routes.mjs';
 import userRoutes from './user-routes.mjs';
-import articleRoutes from './article-routes.mjs';
+import articleDraftRoutes from './article-draft-routes.mjs';
+import articleSubmissionRoutes from './article-submission-routes.mjs';
 
 const router = express.Router();
 
@@ -20,7 +21,8 @@ router.use('/login', loginRoutes);
 router.use('/logout', logoutRoutes);
 router.use('/register', registerRoutes);
 router.use('/users', userRoutes);
-router.use('/articles', articleRoutes);
+router.use('/articles/drafts', articleDraftRoutes);
+router.use('/articles/submissions', articleSubmissionRoutes);
 
 
 export default router;

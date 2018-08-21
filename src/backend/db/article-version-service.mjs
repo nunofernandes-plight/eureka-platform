@@ -1,9 +1,10 @@
-import ArticleVersion from '../schema/article-version';
-import Document from '../../models/Document';
-import {serializeDocument} from '../../helpers/documentSerializer';
-import createNewEmpty from '../../helpers/createEditorDocument';
+import ArticleVersion from '../schema/article-version.mjs';
+import Document from '../../models/Document.mjs';
+import {serializeDocument} from '../../helpers/documentSerializer.mjs';
+import createNewEmpty from '../../helpers/createEditorDocument.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
+import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 
 export default {
   getAllArticleVersions: () => {
@@ -21,7 +22,7 @@ export default {
     });
 
     let dbArticleVersion = await version.save();
-    if(!dbArticleVersion) errorThrower.noCreationOfEntry('Article Version');
+    if (!dbArticleVersion) errorThrower.noCreationOfEntry('Article Version');
     return dbArticleVersion;
   },
 
@@ -41,7 +42,7 @@ export default {
     }
 
     let draftInfos = [];
-    drafts.map( draft => {
+    drafts.map(draft => {
       let draftInfo = {
         document: {}
       };
@@ -54,32 +55,13 @@ export default {
     return draftInfos;
   },
 
-  /**
-   * Returns the article-version, but only if it is still in state 'DRAFT'
-   * otherwise error
-   * @param userAddress
-   * @param articleVersionID
-   * @returns {Promise<void>}
-   */
-  getArticleVersionDraftById: async (userAddress, articleVersionID) => {
-    const articleVersion = await ArticleVersion.findById(articleVersionID);
-    if(!articleVersion) errorThrower.noEntryFoundById(articleVersionID);
-
-    if(articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
-    if(articleVersion.articleVersionState !== ArticleVersionStates.DRAFT) {
-      let error = new Error('Submitted ArticleVersion is not on state \'DRAFT\'');
-      error.status = 400;
-      throw error;
-    }
-    return articleVersion;
-  },
 
   updateDraftById: async (userAddress, articleVersionId, document) => {
     // error checking
     let articleVersion = await ArticleVersion.findById(articleVersionId);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
     if (articleVersion.articleVersionState !== ArticleVersionStates.DRAFT)
-      errorThrower.notAnArticleDraft(articleVersionId);
+      errorThrower.notCorrectStatus(ArticleVersionStates.DRAFT, articleVersion.articleVersionState);
     if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
 
     // add new document variables
@@ -92,5 +74,59 @@ export default {
     articleVersion.timestamp = new Date().getTime();
     await ArticleVersion.findByIdAndUpdate(articleVersionId, articleVersion);
     return 'Successful updated Article Version with ID: ' + articleVersionId;
+  },
+
+  finishDraftById: async (userAddress, articleVersionId, articleHash) => {
+    // error checking
+    let articleVersion = await ArticleVersion.findById(articleVersionId);
+    if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
+    if (articleVersion.articleVersionState !== ArticleVersionStates.DRAFT)
+      errorThrower.notCorrectStatus(ArticleVersionStates.DRAFT, articleVersion.articleVersionState);
+    if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+
+    articleVersion.articleHash = articleHash;
+    articleVersion.articleVersionState = ArticleVersionStates.FINISHED_DRAFT;
+
+    await articleVersion.save();
+    return 'Succesful finished draft of article-version';
+  },
+
+  /**
+   * Returns the article-version, but only if it is still in state 'DRAFT'
+   * otherwise error
+   * @param userAddress
+   * @param articleVersionID
+   * @returns {Promise<void>}
+   */
+  getArticleVersionDraftById: async (userAddress, articleVersionID) => {
+    const articleVersion = await ArticleVersion.findById(articleVersionID);
+    if (!articleVersion) errorThrower.noEntryFoundById(articleVersionID);
+
+    if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+    if (articleVersion.articleVersionState !== ArticleVersionStates.DRAFT) {
+      let error = new Error('Submitted ArticleVersion is not on state \'DRAFT\'');
+      error.status = 400;
+      throw error;
+    }
+    return articleVersion;
+  },
+
+  changeArticleVersionState: async (articleHash, versionState) => {
+    if (!(versionState in ArticleVersionState)) {
+      let error = new Error('Internal error: Provided param "versionState" is not a actual ArticleVersionState');
+      error.status = 500;
+      throw error;
+    }
+
+    ArticleVersion.findOneAndUpdate(
+      {
+        articleVersionState: versionState
+      },
+      (err, articleVersion) => {
+        if (err) throw err;
+        else {
+          return articleVersion;
+        }
+      });
   }
 };

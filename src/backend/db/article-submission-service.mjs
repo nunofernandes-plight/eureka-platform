@@ -6,7 +6,7 @@ import articleVersionService from './article-version-service.mjs';
 
 export default {
   getAllSubmissions: () => {
-    return ArticleSubmission.find({});
+    return ArticleSubmission.find({}).populate('articleVersions');
   },
   createSubmission: async (ownerAddress) => {
     // create first article version
@@ -29,6 +29,18 @@ export default {
   },
 
 
+  /**
+   * Get all the article-submissions of an user
+   * @param userAddress
+   * @returns {Promise<*>}
+   */
+  getSubmissionsOfUser: async (userAddress) => {
+    const submissions = await ArticleSubmission.find({
+      ownerAddress: userAddress
+    }).populate('articleVersions');
+    if(!submissions) errorThrower.noEntryFoundById('EthereumAddress');
+    return submissions;
+  },
 
   /**
    * Get one submission by DB-ID
@@ -38,6 +50,33 @@ export default {
   getSubmissionById: async _submissionId => {
     return ArticleSubmission.findById(_submissionId);
   },
+
+  /**
+   * Gets the submission, which contains an article-version holding the
+   * articleHash provided as param with in it.
+   * @param scSubmissionId
+   * @param articleHash
+   * @param articleUrl
+   * @returns {Promise<void>}
+   */
+  updateSubmissionStartByArticleHash: async (scSubmissionId, articleHash, articleUrl) => {
+    let articleVersion = await ArticleVersion.findOne({articleHash: articleHash});
+
+    // error checking
+    if(!articleVersion) errorThrower.noEntryFoundById(articleHash);
+    if(articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT)
+      errorThrower.notCorrectStatus(ArticleVersionState.FINISHED_DRAFT, articleVersion.articleVersionState);
+
+    articleVersion.articleVersionState = ArticleVersionState.SUBMITTED;
+    await articleVersion.save();
+
+    let articleSubmission = await ArticleSubmission.findOne({articleVersions: articleVersion._id});
+    articleSubmission.scSubmissionID = scSubmissionId;
+    articleSubmission.articleUrl = articleUrl;
+    await articleSubmission.save();
+    return articleSubmission;
+  },
+
 
   deleteSubmissionById: async (userAddress, submissionId) => {
     const articleSubmission = await ArticleSubmission.findByIdAndDelete(submissionId);
@@ -109,26 +148,6 @@ export default {
     submission.articleVersions.push(articleVersion);
     await submission.save();
     return submission;
-  },
-
-  changeArticleVersionState: async (_submissionId, _articleHash, versionState) => {
-    if (!(versionState in ArticleVersionState)) {
-      let error = new Error('Internal error: Provided param "versionState" is not a actual ArticleVersionState');
-      error.status = 500;
-      throw error;
-    }
-    let submission = await ArticleSubmission.findById(_submissionId);
-    if (!submission) {
-      errorThrower.noEntryFoundById('_submissionId');
-    }
-
-    //get position within article-version array
-    const articleVersionPosition = submission.articleVersions.findIndex((entry) => {
-      return entry.articleHash === _articleHash;
-    });
-
-    submission.articleVersions[articleVersionPosition].articleVersionState = versionState;
-    return await submission.save();
   },
 
   pushReviewIntoArticleVersion: async (_submissionId, _articleHash, review) => {

@@ -39,14 +39,19 @@ export default {
     throw error;
 
   },
+  missingBodyValue: (value) => {
+    let error = new Error('Missing body-value was not provided: ' + value);
+    error.status = 400;
+    throw error;
+  },
   internalError: (message) => {
     let error = new Error(message);
     error.status = 500;
     throw error;
   },
-  notAnArticleDraft: (articleVersionId) => {
-    let error = new Error('ArticleVersion corresponding to ID: ' + articleVersionId
-     + ' is not in Status \'Draft\'.');
+  notCorrectStatus: (expectedStatus, foundStatus) => {
+    let error = new Error('The status found is not as expected. Expected Status: '
+      + expectedStatus + '. Status found: ' + foundStatus);
     error.status = 400;
     throw error;
   }
