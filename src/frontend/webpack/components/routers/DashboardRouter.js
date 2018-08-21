@@ -31,7 +31,6 @@ class DashboardRouter extends Component {
           />
 
           <Route
-            exact
             path={`${this.props.base}/articles`}
             render={() => (
               <MyArticles
@@ -42,17 +41,7 @@ class DashboardRouter extends Component {
             )}
           />
 
-          <Route
-            exactly
-            path={`${this.props.base}/articles/:id`}
-            render={props => (
-              <DocumentEditor
-                user={this.props.user}
-                selectedAccount={this.props.selectedAccount}
-                {...props}
-              />
-            )}
-          />
+
 
           <Route
             exact
