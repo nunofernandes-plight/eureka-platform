@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {Card} from '../views/Card.js';
+import {Card, CardTitle} from '../views/Card.js';
 import {withRouter} from 'react-router-dom';
-import {__THIRD} from '../../helpers/colors.js';
+import {__ALERT_ERROR, __THIRD} from '../../helpers/colors.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import Modal from '../design-components/Modal.js';
 import CircleSpinner from '../views/spinners/CircleSpinner.js';
 import MyDrafts from '../views/MyDrafts.js';
+import Icon from '../views/icons/Icon.js';
 
 const Parent = styled.div`
   display: flex;
@@ -19,6 +20,21 @@ const CardContainer = styled.div`
   max-width: 1200px;
   justify-content: center;
   margin: 0 auto;
+`;
+
+const TitleContainer = styled.div`
+  &::before {
+    content: '';
+    margin: 1px auto 1px 1px;
+    visibility: hidden;
+    padding: 35px;
+    background: #ddd;
+  }
+  width: 100%;
+  display: flex;
+  color: ${__ALERT_ERROR} !important;
+  align-items: center;
+  justify-content: center;
 `;
 
 const IconContainer = styled.div`
@@ -215,7 +231,16 @@ class MyArticles extends Component {
       <Parent>
         {this.renderModal()}
         <CardContainer>
-          <Card width={1160} title={'Your Drafts'}>
+          <Card width={1160}>
+            <TitleContainer>
+              <CardTitle style={{margin: 0}}>My Drafts</CardTitle>
+              <Icon
+                style={{marginLeft: 'auto', marginRight: '35px'}}
+                icon={'material'}
+                material={'add_to_photos'}
+                width={40}
+              />
+            </TitleContainer>
             {this.state.drafts ? (
               <MyDrafts
                 drafts={this.state.drafts}
