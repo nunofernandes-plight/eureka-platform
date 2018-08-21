@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Card, CardTitle} from '../views/Card.js';
 import {withRouter} from 'react-router-dom';
-import {__ALERT_ERROR, __THIRD} from '../../helpers/colors.js';
+import {__ALERT_ERROR, __MAIN, __THIRD} from '../../helpers/colors.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import Modal from '../design-components/Modal.js';
 import CircleSpinner from '../views/spinners/CircleSpinner.js';
@@ -237,9 +237,9 @@ class MyArticles extends Component {
               <Icon
                 style={{marginLeft: 'auto', marginRight: '35px'}}
                 icon={'material'}
-                material={'add_circle_outline'}
+                material={'loupe'}
                 width={45}
-                color={__THIRD}
+                color={__MAIN}
                 onClick={() => this.createNewArticle()}
               />
             </TitleContainer>
