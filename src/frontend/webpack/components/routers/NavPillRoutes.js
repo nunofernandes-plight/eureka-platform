@@ -7,7 +7,7 @@ export const NavPillRoutes = [
     {
         path: 'submitted',
         icon: 'material',
-        material: 'gesture'
+        material: 'archive'
     },
     {
         path: 'review',

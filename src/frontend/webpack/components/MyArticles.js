@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Route} from 'react-router';
-import {Redirect, Link} from 'react-router-dom';
+import {Redirect, Link, withRouter} from 'react-router-dom';
 import MyDrafts from './MyDrafts.js';
 import DocumentEditor from './DocumentEditor.js';
 import NavPill from '../views/NavPill.js';
 import MySubmitted from './MySubmitted.js';
-import {__THIRD} from '../../helpers/colors.js';
 import {NavPillRoutes} from './routers/NavPillRoutes.js';
 
 const Parent = styled.div`
@@ -41,9 +40,22 @@ const Container = styled.div``;
 class MyArticles extends Component {
   constructor() {
     super();
+    this.state = {
+      currentPath: null
+    };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.changeActiveRoute();
+  }
+
+  changeActiveRoute() {
+    const currentPath = this.props.location.pathname
+      .toString()
+      .replace(this.props.base.toString(), '')
+      .replace(/[^a-zA-Z ]/g, '');
+    this.setState({currentPath});
+  }
 
   render() {
     return (
@@ -52,12 +64,15 @@ class MyArticles extends Component {
           <NavPills>
             {NavPillRoutes.map((item, index) => {
               return (
-                <MyLink to={`${this.props.base}/${item.path}`}>
+                <MyLink key={index} to={`${this.props.base}/${item.path}`}>
                   <NavPill
-                    status={'active'}
+                    status={
+                      this.state.currentPath === item.path ? 'active' : null
+                    }
                     icon={item.icon}
                     width={22}
                     material={item.material}
+                    onClick={() => this.changeActiveRoute()}
                   />
                 </MyLink>
               );
@@ -106,4 +121,4 @@ class MyArticles extends Component {
   }
 }
 
-export default MyArticles;
+export default withRouter(MyArticles);
