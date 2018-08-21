@@ -37,7 +37,7 @@ export default {
   getSubmissionsOfUser: async (userAddress) => {
     const submissions = await ArticleSubmission.find({
       ownerAddress: userAddress
-    });
+    }).populate('articleVersions');
     if(!submissions) errorThrower.noEntryFoundById('EthereumAddress');
     return submissions;
   },
