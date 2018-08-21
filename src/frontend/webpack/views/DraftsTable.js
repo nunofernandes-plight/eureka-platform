@@ -48,7 +48,7 @@ const MyLink = styled(Link)`
   transition: 0.25s all;
   text-decoration: none;
 `;
-const MyDrafts = props => {
+const DraftsTable = props => {
   return (
     <DraftsContainer>
       <Drafts>
@@ -100,4 +100,4 @@ const MyDrafts = props => {
   );
 };
 
-export default MyDrafts;
+export default DraftsTable;
