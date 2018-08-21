@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {Route} from 'react-router';
 import {Redirect} from 'react-router-dom';
 import MyDrafts from './MyDrafts.js';
+import DocumentEditor from './DocumentEditor.js';
 
 const Parent = styled.div`
   display: flex;
@@ -32,6 +33,18 @@ class MyArticles extends Component {
             exact
             path={`${this.props.base}/drafts`}
             render={() => <MyDrafts base={`${this.props.base}/drafts`} />}
+          />
+
+          <Route
+            exactly
+            path={`${this.props.base}/drafts/:id`}
+            render={props => (
+              <DocumentEditor
+                user={this.props.user}
+                selectedAccount={this.props.selectedAccount}
+                {...props}
+              />
+            )}
           />
 
           <Route

@@ -41,17 +41,7 @@ class DashboardRouter extends Component {
             )}
           />
 
-          {/*<Route*/}
-          {/*exactly*/}
-          {/*path={`${this.props.base}/articles/drafts/:id`}*/}
-          {/*render={props => (*/}
-          {/*<DocumentEditor*/}
-          {/*user={this.props.user}*/}
-          {/*selectedAccount={this.props.selectedAccount}*/}
-          {/*{...props}*/}
-          {/*/>*/}
-          {/*)}*/}
-          {/*/>*/}
+
 
           <Route
             exact

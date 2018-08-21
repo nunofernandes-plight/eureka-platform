@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import {withRouter} from 'react-router-dom';
 import DraftsTable from '../views/DraftsTable.js';
 import {Card, CardTitle} from '../views/Card.js';
 import {__ALERT_ERROR, __MAIN} from '../../helpers/colors.js';
@@ -52,7 +53,10 @@ class MyDrafts extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          this.props.history.push(`${this.props.base}/${response.data._id}`);
+          console.log(response.data.articleVersionId);
+          this.props.history.push(
+            `${this.props.base}/${response.data.articleVersionId}`
+          );
         } else {
           this.setState({
             errorMessage: response.error,
@@ -197,4 +201,4 @@ class MyDrafts extends React.Component {
   }
 }
 
-export default MyDrafts;
+export default withRouter(MyDrafts);
