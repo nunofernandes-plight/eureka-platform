@@ -11,7 +11,7 @@ import PanelLeft from '../PanelLeft.js';
 import {DashBoardGuard} from '../guards/Guards.js';
 import DashboardRouter from './DashboardRouter.js';
 
-class Router extends Component {
+class MainRouter extends Component {
   constructor() {
     super();
     this.state = {
@@ -75,6 +75,10 @@ class Router extends Component {
     }
   }
 
+  getPaddingLeft() {
+    return 180;
+  }
+
   render() {
     return (
       <div>
@@ -97,7 +101,7 @@ class Router extends Component {
                       isAuthenticated={this.state.isAuthenticated}
                     >
                       <PanelLeft base={'/app'} />
-                      <div style={{paddingLeft: 180}}>
+                      <div style={{paddingLeft: this.getPaddingLeft()}}>
                         <DashboardRouter
                           base={'/app'}
                           user={this.state.user}
@@ -171,4 +175,4 @@ class Router extends Component {
   }
 }
 
-export default Router;
+export default MainRouter;

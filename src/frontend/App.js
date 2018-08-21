@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Router from './webpack/components/routers/Router';
+import MainRouter from './webpack/components/routers/MainRouter.js';
 import Web3Providers from './web3/Web3Providers.js';
 import Web3 from 'web3';
 import NoConnection from './webpack/NoConnection.js';
@@ -85,7 +85,8 @@ class App extends Component {
         <Detector
           render={({online}) =>
             online ? (
-              <Router
+              <MainRouter
+                contract={this.state.contract}
                 web3={this.state.web3}
                 provider={this.state.provider}
                 network={this.state.network}
