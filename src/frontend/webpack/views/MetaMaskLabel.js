@@ -19,8 +19,8 @@ const MetaMask = Item.extend`
   align-items: center;
   font-size: 13px;
 
-  padding-top: 6px;
-  padding-bottom: 6px;
+  padding-top: 9px;
+  padding-bottom: 9px;
   padding-left: 10px;
   padding-right: 4px;
   border-radius: 6px;
