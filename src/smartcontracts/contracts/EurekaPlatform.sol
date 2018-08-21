@@ -75,7 +75,7 @@ contract EurekaPlatform {
         NEW_REVIEW_ROUND_REQUESTED,
         CLOSED
     }
-    // different ArticleVersions from different review-rounds are saved in the same ArticleSubmission Object
+    // different ArticleVersion from different review-rounds are saved in the same ArticleSubmission Object
     struct ArticleSubmission {
         uint256 submissionId;
         SubmissionState submissionState;

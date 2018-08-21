@@ -43,5 +43,11 @@ export default {
     let error = new Error(message);
     error.status = 500;
     throw error;
+  },
+  notAnArticleDraft: (articleVersionId) => {
+    let error = new Error('ArticleVersion corresponding to ID: ' + articleVersionId
+     + ' is not in Status \'Draft\'.');
+    error.status = 400;
+    throw error;
   }
 }

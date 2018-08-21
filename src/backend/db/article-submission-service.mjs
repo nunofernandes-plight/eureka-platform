@@ -1,24 +1,37 @@
 import ArticleSubmission from '../schema/article-submission.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
-import userService from './user-service.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
+import articleVersionService from './article-version-service.mjs';
 
 export default {
   getAllSubmissions: () => {
     return ArticleSubmission.find({});
   },
-  createSubmission: async (submissionId, ownerAddress) => {
-    const submission = new ArticleSubmission(
-      {_id: submissionId, ownerAddress: ownerAddress});
+  createSubmission: async (ownerAddress) => {
+    // create first article version
+    const firstArticle = await articleVersionService.createArticleVersion(ownerAddress);
+    if (!firstArticle) errorThrower.noCreationOfEntry('Article Version');
 
-    await submission.save();
-    await userService.addArticleSubmission(ownerAddress, submissionId);
-    return submissionId;
+    // create article submission and save article version within it
+    const submission = new ArticleSubmission(
+      {ownerAddress: ownerAddress});
+    submission.articleVersions.push(firstArticle._id);
+
+    const dbSubmission = await submission.save();
+    if(!dbSubmission) errorThrower.noCreationOfEntry('Article-Submission');
+
+    const  response = {
+      articleVersionId: firstArticle._id,
+      articleSubmissionId: submission._id
+    };
+    return response;
   },
 
+
+
   /**
-   * Get one submission by ID
+   * Get one submission by DB-ID
    * @param _submissionId
    * @returns {Promise<Query|void|*|ThenPromise<Object>|Promise<TSchema | null>|Promise>}
    */
@@ -26,6 +39,20 @@ export default {
     return ArticleSubmission.findById(_submissionId);
   },
 
+  deleteSubmissionById: async (userAddress, submissionId) => {
+    const articleSubmission = await ArticleSubmission.findByIdAndDelete(submissionId);
+    if(!articleSubmission) errorThrower.noEntryFoundById(submissionId);
+    if(articleSubmission.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+
+    // delete all article version related to the article submission
+    await Promise.all(
+      articleSubmission.articleVersions.map(async articleVersionId => {
+        await ArticleVersion.findByIdAndDelete(articleVersionId);
+      })
+    );
+
+    return 'Successful deletion of Submission with ID' + submissionId;
+  },
 
   /**
    * Add the editor to the submission given by the ID
@@ -111,7 +138,7 @@ export default {
     }
 
     //get position within article-version array
-    const articleVersionPosition = submission.articleVersions.findIndex( (entry) => {
+    const articleVersionPosition = submission.articleVersions.findIndex((entry) => {
       return entry.articleHash === _articleHash;
     });
 
