@@ -7,9 +7,9 @@ import Login from './webpack/components/Login';
 import MetaMaskGuide from './webpack/MetaMaskGuide';
 import {getDomain} from '../helpers/getDomain.js';
 import SignUp from './webpack/components/SignUp.js';
-import PanelLeft from './webpack/dashboard/PanelLeft.js';
+import PanelLeft from './webpack/components/PanelLeft.js';
 import {DashBoardGuard} from './webpack/guards/Guards.js';
-import DashboardRouter from './webpack/dashboard/DashboardRouter.js';
+import DashboardRouter from './webpack/components/routers/DashboardRouter.js';
 
 class Router extends Component {
   constructor() {

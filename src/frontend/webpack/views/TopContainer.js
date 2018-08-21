@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import {__MAIN, __SECOND, __THIRD} from '../../helpers/colors.js';
-import Avatar from '../views/Avatar.js';
-import MetaMaskLabel from '../views/MetaMaskLabel.js';
+import Avatar from './Avatar.js';
+import MetaMaskLabel from './MetaMaskLabel.js';
 import RenderNetwork from '../../web3/RenderNetwork.js';
-import Ball from '../views/Ball.js';
+import Ball from './Ball.js';
 
 export const Container = styled.div`
   min-height: 353px;

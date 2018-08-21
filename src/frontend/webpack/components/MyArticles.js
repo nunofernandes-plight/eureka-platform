@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {TopContainer} from './TopContainer.js';
+import {TopContainer} from '../views/TopContainer.js';
 import {withRouter, Link} from 'react-router-dom';
 import Icon from '../views/icons/Icon.js';
 import {
@@ -14,7 +14,7 @@ import Modal from '../design-components/Modal.js';
 import {renderField} from './editor/DocumentRenderer.js';
 import CircleSpinner from '../views/spinners/CircleSpinner.js';
 import {renderTimestamp} from '../../helpers/timestampRenderer.js';
-import {CardTitle} from './Card.js';
+import {CardTitle} from '../views/Card.js';
 
 const Parent = styled.div`
   display: flex;

@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Link, withRouter} from 'react-router-dom';
 import EurekaLogo from '../views/icons/EurekaLogo.js';
-import {NavItem, Separator} from './NavItem.js';
-import {Routes} from './Routes.js';
+import {NavItem, Separator} from '../views/NavItem.js';
+import {Routes} from './routers/Routes.js';
 
 const Container = styled.div`
   display: flex;

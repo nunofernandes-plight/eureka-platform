@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Ball from '../views/Ball.js';
+import Ball from './Ball.js';
 const Container = styled.div`
   padding-bottom: 2em;
   position: relative;

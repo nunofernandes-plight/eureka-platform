@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {Route} from 'react-router';
 import {Redirect} from 'react-router-dom';
-import Dashboard from './Dashboard.js';
-import MyAccount from './MyAccount.js';
-import {TopContainer} from './TopContainer.js';
-import {BottomContainer} from './BottomContainer.js';
-import MyArticles from './MyArticles.js';
-import DocumentEditor from './DocumentEditor.js';
+import Dashboard from '../Dashboard.js';
+import MyAccount from '../MyAccount.js';
+import {TopContainer} from '../../views/TopContainer.js';
+import {BottomContainer} from '../../views/BottomContainer.js';
+import MyArticles from '../MyArticles.js';
+import DocumentEditor from '../DocumentEditor.js';
 
 class DashboardRouter extends Component {
   render() {
