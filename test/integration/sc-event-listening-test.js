@@ -168,8 +168,9 @@ test.only(PRETEXT + 'Assignment, Change and Remove of Editor for Submission Proc
   let editor2 = await userService.createUser('testEditor2', 'editor2@test.test', testAccounts[3], 'test-editor2-avatar');
   t.is(true, true);
 
-  // signup editor and submit article
+  // signup editor 1 & 2
   await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
+  await signUpEditor(eurekaPlatformContract, editor2.ethereumAddress, contractOwner);
 
   // setup article draft
   await articleSubmissionService.createSubmission(author.ethereumAddress);
@@ -190,37 +191,21 @@ test.only(PRETEXT + 'Assignment, Change and Remove of Editor for Submission Proc
     articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmission._id);
     counter++;
   }
+
+  // assign first editor for submission process
   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmission.scSubmissionID, editor.ethereumAddress);
   articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmission._id);
   t.is(articleSubmission.editor, editor.ethereumAddress);
 
-  // await submitArticle(
-  //   eurekaTokenContract,
-  //   author.ethereumAddress,
-  //   eurekaPlatformContract.options.address,
-  //   5000,
-  //   ARTICLE1_DATA_IN_HEX
-  // );
-  //
-  // let articleSubmissions = await articleSubmissionService.getAllSubmissions();
-  // t.is(articleSubmissions.length, 1);
-  //
-  //
-  // // assign editor from the submission process
-  // await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[0]._id, editor.ethereumAddress);
-  // let articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
-  // t.is(articleSubmission.editor, editor.ethereumAddress);
-  //
-  // // change editor from the submission process
-  // await signUpEditor(eurekaPlatformContract, editor2.ethereumAddress, contractOwner);
-  // await changeEditorFromSubmissionProcess(eurekaPlatformContract, articleSubmissions[0]._id, editor2.ethereumAddress);
-  // articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
-  // t.is(articleSubmission.editor, editor2.ethereumAddress);
-  //
-  // // remove editor from the submission process
-  // await removeEditorFromSubmissionProcess(eurekaPlatformContract, articleSubmission._id, editor2.ethereumAddress);
-  // articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
-  // t.is(articleSubmission.editor, undefined);
+  // change editor to editor2 for the submission process
+  await changeEditorFromSubmissionProcess(eurekaPlatformContract, articleSubmission.scSubmissionID, editor2.ethereumAddress);
+  articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmission._id);
+  t.is(articleSubmission.editor, editor2.ethereumAddress);
+
+  // remove editor from the submission process
+  await removeEditorFromSubmissionProcess(eurekaPlatformContract, articleSubmission.scSubmissionID, editor2.ethereumAddress);
+  articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmission._id);
+  t.is(articleSubmission.editor, undefined);
 });
 //
 // test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
