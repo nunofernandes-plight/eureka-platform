@@ -188,10 +188,11 @@ test.only(PRETEXT + 'Assignment, Change and Remove of Editor for Submission Proc
       counter < 5){
     sleepSync(5000);
     articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmission._id);
-    console.log('Looper for the ' + (counter + 1) + ' time');
     counter++;
   }
-  //await assignForSubmissionProcess(eurekaPlatformContract, toString(articleSubmission.scSubmissionID), editor.ethereumAddress);
+  await assignForSubmissionProcess(eurekaPlatformContract, articleSubmission.scSubmissionID, editor.ethereumAddress);
+  articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmission._id);
+  t.is(articleSubmission.editor, editor.ethereumAddress);
 
   // await submitArticle(
   //   eurekaTokenContract,

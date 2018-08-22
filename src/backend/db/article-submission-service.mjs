@@ -71,7 +71,6 @@ export default {
     await articleVersion.save();
 
     let articleSubmission = await ArticleSubmission.findOne({'articleVersions': articleVersion._id});
-    console.log("SC SUBMISSION ID: " + scSubmissionId);
     articleSubmission.scSubmissionID = scSubmissionId;
     articleSubmission.articleUrl = articleUrl;
     await articleSubmission.save();
@@ -101,7 +100,7 @@ export default {
    * @returns {Promise<void>}
    */
   updateEditorToSubmission: async (_submissionId, _editor) => {
-    ArticleSubmission.findByIdAndUpdate(_submissionId,
+    ArticleSubmission.findOneAndUpdate({scSubmissionID: _submissionId},
       {
         editor: _editor
       }, (err, submission) => {
