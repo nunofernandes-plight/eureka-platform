@@ -2,7 +2,10 @@ import userService from '../db/user-service.mjs';
 import articleSubmissionService from '../db/article-submission-service.mjs';
 import articleVersionService from '../db/article-version-service.mjs';
 import reviewService from '../db/review-service.mjs';
+import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
+import Review from '../schema/review.mjs';
+import ArticleVersion from '../schema/article-version.mjs';
 
 export default {
   setup: EurekaPlatformContract => {
@@ -88,29 +91,43 @@ export default {
       }
     );
 
-    // /** Reviewers are assigned as editor-approved on an article **/
-    // EurekaPlatformContract.events.ReviewersAreInvited(
-    //   undefined,
-    //   async (error, event) => {
-    //     if (error) throw error;
-    //
-    //     const approvedReviewers = event.returnValues.editorApprovedReviewers;
-    //     const submissionId = event.returnValues.submissionId;
-    //     const articleHash = event.returnValues.articleHash;
-    //     const timestamp = event.returnValues.stateTimestamp;
-    //
-    //     await articleSubmissionService.changeArticleVersionState(
-    //       event.returnValues.submissionId,
-    //       event.returnValues.articleHash,
-    //       ArticleVersionState.REVIEWERS_INVITED
-    //     );
-    //
-    //     const reviews = await createReviews(approvedReviewers, submissionId, articleHash, timestamp);
-    //     reviews.forEach(review => {
-    //       userService.addReviewInvitation(review.reviewerAddress, review);
-    //     });
-    //   }
-    // );
+    /** Reviewers are assigned as editor-approved on an article **/
+    EurekaPlatformContract.events.ReviewersAreInvited(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+
+        const approvedReviewers = event.returnValues.editorApprovedReviewers;
+        const submissionId = event.returnValues.submissionId;
+        const articleHash = event.returnValues.articleHash;
+        const timestamp = event.returnValues.stateTimestamp;
+
+        await articleVersionService.changeArticleVersionState(
+          event.returnValues.articleHash,
+          ArticleVersionState.REVIEWERS_INVITED
+        );
+
+        let articleVersion = await ArticleVersion.findOne({
+          articleHash: articleHash
+        });
+        if(!articleVersion) errorThrower.noEntryFoundById(articleHash);
+
+
+        for(let i = 0; i < approvedReviewers.length; i++) {
+          const review = new Review({
+            stateTimestamp: timestamp,
+            reviewerAddress: approvedReviewers[i]
+          });
+          articleVersion.reviews.push(review);
+        }
+        await articleVersion.save();
+
+        // const reviews = await createReviews(approvedReviewers, submissionId, articleHash, timestamp);
+        // reviews.forEach(review => {
+        //   userService.addReviewInvitation(review.reviewerAddress, review);
+        // });
+      }
+    );
     //
     // /** Acception of Reviewer Invitation**/
     // EurekaPlatformContract.events.InvitationIsAccepted(

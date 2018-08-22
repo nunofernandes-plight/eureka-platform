@@ -186,7 +186,7 @@ test(PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process',
   let counter = 0;
   while (
     typeof articleSubmission.scSubmissionID === 'undefined' &&
-      counter < 5){
+    counter < 5) {
     sleepSync(5000);
     articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmission._id);
     counter++;
@@ -208,7 +208,7 @@ test(PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process',
   t.is(articleSubmission.editor, undefined);
 });
 
-test.only(PRETEXT + 'Submission of article, Sanity-Check', async t => {
+test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   // create author and editor
   let testAccounts = await getAccounts();
   let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
@@ -237,9 +237,9 @@ test.only(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   let counter = 0;
   while (
     (typeof articleSubmissions[0].scSubmissionID === 'undefined' ||
-    typeof articleSubmissions[1].scSubmissionID === 'undefined')
+      typeof articleSubmissions[1].scSubmissionID === 'undefined')
     &&
-    counter < 5){
+    counter < 5) {
     sleepSync(5000);
     articleSubmissions = await articleSubmissionService.getAllSubmissions();
     counter++;
@@ -254,7 +254,102 @@ test.only(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[1].scSubmissionID, editor.ethereumAddress);
   articleSubmission2 = await articleSubmissionService.getSubmissionById(articleSubmissions[1]._id);
   t.is(articleSubmission2.editor, editor.ethereumAddress);
+
+  //Accept sanity check for article 1
+  articleVersion1 = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion1._id);
+  t.is(articleVersion1.articleVersionState, ArticleVersionState.SUBMITTED);
+  await setSanityToOk(eurekaPlatformContract, articleVersion1.articleHash, editor.ethereumAddress);
+  articleVersion1 = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion1._id);
+
+  // check for SC status change
+  counter = 0;
+  while (
+    articleVersion1.articleVersionState === ArticleVersionState.SUBMITTED
+    &&
+    counter < 5) {
+    sleepSync(5000);
+    articleSubmissions = await articleSubmissionService.getAllSubmissions();
+    counter++;
+  }
+  t.is(articleVersion1.articleVersionState, ArticleVersionState.EDITOR_CHECKED);
+
+  // Decline sanity check for article 2
+  articleVersion2 = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion2._id);
+  t.is(articleVersion2.articleVersionState, ArticleVersionState.SUBMITTED);
+  await setSanityIsNotOk(eurekaPlatformContract, articleVersion2.articleHash, editor.ethereumAddress);
+  articleVersion2 = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion2._id);
+
+  // check for SC status change
+  counter = 0;
+  while (
+    articleVersion2.articleVersionState === ArticleVersionState.SUBMITTED
+    &&
+    counter < 5) {
+    sleepSync(5000);
+    articleSubmissions = await articleSubmissionService.getAllSubmissions();
+    counter++;
+  }
+  t.is(articleVersion2.articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
 });
+
+
+test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
+  // create author and editor
+  let testAccounts = await getAccounts();
+  let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
+  let editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[4], 'test-editor-avatar');
+
+  let reviewer1 = await userService.createUser('testReviewer1', 'reviewer1@test.test', testAccounts[5], 'test-reviewer-avatar');
+  let reviewer2 = await userService.createUser('testReviewer2', 'reviewer2@test.test', testAccounts[6], 'test-reviewer-avatar');
+
+  // setup article draft 1 & 2
+  await articleSubmissionService.createSubmission(author.ethereumAddress);
+  let articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+  let articleVersion = articleSubmission.articleVersions[0];
+  await articleVersionService.finishDraftById(author.ethereumAddress, articleVersion._id, ARTICLE1_HASH_HEX);
+
+  // signup editor and submit article 1 & 2
+  await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
+  await submitArticle(eurekaTokenContract, author.ethereumAddress, eurekaPlatformContract.options.address, 5000, ARTICLE1_DATA_IN_HEX);
+
+  let counter = 0;
+  while (
+    (typeof articleSubmission.scSubmissionID === 'undefined'
+      &&
+      counter < 5)) {
+    sleepSync(5000);
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    counter++;
+  }
+  // assign editor for the submission process of article
+  await assignForSubmissionProcess(eurekaPlatformContract, articleSubmission.scSubmissionID, editor.ethereumAddress);
+
+  // Accept sanity check for article 1
+  articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
+  await setSanityToOk(eurekaPlatformContract, articleVersion.articleHash, editor.ethereumAddress);
+
+  // Invite reviewers
+  t.is(articleVersion.reviews.length, 0);
+  await inviteReviewersForArticle(eurekaPlatformContract, articleVersion.articleHash,
+    [reviewer1.ethereumAddress, reviewer2.ethereumAddress], editor.ethereumAddress);
+
+  articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
+
+
+  counter = 0;
+  while (
+    articleVersion.reviews.length < 2
+      &&
+      counter < 5) {
+    sleepSync(5000);
+    articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
+    counter++;
+  }
+  t.is(articleVersion.reviews.length, 2);
+
+  t.is(true, true);
+});
+
 
 // test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
 //   // create author and editor
