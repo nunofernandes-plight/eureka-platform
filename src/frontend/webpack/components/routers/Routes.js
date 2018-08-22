@@ -3,34 +3,40 @@ export const Routes = [
   {
     path: 'dashboard',
     name: 'Dashboard',
-    icon: 'dashboard',
+    icon: 'material',
+    material: 'dashboard',
     separator: 'General'
   },
   {
     path: 'articles',
     name: 'My Articles',
-    icon: 'article'
+    material: 'create',
+    icon: 'material'
   },
   {
     path: 'reviews',
     name: 'My Reviews',
-    icon: 'review'
+    icon: 'material',
+    material: 'rate_review'
   },
   {
     path: 'linked',
     name: 'My Linked Articles',
-    icon: 'link'
+    icon: 'material',
+    material: 'format_quote'
   },
   {
     path: 'wallet',
     name: 'My Wallet',
-    icon: 'wallet',
+    icon: 'material',
+    material: 'account_balance_wallet',
     separator: 'Personal'
   },
   {
     path: 'account',
     name: 'My Account',
-    icon: 'account'
+    icon: 'material',
+    material: 'account_box'
   },
   {
     path: 'actions',

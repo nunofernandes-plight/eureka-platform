@@ -12,7 +12,7 @@ const Container = styled.div`
   width: 180px;
   height: 100%;
   left: 0;
-  margin-top: 20px;
+  top: 30px;
   z-index: 600;
   background: white;
   transition-duration: 0.15s;
@@ -26,6 +26,7 @@ const TopLogo = styled.div`
   display: flex;
   justify-content: center;
   position: relative;
+  margin-bottom: 20px;
 `;
 
 const Items = styled.div`
@@ -77,27 +78,16 @@ class PanelLeft extends Component {
         <Items>
           {Routes.map((route, i) => {
             return (
-              <div key={i}>
-                {route.separator ? <Separator text={route.separator} /> : null}
-                <Link
-                  style={{textDecoration: 'none'}}
-                  to={`${this.props.base}/${route.path}`}
-                >
-                  <NavItem
-                    status={
-                      this.state.activePath.toString().includes(route.path)
-                        ? 'active'
-                        : null
-                    }
-                    icon={route.icon}
-                    width={20}
-                    height={20}
-                  >
-                    {' '}
-                    {route.name}
-                  </NavItem>
-                </Link>
-              </div>
+              <NavItem
+                material={route.material}
+                path={route.path}
+                base={this.props.base}
+                icon={route.icon}
+                width={20}
+                height={20}
+              >
+                {route.name}
+              </NavItem>
             );
           })}
         </Items>

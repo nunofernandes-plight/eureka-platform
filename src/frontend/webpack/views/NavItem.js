@@ -2,29 +2,41 @@ import React from 'react';
 import styled from 'styled-components';
 import Icon from './icons/Icon.js';
 import {
-    __GRAY_200,
-    __GRAY_300,
-    __GRAY_500, __SECOND,
-    __THIRD
+  __GRAY_200,
+  __GRAY_300,
+  __GRAY_500,
+  __SECOND,
+  __THIRD
 } from '../../helpers/colors.js';
+import {NavLink} from 'react-router-dom';
 
-const Nav = styled.div`
+const MyNavLink = styled(NavLink)`
   &:hover {
-    background-color: ${props =>
-      props.status === 'active' ? null : `${__GRAY_300}`};
+  background-color: ${__GRAY_300}
     cursor: pointer;
   }
-
   font-size: 13px;
   font-weight: 500;
   padding: 0.75rem;
-  transition: all 0.15s ease;
-  color: ${props => (props.status === 'active' ? 'white' : `${__THIRD}`)};
-  background: ${props =>
-    props.status === 'active' ? `linear-gradient( 150deg, ${__THIRD} 15%, ${__SECOND} 69%, #4caef3 0% )` : 'white'};
-  //box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+  color: ${__THIRD};
+  background: #fff;
   margin: 0;
+  text-decoration: none;
+  &.${props => props.activeClassName} {
+    color: #fff;
+    background: linear-gradient(
+      150deg,
+      ${__THIRD} 15%,
+      ${__SECOND} 69%,
+      #4caef3 0%
+    );
+  }
 `;
+
+MyNavLink.defaultProps = {
+  activeClassName: 'active'
+};
 
 const SeparatorDiv = styled.div`
   display: flex;
@@ -54,10 +66,16 @@ const SeparatorContainer = styled.div`
 
 export const NavItem = props => {
   return (
-    <Nav {...props}>
-      <Icon icon={props.icon} {...props} right={10} bottom={3} />
+    <MyNavLink {...props} to={`${props.base}/${props.path}`}>
+      <Icon
+        material={props.material}
+        icon={props.icon}
+        {...props}
+        right={8}
+        bottom={4}
+      />
       {props.children}
-    </Nav>
+    </MyNavLink>
   );
 };
 
