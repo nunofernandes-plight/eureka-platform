@@ -51,6 +51,7 @@ const Container = styled.div`
   width: 100%;
   padding: 0 20px;
   margin-top: -60px !important;
+  z-index: -10;
 `;
 const EditorCard = styled.div`
   display: flex;

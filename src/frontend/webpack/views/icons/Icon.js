@@ -3,8 +3,9 @@ import styled from 'styled-components';
 
 const MyIcon = styled.svg`
   &:hover {
-    transition: 0.5s;
+    transform: ${props => (props.noMove ? null : 'translateY(2px)')};
   }
+  transition: 0.25s all;
   cursor: pointer;
   width: ${props => props.width}px;
   height: ${props => props.height}px;
@@ -18,8 +19,9 @@ const MyIcon = styled.svg`
 
 const MaterialIcon = styled.div`
   &:hover {
-    transition: 0.5s;
+    transform: ${props => (props.noMove ? null : 'translateY(2px)')};
   }
+  transition: 0.25s all;
   font-size: ${props => props.width}px;
   margin-bottom: ${props => (props.bottom ? props.bottom + 'px' : null)};
   margin-left: ${props => (props.left ? props.left + 'px' : null)};

@@ -60,6 +60,7 @@ class ArticlesRouter extends Component {
             {NavPillRoutes.map((item, index) => {
               return (
                 <NavPill
+                  name={item.name}
                   base={this.props.base}
                   key={index}
                   path={item.path}

@@ -3,7 +3,13 @@ import styled from 'styled-components';
 import {withRouter} from 'react-router-dom';
 import DraftsTable from '../views/DraftsTable.js';
 import {Card, CardTitle} from '../views/Card.js';
-import {__ALERT_ERROR, __MAIN} from '../../helpers/colors.js';
+import {
+  __ALERT_ERROR,
+  __FIFTH,
+  __FOURTH,
+  __MAIN,
+  __THIRD
+} from '../../helpers/colors.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import Modal from '../design-components/Modal.js';
 import CircleSpinner from '../views/spinners/CircleSpinner.js';
@@ -22,6 +28,21 @@ const TitleContainer = styled.div`
   color: ${__ALERT_ERROR} !important;
   align-items: center;
   justify-content: center;
+`;
+
+const Circle = styled.div`
+  &:hover {
+    transform: translateY(3px);
+    cursor: pointer;
+  }
+  border-radius: 50%;
+  padding: 0.75rem;
+  transition: 0.3s all;
+  margin-left: auto;
+  margin-right: 32px;
+  color: #fff;
+  background-color: ${__FIFTH};
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
 `;
 
 class MyDrafts extends React.Component {
@@ -169,14 +190,14 @@ class MyDrafts extends React.Component {
         <Card width={1160}>
           <TitleContainer>
             <CardTitle style={{margin: 0}}>My Drafts</CardTitle>
-            <Icon
-              style={{marginLeft: 'auto', marginRight: '35px'}}
-              icon={'material'}
-              material={'loupe'}
-              width={45}
-              color={__MAIN}
-              onClick={() => this.createNewArticle()}
-            />
+            <Circle>
+              <Icon
+                icon={'material'}
+                material={'add'}
+                width={25}
+                onClick={() => this.createNewArticle()}
+              />
+            </Circle>
           </TitleContainer>
           {this.state.drafts ? (
             <DraftsTable
