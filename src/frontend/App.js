@@ -6,25 +6,30 @@ import NoConnection from './webpack/NoConnection.js';
 import {Detector} from 'react-detect-offline';
 import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
 import {getAllAccounts, getNetwork} from './web3/Helpers.js';
-import abi from './web3/eureka-ABI.json';
+import platformABI from './web3/eurekaPlatform-ABI.json';
+import tokenABI from './web3/eurekaToken-ABI.json';
 
 class App extends Component {
   constructor() {
     super();
-    const EUREKA_PROD_ADDRESS = '';
+    const EUREKA_PLATFORM_PROD_ADDRESS = ''; // TODO: change this to the EUREKA_PLATFORM_PROD_ADDRESS once deployed
+    const EUREKA_TOKEN_PROD_ADDRESS = ''; // TODO: change this to the EUREKA_TOKEN_PROD_ADDRESS once deployed
     let web3 = window.web3;
     let web3Instance = null;
-    let contract = null;
+    let platformContract = null;
+    let tokenContract = null;
     let provider;
     if (typeof web3 !== 'undefined' && web3.currentProvider.isMetaMask) {
       // MetaMask as main provider
       console.info('MetaMask detected in this browser');
       web3Instance = new Web3(web3.currentProvider);
       provider = Web3Providers.META_MASK;
-      contract = new web3Instance.eth.Contract(abi);
+      platformContract = new web3Instance.eth.Contract(platformABI, EUREKA_PLATFORM_PROD_ADDRESS);
+      tokenContract = new web3Instance.eth.Contract(tokenABI, EUREKA_TOKEN_PROD_ADDRESS;
     } else {
       web3Instance = new Web3('http://localhost:7545');
-      contract = new web3Instance.eth.Contract(abi, EUREKA_PROD_ADDRESS);
+      platformContract = new web3Instance.eth.Contract(platformABI);
+      tokenContract = new web3Instance.eth.Contract(tokenABI);
       provider = Web3Providers.LOCALHOST;
     }
 
@@ -33,7 +38,8 @@ class App extends Component {
       provider,
       metaMaskStatus: null,
       accounts: null,
-      contract,
+      platformContract,
+      tokenContract,
       selectedAccount: {
         address: null,
         balance: null
@@ -97,7 +103,8 @@ class App extends Component {
           render={({online}) =>
             online ? (
               <MainRouter
-                contract={this.state.contract}
+                platformContract={this.state.platformContract}
+                tokenContract={this.state.tokenContract}
                 web3={this.state.web3}
                 provider={this.state.provider}
                 network={this.state.network}
