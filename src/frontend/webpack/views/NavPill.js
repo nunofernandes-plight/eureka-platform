@@ -35,7 +35,7 @@ const IconContainer = styled.div`
 
 const NavPill = props => {
   return (
-    <MyLink key={props.key} to={`${props.base}/${props.path}`}>
+    <MyLink to={`${props.base}/${props.path}`}>
       <IconContainer {...props}>
         <Icon
           icon={props.icon}
