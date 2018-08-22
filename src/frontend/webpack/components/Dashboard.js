@@ -1,19 +1,18 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
+import {Card} from '../views/Card.js';
 
 const Container = styled.div`
   display: flex;
-  color: blue; 
+  justify-content: center;
 `;
 
 class Dashboard extends Component {
   render() {
     return (
-      <div>
-        <Container>
-          <div>This is the test for the dasboard componet! enjyo</div>
-        </Container>
-      </div>
+      <Container>
+        <Card width={1000} title={'Your Dashboard'} />
+      </Container>
     );
   }
 }

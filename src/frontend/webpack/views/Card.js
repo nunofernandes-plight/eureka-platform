@@ -22,6 +22,7 @@ const CardContainer = styled.div`
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
   align-items: center;
   padding: 1.5em;
+  min-height: 200px;
   width: ${props => (props.width ? props.width + 'px' : null)};
 `;
 
