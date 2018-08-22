@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Route} from 'react-router';
-import {Redirect, Link, withRouter} from 'react-router-dom';
+import {Redirect, withRouter} from 'react-router-dom';
 import MyDrafts from './MyDrafts.js';
 import DocumentEditor from './DocumentEditor.js';
 import NavPill from '../views/NavPill.js';
@@ -29,11 +29,6 @@ const NavPills = styled.div`
 
 const MarginTop = styled.div`
   margin-top: 15px;
-`;
-
-const MyLink = styled(Link)`
-  transition: 0.25s all;
-  text-decoration: none;
 `;
 
 const Container = styled.div``;
@@ -64,17 +59,14 @@ class MyArticles extends Component {
           <NavPills>
             {NavPillRoutes.map((item, index) => {
               return (
-                <MyLink key={index} to={`${this.props.base}/${item.path}`}>
-                  <NavPill
-                    status={
-                      this.state.currentPath === item.path ? 'active' : null
-                    }
-                    icon={item.icon}
-                    width={22}
-                    material={item.material}
-                    onClick={() => this.changeActiveRoute()}
-                  />
-                </MyLink>
+                <NavPill
+                  base={this.props.base}
+                  key={index}
+                  path={item.path}
+                  icon={item.icon}
+                  material={item.material}
+                  width={22}
+                />
               );
             })}
           </NavPills>
