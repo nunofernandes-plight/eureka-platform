@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Route} from 'react-router';
 import {Redirect, withRouter} from 'react-router-dom';
-import MyDrafts from './MyDrafts.js';
-import DocumentEditor from './DocumentEditor.js';
-import NavPill from '../views/NavPill.js';
-import MySubmitted from './MySubmitted.js';
-import {NavPillRoutes} from './routers/NavPillRoutes.js';
+import MyDrafts from '../MyDrafts.js';
+import DocumentEditor from '../DocumentEditor.js';
+import NavPill from '../../views/NavPill.js';
+import MySubmitted from '../MySubmitted.js';
+import {NavPillRoutes} from './NavPillRoutes.js';
 
 const Parent = styled.div`
   display: flex;
@@ -32,7 +32,7 @@ const MarginTop = styled.div`
 `;
 
 const Container = styled.div``;
-class MyArticles extends Component {
+class ArticlesRouter extends Component {
   constructor() {
     super();
     this.state = {
@@ -94,6 +94,7 @@ class MyArticles extends Component {
               path={`${this.props.base}/drafts/:id`}
               render={props => (
                 <DocumentEditor
+                  contract={this.props.contract}
                   base={this.props.base}
                   user={this.props.user}
                   selectedAccount={this.props.selectedAccount}
@@ -114,4 +115,4 @@ class MyArticles extends Component {
   }
 }
 
-export default withRouter(MyArticles);
+export default withRouter(ArticlesRouter);

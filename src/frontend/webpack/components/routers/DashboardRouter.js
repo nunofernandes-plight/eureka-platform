@@ -5,8 +5,7 @@ import Dashboard from '../Dashboard.js';
 import MyAccount from '../MyAccount.js';
 import {TopContainer} from '../../views/TopContainer.js';
 import {BottomContainer} from '../../views/BottomContainer.js';
-import MyArticles from '../MyArticles.js';
-import DocumentEditor from '../DocumentEditor.js';
+import ArticlesRouter from '../routers/ArticlesRouter.js';
 
 class DashboardRouter extends Component {
   render() {
@@ -33,15 +32,14 @@ class DashboardRouter extends Component {
           <Route
             path={`${this.props.base}/articles`}
             render={() => (
-              <MyArticles
+              <ArticlesRouter
+                contract={this.props.contract}
                 base={`${this.props.base}/articles`}
                 user={this.props.user}
                 selectedAccount={this.props.selectedAccount}
               />
             )}
           />
-
-
 
           <Route
             exact
