@@ -112,15 +112,10 @@ export default {
       throw error;
     }
 
-    ArticleVersion.findOneAndUpdate(
+    await ArticleVersion.findOneAndUpdate({articleHash: articleHash},
       {
         articleVersionState: versionState
-      },
-      (err, articleVersion) => {
-        if (err) throw err;
-        else {
-          return articleVersion;
-        }
-      });
+      }
+    );
   }
 };
