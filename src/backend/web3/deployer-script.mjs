@@ -6,16 +6,32 @@ const deploy = async () => {
   // get a valid Ethereum address, all the smart contracts gets also deployed.
   // the method returns a web3 instance of the smart contract itself.
   const [eurekaTokenContract, eurekaPlatformContract] = await deployContracts();
-  const abi = eurekaPlatformContract._jsonInterface;
 
-  const fileName = 'src/frontend/web3/eureka-ABI.json';
-  fs.writeFileSync(fileName, JSON.stringify(abi), function(err) {
-    if (err) {
-      return console.log(err);
+  const fileNames = {
+    eurekaPlatform: {
+      path: 'src/frontend/web3/eurekaPlatform-ABI.json',
+      abi: JSON.stringify(eurekaPlatformContract._jsonInterface)
+    },
+    eurekaToken: {
+      path: 'src/frontend/web3/eurekaToken-ABI.json',
+      abi: JSON.stringify(eurekaTokenContract._jsonInterface)
     }
+  };
+
+  Object.keys(fileNames).map(contract => {
+    fs.writeFileSync(
+      fileNames[contract].path,
+      fileNames[contract].abi,
+      function(err) {
+        if (err) {
+          return console.log(err);
+        } else {
+          console.log('ABI has been written in ' + contract.path);
+        }
+      }
+    );
   });
 
-  console.log('ABI has been written in ' + fileName);
   process.exit(0);
 };
 

@@ -33,7 +33,8 @@ class DashboardRouter extends Component {
             path={`${this.props.base}/articles`}
             render={() => (
               <ArticlesRouter
-                contract={this.props.contract}
+                  tokenContract={this.props.tokenContract}
+                  platformContract={this.props.platformContract}
                 base={`${this.props.base}/articles`}
                 user={this.props.user}
                 selectedAccount={this.props.selectedAccount}

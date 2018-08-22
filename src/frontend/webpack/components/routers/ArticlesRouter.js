@@ -60,6 +60,7 @@ class ArticlesRouter extends Component {
             {NavPillRoutes.map((item, index) => {
               return (
                 <NavPill
+                  name={item.name}
                   base={this.props.base}
                   key={index}
                   path={item.path}
@@ -94,7 +95,8 @@ class ArticlesRouter extends Component {
               path={`${this.props.base}/drafts/:id`}
               render={props => (
                 <DocumentEditor
-                  contract={this.props.contract}
+                  tokenContract={this.props.tokenContract}
+                  platformContract={this.props.platformContract}
                   base={this.props.base}
                   user={this.props.user}
                   selectedAccount={this.props.selectedAccount}
