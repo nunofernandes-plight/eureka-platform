@@ -25,7 +25,7 @@ class App extends Component {
       web3Instance = new Web3(web3.currentProvider);
       provider = Web3Providers.META_MASK;
       platformContract = new web3Instance.eth.Contract(platformABI, EUREKA_PLATFORM_PROD_ADDRESS);
-      tokenContract = new web3Instance.eth.Contract(tokenABI, EUREKA_TOKEN_PROD_ADDRESS;
+      tokenContract = new web3Instance.eth.Contract(tokenABI, EUREKA_TOKEN_PROD_ADDRESS);
     } else {
       web3Instance = new Web3('http://localhost:7545');
       platformContract = new web3Instance.eth.Contract(platformABI);
