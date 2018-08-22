@@ -208,7 +208,7 @@ test(PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process',
   t.is(articleSubmission.editor, undefined);
 });
 
-test.only(PRETEXT + 'Submission of article, Sanity-Check', async t => {
+test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   // create author and editor
   let testAccounts = await getAccounts();
   let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
@@ -293,6 +293,62 @@ test.only(PRETEXT + 'Submission of article, Sanity-Check', async t => {
 });
 
 
+test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
+  // create author and editor
+  let testAccounts = await getAccounts();
+  let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
+  let editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[4], 'test-editor-avatar');
+
+  let reviewer1 = await userService.createUser('testReviewer1', 'reviewer1@test.test', testAccounts[5], 'test-reviewer-avatar');
+  let reviewer2 = await userService.createUser('testReviewer2', 'reviewer2@test.test', testAccounts[6], 'test-reviewer-avatar');
+
+  // setup article draft 1 & 2
+  await articleSubmissionService.createSubmission(author.ethereumAddress);
+  let articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+  let articleVersion = articleSubmission.articleVersions[0];
+  await articleVersionService.finishDraftById(author.ethereumAddress, articleVersion._id, ARTICLE1_HASH_HEX);
+
+  // signup editor and submit article 1 & 2
+  await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
+  await submitArticle(eurekaTokenContract, author.ethereumAddress, eurekaPlatformContract.options.address, 5000, ARTICLE1_DATA_IN_HEX);
+
+  let counter = 0;
+  while (
+    (typeof articleSubmission.scSubmissionID === 'undefined'
+      &&
+      counter < 5)) {
+    sleepSync(5000);
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    counter++;
+  }
+  // assign editor for the submission process of article
+  await assignForSubmissionProcess(eurekaPlatformContract, articleSubmission.scSubmissionID, editor.ethereumAddress);
+
+  // Accept sanity check for article 1
+  articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
+  await setSanityToOk(eurekaPlatformContract, articleVersion.articleHash, editor.ethereumAddress);
+
+  // Invite reviewers
+  t.is(articleVersion.reviews.length, 0);
+  await inviteReviewersForArticle(eurekaPlatformContract, articleVersion.articleHash,
+    [reviewer1.ethereumAddress, reviewer2.ethereumAddress], editor.ethereumAddress);
+
+  articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
+
+
+  counter = 0;
+  while (
+    articleVersion.reviews.length < 2
+      &&
+      counter < 5) {
+    sleepSync(5000);
+    articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
+    counter++;
+  }
+  t.is(articleVersion.reviews.length, 2);
+
+  t.is(true, true);
+});
 
 
 // test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
