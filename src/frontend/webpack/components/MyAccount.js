@@ -1,7 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Row} from '../../helpers/layout.js';
-import {__THIRD} from '../../helpers/colors.js';
+import {__ALERT_ERROR, __GRAY_200, __THIRD} from '../../helpers/colors.js';
+import EurekaLogo from '../views/icons/EurekaLogo.js';
+import Icon from '../views/icons/Icon.js';
+import CircleSpinner from '../views/spinners/CircleSpinner.js';
 
 const Container = styled.div`
   display: flex;
@@ -66,6 +69,48 @@ const EthereumAddress = styled.div`
   font-size: 1rem;
 `;
 
+const Separator = styled.div`
+  height: 1px;
+  width: 80%;
+  background: ${__GRAY_200};
+  margin: 10px 0;
+`;
+
+const Balances = styled.div`
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+`;
+
+const Balance = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+`;
+
+const SubTitle = styled.h4`
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: ${__ALERT_ERROR};
+  text-align: center;
+`;
+const Number = styled.div`
+  margin-left: 5px;
+`;
+
+const SeeHistory = styled.div`
+  font-size: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+`;
+
+const numberWithCommas = x => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+};
+
 const MyAccount = props => {
   return (
     <Container>
@@ -79,6 +124,50 @@ const MyAccount = props => {
           </EmailContainer>
           <ProfileRow style={{margin: 0}}>
             <EthereumAddress>{props.user.ethereumAddress}</EthereumAddress>
+          </ProfileRow>
+          <ProfileRow>
+            <Separator />
+          </ProfileRow>
+          <ProfileRow>
+            {props.selectedAccount.EKABalance &&
+            props.selectedAccount.balance ? (
+              <Balances>
+                <SubTitle>Your Balances</SubTitle>
+                <Balance>
+                  <EurekaLogo width={30} height={30} />
+                  <Number>
+                    {numberWithCommas(props.selectedAccount.EKABalance)} EKA
+                  </Number>
+                  <SeeHistory>
+                    <Icon
+                      width={22}
+                      height={22}
+                      material={'history'}
+                      icon={'material'}
+                      top={8}
+                    />
+                    <div style={{marginTop: '-5px'}}>See History</div>
+                  </SeeHistory>
+                </Balance>
+                <Balance>
+                  <Icon
+                    icon={'ethereum'}
+                    width={25}
+                    height={25}
+                    right={5}
+                    noMove
+                  />
+                  <Number>
+                    {numberWithCommas(
+                      props.selectedAccount.balance.toString().substr(0, 6)
+                    )}{' '}
+                    ETH
+                  </Number>
+                </Balance>
+              </Balances>
+            ) : (
+              <CircleSpinner />
+            )}
           </ProfileRow>
         </Card>
       </CardContainer>

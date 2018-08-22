@@ -31,6 +31,8 @@ import DropZoneHandler from './editor/DropZoneHandler.js';
 import DocumentFiguresRenderer from './editor/DocumentFiguresRenderer.js';
 import SmartContractInputData from '../views/SmartContractInputData.js';
 import {getArticleHex} from '../../web3/Helpers.js';
+import {getGasEstimation} from '../../../backend/web3/web3-utils-methods.mjs';
+import {getBalanceOf} from '../../../backend/web3/web3-token-contract-methods.mjs';
 
 const titleStyle = () => 'title';
 
@@ -300,7 +302,7 @@ class DocumentEditor extends Component {
     });
   }
 
-  submit() {
+  async submit() {
     // normal API call for storing hash into the db
     const draftId = this.props.match.params.id;
     fetch(`${getDomain()}/api/articles/drafts/${draftId}/submit`, {
@@ -350,27 +352,45 @@ class DocumentEditor extends Component {
 
     const ARTICLE1_DATA_IN_HEX = getArticleHex(this.props.web3, ARTICLE1);
 
-    console.log(this.props.tokenContract);
-    this.props.tokenContract.methods
-      .transferAndCall(
-        '0x9EeB7c5fe9C7b51f0a529FF95db301f9A71deBe6',
-        5000,
-        '0x20159e37',
-        // '0x9b718dd9',
-        ARTICLE1_DATA_IN_HEX
-      )
-      .send({
-        from: this.props.selectedAccount.address
-      })
-      .then(receipt => {
-        console.log(
-          'The article submission exited with the TX status: ' + receipt.status
-        );
-        return receipt;
-      })
-      .catch(err => {
-        console.error(err);
-      });
+    // let gasEstimated = await getGasEstimation(
+    //   this.props.tokenContract.methods.transferAndCall(
+    //     this.props.tokenContract.options.address,
+    //     5000,
+    //     '0x20159e37',
+    //     ARTICLE1_DATA_IN_HEX
+    //   )
+    // );
+
+    // console.log(gasEstimated);
+
+    const balance = await getBalanceOf(
+      this.props.tokenContract,
+      this.props.selectedAccount.address
+    );
+
+    console.log(balance);
+    //
+    // this.props.tokenContract.methods
+    //   .transferAndCall(
+    //     this.props.tokenContract.options.address,
+    //     5000,
+    //     '0x20159e37',
+    //     // '0x9b718dd9',
+    //     ARTICLE1_DATA_IN_HEX
+    //   )
+    //   .send({
+    //     from: this.props.selectedAccount.address,
+    //     gas: gasEstimated
+    //   })
+    //   .then(receipt => {
+    //     console.log(
+    //       'The article submission exited with the TX status: ' + receipt.status
+    //     );
+    //     return receipt;
+    //   })
+    //   .catch(err => {
+    //     console.error(err);
+    //   });
   }
 
   renderTitle() {
