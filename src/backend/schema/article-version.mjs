@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import ArticleVersionState from './article-version-state-enum.mjs';
-import {reviewSchema} from './review.mjs';
 
 /**
  * ArticleVersion for an submission on the eureka platform
@@ -25,10 +24,11 @@ export const articleVersionSchema = mongoose.Schema(
       type: String,
       enum: Object.values(ArticleVersionState),
       default: ArticleVersionState.DRAFT
-    }
-    // reviews: [
-    //   reviewSchema
-    // ]
+    },
+    reviews: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Review'
+    }]
   },
   {
     collection: 'articleVersionState',

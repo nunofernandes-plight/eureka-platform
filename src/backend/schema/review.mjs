@@ -3,16 +3,6 @@ import ReviewState from './review-state-enum.mjs';
 
 export const reviewSchema = mongoose.Schema(
   {
-    //submission it belongs to
-    submissionId: {
-      type: Number,
-      required: true
-    },
-    // article hash it belongs to
-    articleHash: {
-      type: String,
-      required: true
-    },
     reviewState: {
       type: String,
       enum: Object.values(ReviewState),
