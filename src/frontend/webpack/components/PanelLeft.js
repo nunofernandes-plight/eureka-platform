@@ -79,6 +79,7 @@ class PanelLeft extends Component {
           {Routes.map((route, i) => {
             return (
               <NavItem
+                key={i}
                 material={route.material}
                 path={route.path}
                 base={this.props.base}

@@ -1,6 +1,7 @@
 import Editor from 'draft-js-plugins-editor';
 import createSingleLinePlugin from 'draft-js-single-line-plugin';
 import React, {Component} from 'react';
+import {withRouter} from 'react-router-dom';
 import styled from 'styled-components';
 import sha256 from 'js-sha256';
 import {getDomain} from '../../../helpers/getDomain.js';
@@ -280,7 +281,7 @@ class DocumentEditor extends Component {
       });
   }
 
-  submit() {
+  computeInputData() {
     // TODO: check which fields are missing and display the errors
     const hashedDocument = sha256(JSON.stringify(this.state.document));
     this.setState({
@@ -292,6 +293,39 @@ class DocumentEditor extends Component {
         url: `${getDomain() + '/' + this.state._id}`
       }
     });
+  }
+
+  submit() {
+    const draftId = this.props.match.params.id;
+    fetch(`${getDomain()}/api/articles/drafts/${draftId}/submit`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        articleHash: this.state.inputData.hash
+      })
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.props.history.push(`${this.props.base}/submitted`);
+        } else {
+          this.setState({
+            errorMessage: response.error
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.',
+          loading: false
+        });
+      });
+
+    // TODO: SC call
   }
 
   renderTitle() {
@@ -432,7 +466,7 @@ class DocumentEditor extends Component {
             this.setState({showSubmitModal});
           }}
           callback={() => {
-            // TODO: submit article
+            this.submit();
           }}
           show={this.state.showSubmitModal}
           title={'Do you want to submit this document to be reviewed?'}
@@ -545,7 +579,7 @@ class DocumentEditor extends Component {
                   <ButtonContainer>
                     <Button
                       onClick={() => {
-                        this.submit();
+                        this.computeInputData();
                       }}
                     >
                       Submit Article
@@ -561,4 +595,4 @@ class DocumentEditor extends Component {
   }
 }
 
-export default DocumentEditor;
+export default withRouter(DocumentEditor);
