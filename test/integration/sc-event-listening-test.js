@@ -160,7 +160,7 @@ test(PRETEXT + 'Submit an Article &  auto change of Status from DRAFT --> SUBMIT
 });
 
 
-test.only(PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process', async t => {
+test(PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process', async t => {
   // create author and editor
   let testAccounts = await getAccounts();
   let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
@@ -207,58 +207,54 @@ test.only(PRETEXT + 'Assignment, Change and Remove of Editor for Submission Proc
   articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmission._id);
   t.is(articleSubmission.editor, undefined);
 });
-//
-// test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
-//   // create author and editor
-//   let testAccounts = await getAccounts();
-//   let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
-//   let editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[4], 'test-editor-avatar');
-//
-//   // signup editor and submit article 1 & 2
-//   await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
-//   await submitArticle(
-//     eurekaTokenContract,
-//     author.ethereumAddress,
-//     eurekaPlatformContract.options.address,
-//     5000,
-//     ARTICLE1_DATA_IN_HEX
-//   );
-//   await submitArticle(
-//     eurekaTokenContract,
-//     author.ethereumAddress,
-//     eurekaPlatformContract.options.address,
-//     5000,
-//     ARTICLE2_DATA_IN_HEX
-//   );
-//
-//   let articleSubmissions = await articleSubmissionService.getAllSubmissions();
-//   t.is(articleSubmissions.length, 2);
-//
-//   //TODO try sanity check without being assign first --> expected behavior: must fail
-//
-//   // assign editor for the submission process of article 1 & 2
-//   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[0]._id, editor.ethereumAddress);
-//   let articleSubmission1 = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
-//   t.is(articleSubmission1.editor, editor.ethereumAddress);
-//
-//   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[1]._id, editor.ethereumAddress);
-//   let articleSubmission2 = await articleSubmissionService.getSubmissionById(articleSubmissions[1]._id);
-//   t.is(articleSubmission2.editor, editor.ethereumAddress);
-//
-//   //Accept sanity check for article 1
-//   t.is(articleSubmission1.articleVersions[0].articleVersionState, ArticleVersionState.SUBMITTED);
-//   const articleHash1 = articleSubmission1.articleVersions[0].articleHash;
-//   await setSanityToOk(eurekaPlatformContract, articleHash1, editor.ethereumAddress);
-//   articleSubmission1 = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
-//   t.is(articleSubmission1.articleVersions[0].articleVersionState, ArticleVersionState.EDITOR_CHECKED);
-//
-//   // Decline sanity check for article 2
-//   t.is(articleSubmission2.articleVersions[0].articleVersionState, ArticleVersionState.SUBMITTED);
-//   const articleHash2 = articleSubmission2.articleVersions[0].articleHash;
-//   await setSanityIsNotOk(eurekaPlatformContract, articleHash2, editor.ethereumAddress);
-//   articleSubmission2 = await articleSubmissionService.getSubmissionById(articleSubmissions[1]._id);
-//   t.is(articleSubmission2.articleVersions[0].articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
-// });
+
+test.only(PRETEXT + 'Submission of article, Sanity-Check', async t => {
+  // create author and editor
+  let testAccounts = await getAccounts();
+  let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
+  let editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[4], 'test-editor-avatar');
+
+  // setup article draft 1 & 2
+  await articleSubmissionService.createSubmission(author.ethereumAddress);
+  let articleSubmission1 = (await articleSubmissionService.getAllSubmissions())[0];
+  let articleVersion1 = articleSubmission1.articleVersions[0];
+  await articleVersionService.finishDraftById(author.ethereumAddress, articleVersion1._id, ARTICLE1_HASH_HEX);
+
+  await articleSubmissionService.createSubmission(author.ethereumAddress);
+  let articleSubmission2 = (await articleSubmissionService.getAllSubmissions())[1];
+  let articleVersion2 = articleSubmission2.articleVersions[0];
+  await articleVersionService.finishDraftById(author.ethereumAddress, articleVersion2._id, ARTICLE2_HASH_HEX);
+
+  // signup editor and submit article 1 & 2
+  await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
+  await submitArticle(eurekaTokenContract, author.ethereumAddress, eurekaPlatformContract.options.address, 5000, ARTICLE1_DATA_IN_HEX);
+  await submitArticle(eurekaTokenContract, author.ethereumAddress, eurekaPlatformContract.options.address, 5000, ARTICLE2_DATA_IN_HEX);
+
+  let articleSubmissions = await articleSubmissionService.getAllSubmissions();
+  t.is(articleSubmissions.length, 2);
+
+
+  let counter = 0;
+  while (
+    (typeof articleSubmissions[0].scSubmissionID === 'undefined' ||
+    typeof articleSubmissions[1].scSubmissionID === 'undefined')
+    &&
+    counter < 5){
+    sleepSync(5000);
+    articleSubmissions = await articleSubmissionService.getAllSubmissions();
+    counter++;
+  }
+
+  //TODO try sanity check without being assign first --> expected behavior: must fail
+  // assign editor for the submission process of article 1 & 2
+  await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[0].scSubmissionID, editor.ethereumAddress);
+  articleSubmission1 = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
+  t.is(articleSubmission1.editor, editor.ethereumAddress);
+
+  await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[1].scSubmissionID, editor.ethereumAddress);
+  articleSubmission2 = await articleSubmissionService.getSubmissionById(articleSubmissions[1]._id);
+  t.is(articleSubmission2.editor, editor.ethereumAddress);
+});
 
 // test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
 //   // create author and editor
