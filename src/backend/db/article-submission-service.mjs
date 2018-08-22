@@ -79,7 +79,7 @@ export default {
 
 
   deleteSubmissionById: async (userAddress, submissionId) => {
-    const articleSubmission = await ArticleSubmission.findByIdAndDelete(submissionId);
+    const articleSubmission = await ArticleSubmission.findOneAndDelete({scSubmissionID: submissionId});
     if(!articleSubmission) errorThrower.noEntryFoundById(submissionId);
     if(articleSubmission.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
 
@@ -113,7 +113,7 @@ export default {
   },
 
   removeEditorFromSubmission: async (_submissionId) => {
-    ArticleSubmission.findByIdAndUpdate(_submissionId,
+    ArticleSubmission.findOneAndUpdate({scSubmissionID: _submissionId},
       {
         $unset: {
           editor: 1
