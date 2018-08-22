@@ -193,7 +193,7 @@ class DocumentEditor extends Component {
       this.save();
     }, 2500);
 
-    console.log(this.props.contract); 
+    console.log(this.props.contract);
   }
 
   componentWillUnmount() {

@@ -8,12 +8,12 @@ const MyLink = styled(NavLink)`
   text-decoration: none;
   font-size: 0.875rem;
   font-weight: 500;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   color: #5e72e4;
   background-color: #fff;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   margin: 0 10px;
-  border-radius: 50%;
+  border-radius: 10px;
   cursor: pointer;
 
   &.${props => props.activeClassName} {
@@ -26,8 +26,9 @@ MyLink.defaultProps = {
   activeClassName: 'active'
 };
 const IconContainer = styled.div`
-  width: ${props => props.width + 'px'};
-  height: ${props => props.height + 'px'};
+  // width: ${props => props.width + 'px'};
+  // height: ${props => props.height + 'px'};
+  width: 125px; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,7 +38,9 @@ const NavPill = props => {
   return (
     <MyLink to={`${props.base}/${props.path}`}>
       <IconContainer {...props}>
+        {props.path}
         <Icon
+          left={5}
           icon={props.icon}
           material={props.material}
           width={props.width}
