@@ -42,6 +42,7 @@ const Parent = styled.div`
 const EditorParent = styled.div`
   display: flex;
   flex-direction: column;
+  position: relative;
 `;
 const Container = styled.div`
   transition: all 0.5s;
@@ -50,8 +51,6 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   padding: 0 20px;
-  margin-top: -60px !important;
-  z-index: -10;
 `;
 const EditorCard = styled.div`
   display: flex;
@@ -65,6 +64,7 @@ const EditorCard = styled.div`
   width: 1070px;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
   padding: 40px 80px;
+  margin-top: 20px !important;
 `;
 
 const Title = styled.h2`
@@ -101,7 +101,7 @@ const LeftTopContainer = styled.div`
   background-color: #ffffff;
   margin-right: 20px;
   height: 100%;
-  margin-top: 75px;
+  margin-top: 21px;
 `;
 
 const RightTopContainer = styled.div`
@@ -113,6 +113,9 @@ const RightTopContainer = styled.div`
   margin-bottom: 20px;
   align-self: flex-end;
   width: 200px;
+
+  position: absolute;
+  top: -60px;
 `;
 
 const SaveChanges = styled.div`
