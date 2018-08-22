@@ -272,6 +272,24 @@ test.only(PRETEXT + 'Submission of article, Sanity-Check', async t => {
     counter++;
   }
   t.is(articleVersion1.articleVersionState, ArticleVersionState.EDITOR_CHECKED);
+
+  // Decline sanity check for article 2
+  articleVersion2 = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion2._id);
+  t.is(articleVersion2.articleVersionState, ArticleVersionState.SUBMITTED);
+  await setSanityIsNotOk(eurekaPlatformContract, articleVersion2.articleHash, editor.ethereumAddress);
+  articleVersion2 = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion2._id);
+
+  // check for SC status change
+  counter = 0;
+  while (
+    articleVersion2.articleVersionState === ArticleVersionState.SUBMITTED
+    &&
+    counter < 5) {
+    sleepSync(5000);
+    articleSubmissions = await articleSubmissionService.getAllSubmissions();
+    counter++;
+  }
+  t.is(articleVersion2.articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
 });
 
 
