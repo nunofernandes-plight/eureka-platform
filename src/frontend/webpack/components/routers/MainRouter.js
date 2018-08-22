@@ -103,6 +103,7 @@ class MainRouter extends Component {
                       <PanelLeft base={'/app'} />
                       <div style={{paddingLeft: this.getPaddingLeft()}}>
                         <DashboardRouter
+                          contract={this.props.contract}
                           base={'/app'}
                           user={this.state.user}
                           selectedAccount={this.props.selectedAccount}

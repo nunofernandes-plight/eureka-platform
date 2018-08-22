@@ -94,6 +94,7 @@ class MyArticles extends Component {
               path={`${this.props.base}/drafts/:id`}
               render={props => (
                 <DocumentEditor
+                  contract={this.props.contract}
                   base={this.props.base}
                   user={this.props.user}
                   selectedAccount={this.props.selectedAccount}

@@ -192,6 +192,8 @@ class DocumentEditor extends Component {
     this.saveInterval = setInterval(() => {
       this.save();
     }, 2500);
+
+    console.log(this.props.contract); 
   }
 
   componentWillUnmount() {

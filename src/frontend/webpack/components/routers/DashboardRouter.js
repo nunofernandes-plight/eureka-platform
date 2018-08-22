@@ -34,14 +34,13 @@ class DashboardRouter extends Component {
             path={`${this.props.base}/articles`}
             render={() => (
               <MyArticles
+                contract={this.props.contract}
                 base={`${this.props.base}/articles`}
                 user={this.props.user}
                 selectedAccount={this.props.selectedAccount}
               />
             )}
           />
-
-
 
           <Route
             exact
