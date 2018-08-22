@@ -14,6 +14,7 @@ import ArticleSubmission from '../../src/backend/schema/article-submission.mjs';
 import ArticleVersionState from '../../src/backend/schema/article-version-state-enum.mjs';
 import userService from '../../src/backend/db/user-service.mjs';
 import articleSubmissionService from '../../src/backend/db/article-submission-service.mjs';
+import articleVersionService from '../../src/backend/db/article-version-service.mjs';
 import getArticleHex from '../../src/backend/web3/get-articleHex.mjs';
 import {
   getLinkedArticles,
@@ -28,6 +29,7 @@ import {
 import {sleepSync} from '../helpers.js';
 import {getAuthors} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import web3 from 'web3';
+import ArticleVersion from '../../src/backend/schema/article-version.mjs';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
@@ -114,6 +116,7 @@ async function setupContract(eurekaContract, platformContract) {
 async function cleanDB() {
   await User.remove({});
   await ArticleSubmission.remove({});
+  await ArticleVersion.remove({});
 }
 
 test(PRETEXT + 'Sign up Editor', async t => {
@@ -129,7 +132,7 @@ test(PRETEXT + 'Sign up Editor', async t => {
 });
 
 
-test(PRETEXT + 'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED', async t => {
+test.only(PRETEXT + 'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED', async t => {
   // create user on DB
   t.is((await userService.getAllUsers()).length, 0);
   let user = await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
@@ -141,11 +144,22 @@ test(PRETEXT + 'Submit an Article &  auto change of Status from DRAFT --> SUBMIT
   let articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
 
   t.is(articleSubmission.articleVersions.length, 1);
-  t.is(articleSubmission.articleVersions.articleVersionState, ArticleVersionState.DRAFT);
+  let articleVersion = articleSubmission.articleVersions[0];
+  t.is(articleVersion.articleVersionState, ArticleVersionState.DRAFT);
 
   //TODO make submission to SC
-  //TODO check if state of articleversion changes to SUBMITTED
+  await articleVersionService.finishDraftById(user.ethereumAddress, articleVersion._id, ARTICLE1_HASH_HEX);
+  articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id);
+  t.is(articleVersion.articleVersionState, ArticleVersionState.FINISHED_DRAFT);
+  t.is(articleVersion.articleHash, ARTICLE1_HASH_HEX);
+
+  await submitArticle(eurekaTokenContract, user.ethereumAddress, eurekaPlatformContract.options.address, 5000, ARTICLE1_DATA_IN_HEX);
+  articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id);
+  t.is(articleVersion.articleVersionState, ArticleVersionState.SUBMITTED);
 });
+
+
+
 //
 // test(PRETEXT + 'Submit Article & auto-start of Submit first Article-Version', async t => {
 //   // create user on DB

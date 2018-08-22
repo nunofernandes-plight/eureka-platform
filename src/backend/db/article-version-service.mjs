@@ -98,16 +98,10 @@ export default {
    * @param articleVersionID
    * @returns {Promise<void>}
    */
-  getArticleVersionDraftById: async (userAddress, articleVersionID) => {
+  getArticleVersionById: async (userAddress, articleVersionID) => {
     const articleVersion = await ArticleVersion.findById(articleVersionID);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionID);
-
     if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
-    if (articleVersion.articleVersionState !== ArticleVersionStates.DRAFT) {
-      let error = new Error('Submitted ArticleVersion is not on state \'DRAFT\'');
-      error.status = 400;
-      throw error;
-    }
     return articleVersion;
   },
 
