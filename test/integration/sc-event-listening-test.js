@@ -12,9 +12,11 @@ import getAccounts from '../../src/backend/web3/get-accounts.mjs';
 import User from '../../src/backend/schema/user.mjs';
 import ArticleSubmission from '../../src/backend/schema/article-submission.mjs';
 import ArticleVersionState from '../../src/backend/schema/article-version-state-enum.mjs';
+import ReviewState from '../../src/backend/schema/review-state-enum.mjs';
 import userService from '../../src/backend/db/user-service.mjs';
 import articleSubmissionService from '../../src/backend/db/article-submission-service.mjs';
 import articleVersionService from '../../src/backend/db/article-version-service.mjs';
+import reviewService from '../../src/backend/db/review-service.mjs';
 import getArticleHex from '../../src/backend/web3/get-articleHex.mjs';
 import {
   getLinkedArticles,
@@ -24,7 +26,7 @@ import {
   setSanityToOk,
   setSanityIsNotOk,
   inviteReviewersForArticle,
-  acceptReviewerInvitation
+  acceptReviewInvitation
 } from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import {sleepSync} from '../helpers.js';
 import {getAuthors} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
@@ -336,6 +338,7 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
   articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
 
 
+  // check if article-version in DB holds reviewers
   counter = 0;
   while (
     articleVersion.reviews.length < 2
@@ -347,7 +350,22 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
   }
   t.is(articleVersion.reviews.length, 2);
 
-  t.is(true, true);
+  // reviewer1 accept --> check for new state in DB
+  await acceptReviewInvitation(eurekaPlatformContract, articleVersion.articleHash, reviewer1.ethereumAddress);
+  let review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.reviews[0]);
+  counter = 0;
+  while (
+    review.reviewState === ReviewState.INVITED
+    &&
+    counter < 5) {
+    sleepSync(5000);
+    review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.reviews[0]);
+    counter++;
+  }
+  t.is(review.reviewState, ReviewState.ACCEPTED);
+
+  // reviewer2 declines --> check for new state in DB
+  
 });
 
 
@@ -417,6 +435,6 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
 //   t.is(dbReviewer2.reviewerInvitation.length, 1);
 //
 //   /** Acception of Invitation **/
-//   await acceptReviewerInvitation(eurekaPlatformContract, articleHash, reviewer1.ethereumAddress);
+//   await acceptReviewInvitation(eurekaPlatformContract, articleHash, reviewer1.ethereumAddress);
 // });
 

@@ -1,4 +1,5 @@
 import Review from '../schema/review.mjs';
+import errorThrower from '../helpers/error-thrower.mjs';
 
 export default {
   getAllReviews: () => {
@@ -11,7 +12,10 @@ export default {
       console.log('Created new review on DB done');
     });
   },
-  createReviewAndReturn: async (submissionId, articleHash, stateTimestamp, reviewerAddress) => {
-    return new Review({submissionId, articleHash, stateTimestamp, reviewerAddress});
+  getReviewById: async (userAddress, reviewId) => {
+    const review = await Review.findById(reviewId);
+    if(!review) errorThrower.noEntryFoundById(reviewId);
+    if(review.reviewerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+    return review;
   }
 };

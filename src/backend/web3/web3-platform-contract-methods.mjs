@@ -141,7 +141,7 @@ export const inviteReviewersForArticle = (contract, _articleHash, _editorApprove
     });
 };
 
-export const acceptReviewerInvitation = (contract, _articleHash, _from) => {
+export const acceptReviewInvitation = (contract, _articleHash, _from) => {
   return contract.methods
     .acceptReviewInvitation(_articleHash)
     .send({
