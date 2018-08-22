@@ -103,6 +103,7 @@ class MainRouter extends Component {
                       <PanelLeft base={'/app'} />
                       <div style={{paddingLeft: this.getPaddingLeft()}}>
                         <DashboardRouter
+                          web3={this.props.web3}
                           tokenContract={this.props.tokenContract}
                           platformContract={this.props.platformContract}
                           base={'/app'}

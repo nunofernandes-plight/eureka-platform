@@ -8,6 +8,8 @@ import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
 import {getAllAccounts, getNetwork} from './web3/Helpers.js';
 import platformABI from './web3/eurekaPlatform-ABI.json';
 import tokenABI from './web3/eurekaToken-ABI.json';
+import platformAddress from './web3/eurekaPlatform-Address.json';
+import tokenAddress from './web3/eurekaToken-Address.json';
 
 class App extends Component {
   constructor() {
@@ -24,12 +26,21 @@ class App extends Component {
       console.info('MetaMask detected in this browser');
       web3Instance = new Web3(web3.currentProvider);
       provider = Web3Providers.META_MASK;
-      platformContract = new web3Instance.eth.Contract(platformABI, EUREKA_PLATFORM_PROD_ADDRESS);
-      tokenContract = new web3Instance.eth.Contract(tokenABI, EUREKA_TOKEN_PROD_ADDRESS);
+      platformContract = new web3Instance.eth.Contract(
+        platformABI,
+        EUREKA_PLATFORM_PROD_ADDRESS
+      );
+
+      tokenContract = new web3Instance.eth.Contract(
+        tokenABI,
+        EUREKA_TOKEN_PROD_ADDRESS
+      );
     } else {
       web3Instance = new Web3('http://localhost:7545');
       platformContract = new web3Instance.eth.Contract(platformABI);
       tokenContract = new web3Instance.eth.Contract(tokenABI);
+      platformContract.options.address = platformAddress;
+      tokenContract.options.address = tokenAddress;
       provider = Web3Providers.LOCALHOST;
     }
 
