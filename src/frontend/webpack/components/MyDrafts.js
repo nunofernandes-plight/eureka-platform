@@ -190,13 +190,8 @@ class MyDrafts extends React.Component {
         <Card width={1160}>
           <TitleContainer>
             <CardTitle style={{margin: 0}}>My Drafts</CardTitle>
-            <Circle>
-              <Icon
-                icon={'material'}
-                material={'add'}
-                width={25}
-                onClick={() => this.createNewArticle()}
-              />
+            <Circle onClick={() => this.createNewArticle()}>
+              <Icon icon={'material'} material={'add'} width={25} />
             </Circle>
           </TitleContainer>
           {this.state.drafts ? (
