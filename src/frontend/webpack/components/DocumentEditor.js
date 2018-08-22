@@ -302,6 +302,7 @@ class DocumentEditor extends Component {
   }
 
   submit() {
+    // normal API call for storing hash into the db
     const draftId = this.props.match.params.id;
     fetch(`${getDomain()}/api/articles/drafts/${draftId}/submit`, {
       method: 'PUT',
