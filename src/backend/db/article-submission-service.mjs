@@ -60,8 +60,6 @@ export default {
    * @returns {Promise<void>}
    */
   updateSubmissionStartByArticleHash: async (scSubmissionId, articleHash, articleUrl) => {
-    console.log('TESTING WORKS!!!!');
-    console.log(articleHash);
     let articleVersion = await ArticleVersion.findOne({articleHash: articleHash});
 
     // error checking
@@ -102,7 +100,7 @@ export default {
    * @returns {Promise<void>}
    */
   updateEditorToSubmission: async (_submissionId, _editor) => {
-    ArticleSubmission.findByIdAndUpdate(_submissionId,
+    ArticleSubmission.findOneAndUpdate({scSubmissionID: _submissionId},
       {
         editor: _editor
       }, (err, submission) => {
