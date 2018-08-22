@@ -30,6 +30,9 @@ import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
 import DropZoneHandler from './editor/DropZoneHandler.js';
 import DocumentFiguresRenderer from './editor/DocumentFiguresRenderer.js';
 import SmartContractInputData from '../views/SmartContractInputData.js';
+import {getArticleHex} from '../../web3/Helpers.js';
+import {getGasEstimation} from '../../../backend/web3/web3-utils-methods.mjs';
+import {getBalanceOf} from '../../../backend/web3/web3-token-contract-methods.mjs';
 
 const titleStyle = () => 'title';
 
@@ -196,8 +199,6 @@ class DocumentEditor extends Component {
     this.saveInterval = setInterval(() => {
       this.save();
     }, 2500);
-
-    console.log(this.props.contract);
   }
 
   componentWillUnmount() {
@@ -301,7 +302,7 @@ class DocumentEditor extends Component {
     });
   }
 
-  submit() {
+  async submit() {
     // normal API call for storing hash into the db
     const draftId = this.props.match.params.id;
     fetch(`${getDomain()}/api/articles/drafts/${draftId}/submit`, {
@@ -332,7 +333,64 @@ class DocumentEditor extends Component {
         });
       });
 
-    // TODO: SC call
+    const ARTICLE1 = {
+      articleHash:
+        '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+      url: 'article1.url',
+      authors: [
+        '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88',
+        '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'
+      ],
+      contributorRatios: [4000, 6000],
+      linkedArticles: [
+        '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
+        '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
+        'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
+      ],
+      linkedArticlesSplitRatios: [3334, 3333, 3333]
+    };
+
+    const ARTICLE1_DATA_IN_HEX = getArticleHex(this.props.web3, ARTICLE1);
+
+    // let gasEstimated = await getGasEstimation(
+    //   this.props.tokenContract.methods.transferAndCall(
+    //     this.props.tokenContract.options.address,
+    //     5000,
+    //     '0x20159e37',
+    //     ARTICLE1_DATA_IN_HEX
+    //   )
+    // );
+
+    // console.log(gasEstimated);
+
+    const balance = await getBalanceOf(
+      this.props.tokenContract,
+      this.props.selectedAccount.address
+    );
+
+    console.log(balance);
+    //
+    // this.props.tokenContract.methods
+    //   .transferAndCall(
+    //     this.props.tokenContract.options.address,
+    //     5000,
+    //     '0x20159e37',
+    //     // '0x9b718dd9',
+    //     ARTICLE1_DATA_IN_HEX
+    //   )
+    //   .send({
+    //     from: this.props.selectedAccount.address,
+    //     gas: gasEstimated
+    //   })
+    //   .then(receipt => {
+    //     console.log(
+    //       'The article submission exited with the TX status: ' + receipt.status
+    //     );
+    //     return receipt;
+    //   })
+    //   .catch(err => {
+    //     console.error(err);
+    //   });
   }
 
   renderTitle() {

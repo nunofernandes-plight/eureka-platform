@@ -76,6 +76,7 @@ const deploy = async (web3Contract, bytecode, accounts, contractName) => {
       gas: gasEstimated
     })
     .on('receipt', receipt => {
+      web3Contract.options.address = receipt.contractAddress;
       console.log(
         'Smart contract "' +
           contractName +

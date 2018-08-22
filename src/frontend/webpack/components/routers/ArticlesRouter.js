@@ -95,6 +95,7 @@ class ArticlesRouter extends Component {
               path={`${this.props.base}/drafts/:id`}
               render={props => (
                 <DocumentEditor
+                  web3={this.props.web3}
                   tokenContract={this.props.tokenContract}
                   platformContract={this.props.platformContract}
                   base={this.props.base}

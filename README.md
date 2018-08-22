@@ -175,6 +175,6 @@ Andreas Schaufelbühl
 This project is licensed under the MIT License.
 
 ## Acknowledgments
-
+* EUREKA Blockchain Solutions GmbH
 * ScienceMatters AG
 * University of Zurich

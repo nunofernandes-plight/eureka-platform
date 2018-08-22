@@ -26,15 +26,21 @@ class DashboardRouter extends Component {
           <Route
             exact
             path={`${this.props.base}/account`}
-            render={() => <MyAccount user={this.props.user} />}
+            render={() => (
+              <MyAccount
+                user={this.props.user}
+                selectedAccount={this.props.selectedAccount}
+              />
+            )}
           />
 
           <Route
             path={`${this.props.base}/articles`}
             render={() => (
               <ArticlesRouter
-                  tokenContract={this.props.tokenContract}
-                  platformContract={this.props.platformContract}
+                web3={this.props.web3}
+                tokenContract={this.props.tokenContract}
+                platformContract={this.props.platformContract}
                 base={`${this.props.base}/articles`}
                 user={this.props.user}
                 selectedAccount={this.props.selectedAccount}
