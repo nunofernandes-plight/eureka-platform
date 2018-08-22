@@ -52,6 +52,16 @@ class App extends Component {
       selectedAccount.address = Array.from(accounts.keys())[0];
       selectedAccount.balance = accounts.get(selectedAccount.address);
       this.setState({selectedAccount});
+      // GANACHE case
+    } else if (this.state.provider === Web3Providers.LOCALHOST) {
+      let selectedAccount = {...this.state.selectedAccount};
+      selectedAccount.address = localStorage.getItem('ganache')
+        ? JSON.parse(localStorage.getItem('ganache'))
+        : null;
+      selectedAccount.balance = selectedAccount.address
+        ? accounts.get(selectedAccount.address)
+        : null;
+      this.setState({selectedAccount});
     }
 
     this.setState({network, metaMaskStatus, accounts});
@@ -73,6 +83,7 @@ class App extends Component {
     }
 
     this.setState({selectedAccount: account});
+    localStorage.setItem('ganache', JSON.stringify(account.address.toString()));
   }
 
   componentWillUnmount() {

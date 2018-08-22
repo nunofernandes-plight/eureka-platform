@@ -50,7 +50,7 @@ const RenderNetwork = props => {
     <NetworkContainer network={props.network}>
       {props.network}{' '}
       {props.network === Network.GANACHE ? (
-        <GanacheLogo src="img/logos/ganache.png" />
+        <GanacheLogo src="/img/logos/ganache.png" />
       ) : (
         <Icon
           icon={'ethereum'}
