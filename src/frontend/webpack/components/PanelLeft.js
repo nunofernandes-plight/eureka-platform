@@ -5,13 +5,17 @@ import EurekaLogo from '../views/icons/EurekaLogo.js';
 import {NavItem, Separator} from '../views/NavItem.js';
 import {Routes} from './routers/Routes.js';
 import {EXTRA_LARGE_DEVICES, MAKE_MOBILE} from '../../helpers/mobile.js';
-import {PANEL_LEFT_BREAK_POINT} from "../../helpers/layout.js";
+import {
+  PANEL_LEFT_BREAK_POINT,
+  PANEL_LEFT_MOBILE_WIDTH,
+  PANEL_LEFT_NORMAL_WIDTH
+} from '../../helpers/layout.js';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: fixed;
-  width: 180px;
+  width: ${PANEL_LEFT_NORMAL_WIDTH}px;
   height: 100%;
   left: 0;
   padding-top: 30px;
@@ -24,7 +28,7 @@ const Container = styled.div`
   overflow-x: hidden;
 
   ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
-    width: 65px;  
+    width: ${PANEL_LEFT_MOBILE_WIDTH}px;  
   `};
 `;
 

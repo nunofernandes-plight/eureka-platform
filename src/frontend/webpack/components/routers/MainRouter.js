@@ -12,12 +12,16 @@ import PanelLeft from '../PanelLeft.js';
 import {DashBoardGuard} from '../guards/Guards.js';
 import DashboardRouter from './DashboardRouter.js';
 import {MAKE_MOBILE} from '../../../helpers/mobile.js';
-import {PANEL_LEFT_BREAK_POINT} from '../../../helpers/layout.js';
+import {
+  PANEL_LEFT_BREAK_POINT,
+  PANEL_LEFT_MOBILE_WIDTH,
+  PANEL_LEFT_NORMAL_WIDTH
+} from '../../../helpers/layout.js';
 
 const PaddingLeft = styled.div`
-  padding-left: 180px;
+  padding-left: ${PANEL_LEFT_NORMAL_WIDTH}px;
   ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
-    padding-left: 50px; 
+    padding-left: ${PANEL_LEFT_MOBILE_WIDTH}px; 
   `};
   transition: 0.5s all;
 `;

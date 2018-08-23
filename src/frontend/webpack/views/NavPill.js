@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import {NavLink} from 'react-router-dom';
 import Icon from './icons/Icon.js';
 import {__FIFTH} from '../../helpers/colors.js';
+import {MAKE_MOBILE} from '../../helpers/mobile.js';
+import {PANEL_LEFT_BREAK_POINT} from '../../helpers/layout.js';
 
 const MyLink = styled(NavLink)`
   &:hover {
@@ -34,13 +36,22 @@ const IconContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
+    width: auto;
+  `};
+`;
+
+const Name = styled.div`
+  ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
+    display: none; 
+  `};
 `;
 
 const NavPill = props => {
   return (
     <MyLink to={`${props.base}/${props.path}`}>
       <IconContainer {...props}>
-        {props.name}
+        <Name>{props.name}</Name>
         <Icon
           noMove
           left={5}
