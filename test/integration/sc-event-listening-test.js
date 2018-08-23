@@ -374,10 +374,17 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
     review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.reviews[0]);
     counter++;
   }
-  t.is(review.reviewState, ReviewState.ACCEPTED);
+  t.is(review.reviewState, ReviewState.INVITATION_ACCEPTED);
 
+  // add editor-approved review into DB
+  await reviewService.addEditorApprovedReview(reviewer1.ethereumAddress, review._id,
+    REVIEW1.reviewText, REVIEW1_HASH_HEX, REVIEW1.score1, REVIEW1.score2,
+    REVIEW1.articleHasMajorIssues, REVIEW1.articleHasMinorIssues);
+
+  review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.reviews[0]);
+  t.is(review.reviewState, ReviewState.HANDED_IN_DB);
   // add an review
-  await addEditorApprovedReview(eurekaPlatformContract, articleVersion.articleHash, REVIEW1_HASH_HEX, REVIEW1.articleHasMajorIssue,
+  await addEditorApprovedReview(eurekaPlatformContract, articleVersion.articleHash, REVIEW1_HASH_HEX, REVIEW1.articleHasMajorIssues,
     REVIEW1.articleHasMinorIssues, REVIEW1.score1, REVIEW1.score2, reviewer1.ethereumAddress);
 
   t.is(true, true);

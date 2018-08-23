@@ -1,8 +1,7 @@
 import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
 import reviewService from '../db/review-service.mjs';
-import accesController from '../controller/acess-controller';
-
+import accesController from '../controller/acess-controller.mjs';
 const router = express.Router();
 router.use(accesController.loggedInOnly);
 
@@ -36,6 +35,6 @@ router.put(
       req.body.articleHasMajorIssues,
       req.body.articleHasMinorIssues);
   })
-)
+);
 
 export default router;

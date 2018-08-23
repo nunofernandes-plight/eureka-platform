@@ -143,7 +143,7 @@ export default {
         for (let i = 0; i < articleReviews.length; i++) {
           if (articleReviews[i].reviewerAddress == reviewerAddress) {
             articleReviews[i].stateTimestamp = event.returnValues.stateTimestamp;
-            articleReviews[i].reviewState = ReviewState.ACCEPTED;
+            articleReviews[i].reviewState = ReviewState.INVITATION_ACCEPTED;
             await articleReviews[i].save();
             break;
           }
