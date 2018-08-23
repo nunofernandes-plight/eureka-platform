@@ -15,7 +15,8 @@ export const articleVersionSchema = mongoose.Schema(
       type: Number
     },
     articleHash: {
-      type: String
+      type: String,
+      unique: true
     },
     articleUrl: {
       type: String
@@ -25,7 +26,11 @@ export const articleVersionSchema = mongoose.Schema(
       enum: Object.values(ArticleVersionState),
       default: ArticleVersionState.DRAFT
     },
-    reviews: [{
+    editorApprovedReviews: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Review'
+    }],
+    communityReviews: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Review'
     }]

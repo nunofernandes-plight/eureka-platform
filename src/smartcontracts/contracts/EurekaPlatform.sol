@@ -379,6 +379,7 @@ contract EurekaPlatform {
         emit EditorApprovedReviewIsAdded(_articleHash, block.timestamp, _reviewHash, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2);
     }
 
+    event CommunityReviewIsAdded(bytes32 articleHash, uint256 stateTimestamp, bytes32 reviewHash, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
     function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
@@ -403,6 +404,7 @@ contract EurekaPlatform {
         article.communityReviews.push(review);
         review.reviewState = ReviewState.HANDED_IN;
         review.stateTimestamp = block.timestamp;
+        emit CommunityReviewIsAdded(_articleHash, block.timestamp, _reviewHash, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2);
     }
 
     function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
@@ -431,7 +433,7 @@ contract EurekaPlatform {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
-        //TODO: in which states of the articles the reviewers can hand in reviews and get accepted?
+        //TODO: in which states of the articles the reviewers can hand in editorApprovedReviews and get accepted?
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
 
@@ -447,7 +449,7 @@ contract EurekaPlatform {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
-        //TODO: in which states of the articles the reviewers can hand in reviews and get accepted?
+        //TODO: in which states of the articles the reviewers can hand in editorApprovedReviews and get accepted?
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
 

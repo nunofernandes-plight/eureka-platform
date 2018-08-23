@@ -182,7 +182,7 @@ export default {
       return entry.articleHash === _articleHash;
     });
 
-    submission.articleVersions[articleVersionPosition].reviews.push(review);
+    submission.articleVersions[articleVersionPosition].editorApprovedReviews.push(review);
 
     return await submission.save();
   }

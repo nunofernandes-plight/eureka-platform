@@ -88,7 +88,7 @@ export const getReviewError = document => {
         }
     }
     if (reviews.length < 2) {
-        return 'Need 2 reviews, ' + reviews.length + ' so far.';
+        return 'Need 2 editorApprovedReviews, ' + reviews.length + ' so far.';
     }
     return false;
 };

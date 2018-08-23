@@ -17,7 +17,8 @@ export const reviewSchema = mongoose.Schema(
       required: true
     },
     reviewHash: {
-      type: String
+      type: String,
+      unique: true
     },
     reviewText: {
       type: String,
@@ -37,8 +38,8 @@ export const reviewSchema = mongoose.Schema(
       default: false
     }
   },
-  {collection: 'reviews'}
+  {collection: 'editorApprovedReviews'}
 );
 
-const Review = mongoose.model('Review', reviewSchema, 'reviews');
+const Review = mongoose.model('Review', reviewSchema, 'editorApprovedReviews');
 export default Review;
