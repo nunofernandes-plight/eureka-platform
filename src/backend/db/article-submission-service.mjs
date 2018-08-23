@@ -102,7 +102,7 @@ export default {
    * @returns {Promise<void>}
    */
   deleteSubmissionByDraftId: async (userAddress, articleVersionID) => {
-    const articleSubmission = await ArticleSubmission.findOne({'articleVersions': articleVersionID);
+    const articleSubmission = await ArticleSubmission.findOne({'articleVersions': articleVersionID});
     if(!articleSubmission) errorThrower.noEntryFoundById(articleVersionID);
     if(articleSubmission.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
 
