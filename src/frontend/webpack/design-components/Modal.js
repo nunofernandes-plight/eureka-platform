@@ -141,12 +141,14 @@ class Modal extends Component {
             <MyModal {...this.props}>
               <MyModalHeader {...this.props}>
                 <ModalTitle>{this.props.title}</ModalTitle>
-                <Icon
-                  icon={'close'}
-                  width={10}
-                  height={18}
-                  onClick={() => this.toggle()}
-                />
+                {this.props.noClose ? null : (
+                  <Icon
+                    icon={'close'}
+                    width={10}
+                    height={18}
+                    onClick={() => this.toggle()}
+                  />
+                )}
               </MyModalHeader>
               <MyModalBody>
                 {this.props.type === 'notification' ? (
@@ -163,7 +165,9 @@ class Modal extends Component {
                 <Content>{this.props.children}</Content>
               </MyModalBody>
               <MyModalFooter {...this.props}>
-                <CloseButton onClick={() => this.toggle()}>CLOSE</CloseButton>
+                {this.props.noClose ? null : (
+                  <CloseButton onClick={() => this.toggle()}>CLOSE</CloseButton>
+                )}
                 {this.props.action ? (
                   <ActionButton onClick={() => this.props.callback()}>
                     {this.props.action}
