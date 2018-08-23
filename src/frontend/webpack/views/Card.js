@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {__ALERT_ERROR} from '../../helpers/colors.js';
+import {EXTRA_LARGE_DEVICES} from '../../helpers/mobile.js';
 
 export const CardTitle = styled.h2`
   font-size: 1.5rem;
@@ -24,6 +25,10 @@ const CardContainer = styled.div`
   padding: 1.5em;
   min-height: 200px;
   width: ${props => (props.width ? props.width + 'px' : null)};
+
+  ${EXTRA_LARGE_DEVICES`
+    width: 768px; 
+  `};
 `;
 
 export const Card = props => {

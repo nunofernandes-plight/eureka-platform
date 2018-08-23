@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import styled from 'styled-components';
 import {Switch, Route} from 'react-router';
 import {BrowserRouter, Redirect} from 'react-router-dom';
 import WelcomePage from '../../views/WelcomePage';
@@ -10,6 +11,16 @@ import SignUp from '../SignUp.js';
 import PanelLeft from '../PanelLeft.js';
 import {DashBoardGuard} from '../guards/Guards.js';
 import DashboardRouter from './DashboardRouter.js';
+import {MAKE_MOBILE} from '../../../helpers/mobile.js';
+import {PANEL_LEFT_BREAK_POINT} from '../../../helpers/layout.js';
+
+const PaddingLeft = styled.div`
+  padding-left: 180px;
+  ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
+    padding-left: 50px; 
+  `};
+  transition: 0.5s all;
+`;
 
 class MainRouter extends Component {
   constructor() {
@@ -75,10 +86,6 @@ class MainRouter extends Component {
     }
   }
 
-  getPaddingLeft() {
-    return 180;
-  }
-
   render() {
     return (
       <div>
@@ -96,25 +103,23 @@ class MainRouter extends Component {
               <Route
                 path="/app"
                 render={() => (
-                  <div>
+                  <PaddingLeft>
                     <DashBoardGuard
                       isAuthenticated={this.state.isAuthenticated}
                     >
                       <PanelLeft base={'/app'} />
-                      <div style={{paddingLeft: this.getPaddingLeft()}}>
-                        <DashboardRouter
-                          web3={this.props.web3}
-                          tokenContract={this.props.tokenContract}
-                          platformContract={this.props.platformContract}
-                          base={'/app'}
-                          user={this.state.user}
-                          selectedAccount={this.props.selectedAccount}
-                          metaMaskStatus={this.props.metaMaskStatus}
-                          network={this.props.network}
-                        />
-                      </div>
+                      <DashboardRouter
+                        web3={this.props.web3}
+                        tokenContract={this.props.tokenContract}
+                        platformContract={this.props.platformContract}
+                        base={'/app'}
+                        user={this.state.user}
+                        selectedAccount={this.props.selectedAccount}
+                        metaMaskStatus={this.props.metaMaskStatus}
+                        network={this.props.network}
+                      />
                     </DashBoardGuard>
-                  </div>
+                  </PaddingLeft>
                 )}
               />
 

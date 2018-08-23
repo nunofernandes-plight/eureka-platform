@@ -4,6 +4,8 @@ import {Link, withRouter} from 'react-router-dom';
 import EurekaLogo from '../views/icons/EurekaLogo.js';
 import {NavItem, Separator} from '../views/NavItem.js';
 import {Routes} from './routers/Routes.js';
+import {EXTRA_LARGE_DEVICES, MAKE_MOBILE} from '../../helpers/mobile.js';
+import {PANEL_LEFT_BREAK_POINT} from "../../helpers/layout.js";
 
 const Container = styled.div`
   display: flex;
@@ -12,7 +14,7 @@ const Container = styled.div`
   width: 180px;
   height: 100%;
   left: 0;
-  top: 30px;
+  padding-top: 30px;
   z-index: 600;
   background: white;
   transition-duration: 0.15s;
@@ -20,6 +22,10 @@ const Container = styled.div`
   transition-property: width;
   flex: 1 1 auto;
   overflow-x: hidden;
+
+  ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
+    width: 65px;  
+  `};
 `;
 
 const TopLogo = styled.div`
