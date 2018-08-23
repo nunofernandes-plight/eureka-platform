@@ -198,6 +198,7 @@ class MyDrafts extends React.Component {
             <DraftsTable
               drafts={this.state.drafts}
               base={this.props.base}
+              onSubmit={() => this.createNewArticle()}
               onDelete={_id => {
                 this.setState({
                   showDeleteModal: true,

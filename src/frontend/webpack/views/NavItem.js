@@ -9,12 +9,15 @@ import {
   __THIRD
 } from '../../helpers/colors.js';
 import {NavLink} from 'react-router-dom';
+import {MAKE_MOBILE} from '../../helpers/mobile.js';
+import {PANEL_LEFT_BREAK_POINT} from '../../helpers/layout.js';
 
 const MyNavLink = styled(NavLink)`
   &:hover {
   background-color: ${__GRAY_300}
     cursor: pointer;
   }
+      display: flex;
   font-size: 13px;
   font-weight: 500;
   padding: 0.75rem;
@@ -32,6 +35,9 @@ const MyNavLink = styled(NavLink)`
       #4caef3 0%
     );
   }
+  ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
+    justify-content: center; 
+`};
 `;
 
 MyNavLink.defaultProps = {
@@ -64,6 +70,12 @@ const SeparatorContainer = styled.div`
   min-height: 15px;
 `;
 
+const LinkName = styled.div`
+  ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
+    display: none; 
+`};
+`;
+
 export const NavItem = props => {
   return (
     <MyNavLink {...props} to={`${props.base}/${props.path}`}>
@@ -74,7 +86,7 @@ export const NavItem = props => {
         right={8}
         bottom={4}
       />
-      {props.children}
+      <LinkName>{props.children}</LinkName>
     </MyNavLink>
   );
 };

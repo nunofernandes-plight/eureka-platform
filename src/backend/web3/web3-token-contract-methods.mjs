@@ -55,6 +55,7 @@ export const submitArticle = (_contract, _from, _to, _amount, _data) => {
     })
     .catch(err => {
       console.error('submitArticle error: ', err);
+      return err;
     });
 };
 

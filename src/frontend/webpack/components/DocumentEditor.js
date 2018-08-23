@@ -36,6 +36,7 @@ import {
   getBalanceOf,
   submitArticle
 } from '../../../backend/web3/web3-token-contract-methods.mjs';
+import {SUBMISSION_PRICE} from '../Costants/Constants.js';
 
 const titleStyle = () => 'title';
 
@@ -307,9 +308,8 @@ class DocumentEditor extends Component {
 
   async submit() {
     const ARTICLE1 = {
-      articleHash:
-        '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
-      url: 'article1.url',
+      articleHash: this.state.inputData.hash,
+      url: this.state.inputData.url,
       authors: [
         this.props.selectedAccount.address,
         '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'
@@ -322,9 +322,6 @@ class DocumentEditor extends Component {
       ],
       linkedArticlesSplitRatios: [3334, 3333, 3333]
     };
-
-    console.log(this.props.tokenContract.options.address);
-    console.log(this.props.platformContract.options.address);
 
     // normal API call for storing hash into the db
     const draftId = this.props.match.params.id;
@@ -356,17 +353,12 @@ class DocumentEditor extends Component {
         });
       });
 
-    const balance = await getBalanceOf(
-      this.props.tokenContract,
-      this.props.selectedAccount.address
-    );
-
     const ARTICLE1_DATA_IN_HEX = getArticleHex(this.props.web3, ARTICLE1);
-    await submitArticle(
+    const err = await submitArticle(
       this.props.tokenContract,
       this.props.selectedAccount.address,
       this.props.platformContract.options.address,
-      5000,
+      SUBMISSION_PRICE,
       ARTICLE1_DATA_IN_HEX
     );
   }
@@ -493,12 +485,15 @@ class DocumentEditor extends Component {
     return (
       <div>
         <Modal
+          noClose
           type={'notification'}
           toggle={isErrorMessage => {
             this.setState({errorMessage: null});
           }}
+          action={'GOT IT!'}
           show={this.state.errorMessage}
           title={'You got the following error'}
+          callback={() => this.props.history.push(`${this.props.base}/drafts`)}
         >
           {this.state.errorMessage}
         </Modal>

@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import GridSpinner from './views/spinners/GridSpinner.js'
+import GridSpinner from './views/spinners/GridSpinner.js';
 
 const Container = styled.div`
   display: flex;
@@ -14,18 +14,16 @@ const Title = styled.h1``;
 
 const SubTitle = styled.h3``;
 
-class NoConnection extends Component {
-  render() {
-    return (
-      <Container>
-        <Title>Please check your Internet connection.</Title>
-        <SubTitle>
-          It seems like your are offline. In order to use EUREKA please be sure
-          to have a valid Internet connection.
-        </SubTitle>
-        <GridSpinner />
-      </Container>
-    );
-  }
-}
+const NoConnection = () => {
+  return (
+    <Container>
+      <Title>Please check your Internet connection.</Title>
+      <SubTitle>
+        It seems like your are offline. In order to use EUREKA please be sure to
+        have a valid Internet connection.
+      </SubTitle>
+      <GridSpinner />
+    </Container>
+  );
+};
 export default NoConnection;

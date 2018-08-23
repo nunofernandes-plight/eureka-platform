@@ -4,7 +4,9 @@ import {
   __ALERT_ERROR,
   __GRAY_600,
   __GRAY_200,
-  __THIRD
+  __THIRD,
+  __FIFTH,
+  __GRAY_100
 } from '../../helpers/colors.js';
 import {Link} from 'react-router-dom';
 import Icon from '../views/icons/Icon.js';
@@ -39,63 +41,102 @@ const Tr = styled.tr`
   transition: 0.5s all;
 `;
 
+const NoDrafts = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const StartWriting = styled.div`
+  &:hover {
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    background: ${__FIFTH};
+    color: white;
+  }
+  transition: 0.5s all;
+  padding: 0.5rem 1.75rem;
+  border-radius: 10px;
+`;
+
 const MyLink = styled(Link)`
   &:hover {
     text-decoration: underline;
   }
-  
-  color: ${__THIRD}
+  color: ${__THIRD};
   transition: 0.25s all;
   text-decoration: none;
 `;
 const DraftsTable = props => {
   return (
     <DraftsContainer>
-      <Drafts>
-        <tbody>
-          <tr>
-            <th />
-            <th>
-              <TableTitle>Name</TableTitle>
-            </th>
-            <th>
-              <TableTitle>Authors</TableTitle>
-            </th>
-            <th>
-              <TableTitle>Last changed</TableTitle>
-            </th>
-            <th />
-          </tr>
-        </tbody>
+      {!props.drafts || props.drafts.length === 0 ? (
+        <NoDrafts>
+          <Icon
+            icon={'material'}
+            material={'gesture'}
+            width={100}
+            height={100}
+            color={__FIFTH}
+          />
+          <StartWriting onClick={() => props.onSubmit()}>
+            Start writing your article exploiting EUREKA's Blockchain
+            Technology!
+          </StartWriting>
+        </NoDrafts>
+      ) : (
+        <Drafts>
+          <tbody>
+            <tr>
+              <th />
+              <th>
+                <TableTitle>Name</TableTitle>
+              </th>
+              <th>
+                <TableTitle>Authors</TableTitle>
+              </th>
+              <th>
+                <TableTitle>Last changed</TableTitle>
+              </th>
+              <th />
+            </tr>
+          </tbody>
 
-        <tbody>
-          {props.drafts.map(draft => (
-            <Tr key={draft._id}>
-              <td style={{padding: '20px 15px'}}>
-                <Icon icon={'file'} width={20} height={20} color={__GRAY_600} />
-              </td>
-              <td>
-                <MyLink to={`${props.base}/${draft._id}`}>
-                  {renderField(draft.document, 'title')}
-                </MyLink>
-              </td>
-              <td>{draft.document.authors}</td>
-              <td>{renderTimestamp(draft.timestamp)}</td>
-              <td>
-                <Icon
-                  icon={'delete'}
-                  width={20}
-                  height={20}
-                  color={__ALERT_ERROR}
-                  onClick={() => {
-                    props.onDelete(draft._id);
-                  }}
-                />
-              </td>
-            </Tr>
-          ))}
-        </tbody>
-      </Drafts>
+          <tbody>
+            {props.drafts.map(draft => (
+              <Tr key={draft._id}>
+                <td style={{padding: '20px 15px'}}>
+                  <Icon
+                    icon={'file'}
+                    width={20}
+                    height={20}
+                    color={__GRAY_600}
+                  />
+                </td>
+                <td>
+                  <MyLink to={`${props.base}/${draft._id}`}>
+                    {renderField(draft.document, 'title')}
+                  </MyLink>
+                </td>
+                <td>{draft.document.authors}</td>
+                <td>{renderTimestamp(draft.timestamp)}</td>
+                <td>
+                  <Icon
+                    icon={'delete'}
+                    width={20}
+                    height={20}
+                    color={__ALERT_ERROR}
+                    onClick={() => {
+                      props.onDelete(draft._id);
+                    }}
+                  />
+                </td>
+              </Tr>
+            ))}
+          </tbody>
+        </Drafts>
+      )}
     </DraftsContainer>
   );
 };

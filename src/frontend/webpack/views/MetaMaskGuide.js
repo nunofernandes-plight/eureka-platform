@@ -1,6 +1,6 @@
  import React, {Component} from 'react';
 import styled from 'styled-components';
-import MetaMaskLogo from './views/icons/MetaMaskLogo.js';
+import MetaMaskLogo from './icons/MetaMaskLogo.js';
 
 const Container = styled.div`
   display: flex;
