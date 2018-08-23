@@ -3,11 +3,14 @@ import {Route} from 'react-router';
 import {Redirect} from 'react-router-dom';
 import Dashboard from '../Dashboard.js';
 import MyAccount from '../MyAccount.js';
-import {TopContainer} from '../../views/TopContainer.js';
+import TopContainer from '../../views/TopContainer.js';
 import {BottomContainer} from '../../views/BottomContainer.js';
 import ArticlesRouter from '../routers/ArticlesRouter.js';
 
 class DashboardRouter extends Component {
+  constructor() {
+    super();
+  }
   render() {
     return (
       <div>
