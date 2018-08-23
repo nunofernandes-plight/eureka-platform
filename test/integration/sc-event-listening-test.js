@@ -26,7 +26,8 @@ import {
   setSanityToOk,
   setSanityIsNotOk,
   inviteReviewersForArticle,
-  acceptReviewInvitation
+  acceptReviewInvitation,
+  addEditorApprovedReview
 } from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import {sleepSync} from '../helpers.js';
 import {getAuthors} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
@@ -75,6 +76,17 @@ const ARTICLE2 = {
 };
 const ARTICLE2_DATA_IN_HEX = getArticleHex(ARTICLE2);
 const ARTICLE2_HASH_HEX = '0x' + ARTICLE2.articleHash;
+
+const REVIEW1 = {
+  reviewHash: '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', //TODO change?
+  reviewText: 'This is the test-text for the review or reviewer 1',
+  score1: 3,
+  score2: 5,
+  articleHasMajorIssues: false,
+  articleHasMinorIssues: true
+};
+
+const REVIEW1_HASH_HEX = '0x' + REVIEW1.reviewHash;
 
 /**************** TESTING ****************/
 
@@ -364,8 +376,11 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
   }
   t.is(review.reviewState, ReviewState.ACCEPTED);
 
-  // reviewer2 declines --> check for new state in DB
-  
+  // add an review
+  await addEditorApprovedReview(eurekaPlatformContract, articleVersion.articleHash, REVIEW1_HASH_HEX, REVIEW1.articleHasMajorIssue,
+    REVIEW1.articleHasMinorIssues, REVIEW1.score1, REVIEW1.score2, reviewer1.ethereumAddress);
+
+  t.is(true, true);
 });
 
 

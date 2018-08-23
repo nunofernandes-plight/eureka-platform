@@ -349,6 +349,7 @@ contract EurekaPlatform {
     }
 
 
+    event EditorApprovedReviewIsAdded(bytes32 articleHash, bytes32 reviewHash, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
     function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
@@ -375,6 +376,7 @@ contract EurekaPlatform {
 
         review.reviewState = ReviewState.HANDED_IN;
         review.stateTimestamp = block.timestamp;
+        emit EditorApprovedReviewIsAdded(_articleHash, _reviewHash, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2);
     }
 
     function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {

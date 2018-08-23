@@ -161,6 +161,27 @@ export const acceptReviewInvitation = (contract, _articleHash, _from) => {
     });
 };
 
+export const addEditorApprovedReview = (contract, _articleHash, _reviewHash, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2, _from) => {
+  return contract.methods
+    .addEditorApprovedReview(_articleHash, _reviewHash, _articleHasMajorIssues,
+      _articleHasMinorIssues, _score1, _score2)
+    .send({
+      from: _from
+    })
+    .then(receipt => {
+      console.log(
+        'Adding an editorial-approved review eith hash ' +
+        _reviewHash +
+        ' is sent out with the TX status: ' +
+        receipt.status
+      );
+      return receipt;
+    })
+    .catch(err => {
+      console.error(err);
+    });
+};
+
 /*
   Getters
  */

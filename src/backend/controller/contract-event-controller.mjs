@@ -140,14 +140,14 @@ export default {
         if (!articleVersion) errorThrower.noEntryFoundById(articleHash);
 
         let articleReviews = articleVersion.reviews;
-        for(let i = 0; i < articleReviews.length; i++) {
-          if(articleReviews[i].reviewerAddress == reviewerAddress) {
+        for (let i = 0; i < articleReviews.length; i++) {
+          if (articleReviews[i].reviewerAddress == reviewerAddress) {
             articleReviews[i].stateTimestamp = event.returnValues.stateTimestamp;
             articleReviews[i].reviewState = ReviewState.ACCEPTED;
             await articleReviews[i].save();
             break;
           }
-          if(i === articleReviews.length - 1) {
+          if (i === articleReviews.length - 1) {
             let error = new Error('Invitation Acception: corresponding review could not be found');
             error.status = 500;
             throw error;
@@ -156,6 +156,12 @@ export default {
       }
     );
 
-
+    EurekaPlatformContract.events.EditorApprovedReviewIsAdded(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+        console.log('REVIEW ADDED!!!');
+      }
+    );
   }
 };
