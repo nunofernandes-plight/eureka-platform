@@ -12,9 +12,11 @@ import getAccounts from '../../src/backend/web3/get-accounts.mjs';
 import User from '../../src/backend/schema/user.mjs';
 import ArticleSubmission from '../../src/backend/schema/article-submission.mjs';
 import ArticleVersionState from '../../src/backend/schema/article-version-state-enum.mjs';
+import ReviewState from '../../src/backend/schema/review-state-enum.mjs';
 import userService from '../../src/backend/db/user-service.mjs';
 import articleSubmissionService from '../../src/backend/db/article-submission-service.mjs';
 import articleVersionService from '../../src/backend/db/article-version-service.mjs';
+import reviewService from '../../src/backend/db/review-service.mjs';
 import getArticleHex from '../../src/backend/web3/get-articleHex.mjs';
 import {
   getLinkedArticles,
@@ -24,7 +26,8 @@ import {
   setSanityToOk,
   setSanityIsNotOk,
   inviteReviewersForArticle,
-  acceptReviewerInvitation
+  acceptReviewInvitation,
+  addEditorApprovedReview
 } from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import {sleepSync} from '../helpers.js';
 import {getAuthors} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
@@ -73,6 +76,17 @@ const ARTICLE2 = {
 };
 const ARTICLE2_DATA_IN_HEX = getArticleHex(ARTICLE2);
 const ARTICLE2_HASH_HEX = '0x' + ARTICLE2.articleHash;
+
+const REVIEW1 = {
+  reviewHash: '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', //TODO change?
+  reviewText: 'This is the test-text for the review or reviewer 1',
+  score1: 3,
+  score2: 5,
+  articleHasMajorIssues: false,
+  articleHasMinorIssues: true
+};
+
+const REVIEW1_HASH_HEX = '0x' + REVIEW1.reviewHash;
 
 /**************** TESTING ****************/
 
@@ -336,6 +350,7 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
   articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
 
 
+  // check if article-version in DB holds reviewers
   counter = 0;
   while (
     articleVersion.reviews.length < 2
@@ -346,6 +361,24 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
     counter++;
   }
   t.is(articleVersion.reviews.length, 2);
+
+  // reviewer1 accept --> check for new state in DB
+  await acceptReviewInvitation(eurekaPlatformContract, articleVersion.articleHash, reviewer1.ethereumAddress);
+  let review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.reviews[0]);
+  counter = 0;
+  while (
+    review.reviewState === ReviewState.INVITED
+    &&
+    counter < 5) {
+    sleepSync(5000);
+    review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.reviews[0]);
+    counter++;
+  }
+  t.is(review.reviewState, ReviewState.ACCEPTED);
+
+  // add an review
+  await addEditorApprovedReview(eurekaPlatformContract, articleVersion.articleHash, REVIEW1_HASH_HEX, REVIEW1.articleHasMajorIssue,
+    REVIEW1.articleHasMinorIssues, REVIEW1.score1, REVIEW1.score2, reviewer1.ethereumAddress);
 
   t.is(true, true);
 });
@@ -417,6 +450,6 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
 //   t.is(dbReviewer2.reviewerInvitation.length, 1);
 //
 //   /** Acception of Invitation **/
-//   await acceptReviewerInvitation(eurekaPlatformContract, articleHash, reviewer1.ethereumAddress);
+//   await acceptReviewInvitation(eurekaPlatformContract, articleHash, reviewer1.ethereumAddress);
 // });
 

@@ -15,6 +15,26 @@ export const reviewSchema = mongoose.Schema(
     reviewerAddress: {
       type: String,
       required: true
+    },
+    reviewHash: {
+      type: String
+    },
+    reviewText: {
+      type: String,
+    },
+    reviewScore1: {
+      type: Number
+    },
+    reviewScore2: {
+      type: Number
+    },
+    hasMajorIssues: {
+      type: Boolean,
+      default: false
+    },
+    hasMinorIssues: {
+      type: Boolean,
+      default: false
     }
   },
   {collection: 'reviews'}
