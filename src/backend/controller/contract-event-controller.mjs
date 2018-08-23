@@ -119,7 +119,7 @@ export default {
             reviewerAddress: approvedReviewers[i]
           });
           await review.save();
-          articleVersion.reviews.push(review._id);
+          articleVersion.editorApprovedReviews.push(review._id);
         }
         await articleVersion.save();
 
@@ -136,10 +136,10 @@ export default {
 
         let articleVersion = await ArticleVersion.findOne({
           articleHash: articleHash
-        }).populate('reviews');
+        }).populate('editorApprovedReviews');
         if (!articleVersion) errorThrower.noEntryFoundById(articleHash);
 
-        let articleReviews = articleVersion.reviews;
+        let articleReviews = articleVersion.editorApprovedReviews;
         for (let i = 0; i < articleReviews.length; i++) {
           if (articleReviews[i].reviewerAddress == reviewerAddress) {
             articleReviews[i].stateTimestamp = event.returnValues.stateTimestamp;
@@ -170,5 +170,22 @@ export default {
         );
       }
     );
+
+    EurekaPlatformContract.events.CommunityReviewIsAdded(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+        await reviewService.updateCommunityReviewFromSC(
+          event.returnValues.reviewHash,
+          event.returnValues.stateTimestamp,
+          event.returnValues.articleHasMajorIssues,
+          event.returnValues.articleHasMinorIssues,
+          event.returnValues.score1,
+          event.returnValues.score2
+        );
+      }
+    );
+
+
   }
 };

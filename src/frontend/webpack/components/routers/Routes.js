@@ -14,7 +14,7 @@ export const Routes = [
     icon: 'material'
   },
   {
-    path: 'reviews',
+    path: 'editorApprovedReviews',
     name: 'My Reviews',
     icon: 'material',
     material: 'rate_review'

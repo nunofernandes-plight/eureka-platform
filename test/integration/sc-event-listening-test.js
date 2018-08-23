@@ -27,7 +27,8 @@ import {
   setSanityIsNotOk,
   inviteReviewersForArticle,
   acceptReviewInvitation,
-  addEditorApprovedReview
+  addEditorApprovedReview,
+  addCommunityReview
 } from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import {sleepSync} from '../helpers.js';
 import {getAuthors} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
@@ -86,8 +87,17 @@ const REVIEW1 = {
   articleHasMajorIssues: true,
   articleHasMinorIssues: true
 };
-
 const REVIEW1_HASH_HEX = '0x' + REVIEW1.reviewHash;
+
+const REVIEW2 = {
+  reviewHash: '000ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', //TODO change?
+  reviewText: 'That one is the second review. So it comes from reviewer2',
+  score1: 1,
+  score2: 1,
+  articleHasMajorIssues: true,
+  articleHasMinorIssues: true
+};
+const REVIEW2_HASH_HEX = '0x' + REVIEW2.reviewHash;
 
 /**************** TESTING ****************/
 
@@ -345,7 +355,7 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
   await setSanityToOk(eurekaPlatformContract, articleVersion.articleHash, editor.ethereumAddress);
 
   // Invite reviewers
-  t.is(articleVersion.reviews.length, 0);
+  t.is(articleVersion.editorApprovedReviews.length, 0);
   await inviteReviewersForArticle(eurekaPlatformContract, articleVersion.articleHash,
     [reviewer1.ethereumAddress, reviewer2.ethereumAddress], editor.ethereumAddress);
 
@@ -355,25 +365,25 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
   // check if article-version in DB holds reviewers
   counter = 0;
   while (
-    articleVersion.reviews.length < 2
-      &&
-      counter < 5) {
+    articleVersion.editorApprovedReviews.length < 2
+    &&
+    counter < 5) {
     sleepSync(5000);
     articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
     counter++;
   }
-  t.is(articleVersion.reviews.length, 2);
+  t.is(articleVersion.editorApprovedReviews.length, 2);
 
   // reviewer1 accept --> check for new state in DB
   await acceptReviewInvitation(eurekaPlatformContract, articleVersion.articleHash, reviewer1.ethereumAddress);
-  let review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.reviews[0]);
+  let review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.editorApprovedReviews[0]);
   counter = 0;
   while (
     review.reviewState === ReviewState.INVITED
     &&
     counter < 5) {
     sleepSync(5000);
-    review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.reviews[0]);
+    review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.editorApprovedReviews[0]);
     counter++;
   }
   t.is(review.reviewState, ReviewState.INVITATION_ACCEPTED);
@@ -403,4 +413,28 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
     counter++;
   }
   t.is(review.reviewState, ReviewState.HANDED_IN_SC);
+
+  // write a community review as reviewer2
+  let review2 = await reviewService.addNewCommunitydReview(reviewer2.ethereumAddress, articleVersion.articleHash,
+    REVIEW2.reviewText, REVIEW2_HASH_HEX, REVIEW2.score1, REVIEW2.score2, REVIEW2.articleHasMajorIssues, REVIEW2.articleHasMinorIssues);
+  review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
+
+  t.is(review2.reviewState, ReviewState.HANDED_IN_DB);
+  await addCommunityReview(eurekaPlatformContract, articleVersion.articleHash, REVIEW2_HASH_HEX, REVIEW2.articleHasMajorIssues,
+    REVIEW2.articleHasMinorIssues, REVIEW2.score1, REVIEW2.score2, reviewer2.ethereumAddress);
+
+  review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
+
+  counter = 0;
+  while (
+    review2.reviewState === ReviewState.HANDED_IN_DB
+    &&
+    counter < 5) {
+    sleepSync(5000);
+    //testreview2 = await Review.findOne({reviewHash: REVIEW2_HASH_HEX});
+    console.log(review2._id);
+    review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
+    counter++;
+  }
+  t.is(review2.reviewState, ReviewState.HANDED_IN_SC);
 });
