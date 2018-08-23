@@ -1,7 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import {__ALERT_ERROR} from '../../helpers/colors.js';
-import {EXTRA_LARGE_DEVICES} from '../../helpers/mobile.js';
+import {
+  EXTRA_LARGE_DEVICES,
+  LARGE_DEVICES,
+  MEDIUM_DEVICES
+} from '../../helpers/mobile.js';
 
 export const CardTitle = styled.h2`
   font-size: 1.5rem;
@@ -28,6 +32,14 @@ const CardContainer = styled.div`
 
   ${EXTRA_LARGE_DEVICES`
     width: 768px; 
+  `};
+
+  ${LARGE_DEVICES`
+    width: 680px; 
+  `};
+
+  ${MEDIUM_DEVICES`
+    width: 500px;
   `};
 `;
 

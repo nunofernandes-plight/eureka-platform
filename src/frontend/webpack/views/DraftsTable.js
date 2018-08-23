@@ -12,6 +12,7 @@ import {Link} from 'react-router-dom';
 import Icon from '../views/icons/Icon.js';
 import {renderField} from '../components/editor/DocumentRenderer.js';
 import {renderTimestamp} from '../../helpers/timestampRenderer.js';
+import {LARGE_DEVICES, MEDIUM_DEVICES} from '../../helpers/mobile.js';
 
 const DraftsContainer = styled.div`
   font-size: 14px;
@@ -68,6 +69,18 @@ const MyLink = styled(Link)`
   transition: 0.25s all;
   text-decoration: none;
 `;
+
+const Authors = styled.td`
+  ${MEDIUM_DEVICES`
+    display: none; 
+  `};
+`;
+
+const AuthorsTitle = styled.th`
+  ${MEDIUM_DEVICES`
+    display: none; 
+  `};
+`;
 const DraftsTable = props => {
   return (
     <DraftsContainer>
@@ -93,9 +106,9 @@ const DraftsTable = props => {
               <th>
                 <TableTitle>Name</TableTitle>
               </th>
-              <th>
+              <AuthorsTitle>
                 <TableTitle>Authors</TableTitle>
-              </th>
+              </AuthorsTitle>
               <th>
                 <TableTitle>Last changed</TableTitle>
               </th>
@@ -119,7 +132,7 @@ const DraftsTable = props => {
                     {renderField(draft.document, 'title')}
                   </MyLink>
                 </td>
-                <td>{draft.document.authors}</td>
+                <Authors>{draft.document.authors}</Authors>
                 <td>{renderTimestamp(draft.timestamp)}</td>
                 <td>
                   <Icon

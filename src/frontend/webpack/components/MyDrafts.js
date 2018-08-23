@@ -39,7 +39,7 @@ const Circle = styled.div`
   padding: 0.75rem;
   transition: 0.3s all;
   margin-left: auto;
-  margin-right: 32px;
+  margin-right: 25px;
   color: #fff;
   background-color: ${__FIFTH};
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -187,7 +187,7 @@ class MyDrafts extends React.Component {
     return (
       <div>
         {this.renderModal()}
-        <Card width={1160}>
+        <Card width={1000}>
           <TitleContainer>
             <CardTitle style={{margin: 0}}>My Drafts</CardTitle>
             <Circle onClick={() => this.createNewArticle()}>
