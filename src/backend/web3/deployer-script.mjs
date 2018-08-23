@@ -1,5 +1,7 @@
 import deployContracts from './index.mjs';
 import fs from 'fs';
+import app from '../../../src/backend/api/api.mjs';
+
 import {
   finishMinting,
   mintEurekaTokens
@@ -13,6 +15,11 @@ const deploy = async () => {
   const [eurekaTokenContract, eurekaPlatformContract] = await deployContracts();
   await setup(eurekaTokenContract, eurekaPlatformContract);
 
+  app.setupApp(eurekaPlatformContract);
+  app.listenTo(process.env.PORT || 8080);
+
+
+  // for front-end
   const fileNames = {
     eurekaPlatform: {
       addressPath: 'src/frontend/web3/eurekaPlatform-Address.json',
@@ -53,8 +60,6 @@ const deploy = async () => {
       }
     );
   });
-
-  process.exit(0);
 };
 
 const setup = async (eurekaTokenContract, eurekaPlatformContract) => {
