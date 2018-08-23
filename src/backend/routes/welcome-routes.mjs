@@ -9,8 +9,8 @@ import {asyncHandler} from '../api/requestHandler.mjs';
 const router = express.Router();
 
 router.get('/', asyncHandler(async (req, res) => {
-  console.log(req.user);
-  console.log(req.isAuthenticated());
+  // console.log(req.user);
+  // console.log(req.isAuthenticated());
   if(!req.user) {
     let error = new Error('Not logged in Backend');
     error.status= 401;
