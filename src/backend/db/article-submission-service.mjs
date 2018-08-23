@@ -90,9 +90,30 @@ export default {
       })
     );
 
+    //delete article-submission
+    await articleSubmission.remove();
     return 'Successful deletion of Submission with ID' + submissionId;
   },
 
+  /**
+   * Deletes the whole submission by the articleVersion Id it contains
+   * @param userAddress
+   * @param draftId
+   * @returns {Promise<void>}
+   */
+  deleteSubmissionByDraftId: async (userAddress, articleVersionID) => {
+    const articleSubmission = await ArticleSubmission.findOne({'articleVersions': articleVersionID);
+    if(!articleSubmission) errorThrower.noEntryFoundById(articleVersionID);
+    if(articleSubmission.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+
+    // delete all article version related to the article submission
+    await Promise.all(
+      articleSubmission.articleVersions.map(async articleVersionId => {
+        await ArticleVersion.findByIdAndDelete(articleVersionId);
+      })
+    );
+    await articleSubmission.remove();
+  },
   /**
    * Add the editor to the submission given by the ID
    * @param _submissionId

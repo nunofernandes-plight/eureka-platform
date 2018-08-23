@@ -96,7 +96,7 @@ router.delete(
       errorThrower.notLoggedIn();
     }
 
-    return await articleSubmissionService.deleteSubmissionById(ethereumAddress, draftId);
+    return await articleSubmissionService.deleteSubmissionByDraftId(ethereumAddress, draftId);
   })
 );
 
