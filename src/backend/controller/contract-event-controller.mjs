@@ -160,6 +160,8 @@ export default {
       undefined,
       async (error, event) => {
         if (error) throw error;
+
+
         console.log('REVIEW ADDED!!!');
       }
     );
