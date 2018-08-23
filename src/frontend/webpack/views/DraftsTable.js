@@ -59,6 +59,7 @@ const StartWriting = styled.div`
   transition: 0.5s all;
   padding: 0.5rem 1.75rem;
   border-radius: 10px;
+  text-align: center;
 `;
 
 const MyLink = styled(Link)`
