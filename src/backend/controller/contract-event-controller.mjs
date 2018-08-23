@@ -160,9 +160,14 @@ export default {
       undefined,
       async (error, event) => {
         if (error) throw error;
-
-
-        console.log('REVIEW ADDED!!!');
+        await reviewService.updateEditorApprovedReviewFromSC(
+          event.returnValues.reviewHash,
+          event.returnValues.stateTimestamp,
+          event.returnValues.articleHasMajorIssues,
+          event.returnValues.articleHasMinorIssues,
+          event.returnValues.score1,
+          event.returnValues.score2
+        );
       }
     );
   }
