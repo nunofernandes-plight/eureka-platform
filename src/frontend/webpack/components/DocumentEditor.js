@@ -36,6 +36,7 @@ import {
   getBalanceOf,
   submitArticle
 } from '../../../backend/web3/web3-token-contract-methods.mjs';
+import {SUBMISSION_PRICE} from '../Costants/Constants.js';
 
 const titleStyle = () => 'title';
 
@@ -353,11 +354,11 @@ class DocumentEditor extends Component {
       });
 
     const ARTICLE1_DATA_IN_HEX = getArticleHex(this.props.web3, ARTICLE1);
-    await submitArticle(
+    const err = await submitArticle(
       this.props.tokenContract,
       this.props.selectedAccount.address,
       this.props.platformContract.options.address,
-      5000,
+      SUBMISSION_PRICE,
       ARTICLE1_DATA_IN_HEX
     );
   }
