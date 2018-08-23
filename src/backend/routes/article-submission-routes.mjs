@@ -7,6 +7,8 @@ import errorThrower from '../helpers/error-thrower.mjs';
 const router = express.Router();
 router.use(accesController.loggedInOnly);
 
+router.use(accesController.loggedInOnly);
+
 router.get('/',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;

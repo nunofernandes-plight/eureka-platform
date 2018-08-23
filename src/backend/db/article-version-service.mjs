@@ -40,21 +40,16 @@ export default {
     if (!drafts) {
       errorThrower.noEntryFoundById('EthereumAddress');
     }
-
-    let draftInfos = [];
-    drafts.map(draft => {
-      let draftInfo = {
-        document: {}
-      };
-      draftInfo._id = draft._id;
-      draftInfo.document.title = draft.document.title;
-      draftInfo.document.authors = draft.document.authors;
-      draftInfo.timestamp = draft.timestamp;
-      draftInfos.push(draftInfo);
-    });
-    return draftInfos;
+    return getDraftInfos(drafts);
   },
 
+  getSubmittedAndFinishedDraftOfUser: async (userAddress) => {
+    const drafts = await ArticleVersion.find({
+      ownerAddress: userAddress,
+      $or: [{articleVersionState: ArticleVersionState.FINISHED_DRAFT}, {articleVersionState: ArticleVersionState.SUBMITTED}]
+    });
+    return getDraftInfos(drafts);
+  },
 
   updateDraftById: async (userAddress, articleVersionId, document) => {
     // error checking
@@ -119,3 +114,23 @@ export default {
     );
   }
 };
+
+/**
+ * Extracts only specific infos out of the drafts to return to the frontend
+ * @param drafts
+ * @returns {Array}
+ */
+function getDraftInfos(drafts) {
+  let draftInfos = [];
+  drafts.map(draft => {
+    let draftInfo = {
+      document: {}
+    };
+    draftInfo._id = draft._id;
+    draftInfo.document.title = draft.document.title;
+    draftInfo.document.authors = draft.document.authors;
+    draftInfo.timestamp = draft.timestamp;
+    draftInfos.push(draftInfo);
+  });
+  return draftInfos;
+}
