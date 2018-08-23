@@ -71,7 +71,7 @@ class MainRouter extends Component {
     if (this.state.isAuthenticated) {
       return 0;
     } else {
-      return 100;
+      return 95;
     }
   }
 
