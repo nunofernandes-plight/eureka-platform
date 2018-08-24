@@ -21,7 +21,7 @@ const Span = styled.span`
   &:before {
     transform: ${props =>
       !props.checked ? 'translateX(1.625rem)' : 'translateX(0rem)'};
-    background: #5e72e4;
+    background: ${props => (!props.checked ? '#5e72e4' : '#ddd')};
     position: absolute;
     bottom: 2px;
     left: 2px;
@@ -30,7 +30,6 @@ const Span = styled.span`
     content: '';
     transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     border-radius: 50% !important;
-    // background-color: #ddd; // if non active
   }
 
   position: absolute;
@@ -39,10 +38,9 @@ const Span = styled.span`
   bottom: 0;
   left: 0;
   cursor: pointer;
-  // border: 1px solid #cad1d7; // if non active
   border-radius: 34px !important;
   background-color: transparent;
-  border: 1px solid #5e72e4; // if active
+  border: 1px solid ${props => (!props.checked ? '#5e72e4' : '#ddd')};
 `;
 
 class ToggleButton extends React.Component {
@@ -54,7 +52,7 @@ class ToggleButton extends React.Component {
   }
 
   handleCheckBoxChange = e => {
-    this.setState({checked: e.target.checked});
+    this.props.isMobileMode(e.target.checked);
   };
 
   render() {
@@ -66,7 +64,7 @@ class ToggleButton extends React.Component {
             this.handleCheckBoxChange(e);
           }}
         />
-        <Span checked={this.state.checked} />
+        <Span checked={this.props.checked} />
       </Label>
     );
   }

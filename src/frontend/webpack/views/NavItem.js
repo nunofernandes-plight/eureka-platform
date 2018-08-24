@@ -17,7 +17,8 @@ const MyNavLink = styled(NavLink)`
   background-color: ${__GRAY_300}
     cursor: pointer;
   }
-      display: flex;
+  display: flex;
+  justify-content: ${props => (props.isMobileMode ? 'center' : null)};
   font-size: 13px;
   font-weight: 500;
   padding: 0.75rem;
@@ -71,7 +72,8 @@ const SeparatorContainer = styled.div`
 `;
 
 const LinkName = styled.div`
-  ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
+  display: ${props => (props.isMobileMode ? 'none' : null)}
+    ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
     display: none; 
 `};
 `;
@@ -86,7 +88,7 @@ export const NavItem = props => {
         right={8}
         bottom={4}
       />
-      <LinkName>{props.children}</LinkName>
+      <LinkName isMobileMode={props.isMobileMode}>{props.children}</LinkName>
     </MyNavLink>
   );
 };

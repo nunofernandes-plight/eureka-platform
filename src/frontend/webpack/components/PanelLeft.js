@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {Link, withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import EurekaLogo from '../views/icons/EurekaLogo.js';
 import {NavItem} from '../views/NavItem.js';
 import {Routes} from './routers/Routes.js';
@@ -16,17 +16,20 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: fixed;
-  width: ${PANEL_LEFT_NORMAL_WIDTH}px;
+  width: ${props =>
+    props.isMobileMode ? PANEL_LEFT_MOBILE_WIDTH : PANEL_LEFT_NORMAL_WIDTH}px;
   left: 0;
   padding-top: 30px;
   z-index: 600;
   background: white;
+  transition: 0.3s all;
   transition-duration: 0.15s;
   transition-timing-function: ease-in-out;
   transition-property: width;
   flex: 1 1 auto;
   overflow-x: hidden;
   height: 100%;
+
   ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
     width: ${PANEL_LEFT_MOBILE_WIDTH}px;  
   `};
@@ -63,31 +66,20 @@ const NotificationNumber = styled.div`
 `;
 
 const MobileMode = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   bottom: 0;
-  height: 50px;
+  height: 60px;
   background: white;
   width: 100%;
   z-index: 10;
-  display: flex;
 `;
 class PanelLeft extends Component {
-  constructor() {
-    super();
-    this.state = {
-      activePath: PanelLeft.computeActiveRoute()
-    };
-  }
-
-  static computeActiveRoute() {
-    const pathArray = window.location.href.toString().split('app');
-    const path = pathArray[pathArray.length - 1]; // e.g. /account
-    return path.replace(/[^a-zA-Z ]/g, '');
-  }
-
   render() {
     return (
-      <Container>
+      <Container isMobileMode={this.props.checked}>
         <TopLogo>
           <NotificationBell>
             <NotificationNumber>1</NotificationNumber>
@@ -105,6 +97,7 @@ class PanelLeft extends Component {
                 icon={route.icon}
                 width={20}
                 height={20}
+                isMobileMode={this.props.checked}
               >
                 {route.name}
               </NavItem>
@@ -112,7 +105,14 @@ class PanelLeft extends Component {
           })}
         </Items>
 
-        <MobileMode><ToggleButton/></MobileMode>
+        <MobileMode>
+          <ToggleButton
+            checked={this.props.checked}
+            isMobileMode={isMobileMode => {
+              this.props.isMobileMode(isMobileMode);
+            }}
+          />
+        </MobileMode>
       </Container>
     );
   }

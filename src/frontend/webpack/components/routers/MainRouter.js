@@ -21,9 +21,10 @@ import {
 import Modal from '../../design-components/Modal.js';
 
 const PaddingLeft = styled.div`
-  padding-left: ${PANEL_LEFT_NORMAL_WIDTH}px;
+  padding-left: ${props =>
+    props.isMobileMode ? PANEL_LEFT_MOBILE_WIDTH : PANEL_LEFT_NORMAL_WIDTH}px;
   ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
-    padding-left: ${PANEL_LEFT_MOBILE_WIDTH}px; 
+    padding-left: ${PANEL_LEFT_MOBILE_WIDTH}px; x§
   `};
   transition: 0.5s all;
 `;
@@ -35,7 +36,8 @@ class MainRouter extends Component {
       isAuthenticated: null,
       user: null,
       isLoading: false,
-      errorMessage: null
+      errorMessage: null,
+      isMobileMode: false
     };
   }
 
@@ -154,11 +156,17 @@ class MainRouter extends Component {
               <Route
                 path="/app"
                 render={() => (
-                  <PaddingLeft>
+                  <PaddingLeft isMobileMode={this.state.isMobileMode}>
                     <DashBoardGuard
                       isAuthenticated={this.state.isAuthenticated}
                     >
-                      <PanelLeft base={'/app'} />
+                      <PanelLeft
+                        base={'/app'}
+                        checked={this.state.isMobileMode}
+                        isMobileMode={isMobileMode => {
+                          this.setState({isMobileMode});
+                        }}
+                      />
                       <DashboardRouter
                         web3={this.props.web3}
                         tokenContract={this.props.tokenContract}
