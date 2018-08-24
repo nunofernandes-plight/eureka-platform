@@ -117,9 +117,8 @@ const DropDown = props => {
       <Tabs>
         {Items.map((item, index) => {
           return (
-            <div>
+            <div key={index}>
               <Tab
-                key={index}
                 width={15}
                 height={15}
                 {...item}

@@ -14,7 +14,7 @@ import {renderField} from '../components/editor/DocumentRenderer.js';
 import {renderTimestamp} from '../../helpers/timestampRenderer.js';
 import {MEDIUM_DEVICES} from '../../helpers/mobile.js';
 
-const DraftsContainer = styled.div`
+const SubmittedContainer = styled.div`
   font-size: 14px;
   width: 100%;
   padding: 10px 25px;
@@ -22,7 +22,7 @@ const DraftsContainer = styled.div`
   overflow: scroll;
 `;
 
-const Drafts = styled.table`
+const Submitted = styled.table`
   width: 100%;
   text-align: left;
   position: relative;
@@ -42,7 +42,7 @@ const Tr = styled.tr`
   transition: 0.5s all;
 `;
 
-const NoDrafts = styled.div`
+const NoSubmitted = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -82,25 +82,19 @@ const AuthorsTitle = styled.th`
     display: none; 
   `};
 `;
-const DraftsTable = props => {
+const SubmittedTable = props => {
   return (
-    <DraftsContainer>
-      {!props.drafts || props.drafts.length === 0 ? (
-        <NoDrafts>
-          <Icon
-            icon={'material'}
-            material={'gesture'}
-            width={100}
-            height={100}
-            color={__FIFTH}
-          />
+    <SubmittedContainer>
+      {!props.submitted || props.submitted.length === 0 ? (
+        <NoSubmitted>
+          <img src={'/img/icons/stamp.png'} width={100} height={100} />
           <StartWriting onClick={() => props.onSubmit()}>
-            Start writing your article exploiting EUREKA's Blockchain
-            Technology!
+            Submit your first article with EUREKA and exploit the REWARD
+            process!
           </StartWriting>
-        </NoDrafts>
+        </NoSubmitted>
       ) : (
-        <Drafts>
+        <Submitted>
           <tbody>
             <tr>
               <th />
@@ -113,13 +107,13 @@ const DraftsTable = props => {
               <th>
                 <TableTitle>Last changed</TableTitle>
               </th>
-              <th />
+              <th>Status</th>
             </tr>
           </tbody>
 
           <tbody>
-            {props.drafts.map(draft => (
-              <Tr key={draft._id}>
+            {props.submitted.map(submitted => (
+              <Tr key={submitted._id}>
                 <td style={{padding: '20px 15px'}}>
                   <Icon
                     icon={'file'}
@@ -128,31 +122,17 @@ const DraftsTable = props => {
                     color={__GRAY_600}
                   />
                 </td>
-                <td>
-                  <MyLink to={`${props.base}/${draft._id}`}>
-                    {renderField(draft.document, 'title')}
-                  </MyLink>
-                </td>
-                <Authors>{draft.document.authors}</Authors>
-                <td>{renderTimestamp(draft.timestamp)}</td>
-                <td>
-                  <Icon
-                    icon={'delete'}
-                    width={20}
-                    height={20}
-                    color={__ALERT_ERROR}
-                    onClick={() => {
-                      props.onDelete(draft._id);
-                    }}
-                  />
-                </td>
+                <td>TODO: link to preview</td>
+                <Authors>{submitted.document.authors}</Authors>
+                <td>{renderTimestamp(submitted.timestamp)}</td>
+                <td>status</td>
               </Tr>
             ))}
           </tbody>
-        </Drafts>
+        </Submitted>
       )}
-    </DraftsContainer>
+    </SubmittedContainer>
   );
 };
 
-export default DraftsTable;
+export default SubmittedTable;
