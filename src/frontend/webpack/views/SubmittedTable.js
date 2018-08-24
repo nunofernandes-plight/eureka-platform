@@ -4,13 +4,16 @@ import {
   __GRAY_600,
   __GRAY_200,
   __THIRD,
-  __FIFTH
+  __FIFTH,
+  __ALERT_SUCCESS
 } from '../../helpers/colors.js';
 import {Link} from 'react-router-dom';
 import Icon from '../views/icons/Icon.js';
 import {renderTimestamp} from '../../helpers/timestampRenderer.js';
 import {MEDIUM_DEVICES} from '../../helpers/mobile.js';
 import {renderField} from '../components/editor/DocumentRenderer.js';
+import ARTICLE_VERSION_STATE from '../../../backend/schema/article-version-state-enum.mjs';
+import PulseSpinner from '../views/spinners/PulseSpinner.js';
 
 const SubmittedContainer = styled.div`
   font-size: 14px;
@@ -82,6 +85,37 @@ const AuthorsTitle = styled.th`
     display: none; 
   `};
 `;
+
+const IconContainer = styled.div`
+  border-radius: 50%;
+  padding: 0.25rem;
+  background: ${__ALERT_SUCCESS};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  margin: auto;
+  height: 25px;
+`;
+const renderStatus = status => {
+  if (status === ARTICLE_VERSION_STATE.FINISHED_DRAFT) {
+    return <PulseSpinner />;
+  } else if (status === ARTICLE_VERSION_STATE.SUBMITTED) {
+    return (
+      <IconContainer>
+        <Icon
+          icon={'material'}
+          material={'done'}
+          width={18}
+          height={18}
+          color={'#fff'}
+          noMove
+        />
+      </IconContainer>
+    );
+  } else {
+  }
+};
 const SubmittedTable = props => {
   return (
     <SubmittedContainer>
@@ -108,7 +142,7 @@ const SubmittedTable = props => {
                 <TableTitle>Name</TableTitle>
               </th>
               <AuthorsTitle>
-                <TableTitle>Authors</TableTitle>
+                <TableTitle>Unique Article Hash</TableTitle>
               </AuthorsTitle>
               <th>
                 <TableTitle>Last changed</TableTitle>
@@ -130,16 +164,16 @@ const SubmittedTable = props => {
                 </td>
                 <td>
                   <MyLink
-                    to={`${props.base.toString().replace('/submitted', '')}/preview/${
-                      submitted._id
-                    }`}
+                    to={`${props.base
+                      .toString()
+                      .replace('/submitted', '')}/preview/${submitted._id}`}
                   >
                     {renderField(submitted.document, 'title')}
                   </MyLink>
                 </td>
-                <Authors>{submitted.document.authors}</Authors>
+                <Authors>{submitted.articleHash.substr(0, 55)}...</Authors>
                 <td>{renderTimestamp(submitted.timestamp)}</td>
-                <td>status</td>
+                <td>{renderStatus(submitted.articleVersionState)}</td>
               </Tr>
             ))}
           </tbody>

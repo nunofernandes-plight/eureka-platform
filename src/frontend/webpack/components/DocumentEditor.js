@@ -30,13 +30,9 @@ import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
 import DropZoneHandler from './editor/DropZoneHandler.js';
 import DocumentFiguresRenderer from './editor/DocumentFiguresRenderer.js';
 import SmartContractInputData from '../views/SmartContractInputData.js';
-import {getAccounts, getArticleHex} from '../../web3/Helpers.js';
-import {getGasEstimation} from '../../../backend/web3/web3-utils-methods.mjs';
-import {
-  getBalanceOf,
-  submitArticle
-} from '../../../backend/web3/web3-token-contract-methods.mjs';
-import {SUBMISSION_PRICE} from '../Costants/Constants.js';
+import {getArticleHex} from '../../web3/Helpers.js';
+import {submitArticle} from '../../web3/Web3Methods.js';
+import {SUBMISSION_PRICE} from '../Constants/Constants.js';
 
 const titleStyle = () => 'title';
 
@@ -353,14 +349,32 @@ class DocumentEditor extends Component {
         });
       });
 
+    // SC call
     const ARTICLE1_DATA_IN_HEX = getArticleHex(this.props.web3, ARTICLE1);
-    const err = await submitArticle(
+    const receipt = await submitArticle(
       this.props.tokenContract,
       this.props.selectedAccount.address,
       this.props.platformContract.options.address,
       SUBMISSION_PRICE,
       ARTICLE1_DATA_IN_HEX
-    );
+    )
+      .on('transactionHash', tx => {
+        console.log(tx);
+      })
+      .on('receipt', receipt => {
+        console.log(
+          'The article submission exited with the TX status: ' + receipt.status
+        );
+        return receipt;
+      })
+      .catch(err => {
+        console.error('submitArticle error: ', err);
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong with the Smart Contract call.'
+        });
+      });
+
+    console.log(receipt);
   }
 
   renderTitle() {
