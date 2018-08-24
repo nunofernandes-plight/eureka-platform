@@ -15,8 +15,10 @@ import {MAKE_MOBILE} from '../../../helpers/mobile.js';
 import {
   PANEL_LEFT_BREAK_POINT,
   PANEL_LEFT_MOBILE_WIDTH,
-  PANEL_LEFT_NORMAL_WIDTH
+  PANEL_LEFT_NORMAL_WIDTH,
+  HEADER_PADDING_TOP
 } from '../../../helpers/layout.js';
+import Modal from '../../design-components/Modal.js';
 
 const PaddingLeft = styled.div`
   padding-left: ${PANEL_LEFT_NORMAL_WIDTH}px;
@@ -31,7 +33,9 @@ class MainRouter extends Component {
     super();
     this.state = {
       isAuthenticated: null,
-      user: null
+      user: null,
+      isLoading: false,
+      errorMessage: null
     };
   }
 
@@ -69,6 +73,33 @@ class MainRouter extends Component {
       });
   }
 
+  action(item) {
+    this.setState({isLoading: true});
+    fetch(`${getDomain()}/api/${item.action}`, {
+      method: item.method,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.setState({isAuthenticated: response.data.isAuthenticated});
+        } else {
+          this.setState({errorMessage: response.error});
+        }
+        this.setState({isLoading: false});
+      })
+      .catch(err => {
+        console.error(err);
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.',
+          isLoading: false
+        });
+      });
+  }
+
   componentWillReceiveProps(nextProps) {
     const selectedAddress = nextProps.selectedAccount.address;
     if (this.state.user) {
@@ -86,13 +117,29 @@ class MainRouter extends Component {
     if (this.state.isAuthenticated) {
       return 0;
     } else {
-      return 95;
+      return HEADER_PADDING_TOP;
     }
+  }
+
+  renderModals() {
+    return (
+      <Modal
+        type={'notification'}
+        toggle={isErrorMessage => {
+          this.setState({errorMessage: null});
+        }}
+        show={this.state.errorMessage}
+        title={'You got the following error'}
+      >
+        {this.state.errorMessage}
+      </Modal>
+    );
   }
 
   render() {
     return (
       <div>
+        {this.renderModals()}
         <Header
           provider={this.props.provider}
           metaMaskStatus={this.props.metaMaskStatus}
@@ -121,6 +168,7 @@ class MainRouter extends Component {
                         selectedAccount={this.props.selectedAccount}
                         metaMaskStatus={this.props.metaMaskStatus}
                         network={this.props.network}
+                        action={item => this.action(item)}
                       />
                     </DashBoardGuard>
                   </PaddingLeft>

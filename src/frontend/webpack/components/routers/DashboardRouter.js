@@ -18,6 +18,7 @@ class DashboardRouter extends Component {
           user={this.props.user}
           metaMaskStatus={this.props.metaMaskStatus}
           network={this.props.network}
+          action={item => this.props.action(item)}
         />
         <BottomContainer>
           <Route

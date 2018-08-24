@@ -5,6 +5,7 @@ export const SMALL_LAPTOPS_WIDTH = 970;
 export const TABLETS_WIDTH = 750;
 export const SMALL_WIDTH = 768;
 
+export const HEADER_PADDING_TOP = 95;
 export const PANEL_LEFT_BREAK_POINT = 1300;
 export const PANEL_LEFT_NORMAL_WIDTH = 180;
 export const PANEL_LEFT_MOBILE_WIDTH = 65;

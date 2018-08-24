@@ -67,7 +67,10 @@ class TopContainer extends React.Component {
                 height={40}
                 right={15}
               />
-              <UserDropDownMenu visible={this.state.dropMenuVisible} />
+              <UserDropDownMenu
+                visible={this.state.dropMenuVisible}
+                action={item => this.props.action(item)}
+              />
             </DropDownMenuParent>
           </div>
         </Profile>
