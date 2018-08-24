@@ -10,6 +10,7 @@ const Img = styled.img`
   margin-left: ${props => (props.left ? props.left + 'px' : null)};
   margin-right: ${props => (props.right ? props.right + 'px' : null)};
   margin-top: ${props => (props.top ? props.top + 'px' : null)};
+  cursor: ${props => (props.cursor ? props.cursor : 'auto')};
 `;
 const Avatar = props => {
   return <Img src={`/${props.avatar}`} {...props} />;

@@ -66,6 +66,7 @@ class TopContainer extends React.Component {
                 width={40}
                 height={40}
                 right={15}
+                cursor={'pointer'}
               />
               <UserDropDownMenu
                 visible={this.state.dropMenuVisible}
