@@ -33,7 +33,9 @@ import SmartContractInputData from '../views/SmartContractInputData.js';
 import {getArticleHex} from '../../web3/Helpers.js';
 import {submitArticle} from '../../web3/Web3Methods.js';
 import {SUBMISSION_PRICE} from '../Constants/Constants.js';
-
+import Notification from '../design-components/Notification.js';
+import {ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const titleStyle = () => 'title';
 
 const Parent = styled.div`
@@ -333,12 +335,8 @@ class DocumentEditor extends Component {
     })
       .then(response => response.json())
       .then(async response => {
-        if (response.success) {
-          this.props.history.push(`${this.props.base}/submitted`);
-        } else {
-          this.setState({
-            errorMessage: response.error
-          });
+        if (!response.success) {
+          this.setState({errorMessage: response.error});
         }
       })
       .catch(err => {
@@ -359,7 +357,7 @@ class DocumentEditor extends Component {
       ARTICLE1_DATA_IN_HEX
     )
       .on('transactionHash', tx => {
-        console.log(tx);
+        this.props.history.push(`${this.props.base}/submitted?tx=${tx}`);
       })
       .on('receipt', receipt => {
         console.log(
@@ -370,7 +368,8 @@ class DocumentEditor extends Component {
       .catch(err => {
         console.error('submitArticle error: ', err);
         this.setState({
-          errorMessage: 'Ouh. Something went wrong with the Smart Contract call.'
+          errorMessage:
+            'Ouh. Something went wrong with the Smart Contract call.'
         });
       });
 
@@ -636,6 +635,8 @@ class DocumentEditor extends Component {
                     >
                       Submit Article
                     </Button>
+
+                    <Notification />
                   </ButtonContainer>
                 </EditorCard>
               </EditorParent>
