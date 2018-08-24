@@ -11,6 +11,8 @@ const Parent = styled.div`
   transition: 0.5s ease-in-out;
   z-index: 1000;
   cursor: pointer;
+  pointer-events: ${props => (props.visible ? 'auto' : 'none')};
+  opacity: ${props => (props.visible ? 1 : 0)};
 `;
 const Navigation = styled.div`
   background: rgb(255, 255, 255);
@@ -19,7 +21,7 @@ const Navigation = styled.div`
   padding: 1rem 2rem;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   border-radius: 5px;
-  animation: ${fadeIn} 0.5s;
+  // animation: ${fadeIn} 0.5s;
 `;
 
 const Tabs = styled.div`
@@ -64,7 +66,11 @@ const DropDown = () => {
 };
 
 const UserDropDownMenu = props => {
-  return <Parent>{props.visible ? <DropDown /> : null}</Parent>;
+  return (
+    <Parent visible={props.visible}>
+      <DropDown />
+    </Parent>
+  );
 };
 
 export default UserDropDownMenu;
