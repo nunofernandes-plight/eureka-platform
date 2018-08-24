@@ -10,6 +10,7 @@ import {
 } from '../../helpers/colors.js';
 import {Items} from './UserDropDownItems.js';
 import {getDomain} from '../../../helpers/getDomain.js';
+import EurekaLogo from './icons/EurekaLogo.js';
 
 const Parent = styled.div`
   position: absolute;
@@ -41,7 +42,7 @@ const TabContainer = styled.div`
   transition: 0.3s all;
   display: flex;
   align-items: center;
-  padding: 5px 15px;
+  padding: 5px 25px;
   cursor: pointer;
 `;
 
@@ -58,7 +59,7 @@ const SmallSquare = styled.div`
 `;
 
 const IconContainer = styled.div`
-  background: ${__FIFTH};
+  background: ${props => props.color};
   color: #fff;
   border-radius: 50%;
   padding: 0.5rem;
@@ -70,11 +71,12 @@ const IconContainer = styled.div`
   align-items: center;
 `;
 
-const Text = styled.h3`
+const Text = styled.h4`
   margin-left: 10px;
   margin-top: 0;
   margin-bottom: 0;
-  color: ${__FIFTH};
+  color: ${props => props.color};
+  font-size: 12px;
 `;
 
 const Separator = styled.div`
@@ -91,16 +93,20 @@ const Tab = props => {
         props.onClick(props);
       }}
     >
-      <IconContainer>
-        <Icon
-          icon={props.icon}
-          material={props.material}
-          width={props.width}
-          height={props.height}
-          noMove
-        />
+      <IconContainer color={props.color}>
+        {props.icon === 'eureka' ? (
+          <EurekaLogo width={props.width + 2} height={props.height + 2} />
+        ) : (
+          <Icon
+            icon={props.icon}
+            material={props.material}
+            width={props.width}
+            height={props.height}
+            noMove
+          />
+        )}
       </IconContainer>
-      <Text>{props.text}</Text>
+      <Text color={props.color}>{props.text}</Text>
     </TabContainer>
   );
 };
