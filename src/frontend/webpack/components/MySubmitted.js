@@ -8,6 +8,7 @@ import SubmittedTable from '../views/SubmittedTable.js';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../design-components/Notification.css';
+import {getMetaMaskStatus} from '../../web3/IsLoggedIn.js';
 
 const Container = styled.div``;
 
@@ -23,13 +24,20 @@ class MySubmitted extends React.Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.fetchYourArticles();
+    this.interval = setInterval(async () => {
+      this.fetchYourArticles();
+    }, 3500);
 
     const tx = MySubmitted.getParameterByName('tx');
     if (tx) {
       this.setState({showTxModal: true, tx});
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   static getParameterByName(name, url) {

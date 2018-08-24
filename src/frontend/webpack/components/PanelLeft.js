@@ -2,21 +2,21 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Link, withRouter} from 'react-router-dom';
 import EurekaLogo from '../views/icons/EurekaLogo.js';
-import {NavItem, Separator} from '../views/NavItem.js';
+import {NavItem} from '../views/NavItem.js';
 import {Routes} from './routers/Routes.js';
-import {EXTRA_LARGE_DEVICES, MAKE_MOBILE} from '../../helpers/mobile.js';
+import {MAKE_MOBILE} from '../../helpers/mobile.js';
 import {
   PANEL_LEFT_BREAK_POINT,
   PANEL_LEFT_MOBILE_WIDTH,
   PANEL_LEFT_NORMAL_WIDTH
 } from '../../helpers/layout.js';
+import ToggleButton from '../design-components/ToggleButton.js';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: fixed;
   width: ${PANEL_LEFT_NORMAL_WIDTH}px;
-  height: 100%;
   left: 0;
   padding-top: 30px;
   z-index: 600;
@@ -26,7 +26,7 @@ const Container = styled.div`
   transition-property: width;
   flex: 1 1 auto;
   overflow-x: hidden;
-
+  height: 100%;
   ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
     width: ${PANEL_LEFT_MOBILE_WIDTH}px;  
   `};
@@ -62,6 +62,15 @@ const NotificationNumber = styled.div`
   margin-top: -2.3px;
 `;
 
+const MobileMode = styled.div`
+  position: absolute;
+  bottom: 0;
+  height: 50px;
+  background: white;
+  width: 100%;
+  z-index: 10;
+  display: flex;
+`;
 class PanelLeft extends Component {
   constructor() {
     super();
@@ -102,6 +111,8 @@ class PanelLeft extends Component {
             );
           })}
         </Items>
+
+        <MobileMode><ToggleButton/></MobileMode>
       </Container>
     );
   }
