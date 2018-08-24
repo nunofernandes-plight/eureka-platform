@@ -6,6 +6,7 @@ import MyDrafts from '../MyDrafts.js';
 import DocumentEditor from '../DocumentEditor.js';
 import NavPill from '../../views/NavPill.js';
 import MySubmitted from '../MySubmitted.js';
+import Preview from '../Preview.js';
 import {NavPillRoutes} from './NavPillRoutes.js';
 
 const Parent = styled.div`
@@ -87,6 +88,14 @@ class ArticlesRouter extends Component {
                 render={() => (
                   <MySubmitted base={`${this.props.base}/submitted`} />
                 )}
+              />
+            </MarginTop>
+
+            <MarginTop>
+              <Route
+                exact
+                path={`${this.props.base}/preview`}
+                render={() => <Preview base={`${this.props.base}/preview`} />}
               />
             </MarginTop>
 

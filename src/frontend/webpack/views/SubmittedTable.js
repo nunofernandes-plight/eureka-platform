@@ -87,7 +87,13 @@ const SubmittedTable = props => {
     <SubmittedContainer>
       {!props.submitted || props.submitted.length === 0 ? (
         <NoSubmitted>
-          <img src={'/img/icons/stamp.png'} width={100} height={100} />
+          <Icon
+            icon={'material'}
+            material={'gesture'}
+            width={100}
+            height={100}
+            color={__FIFTH}
+          />
           <StartWriting onClick={() => props.onSubmit()}>
             Submit your first article with EUREKA and exploit the REWARD
             process!

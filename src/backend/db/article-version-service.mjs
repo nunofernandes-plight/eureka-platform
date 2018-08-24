@@ -126,6 +126,9 @@ function getDraftInfos(drafts) {
     let draftInfo = {
       document: {}
     };
+
+    draftInfo.articleVersionState = draft.articleVersionState;
+    draftInfo.articleHash = draft.articleHash; 
     draftInfo._id = draft._id;
     draftInfo.document.title = draft.document.title;
     draftInfo.document.authors = draft.document.authors;
