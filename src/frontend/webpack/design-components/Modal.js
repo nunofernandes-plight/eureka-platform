@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import styled, {keyframes} from 'styled-components';
 import Icon from '../views/icons/Icon.js';
+import {PANEL_LEFT_NORMAL_WIDTH} from "../../helpers/layout.js";
 
 const getBackColor = props => {
   if (props.type === 'notification') {
@@ -41,7 +42,9 @@ const MyModal = styled.div`
   min-height: 250px;
   max-width: 700px;
   min-width: 350px;
-  margin: 1.75rem auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: ${PANEL_LEFT_NORMAL_WIDTH}px;
   display: flex;
   flex-direction: column;
   border-radius: 0.3rem;

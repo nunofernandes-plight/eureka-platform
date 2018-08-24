@@ -33,9 +33,6 @@ import SmartContractInputData from '../views/SmartContractInputData.js';
 import {getArticleHex} from '../../web3/Helpers.js';
 import {submitArticle} from '../../web3/Web3Methods.js';
 import {SUBMISSION_PRICE} from '../Constants/Constants.js';
-import Notification from '../design-components/Notification.js';
-import {ToastContainer, toast} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 const titleStyle = () => 'title';
 
 const Parent = styled.div`
@@ -635,8 +632,6 @@ class DocumentEditor extends Component {
                     >
                       Submit Article
                     </Button>
-
-                    <Notification />
                   </ButtonContainer>
                 </EditorCard>
               </EditorParent>

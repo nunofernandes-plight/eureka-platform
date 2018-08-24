@@ -17,7 +17,9 @@ class MySubmitted extends React.Component {
     this.state = {
       articlesLoading: false,
       errorMessage: null,
-      submitted: null
+      submitted: null,
+      tx: null,
+      showTxModal: false
     };
   }
 
@@ -26,16 +28,7 @@ class MySubmitted extends React.Component {
 
     const tx = MySubmitted.getParameterByName('tx');
     if (tx) {
-      toast(
-        'Your article has been submitted to our Smart Contract and has the following transaction hash: ' +
-          tx,
-        {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 200000,
-          className: '__ALERT_SUCCESS',
-          progressClassName: '__BAR'
-        }
-      );
+      this.setState({showTxModal: true, tx});
     }
   }
 
@@ -89,6 +82,24 @@ class MySubmitted extends React.Component {
           title={'You got the following error'}
         >
           {this.state.errorMessage}
+        </Modal>
+
+        <Modal
+          action={'GOT IT'}
+          callback={() => {
+            this.setState({showTxModal: false});
+            this.props.history.push(`${this.props.base}`);
+          }}
+          noClose
+          show={this.state.showTxModal}
+          title={'Your article has been successfully submitted!'}
+        >
+          Dear user, your article has successfully triggered our Smart Contract.
+          If you are interested, you can track the Blockchain approval process
+          at the following link: <a href={'google.ch'}>{this.state.tx} </a>.
+          <br />
+          We will inform you once the blockchain-based peer-review process will
+          start.
         </Modal>
       </div>
     );
