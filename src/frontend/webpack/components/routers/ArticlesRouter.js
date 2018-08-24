@@ -94,7 +94,7 @@ class ArticlesRouter extends Component {
             <MarginTop>
               <Route
                 exact
-                path={`${this.props.base}/preview`}
+                path={`${this.props.base}/preview/:id`}
                 render={() => <Preview base={`${this.props.base}/preview`} />}
               />
             </MarginTop>

@@ -1,18 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 import {
-  __ALERT_ERROR,
   __GRAY_600,
   __GRAY_200,
   __THIRD,
-  __FIFTH,
-  __GRAY_100
+  __FIFTH
 } from '../../helpers/colors.js';
 import {Link} from 'react-router-dom';
 import Icon from '../views/icons/Icon.js';
-import {renderField} from '../components/editor/DocumentRenderer.js';
 import {renderTimestamp} from '../../helpers/timestampRenderer.js';
 import {MEDIUM_DEVICES} from '../../helpers/mobile.js';
+import {renderField} from '../components/editor/DocumentRenderer.js';
 
 const SubmittedContainer = styled.div`
   font-size: 14px;
@@ -71,6 +69,8 @@ const MyLink = styled(Link)`
   text-decoration: none;
 `;
 
+const Preview = styled.td``;
+
 const Authors = styled.td`
   ${MEDIUM_DEVICES`
     display: none; 
@@ -128,7 +128,15 @@ const SubmittedTable = props => {
                     color={__GRAY_600}
                   />
                 </td>
-                <td>TODO: link to preview</td>
+                <td>
+                  <MyLink
+                    to={`${props.base.toString().replace('/submitted', '')}/preview/${
+                      submitted._id
+                    }`}
+                  >
+                    {renderField(submitted.document, 'title')}
+                  </MyLink>
+                </td>
                 <Authors>{submitted.document.authors}</Authors>
                 <td>{renderTimestamp(submitted.timestamp)}</td>
                 <td>status</td>

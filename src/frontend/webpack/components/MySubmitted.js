@@ -75,6 +75,9 @@ class MySubmitted extends React.Component {
           <SubmittedTable
             base={this.props.base}
             submitted={this.state.submitted}
+            onPreview={_id => {
+              this.props.onPreview(_id);
+            }}
           />
         </Card>
       </Container>
