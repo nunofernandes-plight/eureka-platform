@@ -76,6 +76,9 @@ const MobileMode = styled.div`
   background: white;
   width: 100%;
   z-index: 10;
+
+  ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
+    display: none;`};
 `;
 
 const MobileModeTitle = styled.h5`

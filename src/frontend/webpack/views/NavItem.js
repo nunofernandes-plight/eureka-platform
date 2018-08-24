@@ -72,10 +72,9 @@ const SeparatorContainer = styled.div`
 `;
 
 const LinkName = styled.div`
-  display: ${props => (props.isMobileMode ? 'none' : null)}
-    ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
-    display: none; 
-`};
+  display: ${props => (props.isMobileMode ? 'none' : null)};
+  ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
+    display: none;`};
 `;
 
 export const NavItem = props => {
