@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import {__FIFTH, __GRAY_200} from '../../helpers/colors.js';
 
 const Label = styled.label`
   position: relative;
@@ -21,7 +22,7 @@ const Span = styled.span`
   &:before {
     transform: ${props =>
       !props.checked ? 'translateX(1.625rem)' : 'translateX(0rem)'};
-    background: ${props => (!props.checked ? '#5e72e4' : '#ddd')};
+    background: ${props => (!props.checked ? __FIFTH : __GRAY_200)};
     position: absolute;
     bottom: 2px;
     left: 2px;
@@ -40,7 +41,7 @@ const Span = styled.span`
   cursor: pointer;
   border-radius: 34px !important;
   background-color: transparent;
-  border: 1px solid ${props => (!props.checked ? '#5e72e4' : '#ddd')};
+  border: 1px solid ${props => (!props.checked ? __FIFTH : __GRAY_200)};
 `;
 
 class ToggleButton extends React.Component {

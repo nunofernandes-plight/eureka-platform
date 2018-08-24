@@ -69,12 +69,18 @@ const MobileMode = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   position: absolute;
-  bottom: 0;
+  bottom: 10px;
   height: 60px;
   background: white;
   width: 100%;
   z-index: 10;
+`;
+
+const MobileModeTitle = styled.h5`
+  margin: 0;
+  text-align: center;
 `;
 class PanelLeft extends Component {
   render() {
@@ -106,6 +112,7 @@ class PanelLeft extends Component {
         </Items>
 
         <MobileMode>
+          <MobileModeTitle>Toggle menu</MobileModeTitle>
           <ToggleButton
             checked={this.props.checked}
             isMobileMode={isMobileMode => {
