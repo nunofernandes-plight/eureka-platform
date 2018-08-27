@@ -84,6 +84,15 @@ export default {
     return User.findOne({_id: userId});
   },
 
+
+  getOwnRoles: async (ethereumAddress) => {
+    if(!ethereumAddress) errorThrower.missingParameter('Ethereum-address');
+
+    const user = await User.findOne({ethereumAddress: ethereumAddress});
+    if(!user) errorThrower.noEntryFoundById(ethereumAddress);
+
+    return user.roles;
+  },
   /**
    * Add the role to the given user
    * if the role matches a roles-enum
