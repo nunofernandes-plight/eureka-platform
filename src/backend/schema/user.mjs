@@ -29,9 +29,6 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: false
     },
-    isEditor: {
-      type: Boolean
-    },
     roles: [
       {
         type: String,

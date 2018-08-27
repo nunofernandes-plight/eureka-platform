@@ -50,8 +50,7 @@ export default {
       ethereumAddress,
       password: hashedPassword,
       email,
-      avatar,
-      isEditor: false //default not an editor
+      avatar
     });
 
     return newUser.save().then(
@@ -125,9 +124,7 @@ export default {
   makeEditor: async ethereumAddress => {
     User.findOneAndUpdate(
       {ethereumAddress: ethereumAddress},
-      {
-        isEditor: true
-      },
+      {$addToSet: { roles: Roles.EDITOR }},
       (err, user) => {
         if (err) throw err;
         console.log('User ' + user.ethereumAddress + ' has become an Editor');
