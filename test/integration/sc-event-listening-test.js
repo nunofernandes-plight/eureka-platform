@@ -2,8 +2,7 @@ import {signUpEditor} from '../../src/backend/web3/web3-platform-contract-method
 import {
   mintEurekaTokens,
   finishMinting,
-  submitArticle,
-  getBalanceOf
+  submitArticle
 } from '../../src/backend/web3/web3-token-contract-methods.mjs';
 import test from 'ava';
 import app from '../../src/backend/api/api.mjs';
@@ -19,7 +18,6 @@ import articleVersionService from '../../src/backend/db/article-version-service.
 import reviewService from '../../src/backend/db/review-service.mjs';
 import getArticleHex from '../../src/backend/web3/get-articleHex.mjs';
 import {
-  getLinkedArticles,
   assignForSubmissionProcess,
   removeEditorFromSubmissionProcess,
   changeEditorFromSubmissionProcess,
@@ -30,10 +28,10 @@ import {
   addEditorApprovedReview,
   addCommunityReview,
   correctReview,
-  acceptReview
+  acceptReview,
+  declineReview
 } from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import {sleepSync} from '../helpers.js';
-import {getAuthors} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import ArticleVersion from '../../src/backend/schema/article-version.mjs';
 import Review from '../../src/backend/schema/review.mjs';
 
@@ -109,6 +107,16 @@ const REVIEW2 = {
   articleHasMinorIssues: true
 };
 const REVIEW2_HASH_HEX = '0x' + REVIEW2.reviewHash;
+
+const REVIEW3 = {
+  reviewHash: '333cc57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', // TODO change?
+  reviewText: 'Third review. So it comes from reviewer3',
+  score1: 4,
+  score2: 4,
+  articleHasMajorIssues: true,
+  articleHasMinorIssues: false
+};
+const REVIEW3_HASH_HEX = '0x' + REVIEW3.reviewHash;
 
 /** ************** TESTING ****************/
 
@@ -331,6 +339,7 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
 
   const reviewer1 = await userService.createUser('testReviewer1', 'reviewer1@test.test', testAccounts[5], 'test-reviewer-avatar');
   const reviewer2 = await userService.createUser('testReviewer2', 'reviewer2@test.test', testAccounts[6], 'test-reviewer-avatar');
+  const reviewer3 = await userService.createUser('testReviewer3', 'reviewer3@test.test', testAccounts[7], 'test-reviewer-avatar');
 
   // Setup article draft 1 & 2
   await articleSubmissionService.createSubmission(author.ethereumAddress);
@@ -388,7 +397,20 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
   }
   t.is(review.reviewState, ReviewState.INVITATION_ACCEPTED);
 
-  // Add editor-approved review into DB
+  // Reviewer2 accept --> check for new state in DB
+  await acceptReviewInvitation(eurekaPlatformContract, articleVersion.articleHash, reviewer2.ethereumAddress);
+  let review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, articleVersion.editorApprovedReviews[1]);
+  counter = 0;
+  while (
+    review.reviewState === ReviewState.INVITED &&
+    counter < 5) {
+    sleepSync(5000);
+    review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.editorApprovedReviews[1]);
+    counter++;
+  }
+  t.is(review2.reviewState, ReviewState.INVITATION_ACCEPTED);
+
+  // Add editor-approved review1 into DB
   await reviewService.addEditorApprovedReview(reviewer1.ethereumAddress, review._id,
     REVIEW1.reviewText, REVIEW1_HASH_HEX, REVIEW1.score1, REVIEW1.score2,
     REVIEW1.articleHasMajorIssues, REVIEW1.articleHasMinorIssues);
@@ -396,13 +418,13 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
   review = await reviewService.getReviewById(reviewer1.ethereumAddress, review._id);
   t.is(review.reviewState, ReviewState.HANDED_IN_DB);
 
-  // Add an review in SC
+  // Add review1 in SC
   await addEditorApprovedReview(eurekaPlatformContract, articleVersion.articleHash, REVIEW1_HASH_HEX, REVIEW1.articleHasMajorIssues,
     REVIEW1.articleHasMinorIssues, REVIEW1.score1, REVIEW1.score2, reviewer1.ethereumAddress);
 
-  review = await reviewService.getReviewById(reviewer1.ethereumAddress, review._id);
 
   // Check if status changed on DB
+  review = await reviewService.getReviewById(reviewer1.ethereumAddress, review._id);
   counter = 0;
   while (
     review.reviewState === ReviewState.HANDED_IN_DB &&
@@ -413,33 +435,59 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
   }
   t.is(review.reviewState, ReviewState.HANDED_IN_SC);
 
-  // Write a community review as reviewer2
-  let review2 = await reviewService.addNewCommunitydReview(reviewer2.ethereumAddress, articleVersion.articleHash,
-    REVIEW2.reviewText, REVIEW2_HASH_HEX, REVIEW2.score1, REVIEW2.score2, REVIEW2.articleHasMajorIssues, REVIEW2.articleHasMinorIssues);
-  review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
 
+
+  // Add editor-approved review2 into DB
+  await reviewService.addEditorApprovedReview(reviewer2.ethereumAddress, review2._id,
+    REVIEW2.reviewText, REVIEW2_HASH_HEX, REVIEW2.score1, REVIEW2.score2,
+    REVIEW2.articleHasMajorIssues, REVIEW2.articleHasMinorIssues);
+
+  review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
   t.is(review2.reviewState, ReviewState.HANDED_IN_DB);
-  await addCommunityReview(eurekaPlatformContract, articleVersion.articleHash, REVIEW2_HASH_HEX, REVIEW2.articleHasMajorIssues,
+
+  // Add review2 in SC
+  await addEditorApprovedReview(eurekaPlatformContract, articleVersion.articleHash, REVIEW2_HASH_HEX, REVIEW2.articleHasMajorIssues,
     REVIEW2.articleHasMinorIssues, REVIEW2.score1, REVIEW2.score2, reviewer2.ethereumAddress);
 
-  review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
 
+  // Check if status changed on DB
+  review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
   counter = 0;
   while (
     review2.reviewState === ReviewState.HANDED_IN_DB &&
     counter < 5) {
     sleepSync(5000);
-    review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
+    review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review._id);
     counter++;
   }
   t.is(review2.reviewState, ReviewState.HANDED_IN_SC);
 
+
+  // Write a community review as reviewer3
+  let review3 = await reviewService.addNewCommunitydReview(reviewer3.ethereumAddress, articleVersion.articleHash,
+    REVIEW3.reviewText, REVIEW3_HASH_HEX, REVIEW3.score1, REVIEW3.score2, REVIEW3.articleHasMajorIssues, REVIEW3.articleHasMinorIssues);
+  review3 = await reviewService.getReviewById(reviewer3.ethereumAddress, review3._id);
+
+  t.is(review3.reviewState, ReviewState.HANDED_IN_DB);
+  await addCommunityReview(eurekaPlatformContract, articleVersion.articleHash, REVIEW3_HASH_HEX, REVIEW3.articleHasMajorIssues,
+    REVIEW3.articleHasMinorIssues, REVIEW3.score1, REVIEW3.score2, reviewer3.ethereumAddress);
+
+  review3 = await reviewService.getReviewById(reviewer3.ethereumAddress, review3._id);
+
+  counter = 0;
+  while (
+    review3.reviewState === ReviewState.HANDED_IN_DB &&
+    counter < 5) {
+    sleepSync(5000);
+    review3 = await reviewService.getReviewById(reviewer3.ethereumAddress, review3._id);
+    counter++;
+  }
+  t.is(review3.reviewState, ReviewState.HANDED_IN_SC);
+
+
+  // Accept review1
   await acceptReview(eurekaPlatformContract, articleVersion.articleHash, reviewer1.ethereumAddress, editor.ethereumAddress);
-  //TODO Db call before with new corrected version
-
   review = await reviewService.getReviewById(reviewer1.ethereumAddress, review._id);
-
-
   counter = 0;
   while (
     review.reviewState === ReviewState.HANDED_IN_SC &&
@@ -448,8 +496,20 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
     review = await reviewService.getReviewById(reviewer1.ethereumAddress, review._id);
     counter++;
   }
-
   t.is(review.reviewState, ReviewState.ACCEPTED);
-  //
+
+
+  // Decline review2
+  await declineReview(eurekaPlatformContract, articleVersion.articleHash, reviewer2.ethereumAddress, editor.ethereumAddress);
+  review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
+  counter = 0;
+  while (
+    review2.reviewState === ReviewState.HANDED_IN_SC &&
+    counter < 5) {
+    sleepSync(5000);
+    review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
+    counter++;
+  }
+  t.is(review2.reviewState, ReviewState.DECLINED);
 
 });

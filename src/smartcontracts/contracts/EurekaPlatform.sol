@@ -449,7 +449,7 @@ contract EurekaPlatform {
         emit ReviewIsAccepted(_articleHash, block.timestamp, _reviewerAddress);
     }
 
-
+    event ReviewIsDeclined(bytes32 articleHash, uint256 stateTimestamp, address reviewer);
     function declineReview(bytes32 _articleHash, address _reviewerAddress) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
@@ -464,6 +464,7 @@ contract EurekaPlatform {
         review.reviewState = ReviewState.DECLINED;
         review.stateTimestamp = block.timestamp;
         review.reviewedBy = msg.sender;
+        emit ReviewIsDeclined(_articleHash, block.timestamp, _reviewerAddress);
     }
 
     function acceptArticleVersion(bytes32 _articleHash) public {

@@ -114,9 +114,6 @@ export default {
     review.reviewScore1 = score1;
     review.reviewScore2 = score2;
     await review.save();
-
-    console.log('WORKING !!!! COMMUNITY');
-    console.log(await Review.findById(review._id));
     return 'Updated community review according to SC: ' + reviewHash;
   },
 
@@ -134,5 +131,32 @@ export default {
     review.stateTimestamp = stateTimestamp;
     await review.save();
     return 'Acception of review ' + reviewId;
+  },
+
+  declineReview: async (articleHash, reviewerAddress, stateTimestamp) => {
+    const articleVersion = await ArticleVersion.findOne({
+      articleHash: articleHash
+    }).populate('editorApprovedReviews');
+
+    console.log(articleVersion);
+
+    const reviewId = articleVersion.editorApprovedReviews.find((review) => {
+      return review.reviewerAddress === reviewerAddress;
+    });
+
+
+
+    let review = await Review.findById(reviewId);
+    console.log(review);
+    review.reviewState = ReviewState.DECLINED;
+    review.stateTimestamp = stateTimestamp;
+    console.log(review);
+
+    await review.save();
+
+
+    let review2 = await Review.findById(review._id);
+    console.log(review2);
+    return 'Decline of review ' + reviewId;
   }
 };
