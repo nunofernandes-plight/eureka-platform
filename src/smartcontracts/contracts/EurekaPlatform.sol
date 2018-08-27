@@ -11,7 +11,7 @@ contract EurekaPlatform {
 
     Eureka eurekaTokenContract;
 
-    address contractOwner;
+    address public contractOwner;
 
     /*
     *   journal parameters
