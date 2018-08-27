@@ -1,4 +1,4 @@
- import React, {Component} from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
 import MetaMaskLogo from './icons/MetaMaskLogo.js';
 
@@ -12,15 +12,15 @@ const Title = styled.h1``;
 const SubTitle = styled.h2``;
 
 class MetaMaskGuide extends Component {
-  render() {
-    return (
-      <Container>
-        <Title>EUREKA and MetaMask</Title>
-        <MetaMaskLogo download width={500} />
-        <SubTitle>How does it work</SubTitle>
-      </Container>
-    );
-  }
+	render() {
+		return (
+			<Container>
+				<Title>EUREKA and MetaMask</Title>
+				<MetaMaskLogo download width={500} />
+				<SubTitle>How does it work</SubTitle>
+			</Container>
+		);
+	}
 }
 
 export default MetaMaskGuide;

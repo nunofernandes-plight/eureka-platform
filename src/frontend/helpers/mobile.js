@@ -29,7 +29,7 @@ export const EXTRA_LARGE_DEVICES = (...args) => css`
 `;
 
 export const MAKE_MOBILE = width => {
-  return (...args) => css`
+	return (...args) => css`
     @media (max-width: ${width}px) {
       ${css(...args)};
     }

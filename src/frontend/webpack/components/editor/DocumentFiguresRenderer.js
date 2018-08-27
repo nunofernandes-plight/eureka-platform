@@ -37,62 +37,63 @@ const RemoveIconContainer = styled.div`
 `;
 
 class DocumentFiguresRenderer extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      showDeleteModal: false,
-      indexToRemove: null
-    };
-  }
+	constructor() {
+		super();
+		this.state = {
+			showDeleteModal: false,
+			indexToRemove: null
+		};
+	}
 
-  renderModal() {
-    return (
-      <Modal
-        action={'DELETE'}
-        type={'notification'}
-        callback={() => {
-          this.setState({showDeleteModal: false});
-          this.props.onDelete(this.state.indexToRemove);
-        }}
-        toggle={showDeleteModal => {
-          this.setState({showDeleteModal});
-        }}
-        show={this.state.showDeleteModal}
-        title={'Delete Figure'}
-      >
+	renderModal() {
+		return (
+			<Modal
+				action={'DELETE'}
+				type={'notification'}
+				callback={() => {
+					this.setState({showDeleteModal: false});
+					this.props.onDelete(this.state.indexToRemove);
+				}}
+				toggle={showDeleteModal => {
+					this.setState({showDeleteModal});
+				}}
+				show={this.state.showDeleteModal}
+				title={'Delete Figure'}
+			>
         Are you sure you want to delete this figure?
-      </Modal>
-    );
-  }
-  render() {
-    return (
-      <div>
-        {this.renderModal()}
-        <Container figures={this.props.figures}>
-          {this.props.figures.map((figure, i) => {
-            return (
-              <VerticalContainer key={figure.id}>
-                <FigureContainer>
-                  <Figure src={figure.cdn} />
-                </FigureContainer>
-                <RemoveIconContainer>
-                  <Icon
-                    icon={'delete'}
-                    color={__ALERT_ERROR}
-                    width={15}
-                    height={15}
-                    onClick={() => {
-                      this.setState({indexToRemove: i, showDeleteModal: true});
-                    }}
-                  />
-                </RemoveIconContainer>
-              </VerticalContainer>
-            );
-          })}
-        </Container>
-      </div>
-    );
-  }
+			</Modal>
+		);
+	}
+
+	render() {
+		return (
+			<div>
+				{this.renderModal()}
+				<Container figures={this.props.figures}>
+					{this.props.figures.map((figure, i) => {
+						return (
+							<VerticalContainer key={figure.id}>
+								<FigureContainer>
+									<Figure src={figure.cdn} />
+								</FigureContainer>
+								<RemoveIconContainer>
+									<Icon
+										icon={'delete'}
+										color={__ALERT_ERROR}
+										width={15}
+										height={15}
+										onClick={() => {
+											this.setState({indexToRemove: i, showDeleteModal: true});
+										}}
+									/>
+								</RemoveIconContainer>
+							</VerticalContainer>
+						);
+					})}
+				</Container>
+			</div>
+		);
+	}
 }
 
 export default DocumentFiguresRenderer;

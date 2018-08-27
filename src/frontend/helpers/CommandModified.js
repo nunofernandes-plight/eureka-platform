@@ -1,10 +1,10 @@
 let modifier = 'Ctrl+';
 
 if (
-    typeof window !== 'undefined' &&
+	typeof window !== 'undefined' &&
     window.navigator.platform.indexOf('Mac') > -1
 ) {
-    modifier = '⌘';
+	modifier = '⌘';
 }
 
 const finalModifier = modifier;

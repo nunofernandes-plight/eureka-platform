@@ -32,6 +32,5 @@ export const __GRAY_900 = '#212529';
 export const __LABEL_PRIMARY_TEXT = '#2643e9';
 export const __LABEL_PRIMARY_BACK = '#cbd2f6';
 
-
 // FOOTER
 export const __FOOTER = '#233143';

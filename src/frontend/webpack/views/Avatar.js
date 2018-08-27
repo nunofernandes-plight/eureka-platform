@@ -13,7 +13,7 @@ const Img = styled.img`
   cursor: ${props => (props.cursor ? props.cursor : 'auto')};
 `;
 const Avatar = props => {
-  return <Img src={`/${props.avatar}`} {...props} />;
+	return <Img src={`/${props.avatar}`} {...props} />;
 };
 
 export default Avatar;

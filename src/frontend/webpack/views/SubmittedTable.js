@@ -1,19 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  __GRAY_600,
-  __GRAY_200,
-  __THIRD,
-  __FIFTH,
-  __ALERT_SUCCESS
-} from '../../helpers/colors.js';
 import {Link} from 'react-router-dom';
-import Icon from '../views/icons/Icon.js';
+import {
+	__GRAY_600,
+	__GRAY_200,
+	__THIRD,
+	__FIFTH,
+	__ALERT_SUCCESS
+} from '../../helpers/colors.js';
 import {renderTimestamp} from '../../helpers/timestampRenderer.js';
 import {MEDIUM_DEVICES} from '../../helpers/mobile.js';
 import {renderField} from '../components/editor/DocumentRenderer.js';
 import ARTICLE_VERSION_STATE from '../../../backend/schema/article-version-state-enum.mjs';
-import PulseSpinner from '../views/spinners/PulseSpinner.js';
+import Icon from './icons/Icon.js';
+import PulseSpinner from './spinners/PulseSpinner.js';
 
 const SubmittedContainer = styled.div`
   font-size: 14px;
@@ -98,89 +98,88 @@ const IconContainer = styled.div`
   height: 25px;
 `;
 const renderStatus = status => {
-  if (status === ARTICLE_VERSION_STATE.FINISHED_DRAFT) {
-    return <PulseSpinner />;
-  } else if (status === ARTICLE_VERSION_STATE.SUBMITTED) {
-    return (
-      <IconContainer>
-        <Icon
-          icon={'material'}
-          material={'done'}
-          width={18}
-          height={18}
-          color={'#fff'}
-          noMove
-        />
-      </IconContainer>
-    );
-  } else {
-  }
+	if (status === ARTICLE_VERSION_STATE.FINISHED_DRAFT) {
+		return <PulseSpinner />;
+	} if (status === ARTICLE_VERSION_STATE.SUBMITTED) {
+		return (
+			<IconContainer>
+				<Icon
+					icon={'material'}
+					material={'done'}
+					width={18}
+					height={18}
+					color={'#fff'}
+					noMove
+				/>
+			</IconContainer>
+		);
+	}
 };
 const SubmittedTable = props => {
-  return (
-    <SubmittedContainer>
-      {!props.submitted || props.submitted.length === 0 ? (
-        <NoSubmitted>
-          <Icon
-            icon={'material'}
-            material={'gesture'}
-            width={100}
-            height={100}
-            color={__FIFTH}
-          />
-          <StartWriting onClick={() => props.onSubmit()}>
+	return (
+		<SubmittedContainer>
+			{!props.submitted || props.submitted.length === 0 ? (
+				<NoSubmitted>
+					<Icon
+						icon={'material'}
+						material={'gesture'}
+						width={100}
+						height={100}
+						color={__FIFTH}
+					/>
+					<StartWriting onClick={() => props.onSubmit()}>
             Submit your first article with EUREKA and exploit the REWARD
             process!
-          </StartWriting>
-        </NoSubmitted>
-      ) : (
-        <Submitted>
-          <tbody>
-            <tr>
-              <th />
-              <th>
-                <TableTitle>Name</TableTitle>
-              </th>
-              <AuthorsTitle>
-                <TableTitle>Unique Article Hash</TableTitle>
-              </AuthorsTitle>
-              <th>
-                <TableTitle>Last changed</TableTitle>
-              </th>
-              <th>Status</th>
-            </tr>
-          </tbody>
+					</StartWriting>
+				</NoSubmitted>
+			) : (
+				<Submitted>
+					<tbody>
+						<tr>
+							<th />
+							<th>
+								<TableTitle>Name</TableTitle>
+							</th>
+							<AuthorsTitle>
+								<TableTitle>Unique Article Hash</TableTitle>
+							</AuthorsTitle>
+							<th>
+								<TableTitle>Last changed</TableTitle>
+							</th>
+							<th>Status</th>
+						</tr>
+					</tbody>
 
-          <tbody>
-            {props.submitted.map(submitted => (
-              <Tr key={submitted._id}>
-                <td style={{padding: '20px 15px'}}>
-                  <Icon
-                    icon={'file'}
-                    width={20}
-                    height={20}
-                    color={__GRAY_600}
-                  />
-                </td>
-                <td>
-                  <MyLink
-                    to={`${props.base
-                      .toString()
-                      .replace('/submitted', '')}/preview/${submitted._id}`}
-                  >
-                    {renderField(submitted.document, 'title')}
-                  </MyLink>
-                </td>
-                <Authors>{submitted.articleHash.substr(0, 55)}...</Authors>
-                <td>{renderTimestamp(submitted.timestamp)}</td>
-                <td>{renderStatus(submitted.articleVersionState)}</td>
-              </Tr>
-            ))}
-          </tbody>
-        </Submitted>
-      )}
-    </SubmittedContainer>
-  );
+					<tbody>
+						{props.submitted.map(submitted => (
+							<Tr key={submitted._id}>
+								<td style={{padding: '20px 15px'}}>
+									<Icon
+										icon={'file'}
+										width={20}
+										height={20}
+										color={__GRAY_600}
+									/>
+								</td>
+								<td>
+									<MyLink
+										to={`${props.base
+											.toString()
+											.replace('/submitted', '')}/preview/${submitted._id}`}
+									>
+										{renderField(submitted.document, 'title')}
+									</MyLink>
+								</td>
+								<Authors>{submitted.articleHash.substr(0, 55)}...</Authors>
+								<td>{renderTimestamp(submitted.timestamp)}</td>
+								<td>{renderStatus(submitted.articleVersionState)}</td>
+							</Tr>
+						))}
+					</tbody>
+				</Submitted>
+			)}
+		</SubmittedContainer>
+	);
 };
 
 export default SubmittedTable;

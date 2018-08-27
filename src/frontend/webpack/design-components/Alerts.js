@@ -1,77 +1,77 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {
-  __ALERT_DANGER,
-  __ALERT_ERROR,
-  __ALERT_INFO,
-  __ALERT_SUCCESS,
-  __ALERT_WARNING
+	__ALERT_DANGER,
+	__ALERT_ERROR,
+	__ALERT_INFO,
+	__ALERT_SUCCESS,
+	__ALERT_WARNING
 } from '../../helpers/colors.js';
 import Icon from '../views/icons/Icon.js';
 
 const getColor = props => {
-  if (props.status === 'success') {
-    return `${__ALERT_SUCCESS}`;
-  } else if (props.status === 'info') {
-    return `${__ALERT_INFO}`;
-  } else if (props.status === 'warning') {
-    return `${__ALERT_WARNING}`;
-  } else if (props.status === 'danger') {
-    return `${__ALERT_DANGER}`;
-  } else if (props.status === 'error') {
-    return `${__ALERT_ERROR}`;
-  }
+	if (props.status === 'success') {
+		return `${__ALERT_SUCCESS}`;
+	} if (props.status === 'info') {
+		return `${__ALERT_INFO}`;
+	} if (props.status === 'warning') {
+		return `${__ALERT_WARNING}`;
+	} if (props.status === 'danger') {
+		return `${__ALERT_DANGER}`;
+	} if (props.status === 'error') {
+		return `${__ALERT_ERROR}`;
+	}
 };
 
 const getIcon = props => {
-  const marginRight = 20;
-  const iconSize = 25;
-  if (props.status === 'success') {
-    return (
-      <Icon
-        icon={'thumbs-up'}
-        width={iconSize}
-        height={iconSize}
-        right={marginRight}
-      />
-    );
-  } else if (props.status === 'info') {
-    return (
-      <Icon
-        icon={'bell'}
-        width={iconSize}
-        height={iconSize}
-        right={marginRight}
-      />
-    );
-  } else if (props.status === 'warning') {
-    return (
-      <Icon
-        icon={'bell'}
-        width={iconSize}
-        height={iconSize}
-        right={marginRight}
-      />
-    );
-  } else if (props.status === 'danger') {
-    return (
-      <Icon
-        icon={'bell'}
-        width={iconSize}
-        height={iconSize}
-        right={marginRight}
-      />
-    );
-  } else if (props.status === 'error') {
-    return (
-      <Icon
-        icon={'exlamation-circle'}
-        width={iconSize}
-        height={iconSize}
-        right={marginRight}
-      />
-    );
-  }
+	const marginRight = 20;
+	const iconSize = 25;
+	if (props.status === 'success') {
+		return (
+			<Icon
+				icon={'thumbs-up'}
+				width={iconSize}
+				height={iconSize}
+				right={marginRight}
+			/>
+		);
+	} if (props.status === 'info') {
+		return (
+			<Icon
+				icon={'bell'}
+				width={iconSize}
+				height={iconSize}
+				right={marginRight}
+			/>
+		);
+	} if (props.status === 'warning') {
+		return (
+			<Icon
+				icon={'bell'}
+				width={iconSize}
+				height={iconSize}
+				right={marginRight}
+			/>
+		);
+	} if (props.status === 'danger') {
+		return (
+			<Icon
+				icon={'bell'}
+				width={iconSize}
+				height={iconSize}
+				right={marginRight}
+			/>
+		);
+	} if (props.status === 'error') {
+		return (
+			<Icon
+				icon={'exlamation-circle'}
+				width={iconSize}
+				height={iconSize}
+				right={marginRight}
+			/>
+		);
+	}
 };
 const Container = styled.div`
   color: #fff;
@@ -86,34 +86,34 @@ const Container = styled.div`
 `;
 
 class Alert extends Component {
-  constructor() {
-    super();
-    this.state = {
-      isHidden: false
-    };
-  }
+	constructor() {
+		super();
+		this.state = {
+			isHidden: false
+		};
+	}
 
-  hideAlert() {
-    this.setState({isHidden: true});
-  }
+	hideAlert() {
+		this.setState({isHidden: true});
+	}
 
-  render() {
-    return (
-      <div>
-        <Container isHidden={this.state.isHidden} {...this.props}>
-          {getIcon(this.props)} {this.props.children}
-          <Icon
-            onClick={() => this.hideAlert()}
-            icon={'close'}
-            width={18}
-            height={18}
-            top={2}
-            left={10}
-          />
-        </Container>
-      </div>
-    );
-  }
+	render() {
+		return (
+			<div>
+				<Container isHidden={this.state.isHidden} {...this.props}>
+					{getIcon(this.props)} {this.props.children}
+					<Icon
+						onClick={() => this.hideAlert()}
+						icon={'close'}
+						width={18}
+						height={18}
+						top={2}
+						left={10}
+					/>
+				</Container>
+			</div>
+		);
+	}
 }
 
 export default Alert;

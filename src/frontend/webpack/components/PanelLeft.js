@@ -3,21 +3,21 @@ import styled from 'styled-components';
 import {withRouter} from 'react-router-dom';
 import EurekaLogo from '../views/icons/EurekaLogo.js';
 import {NavItem} from '../views/NavItem.js';
-import {Routes} from './routers/Routes.js';
 import {MAKE_MOBILE} from '../../helpers/mobile.js';
 import {
-  PANEL_LEFT_BREAK_POINT,
-  PANEL_LEFT_MOBILE_WIDTH,
-  PANEL_LEFT_NORMAL_WIDTH
+	PANEL_LEFT_BREAK_POINT,
+	PANEL_LEFT_MOBILE_WIDTH,
+	PANEL_LEFT_NORMAL_WIDTH
 } from '../../helpers/layout.js';
 import ToggleButton from '../design-components/ToggleButton.js';
+import {Routes} from './routers/Routes.js';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: fixed;
   width: ${props =>
-    props.isMobileMode ? PANEL_LEFT_MOBILE_WIDTH : PANEL_LEFT_NORMAL_WIDTH}px;
+		props.isMobileMode ? PANEL_LEFT_MOBILE_WIDTH : PANEL_LEFT_NORMAL_WIDTH}px;
   left: 0;
   padding-top: 30px;
   z-index: 600;
@@ -86,46 +86,46 @@ const MobileModeTitle = styled.h5`
   text-align: center;
 `;
 class PanelLeft extends Component {
-  render() {
-    return (
-      <Container isMobileMode={this.props.checked}>
-        <TopLogo>
-          <NotificationBell>
-            <NotificationNumber>1</NotificationNumber>
-          </NotificationBell>
-          <EurekaLogo height={40} />
-        </TopLogo>
-        <Items>
-          {Routes.map((route, i) => {
-            return (
-              <NavItem
-                key={i}
-                material={route.material}
-                path={route.path}
-                base={this.props.base}
-                icon={route.icon}
-                width={20}
-                height={20}
-                isMobileMode={this.props.checked}
-              >
-                {route.name}
-              </NavItem>
-            );
-          })}
-        </Items>
+	render() {
+		return (
+			<Container isMobileMode={this.props.checked}>
+				<TopLogo>
+					<NotificationBell>
+						<NotificationNumber>1</NotificationNumber>
+					</NotificationBell>
+					<EurekaLogo height={40} />
+				</TopLogo>
+				<Items>
+					{Routes.map((route, i) => {
+						return (
+							<NavItem
+								key={i}
+								material={route.material}
+								path={route.path}
+								base={this.props.base}
+								icon={route.icon}
+								width={20}
+								height={20}
+								isMobileMode={this.props.checked}
+							>
+								{route.name}
+							</NavItem>
+						);
+					})}
+				</Items>
 
-        <MobileMode>
-          <MobileModeTitle>Toggle menu</MobileModeTitle>
-          <ToggleButton
-            checked={this.props.checked}
-            isMobileMode={isMobileMode => {
-              this.props.isMobileMode(isMobileMode);
-            }}
-          />
-        </MobileMode>
-      </Container>
-    );
-  }
+				<MobileMode>
+					<MobileModeTitle>Toggle menu</MobileModeTitle>
+					<ToggleButton
+						checked={this.props.checked}
+						isMobileMode={isMobileMode => {
+							this.props.isMobileMode(isMobileMode);
+						}}
+					/>
+				</MobileMode>
+			</Container>
+		);
+	}
 }
 
 export default withRouter(PanelLeft);

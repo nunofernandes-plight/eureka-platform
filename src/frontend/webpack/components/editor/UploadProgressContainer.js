@@ -12,13 +12,13 @@ const Container = styled.div`
 `;
 
 const UploadProgressContainer = () => {
-  return (
-    <Container>
-      <div style={{display: 'block', alignSelf: 'center'}}>
-        <UploadSpinner style={{marginTop: 0}} />
-      </div>
-    </Container>
-  );
+	return (
+		<Container>
+			<div style={{display: 'block', alignSelf: 'center'}}>
+				<UploadSpinner style={{marginTop: 0}} />
+			</div>
+		</Container>
+	);
 };
 
 export default UploadProgressContainer;

@@ -120,5 +120,4 @@ export default {
     return 'Updated community review according to SC: ' + reviewHash;
   },
 
-}
 };

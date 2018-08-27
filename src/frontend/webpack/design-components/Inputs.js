@@ -1,25 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
 import {
-  __ALERT_ERROR,
-  __ALERT_SUCCESS,
-  __GRAY_200,
-  __THIRD
+	__ALERT_ERROR,
+	__ALERT_SUCCESS,
+	__GRAY_200,
+	__THIRD
 } from '../../helpers/colors.js';
 import Icon from '../views/icons/Icon.js';
 
 const getColor = (props, placeholder) => {
-  if (props.status === 'valid') {
-    return `${__ALERT_SUCCESS}`;
-  } else if (props.status === 'error') {
-    return `${__ALERT_ERROR}`;
-  } else {
-    if (placeholder) {
-      return `${__THIRD}`;
-    } else {
-      return `${__GRAY_200}`;
-    }
-  }
+	if (props.status === 'valid') {
+		return `${__ALERT_SUCCESS}`;
+	} if (props.status === 'error') {
+		return `${__ALERT_ERROR}`;
+	}
+	if (placeholder) {
+		return `${__THIRD}`;
+	}
+	return `${__GRAY_200}`;
 };
 const Status = styled.div`
   line-height: 22px;
@@ -39,25 +37,25 @@ const Container = styled.div`
 `;
 
 const renderIcon = props => {
-  if (props.status === 'valid') {
-    return <Icon icon={'check'} width={10} heigth={10} bottom={3}/>;
-  } else if (props.status === 'error') {
-    return <Icon icon={'exlamation'} width={10} height={16} bottom={3} />;
-  }
+	if (props.status === 'valid') {
+		return <Icon icon={'check'} width={10} heigth={10} bottom={3}/>;
+	} if (props.status === 'error') {
+		return <Icon icon={'exlamation'} width={10} height={16} bottom={3} />;
+	}
 };
 export const InputField = props => {
-  return (
-    <Container>
-      <Input
-        id={props.id ? props.id : null}
-        type={props.type ? props.type : null}
-        {...props}
-      />
-      <Status {...props}>
-        <IconContainer {...props}>{renderIcon(props)}</IconContainer>
-      </Status>
-    </Container>
-  );
+	return (
+		<Container>
+			<Input
+				id={props.id ? props.id : null}
+				type={props.type ? props.type : null}
+				{...props}
+			/>
+			<Status {...props}>
+				<IconContainer {...props}>{renderIcon(props)}</IconContainer>
+			</Status>
+		</Container>
+	);
 };
 
 const Input = styled.input`

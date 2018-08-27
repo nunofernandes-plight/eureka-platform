@@ -1,20 +1,20 @@
 import React, {Component} from 'react';
 import styled, {keyframes} from 'styled-components';
 import Icon from '../views/icons/Icon.js';
-import {PANEL_LEFT_NORMAL_WIDTH} from "../../helpers/layout.js";
+import {PANEL_LEFT_NORMAL_WIDTH} from '../../helpers/layout.js';
+import {__FIFTH, __THIRD} from '../../helpers/colors.js';
 
 const getBackColor = props => {
-  if (props.type === 'notification') {
-    return 'linear-gradient(87deg,#f5365c 0,#f56036 100%)!important';
-  } else {
-    return `#fff`;
-  }
+	if (props.type === 'notification') {
+		return `linear-gradient(87deg,${__FIFTH} 0,${__THIRD} 100%)!important`;
+	}
+	return '#fff';
 };
 
 const getFontColor = props => {
-  if (props.type === 'notification') {
-    return `#fff`;
-  }
+	if (props.type === 'notification') {
+		return `#fff`;
+	}
 };
 const ModalParent = styled.div`
   position: fixed;
@@ -68,7 +68,7 @@ const MyModalHeader = styled.div`
   display: flex;
   padding: 1.25rem;
   border-bottom: ${props =>
-    props.type === 'notification' ? null : '1px solid #e9ecef'};
+		props.type === 'notification' ? null : '1px solid #e9ecef'};
   border-top-left-radius: 0.3rem;
   border-top-right-radius: 0.3rem;
   align-items: flex-start;
@@ -85,7 +85,7 @@ const MyModalFooter = styled.div`
   display: flex;
   padding: 1.5rem;
   border-top: ${props =>
-    props.type === 'notification' ? null : '1px solid #e9ecef'};
+		props.type === 'notification' ? null : '1px solid #e9ecef'};
   align-items: center;
   justify-content: flex-end;
 `;
@@ -115,7 +115,7 @@ const ActionButton = styled.div`
   }
   cursor: pointer;
   margin: 0 0 0 auto;
-  color: #212529;
+  color: ${__THIRD};
   background-color: #fff;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   font-weight: 600;
@@ -131,58 +131,58 @@ const ActionButton = styled.div`
 `;
 
 class Modal extends Component {
-  toggle() {
-    const isShowed = !this.props.show;
-    this.props.toggle(isShowed);
-  }
+	toggle() {
+		const isShowed = !this.props.show;
+		this.props.toggle(isShowed);
+	}
 
-  render() {
-    return (
-      <div>
-        {this.props.show ? (
-          <ModalParent {...this.props}>
-            <MyModal {...this.props}>
-              <MyModalHeader {...this.props}>
-                <ModalTitle>{this.props.title}</ModalTitle>
-                {this.props.noClose ? null : (
-                  <Icon
-                    icon={'close'}
-                    width={10}
-                    height={18}
-                    onClick={() => this.toggle()}
-                  />
-                )}
-              </MyModalHeader>
-              <MyModalBody>
-                {this.props.type === 'notification' ? (
-                  <div style={{display: 'flex', justifyContent: 'center'}}>
-                    <Icon
-                      icon={'bell'}
-                      width={40}
-                      height={40}
-                      top={10}
-                      bottom={20}
-                    />
-                  </div>
-                ) : null}
-                <Content>{this.props.children}</Content>
-              </MyModalBody>
-              <MyModalFooter {...this.props}>
-                {this.props.noClose ? null : (
-                  <CloseButton onClick={() => this.toggle()}>CLOSE</CloseButton>
-                )}
-                {this.props.action ? (
-                  <ActionButton onClick={() => this.props.callback()}>
-                    {this.props.action}
-                  </ActionButton>
-                ) : null}
-              </MyModalFooter>
-            </MyModal>
-          </ModalParent>
-        ) : null}
-      </div>
-    );
-  }
+	render() {
+		return (
+			<div>
+				{this.props.show ? (
+					<ModalParent {...this.props}>
+						<MyModal {...this.props}>
+							<MyModalHeader {...this.props}>
+								<ModalTitle>{this.props.title}</ModalTitle>
+								{this.props.noClose ? null : (
+									<Icon
+										icon={'close'}
+										width={10}
+										height={18}
+										onClick={() => this.toggle()}
+									/>
+								)}
+							</MyModalHeader>
+							<MyModalBody>
+								{this.props.type === 'notification' ? (
+									<div style={{display: 'flex', justifyContent: 'center'}}>
+										<Icon
+											icon={'bell'}
+											width={40}
+											height={40}
+											top={10}
+											bottom={20}
+										/>
+									</div>
+								) : null}
+								<Content>{this.props.children}</Content>
+							</MyModalBody>
+							<MyModalFooter {...this.props}>
+								{this.props.noClose ? null : (
+									<CloseButton onClick={() => this.toggle()}>CLOSE</CloseButton>
+								)}
+								{this.props.action ? (
+									<ActionButton onClick={() => this.props.callback()}>
+										{this.props.action}
+									</ActionButton>
+								) : null}
+							</MyModalFooter>
+						</MyModal>
+					</ModalParent>
+				) : null}
+			</div>
+		);
+	}
 }
 
 export default Modal;

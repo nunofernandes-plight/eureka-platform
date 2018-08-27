@@ -12,12 +12,12 @@ const Subtitle = styled.div`
 `;
 
 const DropdownDetailOption = props => {
-    return (
-        <div style={props.style}>
-            <Title>{props.title}</Title>
-            <Subtitle>{props.subtitle}</Subtitle>
-        </div>
-    );
+	return (
+		<div style={props.style}>
+			<Title>{props.title}</Title>
+			<Subtitle>{props.subtitle}</Subtitle>
+		</div>
+	);
 };
 
 export default DropdownDetailOption;

@@ -11,15 +11,14 @@ const Logo = styled.img`
 `;
 
 const renderLogo = props => {
-  if (props.download) {
-    return <Logo src="/img/logos/download-metamask.png" {...props} />;
-  } else {
-    return <Logo src="/img/logos/metamask.png" {...props} />;
-  }
+	if (props.download) {
+		return <Logo src="/img/logos/download-metamask.png" {...props} />;
+	}
+	return <Logo src="/img/logos/metamask.png" {...props} />;
 };
 
 const MetaMaskLogo = props => {
-  return renderLogo(props);
+	return renderLogo(props);
 };
 
 export default MetaMaskLogo;
