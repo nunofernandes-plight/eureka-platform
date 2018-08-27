@@ -32,7 +32,7 @@ import DocumentFiguresRenderer from './editor/DocumentFiguresRenderer.js';
 import SmartContractInputData from '../views/SmartContractInputData.js';
 import {getArticleHex} from '../../web3/Helpers.js';
 import {submitArticle} from '../../web3/Web3Methods.js';
-import {SUBMISSION_PRICE} from '../Constants/Constants.js';
+import {SUBMISSION_PRICE} from '../constants/Constants.js';
 const titleStyle = () => 'title';
 
 const Parent = styled.div`
