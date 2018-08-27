@@ -1,23 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
 import {
-	__ALERT_ERROR,
-	__ALERT_SUCCESS,
-	__GRAY_200,
-	__THIRD
+  __ALERT_ERROR,
+  __ALERT_SUCCESS,
+  __GRAY_200,
+  __THIRD
 } from '../../helpers/colors.js';
 import Icon from '../views/icons/Icon.js';
 
 const getColor = (props, placeholder) => {
-	if (props.status === 'valid') {
-		return `${__ALERT_SUCCESS}`;
-	} if (props.status === 'error') {
-		return `${__ALERT_ERROR}`;
-	}
-	if (placeholder) {
-		return `${__THIRD}`;
-	}
-	return `${__GRAY_200}`;
+  if (props.status === 'valid') {
+    return `${__ALERT_SUCCESS}`;
+  }
+  if (props.status === 'error') {
+    return `${__ALERT_ERROR}`;
+  }
+  if (placeholder) {
+    return `${__THIRD}`;
+  }
+  return `${__GRAY_200}`;
 };
 const Status = styled.div`
   line-height: 22px;
@@ -34,28 +35,42 @@ const IconContainer = styled.div`
 
 const Container = styled.div`
   display: flex;
+  position: relative;
+  width: ${props => (props.width ? props.width : null)};
+  margin-bottom: ${props => (props.bottom ? props.bottom + 'px' : null)};
+  margin-left: ${props => (props.left ? props.left + 'px' : null)};
+  margin-right: ${props => (props.right ? props.right + 'px' : null)};
+  margin-top: ${props => (props.top ? props.top + 'px' : null)};
+  padding-bottom: ${props =>
+    props.paddingBottom ? props.paddingBottom + 'px' : null};
+  padding-left: ${props =>
+    props.paddingLeft ? props.paddingLeft + 'px' : null};
+  padding-right: ${props =>
+    props.paddingRight ? props.paddingRight + 'px' : null};
+  padding-top: ${props => (props.paddingTop ? props.paddingTop + 'px' : null)};
 `;
 
 const renderIcon = props => {
-	if (props.status === 'valid') {
-		return <Icon icon={'check'} width={10} heigth={10} bottom={3}/>;
-	} if (props.status === 'error') {
-		return <Icon icon={'exlamation'} width={10} height={16} bottom={3} />;
-	}
+  if (props.status === 'valid') {
+    return <Icon icon={'check'} width={10} heigth={10} bottom={3} />;
+  }
+  if (props.status === 'error') {
+    return <Icon icon={'exlamation'} width={10} height={16} bottom={3} />;
+  }
 };
 export const InputField = props => {
-	return (
-		<Container>
-			<Input
-				id={props.id ? props.id : null}
-				type={props.type ? props.type : null}
-				{...props}
-			/>
-			<Status {...props}>
-				<IconContainer {...props}>{renderIcon(props)}</IconContainer>
-			</Status>
-		</Container>
-	);
+  return (
+    <Container {...props}>
+      <Input
+        id={props.id ? props.id : null}
+        type={props.type ? props.type : null}
+        {...props}
+      />
+      <Status {...props}>
+        <IconContainer {...props}>{renderIcon(props)}</IconContainer>
+      </Status>
+    </Container>
+  );
 };
 
 const Input = styled.input`
