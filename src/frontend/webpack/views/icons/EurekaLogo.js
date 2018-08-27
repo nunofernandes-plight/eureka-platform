@@ -5,6 +5,10 @@ const Logo = styled.img`
   height: ${props => (props.height ? props.height + 'px' : null)};
   width: ${props => (props.width ? props.width + 'px' : null)};
   display: ${props => (props.app ? 'none' : 'flex')};
+  margin-bottom: ${props => (props.bottom ? props.bottom + 'px' : null)};
+  margin-left: ${props => (props.left ? props.left + 'px' : null)};
+  margin-right: ${props => (props.right ? props.right + 'px' : null)};
+  margin-top: ${props => (props.top ? props.top + 'px' : null)};
 `;
 
 const renderLogo = props => {
