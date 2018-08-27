@@ -5,12 +5,16 @@ import Dashboard from '../Dashboard.js';
 import MyAccount from '../MyAccount.js';
 import TopContainer from '../../views/TopContainer.js';
 import {BottomContainer} from '../../views/BottomContainer.js';
-import ArticlesRouter from '../routers/ArticlesRouter.js';
+import ArticlesRouter from './ArticlesRouter.js';
+import AddressBook from '../AddressBook.js';
+import ContractOwnerDashboard from '../ContractOwnerDashboard.js';
+import {ContractOwnerGuard} from '../guards/Guards.js';
 
 class DashboardRouter extends Component {
   constructor() {
     super();
   }
+
   render() {
     return (
       <div>
@@ -19,12 +23,37 @@ class DashboardRouter extends Component {
           metaMaskStatus={this.props.metaMaskStatus}
           network={this.props.network}
           action={item => this.props.action(item)}
+          selectedAccount={this.props.selectedAccount}
         />
         <BottomContainer>
           <Route
             exact
             path={`${this.props.base}/dashboard`}
             render={() => <Dashboard />}
+          />
+
+          <Route
+            exact
+            path={`${this.props.base}/owner`}
+            render={() => (
+              <ContractOwnerGuard roles={this.props.user.roles}>
+                <ContractOwnerDashboard
+                  web3={this.props.web3}
+                  selectedAccount={this.props.selectedAccount}
+                />
+              </ContractOwnerGuard>
+            )}
+          />
+
+          <Route
+            exact
+            path={`${this.props.base}/book`}
+            render={() => (
+              <AddressBook
+                web3={this.props.web3}
+                selectedAccount={this.props.selectedAccount}
+              />
+            )}
           />
 
           <Route

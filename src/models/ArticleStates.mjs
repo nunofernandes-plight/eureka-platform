@@ -1,31 +1,33 @@
-export const DRAFT = 'draft';
-export const SUBMITTED = 'submitted';
-export const REJECTED = 'rejected';
-export const PRE_REVIEW = 'pre_review';
-export const IN_REVIEW = 'in_review';
-export const POST_REVIEW = 'post_review';
-export const REVIEWED = 'reviewed';
-export const AWAITING_FOLLOWUP = 'awaiting_followup';
-export const ARCHIVED = 'archived';
-export const OBSOLETE = 'obsolete';
-export const PRE_ACCEPTED = 'pre_accepted';
-export const ACCEPTED = 'accepted';
-export const PRE_PUBLISH = 'pre_publish';
-export const PUBLISHED = 'published';
+export const DRAFT = 'DRAFT';
+export const FINISHED_DRAFT = 'FINISHED_DRAFT';
+export const SUBMITTED = 'SUBMITTED';
+export const REJECTED = 'REJECTED';
+export const PRE_REVIEW = 'PRE_REVIEW';
+export const IN_REVIEW = 'IN_REVIEW';
+export const POST_REVIEW = 'POST_REVIEW';
+export const REVIEWED = 'REVIEWED';
+export const AWAITING_FOLLOWUP = 'AWAITING_FOLLOWUP';
+export const ARCHIVED = 'ARCHIVED';
+export const OBSOLETE = 'OBSOLETE';
+export const PRE_ACCEPTED = 'PRE_ACCEPTED';
+export const ACCEPTED = 'ACCEPTED';
+export const PRE_PUBLISH = 'PRE_PUBLISH';
+export const PUBLISHED = 'PUBLISHED';
 
 export const all = {
-    DRAFT,
-    SUBMITTED,
-    REJECTED,
-    PRE_REVIEW,
-    IN_REVIEW,
-    POST_REVIEW,
-    REVIEWED,
-    AWAITING_FOLLOWUP,
-    ARCHIVED,
-    OBSOLETE,
-    PRE_ACCEPTED,
-    ACCEPTED,
-    PRE_PUBLISH,
-    PUBLISHED
+  DRAFT,
+  FINISHED_DRAFT,
+  SUBMITTED,
+  REJECTED,
+  PRE_REVIEW,
+  IN_REVIEW,
+  POST_REVIEW,
+  REVIEWED,
+  AWAITING_FOLLOWUP,
+  ARCHIVED,
+  OBSOLETE,
+  PRE_ACCEPTED,
+  ACCEPTED,
+  PRE_PUBLISH,
+  PUBLISHED
 };

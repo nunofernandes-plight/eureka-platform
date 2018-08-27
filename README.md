@@ -178,3 +178,4 @@ This project is licensed under the MIT License.
 * EUREKA Blockchain Solutions GmbH
 * ScienceMatters AG
 * University of Zurich
+* Creative Tim for open-source Argon design system (https://www.creative-tim.com/)

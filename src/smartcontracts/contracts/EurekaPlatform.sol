@@ -11,7 +11,7 @@ contract EurekaPlatform {
 
     Eureka eurekaTokenContract;
 
-    address contractOwner;
+    address public contractOwner;
 
     /*
     *   journal parameters
@@ -407,6 +407,7 @@ contract EurekaPlatform {
         emit CommunityReviewIsAdded(_articleHash, block.timestamp, _reviewHash, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2);
     }
 
+    event ReviewIsCorrected(bytes32 articleHash, uint256 stateTimestamp, bytes32 reviewHash, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
     function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
@@ -427,8 +428,10 @@ contract EurekaPlatform {
 
         review.reviewState = ReviewState.HANDED_IN;
         review.stateTimestamp = block.timestamp;
+        emit ReviewIsCorrected(_articleHash, block.timestamp, _reviewHash, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2);
     }
 
+    event ReviewIsAccepted(bytes32 articleHash, uint256 stateTimestamp, address reviewer);
     function acceptReview(bytes32 _articleHash, address _reviewerAddress) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
@@ -443,8 +446,10 @@ contract EurekaPlatform {
         review.reviewState = ReviewState.ACCEPTED;
         review.stateTimestamp = block.timestamp;
         review.reviewedBy = msg.sender;
+        emit ReviewIsAccepted(_articleHash, block.timestamp, _reviewerAddress);
     }
 
+    event ReviewIsDeclined(bytes32 articleHash, uint256 stateTimestamp, address reviewer);
     function declineReview(bytes32 _articleHash, address _reviewerAddress) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
@@ -459,6 +464,7 @@ contract EurekaPlatform {
         review.reviewState = ReviewState.DECLINED;
         review.stateTimestamp = block.timestamp;
         review.reviewedBy = msg.sender;
+        emit ReviewIsDeclined(_articleHash, block.timestamp, _reviewerAddress);
     }
 
     function acceptArticleVersion(bytes32 _articleHash) public {

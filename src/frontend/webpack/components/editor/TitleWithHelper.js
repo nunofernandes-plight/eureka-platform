@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import EditorSectionHint from './EditorSectionHint';
 import {__THIRD} from '../../../helpers/colors.js';
+import EditorSectionHint from './EditorSectionHint';
 
 const Container = styled.div`
   display: flex;
@@ -21,7 +21,7 @@ export const Title = styled.div`
 `;
 
 const RequiredStar = styled.span.attrs({
-  children: '*'
+	children: '*'
 })`
   color: red;
   vertical-align: top;
@@ -29,46 +29,46 @@ const RequiredStar = styled.span.attrs({
 `;
 
 const isActive = id => {
-  if (typeof window === 'undefined') {
-    return false;
-  }
-  return id && window.location.hash === `#${id}`;
+	if (typeof window === 'undefined') {
+		return false;
+	}
+	return id && window.location.hash === `#${id}`;
 };
 
 const TitleWithHelper = ({
-  title,
-  id,
-  requirement,
-  field,
-  content,
-  document
+	title,
+	id,
+	requirement,
+	field,
+	content,
+	document
 }) => {
-  if (!field && requirement) {
-    console.warn('Field is a mandatory prop', id);
-  }
-  return (
-    <Container>
-      <Left>
-        {/*
+	if (!field && requirement) {
+		console.warn('Field is a mandatory prop', id);
+	}
+	return (
+		<Container>
+			<Left>
+				{/*
           When permalinking this is the anchor.
           So the section title is 100px from the top.
         */}
-        {id ? (
-          <div style={{marginTop: -100, position: 'absolute'}} id={id} />
-        ) : null}
-        <Title className={isActive(id) ? 'flashing-matters-highlight' : ''}>
-          {title}
-          {requirement && requirement.required ? <RequiredStar /> : null}
-        </Title>
-      </Left>
-      <EditorSectionHint
-        requirement={requirement}
-        field={field}
-        content={content}
-        document={document}
-      />
-    </Container>
-  );
+				{id ? (
+					<div style={{marginTop: -100, position: 'absolute'}} id={id} />
+				) : null}
+				<Title className={isActive(id) ? 'flashing-matters-highlight' : ''}>
+					{title}
+					{requirement && requirement.required ? <RequiredStar /> : null}
+				</Title>
+			</Left>
+			<EditorSectionHint
+				requirement={requirement}
+				field={field}
+				content={content}
+				document={document}
+			/>
+		</Container>
+	);
 };
 
 export default TitleWithHelper;

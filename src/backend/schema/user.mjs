@@ -22,29 +22,19 @@ const userSchema = mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: false
+      unique: true
     },
     avatar: {
       type: String,
       required: true,
       unique: false
     },
-    isEditor: {
-      type: Boolean
-    },
     roles: [
       {
         type: String,
         enum: Object.values(Roles)
       }
-    ],
-    reviewerInvitation: [
-      reviewSchema
-    ],
-    acceptedReviewerInvitation: [
-      reviewSchema
-    ],
-    articleSubmissions: [articleSubmissionSchema]
+    ]
   },
   {collection: 'users'}
 );

@@ -16,9 +16,6 @@ export const mintEurekaTokens = async (
     .send({
       from: owner,
       gas: gasEstimated
-    })
-    .then(receipt => {
-      return receipt;
     });
 };
 
@@ -27,10 +24,6 @@ export const finishMinting = (contract, owner) => {
     .finishMinting()
     .send({
       from: owner
-    })
-    .then(receipt => {
-      console.log('The EKA token minting has been finished.');
-      return receipt;
     });
 };
 
@@ -44,18 +37,7 @@ export const submitArticle = (_contract, _from, _to, _amount, _data) => {
       _data
     )
     .send({
-      from: _from,
-      gas: 124124124
-    })
-    .then(receipt => {
-      console.log(
-        'The article submission exited with the TX status: ' + receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error('submitArticle error: ', err);
-      return err;
+      from: _from
     });
 };
 
@@ -66,23 +48,11 @@ export const submitArticle = (_contract, _from, _to, _amount, _data) => {
 export const getBalanceOf = (contract, account) => {
   return contract.methods
     .balanceOf(account)
-    .call({from: account})
-    .then(bal => {
-      return bal;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+    .call({from: account});
 };
 
 export const getTotalSupplyOf = (contract, fromAccount) => {
   return contract.methods
     .totalSupply()
-    .call({from: fromAccount})
-    .then(supply => {
-      return supply;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+    .call({from: fromAccount});
 };

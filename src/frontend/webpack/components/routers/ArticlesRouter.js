@@ -34,97 +34,97 @@ const MarginTop = styled.div`
 
 const Container = styled.div``;
 class ArticlesRouter extends Component {
-  constructor() {
-    super();
-    this.state = {
-      currentPath: null
-    };
-  }
+	constructor() {
+		super();
+		this.state = {
+			currentPath: null
+		};
+	}
 
-  componentDidMount() {
-    this.changeActiveRoute();
-  }
+	componentDidMount() {
+		this.changeActiveRoute();
+	}
 
-  changeActiveRoute() {
-    const currentPath = this.props.location.pathname
-      .toString()
-      .replace(this.props.base.toString(), '')
-      .replace(/[^a-zA-Z ]/g, '');
-    this.setState({currentPath});
-  }
+	changeActiveRoute() {
+		const currentPath = this.props.location.pathname
+			.toString()
+			.replace(this.props.base.toString(), '')
+			.replace(/[^a-zA-Z ]/g, '');
+		this.setState({currentPath});
+	}
 
-  render() {
-    return (
-      <Parent>
-        <Container>
-          <NavPills>
-            {NavPillRoutes.map((item, index) => {
-              return (
-                <NavPill
-                  name={item.name}
-                  base={this.props.base}
-                  key={index}
-                  path={item.path}
-                  icon={item.icon}
-                  material={item.material}
-                  width={22}
-                />
-              );
-            })}
-          </NavPills>
-          <CardContainer>
-            <MarginTop>
-              <Route
-                exact
-                path={`${this.props.base}/drafts`}
-                render={() => <MyDrafts base={`${this.props.base}/drafts`} />}
-              />
-            </MarginTop>
+	render() {
+		return (
+			<Parent>
+				<Container>
+					<NavPills>
+						{NavPillRoutes.map((item, index) => {
+							return (
+								<NavPill
+									name={item.name}
+									base={this.props.base}
+									key={index}
+									path={item.path}
+									icon={item.icon}
+									material={item.material}
+									width={22}
+								/>
+							);
+						})}
+					</NavPills>
+					<CardContainer>
+						<MarginTop>
+							<Route
+								exact
+								path={`${this.props.base}/drafts`}
+								render={() => <MyDrafts base={`${this.props.base}/drafts`} />}
+							/>
+						</MarginTop>
 
-            <MarginTop>
-              <Route
-                exact
-                path={`${this.props.base}/submitted`}
-                render={() => (
-                  <MySubmitted base={`${this.props.base}/submitted`} />
-                )}
-              />
-            </MarginTop>
+						<MarginTop>
+							<Route
+								exact
+								path={`${this.props.base}/submitted`}
+								render={() => (
+									<MySubmitted base={`${this.props.base}/submitted`} />
+								)}
+							/>
+						</MarginTop>
 
-            <MarginTop>
-              <Route
-                exact
-                path={`${this.props.base}/preview`}
-                render={() => <Preview base={`${this.props.base}/preview`} />}
-              />
-            </MarginTop>
+						<MarginTop>
+							<Route
+								exact
+								path={`${this.props.base}/preview/:id`}
+								render={() => <Preview base={`${this.props.base}/preview`} />}
+							/>
+						</MarginTop>
 
-            <Route
-              exact
-              path={`${this.props.base}/drafts/:id`}
-              render={props => (
-                <DocumentEditor
-                  web3={this.props.web3}
-                  tokenContract={this.props.tokenContract}
-                  platformContract={this.props.platformContract}
-                  base={this.props.base}
-                  user={this.props.user}
-                  selectedAccount={this.props.selectedAccount}
-                  {...props}
-                />
-              )}
-            />
+						<Route
+							exact
+							path={`${this.props.base}/drafts/:id`}
+							render={props => (
+								<DocumentEditor
+									web3={this.props.web3}
+									tokenContract={this.props.tokenContract}
+									platformContract={this.props.platformContract}
+									base={this.props.base}
+									user={this.props.user}
+									selectedAccount={this.props.selectedAccount}
+									{...props}
+								/>
+							)}
+						/>
 
-            <Route
-              exact
-              path={`${this.props.base}`}
-              render={() => <Redirect to={`${this.props.base}/drafts`} />}
-            />
-          </CardContainer>
-        </Container>
-      </Parent>
-    );
-  }
+						<Route
+							exact
+							path={`${this.props.base}`}
+							render={() => <Redirect to={`${this.props.base}/drafts`} />}
+						/>
+					</CardContainer>
+				</Container>
+			</Parent>
+		);
+	}
 }
 
 export default withRouter(ArticlesRouter);

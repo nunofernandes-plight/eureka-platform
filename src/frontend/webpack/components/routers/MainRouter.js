@@ -10,7 +10,6 @@ import {getDomain} from '../../../../helpers/getDomain.js';
 import SignUp from '../SignUp.js';
 import PanelLeft from '../PanelLeft.js';
 import {DashBoardGuard} from '../guards/Guards.js';
-import DashboardRouter from './DashboardRouter.js';
 import {MAKE_MOBILE} from '../../../helpers/mobile.js';
 import {
   PANEL_LEFT_BREAK_POINT,
@@ -19,9 +18,12 @@ import {
   HEADER_PADDING_TOP
 } from '../../../helpers/layout.js';
 import Modal from '../../design-components/Modal.js';
+import DashboardRouter from './DashboardRouter.js';
+import Roles from '../../../../backend/schema/roles-enum.mjs';
 
 const PaddingLeft = styled.div`
-  padding-left: ${PANEL_LEFT_NORMAL_WIDTH}px;
+  padding-left: ${props =>
+    props.isMobileMode ? PANEL_LEFT_MOBILE_WIDTH : PANEL_LEFT_NORMAL_WIDTH}px;
   ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
     padding-left: ${PANEL_LEFT_MOBILE_WIDTH}px; 
   `};
@@ -35,7 +37,8 @@ class MainRouter extends Component {
       isAuthenticated: null,
       user: null,
       isLoading: false,
-      errorMessage: null
+      errorMessage: null,
+      isMobileMode: false
     };
   }
 
@@ -55,8 +58,12 @@ class MainRouter extends Component {
       .then(response => {
         console.log('fetching works');
         if (response.success) {
+          let user = response.data.user;
+          // TODO: remove this! FAKE JUST FOR TESTING
+          user.roles.push(Roles.USER);
+          // user.roles.push(Roles.CONTRACT_OWNER);
           this.setState({
-            user: response.data.user,
+            user,
             isAuthenticated: response.data.isAuthenticated
           });
         } else {
@@ -104,7 +111,7 @@ class MainRouter extends Component {
     const selectedAddress = nextProps.selectedAccount.address;
     if (this.state.user) {
       const loadedAddress = this.state.user.ethereumAddress;
-      // check if user changed address during the session
+      // Check if user changed address during the session
       if (loadedAddress !== selectedAddress) {
         this.setState({
           isAuthenticated: false
@@ -116,9 +123,8 @@ class MainRouter extends Component {
   getPaddingTop() {
     if (this.state.isAuthenticated) {
       return 0;
-    } else {
-      return HEADER_PADDING_TOP;
     }
+    return HEADER_PADDING_TOP;
   }
 
   renderModals() {
@@ -154,11 +160,18 @@ class MainRouter extends Component {
               <Route
                 path="/app"
                 render={() => (
-                  <PaddingLeft>
+                  <PaddingLeft isMobileMode={this.state.isMobileMode}>
                     <DashBoardGuard
                       isAuthenticated={this.state.isAuthenticated}
                     >
-                      <PanelLeft base={'/app'} />
+                      <PanelLeft
+                        base={'/app'}
+                        checked={this.state.isMobileMode}
+                        user={this.state.user}
+                        isMobileMode={isMobileMode => {
+                          this.setState({isMobileMode});
+                        }}
+                      />
                       <DashboardRouter
                         web3={this.props.web3}
                         tokenContract={this.props.tokenContract}

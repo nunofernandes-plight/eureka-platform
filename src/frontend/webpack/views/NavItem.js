@@ -1,23 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
-import Icon from './icons/Icon.js';
-import {
-  __GRAY_200,
-  __GRAY_300,
-  __GRAY_500,
-  __SECOND,
-  __THIRD
-} from '../../helpers/colors.js';
 import {NavLink} from 'react-router-dom';
+import {
+	__GRAY_200,
+	__GRAY_300,
+	__GRAY_500,
+	__SECOND,
+	__THIRD
+} from '../../helpers/colors.js';
 import {MAKE_MOBILE} from '../../helpers/mobile.js';
 import {PANEL_LEFT_BREAK_POINT} from '../../helpers/layout.js';
+import Icon from './icons/Icon.js';
 
 const MyNavLink = styled(NavLink)`
   &:hover {
   background-color: ${__GRAY_300}
     cursor: pointer;
   }
-      display: flex;
+  display: flex;
   font-size: 13px;
   font-weight: 500;
   padding: 0.75rem;
@@ -41,7 +41,7 @@ const MyNavLink = styled(NavLink)`
 `;
 
 MyNavLink.defaultProps = {
-  activeClassName: 'active'
+	activeClassName: 'active'
 };
 
 const SeparatorDiv = styled.div`
@@ -65,38 +65,46 @@ const SeparatorContainer = styled.div`
   align-items: center;
   margin-left: 14px;
   margin-right: 14px;
-  margin-top: 30px;
+  margin-top: 15px;
   margin-bottom: 5px;
   min-height: 15px;
 `;
 
 const LinkName = styled.div`
+  display: ${props => (props.isMobileMode ? 'none' : null)};
   ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
-    display: none; 
-`};
+    display: none;`};
+`;
+
+const IconContainer = styled.div`
+  display: flex;
+  width: ${props => (props.isMobileMode ? '100%' : 'auto')};
+  justify-content: ${props => (props.isMobileMode ? 'center' : 'flex-start')};
 `;
 
 export const NavItem = props => {
-  return (
-    <MyNavLink {...props} to={`${props.base}/${props.path}`}>
-      <Icon
-        material={props.material}
-        icon={props.icon}
-        {...props}
-        right={8}
-        bottom={4}
-      />
-      <LinkName>{props.children}</LinkName>
-    </MyNavLink>
-  );
+	return (
+		<MyNavLink to={`${props.base}/${props.path}`}>
+			<IconContainer {...props}>
+				<Icon
+					material={props.material}
+					icon={props.icon}
+					{...props}
+					right={8}
+					bottom={4}
+				/>
+			</IconContainer>
+			<LinkName isMobileMode={props.isMobileMode}>{props.children}</LinkName>
+		</MyNavLink>
+	);
 };
 
 export const Separator = props => {
-  return (
-    <SeparatorContainer>
-      <SeparatorDiv width={35} />
-      <SeparatorText>{props.text}</SeparatorText>
-      <SeparatorDiv width={100} />
-    </SeparatorContainer>
-  );
+	return (
+		<SeparatorContainer>
+			<SeparatorDiv width={35} />
+			<SeparatorText>{props.text}</SeparatorText>
+			<SeparatorDiv width={100} />
+		</SeparatorContainer>
+	);
 };

@@ -50,8 +50,7 @@ export default {
       ethereumAddress,
       password: hashedPassword,
       email,
-      avatar,
-      isEditor: false //default not an editor
+      avatar
     });
 
     return newUser.save().then(
@@ -84,6 +83,15 @@ export default {
     return User.findOne({_id: userId});
   },
 
+
+  getOwnRoles: async (ethereumAddress) => {
+    if(!ethereumAddress) errorThrower.missingParameter('Ethereum-address');
+
+    const user = await User.findOne({ethereumAddress: ethereumAddress});
+    if(!user) errorThrower.noEntryFoundById(ethereumAddress);
+
+    return user.roles;
+  },
   /**
    * Add the role to the given user
    * if the role matches a roles-enum
@@ -116,9 +124,7 @@ export default {
   makeEditor: async ethereumAddress => {
     User.findOneAndUpdate(
       {ethereumAddress: ethereumAddress},
-      {
-        isEditor: true
-      },
+      {$addToSet: { roles: Roles.EDITOR }},
       (err, user) => {
         if (err) throw err;
         console.log('User ' + user.ethereumAddress + ' has become an Editor');
@@ -163,22 +169,4 @@ export default {
       }
     );
   },
-
-  /**
-   * Adds a reviewerInvitation to the array of reviewerInvitation
-   * @param ethereumAddress
-   * @param review
-   * @returns {Promise<void>}
-   */
-  addReviewInvitation: async (ethereumAddress, review) => {
-    let user = await User.findOne({ethereumAddress: ethereumAddress});
-    if (!user) errorThrower.noEntryFoundById(ethereumAddress);
-
-    user.reviewerInvitation.push(review);
-    await User.findOneAndUpdate(
-      {ethereumAddress: ethereumAddress},
-      user
-    );
-    return 'ReviewerInvitation for Review ' + review._id + ' is added to User ' + ethereumAddress;
-  }
 };

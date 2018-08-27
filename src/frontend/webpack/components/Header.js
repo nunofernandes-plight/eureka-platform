@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {Row} from '../../helpers/layout.js';
 import EurekaLogo from '../views/icons/EurekaLogo.js';
 import {
-  __THIRD
+	__THIRD
 } from '../../helpers/colors.js';
 import Icon from '../views/icons/Icon.js';
 import RenderNetwork from '../../web3/RenderNetwork.js';
@@ -26,13 +26,12 @@ const Container = Row.extend`
   align-items: center;
   justify-content: space-between;
   max-height: ${props => {
-    const isApp = props.user && props.isAuthenticated;
-    if (isApp) {
-      return '55px';
-    } else {
-      return null;
-    }
-  }};
+		const isApp = props.user && props.isAuthenticated;
+		if (isApp) {
+			return '55px';
+		}
+		return null;
+	}};
 `;
 const LeftContainer = styled.div`
   display: flex;
@@ -53,7 +52,6 @@ const Item = styled.div`
   margin: 0 10px;
   align-self: center;
 `;
-
 
 const SignUp = Item.extend`
   &:hover {
@@ -81,79 +79,77 @@ const Flex = styled.div`
 `;
 
 const renderLeft = props => {
-  const isApp = props.user && props.isAuthenticated;
-  return (
-    <LeftContainer>
-      {isApp ? (
-        <EurekaLogo app height={44} blue />
-      ) : (
-        <EurekaLogo height={44} blue />
-      )}
-    </LeftContainer>
-  );
+	const isApp = props.user && props.isAuthenticated;
+	return (
+		<LeftContainer>
+			{isApp ? (
+				<EurekaLogo app height={44} blue />
+			) : (
+				<EurekaLogo height={44} blue />
+			)}
+		</LeftContainer>
+	);
 };
 
 const renderStatus = props => {
-  if (!props.metaMaskStatus || !props.network) {
-    return <CircleSpinner />;
-  } else {
-    return (
-      <Flex>
-        <MetaMaskLabel {...props} />
-        <RenderNetwork network={props.network} />
-      </Flex>
-    );
-  }
+	if (!props.metaMaskStatus || !props.network) {
+		return <CircleSpinner />;
+	}
+	return (
+		<Flex>
+			<MetaMaskLabel {...props} />
+			<RenderNetwork network={props.network} />
+		</Flex>
+	);
 };
 
 const renderMiddle = props => {
-  return (
-    <MiddleContainer>
-      <Item>
+	return (
+		<MiddleContainer>
+			<Item>
         Products <Icon icon="chevron-down" width={15} height={15} />
-      </Item>
-      {renderStatus(props)}
-    </MiddleContainer>
-  );
+			</Item>
+			{renderStatus(props)}
+		</MiddleContainer>
+	);
 };
 
 const renderRight = props => {
-  if (props.isAuthenticated && props.user) {
-    return (
-      <ProfileContainer>
-        <div>
-          <Avatar avatar={props.user.avatar} width={40} height={40} />
-        </div>
-        {/*<Email>{renderEmail(props)}</Email>*/}
-      </ProfileContainer>
-    );
-  } else {
-    return (
-      <RightContainer>
-        <Item style={{cursor: 'pointer'}}>Login</Item>
-        <SignUp>Sign Up</SignUp>
-      </RightContainer>
-    );
-  }
+	if (props.isAuthenticated && props.user) {
+		return (
+			<ProfileContainer>
+				<div>
+					<Avatar avatar={props.user.avatar} width={40} height={40} />
+				</div>
+				{/* <Email>{renderEmail(props)}</Email> */}
+			</ProfileContainer>
+		);
+	}
+	return (
+		<RightContainer>
+			<Item style={{cursor: 'pointer'}}>Login</Item>
+			<SignUp>Sign Up</SignUp>
+		</RightContainer>
+	);
 };
 
-// do not show the header when the user is authenticated (i.e. is in the main app)
+// Do not show the header when the user is authenticated (i.e. is in the main app)
 class Header extends Component {
-  render() {
-    return (
-      <div>
-        {this.props.isAuthenticated ? null : (
-          <Parent>
-            <Container {...this.props}>
-              {renderLeft(this.props)}
-              {renderMiddle(this.props)}
-              {renderRight(this.props)}
-            </Container>
-          </Parent>
-        )}
-      </div>
-    );
-  }
+	render() {
+		return (
+			<div>
+				{this.props.isAuthenticated ? null : (
+					<Parent>
+						<Container {...this.props}>
+							{renderLeft(this.props)}
+							{renderMiddle(this.props)}
+							{renderRight(this.props)}
+						</Container>
+					</Parent>
+				)}
+			</div>
+		);
+	}
 }
 
 export default Header;

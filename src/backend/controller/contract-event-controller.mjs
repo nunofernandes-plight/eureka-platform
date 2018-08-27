@@ -187,5 +187,32 @@ export default {
     );
 
 
+    EurekaPlatformContract.events.ReviewIsAccepted(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+
+        await reviewService.acceptReview(
+          event.returnValues.articleHash,
+          event.returnValues.reviewer,
+          event.returnValues.stateTimestamp
+        );
+        console.log('ACCEPTION WORKED');
+      }
+    );
+
+    EurekaPlatformContract.events.ReviewIsDeclined(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+
+        await reviewService.declineReview(
+          event.returnValues.articleHash,
+          event.returnValues.reviewer,
+          event.returnValues.stateTimestamp
+        );
+        console.log('DECLINED WORKED');
+      }
+    );
   }
 };

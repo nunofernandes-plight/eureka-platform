@@ -1,13 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  __ALERT_WARNING,
-  __FIFTH,
-  __MAIN,
-  __THIRD
-} from '../helpers/colors.js';
-import Network from '../web3/Network.js';
+import {__ALERT_WARNING, __FIFTH, __MAIN, __THIRD} from '../helpers/colors.js';
 import Icon from '../webpack/views/icons/Icon.js';
+import Network from './Network.js';
 
 const NetworkContainer = styled.div`
   box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.1);
@@ -39,6 +34,9 @@ const getColor = network => {
 
     case Network.UNKNOWN:
       return `${__MAIN}`;
+
+    case Network.KOVAN:
+      return `${__THIRD}`;
 
     default:
       return null;

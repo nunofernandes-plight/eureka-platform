@@ -2,8 +2,7 @@ import {signUpEditor} from '../../src/backend/web3/web3-platform-contract-method
 import {
   mintEurekaTokens,
   finishMinting,
-  submitArticle,
-  getBalanceOf
+  submitArticle
 } from '../../src/backend/web3/web3-token-contract-methods.mjs';
 import test from 'ava';
 import app from '../../src/backend/api/api.mjs';
@@ -19,7 +18,6 @@ import articleVersionService from '../../src/backend/db/article-version-service.
 import reviewService from '../../src/backend/db/review-service.mjs';
 import getArticleHex from '../../src/backend/web3/get-articleHex.mjs';
 import {
-  getLinkedArticles,
   assignForSubmissionProcess,
   removeEditorFromSubmissionProcess,
   changeEditorFromSubmissionProcess,
@@ -28,13 +26,15 @@ import {
   inviteReviewersForArticle,
   acceptReviewInvitation,
   addEditorApprovedReview,
-  addCommunityReview
+  addCommunityReview,
+  correctReview,
+  acceptReview,
+  declineReview
 } from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import {sleepSync} from '../helpers.js';
-import {getAuthors} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
-import web3 from 'web3';
 import ArticleVersion from '../../src/backend/schema/article-version.mjs';
 import Review from '../../src/backend/schema/review.mjs';
+import Roles from '../../src/backend/schema/roles-enum.mjs';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
@@ -60,7 +60,6 @@ const ARTICLE1 = {
 const ARTICLE1_DATA_IN_HEX = getArticleHex(ARTICLE1);
 const ARTICLE1_HASH_HEX = '0x' + ARTICLE1.articleHash;
 
-
 const ARTICLE2 = {
   articleHash: '551aa99a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
   url: 'article2.url',
@@ -80,7 +79,7 @@ const ARTICLE2_DATA_IN_HEX = getArticleHex(ARTICLE2);
 const ARTICLE2_HASH_HEX = '0x' + ARTICLE2.articleHash;
 
 const REVIEW1 = {
-  reviewHash: '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', //TODO change?
+  reviewHash: '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', // TODO change?
   reviewText: 'This is the test-text for the review or reviewer 1',
   score1: 3,
   score2: 5,
@@ -89,8 +88,19 @@ const REVIEW1 = {
 };
 const REVIEW1_HASH_HEX = '0x' + REVIEW1.reviewHash;
 
+const REVIEW1_CORRECTED = {
+  reviewHash: '999aa57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+  reviewText: 'Corrected version of review2',
+  score1: 3,
+  score2: 3,
+  articleHasMajorIssues: false,
+  articleHasMinorIssues: false
+};
+const REVIEW1_CORRECTED_HASH_HEX = '0x' + REVIEW1_CORRECTED.reviewHash;
+
+
 const REVIEW2 = {
-  reviewHash: '000ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', //TODO change?
+  reviewHash: '000ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', // TODO change?
   reviewText: 'That one is the second review. So it comes from reviewer2',
   score1: 1,
   score2: 1,
@@ -99,10 +109,20 @@ const REVIEW2 = {
 };
 const REVIEW2_HASH_HEX = '0x' + REVIEW2.reviewHash;
 
-/**************** TESTING ****************/
+const REVIEW3 = {
+  reviewHash: '333cc57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', // TODO change?
+  reviewText: 'Third review. So it comes from reviewer3',
+  score1: 4,
+  score2: 4,
+  articleHasMajorIssues: true,
+  articleHasMinorIssues: false
+};
+const REVIEW3_HASH_HEX = '0x' + REVIEW3.reviewHash;
+
+/** ************** TESTING ****************/
 
 test.beforeEach(async () => {
-  let [eurekaContract, platformContract] = await deployContracts();
+  const [eurekaContract, platformContract] = await deployContracts();
   await setupContract(eurekaContract, platformContract);
   contractOwner = accounts[0];
 
@@ -125,7 +145,7 @@ async function setupContract(eurekaContract, platformContract) {
   eurekaTokenContract = eurekaContract;
   eurekaPlatformContract = platformContract;
 
-  let tokenAmounts = [];
+  const tokenAmounts = [];
   accounts.forEach(() => {
     tokenAmounts.push(20000);
   });
@@ -149,62 +169,64 @@ test(PRETEXT + 'Sign up Editor', async t => {
   await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
 
   let user = await userService.getUserByEthereumAddress(contractOwner);
-  t.is(user.isEditor, false);
+  // t.is(user.isEditor, false);
+  t.is(user.roles.length, 0);
 
   await signUpEditor(eurekaPlatformContract, contractOwner, contractOwner);
 
   user = await userService.getUserByEthereumAddress(contractOwner);
-  t.is(user.isEditor, true);
+  t.is(user.roles.length, 1);
+  t.is(user.roles[0], Roles.EDITOR);
+
+
 });
 
-
 test(PRETEXT + 'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED', async t => {
-  // create user on DB
+  // Create user on DB
   t.is((await userService.getAllUsers()).length, 0);
-  let user = await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
+  const user = await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
   t.is((await userService.getAllUsers()).length, 1);
 
-  // create an article-draft on DB
+  // Create an article-draft on DB
   t.is((await articleSubmissionService.getAllSubmissions()).length, 0);
   await articleSubmissionService.createSubmission(user.ethereumAddress);
-  let articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+  const articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
 
   t.is(articleSubmission.articleVersions.length, 1);
   let articleVersion = articleSubmission.articleVersions[0];
   t.is(articleVersion.articleVersionState, ArticleVersionState.DRAFT);
 
-  // send articleHash to DB
+  // Send articleHash to DB
   await articleVersionService.finishDraftById(user.ethereumAddress, articleVersion._id, ARTICLE1_HASH_HEX);
   articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id);
   t.is(articleVersion.articleVersionState, ArticleVersionState.FINISHED_DRAFT);
   t.is(articleVersion.articleHash, ARTICLE1_HASH_HEX);
 
-  // submission on the SC
+  // Submission on the SC
   await submitArticle(eurekaTokenContract, user.ethereumAddress, eurekaPlatformContract.options.address, 5000, ARTICLE1_DATA_IN_HEX);
   articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id);
   t.is(articleVersion.articleVersionState, ArticleVersionState.SUBMITTED);
 });
 
-
 test(PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process', async t => {
-  // create author and editor
-  let testAccounts = await getAccounts();
-  let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
-  let editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[2], 'test-editor-avatar');
-  let editor2 = await userService.createUser('testEditor2', 'editor2@test.test', testAccounts[3], 'test-editor2-avatar');
+  // Create author and editor
+  const testAccounts = await getAccounts();
+  const author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
+  const editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[2], 'test-editor-avatar');
+  const editor2 = await userService.createUser('testEditor2', 'editor2@test.test', testAccounts[3], 'test-editor2-avatar');
   t.is(true, true);
 
-  // signup editor 1 & 2
+  // Signup editor 1 & 2
   await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
   await signUpEditor(eurekaPlatformContract, editor2.ethereumAddress, contractOwner);
 
-  // setup article draft
+  // Setup article draft
   await articleSubmissionService.createSubmission(author.ethereumAddress);
   let articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
   let articleVersion = articleSubmission.articleVersions[0];
   await articleVersionService.finishDraftById(author.ethereumAddress, articleVersion._id, ARTICLE1_HASH_HEX);
 
-  // submit articleHash on SC
+  // Submit articleHash on SC
   await submitArticle(eurekaTokenContract, author.ethereumAddress, eurekaPlatformContract.options.address, 5000, ARTICLE1_DATA_IN_HEX);
   articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
   articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmission._id);
@@ -218,29 +240,29 @@ test(PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process',
     counter++;
   }
 
-  // assign first editor for submission process
+  // Assign first editor for submission process
   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmission.scSubmissionID, editor.ethereumAddress);
   articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmission._id);
   t.is(articleSubmission.editor, editor.ethereumAddress);
 
-  // change editor to editor2 for the submission process
+  // Change editor to editor2 for the submission process
   await changeEditorFromSubmissionProcess(eurekaPlatformContract, articleSubmission.scSubmissionID, editor2.ethereumAddress);
   articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmission._id);
   t.is(articleSubmission.editor, editor2.ethereumAddress);
 
-  // remove editor from the submission process
+  // Remove editor from the submission process
   await removeEditorFromSubmissionProcess(eurekaPlatformContract, articleSubmission.scSubmissionID, editor2.ethereumAddress);
   articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmission._id);
   t.is(articleSubmission.editor, undefined);
 });
 
 test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
-  // create author and editor
-  let testAccounts = await getAccounts();
-  let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
-  let editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[4], 'test-editor-avatar');
+  // Create author and editor
+  const testAccounts = await getAccounts();
+  const author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
+  const editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[4], 'test-editor-avatar');
 
-  // setup article draft 1 & 2
+  // Setup article draft 1 & 2
   await articleSubmissionService.createSubmission(author.ethereumAddress);
   let articleSubmission1 = (await articleSubmissionService.getAllSubmissions())[0];
   let articleVersion1 = articleSubmission1.articleVersions[0];
@@ -251,7 +273,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   let articleVersion2 = articleSubmission2.articleVersions[0];
   await articleVersionService.finishDraftById(author.ethereumAddress, articleVersion2._id, ARTICLE2_HASH_HEX);
 
-  // signup editor and submit article 1 & 2
+  // Signup editor and submit article 1 & 2
   await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
   await submitArticle(eurekaTokenContract, author.ethereumAddress, eurekaPlatformContract.options.address, 5000, ARTICLE1_DATA_IN_HEX);
   await submitArticle(eurekaTokenContract, author.ethereumAddress, eurekaPlatformContract.options.address, 5000, ARTICLE2_DATA_IN_HEX);
@@ -259,19 +281,17 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   let articleSubmissions = await articleSubmissionService.getAllSubmissions();
   t.is(articleSubmissions.length, 2);
 
-
   let counter = 0;
   while (
     (typeof articleSubmissions[0].scSubmissionID === 'undefined' ||
-      typeof articleSubmissions[1].scSubmissionID === 'undefined')
-    &&
+      typeof articleSubmissions[1].scSubmissionID === 'undefined') &&
     counter < 5) {
     sleepSync(5000);
     articleSubmissions = await articleSubmissionService.getAllSubmissions();
     counter++;
   }
 
-  //TODO try sanity check without being assign first --> expected behavior: must fail
+  // TODO try sanity check without being assign first --> expected behavior: must fail
   // assign editor for the submission process of article 1 & 2
   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmissions[0].scSubmissionID, editor.ethereumAddress);
   articleSubmission1 = await articleSubmissionService.getSubmissionById(articleSubmissions[0]._id);
@@ -281,17 +301,16 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   articleSubmission2 = await articleSubmissionService.getSubmissionById(articleSubmissions[1]._id);
   t.is(articleSubmission2.editor, editor.ethereumAddress);
 
-  //Accept sanity check for article 1
+  // Accept sanity check for article 1
   articleVersion1 = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion1._id);
   t.is(articleVersion1.articleVersionState, ArticleVersionState.SUBMITTED);
   await setSanityToOk(eurekaPlatformContract, articleVersion1.articleHash, editor.ethereumAddress);
   articleVersion1 = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion1._id);
 
-  // check for SC status change
+  // Check for SC status change
   counter = 0;
   while (
-    articleVersion1.articleVersionState === ArticleVersionState.SUBMITTED
-    &&
+    articleVersion1.articleVersionState === ArticleVersionState.SUBMITTED &&
     counter < 5) {
     sleepSync(5000);
     articleSubmissions = await articleSubmissionService.getAllSubmissions();
@@ -305,11 +324,10 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   await setSanityIsNotOk(eurekaPlatformContract, articleVersion2.articleHash, editor.ethereumAddress);
   articleVersion2 = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion2._id);
 
-  // check for SC status change
+  // Check for SC status change
   counter = 0;
   while (
-    articleVersion2.articleVersionState === ArticleVersionState.SUBMITTED
-    &&
+    articleVersion2.articleVersionState === ArticleVersionState.SUBMITTED &&
     counter < 5) {
     sleepSync(5000);
     articleSubmissions = await articleSubmissionService.getAllSubmissions();
@@ -318,36 +336,35 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   t.is(articleVersion2.articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
 });
 
+test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
+  // Create author and editor
+  const testAccounts = await getAccounts();
+  const author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
+  const editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[4], 'test-editor-avatar');
 
-test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
-  // create author and editor
-  let testAccounts = await getAccounts();
-  let author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
-  let editor = await userService.createUser('testEditor', 'editor@test.test', testAccounts[4], 'test-editor-avatar');
+  const reviewer1 = await userService.createUser('testReviewer1', 'reviewer1@test.test', testAccounts[5], 'test-reviewer-avatar');
+  const reviewer2 = await userService.createUser('testReviewer2', 'reviewer2@test.test', testAccounts[6], 'test-reviewer-avatar');
+  const reviewer3 = await userService.createUser('testReviewer3', 'reviewer3@test.test', testAccounts[7], 'test-reviewer-avatar');
 
-  let reviewer1 = await userService.createUser('testReviewer1', 'reviewer1@test.test', testAccounts[5], 'test-reviewer-avatar');
-  let reviewer2 = await userService.createUser('testReviewer2', 'reviewer2@test.test', testAccounts[6], 'test-reviewer-avatar');
-
-  // setup article draft 1 & 2
+  // Setup article draft 1 & 2
   await articleSubmissionService.createSubmission(author.ethereumAddress);
   let articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
   let articleVersion = articleSubmission.articleVersions[0];
   await articleVersionService.finishDraftById(author.ethereumAddress, articleVersion._id, ARTICLE1_HASH_HEX);
 
-  // signup editor and submit article 1 & 2
+  // Signup editor and submit article 1 & 2
   await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
   await submitArticle(eurekaTokenContract, author.ethereumAddress, eurekaPlatformContract.options.address, 5000, ARTICLE1_DATA_IN_HEX);
 
   let counter = 0;
   while (
-    (typeof articleSubmission.scSubmissionID === 'undefined'
-      &&
+    (typeof articleSubmission.scSubmissionID === 'undefined' &&
       counter < 5)) {
     sleepSync(5000);
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
     counter++;
   }
-  // assign editor for the submission process of article
+  // Assign editor for the submission process of article
   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmission.scSubmissionID, editor.ethereumAddress);
 
   // Accept sanity check for article 1
@@ -361,12 +378,10 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
 
   articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
 
-
-  // check if article-version in DB holds reviewers
+  // Check if article-version in DB holds reviewers
   counter = 0;
   while (
-    articleVersion.editorApprovedReviews.length < 2
-    &&
+    articleVersion.editorApprovedReviews.length < 2 &&
     counter < 5) {
     sleepSync(5000);
     articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
@@ -374,13 +389,12 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
   }
   t.is(articleVersion.editorApprovedReviews.length, 2);
 
-  // reviewer1 accept --> check for new state in DB
+  // Reviewer1 accept --> check for new state in DB
   await acceptReviewInvitation(eurekaPlatformContract, articleVersion.articleHash, reviewer1.ethereumAddress);
   let review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.editorApprovedReviews[0]);
   counter = 0;
   while (
-    review.reviewState === ReviewState.INVITED
-    &&
+    review.reviewState === ReviewState.INVITED &&
     counter < 5) {
     sleepSync(5000);
     review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.editorApprovedReviews[0]);
@@ -388,7 +402,20 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
   }
   t.is(review.reviewState, ReviewState.INVITATION_ACCEPTED);
 
-  // add editor-approved review into DB
+  // Reviewer2 accept --> check for new state in DB
+  await acceptReviewInvitation(eurekaPlatformContract, articleVersion.articleHash, reviewer2.ethereumAddress);
+  let review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, articleVersion.editorApprovedReviews[1]);
+  counter = 0;
+  while (
+    review.reviewState === ReviewState.INVITED &&
+    counter < 5) {
+    sleepSync(5000);
+    review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.editorApprovedReviews[1]);
+    counter++;
+  }
+  t.is(review2.reviewState, ReviewState.INVITATION_ACCEPTED);
+
+  // Add editor-approved review1 into DB
   await reviewService.addEditorApprovedReview(reviewer1.ethereumAddress, review._id,
     REVIEW1.reviewText, REVIEW1_HASH_HEX, REVIEW1.score1, REVIEW1.score2,
     REVIEW1.articleHasMajorIssues, REVIEW1.articleHasMinorIssues);
@@ -396,17 +423,16 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
   review = await reviewService.getReviewById(reviewer1.ethereumAddress, review._id);
   t.is(review.reviewState, ReviewState.HANDED_IN_DB);
 
-  // add an review in SC
+  // Add review1 in SC
   await addEditorApprovedReview(eurekaPlatformContract, articleVersion.articleHash, REVIEW1_HASH_HEX, REVIEW1.articleHasMajorIssues,
     REVIEW1.articleHasMinorIssues, REVIEW1.score1, REVIEW1.score2, reviewer1.ethereumAddress);
 
-  review = await reviewService.getReviewById(reviewer1.ethereumAddress, review._id);
 
-  // check if status changed on DB
+  // Check if status changed on DB
+  review = await reviewService.getReviewById(reviewer1.ethereumAddress, review._id);
   counter = 0;
   while (
-    review.reviewState === ReviewState.HANDED_IN_DB
-    &&
+    review.reviewState === ReviewState.HANDED_IN_DB &&
     counter < 5) {
     sleepSync(5000);
     review = await reviewService.getReviewById(reviewer1.ethereumAddress, review._id);
@@ -414,27 +440,81 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
   }
   t.is(review.reviewState, ReviewState.HANDED_IN_SC);
 
-  // write a community review as reviewer2
-  let review2 = await reviewService.addNewCommunitydReview(reviewer2.ethereumAddress, articleVersion.articleHash,
-    REVIEW2.reviewText, REVIEW2_HASH_HEX, REVIEW2.score1, REVIEW2.score2, REVIEW2.articleHasMajorIssues, REVIEW2.articleHasMinorIssues);
-  review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
 
+
+  // Add editor-approved review2 into DB
+  await reviewService.addEditorApprovedReview(reviewer2.ethereumAddress, review2._id,
+    REVIEW2.reviewText, REVIEW2_HASH_HEX, REVIEW2.score1, REVIEW2.score2,
+    REVIEW2.articleHasMajorIssues, REVIEW2.articleHasMinorIssues);
+
+  review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
   t.is(review2.reviewState, ReviewState.HANDED_IN_DB);
-  await addCommunityReview(eurekaPlatformContract, articleVersion.articleHash, REVIEW2_HASH_HEX, REVIEW2.articleHasMajorIssues,
+
+  // Add review2 in SC
+  await addEditorApprovedReview(eurekaPlatformContract, articleVersion.articleHash, REVIEW2_HASH_HEX, REVIEW2.articleHasMajorIssues,
     REVIEW2.articleHasMinorIssues, REVIEW2.score1, REVIEW2.score2, reviewer2.ethereumAddress);
 
-  review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
 
+  // Check if status changed on DB
+  review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
   counter = 0;
   while (
-    review2.reviewState === ReviewState.HANDED_IN_DB
-    &&
+    review2.reviewState === ReviewState.HANDED_IN_DB &&
     counter < 5) {
     sleepSync(5000);
-    //testreview2 = await Review.findOne({reviewHash: REVIEW2_HASH_HEX});
-    console.log(review2._id);
-    review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
+    review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review._id);
     counter++;
   }
   t.is(review2.reviewState, ReviewState.HANDED_IN_SC);
+
+
+  // Write a community review as reviewer3
+  let review3 = await reviewService.addNewCommunitydReview(reviewer3.ethereumAddress, articleVersion.articleHash,
+    REVIEW3.reviewText, REVIEW3_HASH_HEX, REVIEW3.score1, REVIEW3.score2, REVIEW3.articleHasMajorIssues, REVIEW3.articleHasMinorIssues);
+  review3 = await reviewService.getReviewById(reviewer3.ethereumAddress, review3._id);
+
+  t.is(review3.reviewState, ReviewState.HANDED_IN_DB);
+  await addCommunityReview(eurekaPlatformContract, articleVersion.articleHash, REVIEW3_HASH_HEX, REVIEW3.articleHasMajorIssues,
+    REVIEW3.articleHasMinorIssues, REVIEW3.score1, REVIEW3.score2, reviewer3.ethereumAddress);
+
+  review3 = await reviewService.getReviewById(reviewer3.ethereumAddress, review3._id);
+
+  counter = 0;
+  while (
+    review3.reviewState === ReviewState.HANDED_IN_DB &&
+    counter < 5) {
+    sleepSync(5000);
+    review3 = await reviewService.getReviewById(reviewer3.ethereumAddress, review3._id);
+    counter++;
+  }
+  t.is(review3.reviewState, ReviewState.HANDED_IN_SC);
+
+
+  // Accept review1
+  await acceptReview(eurekaPlatformContract, articleVersion.articleHash, reviewer1.ethereumAddress, editor.ethereumAddress);
+  review = await reviewService.getReviewById(reviewer1.ethereumAddress, review._id);
+  counter = 0;
+  while (
+    review.reviewState === ReviewState.HANDED_IN_SC &&
+    counter < 5) {
+    sleepSync(5000);
+    review = await reviewService.getReviewById(reviewer1.ethereumAddress, review._id);
+    counter++;
+  }
+  t.is(review.reviewState, ReviewState.ACCEPTED);
+
+
+  // Decline review2
+  await declineReview(eurekaPlatformContract, articleVersion.articleHash, reviewer2.ethereumAddress, editor.ethereumAddress);
+  review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
+  counter = 0;
+  while (
+    review2.reviewState === ReviewState.HANDED_IN_SC &&
+    counter < 5) {
+    sleepSync(5000);
+    review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
+    counter++;
+  }
+  t.is(review2.reviewState, ReviewState.DECLINED);
+
 });

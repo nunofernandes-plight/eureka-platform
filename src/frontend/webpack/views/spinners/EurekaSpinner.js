@@ -64,13 +64,13 @@ const EurekaLoader = styled.div`
   border-radius: 50%;
 `;
 const EurekaSpinner = () => {
-  return (
-    <Container>
-      <EurekaLoader>
-        <Logo src="../img/logos/eureka-hd.png" width={150} height={150} />
-      </EurekaLoader>
-    </Container>
-  );
+	return (
+		<Container>
+			<EurekaLoader>
+				<Logo src="../img/logos/eureka-hd.png" width={150} height={150} />
+			</EurekaLoader>
+		</Container>
+	);
 };
 
 export default EurekaSpinner;
