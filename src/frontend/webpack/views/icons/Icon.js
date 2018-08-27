@@ -15,6 +15,7 @@ const MyIcon = styled.svg`
   margin-left: ${props => (props.left ? props.left + 'px' : null)};
   margin-right: ${props => (props.right ? props.right + 'px' : null)};
   margin-top: ${props => (props.top ? props.top + 'px' : null)};
+
 `;
 
 const MaterialIcon = styled.div`

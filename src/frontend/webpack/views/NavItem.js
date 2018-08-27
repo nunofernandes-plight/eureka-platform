@@ -18,7 +18,6 @@ const MyNavLink = styled(NavLink)`
     cursor: pointer;
   }
   display: flex;
-  justify-content: ${props => (props.isMobileMode ? 'center' : null)};
   font-size: 13px;
   font-weight: 500;
   padding: 0.75rem;
@@ -77,16 +76,24 @@ const LinkName = styled.div`
     display: none;`};
 `;
 
+const IconContainer = styled.div`
+  display: flex;
+  width: ${props => (props.isMobileMode ? '100%' : 'auto')};
+  justify-content: ${props => (props.isMobileMode ? 'center' : 'flex-start')};
+`;
+
 export const NavItem = props => {
   return (
-    <MyNavLink {...props} to={`${props.base}/${props.path}`}>
-      <Icon
-        material={props.material}
-        icon={props.icon}
-        {...props}
-        right={8}
-        bottom={4}
-      />
+    <MyNavLink to={`${props.base}/${props.path}`}>
+      <IconContainer {...props}>
+        <Icon
+          material={props.material}
+          icon={props.icon}
+          {...props}
+          right={8}
+          bottom={4}
+        />
+      </IconContainer>
       <LinkName isMobileMode={props.isMobileMode}>{props.children}</LinkName>
     </MyNavLink>
   );

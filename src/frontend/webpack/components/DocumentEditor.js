@@ -577,8 +577,6 @@ class DocumentEditor extends Component {
                   figure: figures
                 }
               });
-
-              // this.props.addImage(figure, 'featuredIn');
             }}
           />
           <DocumentFiguresRenderer

@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import styled, {keyframes} from 'styled-components';
 import Icon from '../views/icons/Icon.js';
-import {PANEL_LEFT_NORMAL_WIDTH} from "../../helpers/layout.js";
+import {PANEL_LEFT_NORMAL_WIDTH} from '../../helpers/layout.js';
+import {__FIFTH, __THIRD} from '../../helpers/colors.js';
 
 const getBackColor = props => {
   if (props.type === 'notification') {
-    return 'linear-gradient(87deg,#f5365c 0,#f56036 100%)!important';
+    return `linear-gradient(87deg,${__FIFTH} 0,${__THIRD} 100%)!important`;
   } else {
-    return `#fff`;
+    return '#fff';
   }
 };
 
@@ -115,7 +116,7 @@ const ActionButton = styled.div`
   }
   cursor: pointer;
   margin: 0 0 0 auto;
-  color: #212529;
+  color: ${__THIRD};
   background-color: #fff;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   font-weight: 600;
