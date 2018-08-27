@@ -118,5 +118,7 @@ export default {
     console.log('WORKING !!!! COMMUNITY');
     console.log(await Review.findById(review._id));
     return 'Updated community review according to SC: ' + reviewHash;
-  }
+  },
+
+}
 };

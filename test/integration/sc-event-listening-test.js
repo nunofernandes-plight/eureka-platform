@@ -28,7 +28,9 @@ import {
   inviteReviewersForArticle,
   acceptReviewInvitation,
   addEditorApprovedReview,
-  addCommunityReview
+  addCommunityReview,
+  correctReview,
+  acceptReview
 } from '../../src/backend/web3/web3-platform-contract-methods.mjs';
 import {sleepSync} from '../helpers.js';
 import {getAuthors} from '../../src/backend/web3/web3-platform-contract-methods.mjs';
@@ -88,6 +90,17 @@ const REVIEW1 = {
   articleHasMinorIssues: true
 };
 const REVIEW1_HASH_HEX = '0x' + REVIEW1.reviewHash;
+
+const REVIEW1_CORRECTED = {
+  reviewHash: '999aa57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+  reviewText: 'Corrected version of review2',
+  score1: 3,
+  score2: 3,
+  articleHasMajorIssues: false,
+  articleHasMinorIssues: false
+};
+const REVIEW1_CORRECTED_HASH_HEX = '0x' + REVIEW1_CORRECTED.reviewHash;
+
 
 const REVIEW2 = {
   reviewHash: '000ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', //TODO change?
@@ -328,11 +341,13 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
   let reviewer1 = await userService.createUser('testReviewer1', 'reviewer1@test.test', testAccounts[5], 'test-reviewer-avatar');
   let reviewer2 = await userService.createUser('testReviewer2', 'reviewer2@test.test', testAccounts[6], 'test-reviewer-avatar');
 
+
   // setup article draft 1 & 2
   await articleSubmissionService.createSubmission(author.ethereumAddress);
   let articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
   let articleVersion = articleSubmission.articleVersions[0];
   await articleVersionService.finishDraftById(author.ethereumAddress, articleVersion._id, ARTICLE1_HASH_HEX);
+
 
   // signup editor and submit article 1 & 2
   await signUpEditor(eurekaPlatformContract, editor.ethereumAddress, contractOwner);
@@ -431,10 +446,16 @@ test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invi
     &&
     counter < 5) {
     sleepSync(5000);
-    //testreview2 = await Review.findOne({reviewHash: REVIEW2_HASH_HEX});
     console.log(review2._id);
     review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
     counter++;
   }
   t.is(review2.reviewState, ReviewState.HANDED_IN_SC);
+
+  await acceptReview(eurekaPlatformContract, articleVersion.articleHash, reviewer1.ethereumAddress, editor.ethereumAddress);
+  // correct review1
+  //TODO Db call before with new corrected version
+
+  //
+
 });

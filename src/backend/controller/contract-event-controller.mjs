@@ -187,5 +187,13 @@ export default {
     );
 
 
+    EurekaPlatformContract.events.ReviewIsAccepted(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+
+        console.log('ACCEPTION WORKED');
+      }
+    );
   }
 };
