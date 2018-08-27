@@ -36,8 +36,11 @@ class DashboardRouter extends Component {
             exact
             path={`${this.props.base}/owner`}
             render={() => (
-              <ContractOwnerGuard role={this.props.role}>
-                <ContractOwnerDashboard {...this.props} />
+              <ContractOwnerGuard roles={this.props.user.roles}>
+                <ContractOwnerDashboard
+                  web3={this.props.web3}
+                  selectedAccount={this.props.selectedAccount}
+                />
               </ContractOwnerGuard>
             )}
           />

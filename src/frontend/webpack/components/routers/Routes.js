@@ -49,5 +49,11 @@ export const Routes = [
     name: 'My History',
     icon: 'ethereum',
     separator: 'History'
+  },
+  {
+    path: 'owner',
+    name: 'Smart Contract',
+    material: 'security',
+    icon: 'material'
   }
 ];
