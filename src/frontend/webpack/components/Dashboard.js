@@ -8,13 +8,13 @@ const Container = styled.div`
 `;
 
 class Dashboard extends Component {
-  render() {
-    return (
-      <Container>
-        <Card width={1000} title={'Your Dashboard'} />
-      </Container>
-    );
-  }
+	render() {
+		return (
+			<Container>
+				<Card width={1000} title={'Your Dashboard'} />
+			</Container>
+		);
+	}
 }
 
 export default Dashboard;

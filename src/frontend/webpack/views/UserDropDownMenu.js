@@ -1,15 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
-import Icon from './icons/Icon.js';
 import {
-  __ALERT_ERROR,
-  __FIFTH,
-  __GRAY_100,
-  __GRAY_200,
-  __THIRD
+	__ALERT_ERROR,
+	__FIFTH,
+	__GRAY_100,
+	__GRAY_200,
+	__THIRD
 } from '../../helpers/colors.js';
-import {Items} from './UserDropDownItems.js';
 import {getDomain} from '../../../helpers/getDomain.js';
+import Icon from './icons/Icon.js';
+import {Items} from './UserDropDownItems.js';
 import EurekaLogo from './icons/EurekaLogo.js';
 
 const Parent = styled.div`
@@ -87,67 +87,67 @@ const Separator = styled.div`
 `;
 
 const Tab = props => {
-  return (
-    <TabContainer
-      onClick={() => {
-        props.onClick(props);
-      }}
-    >
-      <IconContainer color={props.color}>
-        {props.icon === 'eureka' ? (
-          <EurekaLogo width={props.width + 2} height={props.height + 2} />
-        ) : (
-          <Icon
-            icon={props.icon}
-            material={props.material}
-            width={props.width}
-            height={props.height}
-            noMove
-          />
-        )}
-      </IconContainer>
-      <Text color={props.color}>{props.text}</Text>
-    </TabContainer>
-  );
+	return (
+		<TabContainer
+			onClick={() => {
+				props.onClick(props);
+			}}
+		>
+			<IconContainer color={props.color}>
+				{props.icon === 'eureka' ? (
+					<EurekaLogo width={props.width + 2} height={props.height + 2} />
+				) : (
+					<Icon
+						icon={props.icon}
+						material={props.material}
+						width={props.width}
+						height={props.height}
+						noMove
+					/>
+				)}
+			</IconContainer>
+			<Text color={props.color}>{props.text}</Text>
+		</TabContainer>
+	);
 };
 
 const DropDown = props => {
-  return (
-    <Navigation>
-      <Tabs>
-        {Items.map((item, index) => {
-          return (
-            <div key={index}>
-              <Tab
-                width={15}
-                height={15}
-                {...item}
-                onClick={item => {
-                  props.onClick(item);
-                }}
-              />
-              {index !== Items.length ? null : <Separator />}
-            </div>
-          );
-        })}
-      </Tabs>
-    </Navigation>
-  );
+	return (
+		<Navigation>
+			<Tabs>
+				{Items.map((item, index) => {
+					return (
+						<div key={index}>
+							<Tab
+								width={15}
+								height={15}
+								{...item}
+								onClick={item => {
+									props.onClick(item);
+								}}
+							/>
+							{index !== Items.length ? null : <Separator />}
+						</div>
+					);
+				})}
+			</Tabs>
+		</Navigation>
+	);
 };
 
 class UserDropDownMenu extends React.Component {
-  render() {
-    return (
-      <Parent visible={this.props.visible}>
-        <SmallSquare />
-        <DropDown
-          onClick={item => {
-            this.props.action(item);
-          }}
-        />
-      </Parent>
-    );
-  }
+	render() {
+		return (
+			<Parent visible={this.props.visible}>
+				<SmallSquare />
+				<DropDown
+					onClick={item => {
+						this.props.action(item);
+					}}
+				/>
+			</Parent>
+		);
+	}
 }
 
 export default UserDropDownMenu;

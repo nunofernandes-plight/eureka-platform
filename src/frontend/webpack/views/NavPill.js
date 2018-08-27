@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import {NavLink} from 'react-router-dom';
-import Icon from './icons/Icon.js';
 import {__FIFTH} from '../../helpers/colors.js';
 import {MAKE_MOBILE} from '../../helpers/mobile.js';
 import {PANEL_LEFT_BREAK_POINT} from '../../helpers/layout.js';
+import Icon from './icons/Icon.js';
 
 const MyLink = styled(NavLink)`
   &:hover {
@@ -29,7 +29,7 @@ const MyLink = styled(NavLink)`
 `;
 
 MyLink.defaultProps = {
-  activeClassName: 'active'
+	activeClassName: 'active'
 };
 const IconContainer = styled.div`
   width: 125px;
@@ -48,21 +48,21 @@ const Name = styled.div`
 `;
 
 const NavPill = props => {
-  return (
-    <MyLink to={`${props.base}/${props.path}`}>
-      <IconContainer {...props}>
-        <Name>{props.name}</Name>
-        <Icon
-          noMove
-          left={5}
-          icon={props.icon}
-          material={props.material}
-          width={props.width}
-          height={props.height}
-        />
-      </IconContainer>
-    </MyLink>
-  );
+	return (
+		<MyLink to={`${props.base}/${props.path}`}>
+			<IconContainer {...props}>
+				<Name>{props.name}</Name>
+				<Icon
+					noMove
+					left={5}
+					icon={props.icon}
+					material={props.material}
+					width={props.width}
+					height={props.height}
+				/>
+			</IconContainer>
+		</MyLink>
+	);
 };
 
 export default NavPill;

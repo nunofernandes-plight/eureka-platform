@@ -49,25 +49,25 @@ const IContainer = styled.div`
 `;
 
 const CardWithBullerIcon = props => {
-  return (
-    <Card width={500}>
-      <h2>Submit an Article</h2>
-      <IconContainer onClick={() => props.callback()}>
-        <Icon icon={'plus'} width={40} height={40} />
-      </IconContainer>
-      <Paragraph>Create your narrative bit by bit.</Paragraph>
-      <List>
-        <Bullet>
-          <Element>
-            <IContainer>
-              <Icon icon={'ethereum'} width={15} height={15} color={__THIRD} />
-            </IContainer>
-            <Text>Fully integrated with the Ethereum Blockchain</Text>
-          </Element>
-        </Bullet>
-      </List>
-    </Card>
-  );
+	return (
+		<Card width={500}>
+			<h2>Submit an Article</h2>
+			<IconContainer onClick={() => props.callback()}>
+				<Icon icon={'plus'} width={40} height={40} />
+			</IconContainer>
+			<Paragraph>Create your narrative bit by bit.</Paragraph>
+			<List>
+				<Bullet>
+					<Element>
+						<IContainer>
+							<Icon icon={'ethereum'} width={15} height={15} color={__THIRD} />
+						</IContainer>
+						<Text>Fully integrated with the Ethereum Blockchain</Text>
+					</Element>
+				</Bullet>
+			</List>
+		</Card>
+	);
 };
 
 export default CardWithBullerIcon;

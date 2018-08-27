@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {__THIRD} from '../../helpers/colors.js';
 import ReactCardFlip from 'react-card-flip';
+import {__THIRD} from '../../helpers/colors.js';
 import Icon from '../views/icons/Icon.js';
 import EurekaLogo from '../views/icons/EurekaLogo.js';
 
@@ -71,95 +71,96 @@ const CardDescription = styled.p`
 `;
 
 class Cards extends Component {
-  constructor() {
-    super();
-    this.state = {
-      '1': false,
-      '2': false,
-      '3': false,
-      '4': false
-    };
-  }
+	constructor() {
+		super();
+		this.state = {
+			1: false,
+			2: false,
+			3: false,
+			4: false
+		};
+	}
 
-  flipCard(key) {
-    const flip = !this.state[key];
-    this.setState({[key]: flip});
-  }
-  render() {
-    return (
-      <Container>
-        <ReactCardFlip isFlipped={this.state['1']}>
-          <Card key="front" onMouseEnter={() => this.flipCard('1')}>
-            <CardTitle>Become an author</CardTitle>
-            <CardFigure src="img/icons/submit.png" />
-            <CardDescription>
+	flipCard(key) {
+		const flip = !this.state[key];
+		this.setState({[key]: flip});
+	}
+
+	render() {
+		return (
+			<Container>
+				<ReactCardFlip isFlipped={this.state['1']}>
+					<Card key="front" onMouseEnter={() => this.flipCard('1')}>
+						<CardTitle>Become an author</CardTitle>
+						<CardFigure src="img/icons/submit.png" />
+						<CardDescription>
               Submit your article to be peer-reviewed in the EUREKA ecosystem
-            </CardDescription>
-          </Card>
-          <Card key="back" onMouseLeave={() => this.flipCard('1')}>
-            <CardTitle>Submit article</CardTitle>
-            <CardFigureBack>
-              <Icon icon="plus" width={30} height={30} />
-            </CardFigureBack>
-            <button>Submit article now!</button>
-          </Card>
-        </ReactCardFlip>
+						</CardDescription>
+					</Card>
+					<Card key="back" onMouseLeave={() => this.flipCard('1')}>
+						<CardTitle>Submit article</CardTitle>
+						<CardFigureBack>
+							<Icon icon="plus" width={30} height={30} />
+						</CardFigureBack>
+						<button>Submit article now!</button>
+					</Card>
+				</ReactCardFlip>
 
-        <ReactCardFlip isFlipped={this.state['2']}>
-          <Card key="front" onMouseEnter={() => this.flipCard('2')}>
-            <CardTitle>Start reviewing</CardTitle>
-            <CardFigure src="img/icons/become_reviewer.png" />
-            <CardDescription>
+				<ReactCardFlip isFlipped={this.state['2']}>
+					<Card key="front" onMouseEnter={() => this.flipCard('2')}>
+						<CardTitle>Start reviewing</CardTitle>
+						<CardFigure src="img/icons/become_reviewer.png" />
+						<CardDescription>
               Send your reviewer application in a few steps!{' '}
-            </CardDescription>
-          </Card>
-          <Card key="back" onMouseLeave={() => this.flipCard('2')}>
-            <CardTitle>Submit application</CardTitle>
-            <CardFigureBack>
-              <Icon icon="arrow-right" width={30} height={30} />
-            </CardFigureBack>
-            <button>Become a reviewer!</button>
-          </Card>
-        </ReactCardFlip>
+						</CardDescription>
+					</Card>
+					<Card key="back" onMouseLeave={() => this.flipCard('2')}>
+						<CardTitle>Submit application</CardTitle>
+						<CardFigureBack>
+							<Icon icon="arrow-right" width={30} height={30} />
+						</CardFigureBack>
+						<button>Become a reviewer!</button>
+					</Card>
+				</ReactCardFlip>
 
-        <ReactCardFlip isFlipped={this.state['3']}>
-          <Card key="front" onMouseEnter={() => this.flipCard('3')}>
-            <CardTitle>Validation</CardTitle>
+				<ReactCardFlip isFlipped={this.state['3']}>
+					<Card key="front" onMouseEnter={() => this.flipCard('3')}>
+						<CardTitle>Validation</CardTitle>
 
-            <CardFigure src="img/icons/validate.png" />
-            <CardDescription>
+						<CardFigure src="img/icons/validate.png" />
+						<CardDescription>
               Validate or invalidate a existing work!
-            </CardDescription>
-          </Card>
-          <Card key="back" onMouseLeave={() => this.flipCard('3')}>
-            <CardTitle>Validate a work</CardTitle>
-            <CardFigureBack>
-              <Icon icon="check" width={30} height={30} />
-            </CardFigureBack>
-            <button>Validate!</button>
-          </Card>
-        </ReactCardFlip>
+						</CardDescription>
+					</Card>
+					<Card key="back" onMouseLeave={() => this.flipCard('3')}>
+						<CardTitle>Validate a work</CardTitle>
+						<CardFigureBack>
+							<Icon icon="check" width={30} height={30} />
+						</CardFigureBack>
+						<button>Validate!</button>
+					</Card>
+				</ReactCardFlip>
 
-        <ReactCardFlip isFlipped={this.state['4']}>
-          <Card key="front" onMouseEnter={() => this.flipCard('4')}>
-            <CardTitle>Our Journal</CardTitle>
-            <EurekaLogo width={70} height={70} />
-            <CardDescription>
+				<ReactCardFlip isFlipped={this.state['4']}>
+					<Card key="front" onMouseEnter={() => this.flipCard('4')}>
+						<CardTitle>Our Journal</CardTitle>
+						<EurekaLogo width={70} height={70} />
+						<CardDescription>
               Have a look at the articles which have been published into our
               Journal
-            </CardDescription>
-          </Card>
-          <Card key="back" onMouseLeave={() => this.flipCard(4)}>
-            <CardTitle>Our Jorunal</CardTitle>
-            <CardFigureBack>
-              <Icon icon="read" width={30} height={30} />
-            </CardFigureBack>
-            <button>Read more...</button>
-          </Card>
-        </ReactCardFlip>
-      </Container>
-    );
-  }
+						</CardDescription>
+					</Card>
+					<Card key="back" onMouseLeave={() => this.flipCard(4)}>
+						<CardTitle>Our Jorunal</CardTitle>
+						<CardFigureBack>
+							<Icon icon="read" width={30} height={30} />
+						</CardFigureBack>
+						<button>Read more...</button>
+					</Card>
+				</ReactCardFlip>
+			</Container>
+		);
+	}
 }
 
 export default Cards;

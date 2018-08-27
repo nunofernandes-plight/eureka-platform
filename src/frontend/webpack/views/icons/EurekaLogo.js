@@ -12,20 +12,19 @@ const Logo = styled.img`
 `;
 
 const renderLogo = props => {
-  if (props.blue) {
-    return <Logo src="/img/logos/eureka-blue.png" {...props} />;
-  }
-  if (props.blueNoLogo) {
-    return <Logo src="/img/logos/eureka-blue-no-logo.png" {...props} />;
-  } else if (props.white) {
-    return <Logo src="/img/logos/eureka-white.png" {...props} />;
-  } else {
-    return <Logo src="/img/logos/eureka-hd.png" {...props} />;
-  }
+	if (props.blue) {
+		return <Logo src="/img/logos/eureka-blue.png" {...props} />;
+	}
+	if (props.blueNoLogo) {
+		return <Logo src="/img/logos/eureka-blue-no-logo.png" {...props} />;
+	} if (props.white) {
+		return <Logo src="/img/logos/eureka-white.png" {...props} />;
+	}
+	return <Logo src="/img/logos/eureka-hd.png" {...props} />;
 };
 
 const EurekaLogo = props => {
-  return <div>{renderLogo(props)}</div>;
+	return <div>{renderLogo(props)}</div>;
 };
 
 export default EurekaLogo;

@@ -1,11 +1,11 @@
 import React from 'react';
+import styled from 'styled-components';
 import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
 import {
-  __ALERT_ERROR,
-  __ALERT_SUCCESS,
-  __ALERT_WARNING
+	__ALERT_ERROR,
+	__ALERT_SUCCESS,
+	__ALERT_WARNING
 } from '../../helpers/colors.js';
-import styled from 'styled-components';
 import MetaMaskLogo from './icons/MetaMaskLogo.js';
 import CircleHeaderSpinner from './spinners/CircleHeaderSpinner.js';
 
@@ -42,33 +42,33 @@ const MetaMaskDetectedLoggedIn = MetaMask.extend`
 `;
 
 const MetaMaskLabel = props => {
-  if (!props.metaMaskStatus) {
-    return <CircleHeaderSpinner />;
-  }
-  const status = props.metaMaskStatus;
-  if (status === MetaMaskStatus.DETECTED_NO_LOGGED_IN) {
-    return (
-      <MetaMaskDetectedNoLoggedIn>
+	if (!props.metaMaskStatus) {
+		return <CircleHeaderSpinner />;
+	}
+	const status = props.metaMaskStatus;
+	if (status === MetaMaskStatus.DETECTED_NO_LOGGED_IN) {
+		return (
+			<MetaMaskDetectedNoLoggedIn>
         MetaMask detected but locked
-        <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
-      </MetaMaskDetectedNoLoggedIn>
-    );
-  } else if (status === MetaMaskStatus.NO_DETECTED) {
-    return (
-      <NoMetaMask>
+				<MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
+			</MetaMaskDetectedNoLoggedIn>
+		);
+	} if (status === MetaMaskStatus.NO_DETECTED) {
+		return (
+			<NoMetaMask>
         No MetaMask detected{' '}
-        <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
-      </NoMetaMask>
-    );
-  } else if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
-    return (
-      <MetaMaskDetectedLoggedIn>
+				<MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
+			</NoMetaMask>
+		);
+	} if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
+		return (
+			<MetaMaskDetectedLoggedIn>
         MetaMask unlocked
-        <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
-      </MetaMaskDetectedLoggedIn>
-    );
-  }
-  return null;
+				<MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
+			</MetaMaskDetectedLoggedIn>
+		);
+	}
+	return null;
 };
 
 export default MetaMaskLabel;
