@@ -323,7 +323,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   t.is(articleVersion2.articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
 });
 
-test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
+test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
   // Create author and editor
   const testAccounts = await getAccounts();
   const author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
@@ -429,8 +429,6 @@ test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitatio
     review2.reviewState === ReviewState.HANDED_IN_DB &&
     counter < 5) {
     sleepSync(5000);
-    // Testreview2 = await Review.findOne({reviewHash: REVIEW2_HASH_HEX});
-    console.log(review2._id);
     review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, review2._id);
     counter++;
   }
@@ -439,7 +437,19 @@ test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitatio
   await acceptReview(eurekaPlatformContract, articleVersion.articleHash, reviewer1.ethereumAddress, editor.ethereumAddress);
   //TODO Db call before with new corrected version
 
+  review = await reviewService.getReviewById(reviewer1.ethereumAddress, review._id);
 
+
+  counter = 0;
+  while (
+    review.reviewState === ReviewState.HANDED_IN_SC &&
+    counter < 5) {
+    sleepSync(5000);
+    review = await reviewService.getReviewById(reviewer1.ethereumAddress, review._id);
+    counter++;
+  }
+
+  t.is(review.reviewState, ReviewState.ACCEPTED);
   //
 
 });

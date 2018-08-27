@@ -85,7 +85,7 @@ export default {
     let articleVersion = await ArticleVersion.findOne({
       articleHash: articleHash
     });
-    if(!articleVersion) errorThrower.noEntryFoundById(articleHash);
+    if (!articleVersion) errorThrower.noEntryFoundById(articleHash);
 
     const review = new Review({
       reviewerAddress: userAddress,
@@ -120,4 +120,19 @@ export default {
     return 'Updated community review according to SC: ' + reviewHash;
   },
 
+  acceptReview: async (articleHash, reviewerAddress, stateTimestamp) => {
+    const articleVersion = await ArticleVersion.findOne({
+      articleHash: articleHash
+    }).populate('editorApprovedReviews');
+
+    const reviewId = articleVersion.editorApprovedReviews.find((review) => {
+      return review.reviewerAddress === reviewerAddress;
+    });
+
+    let review = await Review.findById(reviewId);
+    review.reviewState = ReviewState.ACCEPTED;
+    review.stateTimestamp = stateTimestamp;
+    await review.save();
+    return 'Acception of review ' + reviewId;
+  }
 };
