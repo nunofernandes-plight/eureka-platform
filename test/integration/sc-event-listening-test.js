@@ -34,6 +34,7 @@ import {
 import {sleepSync} from '../helpers.js';
 import ArticleVersion from '../../src/backend/schema/article-version.mjs';
 import Review from '../../src/backend/schema/review.mjs';
+import Roles from '../../src/backend/schema/roles-enum.mjs';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
@@ -168,12 +169,16 @@ test(PRETEXT + 'Sign up Editor', async t => {
   await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
 
   let user = await userService.getUserByEthereumAddress(contractOwner);
-  t.is(user.isEditor, false);
+  // t.is(user.isEditor, false);
+  t.is(user.roles.length, 0);
 
   await signUpEditor(eurekaPlatformContract, contractOwner, contractOwner);
 
   user = await userService.getUserByEthereumAddress(contractOwner);
-  t.is(user.isEditor, true);
+  t.is(user.roles.length, 1);
+  t.is(user.roles[0], Roles.EDITOR);
+
+
 });
 
 test(PRETEXT + 'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED', async t => {
@@ -331,7 +336,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   t.is(articleVersion2.articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
 });
 
-test.only(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
+test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
   // Create author and editor
   const testAccounts = await getAccounts();
   const author = await userService.createUser('testAuthor', 'author@test.test', contractOwner, 'test-author-avatar');
