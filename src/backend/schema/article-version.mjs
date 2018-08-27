@@ -15,8 +15,7 @@ export const articleVersionSchema = mongoose.Schema(
       type: Number
     },
     articleHash: {
-      type: String,
-      unique: true
+      type: String
     },
     articleUrl: {
       type: String

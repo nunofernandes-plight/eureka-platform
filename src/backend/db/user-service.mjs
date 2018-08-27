@@ -163,22 +163,4 @@ export default {
       }
     );
   },
-
-  /**
-   * Adds a reviewerInvitation to the array of reviewerInvitation
-   * @param ethereumAddress
-   * @param review
-   * @returns {Promise<void>}
-   */
-  addReviewInvitation: async (ethereumAddress, review) => {
-    let user = await User.findOne({ethereumAddress: ethereumAddress});
-    if (!user) errorThrower.noEntryFoundById(ethereumAddress);
-
-    user.reviewerInvitation.push(review);
-    await User.findOneAndUpdate(
-      {ethereumAddress: ethereumAddress},
-      user
-    );
-    return 'ReviewerInvitation for Review ' + review._id + ' is added to User ' + ethereumAddress;
-  }
 };

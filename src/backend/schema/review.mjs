@@ -14,11 +14,9 @@ export const reviewSchema = mongoose.Schema(
     },
     reviewerAddress: {
       type: String,
-      required: true
     },
     reviewHash: {
       type: String,
-      unique: true
     },
     reviewText: {
       type: String,
