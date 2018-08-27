@@ -244,6 +244,25 @@ export const acceptReview = (contract, _articleHash, _reviewerAddress,  _from) =
     });
 };
 
+export const declineReview = (contract, _articleHash, _reviewerAddress,  _from) => {
+  return contract.methods
+    .declineReview(_articleHash, _reviewerAddress)
+    .send({
+      from: _from
+    })
+    .then(receipt => {
+      console.log(
+        'Review from  user ' +
+        _reviewerAddress +
+        ' is declined with the TX status: ' +
+        receipt.status
+      );
+      return receipt;
+    })
+    .catch(err => {
+      console.error(err);
+    });
+};
 
 
 /*
