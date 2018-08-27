@@ -16,10 +16,9 @@ export const DashBoardGuard = props => {
 };
 
 export const ContractOwnerGuard = props => {
-  if (props.role === null) {
-    return <GridSpinner />;
-  }
-  if (props.role === Roles.CONTRACT_OWNER) {
+  if (props.roles.includes(Roles.CONTRACT_OWNER)) {
     return props.children;
+  } else {
+    return <Redirect to={{pathname: '/app', state: {from: props.location}}} />;
   }
 };

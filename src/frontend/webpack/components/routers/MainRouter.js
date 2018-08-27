@@ -58,8 +58,11 @@ class MainRouter extends Component {
       .then(response => {
         console.log('fetching works');
         if (response.success) {
+          let user = response.data.user;
+          // TODO: remove this! FAKE JUST FOR TESTING
+          user.roles.push(Roles.CONTRACT_OWNER);
           this.setState({
-            user: response.data.user,
+            user,
             isAuthenticated: response.data.isAuthenticated
           });
         } else {
@@ -163,6 +166,7 @@ class MainRouter extends Component {
                       <PanelLeft
                         base={'/app'}
                         checked={this.state.isMobileMode}
+                        user={this.state.user}
                         isMobileMode={isMobileMode => {
                           this.setState({isMobileMode});
                         }}
