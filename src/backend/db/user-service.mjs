@@ -5,6 +5,7 @@ import ArticleSubmission from '../schema/article-submission.mjs';
 import {isValidAddress} from '../../helpers/isValidEthereumAddress.mjs';
 import userService from '../db/user-service.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
+import ContractOwner from '../schema/contract-owner';
 
 export default {
   /**
@@ -52,6 +53,12 @@ export default {
       email,
       avatar
     });
+
+    const contractOwner = await ContractOwner.findById(1);
+    if(contractOwner.address === ethereumAddress) {
+      newUser.roles.push(Roles.CONTRACT_OWNER);
+    }
+
 
     return newUser.save().then(
       function() {
