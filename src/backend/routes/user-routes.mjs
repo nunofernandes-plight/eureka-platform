@@ -12,7 +12,7 @@ router.get(
   '/data',
   asyncHandler(async req => {
     let user = await userService.getUserByEthereumAddress(req.user.ethereumAddress);
-
+    user.password = undefined;
     return {
       user: user,
       isAuthenticated: req.isAuthenticated()

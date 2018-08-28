@@ -47,7 +47,7 @@ class MainRouter extends Component {
   }
 
   authenticate() {
-    fetch(`${getDomain()}/api/welcome`, {
+    fetch(`${getDomain()}/api/users/data`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
