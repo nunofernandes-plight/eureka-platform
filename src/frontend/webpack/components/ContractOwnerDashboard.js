@@ -75,6 +75,10 @@ class ContractOwnerDashboard extends React.Component {
   action(stateKey) {
     switch (stateKey) {
       case 'mint':
+        break;
+
+      default:
+        break;
     }
   }
 

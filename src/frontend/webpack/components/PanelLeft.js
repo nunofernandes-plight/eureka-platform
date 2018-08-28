@@ -28,7 +28,7 @@ const Container = styled.div`
   transition-property: width;
   flex: 1 1 auto;
   overflow-x: hidden;
-  height: 100%;
+  max-height: 100%;
 
   ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
     width: ${PANEL_LEFT_MOBILE_WIDTH}px;  
@@ -70,12 +70,12 @@ const MobileMode = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  position: absolute;
-  bottom: 10px;
   height: 60px;
   background: white;
   width: 100%;
   z-index: 10;
+  margin-top: 30px;
+  margin-bottom: 5px;
 
   ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
     display: none;`};
@@ -123,8 +123,7 @@ class PanelLeft extends Component {
               </div>
             );
           })}
-        </Items>
-
+        </Items>{' '}
         <MobileMode>
           <MobileModeTitle>Toggle menu</MobileModeTitle>
           <ToggleButton

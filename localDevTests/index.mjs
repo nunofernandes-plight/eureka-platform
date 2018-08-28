@@ -35,7 +35,7 @@ const setup = async (eurekaTokenContract, eurekaPlatformContract) => {
   EurekaPlatformContract = eurekaPlatformContract;
   EurekaTokenContract = eurekaTokenContract;
 
-  let tokenAmounts = [];
+  const tokenAmounts = [];
   accounts.forEach(() => {
     tokenAmounts.push(20000);
   });
@@ -46,6 +46,7 @@ const setup = async (eurekaTokenContract, eurekaPlatformContract) => {
     contractOwner
   );
   await finishMinting(EurekaTokenContract, contractOwner);
+  console.log('The EKA token minting has been finished.');
 };
 
 // signUpEditor() on SC
@@ -60,7 +61,7 @@ const setup = async (eurekaTokenContract, eurekaPlatformContract) => {
 // };
 
 const testSubmitArticle = async () => {
-  let article = {
+  const article = {
     articleHash:
       '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
     url: 'hoihoi',
@@ -78,12 +79,12 @@ const testSubmitArticle = async () => {
     linkedArticlesSplitRatios: [3334, 3333, 3333]
   };
 
-  let dataInHex = getArticleHex(article);
-  let articleHashHex = '0x' + article.articleHash;
+  const dataInHex = getArticleHex(article);
+  const articleHashHex = '0x' + article.articleHash;
 
   await submitArticle(
     EurekaTokenContract,
-    contractOwner,
+    accounts[1],
     EurekaPlatformContract.options.address,
     5000,
     dataInHex
@@ -91,26 +92,26 @@ const testSubmitArticle = async () => {
 
   console.log(
     'The balance of the service contract is ' +
-      (await getBalanceOf(
-        EurekaTokenContract,
-        EurekaPlatformContract.options.address
-      ))
+    (await getBalanceOf(
+      EurekaTokenContract,
+      EurekaPlatformContract.options.address
+    ))
   );
   console.log(
     'URL of the article: ' +
-      (await getUrl(EurekaPlatformContract, articleHashHex, contractOwner))
+    (await getUrl(EurekaPlatformContract, articleHashHex, contractOwner))
   );
   console.log(
     'Authors: ' +
-      (await getAuthors(EurekaPlatformContract, articleHashHex, contractOwner))
+    (await getAuthors(EurekaPlatformContract, articleHashHex, contractOwner))
   );
   console.log(
     'Linked articles: ' +
-      (await getLinkedArticles(
-        EurekaPlatformContract,
-        articleHashHex,
-        contractOwner
-      ))
+    (await getLinkedArticles(
+      EurekaPlatformContract,
+      articleHashHex,
+      contractOwner
+    ))
   );
   console.log(
     (await getArticleVersion(

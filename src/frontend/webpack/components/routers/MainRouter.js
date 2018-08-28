@@ -60,7 +60,6 @@ class MainRouter extends Component {
         if (response.success) {
           let user = response.data.user;
           user.roles.push(Roles.USER);
-          user.roles.push(Roles.CONTRACT_OWNER);
           this.setState({
             user,
             isAuthenticated: response.data.isAuthenticated
