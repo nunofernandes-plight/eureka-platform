@@ -65,7 +65,7 @@ const SeparatorContainer = styled.div`
   align-items: center;
   margin-left: 14px;
   margin-right: 14px;
-  margin-top: 30px;
+  margin-top: 15px;
   margin-bottom: 5px;
   min-height: 15px;
 `;

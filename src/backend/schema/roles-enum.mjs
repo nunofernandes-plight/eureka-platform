@@ -5,7 +5,7 @@ const Roles = Object.freeze({
   CONTRACT_OWNER: 'CONTRACT_OWNER',
   ADMIN: 'ADMIN',
   EDITOR: 'EDITOR',
-  REVIEWER: 'REVIEWER'
+  USER: 'USER',
 });
 
 export default Roles;
