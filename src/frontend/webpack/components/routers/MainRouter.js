@@ -59,8 +59,8 @@ class MainRouter extends Component {
         console.log('fetching works');
         if (response.success) {
           let user = response.data.user;
+          console.log(user);
           user.roles.push(Roles.USER);
-          user.roles.push(Roles.CONTRACT_OWNER);
           this.setState({
             user,
             isAuthenticated: response.data.isAuthenticated
