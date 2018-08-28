@@ -123,16 +123,17 @@ class PanelLeft extends Component {
               </div>
             );
           })}
+
+          <MobileMode>
+            <MobileModeTitle>Toggle menu</MobileModeTitle>
+            <ToggleButton
+              checked={this.props.checked}
+              isMobileMode={isMobileMode => {
+                this.props.isMobileMode(isMobileMode);
+              }}
+            />
+          </MobileMode>
         </Items>{' '}
-        <MobileMode>
-          <MobileModeTitle>Toggle menu</MobileModeTitle>
-          <ToggleButton
-            checked={this.props.checked}
-            isMobileMode={isMobileMode => {
-              this.props.isMobileMode(isMobileMode);
-            }}
-          />
-        </MobileMode>
       </Container>
     );
   }

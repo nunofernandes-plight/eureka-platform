@@ -304,23 +304,18 @@ class DocumentEditor extends Component {
   async submit() {
     const ARTICLE1 = {
       articleHash: this.state.inputData.hash,
-      url: this.state.inputData.url,
-      authors: [
-        this.props.selectedAccount.address,
-        '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'
-      ],
+      url: 'u', //this.state.inputData.url,
+      authors: [this.props.selectedAccount.address],
       contributorRatios: [4000, 6000],
       linkedArticles: [
-        '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
-        '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
-        'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
+        '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015'
       ],
       linkedArticlesSplitRatios: [3334, 3333, 3333]
     };
 
     // SC call
     const ARTICLE1_DATA_IN_HEX = getArticleHex(this.props.web3, ARTICLE1);
-    const receipt = await submitArticle(
+    await submitArticle(
       this.props.tokenContract,
       this.props.selectedAccount.address,
       this.props.platformContract.options.address,
