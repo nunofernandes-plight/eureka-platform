@@ -7,6 +7,8 @@ import TopContainer from '../../views/TopContainer.js';
 import {BottomContainer} from '../../views/BottomContainer.js';
 import ArticlesRouter from './ArticlesRouter.js';
 import AddressBook from '../AddressBook.js';
+import ContractOwnerDashboard from '../ContractOwnerDashboard.js';
+import {ContractOwnerGuard} from '../guards/Guards.js';
 
 class DashboardRouter extends Component {
   constructor() {
@@ -28,6 +30,19 @@ class DashboardRouter extends Component {
             exact
             path={`${this.props.base}/dashboard`}
             render={() => <Dashboard />}
+          />
+
+          <Route
+            exact
+            path={`${this.props.base}/owner`}
+            render={() => (
+              <ContractOwnerGuard roles={this.props.user.roles}>
+                <ContractOwnerDashboard
+                  web3={this.props.web3}
+                  selectedAccount={this.props.selectedAccount}
+                />
+              </ContractOwnerGuard>
+            )}
           />
 
           <Route

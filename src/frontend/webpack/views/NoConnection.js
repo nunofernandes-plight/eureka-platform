@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import GridSpinner from './views/spinners/GridSpinner.js';
+import GridSpinner from './spinners/GridSpinner.js';
 
 const Container = styled.div`
   display: flex;
