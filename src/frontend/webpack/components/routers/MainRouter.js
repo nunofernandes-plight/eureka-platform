@@ -59,7 +59,6 @@ class MainRouter extends Component {
         console.log('fetching works');
         if (response.success) {
           let user = response.data.user;
-          // TODO: remove this! FAKE JUST FOR TESTING
           user.roles.push(Roles.USER);
           user.roles.push(Roles.CONTRACT_OWNER);
           this.setState({
