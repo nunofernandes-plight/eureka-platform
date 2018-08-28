@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__ALERT_ERROR, __FIFTH} from '../../helpers/colors.js';
+import {__FIFTH} from '../../helpers/colors.js';
 
 const Container = styled.div``;
 

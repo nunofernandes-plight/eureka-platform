@@ -72,8 +72,6 @@ const MyLink = styled(Link)`
   text-decoration: none;
 `;
 
-const Preview = styled.td``;
-
 const Authors = styled.td`
   ${MEDIUM_DEVICES`
     display: none; 

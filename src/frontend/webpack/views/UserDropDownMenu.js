@@ -1,13 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import {
-	__ALERT_ERROR,
-	__FIFTH,
-	__GRAY_100,
 	__GRAY_200,
-	__THIRD
 } from '../../helpers/colors.js';
-import {getDomain} from '../../../helpers/getDomain.js';
 import Icon from './icons/Icon.js';
 import {Items} from './UserDropDownItems.js';
 import EurekaLogo from './icons/EurekaLogo.js';

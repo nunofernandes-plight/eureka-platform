@@ -11,10 +11,6 @@ import ContractOwnerDashboard from '../ContractOwnerDashboard.js';
 import {ContractOwnerGuard} from '../guards/Guards.js';
 
 class DashboardRouter extends Component {
-  constructor() {
-    super();
-  }
-
   render() {
     return (
       <div>

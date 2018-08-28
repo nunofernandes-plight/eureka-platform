@@ -98,7 +98,7 @@ class PanelLeft extends Component {
         <Items>
           {Routes.map((route, i) => {
             return (
-              <div>
+              <div key={i}>
                 {route.separator &&
                 this.props.user.roles.includes(route.role) ? (
                   <Separator

@@ -19,8 +19,8 @@ import {
 class App extends Component {
   constructor() {
     super();
-    const EUREKA_PLATFORM_PROD_ADDRESS = ''; // TODO: change this to the EUREKA_PLATFORM_PROD_ADDRESS once deployed
-    const EUREKA_TOKEN_PROD_ADDRESS = ''; // TODO: change this to the EUREKA_TOKEN_PROD_ADDRESS once deployed
+    // const EUREKA_PLATFORM_PROD_ADDRESS = ''; // TODO: change this to the EUREKA_PLATFORM_PROD_ADDRESS once deployed
+    // const EUREKA_TOKEN_PROD_ADDRESS = ''; // TODO: change this to the EUREKA_TOKEN_PROD_ADDRESS once deployed
     const web3 = window.web3;
     let web3Instance = null;
     let platformContract = null;

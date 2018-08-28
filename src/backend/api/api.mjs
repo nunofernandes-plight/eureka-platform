@@ -10,6 +10,8 @@ import {isProduction} from '../../helpers/isProduction.mjs';
 import router from '../routes/index.mjs';
 import contractEventListener from '../controller/contract-event-controller.mjs';
 import uploadRouter from '../routes/file-upload.routes.mjs';
+import {getContractOwner} from '../web3/web3-platform-contract-methods';
+import ContractOwner from '../schema/contract-owner.mjs';
 
 if (!isProduction) {
   dotenv.config();
@@ -56,6 +58,7 @@ export default {
     // if(!isProduction()) { swap to that
     if (eurekaPlatformContract) {
       contractEventListener.setup(eurekaPlatformContract);
+      writeContractOwnerInDB(ContractOwner, eurekaPlatformContract);
     } else {
       // TODO setup with constant public address
     }
@@ -65,6 +68,7 @@ export default {
       res.locals.isAuthenticated = req.isAuthenticated();
       next();
     });
+
 
     //Parses the text as JSON and exposes the resulting object on req.body.
     app.use(bodyParser.json());
@@ -81,3 +85,20 @@ export default {
     server.close();
   }
 };
+
+
+async function writeContractOwnerInDB(contractOwnerModel ,contract) {
+  const id = 1;
+  const contractOwnerAddress = await getContractOwner(contract);
+  let contractOwner = await ContractOwner.findById(id);
+  if(!contractOwner) {
+    contractOwner = new ContractOwner({
+      _id: id,
+      address: contractOwnerAddress
+    });
+  } else {
+    contractOwner.address = contractOwnerAddress;
+  }
+  await contractOwner.save();
+  return 'ContractOwner saved in DB';
+}
