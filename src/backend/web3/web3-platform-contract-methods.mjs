@@ -1,5 +1,12 @@
 import web3 from './web3Instance.mjs';
 
+export const getContractOwner = (contract) => {
+  return contract.methods.contractOwner().call((err, res) => {
+    if(err) throw err;
+    return res;
+  });
+};
+
 export const signUpEditor = (contract, editor, _from) => {
   return contract.methods
     .signUpEditor(editor)
