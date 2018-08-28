@@ -99,7 +99,13 @@ class PanelLeft extends Component {
           {Routes.map((route, i) => {
             return (
               <div>
-                {route.separator ? <Separator isMobileMode={this.props.checked} text={route.separator} /> : null}
+                {route.separator &&
+                this.props.user.roles.includes(route.role) ? (
+                  <Separator
+                    isMobileMode={this.props.checked}
+                    text={route.separator}
+                  />
+                ) : null}
                 {this.props.user.roles.includes(route.role) ? (
                   <NavItem
                     key={i}
