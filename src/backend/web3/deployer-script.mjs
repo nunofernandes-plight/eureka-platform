@@ -76,6 +76,7 @@ const setup = async (eurekaTokenContract, eurekaPlatformContract) => {
     contractOwner
   );
   await finishMinting(eurekaTokenContract, contractOwner);
+  console.log('The EKA token minting has been finished.');
 };
 
 deploy();
