@@ -13,7 +13,7 @@ const getOptions = (type, mainDisciplines, values) => {
 		mainDisciplines.map(main => {
 			return getSubdisciplines(main);
 		})
-	).map(d => new Object({label: d, value: d}));
+	).map(d => ({label: d, value: d}));
 };
 
 const DocumentSubDisciplinePicker = props => {

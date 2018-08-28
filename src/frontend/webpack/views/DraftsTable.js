@@ -6,8 +6,7 @@ import {
 	__GRAY_600,
 	__GRAY_200,
 	__THIRD,
-	__FIFTH,
-	__GRAY_100
+	__FIFTH
 } from '../../helpers/colors.js';
 import {renderField} from '../components/editor/DocumentRenderer.js';
 import {renderTimestamp} from '../../helpers/timestampRenderer.js';

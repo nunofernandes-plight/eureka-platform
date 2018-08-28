@@ -33,7 +33,7 @@ const DocumentObservationTypePicker = props => {
 					);
 				}}
 				options={ObservationTypeModel.all.map(o => {
-					return new Object({value: o.name, label: o.title, hint: o.hint});
+					return ({value: o.name, label: o.title, hint: o.hint});
 				})}
 			/>
 		</div>
