@@ -318,32 +318,6 @@ class DocumentEditor extends Component {
       linkedArticlesSplitRatios: [3334, 3333, 3333]
     };
 
-    // normal API call for storing hash into the db
-    const draftId = this.props.match.params.id;
-    fetch(`${getDomain()}/api/articles/drafts/${draftId}/submit`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        articleHash: '0x' + ARTICLE1.articleHash
-      })
-    })
-      .then(response => response.json())
-      .then(async response => {
-        if (!response.success) {
-          this.setState({errorMessage: response.error});
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({
-          errorMessage: 'Ouh. Something went wrong.',
-          loading: false
-        });
-      });
-
     // SC call
     const ARTICLE1_DATA_IN_HEX = getArticleHex(this.props.web3, ARTICLE1);
     const receipt = await submitArticle(
@@ -354,7 +328,33 @@ class DocumentEditor extends Component {
       ARTICLE1_DATA_IN_HEX
     )
       .on('transactionHash', tx => {
-        this.props.history.push(`${this.props.base}/submitted?tx=${tx}`);
+        // normal API call for storing hash into the db
+        const draftId = this.props.match.params.id;
+        fetch(`${getDomain()}/api/articles/drafts/${draftId}/submit`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            articleHash: '0x' + ARTICLE1.articleHash
+          })
+        })
+          .then(response => response.json())
+          .then(async response => {
+            if (!response.success) {
+              this.setState({errorMessage: response.error});
+            } else {
+              this.props.history.push(`${this.props.base}/submitted?tx=${tx}`);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            this.setState({
+              errorMessage: 'Ouh. Something went wrong.',
+              loading: false
+            });
+          });
       })
       .on('receipt', receipt => {
         console.log(
@@ -366,11 +366,10 @@ class DocumentEditor extends Component {
         console.error('submitArticle error: ', err);
         this.setState({
           errorMessage:
-            'Ouh. Something went wrong with the Smart Contract call.'
+            'Ouh. Something went wrong with the Smart Contract call: ' +
+            err.toString()
         });
       });
-
-    console.log(receipt);
   }
 
   renderTitle() {
@@ -514,6 +513,7 @@ class DocumentEditor extends Component {
             this.setState({showSubmitModal});
           }}
           callback={() => {
+            this.setState({showSubmitModal: false});
             this.submit();
           }}
           show={this.state.showSubmitModal}

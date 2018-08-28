@@ -74,7 +74,8 @@ const MobileMode = styled.div`
   background: white;
   width: 100%;
   z-index: 10;
-  margin-top: 15px;
+  margin-top: 30px;
+  margin-bottom: 5px;
 
   ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
     display: none;`};
