@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import {NavLink} from 'react-router-dom';
 import {
-	__GRAY_200,
-	__GRAY_300,
-	__GRAY_500,
-	__SECOND,
-	__THIRD
+  __GRAY_200,
+  __GRAY_300,
+  __GRAY_500,
+  __SECOND,
+  __THIRD
 } from '../../helpers/colors.js';
 import {MAKE_MOBILE} from '../../helpers/mobile.js';
 import {PANEL_LEFT_BREAK_POINT} from '../../helpers/layout.js';
@@ -41,7 +41,7 @@ const MyNavLink = styled(NavLink)`
 `;
 
 MyNavLink.defaultProps = {
-	activeClassName: 'active'
+  activeClassName: 'active'
 };
 
 const SeparatorDiv = styled.div`
@@ -61,13 +61,16 @@ const SeparatorText = styled.div`
 `;
 
 const SeparatorContainer = styled.div`
-  display: flex;
+  display: ${props => (props.isMobileMode ? 'none' : 'flex')};
   align-items: center;
   margin-left: 14px;
   margin-right: 14px;
   margin-top: 15px;
   margin-bottom: 5px;
   min-height: 15px;
+
+  ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
+    display: none;`};
 `;
 
 const LinkName = styled.div`
@@ -83,28 +86,28 @@ const IconContainer = styled.div`
 `;
 
 export const NavItem = props => {
-	return (
-		<MyNavLink to={`${props.base}/${props.path}`}>
-			<IconContainer {...props}>
-				<Icon
-					material={props.material}
-					icon={props.icon}
-					{...props}
-					right={8}
-					bottom={4}
-				/>
-			</IconContainer>
-			<LinkName isMobileMode={props.isMobileMode}>{props.children}</LinkName>
-		</MyNavLink>
-	);
+  return (
+    <MyNavLink to={`${props.base}/${props.path}`}>
+      <IconContainer {...props}>
+        <Icon
+          material={props.material}
+          icon={props.icon}
+          {...props}
+          right={8}
+          bottom={4}
+        />
+      </IconContainer>
+      <LinkName isMobileMode={props.isMobileMode}>{props.children}</LinkName>
+    </MyNavLink>
+  );
 };
 
 export const Separator = props => {
-	return (
-		<SeparatorContainer>
-			<SeparatorDiv width={35} />
-			<SeparatorText>{props.text}</SeparatorText>
-			<SeparatorDiv width={100} />
-		</SeparatorContainer>
-	);
+  return (
+    <SeparatorContainer {...props}>
+      <SeparatorDiv width={35} />
+      <SeparatorText>{props.text}</SeparatorText>
+      <SeparatorDiv width={100} />
+    </SeparatorContainer>
+  );
 };
