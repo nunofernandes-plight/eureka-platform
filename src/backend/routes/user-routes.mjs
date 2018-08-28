@@ -11,15 +11,12 @@ router.use(accesController.loggedInOnly);
 router.get(
   '/data',
   asyncHandler(async req => {
-    if (!req.user) {
-      errorThrower.notLoggedIn();
-    }
+    let user = await userService.getUserByEthereumAddress(req.user.ethereumAddress);
 
-    const requesterAddress = req.session.passport.user.ethereumAddress;
-    if (requesterAddress !== req.user.ethereumAddress) {
-      errorThrower.notCorrectEthereumAddress();
-    }
-    return await userService.getUserByEthereumAddress(req.user.ethereumAddress);
+    return {
+      user: user,
+      isAuthenticated: req.isAuthenticated()
+    };
   })
 );
 
