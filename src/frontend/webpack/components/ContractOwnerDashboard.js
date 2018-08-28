@@ -6,6 +6,11 @@ import {InputField} from '../design-components/Inputs.js';
 import Icon from '../views/icons/Icon.js';
 import {Methods} from './routers/ContractOwnerMethods.js';
 import {__GRAY_200, __GRAY_700, __THIRD} from '../../helpers/colors.js';
+import {signUpEditor} from '../../../backend/web3/web3-platform-contract-methods.mjs';
+import Modal from '../design-components/Modal.js';
+import 'react-toastify/dist/ReactToastify.css';
+import '../design-components/Notification.css';
+import {ToastContainer, toast} from 'react-toastify';
 
 const Container = styled.div`
   display: flex;
@@ -68,18 +73,53 @@ class ContractOwnerDashboard extends React.Component {
     super();
     this.state = {
       mintingAddress: null,
-      editorAddress: null
+      editorAddress: null,
+      errorMessage: null
     };
   }
 
   action(stateKey) {
     switch (stateKey) {
-      case 'mint':
+      case 'mintingAddress':
         break;
 
+      case 'editorAddress':
+        this.assignEditor();
+        break;
       default:
         break;
     }
+  }
+
+  async assignEditor() {
+    const receipt = await signUpEditor(
+      this.props.platformContract,
+      this.state.editorAddress,
+      this.props.selectedAccount.address
+    )
+      .on('transactionHash', tx => {
+        toast(
+          'We got your request in our Smart Contract. You can track the transaction at the following tx hash: ' +
+            tx,
+          {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 20000,
+            className: '__ALERT_SUCCESS',
+            progressClassName: '__BAR'
+          }
+        );
+      })
+      .on('receipt', receipt => {
+        return receipt;
+      })
+      .catch(err => {
+        console.error('submitArticle error: ', err);
+        this.setState({
+          errorMessage:
+            'Ouh. Something went wrong with the Smart Contract call: ' +
+            err.toString()
+        });
+      });
   }
 
   handleInput(stateKey, e) {
@@ -97,9 +137,26 @@ class ContractOwnerDashboard extends React.Component {
     }
   }
 
+  renderModals() {
+    return (
+      <Modal
+        type={'notification'}
+        toggle={isErrorMessage => {
+          this.setState({errorMessage: null});
+        }}
+        show={this.state.errorMessage}
+        title={'You got the following error'}
+      >
+        {this.state.errorMessage}
+      </Modal>
+    );
+  }
   render() {
     return (
       <Container>
+        {' '}
+        <ToastContainer />
+        {this.renderModals()}
         <Card
           style={{padding: '50px'}}
           width={1000}
