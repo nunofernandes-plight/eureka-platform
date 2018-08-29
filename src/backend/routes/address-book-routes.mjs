@@ -14,7 +14,7 @@ router.get(
   })
 );
 
-router.put(
+router.post(
   '/',
   asyncHandler(async req => {
     return addressBookService.createContact(req.user.ethereumAddress, req.body);
