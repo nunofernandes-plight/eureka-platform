@@ -27,6 +27,7 @@ import Document from '../../../models/Document.mjs';
 import DocumentTitle from './editor/DocumentTitle.js';
 import DocumentFigures from './editor/DocumentFigures.js';
 import DocumentAuthors from './editor/DocumentAuthors.js';
+import DocumentAuthorsSelection from './editor/DocumentAuthorsSelection.js';
 import DocumentLeftPart from './editor/DocumentLeftPart.js';
 import DocumentRightPart from './editor/DocumentRightPart.js';
 
@@ -66,7 +67,6 @@ const ButtonContainer = styled.div`
 `;
 const Button = styled.button``;
 
-
 class DocumentEditor extends Component {
   constructor() {
     super();
@@ -80,6 +80,7 @@ class DocumentEditor extends Component {
       saving: false,
       saved: false,
       showSubmitModal: false,
+      addAuthorModal: false,
       inputData: {
         url: null,
         hash: null,
@@ -301,45 +302,6 @@ class DocumentEditor extends Component {
       });
   }
 
-  renderTitle() {
-    return (
-      <DocumentTitle
-        document={this.state.document}
-        onTitleChange={title => {
-          this.onTitleChange(title);
-        }}
-      />
-    );
-  }
-
-  renderAuthors() {
-    return <DocumentAuthors document={this.state.document} />;
-  }
-
-  renderSelectMenus() {
-    return (
-      <div>
-        <DocumentPickers
-          document={this.state.document}
-          updateDocument={({document}) => {
-            this.updateDocument({document});
-          }}
-          save={() => this.save()}
-        />
-      </div>
-    );
-  }
-
-  renderFigures() {
-    return (
-      <DocumentFigures
-        document={this.state.document}
-        updateDocument={({document}) => {
-          this.updateDocument({document});
-        }}
-      />
-    );
-  }
   renderModals() {
     return (
       <div>
@@ -374,6 +336,20 @@ class DocumentEditor extends Component {
           new article hash, i.e., a new manuscript version.
           <SmartContractInputData inputData={this.state.inputData} />
         </Modal>
+        <Modal
+          action={'SAVE'}
+          toggle={addAuthorModal => {
+            this.setState({addAuthorModal});
+          }}
+          callback={() => {
+            this.save();
+            this.setState({addAuthorModal: false});
+          }}
+          show={this.state.addAuthorModal}
+          title={'Search and add authors for your manuscript.'}
+        >
+          <DocumentAuthorsSelection document={this.state.document} />
+        </Modal>
       </div>
     );
   }
@@ -396,10 +372,42 @@ class DocumentEditor extends Component {
                   title={'Write your article'}
                 >
                   <EditorContent>
-                    <Line>{this.renderTitle()}</Line>
-                    <Line>{this.renderAuthors()}</Line>
-                    <Line>{this.renderSelectMenus()}</Line>
-                    <Line>{this.renderFigures()}</Line>
+                    <Line>
+                      {' '}
+                      <DocumentTitle
+                        document={this.state.document}
+                        onTitleChange={title => {
+                          this.onTitleChange(title);
+                        }}
+                      />
+                    </Line>
+                    <Line>
+                      {' '}
+                      <DocumentAuthors
+                        addAuthor={() => {
+                          this.setState({addAuthorModal: true});
+                        }}
+                        document={this.state.document}
+                      />
+                    </Line>
+                    <Line>
+                      <DocumentPickers
+                        document={this.state.document}
+                        updateDocument={({document}) => {
+                          this.updateDocument({document});
+                        }}
+                        save={() => this.save()}
+                      />
+                    </Line>
+                    <Line>
+                      {' '}
+                      <DocumentFigures
+                        document={this.state.document}
+                        updateDocument={({document}) => {
+                          this.updateDocument({document});
+                        }}
+                      />
+                    </Line>
                   </EditorContent>
                   <ButtonContainer>
                     <Button
