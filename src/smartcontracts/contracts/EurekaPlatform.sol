@@ -187,8 +187,7 @@ contract EurekaPlatform {
     event SubmissionProcessStart(uint256 submissionId, address submissionOwner, bytes32 articleHash, bytes32 articleURL);
 
     function startSubmissionProcess(
-//        address _from,
-//        uint256 _value,
+    //        uint256 _value,
         bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
         uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) public {
 
