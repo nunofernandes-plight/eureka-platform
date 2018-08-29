@@ -138,8 +138,6 @@ export default {
       articleHash: articleHash
     }).populate('editorApprovedReviews');
 
-    console.log(articleVersion);
-
     const reviewId = articleVersion.editorApprovedReviews.find((review) => {
       return review.reviewerAddress === reviewerAddress;
     });
@@ -147,16 +145,12 @@ export default {
 
 
     let review = await Review.findById(reviewId);
-    console.log(review);
     review.reviewState = ReviewState.DECLINED;
     review.stateTimestamp = stateTimestamp;
-    console.log(review);
-
     await review.save();
 
 
     let review2 = await Review.findById(review._id);
-    console.log(review2);
     return 'Decline of review ' + reviewId;
   }
 };

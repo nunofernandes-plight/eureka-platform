@@ -10,7 +10,7 @@ import {isProduction} from '../../helpers/isProduction.mjs';
 import router from '../routes/index.mjs';
 import contractEventListener from '../controller/contract-event-controller.mjs';
 import uploadRouter from '../routes/file-upload.routes.mjs';
-import {getContractOwner} from '../web3/web3-platform-contract-methods';
+import {getContractOwner} from '../web3/web3-platform-contract-methods.mjs';
 import ContractOwner from '../schema/contract-owner.mjs';
 
 if (!isProduction) {
@@ -100,5 +100,6 @@ async function writeContractOwnerInDB(contractOwnerModel ,contract) {
     contractOwner.address = contractOwnerAddress;
   }
   await contractOwner.save();
+  //mongooseDB.connection.close();
   return 'ContractOwner saved in DB';
 }

@@ -8,6 +8,13 @@ import accesController from '../controller/acess-controller.mjs';
 import Roles from '../schema/roles-enum.mjs';
 
 router.use(accesController.loggedInOnly);
+router.get('/',
+  asyncHandler(async req => {
+    console.log(req.query);
+  })
+);
+
+
 router.get(
   '/data',
   asyncHandler(async req => {

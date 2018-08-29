@@ -5,7 +5,7 @@ import ArticleSubmission from '../schema/article-submission.mjs';
 import {isValidAddress} from '../../helpers/isValidEthereumAddress.mjs';
 import userService from '../db/user-service.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
-import ContractOwner from '../schema/contract-owner';
+import ContractOwner from '../schema/contract-owner.mjs';
 
 export default {
   /**
@@ -129,15 +129,16 @@ export default {
   },
 
   makeEditor: async ethereumAddress => {
-    User.findOneAndUpdate(
-      {ethereumAddress: ethereumAddress},
-      {$addToSet: { roles: Roles.EDITOR }},
-      (err, user) => {
-        if (err) throw err;
-        console.log('User ' + user.ethereumAddress + ' has become an Editor');
-        return user;
-      }
-    );
+    let user = await User.findOne({ethereumAddress: ethereumAddress});
+    if(!user){
+      errorThrower.noEntryFoundById(ethereumAddress);
+    }
+
+    if(!user.roles.includes(Roles.EDITOR)) {
+      user.roles.push(Roles.EDITOR);
+    }
+
+    await user.save();
   },
 
   /**
@@ -153,7 +154,6 @@ export default {
       error.status = 400;
       throw error;
     }
-
     User.findOneAndUpdate(
       {ethereumAddress: ethereumAddress},
       {$push: {articleSubmissions: articleSubmission}},
