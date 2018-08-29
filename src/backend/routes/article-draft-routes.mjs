@@ -117,6 +117,17 @@ router.put(
   })
 );
 
+router.put(
+  '/:draftId/revert',
+  asyncHandler(async req => {
+    const ethereumAddress = req.session.passport.user.ethereumAddress;
+    if (!ethereumAddress) errorThrower.notLoggedIn();
+
+    const draftId = req.params.draftId;
+    return await articleVersionService.revertToDraft(ethereumAddress, draftId);
+  })
+);
+
 
 /********* ADMIN AREA *********/
 router.use(accesController.rolesOnly(Roles.ADMIN));
