@@ -197,7 +197,6 @@ export default {
           event.returnValues.reviewer,
           event.returnValues.stateTimestamp
         );
-        console.log('ACCEPTION WORKED');
       }
     );
 
@@ -211,7 +210,6 @@ export default {
           event.returnValues.reviewer,
           event.returnValues.stateTimestamp
         );
-        console.log('DECLINED WORKED');
       }
     );
   }

@@ -34,6 +34,8 @@ class DashboardRouter extends Component {
             render={() => (
               <ContractOwnerGuard roles={this.props.user.roles}>
                 <ContractOwnerDashboard
+                  tokenContract={this.props.tokenContract}
+                  platformContract={this.props.platformContract}
                   web3={this.props.web3}
                   selectedAccount={this.props.selectedAccount}
                 />

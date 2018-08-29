@@ -37,7 +37,11 @@ export default {
     let error = new Error('Missing parameter was not provided: ' + param);
     error.status = 400;
     throw error;
-
+  },
+  missingQueryParameter: (queryparam) => {
+    let error = new Error('Missing Query parameter was not provided: ' + queryparam);
+    error.status = 400;
+    throw error;
   },
   missingBodyValue: (value) => {
     let error = new Error('Missing body-value was not provided: ' + value);
@@ -55,4 +59,6 @@ export default {
     error.status = 400;
     throw error;
   }
+
+
 }

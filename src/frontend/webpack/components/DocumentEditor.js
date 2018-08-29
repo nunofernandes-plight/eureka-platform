@@ -304,50 +304,19 @@ class DocumentEditor extends Component {
   async submit() {
     const ARTICLE1 = {
       articleHash: this.state.inputData.hash,
-      url: this.state.inputData.url,
-      authors: [
-        this.props.selectedAccount.address,
-        '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'
-      ],
+      url: 'u', //this.state.inputData.url,
+      authors: [this.props.selectedAccount.address],
       contributorRatios: [4000, 6000],
       linkedArticles: [
-        '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
-        '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
-        'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
+        '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015'
       ],
       linkedArticlesSplitRatios: [3334, 3333, 3333]
     };
 
-    // normal API call for storing hash into the db
-    const draftId = this.props.match.params.id;
-    fetch(`${getDomain()}/api/articles/drafts/${draftId}/submit`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        articleHash: '0x' + ARTICLE1.articleHash
-      })
-    })
-      .then(response => response.json())
-      .then(async response => {
-        if (!response.success) {
-          this.setState({errorMessage: response.error});
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({
-          errorMessage: 'Ouh. Something went wrong.',
-          loading: false
-        });
-      });
-
     // SC call
     const ARTICLE1_DATA_IN_HEX = getArticleHex(this.props.web3, ARTICLE1);
 
-    const receipt = await submitArticle(
+    await submitArticle(
       this.props.tokenContract,
       this.props.selectedAccount.address,
       this.props.platformContract.options.address,
@@ -356,7 +325,33 @@ class DocumentEditor extends Component {
       80000000
     )
       .on('transactionHash', tx => {
-        this.props.history.push(`${this.props.base}/submitted?tx=${tx}`);
+        // normal API call for storing hash into the db
+        const draftId = this.props.match.params.id;
+        fetch(`${getDomain()}/api/articles/drafts/${draftId}/submit`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            articleHash: '0x' + ARTICLE1.articleHash
+          })
+        })
+          .then(response => response.json())
+          .then(async response => {
+            if (!response.success) {
+              this.setState({errorMessage: response.error});
+            } else {
+              this.props.history.push(`${this.props.base}/submitted?tx=${tx}`);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            this.setState({
+              errorMessage: 'Ouh. Something went wrong.',
+              loading: false
+            });
+          });
       })
       .on('receipt', receipt => {
         console.log(
@@ -368,11 +363,10 @@ class DocumentEditor extends Component {
         console.error('submitArticle error: ', err);
         this.setState({
           errorMessage:
-            'Ouh. Something went wrong with the Smart Contract call.'
+            'Ouh. Something went wrong with the Smart Contract call: ' +
+            err.toString()
         });
       });
-
-    console.log(receipt);
   }
 
   renderTitle() {
@@ -516,6 +510,7 @@ class DocumentEditor extends Component {
             this.setState({showSubmitModal});
           }}
           callback={() => {
+            this.setState({showSubmitModal: false});
             this.submit();
           }}
           show={this.state.showSubmitModal}

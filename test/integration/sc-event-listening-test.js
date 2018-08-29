@@ -132,7 +132,7 @@ test.beforeEach(async () => {
 });
 
 test.afterEach(async () => {
-  app.close();
+  await app.close();
   await cleanDB();
 });
 
@@ -170,15 +170,14 @@ test(PRETEXT + 'Sign up Editor', async t => {
 
   let user = await userService.getUserByEthereumAddress(contractOwner);
   // t.is(user.isEditor, false);
-  t.is(user.roles.length, 0);
+  t.is(user.roles.length, 1);
+  t.is(user.roles[0], Roles.CONTRACT_OWNER);
 
   await signUpEditor(eurekaPlatformContract, contractOwner, contractOwner);
 
   user = await userService.getUserByEthereumAddress(contractOwner);
-  t.is(user.roles.length, 1);
-  t.is(user.roles[0], Roles.EDITOR);
-
-
+  t.is(user.roles.length, 2);
+  t.is(user.roles[1], Roles.EDITOR);
 });
 
 test(PRETEXT + 'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED', async t => {
@@ -407,10 +406,10 @@ test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitatio
   let review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, articleVersion.editorApprovedReviews[1]);
   counter = 0;
   while (
-    review.reviewState === ReviewState.INVITED &&
+    review2.reviewState === ReviewState.INVITED &&
     counter < 5) {
     sleepSync(5000);
-    review = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.editorApprovedReviews[1]);
+    review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, articleVersion.editorApprovedReviews[1]);
     counter++;
   }
   t.is(review2.reviewState, ReviewState.INVITATION_ACCEPTED);
@@ -469,9 +468,12 @@ test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitatio
 
 
   // Write a community review as reviewer3
+  t.is(articleVersion.communityReviews.length, 0);
   let review3 = await reviewService.addNewCommunitydReview(reviewer3.ethereumAddress, articleVersion.articleHash,
     REVIEW3.reviewText, REVIEW3_HASH_HEX, REVIEW3.score1, REVIEW3.score2, REVIEW3.articleHasMajorIssues, REVIEW3.articleHasMinorIssues);
   review3 = await reviewService.getReviewById(reviewer3.ethereumAddress, review3._id);
+  articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
+  t.is(articleVersion.communityReviews.length, 1);
 
   t.is(review3.reviewState, ReviewState.HANDED_IN_DB);
   await addCommunityReview(eurekaPlatformContract, articleVersion.articleHash, REVIEW3_HASH_HEX, REVIEW3.articleHasMajorIssues,

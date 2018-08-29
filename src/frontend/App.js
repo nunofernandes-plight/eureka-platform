@@ -49,8 +49,8 @@ class App extends Component {
       provider = Web3Providers.LOCALHOST;
     }
 
-    console.log(tokenContract.options.address);
-    console.log(platformContract.options.address);
+    console.log('Token Contract ' + tokenContract.options.address);
+    console.log('Platform Contract ' + platformContract.options.address);
 
     this.state = {
       web3: web3Instance,

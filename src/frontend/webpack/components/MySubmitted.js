@@ -1,13 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import {withRouter} from 'react-router-dom';
-import {ToastContainer} from 'react-toastify';
 import {Card} from '../views/Card.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import Modal from '../design-components/Modal.js';
 import SubmittedTable from '../views/SubmittedTable.js';
-import 'react-toastify/dist/ReactToastify.css';
-import '../design-components/Notification.css';
 
 const Container = styled.div``;
 
@@ -123,7 +120,6 @@ class MySubmitted extends React.Component {
     return (
       <Container>
         {this.renderModals()}
-        <ToastContainer />
         <Card width={1000} title={'My Submitted Documents'}>
           <SubmittedTable
             base={this.props.base}

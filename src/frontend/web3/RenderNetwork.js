@@ -44,6 +44,9 @@ const getColor = network => {
 };
 
 const RenderNetwork = props => {
+  if (!props.network) {
+    return null;
+  }
   return (
     <NetworkContainer network={props.network}>
       {props.network}{' '}
