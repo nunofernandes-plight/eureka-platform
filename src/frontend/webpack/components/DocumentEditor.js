@@ -1,5 +1,3 @@
-import Editor from 'draft-js-plugins-editor';
-import createSingleLinePlugin from 'draft-js-single-line-plugin';
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import styled from 'styled-components';
@@ -8,7 +6,6 @@ import {getDomain} from '../../../helpers/getDomain.js';
 import GridSpinner from '../views/spinners/GridSpinner.js';
 import Toolbar from './editor/Toolbar.js';
 import {__GRAY_500, __GRAY_600} from '../../helpers/colors.js';
-import {customStyleMap} from '../../helpers/customStyleMap.js';
 import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
 import TitleWithHelper from './editor/TitleWithHelper.js';
@@ -19,7 +16,6 @@ import {
 } from '../../../helpers/documentSerializer.mjs';
 import getChangedFields from '../../../helpers/compareDocuments.js';
 import {pick, debounce} from 'underscore';
-import Requirement from '../../../models/Requirement.mjs';
 import DocumentPickers from './editor/DocumentPickers.js';
 import Icon from '../views/icons/Icon.js';
 import Modal from '../../webpack/design-components/Modal.js';
@@ -30,7 +26,14 @@ import SmartContractInputData from '../views/SmartContractInputData.js';
 import {getArticleHex} from '../../web3/Helpers.js';
 import {SUBMISSION_PRICE} from '../constants/Constants.js';
 import {submitArticle} from '../../../backend/web3/web3-token-contract-methods.mjs';
-const titleStyle = () => 'title';
+import {
+  fetchArticle,
+  fetchSubmit,
+  revertArticleToDraft,
+  saveArticle
+} from './editor/DocumentMainMethods.js';
+import ARTICLE_VERSION_STATE from '../../../backend/schema/article-version-state-enum.mjs';
+import DocumentTitle from './editor/DocumentTitle.js';
 
 const Parent = styled.div`
   display: flex;
@@ -82,9 +85,6 @@ const Line = styled.div`
   margin: 15px 0;
 `;
 
-const TitleContainer = styled.div`
-  color: inherit;
-`;
 const ButtonContainer = styled.div`
   align-self: center;
 `;
@@ -160,13 +160,7 @@ class DocumentEditor extends Component {
   componentDidMount() {
     this.setState({loading: true});
     const draftId = this.props.match.params.id;
-    fetch(`${getDomain()}/api/articles/drafts/${draftId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    })
+    fetchArticle(draftId)
       .then(response => response.json())
       .then(response => {
         if (response.success) {
@@ -193,7 +187,11 @@ class DocumentEditor extends Component {
       });
 
     this.saveInterval = setInterval(() => {
-      this.save();
+      if (
+        this.state.document.articleVersionState === ARTICLE_VERSION_STATE.DRAFT
+      ) {
+        this.save();
+      }
     }, 2500);
   }
 
@@ -254,16 +252,7 @@ class DocumentEditor extends Component {
       patch.figure = toSave.figure;
     }
 
-    fetch(`${getDomain()}/api/articles/drafts/${draftId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        document: serializeSavePatch(patch)
-      })
-    })
+    saveArticle(draftId)
       .then(response => response.json())
       .then(response => {
         if (response.success) {
@@ -299,7 +288,7 @@ class DocumentEditor extends Component {
   }
 
   async submit() {
-    const ARTICLE1 = {
+    const article = {
       articleHash: this.state.inputData.hash,
       url: 'u', //this.state.inputData.url,
       authors: [this.props.selectedAccount.address],
@@ -312,16 +301,7 @@ class DocumentEditor extends Component {
 
     // normal API call for storing hash into the db
     const draftId = this.props.match.params.id;
-    fetch(`${getDomain()}/api/articles/drafts/${draftId}/submit`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        articleHash: '0x' + ARTICLE1.articleHash
-      })
-    })
+    submitArticle(draftId, article)
       .then(response => response.json())
       .then(async response => {
         if (!response.success) {
@@ -337,7 +317,7 @@ class DocumentEditor extends Component {
       });
 
     // SC call
-    const ARTICLE1_DATA_IN_HEX = getArticleHex(this.props.web3, ARTICLE1);
+    const ARTICLE1_DATA_IN_HEX = getArticleHex(this.props.web3, article);
 
     await submitArticle(
       this.props.tokenContract,
@@ -357,30 +337,23 @@ class DocumentEditor extends Component {
         return receipt;
       })
       .catch(err => {
-        // MetaMask rejection
-        if (err.message.includes('User denied transaction signature')) {
-          // revert the state of the document from FINISHED_DRAFT to DRAFT
-          fetch(`${getDomain()}/api/articles/drafts/${draftId}/revert`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-          })
-            .then(response => response.json())
-            .then(async response => {
-              if (!response.success) {
-                this.setState({errorMessage: response.error});
-              }
-            })
-            .catch(err => {
-              console.log(err);
-              this.setState({
-                errorMessage: 'Ouh. Something went wrong.'
-              });
-            });
-        }
+        // revert the state of the document from FINISHED_DRAFT to DRAFT
         console.error(err);
+
+        revertArticleToDraft(draftId)
+          .then(response => response.json())
+          .then(async response => {
+            if (!response.success) {
+              this.setState({errorMessage: response.error});
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            this.setState({
+              errorMessage: 'Ouh. Something went wrong.'
+            });
+          });
+
         this.setState({
           errorMessage:
             'Ouh. Something went wrong with the Smart Contract call: ' +
@@ -390,26 +363,13 @@ class DocumentEditor extends Component {
   }
 
   renderTitle() {
-    const singleLinePlugin = createSingleLinePlugin();
     return (
-      <TitleContainer className="title">
-        <TitleWithHelper
-          field="title"
-          requirement={{required: true, hint: 'this is a test rqureiaijsfijas'}}
-          document={{title: 'test'}}
-          title="Title"
-          id="title"
-        />
-        <Editor
-          plugins={[singleLinePlugin]}
-          editorState={this.state.document.title}
-          onChange={this.onTitleChange.bind(this)}
-          blockStyleFn={titleStyle}
-          blockRenderMap={singleLinePlugin.blockRenderMap}
-          placeholder="Please enter your title..."
-          customStyleMap={customStyleMap}
-        />
-      </TitleContainer>
+      <DocumentTitle
+        document={this.state.document}
+        onTitleChange={title => {
+          this.onTitleChange(title);
+        }}
+      />
     );
   }
 
@@ -428,8 +388,6 @@ class DocumentEditor extends Component {
       </div>
     );
   }
-
-
 
   renderSelectMenus() {
     return (
