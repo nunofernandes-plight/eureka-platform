@@ -1,9 +1,11 @@
 import userService from '../db/user-service.mjs';
 import articleSubmissionService from '../db/article-submission-service.mjs';
 import articleVersionService from '../db/article-version-service.mjs';
+import scTransactionService from '../db/sc-transaction-service.mjs';
 import reviewService from '../db/review-service.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
+import ScTransactionType from '../schema/sc-transaction-state-enum.mjs';
 import ReviewState from '../schema/review-state-enum.mjs';
 import Review from '../schema/review.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
@@ -27,6 +29,8 @@ export default {
           event.returnValues.articleHash,
           event.returnValues.articleURL
         );
+        await scTransactionService.createScTransaction(event.returnValues.transSender, event.returnValues.transReceiver,
+          ScTransactionType.SUBMIT_ARTICLE, event.returnValues.timestamp, )
       }
     );
 
