@@ -11,23 +11,19 @@ export const mintEurekaTokens = async (
   );
 
   //Minting
-  return eurekaTokenContract.methods
-    .mint(accounts, amounts)
-    .send({
-      from: owner,
-      gas: gasEstimated
-    });
+  return eurekaTokenContract.methods.mint(accounts, amounts).send({
+    from: owner,
+    gas: gasEstimated
+  });
 };
 
 export const finishMinting = (contract, owner) => {
-  return contract.methods
-    .finishMinting()
-    .send({
-      from: owner
-    });
+  return contract.methods.finishMinting().send({
+    from: owner
+  });
 };
 
-export const submitArticle = (_contract, _from, _to, _amount, _data) => {
+export const submitArticle = (_contract, _from, _to, _amount, _data, _gas) => {
   return _contract.methods
     .transferAndCall(
       _to,
@@ -38,7 +34,8 @@ export const submitArticle = (_contract, _from, _to, _amount, _data) => {
       _data
     )
     .send({
-      from: _from
+      from: _from,
+      gas: _gas
     });
 };
 
@@ -47,13 +44,9 @@ export const submitArticle = (_contract, _from, _to, _amount, _data) => {
  */
 
 export const getBalanceOf = (contract, account) => {
-  return contract.methods
-    .balanceOf(account)
-    .call({from: account});
+  return contract.methods.balanceOf(account).call({from: account});
 };
 
 export const getTotalSupplyOf = (contract, fromAccount) => {
-  return contract.methods
-    .totalSupply()
-    .call({from: fromAccount});
+  return contract.methods.totalSupply().call({from: fromAccount});
 };
