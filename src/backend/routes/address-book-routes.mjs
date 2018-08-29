@@ -21,4 +21,11 @@ router.put(
   })
 );
 
+router.delete(
+  '/',
+  asyncHandler(async req => {
+    return addressBookService.deleteContact(req.user.ethereumAddress, req.body.contactAddress);
+  })
+);
+
 export default router;

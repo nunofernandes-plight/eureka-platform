@@ -7,6 +7,7 @@ export default {
     if (!contacts) errorThrower.internalError();
       return contacts;
   },
+
   createContact: (addressBookOwnerAddress,
                   {
                     contactAddress,
@@ -25,5 +26,10 @@ export default {
       if (err) return console.error(err);
       console.log('Created new contact on DB done');
     });
+  },
+
+  deleteContact: async (addressBookOwnerAddress, contactAddress) => {
+    const contact = await AddressBook.findOne({addressBookOwnerAddress: addressBookOwnerAddress, contactAddress: contactAddress});
+    return await contact.remove();
   }
 };
