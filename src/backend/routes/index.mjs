@@ -10,6 +10,7 @@ import userRoutes from './user-routes.mjs';
 import articleDraftRoutes from './article-draft-routes.mjs';
 import articleSubmittedRoutes from './article-submitted-routes.mjs';
 import articleSubmissionRoutes from './article-submission-routes.mjs';
+import addressBook from './address-book-routes.mjs';
 
 const router = express.Router();
 
@@ -24,6 +25,7 @@ router.use('/register', registerRoutes);
 router.use('/users', userRoutes);
 router.use('/articles/drafts', articleDraftRoutes);
 router.use('/articles/submitted', articleSubmittedRoutes);
+router.use('/book', addressBook);
 
 
 export default router;
