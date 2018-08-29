@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import styled from 'styled-components';
+import {Card} from '../views/Card.js';
 import sha256 from 'js-sha256';
 import {getDomain} from '../../../helpers/getDomain.js';
 import GridSpinner from '../views/spinners/GridSpinner.js';
 import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
-import TitleWithHelper from './editor/TitleWithHelper.js';
-import Document from '../../../models/Document.mjs';
 import {deserializeDocument} from '../../../helpers/documentSerializer.mjs';
 import getChangedFields from '../../../helpers/compareDocuments.js';
 import {pick, debounce} from 'underscore';
@@ -24,11 +23,12 @@ import {
   saveArticle
 } from './editor/DocumentMainMethods.js';
 import ARTICLE_VERSION_STATE from '../../../backend/schema/article-version-state-enum.mjs';
+import Document from '../../../models/Document.mjs';
 import DocumentTitle from './editor/DocumentTitle.js';
+import DocumentFigures from './editor/DocumentFigures.js';
+import DocumentAuthors from './editor/DocumentAuthors.js';
 import DocumentLeftPart from './editor/DocumentLeftPart.js';
 import DocumentRightPart from './editor/DocumentRightPart.js';
-import {Card} from '../views/Card.js';
-import DocumentFigures from './editor/DocumentFigures.js';
 
 const Parent = styled.div`
   display: flex;
@@ -65,9 +65,6 @@ const ButtonContainer = styled.div`
   align-self: center;
 `;
 const Button = styled.button``;
-
-const Authors = styled.div``;
-
 
 
 class DocumentEditor extends Component {
@@ -262,17 +259,12 @@ class DocumentEditor extends Component {
         });
       });
 
-    // SC call
-    const ARTICLE1_DATA_IN_HEX = getArticleHex(this.props.web3, article);
-
-    console.log(this.props);
-
     await submitArticle(
       this.props.tokenContract,
       this.props.selectedAccount.address,
       this.props.platformContract.options.address,
       SUBMISSION_PRICE,
-      ARTICLE1_DATA_IN_HEX,
+      getArticleHex(this.props.web3, article),
       80000000
     )
       .on('transactionHash', tx => {
@@ -321,19 +313,7 @@ class DocumentEditor extends Component {
   }
 
   renderAuthors() {
-    return (
-      <div>
-        {' '}
-        <TitleWithHelper
-          field="authors"
-          requirement={{required: true, hint: 'this is a test rqureiaijsfijas'}}
-          document={{title: 'test'}}
-          title="Authors"
-          id="authors"
-        />
-        <Authors>{this.state.document.authors}</Authors>
-      </div>
-    );
+    return <DocumentAuthors document={this.state.document} />;
   }
 
   renderSelectMenus() {
@@ -350,6 +330,16 @@ class DocumentEditor extends Component {
     );
   }
 
+  renderFigures() {
+    return (
+      <DocumentFigures
+        document={this.state.document}
+        updateDocument={({document}) => {
+          this.updateDocument({document});
+        }}
+      />
+    );
+  }
   renderModals() {
     return (
       <div>
@@ -385,17 +375,6 @@ class DocumentEditor extends Component {
           <SmartContractInputData inputData={this.state.inputData} />
         </Modal>
       </div>
-    );
-  }
-
-  renderFigures() {
-    return (
-      <DocumentFigures
-        document={this.state.document}
-        updateDocument={({document}) => {
-          this.updateDocument({document});
-        }}
-      />
     );
   }
 
