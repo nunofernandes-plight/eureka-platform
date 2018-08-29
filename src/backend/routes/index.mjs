@@ -1,7 +1,6 @@
 import express from 'express';
 import reviewRoutes from './review-routes.mjs';
 import welcomeRoutes from './welcome-routes.mjs';
-import authorRoutes from './author-routes.mjs';
 import signupRoutes from './register-routes.mjs';
 import loginRoutes from './login-routes.mjs';
 import logoutRoutes from './logout-routes.mjs';
@@ -17,7 +16,6 @@ const router = express.Router();
 //Different backend routes goes here
 router.use('/welcome', welcomeRoutes);
 router.use('/editorApprovedReviews', reviewRoutes);
-router.use('/authors', authorRoutes);
 router.use('/signup', signupRoutes);
 router.use('/login', loginRoutes);
 router.use('/logout', logoutRoutes);
