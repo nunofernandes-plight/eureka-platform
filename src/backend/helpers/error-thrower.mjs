@@ -22,6 +22,18 @@ export default {
     throw error;
   },
 
+  noEntryFoundByParameter: (parameter) => {
+    let error;
+
+    if(parameter) {
+      error = new Error('Could not find the entry with the provided parameter: ' + parameter);
+    } else {
+      error= new Error('Could not find the entry with the provided parameter');
+    }
+    error.status = 400;
+    throw error;
+  },
+
   noCreationOfEntry: (entryObject) => {
     let error;
     if(entryObject) {
@@ -30,6 +42,17 @@ export default {
       error = new Error('Could not create an entry in the DB');
     }
     error.status = 500;
+    throw error;
+  },
+
+  entryAlreadyExists: (entryObject) => {
+    let error;
+    if(entryObject) {
+      error = new Error('Could not create an the entry since it already exists: ' + entryObject);
+    } else {
+      error = new Error('Could not create an the entry since it already exists');
+    }
+    error.status = 409;
     throw error;
   },
 
