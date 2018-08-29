@@ -87,7 +87,8 @@ const testSubmitArticle = async () => {
     accounts[1],
     EurekaPlatformContract.options.address,
     5000,
-    dataInHex
+    dataInHex,
+    80000000
   );
 
   console.log(

@@ -15,6 +15,16 @@ export default {
   getAllUsers: () => {
     return User.find({});
   },
+
+  getUsersByEmailQuery: async queryParam => {
+    const regexQuery = '.*' + queryParam + '.*';
+    console.log(queryParam);
+    const users = await User.find({'email': {$regex: regexQuery, $options: 'i'}});
+    //const users = await User.find({'email': 'test@test.ch'});
+    console.log(users);
+    if(!users) errorThrower.noEntryFoundById(regexQuery);
+    return users;
+  },
   /**
    * create a new user in the DB
    * @param password

@@ -341,12 +341,14 @@ class DocumentEditor extends Component {
 
     // SC call
     const ARTICLE1_DATA_IN_HEX = getArticleHex(this.props.web3, ARTICLE1);
+
     await submitArticle(
       this.props.tokenContract,
       this.props.selectedAccount.address,
       this.props.platformContract.options.address,
       SUBMISSION_PRICE,
-      ARTICLE1_DATA_IN_HEX
+      ARTICLE1_DATA_IN_HEX,
+      80000000
     )
       .on('transactionHash', tx => {
         this.props.history.push(`${this.props.base}/submitted?tx=${tx}`);

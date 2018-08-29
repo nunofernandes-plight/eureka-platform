@@ -1,16 +1,18 @@
 import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
-
-const router = express.Router();
 import userService from '../db/user-service.mjs';
 import accesController from '../controller/acess-controller.mjs';
 import Roles from '../schema/roles-enum.mjs';
+import User from '../schema/user';
+
+const router = express.Router();
 
 router.use(accesController.loggedInOnly);
 router.get('/',
   asyncHandler(async req => {
-    console.log(req.query);
+    if (!req.query.email) errorThrower.missingQueryParameter('email');
+    return await userService.getUsersByEmailQuery(req.query.email);
   })
 );
 
@@ -41,13 +43,6 @@ router.post(
   '/addRole',
   asyncHandler(async req => {
     return userService.addRole(req.body.user_id, req.body.role);
-  })
-);
-
-router.get(
-  '/',
-  asyncHandler(async () => {
-    return userService.getAllUsers();
   })
 );
 

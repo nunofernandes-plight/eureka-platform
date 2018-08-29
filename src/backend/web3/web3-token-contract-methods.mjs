@@ -23,7 +23,7 @@ export const finishMinting = (contract, owner) => {
   });
 };
 
-export const submitArticle = (_contract, _from, _to, _amount, _data) => {
+export const submitArticle = (_contract, _from, _to, _amount, _data, _gas) => {
   return _contract.methods
     .transferAndCall(
       _to,
@@ -35,7 +35,7 @@ export const submitArticle = (_contract, _from, _to, _amount, _data) => {
     )
     .send({
       from: _from,
-      gas: 1241412
+      gas: _gas
     });
 };
 
