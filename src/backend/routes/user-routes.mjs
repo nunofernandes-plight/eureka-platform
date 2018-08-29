@@ -4,7 +4,7 @@ import errorThrower from '../helpers/error-thrower.mjs';
 import userService from '../db/user-service.mjs';
 import accesController from '../controller/acess-controller.mjs';
 import Roles from '../schema/roles-enum.mjs';
-import User from '../schema/user';
+import User from '../schema/user.mjs';
 
 const router = express.Router();
 

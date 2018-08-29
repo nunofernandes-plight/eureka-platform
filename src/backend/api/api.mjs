@@ -58,7 +58,7 @@ export default {
     // if(!isProduction()) { swap to that
     if (eurekaPlatformContract) {
       contractEventListener.setup(eurekaPlatformContract);
-      writeContractOwnerInDB(ContractOwner, eurekaPlatformContract);
+      writeContractOwnerInDB(eurekaPlatformContract);
     } else {
       // TODO setup with constant public address
     }
@@ -87,7 +87,7 @@ export default {
 };
 
 
-async function writeContractOwnerInDB(contractOwnerModel ,contract) {
+async function writeContractOwnerInDB(contract) {
   const id = 1;
   const contractOwnerAddress = await getContractOwner(contract);
   let contractOwner = await ContractOwner.findById(id);
