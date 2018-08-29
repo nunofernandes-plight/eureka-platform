@@ -1,5 +1,5 @@
 /**
- * Different Articel versions a article version within an article submission can have
+ * Different Article versions a article version within an article submission can have
  */
 const ARTICLE_VERSION_STATE = Object.freeze({
   NOT_EXISTING: 'NOT_EXISTING',
