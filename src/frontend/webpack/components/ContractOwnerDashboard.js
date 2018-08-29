@@ -74,7 +74,8 @@ class ContractOwnerDashboard extends React.Component {
     this.state = {
       mintingAddress: null,
       editorAddress: null,
-      errorMessage: null
+      errorMessage: null,
+      tx: null
     };
   }
 
@@ -98,19 +99,23 @@ class ContractOwnerDashboard extends React.Component {
       this.props.selectedAccount.address
     )
       .on('transactionHash', tx => {
-        toast(
-          'We got your request in our Smart Contract. You can track the transaction at the following tx hash: ' +
-            tx,
-          {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 20000,
-            className: '__ALERT_SUCCESS',
-            progressClassName: '__BAR'
-          }
-        );
+        this.setState({tx});
       })
       .on('receipt', receipt => {
         return receipt;
+      })
+      .on('confirmationNr', res => {
+        // toast(
+        //   'We got your request in our Smart Contract. You can track the transaction at the following tx hash: ' +
+        //     tx,
+        //   {
+        //     position: toast.POSITION.TOP_CENTER,
+        //     autoClose: 20000,
+        //     className: '__ALERT_SUCCESS',
+        //     progressClassName: '__BAR'
+        //   }
+        // );
+        console.log(res); 
       })
       .catch(err => {
         console.error('submitArticle error: ', err);
@@ -139,16 +144,33 @@ class ContractOwnerDashboard extends React.Component {
 
   renderModals() {
     return (
-      <Modal
-        type={'notification'}
-        toggle={isErrorMessage => {
-          this.setState({errorMessage: null});
-        }}
-        show={this.state.errorMessage}
-        title={'You got the following error'}
-      >
-        {this.state.errorMessage}
-      </Modal>
+      <div>
+        <Modal
+          type={'notification'}
+          toggle={isErrorMessage => {
+            this.setState({errorMessage: null});
+          }}
+          show={this.state.errorMessage}
+          title={'You got the following error'}
+        >
+          {this.state.errorMessage}
+        </Modal>
+
+        <Modal
+          toggle={isTx => {
+            this.setState({tx: null});
+          }}
+          show={this.state.tx}
+          title={'We got your request!'}
+        >
+          Dear Smart Contract Owner, we got your request. You can track your its
+          status at the following link:
+          <a href={'asfoaosjf'}>{this.state.tx}</a>
+          <br />
+          We will inform your once your transaction has been successfully mined
+          and accepted into a block.
+        </Modal>
+      </div>
     );
   }
   render() {
