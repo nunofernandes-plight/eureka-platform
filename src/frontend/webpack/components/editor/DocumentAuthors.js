@@ -1,8 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
-import TitleWithHelper from './TitleWithHelper.js'; 
+import TitleWithHelper from './TitleWithHelper.js';
+import Icon from '../../views/icons/Icon.js';
+import {__ALERT_ERROR} from '../../../helpers/colors.js';
 const Authors = styled.div``;
-
+const AddAuthor = styled.div`
+  &:hover {
+    text-decoration: underline;
+  }
+  transition: 0.15s all;
+  color: ${__ALERT_ERROR};
+  width: 36px;
+  cursor: pointer;
+`;
 const DocumentAuthors = props => {
   return (
     <div>
@@ -14,6 +24,9 @@ const DocumentAuthors = props => {
         title="Authors"
         id="authors"
       />
+      <AddAuthor onClick={() => props.addAuthor()}>
+        Edit <Icon noMove icon={'edit'} width={8} height={8} bottom={2} />
+      </AddAuthor>
       <Authors>{props.document.authors}</Authors>
     </div>
   );
