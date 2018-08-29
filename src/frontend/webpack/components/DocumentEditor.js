@@ -252,7 +252,7 @@ class DocumentEditor extends Component {
       patch.figure = toSave.figure;
     }
 
-    saveArticle(draftId)
+    saveArticle(draftId, patch)
       .then(response => response.json())
       .then(response => {
         if (response.success) {

@@ -14,7 +14,7 @@ export const submitArticle = (draftId, article) => {
   });
 };
 
-export const saveArticle = draftId => {
+export const saveArticle = (draftId, patch) => {
   return fetch(`${getDomain()}/api/articles/drafts/${draftId}`, {
     method: 'PUT',
     headers: {
