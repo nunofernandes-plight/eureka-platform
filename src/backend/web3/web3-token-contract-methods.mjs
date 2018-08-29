@@ -27,7 +27,17 @@ export const finishMinting = (contract, owner) => {
     });
 };
 
-export const submitArticle = (_contract, _from, _to, _amount, _data) => {
+export const gasEstimationSubmitArticle = async (_contract, _from, _to, _amount, _data) => {
+  return await getGasEstimation(_contract.methods
+    .transferAndCall(
+      _to,
+      _amount,
+      '0x20159e37',
+      _data
+    ), _from);
+};
+
+export const submitArticle = (_contract, _from, _to, _amount, _data, _gas) => {
   return _contract.methods
     .transferAndCall(
       _to,
