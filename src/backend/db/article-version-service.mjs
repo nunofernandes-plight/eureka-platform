@@ -86,6 +86,20 @@ export default {
     return 'Succesful finished draft of article-version';
   },
 
+  revertToDraft: async (userAddress, articleVersionId) => {
+    let articleVersion = await ArticleVersion.findById(articleVersionId);
+    if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
+    if (articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT) {
+      errorThrower.notCorrectStatus(ArticleVersionState.FINISHED_DRAFT, articleVersion.articleVersionState);
+    }
+    if(articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress(userAddress);
+
+    articleVersion.articleVersionState = ArticleVersionState.DRAFT;
+    await articleVersion.save();
+    return 'Articleversion ' + articleVersion._id + 'has reverted Status: '
+      + ArticleVersionState.FINISHED_DRAFT + ' to ' + ArticleVersionState.DRAFT;
+  },
+
   /**
    * Returns the article-version, but only if it is still in state 'DRAFT'
    * otherwise error
@@ -128,7 +142,7 @@ function getDraftInfos(drafts) {
     };
 
     draftInfo.articleVersionState = draft.articleVersionState;
-    draftInfo.articleHash = draft.articleHash; 
+    draftInfo.articleHash = draft.articleHash;
     draftInfo._id = draft._id;
     draftInfo.document.title = draft.document.title;
     draftInfo.document.authors = draft.document.authors;
