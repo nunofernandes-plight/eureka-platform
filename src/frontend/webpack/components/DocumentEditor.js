@@ -19,11 +19,8 @@ import {
 } from '../../../helpers/documentSerializer.mjs';
 import getChangedFields from '../../../helpers/compareDocuments.js';
 import {pick, debounce} from 'underscore';
-import DocumentDisciplinePicker from './editor/DocumentDisciplinePicker.js';
 import Requirement from '../../../models/Requirement.mjs';
-import DocumentSubDisciplinePicker from './editor/DocumentSubDisciplinePicker.js';
-import DocumentKeywordsPicker from './editor/DocumentKeywordsPicker.js';
-import ObservationTypePicker from './editor/DocumentObservationTypePicker.js';
+import DocumentPickers from './editor/DocumentPickers.js';
 import Icon from '../views/icons/Icon.js';
 import Modal from '../../webpack/design-components/Modal.js';
 import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
@@ -432,80 +429,18 @@ class DocumentEditor extends Component {
     );
   }
 
-  requirementForField(field) {
-    return (
-      new Document(this.state.document).getTextRequirements()[field] ||
-      new Requirement()
-    );
-  }
+
 
   renderSelectMenus() {
     return (
       <div>
-        <DocumentDisciplinePicker
+        <DocumentPickers
           document={this.state.document}
-          value={this.state.document.main_discipline}
-          requirement={this.requirementForField('main_discipline')}
-          onChange={main_discipline => {
-            this.updateDocument({
-              document: {
-                ...this.state.document,
-                main_discipline
-              }
-            });
-            this.save();
+          updateDocument={({document}) => {
+            this.updateDocument({document});
           }}
-          type={this.state.document.type}
+          save={() => this.save()}
         />
-        <DocumentSubDisciplinePicker
-          value={this.state.document.discipline}
-          requirement={this.requirementForField('discipline')}
-          document={this.state.document}
-          mainDisciplines={this.state.document.main_discipline}
-          onChange={discipline => {
-            this.updateDocument({
-              document: {
-                ...this.state.document,
-                discipline
-              }
-            });
-            this.save();
-          }}
-        />
-        <DocumentKeywordsPicker
-          value={this.state.document.keywords}
-          requirement={this.requirementForField('keywords')}
-          document={this.state.document}
-          onChange={keywords => {
-            this.updateDocument({
-              document: {
-                ...this.state.document,
-                keywords
-              }
-            });
-            this.save();
-          }}
-        />
-        {['replication'].includes(this.state.document.type) ? null : (
-          <ObservationTypePicker
-            value={this.state.document.link.observation_type}
-            document={this.state.document}
-            requirement={this.requirementForField('link.observation_type')}
-            type={this.state.document.type}
-            onChange={observation_type => {
-              this.updateDocument({
-                document: {
-                  ...this.state.document,
-                  link: {
-                    ...this.state.document.link,
-                    observation_type
-                  }
-                }
-              });
-              this.save();
-            }}
-          />
-        )}
       </div>
     );
   }
