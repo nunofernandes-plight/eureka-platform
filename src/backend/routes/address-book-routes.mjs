@@ -21,6 +21,13 @@ router.post(
   })
 );
 
+router.put(
+  '/',
+  asyncHandler(async req => {
+    return addressBookService.updateContact(req.user.ethereumAddress, req.body);
+  })
+);
+
 router.delete(
   '/',
   asyncHandler(async req => {

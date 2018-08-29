@@ -22,7 +22,7 @@ export default {
     throw error;
   },
 
-  noEntryFoundByParameter: (parameter) => {
+  noEntryFoundByParameters: (parameter) => {
     let error;
 
     if(parameter) {
