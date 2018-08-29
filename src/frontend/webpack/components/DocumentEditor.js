@@ -4,36 +4,31 @@ import styled from 'styled-components';
 import sha256 from 'js-sha256';
 import {getDomain} from '../../../helpers/getDomain.js';
 import GridSpinner from '../views/spinners/GridSpinner.js';
-import Toolbar from './editor/Toolbar.js';
-import {__GRAY_500, __GRAY_600} from '../../helpers/colors.js';
 import './editor/new-article.css';
 import 'draft-js/dist/Draft.css';
 import TitleWithHelper from './editor/TitleWithHelper.js';
 import Document from '../../../models/Document.mjs';
-import {
-  deserializeDocument,
-  serializeSavePatch
-} from '../../../helpers/documentSerializer.mjs';
+import {deserializeDocument} from '../../../helpers/documentSerializer.mjs';
 import getChangedFields from '../../../helpers/compareDocuments.js';
 import {pick, debounce} from 'underscore';
 import DocumentPickers from './editor/DocumentPickers.js';
-import Icon from '../views/icons/Icon.js';
 import Modal from '../../webpack/design-components/Modal.js';
-import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
-import DropZoneHandler from './editor/DropZoneHandler.js';
-import DocumentFiguresRenderer from './editor/DocumentFiguresRenderer.js';
 import SmartContractInputData from '../views/SmartContractInputData.js';
 import {getArticleHex} from '../../web3/Helpers.js';
 import {SUBMISSION_PRICE} from '../constants/Constants.js';
 import {submitArticle} from '../../../backend/web3/web3-token-contract-methods.mjs';
 import {
   fetchArticle,
-  fetchSubmit,
+  submitArticleDB,
   revertArticleToDraft,
   saveArticle
 } from './editor/DocumentMainMethods.js';
 import ARTICLE_VERSION_STATE from '../../../backend/schema/article-version-state-enum.mjs';
 import DocumentTitle from './editor/DocumentTitle.js';
+import DocumentLeftPart from './editor/DocumentLeftPart.js';
+import DocumentRightPart from './editor/DocumentRightPart.js';
+import {Card} from '../views/Card.js';
+import DocumentFigures from './editor/DocumentFigures.js';
 
 const Parent = styled.div`
   display: flex;
@@ -54,25 +49,6 @@ const Container = styled.div`
   width: 100%;
   padding: 0 20px;
 `;
-const EditorCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  word-wrap: break-word;
-  border: 0.0625rem solid rgba(0, 0, 0, 0.05);
-  border-radius: 0.25rem;
-  background-color: #ffffff;
-  background-clip: border-box;
-  min-height: 420px;
-  width: 1070px;
-  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
-  padding: 40px 80px;
-  margin-top: 20px !important;
-`;
-
-const Title = styled.h2`
-  text-align: center;
-  color: ${__GRAY_500};
-`;
 
 const EditorContent = styled.div`
   display: flex;
@@ -92,41 +68,7 @@ const Button = styled.button``;
 
 const Authors = styled.div``;
 
-const LeftTopContainer = styled.div`
-  padding: 15px;
-  border: 0.0625rem solid rgba(0, 0, 0, 0.05);
-  border-radius: 0.25rem;
-  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
-  background-color: #ffffff;
-  margin-right: 20px;
-  height: 100%;
-  margin-top: 21px;
-`;
 
-const RightTopContainer = styled.div`
-  padding: 15px 10px;
-  border: 0.0625rem solid rgba(0, 0, 0, 0.05);
-  border-radius: 0.25rem;
-  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
-  background-color: #ffffff;
-  margin-bottom: 20px;
-  align-self: flex-end;
-  width: 200px;
-
-  position: absolute;
-  top: -60px;
-`;
-
-const SaveChanges = styled.div`
-  color: ${__GRAY_600};
-  display: flex;
-  justify-content: center;
-`;
-
-const FiguresFlex = styled.div`
-  display: flex;
-  align-items: center;
-`;
 
 class DocumentEditor extends Component {
   constructor() {
@@ -287,8 +229,8 @@ class DocumentEditor extends Component {
     });
   }
 
-  async submit() {
-    const article = {
+  getArticle() {
+    return {
       articleHash: this.state.inputData.hash,
       url: 'u', //this.state.inputData.url,
       authors: [this.props.selectedAccount.address],
@@ -298,10 +240,14 @@ class DocumentEditor extends Component {
       ],
       linkedArticlesSplitRatios: [3334, 3333, 3333]
     };
+  }
+
+  async submit() {
+    const article = this.getArticle();
 
     // normal API call for storing hash into the db
     const draftId = this.props.match.params.id;
-    submitArticle(draftId, article)
+    submitArticleDB(draftId, article)
       .then(response => response.json())
       .then(async response => {
         if (!response.success) {
@@ -318,6 +264,8 @@ class DocumentEditor extends Component {
 
     // SC call
     const ARTICLE1_DATA_IN_HEX = getArticleHex(this.props.web3, article);
+
+    console.log(this.props);
 
     await submitArticle(
       this.props.tokenContract,
@@ -339,7 +287,6 @@ class DocumentEditor extends Component {
       .catch(err => {
         // revert the state of the document from FINISHED_DRAFT to DRAFT
         console.error(err);
-
         revertArticleToDraft(draftId)
           .then(response => response.json())
           .then(async response => {
@@ -441,73 +388,14 @@ class DocumentEditor extends Component {
     );
   }
 
-  renderSaveButtons() {
-    if (this.state.saving) {
-      return (
-        <div>
-          {' '}
-          <Icon
-            icon={'cloud-upload'}
-            width={20}
-            height={20}
-            color={__GRAY_600}
-          />{' '}
-          Saving...
-        </div>
-      );
-    }
-    return (
-      <div>
-        <Icon icon={'cloud'} width={20} height={20} /> All changes saved{' '}
-      </div>
-    );
-  }
-
   renderFigures() {
     return (
-      <div>
-        {' '}
-        <TitleWithHelper
-          field="Figure"
-          document={this.state.document}
-          requirement={{required: true, hint: 'this is a test rqureiaijsfijas'}}
-          title="Figure"
-          id="figure"
-        />
-        <FiguresFlex>
-          <DropZoneHandler
-            onChangeFigure={f => {
-              let figures = this.state.document.figure
-                ? this.state.document.figure
-                : [];
-              let figure = f.contents[0];
-              figure.cdn = fromS3toCdn(f.contents[0].url);
-              figures.push(figure);
-
-              this.updateDocument({
-                document: {
-                  ...this.state.document,
-                  figure: figures
-                }
-              });
-            }}
-          />
-          <DocumentFiguresRenderer
-            figures={this.state.document.figure}
-            onDelete={index => {
-              const newFigure = this.state.document.figure.filter(
-                (c, i) => i !== index
-              );
-              this.updateDocument({
-                document: {
-                  ...this.state.document,
-                  figure: newFigure
-                }
-              });
-            }}
-          />
-        </FiguresFlex>
-      </div>
+      <DocumentFigures
+        document={this.state.document}
+        updateDocument={({document}) => {
+          this.updateDocument({document});
+        }}
+      />
     );
   }
 
@@ -520,15 +408,14 @@ class DocumentEditor extends Component {
         ) : (
           <Parent>
             <Container>
-              <LeftTopContainer>
-                <Toolbar />
-              </LeftTopContainer>
+              <DocumentLeftPart />
               <EditorParent>
-                <RightTopContainer>
-                  <SaveChanges>{this.renderSaveButtons()}</SaveChanges>
-                </RightTopContainer>
-                <EditorCard>
-                  <Title>Write your article</Title>
+                <DocumentRightPart saving={this.state.saving} />
+                <Card
+                  style={{padding: '40px 80px', marginTop: '21px'}}
+                  width={1070}
+                  title={'Write your article'}
+                >
                   <EditorContent>
                     <Line>{this.renderTitle()}</Line>
                     <Line>{this.renderAuthors()}</Line>
@@ -544,7 +431,7 @@ class DocumentEditor extends Component {
                       Submit Article
                     </Button>
                   </ButtonContainer>
-                </EditorCard>
+                </Card>
               </EditorParent>
             </Container>
           </Parent>

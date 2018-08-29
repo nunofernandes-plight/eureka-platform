@@ -1,7 +1,7 @@
 import {getDomain} from '../../../../helpers/getDomain.js';
 import {serializeSavePatch} from '../../../../helpers/documentSerializer.mjs';
 
-export const submitArticle = (draftId, article) => {
+export const submitArticleDB = (draftId, article) => {
   return fetch(`${getDomain()}/api/articles/drafts/${draftId}/submit`, {
     method: 'PUT',
     headers: {
