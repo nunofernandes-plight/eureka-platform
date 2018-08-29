@@ -66,6 +66,11 @@ export default {
     error.status = 400;
     throw error;
   },
+  noQueryParameterProvided: () => {
+    let error = new Error('No Query parameter was provided');
+    error.status = 400;
+    throw error;
+  },
   missingBodyValue: (value) => {
     let error = new Error('Missing body-value was not provided: ' + value);
     error.status = 400;

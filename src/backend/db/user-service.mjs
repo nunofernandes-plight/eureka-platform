@@ -16,14 +16,23 @@ export default {
     return User.find({});
   },
 
-  getUsersByEmailQuery: async queryParam => {
+  getUsersAddressByEmailQuery: async queryParam => {
     const regexQuery = '.*' + queryParam + '.*';
     console.log(queryParam);
     const users = await User.find({'email': {$regex: regexQuery, $options: 'i'}});
     //const users = await User.find({'email': 'test@test.ch'});
     console.log(users);
-    if(!users) errorThrower.noEntryFoundById(regexQuery);
-    return users;
+    if (!users) errorThrower.noEntryFoundById(regexQuery);
+
+    let usersData = [];
+    users.map(user => {
+      let userData = {};
+      userData.email = user.email;
+      userData.ethereumAddress = user.ethereumAddress;
+      userData.avatar = user.avatar;
+      usersData.push(userData);
+    });
+    return usersData;
   },
   /**
    * create a new user in the DB
@@ -65,7 +74,7 @@ export default {
     });
 
     const contractOwner = await ContractOwner.findById(1);
-    if(contractOwner.address === ethereumAddress) {
+    if (contractOwner.address === ethereumAddress) {
       newUser.roles.push(Roles.CONTRACT_OWNER);
     }
 
@@ -102,10 +111,10 @@ export default {
 
 
   getOwnRoles: async (ethereumAddress) => {
-    if(!ethereumAddress) errorThrower.missingParameter('Ethereum-address');
+    if (!ethereumAddress) errorThrower.missingParameter('Ethereum-address');
 
     const user = await User.findOne({ethereumAddress: ethereumAddress});
-    if(!user) errorThrower.noEntryFoundById(ethereumAddress);
+    if (!user) errorThrower.noEntryFoundById(ethereumAddress);
 
     return user.roles;
   },
@@ -140,11 +149,11 @@ export default {
 
   makeEditor: async ethereumAddress => {
     let user = await User.findOne({ethereumAddress: ethereumAddress});
-    if(!user){
+    if (!user) {
       errorThrower.noEntryFoundById(ethereumAddress);
     }
 
-    if(!user.roles.includes(Roles.EDITOR)) {
+    if (!user.roles.includes(Roles.EDITOR)) {
       user.roles.push(Roles.EDITOR);
     }
 
@@ -185,5 +194,5 @@ export default {
         }
       }
     );
-  },
+  }
 };

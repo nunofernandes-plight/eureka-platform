@@ -34,7 +34,11 @@ const userSchema = mongoose.Schema(
         type: String,
         enum: Object.values(Roles)
       }
-    ]
+    ],
+    scTransactions: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ScTransaction'
+    }]
   },
   {collection: 'users'}
 );
