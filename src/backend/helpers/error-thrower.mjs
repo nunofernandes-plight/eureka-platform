@@ -22,6 +22,18 @@ export default {
     throw error;
   },
 
+  noEntryFoundByParameters: (parameter) => {
+    let error;
+
+    if(parameter) {
+      error = new Error('Could not find the entry with the provided parameter: ' + parameter);
+    } else {
+      error= new Error('Could not find the entry with the provided parameter');
+    }
+    error.status = 400;
+    throw error;
+  },
+
   noCreationOfEntry: (entryObject) => {
     let error;
     if(entryObject) {
@@ -33,6 +45,17 @@ export default {
     throw error;
   },
 
+  entryAlreadyExists: (entryObject) => {
+    let error;
+    if(entryObject) {
+      error = new Error('Could not create an the entry since it already exists: ' + entryObject);
+    } else {
+      error = new Error('Could not create an the entry since it already exists');
+    }
+    error.status = 409;
+    throw error;
+  },
+
   missingParameter: (param) => {
     let error = new Error('Missing parameter was not provided: ' + param);
     error.status = 400;
@@ -40,6 +63,11 @@ export default {
   },
   missingQueryParameter: (queryparam) => {
     let error = new Error('Missing Query parameter was not provided: ' + queryparam);
+    error.status = 400;
+    throw error;
+  },
+  noQueryParameterProvided: () => {
+    let error = new Error('No Query parameter was provided');
     error.status = 400;
     throw error;
   },

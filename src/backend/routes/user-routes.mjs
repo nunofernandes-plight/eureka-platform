@@ -11,8 +11,10 @@ const router = express.Router();
 router.use(accesController.loggedInOnly);
 router.get('/',
   asyncHandler(async req => {
-    if (!req.query.email) errorThrower.missingQueryParameter('email');
-    return await userService.getUsersByEmailQuery(req.query.email);
+    if(req.query.email) {
+      return await userService.getUsersAddressByEmailQuery(req.query.email);
+    }
+    errorThrower.noQueryParameterProvided();
   })
 );
 
