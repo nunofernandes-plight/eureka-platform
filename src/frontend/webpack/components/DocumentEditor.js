@@ -113,6 +113,7 @@ class DocumentEditor extends Component {
             document: deserialized,
             lastSavedVersion: deserialized
           });
+          this.fetchAuthorsData();
         } else {
           this.setState({
             errorMessage: response.error
@@ -320,7 +321,10 @@ class DocumentEditor extends Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          console.log(response);
+          let authorsData = Array.isArray(response.data)
+            ? response.data
+            : [response.data];
+          this.setState({authorsData});
         }
       })
       .catch(err => {
@@ -379,6 +383,7 @@ class DocumentEditor extends Component {
               this.updateDocument({document});
               this.fetchAuthorsData();
             }}
+            authorsData={this.state.authorsData}
             document={this.state.document}
           />
         </Modal>

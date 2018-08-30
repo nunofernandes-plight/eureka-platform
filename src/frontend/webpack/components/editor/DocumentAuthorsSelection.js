@@ -110,13 +110,15 @@ class DocumentAuthorsSelection extends React.Component {
             <Title>Authors</Title>
           </TopContainer>
           <Authors>
-            {this.props.document.authors.map((author, index) => {
-              return (
-                <AuthorContainer key={index}>
-                  <Author>{author}</Author>
-                </AuthorContainer>
-              );
-            })}
+            {this.props.authorsData
+              ? this.props.authorsData.map((author, index) => {
+                  return (
+                    <AuthorContainer key={index}>
+                      <Author>{author.email}</Author>
+                    </AuthorContainer>
+                  );
+                })
+              : null}
           </Authors>
         </AuthorsSection>
 
@@ -128,7 +130,9 @@ class DocumentAuthorsSelection extends React.Component {
           {!this.state.users ? null : (
             <Users>
               {this.state.users.map((user, index) => {
-                if (!this.props.document.authors.includes(user.ethereumAddress)) {
+                if (
+                  !this.props.document.authors.includes(user.ethereumAddress)
+                ) {
                   return (
                     <User
                       key={index}
