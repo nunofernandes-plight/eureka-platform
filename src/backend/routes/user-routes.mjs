@@ -4,7 +4,7 @@ import errorThrower from '../helpers/error-thrower.mjs';
 import userService from '../db/user-service.mjs';
 import accesController from '../controller/acess-controller.mjs';
 import Roles from '../schema/roles-enum.mjs';
-import User from '../schema/user.mjs';
+import queryString from 'query-string';
 
 const router = express.Router();
 
@@ -15,9 +15,13 @@ router.get(
     if (req.query.email) {
       return await userService.getUsersAddressByEmailQuery(req.query.email);
     }
-    if (req.query.ethereumAddress) {
-      return await userService.getUserByEthereumAddress(
-        req.query.ethereumAddress
+    if (req.query.ethAddress) {
+      const addresses = req.query.ethAddress;
+      const users = [];
+      return await Promise.all(
+        addresses.map(async address => {
+          return await userService.getUserByEthereumAddress(address);
+        })
       );
     }
     errorThrower.noQueryParameterProvided();
