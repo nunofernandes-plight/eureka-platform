@@ -9,20 +9,27 @@ import User from '../schema/user.mjs';
 const router = express.Router();
 
 router.use(accesController.loggedInOnly);
-router.get('/',
+router.get(
+  '/',
   asyncHandler(async req => {
-    if(req.query.email) {
+    if (req.query.email) {
       return await userService.getUsersAddressByEmailQuery(req.query.email);
+    }
+    if (req.query.ethereumAddress) {
+      return await userService.getUserByEthereumAddress(
+        req.query.ethereumAddress
+      );
     }
     errorThrower.noQueryParameterProvided();
   })
 );
 
-
 router.get(
   '/data',
   asyncHandler(async req => {
-    let user = await userService.getUserByEthereumAddress(req.user.ethereumAddress);
+    let user = await userService.getUserByEthereumAddress(
+      req.user.ethereumAddress
+    );
     user.password = undefined;
     return {
       user: user,
@@ -37,7 +44,6 @@ router.get(
     return await userService.getOwnRoles(req.user.ethereumAddress);
   })
 );
-
 
 router.use(accesController.rolesOnly(Roles.ADMIN));
 
