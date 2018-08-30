@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import styled from 'styled-components';
+import queryString from 'query-string';
 import {Card} from '../views/Card.js';
 import sha256 from 'js-sha256';
 import {getDomain} from '../../../helpers/getDomain.js';
@@ -81,6 +82,7 @@ class DocumentEditor extends Component {
       saved: false,
       showSubmitModal: false,
       addAuthorModal: false,
+      authorsData: null,
       inputData: {
         url: null,
         hash: null,
@@ -243,12 +245,11 @@ class DocumentEditor extends Component {
 
   async submit() {
     const article = this.getArticle();
-
     // normal API call for storing hash into the db
     const draftId = this.props.match.params.id;
     submitArticleDB(draftId, article)
       .then(response => response.json())
-      .then(async response => {
+      .then(response => {
         if (!response.success) {
           this.setState({errorMessage: response.error});
         }
@@ -303,6 +304,30 @@ class DocumentEditor extends Component {
       });
   }
 
+  fetchAuthorsData() {
+    const query = queryString.stringify({
+      ethAddress: this.state.document.authors
+    });
+
+    console.log(query);
+    fetch(`${getDomain()}/api/users?${query}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          console.log(response);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
   renderModals() {
     return (
       <div>
@@ -352,6 +377,7 @@ class DocumentEditor extends Component {
           <DocumentAuthorsSelection
             updateDocument={({document}) => {
               this.updateDocument({document});
+              this.fetchAuthorsData();
             }}
             document={this.state.document}
           />

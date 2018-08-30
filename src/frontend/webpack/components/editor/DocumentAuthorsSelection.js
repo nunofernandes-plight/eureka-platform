@@ -4,6 +4,7 @@ import {InputField} from '../../design-components/Inputs.js';
 import {getDomain} from '../../../../helpers/getDomain.js';
 import Avatar from '../../views/Avatar.js';
 import {__GRAY_100, __GRAY_200, __GRAY_800} from '../../../helpers/colors.js';
+import {serializeSavePatch} from '../../../../helpers/documentSerializer.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -68,11 +69,13 @@ class DocumentAuthorsSelection extends React.Component {
   constructor() {
     super();
     this.state = {
-      users: null
+      users: null,
+      loadingUsers: false
     };
   }
 
   handleInput(query) {
+    this.setState({loadingUsers: true});
     if (!query) {
       this.setState({users: null});
       return;
@@ -87,16 +90,18 @@ class DocumentAuthorsSelection extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          let users = response.data;
           this.setState({
-            users
+            users: response.data
           });
         }
+        this.setState({loadingUsers: false});
       })
       .catch(err => {
         console.error(err);
+        this.setState({loadingUsers: false});
       });
   }
+
   render() {
     return (
       <Container>
@@ -123,9 +128,7 @@ class DocumentAuthorsSelection extends React.Component {
           {!this.state.users ? null : (
             <Users>
               {this.state.users.map((user, index) => {
-                if (
-                  !this.props.document.authors.includes(user.ethereumAddress)
-                ) {
+                if (!this.props.document.authors.includes(user.ethereumAddress)) {
                   return (
                     <User
                       key={index}
