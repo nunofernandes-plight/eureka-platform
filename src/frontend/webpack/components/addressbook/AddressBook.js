@@ -1,10 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Card} from '../views/Card.js';
-import {InputField} from '../design-components/Inputs.js';
-import {__FIFTH, __GRAY_300, __THIRD} from '../../helpers/colors.js';
-import Icon from '../views/icons/Icon.js';
-import Modal from '../design-components/Modal.js';
+import {Card} from '../../views/Card.js';
+import {InputField} from '../../design-components/Inputs.js';
+import {__FIFTH, __GRAY_300, __THIRD} from '../../../helpers/colors.js';
+import Icon from '../../views/icons/Icon.js';
+import Modal from '../../design-components/Modal.js';
+import {createContact, getContacts, updateContact} from './AddressBookMethods.js';
+import CircleSpinner from '../../views/spinners/CircleSpinner.js';
+import AddressBookTable from '../../views/AddressBookTable.js';
 
 const Container = styled.div`
   display: flex;
@@ -39,15 +42,19 @@ class AddressBook extends React.Component {
   constructor() {
     super();
     this.state = {
+      contacts: [],
       address: null,
       firstName: null,
       lastName: null,
-      showModal: false
+      comment: null,
+      showModal: false,
+
+      fetchingContactsLoading: false
     };
   }
 
   validate() {
-    return !!(
+    return (
       this.props.web3.utils.isAddress(this.state.address) &&
       this.state.firstName &&
       this.state.lastName
@@ -82,19 +89,61 @@ class AddressBook extends React.Component {
           <li>First Name: {this.state.firstName}</li>
           <li>Last Name: {this.state.lastName}</li>
           <li>Address: {this.state.address}</li>
+          <li>Comment: {this.state.comment}</li>
         </ul>
       </Modal>
     );
   }
 
-  addContact() {}
+  addContact() {
+    createContact(this.state.address, this.state.firstName, this.state.lastName, this.state.comment)
+      .then((res) => {
+        this.setState({showModal: false});
+        this.fetchContacts();
+      });
+  }
+
+  fetchContacts() {
+    getContacts()
+      .then(response => response.json())
+      .then(response => {
+        console.log(response);
+        if (response.success) {
+          this.setState({contacts: response.data});
+        } else {
+          this.setState({
+            errorMessage: response.error,
+            fetchingContactsLoading: false
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.',
+          fetchingContactsLoading: false
+        });
+      });
+  }
+
+  componentDidMount() {
+    this.fetchContacts();
+  }
 
   render() {
     return (
       <Container>
         {this.renderModals()}
-        <Card width={1000} title={'Your Ethereum Address Book'}>
+        <Card width={1000} title={'My Ethereum Address Book'}>
           <AddContact>
+
+            <InputField
+              width={'50%'}
+              placeholder={'Ethereum Address'}
+              status={this.state.address ? this.state.addressStatus : null}
+              onChange={e => this.handleInput('address', e)}
+            />
+
             <InputField
               width={'17%'}
               placeholder={'First Name'}
@@ -108,11 +157,11 @@ class AddressBook extends React.Component {
             />
 
             <InputField
-              width={'50%'}
-              placeholder={'Ethereum Address'}
-              status={this.state.address ? this.state.addressStatus : null}
-              onChange={e => this.handleInput('address', e)}
+              width={'17%'}
+              placeholder={'Comment'}
+              onChange={e => this.handleInput('comment', e)}
             />
+
             <Circle
               valid={this.validate()}
               onClick={() => this.setState({showModal: true})}
@@ -120,6 +169,22 @@ class AddressBook extends React.Component {
               <Icon icon={'material'} material={'add'} width={25} noMove />
             </Circle>
           </AddContact>
+          {this.state.contacts ? (
+            <AddressBookTable
+              contacts={this.state.contacts}
+              onEdit={(contactAddress) => updateContact(contactAddress)}
+              onDelete={contactAddress => {
+                this.setState({
+                  showDeleteModal: true,
+                  contactToDelete: contactAddress
+                });
+              }}
+            />
+          ) : (
+            <div style={{marginTop: 25}}>
+              <CircleSpinner />
+            </div>
+          )}
         </Card>
       </Container>
     );
