@@ -3,7 +3,12 @@ import styled from 'styled-components';
 import {InputField} from '../../design-components/Inputs.js';
 import {getDomain} from '../../../../helpers/getDomain.js';
 import Avatar from '../../views/Avatar.js';
-import {__GRAY_100, __GRAY_200, __GRAY_800} from '../../../helpers/colors.js';
+import {
+  __GRAY_100,
+  __GRAY_200,
+  __GRAY_300,
+  __GRAY_800
+} from '../../../helpers/colors.js';
 import {serializeSavePatch} from '../../../../helpers/documentSerializer.mjs';
 
 const Container = styled.div`
@@ -52,16 +57,30 @@ const Authors = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 12px;
 `;
 
-const Author = styled.div``;
+const Address = styled.div`
+  font-weight: bold;
+`;
+
+const AuthorCredentials = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
 
 const Email = styled.div``;
 
-const AuthorContainer = styled.div``;
+const AuthorContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid ${__GRAY_100};
+  width: 100%;
+`;
 const TopContainer = styled.div`
-  background: ${__GRAY_200};
+  background: ${__GRAY_300};
 `;
 
 const SearchSection = styled.div``;
@@ -114,7 +133,16 @@ class DocumentAuthorsSelection extends React.Component {
               ? this.props.authorsData.map((author, index) => {
                   return (
                     <AuthorContainer key={index}>
-                      <Author>{author.email}</Author>
+                      <Avatar
+                        avatar={author.avatar}
+                        width={28}
+                        height={28}
+                        right={20}
+                      />
+                      <AuthorCredentials>
+                        <Address>{author.ethereumAddress}</Address>
+                        <Email style={{fontSize: 12}}>{author.email}</Email>
+                      </AuthorCredentials>
                     </AuthorContainer>
                   );
                 })
