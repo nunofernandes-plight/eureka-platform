@@ -7,11 +7,11 @@ import {
   __GRAY_200,
   __THIRD,
   __FIFTH, __MAIN
-} from '../../helpers/colors.js';
-import {renderField} from '../components/editor/DocumentRenderer.js';
-import {renderTimestamp} from '../../helpers/timestampRenderer.js';
-import {MEDIUM_DEVICES} from '../../helpers/mobile.js';
-import Icon from './icons/Icon.js';
+} from '../../../helpers/colors.js';
+import {renderField} from '../editor/DocumentRenderer.js';
+import {renderTimestamp} from '../../../helpers/timestampRenderer.js';
+import {MEDIUM_DEVICES} from '../../../helpers/mobile.js';
+import Icon from '../../views/icons/Icon.js';
 
 const ContactsContainer = styled.div`
   font-size: 14px;

@@ -7,7 +7,7 @@ import Icon from '../../views/icons/Icon.js';
 import Modal from '../../design-components/Modal.js';
 import {createContact, getContacts, updateContact} from './AddressBookMethods.js';
 import CircleSpinner from '../../views/spinners/CircleSpinner.js';
-import AddressBookTable from '../../views/AddressBookTable.js';
+import AddressBookTable from './AddressBookTable.js';
 
 const Container = styled.div`
   display: flex;
@@ -172,7 +172,7 @@ class AddressBook extends React.Component {
           {this.state.contacts ? (
             <AddressBookTable
               contacts={this.state.contacts}
-              onEdit={(contactAddress) => updateContact(contactAddress)}
+              onEdit={contactAddress => updateContact(contactAddress)}
               onDelete={contactAddress => {
                 this.setState({
                   showDeleteModal: true,
