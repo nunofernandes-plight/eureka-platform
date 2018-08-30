@@ -107,8 +107,8 @@ class DocumentAuthorsSelection extends React.Component {
           <Authors>
             {this.props.document.authors.map((author, index) => {
               return (
-                <AuthorContainer>
-                  <Author key={index}>{author}</Author>
+                <AuthorContainer key={index}>
+                  <Author>{author}</Author>
                 </AuthorContainer>
               );
             })}
@@ -123,29 +123,33 @@ class DocumentAuthorsSelection extends React.Component {
           {!this.state.users ? null : (
             <Users>
               {this.state.users.map((user, index) => {
-                return (
-                  <User
-                    key={index}
-                    onClick={() => {
-                      const authors = this.props.document.authors;
-                      authors.push(user.ethereumAddress);
-                      this.props.updateDocument({
-                        document: {
-                          ...this.props.document,
-                          authors
-                        }
-                      });
-                    }}
-                  >
-                    <Avatar
-                      avatar={user.avatar}
-                      width={28}
-                      height={28}
-                      right={10}
-                    />
-                    <Email>{user.email}</Email>
-                  </User>
-                );
+                if (
+                  !this.props.document.authors.includes(user.ethereumAddress)
+                ) {
+                  return (
+                    <User
+                      key={index}
+                      onClick={() => {
+                        const authors = this.props.document.authors;
+                        authors.push(user.ethereumAddress);
+                        this.props.updateDocument({
+                          document: {
+                            ...this.props.document,
+                            authors
+                          }
+                        });
+                      }}
+                    >
+                      <Avatar
+                        avatar={user.avatar}
+                        width={28}
+                        height={28}
+                        right={10}
+                      />
+                      <Email>{user.email}</Email>
+                    </User>
+                  );
+                }
               })}
             </Users>
           )}

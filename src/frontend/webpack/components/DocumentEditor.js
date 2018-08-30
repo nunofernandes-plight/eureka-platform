@@ -188,6 +188,7 @@ class DocumentEditor extends Component {
     let patch = pick(toSave, ...changedFields);
     const draftId = this.props.match.params.id;
 
+    patch.authors = toSave.authors;
     if (toSave.figure.length > 0) {
       patch.figure = toSave.figure;
     }
@@ -348,7 +349,12 @@ class DocumentEditor extends Component {
           show={this.state.addAuthorModal}
           title={'Search and add authors for your manuscript.'}
         >
-          <DocumentAuthorsSelection document={this.state.document} />
+          <DocumentAuthorsSelection
+            updateDocument={({document}) => {
+              this.updateDocument({document});
+            }}
+            document={this.state.document}
+          />
         </Modal>
       </div>
     );
@@ -373,7 +379,6 @@ class DocumentEditor extends Component {
                 >
                   <EditorContent>
                     <Line>
-                      {' '}
                       <DocumentTitle
                         document={this.state.document}
                         onTitleChange={title => {
@@ -382,7 +387,6 @@ class DocumentEditor extends Component {
                       />
                     </Line>
                     <Line>
-                      {' '}
                       <DocumentAuthors
                         addAuthor={() => {
                           this.setState({addAuthorModal: true});
@@ -400,7 +404,6 @@ class DocumentEditor extends Component {
                       />
                     </Line>
                     <Line>
-                      {' '}
                       <DocumentFigures
                         document={this.state.document}
                         updateDocument={({document}) => {
