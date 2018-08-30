@@ -4,7 +4,6 @@ import errorThrower from '../helpers/error-thrower.mjs';
 import userService from '../db/user-service.mjs';
 import accesController from '../controller/acess-controller.mjs';
 import Roles from '../schema/roles-enum.mjs';
-import queryString from 'query-string';
 
 const router = express.Router();
 
@@ -16,10 +15,13 @@ router.get(
       return await userService.getUsersAddressByEmailQuery(req.query.email);
     }
     if (req.query.ethAddress) {
-      const addresses = req.query.ethAddress;
-      const users = [];
+      const query = req.query.ethAddress;
+
+      if (!Array.isArray(query)) {
+        return await userService.getUserByEthereumAddress(query);
+      }
       return await Promise.all(
-        addresses.map(async address => {
+        query.map(async address => {
           return await userService.getUserByEthereumAddress(address);
         })
       );
