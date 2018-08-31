@@ -6,7 +6,7 @@ import MyAccount from '../MyAccount.js';
 import TopContainer from '../../views/TopContainer.js';
 import {BottomContainer} from '../../views/BottomContainer.js';
 import ArticlesRouter from './ArticlesRouter.js';
-import AddressBook from '../AddressBook.js';
+import AddressBook from '../addressbook/AddressBook.js';
 import ContractOwnerDashboard from '../ContractOwnerDashboard.js';
 import {ContractOwnerGuard} from '../guards/Guards.js';
 
