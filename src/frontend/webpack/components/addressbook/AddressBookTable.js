@@ -1,18 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Link} from 'react-router-dom';
-import {
-  __ALERT_ERROR,
-  __GRAY_600,
-  __GRAY_200,
-  __THIRD,
-  __FIFTH, __MAIN
-} from '../../../helpers/colors.js';
-import {renderField} from '../editor/DocumentRenderer.js';
-import {renderTimestamp} from '../../../helpers/timestampRenderer.js';
-import {MEDIUM_DEVICES} from '../../../helpers/mobile.js';
-import Icon from '../../views/icons/Icon.js';
-import {InputField} from '../../design-components/Inputs.js';
 import AddressBookTableRow from './AddressBookTableRow.js';
 
 const ContactsContainer = styled.div`
