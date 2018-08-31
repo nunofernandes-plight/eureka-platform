@@ -49,7 +49,8 @@ class AddressBook extends React.Component {
       comment: null,
       showModal: false,
 
-      fetchingContactsLoading: false
+      fetchingContactsLoading: false,
+      contactToEdit: null
     };
   }
 
@@ -172,7 +173,9 @@ class AddressBook extends React.Component {
           {this.state.contacts ? (
             <AddressBookTable
               contacts={this.state.contacts}
-              onEdit={contactAddress => updateContact(contactAddress)}
+              contactToEdit={this.state.contactToEdit}
+              onEdit={contactAddress => this.setState({contactToEdit: contactAddress})}
+              onSave={contact => this.updateContact(contact)}
               onDelete={contactAddress => {
                 this.setState({
                   showDeleteModal: true,
