@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import styled from 'styled-components';
+import queryString from 'query-string';
 import {Card} from '../views/Card.js';
 import sha256 from 'js-sha256';
 import {getDomain} from '../../../helpers/getDomain.js';
@@ -81,6 +82,7 @@ class DocumentEditor extends Component {
       saved: false,
       showSubmitModal: false,
       addAuthorModal: false,
+      authorsData: null,
       inputData: {
         url: null,
         hash: null,
@@ -111,6 +113,7 @@ class DocumentEditor extends Component {
             document: deserialized,
             lastSavedVersion: deserialized
           });
+          this.fetchAuthorsData();
         } else {
           this.setState({
             errorMessage: response.error
@@ -188,6 +191,7 @@ class DocumentEditor extends Component {
     let patch = pick(toSave, ...changedFields);
     const draftId = this.props.match.params.id;
 
+    patch.authors = toSave.authors;
     if (toSave.figure.length > 0) {
       patch.figure = toSave.figure;
     }
@@ -242,12 +246,11 @@ class DocumentEditor extends Component {
 
   async submit() {
     const article = this.getArticle();
-
     // normal API call for storing hash into the db
     const draftId = this.props.match.params.id;
     submitArticleDB(draftId, article)
       .then(response => response.json())
-      .then(async response => {
+      .then(response => {
         if (!response.success) {
           this.setState({errorMessage: response.error});
         }
@@ -302,6 +305,33 @@ class DocumentEditor extends Component {
       });
   }
 
+  fetchAuthorsData() {
+    const query = queryString.stringify({
+      ethAddress: this.state.document.authors
+    });
+
+    console.log(query);
+    fetch(`${getDomain()}/api/users?${query}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          let authorsData = Array.isArray(response.data)
+            ? response.data
+            : [response.data];
+          this.setState({authorsData});
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
   renderModals() {
     return (
       <div>
@@ -348,7 +378,15 @@ class DocumentEditor extends Component {
           show={this.state.addAuthorModal}
           title={'Search and add authors for your manuscript.'}
         >
-          <DocumentAuthorsSelection document={this.state.document} />
+          <DocumentAuthorsSelection
+            updateDocument={({document}) => {
+              this.updateDocument({document});
+              this.fetchAuthorsData();
+            }}
+            selectedAccount={this.props.selectedAccount}
+            authorsData={this.state.authorsData}
+            document={this.state.document}
+          />
         </Modal>
       </div>
     );
@@ -373,7 +411,6 @@ class DocumentEditor extends Component {
                 >
                   <EditorContent>
                     <Line>
-                      {' '}
                       <DocumentTitle
                         document={this.state.document}
                         onTitleChange={title => {
@@ -382,12 +419,11 @@ class DocumentEditor extends Component {
                       />
                     </Line>
                     <Line>
-                      {' '}
                       <DocumentAuthors
                         addAuthor={() => {
                           this.setState({addAuthorModal: true});
                         }}
-                        document={this.state.document}
+                        authorsData={this.state.authorsData}
                       />
                     </Line>
                     <Line>
@@ -400,7 +436,6 @@ class DocumentEditor extends Component {
                       />
                     </Line>
                     <Line>
-                      {' '}
                       <DocumentFigures
                         document={this.state.document}
                         updateDocument={({document}) => {

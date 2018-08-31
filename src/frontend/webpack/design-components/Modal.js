@@ -154,7 +154,7 @@ class Modal extends Component {
 								)}
 							</MyModalHeader>
 							<MyModalBody>
-								{this.props.type === 'notification' ? (
+								{this.props.type === 'notification' && !this.props.noBell ? (
 									<div style={{display: 'flex', justifyContent: 'center'}}>
 										<Icon
 											icon={'bell'}
