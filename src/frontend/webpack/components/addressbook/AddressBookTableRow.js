@@ -32,6 +32,10 @@ const Tick = styled(Icon)`
   background-color: ${props => (props.valid ? __ALERT_SUCCESS : __GRAY_300)};
 `;
 
+const CustomInputField = styled(InputField)`
+  margin-left: -0.75rem;
+`;
+
 class AddressBookTableRow extends React.Component {
   constructor() {
     super();
@@ -67,24 +71,28 @@ class AddressBookTableRow extends React.Component {
     if (this.props.editable)
       return (
         <Tr key={this.state.contactAddress}>
-          <Td>
+          <Td
+            width={'42%'}>
             {this.state.contactAddress}
           </Td>
-          <td>
+          <td
+            width={'16%'}>
             <InputField
               value={this.state.firstName}
               placeholder={'First Name'}
               onChange={e => this.handleInput('firstName', e)}
             />
           </td>
-          <td>
+          <td
+            width={'16%'}>
             <InputField
               value={this.state.lastName}
               placeholder={'Last Name'}
               onChange={e => this.handleInput('lastName', e)}
             />
           </td>
-          <td>
+          <td
+            width={'26%'}>
             <InputField
               value={this.state.comment}
               placeholder={'Comment'}
@@ -119,16 +127,20 @@ class AddressBookTableRow extends React.Component {
     else
       return (
         <Tr key={this.state.contactAddress}>
-          <Td>
+          <Td
+            width={'42%'}>
             {this.state.contactAddress}
           </Td>
-          <td>
+          <td
+            width={'16%'}>
             {this.state.firstName}
           </td>
-          <td>
+          <td
+            width={'16%'}>
             {this.state.lastName}
           </td>
-          <td>
+          <td
+            width={'26%'}>
             {this.state.comment}
           </td>
           <td>

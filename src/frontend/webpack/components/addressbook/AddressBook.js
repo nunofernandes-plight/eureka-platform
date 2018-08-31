@@ -5,7 +5,7 @@ import {InputField} from '../../design-components/Inputs.js';
 import {__FIFTH, __GRAY_300, __THIRD} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import Modal from '../../design-components/Modal.js';
-import {createContact, getContacts, updateContact} from './AddressBookMethods.js';
+import {createContact, deleteContact, getContacts, updateContact} from './AddressBookMethods.js';
 import CircleSpinner from '../../views/spinners/CircleSpinner.js';
 import AddressBookTable from './AddressBookTable.js';
 
@@ -38,6 +38,11 @@ const Circle = styled.div`
   background-color: ${__FIFTH};
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
 `;
+
+const CustomInputField = styled(InputField)`
+  padding: 0 5px;
+`;
+
 class AddressBook extends React.Component {
   constructor() {
     super();
@@ -47,10 +52,12 @@ class AddressBook extends React.Component {
       firstName: null,
       lastName: null,
       comment: null,
-      showModal: false,
 
       fetchingContactsLoading: false,
-      contactToEdit: null
+      contactToEdit: null,
+
+      showDeleteModal: false,
+      contactToDelete: null
     };
   }
 
@@ -75,31 +82,57 @@ class AddressBook extends React.Component {
 
   renderModals() {
     return (
-      <Modal
-        type={'notification'}
-        action={'Add contact'}
-        callback={() => this.addContact()}
-        toggle={showModal => {
-          this.setState({showModal});
-        }}
-        show={this.state.showModal}
-        title={'Add contact'}
-      >
-        Do you want to add this contact to your list?
-        <ul>
-          <li>First Name: {this.state.firstName}</li>
-          <li>Last Name: {this.state.lastName}</li>
-          <li>Address: {this.state.address}</li>
-          <li>Comment: {this.state.comment}</li>
-        </ul>
-      </Modal>
+      <div>
+        <Modal
+          type={'notification'}
+          toggle={isErrorMessage => {
+            this.setState({errorMessage: null});
+          }}
+          show={this.state.errorMessage}
+          title={'You got the following error'}
+        >
+          {this.state.errorMessage}
+        </Modal>
+        <Modal
+          action={'DELETE'}
+          type={'notification'}
+          callback={() => {
+            this.setState({showDeleteModal: false});
+            this.removeContact();
+          }}
+          toggle={showDeleteModal => {
+            this.setState({showDeleteModal});
+          }}
+          show={this.state.showDeleteModal}
+          title={'Delete Contact'}
+        >
+          Are you sure you want to delete this contact? This action will be
+          permanent.
+        </Modal>
+      </div>
     );
   }
 
   addContact() {
     createContact(this.state.address, this.state.firstName, this.state.lastName, this.state.comment)
       .then((res) => {
-        this.setState({showModal: false});
+        this.fetchContacts();
+      });
+  }
+
+  editContact(contactAddress, firstName, lastName, info) {
+    updateContact(contactAddress, firstName, lastName, info)
+      .then(() => {
+        this.setState({contactToEdit: null});
+        this.fetchContacts();
+      })
+  }
+
+  removeContact() {
+    deleteContact(this.state.contactToDelete)
+      .then(() => {
+        this.setState({showDeleteModal: false});
+        //TODO: contact is not removed only after reload
         this.fetchContacts();
       });
   }
@@ -138,34 +171,34 @@ class AddressBook extends React.Component {
         <Card width={1000} title={'My Ethereum Address Book'}>
           <AddContact>
 
-            <InputField
-              width={'50%'}
+            <CustomInputField
+              width={'42%'}
               placeholder={'Ethereum Address'}
               status={this.state.address ? this.state.addressStatus : null}
               onChange={e => this.handleInput('address', e)}
             />
 
-            <InputField
-              width={'17%'}
+            <CustomInputField
+              width={'16%'}
               placeholder={'First Name'}
               onChange={e => this.handleInput('firstName', e)}
             />
 
-            <InputField
-              width={'17%'}
+            <CustomInputField
+              width={'16%'}
               placeholder={'Last Name'}
               onChange={e => this.handleInput('lastName', e)}
             />
 
-            <InputField
-              width={'17%'}
+            <CustomInputField
+              width={'26%'}
               placeholder={'Comment'}
               onChange={e => this.handleInput('comment', e)}
             />
 
             <Circle
               valid={this.validate()}
-              onClick={() => this.setState({showModal: true})}
+              onClick={() => this.addContact()}
             >
               <Icon icon={'material'} material={'add'} width={25} noMove />
             </Circle>
@@ -175,7 +208,7 @@ class AddressBook extends React.Component {
               contacts={this.state.contacts}
               contactToEdit={this.state.contactToEdit}
               onEdit={contactAddress => this.setState({contactToEdit: contactAddress})}
-              onSave={contact => this.updateContact(contact)}
+              onSave={(contactAddress, firstName, lastName, info) => this.editContact(contactAddress, firstName, lastName, info)}
               onDelete={contactAddress => {
                 this.setState({
                   showDeleteModal: true,
