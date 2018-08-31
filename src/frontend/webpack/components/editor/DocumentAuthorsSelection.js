@@ -151,6 +151,13 @@ class DocumentAuthorsSelection extends React.Component {
         </AuthorsSection>
 
         <SearchSection>
+          <h4 style={{textAlign: 'left', marginBottom: 0}}>
+            Search by a user by email
+          </h4>
+          <p style={{fontSize: 10, textAlign: 'left', marginTop: 0}}>
+            You’ll only be able to find a EUREKA user by their email address if
+            they’ve chosen to list it publicly.{' '}
+          </p>
           <InputField
             placeholder={'Search for an email in our system'}
             onChange={e => this.handleInput(e.target.value)}

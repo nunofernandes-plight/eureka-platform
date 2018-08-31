@@ -422,7 +422,8 @@ class DocumentEditor extends Component {
                         addAuthor={() => {
                           this.setState({addAuthorModal: true});
                         }}
-                        document={this.state.document}
+                        authorsData={this.state.authorsData}
+
                       />
                     </Line>
                     <Line>
