@@ -10,6 +10,7 @@ import {
   __GRAY_800
 } from '../../../helpers/colors.js';
 import {serializeSavePatch} from '../../../../helpers/documentSerializer.mjs';
+import Author from '../../views/Author.js';
 
 const Container = styled.div`
   display: flex;
@@ -130,20 +131,16 @@ class DocumentAuthorsSelection extends React.Component {
           </TopContainer>
           <Authors>
             {this.props.authorsData
-              ? this.props.authorsData.map((author, index) => {
+              ? this.props.authorsData.map(author => {
                   return (
-                    <AuthorContainer key={index}>
-                      <Avatar
-                        avatar={author.avatar}
+                    <div key={author.ethereumAddress}>
+                      <Author
+                        author={author}
                         width={28}
                         height={28}
-                        right={20}
+                        right={10}
                       />
-                      <AuthorCredentials>
-                        <Address>{author.ethereumAddress}</Address>
-                        <Email style={{fontSize: 12}}>{author.email}</Email>
-                      </AuthorCredentials>
-                    </AuthorContainer>
+                    </div>
                   );
                 })
               : null}

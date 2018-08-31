@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import TitleWithHelper from './TitleWithHelper.js';
 import Icon from '../../views/icons/Icon.js';
 import {__ALERT_ERROR} from '../../../helpers/colors.js';
+import Author from '../../views/Author.js';
 
 const Authors = styled.div``;
 const AddAuthor = styled.div`
@@ -41,9 +42,8 @@ const DocumentAuthors = props => {
         {props.authorsData
           ? props.authorsData.map(author => {
               return (
-                <div>
-                  <Address>{author.ethereumAddress}</Address>{' '}
-                  <Email>({author.email})</Email>
+                <div key={author.ethereumAddress}>
+                  <Author author={author} width={25} height={25} right={13} />
                 </div>
               );
             })
