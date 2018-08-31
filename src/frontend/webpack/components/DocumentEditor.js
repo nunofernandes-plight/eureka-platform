@@ -310,7 +310,6 @@ class DocumentEditor extends Component {
       ethAddress: this.state.document.authors
     });
 
-    console.log(query);
     fetch(`${getDomain()}/api/users?${query}`, {
       method: 'GET',
       headers: {

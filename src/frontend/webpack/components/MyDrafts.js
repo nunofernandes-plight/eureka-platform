@@ -8,6 +8,7 @@ import {getDomain} from '../../../helpers/getDomain.js';
 import Modal from '../design-components/Modal.js';
 import CircleSpinner from '../views/spinners/CircleSpinner.js';
 import Icon from '../views/icons/Icon.js';
+import queryString from 'query-string';
 
 const TitleContainer = styled.div`
   &::before {
@@ -48,7 +49,9 @@ class MyDrafts extends React.Component {
       errorMessage: null,
       drafts: null,
       showDeleteModal: false,
-      draftToDelete: null
+      draftToDelete: null,
+      authorsData: null,
+      loadingAuthor: false
     };
   }
 
@@ -113,6 +116,34 @@ class MyDrafts extends React.Component {
           errorMessage: 'Ouh. Something went wrong.',
           fetchingArticlesLoading: false
         });
+      });
+  }
+
+  getAuthor(address) {
+    this.setState({loadingAuthor: true});
+    const query = queryString.stringify({
+      ethAddress: address
+    });
+    fetch(`${getDomain()}/api/users?${query}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          let authorsData = Array.isArray(response.data)
+            ? response.data
+            : [response.data];
+          this.setState({authorsData});
+        }
+        this.setState({loadingAuthor: false});
+      })
+      .catch(err => {
+        this.setState({loadingAuthor: false});
+        console.error(err);
       });
   }
 
@@ -190,6 +221,9 @@ class MyDrafts extends React.Component {
           </TitleContainer>
           {this.state.drafts ? (
             <DraftsTable
+              loadingAuthor={this.state.loadingAuthor}
+              getAuthor={address => this.getAuthor(address)}
+              authorsData={this.state.authorsData}
               drafts={this.state.drafts}
               base={this.props.base}
               onSubmit={() => this.createNewArticle()}
