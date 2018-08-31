@@ -383,6 +383,7 @@ class DocumentEditor extends Component {
               this.updateDocument({document});
               this.fetchAuthorsData();
             }}
+            selectedAccount={this.props.selectedAccount}
             authorsData={this.state.authorsData}
             document={this.state.document}
           />
@@ -423,7 +424,6 @@ class DocumentEditor extends Component {
                           this.setState({addAuthorModal: true});
                         }}
                         authorsData={this.state.authorsData}
-
                       />
                     </Line>
                     <Line>

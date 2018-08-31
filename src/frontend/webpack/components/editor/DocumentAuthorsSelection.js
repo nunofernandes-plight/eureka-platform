@@ -4,6 +4,8 @@ import {InputField} from '../../design-components/Inputs.js';
 import {getDomain} from '../../../../helpers/getDomain.js';
 import Avatar from '../../views/Avatar.js';
 import {
+  __ALERT_DANGER,
+  __ALERT_ERROR,
   __GRAY_100,
   __GRAY_200,
   __GRAY_300,
@@ -11,6 +13,7 @@ import {
 } from '../../../helpers/colors.js';
 import {serializeSavePatch} from '../../../../helpers/documentSerializer.mjs';
 import Author from '../../views/Author.js';
+import Icon from '../../views/icons/Icon.js';
 
 const Container = styled.div`
   display: flex;
@@ -60,29 +63,18 @@ const Authors = styled.div`
   align-items: flex-start;
 `;
 
-const Address = styled.div`
-  font-weight: bold;
-`;
-
-const AuthorCredentials = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`;
-
 const Email = styled.div``;
 
-const AuthorContainer = styled.div`
+const Element = styled.div`
   display: flex;
   align-items: center;
-  padding: 12px;
-  cursor: pointer;
-  border-bottom: 1px solid ${__GRAY_100};
   width: 100%;
 `;
 const TopContainer = styled.div`
   background: ${__GRAY_300};
 `;
+
+const Delete = styled.div``;
 
 const SearchSection = styled.div``;
 class DocumentAuthorsSelection extends React.Component {
@@ -133,14 +125,41 @@ class DocumentAuthorsSelection extends React.Component {
             {this.props.authorsData
               ? this.props.authorsData.map(author => {
                   return (
-                    <div key={author.ethereumAddress}>
+                    <Element key={author.ethereumAddress}>
                       <Author
                         author={author}
                         width={28}
                         height={28}
                         right={10}
                       />
-                    </div>
+                      {author.ethereumAddress ===
+                      this.props.selectedAccount.address ? null : (
+                        <Delete>
+                          <Icon
+                            icon={'delete'}
+                            width={15}
+                            height={15}
+                            color={__ALERT_ERROR}
+                            right={20}
+                            onClick={() => {
+                              const authors = this.props.document.authors;
+                              const indexToDelete = authors.indexOf(
+                                author.ethereumAddress
+                              );
+                              if (indexToDelete > -1) {
+                                authors.splice(indexToDelete, 1);
+                              }
+                              this.props.updateDocument({
+                                document: {
+                                  ...this.props.document,
+                                  authors
+                                }
+                              });
+                            }}
+                          />
+                        </Delete>
+                      )}
+                    </Element>
                   );
                 })
               : null}
