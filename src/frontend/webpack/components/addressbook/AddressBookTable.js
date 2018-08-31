@@ -31,46 +31,45 @@ const NoDrafts = styled.div`
 `;
 
 const AddressBookTable = props => {
-	return (
-		<ContactsContainer>
-			{!props.contacts || props.contacts.length === 0 ? (
-				<NoDrafts>
-					You don't have any addresses saved yet.
-				</NoDrafts>
-			) : (
-				<Contacts>
-					<tbody>
-						<tr>
+  return (
+    <ContactsContainer>
+      {!props.contacts || props.contacts.length === 0 ? (
+        <NoDrafts>You don't have any addresses saved yet.</NoDrafts>
+      ) : (
+        <Contacts>
+          <tbody>
+            <tr>
               <th>
                 <TableTitle>Ethereum address</TableTitle>
               </th>
-							<th>
-								<TableTitle>First Name</TableTitle>
-							</th>
+              <th>
+                <TableTitle>First Name</TableTitle>
+              </th>
               <th>
                 <TableTitle>Last Name</TableTitle>
               </th>
-							<th>
-								<TableTitle>Comment</TableTitle>
-							</th>
-							<th />
-						</tr>
-					</tbody>
+              <th>
+                <TableTitle>Comment</TableTitle>
+              </th>
+              <th />
+            </tr>
+          </tbody>
 
-					<tbody>
-						{props.contacts.map( (contact) => (
-							<AddressBookTableRow
-								contact={contact}
-								editable={props.contactToEdit === contact.contactAddress}
-								onEdit={props.onEdit}
-								onDelete={props.onDelete}
-								onSave={props.onSave}/>
-						))}
-					</tbody>
-				</Contacts>
-			)}
-		</ContactsContainer>
-	);
+          <tbody>
+            {props.contacts.map(contact => (
+              <AddressBookTableRow
+                contact={contact}
+                editable={props.contactToEdit === contact.contactAddress}
+                onEdit={props.onEdit}
+                onDelete={props.onDelete}
+                onSave={props.onSave}
+              />
+            ))}
+          </tbody>
+        </Contacts>
+      )}
+    </ContactsContainer>
+  );
 };
 
 export default AddressBookTable;

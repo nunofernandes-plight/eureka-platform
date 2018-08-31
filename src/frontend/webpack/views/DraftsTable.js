@@ -83,7 +83,6 @@ const AuthorsTitle = styled.th`
   `};
 `;
 const DraftsTable = props => {
-  console.log(props.authorsData);
   return (
     <DraftsContainer>
       {!props.drafts || props.drafts.length === 0 ? (
@@ -145,7 +144,7 @@ const DraftsTable = props => {
                             }
                           }}
                           title={'Author lookup'}
-                          width={400}
+                          width={418}
                           position={'top'}
                           content={
                             <div>
