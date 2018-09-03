@@ -269,7 +269,7 @@ class DocumentEditor extends Component {
       this.props.platformContract.options.address,
       SUBMISSION_PRICE,
       getArticleHex(this.props.web3, article),
-      80000000
+      8000000
     )
       .on('transactionHash', tx => {
         this.props.history.push(`${this.props.base}/submitted?tx=${tx}`);
