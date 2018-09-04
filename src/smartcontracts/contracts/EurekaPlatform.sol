@@ -184,7 +184,7 @@ contract EurekaPlatform {
         emit EditorSignUp(editor);
     }
 
-    event SubmissionProcessStart(uint256 submissionId, address submissionOwner, bytes32 articleHash, bytes32 articleURL);
+    event SubmissionProcessStart(uint256 submissionId, address submissionOwner, bytes32 articleHash, bytes32 articleURL, uint256 stateTimestamp);
 
     function startSubmissionProcess(
 //        address _from,
@@ -206,7 +206,7 @@ contract EurekaPlatform {
 
         submission.submissionState = SubmissionState.OPEN;
         submission.stateTimestamp = block.timestamp;
-        emit SubmissionProcessStart(submission.submissionId, tx.origin, _articleHash, _articleURL);
+        emit SubmissionProcessStart(submission.submissionId, tx.origin, _articleHash, _articleURL, block.timestamp);
     }
 
     function submitArticleVersion(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL,

@@ -25,7 +25,6 @@ export const scTransactionSchema = mongoose.Schema(
     },
     txHash: {
       type: String,
-      required: true
     }
   },
   {

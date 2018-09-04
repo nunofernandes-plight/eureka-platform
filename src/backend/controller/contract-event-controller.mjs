@@ -13,6 +13,7 @@ import ArticleVersion from '../schema/article-version.mjs';
 export default {
   setup: EurekaPlatformContract => {
 
+    const ETHEREUM_PLATFORM_CONTRACT_ADDRESS = EurekaPlatformContract.options.address;
     /** Editor Sign up **/
     EurekaPlatformContract.events.EditorSignUp(undefined, async (error, event) => {
       if (error) throw error;
@@ -29,8 +30,9 @@ export default {
           event.returnValues.articleHash,
           event.returnValues.articleURL
         );
-        // await scTransactionService.createScTransaction(event.returnValues.transSender, event.returnValues.transReceiver,
-        //   ScTransactionType.SUBMIT_ARTICLE, event.returnValues.timestamp, )
+        await scTransactionService.createScTransaction(event.returnValues.submissionOwner, ETHEREUM_PLATFORM_CONTRACT_ADDRESS,
+          ScTransactionType.SUBMIT_ARTICLE, event.returnValues.stateTimestamp);
+
       }
     );
 
