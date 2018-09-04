@@ -1,19 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Link} from 'react-router-dom';
-import {
-  __ALERT_ERROR,
-  __GRAY_600,
-  __GRAY_200,
-  __THIRD,
-  __FIFTH, __MAIN, __ALERT_SUCCESS, __GRAY_300
-} from '../../../helpers/colors.js';
-import {renderField} from '../editor/DocumentRenderer.js';
-import {renderTimestamp} from '../../../helpers/timestampRenderer.js';
-import {MEDIUM_DEVICES} from '../../../helpers/mobile.js';
+import {__ALERT_ERROR, __ALERT_SUCCESS, __GRAY_200, __GRAY_300, __MAIN} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import {InputField} from '../../design-components/Inputs.js';
-import {createContact, getContacts} from './AddressBookMethods.js';
 
 const Tr = styled.tr`
   &:hover {
@@ -30,10 +19,6 @@ const Tick = styled(Icon)`
   opacity: ${props => (props.valid ? '1' : '0.5')};
   pointer-events: ${props => (props.valid ? 'auto' : 'none')};
   background-color: ${props => (props.valid ? __ALERT_SUCCESS : __GRAY_300)};
-`;
-
-const CustomInputField = styled(InputField)`
-  margin-left: -0.75rem;
 `;
 
 class AddressBookTableRow extends React.Component {

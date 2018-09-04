@@ -57,7 +57,7 @@ const AddressBookTable = props => {
 
           <tbody>
             {props.contacts.map(contact => (
-              <AddressBookTableRow
+              <AddressBookTableRow key={contact.contactAddress}
                 contact={contact}
                 editable={props.contactToEdit === contact.contactAddress}
                 onEdit={props.onEdit}

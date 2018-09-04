@@ -10,14 +10,14 @@ router.use(accesController.loggedInOnly);
 router.get(
   '/',
   asyncHandler(async (req) => {
-    return addressBookService.getContacts(req.user.ethereumAddress);
+    return await addressBookService.getContacts(req.user.ethereumAddress);
   })
 );
 
 router.post(
   '/',
   asyncHandler(async req => {
-    return addressBookService.createContact(req.user.ethereumAddress, req.body);
+    return await addressBookService.createContact(req.user.ethereumAddress, req.body);
   })
 );
 

@@ -57,7 +57,10 @@ class AddressBook extends React.Component {
       contactToEdit: null,
 
       showDeleteModal: false,
-      contactToDelete: null
+      contactToDelete: null,
+
+      showErrorModal: false,
+      errorMessage: null
     };
   }
 
@@ -85,7 +88,7 @@ class AddressBook extends React.Component {
       <div>
         <Modal
           type={'notification'}
-          toggle={isErrorMessage => {
+          toggle={() => {
             this.setState({errorMessage: null});
           }}
           show={this.state.errorMessage}
@@ -115,25 +118,63 @@ class AddressBook extends React.Component {
 
   addContact() {
     createContact(this.state.address, this.state.firstName, this.state.lastName, this.state.comment)
-      .then((res) => {
-        this.fetchContacts();
+      .then(response => {
+        if (response.status === 200)
+          this.fetchContacts();
+        else if (response.status === 409)
+          this.setState({
+            errorMessage: 'There exists already a contact with the same address.'
+          });
+        else
+          this.setState({
+            errorMessage: 'Ouh. Something went wrong.'
+          });
+      })
+      .catch(err => {
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.'
+        });
       });
   }
 
   editContact(contactAddress, firstName, lastName, info) {
     updateContact(contactAddress, firstName, lastName, info)
-      .then(() => {
-        this.setState({contactToEdit: null});
-        this.fetchContacts();
+      .then(response => {
+        if (response.status === 200) {
+          this.setState({contactToEdit: null});
+          this.fetchContacts();
+        }
+        else
+          this.setState({
+            errorMessage: 'Ouh. Something went wrong.'
+          });
       })
+      .catch(err => {
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.'
+        });
+      });
   }
 
   removeContact() {
     deleteContact(this.state.contactToDelete)
-      .then(() => {
-        this.setState({showDeleteModal: false});
-        //TODO: contact is not removed only after reload
+      .then(response => {
+      if (response.status === 200) {
+        this.setState({
+          showDeleteModal: false,
+          contactToDelete: null
+        });
         this.fetchContacts();
+      }
+      else
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.'
+        });
+    })
+      .catch(err => {
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.'
+        });
       });
   }
 
@@ -141,7 +182,6 @@ class AddressBook extends React.Component {
     getContacts()
       .then(response => response.json())
       .then(response => {
-        console.log(response);
         if (response.success) {
           this.setState({contacts: response.data});
         } else {

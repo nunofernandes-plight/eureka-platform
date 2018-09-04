@@ -33,10 +33,9 @@ export default {
         lastName: lastName,
         info: info
       });
-      return contact.save(function(err) {
-        if (err) return console.error(err);
-        console.log('Created new contact on DB done');
-      });
+      const dbcontact = await contact.save();
+      if (!dbcontact) errorThrower.noCreationOfEntry();
+      return dbcontact;
     }
   },
 

@@ -1,5 +1,4 @@
 import {getDomain} from '../../../../helpers/getDomain.js';
-import {serializeSavePatch} from '../../../../helpers/documentSerializer.mjs';
 
 export const createContact = (contactAddress, preName, lastName, info) => {
   return fetch(`${getDomain()}/api/book`, {
