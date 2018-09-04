@@ -51,8 +51,14 @@ router.get(
   })
 );
 
-router.use(accesController.rolesOnly(Roles.ADMIN));
+router.get(
+  '/scTransactions',
+  asyncHandler(async req => {
+    return await userService.getOwnScTransactions(req.user.ethereumAddress);
+  })
+);
 
+router.use(accesController.rolesOnly(Roles.ADMIN));
 router.post(
   '/addRole',
   asyncHandler(async req => {

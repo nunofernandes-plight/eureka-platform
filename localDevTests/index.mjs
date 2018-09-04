@@ -15,6 +15,7 @@ import {
 } from '../src/backend/web3/web3-platform-contract-methods.mjs';
 import getAccounts from '../src/backend/web3/get-accounts.mjs';
 import deployContracts from '../src/backend/web3/index.mjs';
+import web3 from '../src/backend/web3/web3Instance.mjs';
 
 let EurekaPlatformContract = undefined;
 let EurekaTokenContract = undefined;
@@ -82,6 +83,27 @@ const testSubmitArticle = async () => {
   const dataInHex = getArticleHex(article);
   const articleHashHex = '0x' + article.articleHash;
 
+  const logOptions = {
+    address: EurekaPlatformContract.options.address,
+  };
+
+  let logSups = web3.eth.subscribe('logs', logOptions, function(error, result) {
+    if (!error)
+
+
+      console.log('TEST BLA');
+    console.log(result);
+  })
+    .on('data', function(log) {
+      console.log('LOGS:  !!!!!!');
+      console.log(log);
+    })
+    .on('changed', function(log) {
+      console.log('LOGS CHANGED: ');
+      console.log(log);
+    });
+
+
   await submitArticle(
     EurekaTokenContract,
     accounts[1],
@@ -91,43 +113,43 @@ const testSubmitArticle = async () => {
     80000000
   );
 
-  console.log(
-    'The balance of the service contract is ' +
-    (await getBalanceOf(
-      EurekaTokenContract,
-      EurekaPlatformContract.options.address
-    ))
-  );
-  console.log(
-    'URL of the article: ' +
-    (await getUrl(EurekaPlatformContract, articleHashHex, contractOwner))
-  );
-  console.log(
-    'Authors: ' +
-    (await getAuthors(EurekaPlatformContract, articleHashHex, contractOwner))
-  );
-  console.log(
-    'Linked articles: ' +
-    (await getLinkedArticles(
-      EurekaPlatformContract,
-      articleHashHex,
-      contractOwner
-    ))
-  );
-  console.log(
-    (await getArticleVersion(
-      EurekaPlatformContract,
-      articleHashHex,
-      contractOwner
-    ))
-  );
-  console.log(
-    (await getSubmissionProcess(
-      EurekaPlatformContract,
-      articleHashHex,
-      contractOwner
-    ))
-  );
+  // console.log(
+  //   'The balance of the service contract is ' +
+  //   (await getBalanceOf(
+  //     EurekaTokenContract,
+  //     EurekaPlatformContract.options.address
+  //   ))
+  // );
+  // console.log(
+  //   'URL of the article: ' +
+  //   (await getUrl(EurekaPlatformContract, articleHashHex, contractOwner))
+  // );
+  // console.log(
+  //   'Authors: ' +
+  //   (await getAuthors(EurekaPlatformContract, articleHashHex, contractOwner))
+  // );
+  // console.log(
+  //   'Linked articles: ' +
+  //   (await getLinkedArticles(
+  //     EurekaPlatformContract,
+  //     articleHashHex,
+  //     contractOwner
+  //   ))
+  // );
+  // console.log(
+  //   (await getArticleVersion(
+  //     EurekaPlatformContract,
+  //     articleHashHex,
+  //     contractOwner
+  //   ))
+  // );
+  // console.log(
+  //   (await getSubmissionProcess(
+  //     EurekaPlatformContract,
+  //     articleHashHex,
+  //     contractOwner
+  //   ))
+  // );
 };
 
 export default run();

@@ -24,20 +24,20 @@ export default {
    * @param txHash
    * @returns {Promise<*>}
    */
-  createScTransaction: async (userAddress, receiverAddress, transactionType, timestamp, txHash) => {
+  createScTransaction: async (userAddress, transactionType, timestamp, txHash, additionalInfo) => {
     const scTransaction = new ScTransaction({
       ownerAddress: userAddress,
-      receiverAddress: receiverAddress,
       transactionType: transactionType,
       timestamp: timestamp,
-      txHash: txHash
+      txHash: txHash,
+      additionalInfo: additionalInfo
     });
 
     await scTransaction.save();
     let user = await User.findOne({
       ethereumAddress: userAddress,
     });
-    if(!user) errorThrower.noEntryFoundById(userAddress);
+    if(!user) errorThrower.noEntryFoundById('SC Transactions service: ' + userAddress);
     user.scTransactions.push(scTransaction._id);
     await user.save();
     return scTransaction._id;
