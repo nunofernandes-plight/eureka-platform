@@ -119,8 +119,15 @@ class AddressBook extends React.Component {
   addContact() {
     createContact(this.state.address, this.state.firstName, this.state.lastName, this.state.comment)
       .then(response => {
-        if (response.status === 200)
+        if (response.status === 200) {
           this.fetchContacts();
+          this.setState({
+            address: null,
+            firstName: null,
+            lastName: null,
+            comment: null
+          });
+        }
         else if (response.status === 409)
           this.setState({
             errorMessage: 'There exists already a contact with the same address.'
