@@ -11,6 +11,7 @@ import getAccounts from '../../src/backend/web3/get-accounts.mjs';
 import User from '../../src/backend/schema/user.mjs';
 import ArticleSubmission from '../../src/backend/schema/article-submission.mjs';
 import ArticleVersionState from '../../src/backend/schema/article-version-state-enum.mjs';
+import ScTransactionType from '../../src/backend/schema/sc-transaction-state-enum.mjs';
 import ReviewState from '../../src/backend/schema/review-state-enum.mjs';
 import userService from '../../src/backend/db/user-service.mjs';
 import articleSubmissionService from '../../src/backend/db/article-submission-service.mjs';
@@ -36,6 +37,7 @@ import {sleepSync} from '../helpers.js';
 import ArticleVersion from '../../src/backend/schema/article-version.mjs';
 import Review from '../../src/backend/schema/review.mjs';
 import Roles from '../../src/backend/schema/roles-enum.mjs';
+import SC_TRANSACTIONS_TYPE from '../../src/backend/schema/sc-transaction-state-enum.mjs';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
@@ -159,7 +161,10 @@ async function setupContract(eurekaContract, platformContract) {
   await finishMinting(eurekaTokenContract, contractOwner);
 }
 
-test(PRETEXT + 'Sign up Editor', async t => {
+
+/************************ Sign up Editor ************************/
+
+test.only(PRETEXT + 'Sign up Editor', async t => {
   await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
 
   let user = await userService.getUserByEthereumAddress(contractOwner);
@@ -169,10 +174,25 @@ test(PRETEXT + 'Sign up Editor', async t => {
 
   await signUpEditor(eurekaPlatformContract, contractOwner, contractOwner);
 
-  user = await userService.getUserByEthereumAddress(contractOwner);
+  user = await userService.getUserByEthereumAddressWithScTransactions(contractOwner);
+
+  let counter = 0;
+  while (
+    user.scTransactions.length < 1 &&
+    counter < 5) {
+    sleepSync(5000);
+    user = await userService.getUserByEthereumAddressWithScTransactions(contractOwner);
+    counter++;
+  }
+
   t.is(user.roles.length, 2);
   t.is(user.roles[1], Roles.EDITOR);
+  t.is(user.scTransactions.length, 1);
+  t.is(user.scTransactions[0].transactionType, ScTransactionType.EDITOR_ASSIGNED);
 });
+
+
+/************************ Submit an Article &  auto change of Status from DRAFT --> SUBMITTED ************************/
 
 test(PRETEXT + 'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED', async t => {
   // Create user on DB

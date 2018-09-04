@@ -21,7 +21,7 @@ export default {
         affectedAddress: event.returnValues.editorAddress
       };
       await scTransactionService.createScTransaction(event.returnValues.submissionOwner,
-        ScTransactionType.EDITOR_ASSIGNED, event.returnValues.timestamp, event.transactionHash, additionalInfo);
+        ScTransactionType.EDITOR_ASSIGNED, event.returnValues.stateTimestamp, event.transactionHash, additionalInfo);
     });
 
     /** Submission Process Start **/
