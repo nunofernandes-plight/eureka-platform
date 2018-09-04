@@ -30,8 +30,8 @@ export default {
           event.returnValues.articleHash,
           event.returnValues.articleURL
         );
-        await scTransactionService.createScTransaction(event.returnValues.submissionOwner, ETHEREUM_PLATFORM_CONTRACT_ADDRESS,
-          ScTransactionType.SUBMIT_ARTICLE, event.returnValues.stateTimestamp);
+        // await scTransactionService.createScTransaction(event.returnValues.submissionOwner, ETHEREUM_PLATFORM_CONTRACT_ADDRESS,
+        //   ScTransactionType.SUBMIT_ARTICLE, event.returnValues.stateTimestamp);
 
       }
     );
