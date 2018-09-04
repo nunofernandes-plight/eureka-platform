@@ -126,6 +126,14 @@ export default {
 
     return user.roles;
   },
+
+  getOwnScTransactions: async ethereumAddress => {
+    if (!ethereumAddress) errorThrower.missingParameter('Ethereum-address');
+    const user = await User.findOne({ethereumAddress: ethereumAddress}).populate('scTransactions');
+    if (!user) errorThrower.noEntryFoundById(ethereumAddress);
+    return user.scTransactions;
+  },
+
   /**
    * Add the role to the given user
    * if the role matches a roles-enum
