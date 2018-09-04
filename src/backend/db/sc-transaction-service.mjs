@@ -24,13 +24,13 @@ export default {
    * @param txHash
    * @returns {Promise<*>}
    */
-  createScTransaction: async (userAddress, receiverAddress, transactionType, timestamp, txHash) => {
+  createScTransaction: async (userAddress, transactionType, timestamp, txHash, additionalInfo) => {
     const scTransaction = new ScTransaction({
       ownerAddress: userAddress,
-      receiverAddress: receiverAddress,
       transactionType: transactionType,
       timestamp: timestamp,
-      txHash: txHash
+      txHash: txHash,
+      additionalInfo: additionalInfo
     });
 
     await scTransaction.save();
