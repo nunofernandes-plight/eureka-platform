@@ -29,8 +29,8 @@ export default {
           event.returnValues.articleHash,
           event.returnValues.articleURL
         );
-        await scTransactionService.createScTransaction(event.returnValues.transSender, event.returnValues.transReceiver,
-          ScTransactionType.SUBMIT_ARTICLE, event.returnValues.timestamp, )
+        // await scTransactionService.createScTransaction(event.returnValues.transSender, event.returnValues.transReceiver,
+        //   ScTransactionType.SUBMIT_ARTICLE, event.returnValues.timestamp, )
       }
     );
 

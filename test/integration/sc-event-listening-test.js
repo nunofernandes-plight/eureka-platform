@@ -16,6 +16,7 @@ import userService from '../../src/backend/db/user-service.mjs';
 import articleSubmissionService from '../../src/backend/db/article-submission-service.mjs';
 import articleVersionService from '../../src/backend/db/article-version-service.mjs';
 import reviewService from '../../src/backend/db/review-service.mjs';
+import {cleanDB} from '../helpers.js';
 import getArticleHex from '../../src/backend/web3/get-articleHex.mjs';
 import {
   assignForSubmissionProcess,
@@ -156,13 +157,6 @@ async function setupContract(eurekaContract, platformContract) {
     contractOwner
   );
   await finishMinting(eurekaTokenContract, contractOwner);
-}
-
-async function cleanDB() {
-  await User.remove({});
-  await ArticleSubmission.remove({});
-  await ArticleVersion.remove({});
-  await Review.remove({});
 }
 
 test(PRETEXT + 'Sign up Editor', async t => {

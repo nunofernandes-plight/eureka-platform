@@ -4,8 +4,8 @@
 import test from 'ava';
 import User from '../src/backend/schema/user.mjs';
 import ArticleSubmission from '../src/backend/schema/article-submission.mjs';
+import ArticleVersion from '../src/backend/schema/article-version.mjs';
 import Review from '../src/backend/schema/review.mjs';
-import Author from '../src/backend/schema/author.mjs';
 
 /**
  * Empties all the collections of the DB
@@ -15,7 +15,7 @@ export async function cleanDB() {
 	await User.remove({});
 	await ArticleSubmission.remove({});
 	await Review.remove({});
-	await Author.remove({});
+	await ArticleVersion.remove({});
 }
 
 /**
