@@ -51,15 +51,15 @@ const AddressBookMyTableRow = props => {
           props.onChange(field, address, value);
         }}
       />
-      <AddressBookField
-        width={'16%'}
-        contact={props.contact}
-        placeholder={'Comment'}
-        field={'info'}
-        onChange={(field, address, value) => {
-          props.onChange(field, address, value);
-        }}
-      />
+      {/*<AddressBookField*/}
+        {/*width={'16%'}*/}
+        {/*contact={props.contact}*/}
+        {/*placeholder={'Comment'}*/}
+        {/*field={'info'}*/}
+        {/*onChange={(field, address, value) => {*/}
+          {/*props.onChange(field, address, value);*/}
+        {/*}}*/}
+      {/*/>*/}
       <td>
         {props.contact.onEdit ? (
           <Icon
