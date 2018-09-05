@@ -71,7 +71,6 @@ class AddressBook extends React.Component {
   }
 
   handleInput(stateKey, value) {
-    this.computeInputStatus(stateKey, value);
     this.setState({[stateKey]: value});
   }
 
