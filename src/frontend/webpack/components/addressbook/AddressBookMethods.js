@@ -37,7 +37,7 @@ export const updateContact = contact => {
       contactAddress: contact.contactAddress,
       preName: contact.preName,
       lastName: contact.lastName,
-      info: contact.info
+      label: contact.label
     })
   });
 };

@@ -25,6 +25,7 @@ const AddContact = styled.div`
   width: 100%;
   justify-content: space-around;
   align-items: center;
+  margin-top: 15px;
 `;
 
 const Circle = styled.div`
@@ -242,7 +243,10 @@ class AddressBook extends React.Component {
     return (
       <Container>
         {this.renderModals()}
-        <Card width={1000} title={'My Ethereum Address Book'}>
+        <Card
+          width={1000}
+          title={'My Ethereum Address Book'}
+        >
           <AddContact>
             <Circle onClick={() => this.setState({showAddContactModal: true})}>
               <Icon icon={'material'} material={'add'} width={25} noMove />

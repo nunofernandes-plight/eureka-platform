@@ -8,6 +8,7 @@ const ContactsContainer = styled.div`
   width: 100%;
   max-height: 400px;
   overflow: scroll;
+  padding: 5px 25px;
 `;
 
 const Contacts = styled.table`
@@ -48,6 +49,9 @@ const AddressBookTable = props => {
               <th>
                 <TableTitle>Last Name</TableTitle>
               </th>
+              <th style={{textAlign: 'center'}}>
+                <TableTitle>Labels</TableTitle>
+              </th>
               <th />
             </tr>
           </tbody>
@@ -67,7 +71,7 @@ const AddressBookTable = props => {
                   props.onChange(field, address, value);
                 }}
                 onSave={address => {
-                    props.onSave(address);
+                  props.onSave(address);
                 }}
               />
             ))}

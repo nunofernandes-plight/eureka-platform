@@ -1,21 +1,26 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  __ALERT_ERROR,
-  __ALERT_SUCCESS,
-  __GRAY_200,
-  __GRAY_300,
-  __MAIN,
-  __THIRD
-} from '../../../helpers/colors.js';
+import {__ALERT_ERROR, __GRAY_200, __THIRD} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import AddressBookField from './AddressBookField.js';
+import chroma from 'chroma-js';
 
 const Tr = styled.tr`
   &:hover {
     background: ${__GRAY_200};
   }
   transition: 0.5s all;
+`;
+
+const MyLabel = styled.div`
+  color: ${props => props.color};
+  background: ${props => props.alpha};
+  font-size: 10px;
+  text-transform: uppercase;
+  padding: 1.5px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+  margin: 8px 0;
 `;
 
 const Td = styled.td`
@@ -25,9 +30,8 @@ const Td = styled.td`
 const AddressBookMyTableRow = props => {
   return (
     <Tr key={props.contact.contactAddress}>
-      <Td width={'42%'}>{props.contact.contactAddress}</Td>
+      <Td>{props.contact.contactAddress}</Td>
       <AddressBookField
-        width={'16%'}
         contact={props.contact}
         placeholder={'First Name'}
         field={'preName'}
@@ -36,7 +40,6 @@ const AddressBookMyTableRow = props => {
         }}
       />
       <AddressBookField
-        width={'16%'}
         contact={props.contact}
         placeholder={'Last Name'}
         field={'lastName'}
@@ -44,7 +47,24 @@ const AddressBookMyTableRow = props => {
           props.onChange(field, address, value);
         }}
       />
-      <td>
+      <td style={{textAlign: 'center'}}>
+        {props.contact.label ? (
+          props.contact.label.map((l, index) => {
+            const alpha = chroma(l.color)
+              .alpha(0.1)
+              .css();
+            console.log(alpha);
+            return (
+              <MyLabel key={index} alpha={alpha} color={l.color}>
+                {l.label}
+              </MyLabel>
+            );
+          })
+        ) : (
+          <i>No labels.</i>
+        )}
+      </td>
+      <td style={{textAlign: 'center'}}>
         {props.contact.onEdit ? (
           <Icon
             icon={'save'}
@@ -66,8 +86,6 @@ const AddressBookMyTableRow = props => {
             }}
           />
         )}
-      </td>
-      <td>
         <Icon
           icon={'delete'}
           width={12}
