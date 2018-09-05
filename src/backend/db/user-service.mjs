@@ -221,7 +221,7 @@ export default {
                                   contactAddress,
                                   preName,
                                   lastName,
-                                  info
+                                  label
                                 }) => {
 
     const contact = await addressBookService.createContact(addressBookOwnerAddress,
@@ -229,7 +229,7 @@ export default {
         contactAddress,
         preName,
         lastName,
-        info
+        label
       });
 
     User.findOneAndUpdate(
