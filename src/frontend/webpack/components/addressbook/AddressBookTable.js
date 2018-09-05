@@ -6,7 +6,6 @@ import AddressBookMyTableRow from './AddressBookMyTableRow.js';
 const ContactsContainer = styled.div`
   font-size: 14px;
   width: 100%;
-  padding: 10px 25px;
   max-height: 400px;
   overflow: scroll;
 `;
@@ -48,9 +47,6 @@ const AddressBookTable = props => {
               </th>
               <th>
                 <TableTitle>Last Name</TableTitle>
-              </th>
-              <th>
-                <TableTitle>Comment</TableTitle>
               </th>
               <th />
             </tr>
