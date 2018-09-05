@@ -86,7 +86,10 @@ export default {
       + expectedStatus + '. Status found: ' + foundStatus);
     error.status = 400;
     throw error;
+  },
+  notExistingRole: (role) => {
+    let error = new Error('The provided Role does not exist: ' + role);
+    error.status = 400;
+    throw error;
   }
-
-
 }

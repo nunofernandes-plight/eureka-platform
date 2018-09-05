@@ -37,7 +37,7 @@ const userSchema = mongoose.Schema(
     ],
     scTransactions: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'ScTransaction'
+      ref: 'ScTransaction',
     }]
   },
   {collection: 'users'}
