@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import hexRgb from 'hex-rgb';
 import {
   __ALERT_ERROR,
   __ALERT_SUCCESS,
@@ -16,7 +17,8 @@ const getColor = (props, placeholder) => {
     return `${__ALERT_ERROR}`;
   }
   if (placeholder) {
-    return `${__THIRD}`;
+    const rgb = hexRgb(__THIRD);
+    return `rgba(${rgb.red},${rgb.green},${rgb.blue},0.4)`;
   }
   return `${__GRAY_200}`;
 };
