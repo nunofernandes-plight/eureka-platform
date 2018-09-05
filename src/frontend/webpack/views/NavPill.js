@@ -42,6 +42,7 @@ const IconContainer = styled.div`
 `;
 
 const Name = styled.div`
+	white-space: nowrap;
   ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
     display: none; 
   `};
