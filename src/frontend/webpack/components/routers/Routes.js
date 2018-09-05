@@ -33,7 +33,7 @@ export const Routes = [
   },
   {
     path: 'assigned',
-    name: 'My Assigned Articles',
+    name: 'Assigned Articles',
     icon: 'material',
     material: 'playlist_add_check',
     role: Roles.USER //TODO set to EDITOR
