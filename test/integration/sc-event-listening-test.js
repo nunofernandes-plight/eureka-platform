@@ -196,14 +196,12 @@ test(PRETEXT + 'Sign up Editor', async t => {
 
 /************************ Submit an Article &  auto change of Status from DRAFT --> SUBMITTED ************************/
 
-test.only(PRETEXT + 'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED', async t => {
+test(PRETEXT + 'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED', async t => {
   // Create user on DB
   t.is((await userService.getAllUsers()).length, 0);
   const contractOwner = await userService.createUser('test', 'test@test.test', accounts[0], 'test-avatar');
   const user = await userService.createUser('test2', 'test2@test.test', accounts[1], 'test-avatar2');
   t.is((await userService.getAllUsers()).length, 2);
-
-  console.log(user);
 
   // Create an article-draft on DB
   t.is((await articleSubmissionService.getAllSubmissions()).length, 0);
@@ -365,6 +363,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   t.is(articleVersion2.articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
 });
 
+/**************** Invite reviewers for review article & Reviewers accept Invitation  ******************/
 test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
   // Create author and editor
   const testAccounts = await getAccounts();
@@ -393,6 +392,7 @@ test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitatio
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
     counter++;
   }
+
   // Assign editor for the submission process of article
   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmission.scSubmissionID, editor.ethereumAddress);
 
@@ -548,5 +548,4 @@ test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitatio
     counter++;
   }
   t.is(review2.reviewState, ReviewState.DECLINED);
-
 });

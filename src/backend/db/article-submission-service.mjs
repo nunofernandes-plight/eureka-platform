@@ -72,9 +72,9 @@ export default {
 
     let articleSubmission = await ArticleSubmission.findOne({'articleVersions': articleVersion._id});
     if(!articleSubmission) errorThrower.noEntryFoundById(articleVersion._id);
-    // articleSubmission.scSubmissionID = scSubmissionId;
-    // articleSubmission.articleUrl = articleUrl;
-    // articleSubmission = await articleSubmission.save();
+    articleSubmission.scSubmissionID = scSubmissionId;
+    articleSubmission.articleUrl = articleUrl;
+    articleSubmission = await articleSubmission.save();
     return articleSubmission;
   },
 
