@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import AddressBookTableRow from './AddressBookTableRow.js';
+import AddressBookMyTableRow from './AddressBookMyTableRow.js';
 
 const ContactsContainer = styled.div`
   font-size: 14px;
@@ -57,12 +58,21 @@ const AddressBookTable = props => {
 
           <tbody>
             {props.contacts.map(contact => (
-              <AddressBookTableRow key={contact.contactAddress}
+              <AddressBookMyTableRow
+                key={contact.contactAddress}
                 contact={contact}
-                editable={props.contactToEdit === contact.contactAddress}
-                onEdit={props.onEdit}
-                onDelete={props.onDelete}
-                onSave={props.onSave}
+                onEdit={address => {
+                  props.onEdit(address);
+                }}
+                onDelete={address => {
+                  props.onDelete(address);
+                }}
+                onChange={(field, address, value) => {
+                  props.onChange(field, address, value);
+                }}
+                onSave={address => {
+                    props.onSave(address);
+                }}
               />
             ))}
           </tbody>

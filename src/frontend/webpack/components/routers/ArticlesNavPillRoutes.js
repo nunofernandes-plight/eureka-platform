@@ -1,4 +1,4 @@
-export const NavPillRoutes = [
+export const ArticlesNavPillRoutes = [
 	{
 		path: 'drafts',
 		name: 'Drafts',

@@ -32,6 +32,13 @@ export const Routes = [
     role: Roles.USER
   },
   {
+    path: 'assigned',
+    name: 'My Assigned Articles',
+    icon: 'material',
+    material: 'playlist_add_check',
+    role: Roles.USER //TODO set to EDITOR
+  },
+  {
     path: 'book',
     name: 'Address Book',
     material: 'book',

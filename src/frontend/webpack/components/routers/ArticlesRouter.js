@@ -7,7 +7,7 @@ import DocumentEditor from '../DocumentEditor.js';
 import NavPill from '../../views/NavPill.js';
 import MySubmitted from '../MySubmitted.js';
 import Preview from '../Preview.js';
-import {NavPillRoutes} from './NavPillRoutes.js';
+import {ArticlesNavPillRoutes} from './ArticlesNavPillRoutes.js';
 
 const Parent = styled.div`
   display: flex;
@@ -58,7 +58,7 @@ class ArticlesRouter extends Component {
 			<Parent>
 				<Container>
 					<NavPills>
-						{NavPillRoutes.map((item, index) => {
+						{ArticlesNavPillRoutes.map((item, index) => {
 							return (
 								<NavPill
 									name={item.name}
