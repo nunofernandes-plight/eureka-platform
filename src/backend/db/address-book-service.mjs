@@ -1,9 +1,9 @@
-import AddressBook from '../schema/address-book.mjs';
+import Contact from '../schema/address-book.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 
 export default {
   getContacts: async (address) => {
-    const contacts = await AddressBook.find({addressBookOwnerAddress: address});
+    const contacts = await Contact.find({addressBookOwnerAddress: address});
     if (!contacts)
       errorThrower.internalError();
     else
@@ -18,7 +18,7 @@ export default {
                     info
                   }) => {
 
-    let contact = await AddressBook.findOne({
+    let contact = await Contact.findOne({
       addressBookOwnerAddress: addressBookOwnerAddress,
       contactAddress: contactAddress
     });
@@ -26,7 +26,7 @@ export default {
     if (contact)
       errorThrower.entryAlreadyExists();
     else {
-      contact = new AddressBook({
+      contact = new Contact({
         addressBookOwnerAddress: addressBookOwnerAddress,
         contactAddress: contactAddress,
         preName: preName,
@@ -47,7 +47,7 @@ export default {
                           info
                         }) => {
 
-    let contact = await AddressBook.findOne({
+    let contact = await Contact.findOne({
       addressBookOwnerAddress: addressBookOwnerAddress,
       contactAddress: contactAddress
     });
@@ -55,7 +55,7 @@ export default {
     if (!contact)
       errorThrower.noEntryFoundByParameters();
     else {
-      return await AddressBook.findOneAndUpdate(
+      return await Contact.findOneAndUpdate(
         {
           addressBookOwnerAddress: addressBookOwnerAddress,
           contactAddress: contactAddress
@@ -69,7 +69,7 @@ export default {
   },
 
   deleteContact: async (addressBookOwnerAddress, contactAddress) => {
-    const contact = await AddressBook.findOne({
+    const contact = await Contact.findOne({
       addressBookOwnerAddress: addressBookOwnerAddress,
       contactAddress: contactAddress
     });
