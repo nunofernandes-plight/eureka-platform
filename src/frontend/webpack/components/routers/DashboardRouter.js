@@ -9,6 +9,7 @@ import ArticlesRouter from './ArticlesRouter.js';
 import AddressBook from '../addressbook/AddressBook.js';
 import ContractOwnerDashboard from '../ContractOwnerDashboard.js';
 import {ContractOwnerGuard} from '../guards/Guards.js';
+import EditorArticleRouter from './EditorRouter.js';
 
 class DashboardRouter extends Component {
   render() {
@@ -73,6 +74,20 @@ class DashboardRouter extends Component {
                 tokenContract={this.props.tokenContract}
                 platformContract={this.props.platformContract}
                 base={`${this.props.base}/articles`}
+                user={this.props.user}
+                selectedAccount={this.props.selectedAccount}
+              />
+            )}
+          />
+
+          <Route
+            path={`${this.props.base}/assigned`}
+            render={() => (
+              <EditorArticleRouter
+                web3={this.props.web3}
+                tokenContract={this.props.tokenContract}
+                platformContract={this.props.platformContract}
+                base={`${this.props.base}/assigned`}
                 user={this.props.user}
                 selectedAccount={this.props.selectedAccount}
               />

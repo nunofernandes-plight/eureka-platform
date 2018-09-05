@@ -164,7 +164,7 @@ async function setupContract(eurekaContract, platformContract) {
 
 /************************ Sign up Editor ************************/
 
-test.only(PRETEXT + 'Sign up Editor', async t => {
+test(PRETEXT + 'Sign up Editor', async t => {
   await userService.createUser('test', 'test@test.test', contractOwner, 'test-avatar');
 
   let user = await userService.getUserByEthereumAddress(contractOwner);
@@ -192,18 +192,24 @@ test.only(PRETEXT + 'Sign up Editor', async t => {
 });
 
 
+
+
 /************************ Submit an Article &  auto change of Status from DRAFT --> SUBMITTED ************************/
 
 test(PRETEXT + 'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED', async t => {
   // Create user on DB
   t.is((await userService.getAllUsers()).length, 0);
-  const user = await userService.createUser('test', 'test@test.test', accounts[8], 'test-avatar');
-  t.is((await userService.getAllUsers()).length, 1);
+  const contractOwner = await userService.createUser('test', 'test@test.test', accounts[0], 'test-avatar');
+  const user = await userService.createUser('test2', 'test2@test.test', accounts[1], 'test-avatar2');
+  t.is((await userService.getAllUsers()).length, 2);
 
   // Create an article-draft on DB
   t.is((await articleSubmissionService.getAllSubmissions()).length, 0);
   await articleSubmissionService.createSubmission(user.ethereumAddress);
   const articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+
+  // await articleSubmissionService.createSubmission(user.ethereumAddress);
+  // const articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
 
   t.is(articleSubmission.articleVersions.length, 1);
   let articleVersion = articleSubmission.articleVersions[0];
@@ -215,10 +221,18 @@ test(PRETEXT + 'Submit an Article &  auto change of Status from DRAFT --> SUBMIT
   t.is(articleVersion.articleVersionState, ArticleVersionState.FINISHED_DRAFT);
   t.is(articleVersion.articleHash, ARTICLE1_HASH_HEX);
 
-  // // Submission on the SC //TODO fix, why it does not find the user in DB?
-  //await submitArticle(eurekaTokenContract, user.ethereumAddress, eurekaPlatformContract.options.address, 5000, ARTICLE1_DATA_IN_HEX);
-  // articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id);
-  // t.is(articleVersion.articleVersionState, ArticleVersionState.SUBMITTED);
+  //  Submission on the SC //TODO fix, why it does not find the user in DB?
+  //   await submitArticle(eurekaTokenContract, user.ethereumAddress, eurekaPlatformContract.options.address, 5000, ARTICLE1_DATA_IN_HEX);
+  //   articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id);
+  //   let counter = 0;
+  //   while (
+  //     articleVersion.articleVersionState === ArticleVersionState.FINISHED_DRAFT &&
+  //     counter < 5) {
+  //     sleepSync(5000);
+  //     articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id);
+  //     counter++;
+  //   }
+  //   t.is(articleVersion.articleVersionState, ArticleVersionState.SUBMITTED);
 });
 
 test(PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process', async t => {
@@ -349,6 +363,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   t.is(articleVersion2.articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
 });
 
+/**************** Invite reviewers for review article & Reviewers accept Invitation  ******************/
 test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitation ', async t => {
   // Create author and editor
   const testAccounts = await getAccounts();
@@ -377,6 +392,7 @@ test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitatio
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
     counter++;
   }
+
   // Assign editor for the submission process of article
   await assignForSubmissionProcess(eurekaPlatformContract, articleSubmission.scSubmissionID, editor.ethereumAddress);
 
@@ -532,5 +548,4 @@ test(PRETEXT + 'Invite reviewers for review article & Reviewers accept Invitatio
     counter++;
   }
   t.is(review2.reviewState, ReviewState.DECLINED);
-
 });
