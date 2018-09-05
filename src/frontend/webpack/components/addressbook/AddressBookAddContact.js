@@ -86,6 +86,7 @@ const AddressBookAddContact = props => {
       <Label>Ethereum Address</Label>
       <InputField
         status={validateAddress(props)}
+        value={props.address}
         placeholder={'0x94C5fE31Ec15A4e55679155de555e22903D7156b'}
         onChange={e => props.handleInput('address', e.target.value)}
       />
@@ -97,6 +98,7 @@ const AddressBookAddContact = props => {
             right={10}
             style={{flex: '1'}}
             placeholder={'Enter a first name..'}
+            value={props.firstName}
             onChange={e => props.handleInput('firstName', e.target.value)}
           />
         </LabelContainer>
@@ -106,6 +108,7 @@ const AddressBookAddContact = props => {
             status={validateNames('lastName', props)}
             style={{flex: '1'}}
             placeholder={'Enter a last name..'}
+            value={props.lastName}
             onChange={e => props.handleInput('lastName', e.target.value)}
           />
         </LabelContainer>
@@ -114,6 +117,7 @@ const AddressBookAddContact = props => {
         <LabelContainer>
           <Label>Select a contact Label</Label>
           <AddressBookLabelSelect
+            value={props.label}
             onChangeLabel={label => props.onChangeLabel(label)}
           />
         </LabelContainer>

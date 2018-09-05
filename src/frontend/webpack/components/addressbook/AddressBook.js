@@ -62,6 +62,7 @@ class AddressBook extends React.Component {
 
       showAddContactModal: false,
       showDeleteModal: false,
+      showEditContactModal: false,
       contactToDelete: null,
 
       showErrorModal: false,
@@ -140,6 +141,38 @@ class AddressBook extends React.Component {
             }}
           />
         </Modal>
+
+        <Modal
+          action={'UPDATE CONTACT'}
+          callback={async () => {
+            this.setState({submitted: true});
+            if (this.isInputValid()) {
+              this.setState({showEditContactModal: false});
+              this.saveContact();
+              this.setState({submitted: false});
+            }
+          }}
+          show={this.state.showEditContactModal}
+          toggle={showEditContactModal => {
+            this.setState({showEditContactModal});
+          }}
+          title={'Add a new contact'}
+        >
+          <AddressBookAddContact
+            web3={this.props.web3}
+            submitted={this.state.submitted}
+            firstName={this.state.firstName}
+            lastName={this.state.lastName}
+            label={this.state.label}
+            address={this.state.address}
+            onChangeLabel={label => {
+              this.handleInput('label', label);
+            }}
+            handleInput={(field, value) => {
+              this.handleInput(field, value);
+            }}
+          />
+        </Modal>
       </div>
     );
   }
@@ -177,12 +210,13 @@ class AddressBook extends React.Component {
       });
   }
 
-  saveContact(contactAddress) {
-    const contact = this.state.contacts.find(c => {
-      return contactAddress === c.contactAddress;
-    });
-
-    updateContact(contact)
+  saveContact() {
+    updateContact(
+      this.state.address,
+      this.state.firstName,
+      this.state.lastName,
+      this.state.label
+    )
       .then(async response => {
         if (response.status === 200) {
           await this.fetchContacts();
@@ -260,14 +294,16 @@ class AddressBook extends React.Component {
             <AddressBookTable
               contacts={this.state.contacts}
               onEdit={address => {
-                const contacts = [...this.state.contacts];
-                contacts.map(c => {
-                  if (c.contactAddress === address) {
-                    c.onEdit = true;
-                    return c;
-                  }
+                const contactToEdit = this.state.contacts.find(c => {
+                  return c.contactAddress === address;
                 });
-                this.setState({contacts});
+                this.setState({
+                  firstName: contactToEdit.preName,
+                  lastName: contactToEdit.lastName,
+                  address: contactToEdit.contactAddress,
+                  label: contactToEdit.label,
+                  showEditContactModal: true
+                });
               }}
               onChange={(field, address, value) => {
                 const newContacts = this.state.contacts.map(contact => {

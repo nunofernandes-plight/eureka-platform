@@ -26,7 +26,7 @@ export const getContacts = () => {
   });
 };
 
-export const updateContact = contact => {
+export const updateContact = (contactAddress, preName, lastName, label) => {
   return fetch(`${getDomain()}/api/book`, {
     method: 'PUT',
     headers: {
@@ -34,10 +34,10 @@ export const updateContact = contact => {
     },
     credentials: 'include',
     body: JSON.stringify({
-      contactAddress: contact.contactAddress,
-      preName: contact.preName,
-      lastName: contact.lastName,
-      label: contact.label
+      contactAddress,
+      preName,
+      lastName,
+      label
     })
   });
 };
