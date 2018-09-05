@@ -1,8 +1,6 @@
 import errorThrower from '../helpers/error-thrower.mjs';
 import ScTransaction from '../schema/sc-transaction.mjs';
 import userService from './user-service.mjs';
-import User from '../schema/user.mjs';
-
 
 export default {
   /**
@@ -11,7 +9,7 @@ export default {
    */
   getAllScTransactionOfUser: async userAddress => {
     const scTransactions = await ScTransaction.find({ownerAddress: userAddress});
-    if(!scTransactions) errorThrower.noEntryFoundById(userAddress);
+    if (!scTransactions) errorThrower.noEntryFoundById(userAddress);
     return scTransactions;
   },
 
@@ -34,10 +32,9 @@ export default {
     });
 
     await scTransaction.save();
-    let user = await User.findOne({
-      ethereumAddress: userAddress,
-    });
-    if(!user) errorThrower.noEntryFoundById('SC Transactions service: ' + userAddress);
+    let user = await userService.getUserByEthereumAddress(userAddress);
+    if (!user) errorThrower.noEntryFoundById('SC Transactions service: ' + userAddress);
+
     user.scTransactions.push(scTransaction._id);
     await user.save();
     return scTransaction._id;
