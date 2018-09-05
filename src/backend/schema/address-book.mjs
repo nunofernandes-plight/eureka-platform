@@ -16,5 +16,5 @@ const addressBookSchema = mongoose.Schema(
   },
   {collection: 'addressBook'}
 );
-const AddressBook = mongoose.model('AddressBook', addressBookSchema, 'addressBook');
-export default AddressBook;
+const Contact = mongoose.model('Contact', addressBookSchema, 'addressBook');
+export default Contact;
