@@ -48,7 +48,7 @@ class AddressBook extends React.Component {
       address: null,
       firstName: null,
       lastName: null,
-      comment: null,
+      label: null,
 
       fetchingContactsLoading: false,
       contactToEdit: null,
@@ -125,6 +125,9 @@ class AddressBook extends React.Component {
           <AddressBookAddContact
             addressStatus={this.state.addressStatus}
             address={this.state.address}
+            onChangeLabel={label => {
+              this.handleInput('label', label);
+            }}
             handleInput={(field, value) => {
               this.handleInput(field, value);
             }}
@@ -139,7 +142,7 @@ class AddressBook extends React.Component {
       this.state.address,
       this.state.firstName,
       this.state.lastName,
-      this.state.comment
+      this.state.label
     )
       .then(response => {
         if (response.status === 200) {
@@ -148,7 +151,7 @@ class AddressBook extends React.Component {
             address: null,
             firstName: null,
             lastName: null,
-            comment: null
+            label: null
           });
         } else if (response.status === 409)
           this.setState({

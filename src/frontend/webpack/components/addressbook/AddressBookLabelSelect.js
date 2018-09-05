@@ -45,12 +45,13 @@ const colourStyles = {
   })
 };
 
-export default () => (
+export default (props) => (
   <Select
     closeMenuOnSelect={false}
-    defaultValue={[ContactLabels[6]]}
     isMulti
     options={ContactLabels}
     styles={colourStyles}
+    onChange={value => props.onChangeLabel(value)}
+    value={props.value}
   />
 );

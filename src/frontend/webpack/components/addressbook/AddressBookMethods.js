@@ -1,6 +1,6 @@
 import {getDomain} from '../../../../helpers/getDomain.js';
 
-export const createContact = (contactAddress, preName, lastName, info) => {
+export const createContact = (contactAddress, preName, lastName, label) => {
   return fetch(`${getDomain()}/api/book`, {
     method: 'POST',
     headers: {
@@ -8,10 +8,10 @@ export const createContact = (contactAddress, preName, lastName, info) => {
     },
     credentials: 'include',
     body: JSON.stringify({
-      contactAddress: contactAddress,
-      preName: preName,
-      lastName: lastName,
-      info: info
+      contactAddress,
+      preName,
+      lastName,
+      label
     })
   });
 };

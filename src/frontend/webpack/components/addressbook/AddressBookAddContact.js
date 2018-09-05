@@ -80,7 +80,9 @@ const AddressBookAddContact = props => {
       <RowFlex>
         <LabelContainer>
           <Label>Select a contact Label</Label>
-          <AddressBookLabelSelect />
+          <AddressBookLabelSelect
+            onChangeLabel={label => props.onChangeLabel(label)}
+          />
         </LabelContainer>
       </RowFlex>
     </Container>

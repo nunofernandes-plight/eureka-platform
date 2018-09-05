@@ -9,7 +9,6 @@ import {
   __THIRD
 } from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
-import {InputField} from '../../design-components/Inputs.js';
 import AddressBookField from './AddressBookField.js';
 
 const Tr = styled.tr`
@@ -21,12 +20,6 @@ const Tr = styled.tr`
 
 const Td = styled.td`
   padding: 15px 0;
-`;
-
-const Tick = styled(Icon)`
-  opacity: ${props => (props.valid ? '1' : '0.5')};
-  pointer-events: ${props => (props.valid ? 'auto' : 'none')};
-  background-color: ${props => (props.valid ? __ALERT_SUCCESS : __GRAY_300)};
 `;
 
 const AddressBookMyTableRow = props => {
@@ -51,15 +44,6 @@ const AddressBookMyTableRow = props => {
           props.onChange(field, address, value);
         }}
       />
-      {/*<AddressBookField*/}
-        {/*width={'16%'}*/}
-        {/*contact={props.contact}*/}
-        {/*placeholder={'Comment'}*/}
-        {/*field={'info'}*/}
-        {/*onChange={(field, address, value) => {*/}
-          {/*props.onChange(field, address, value);*/}
-        {/*}}*/}
-      {/*/>*/}
       <td>
         {props.contact.onEdit ? (
           <Icon
