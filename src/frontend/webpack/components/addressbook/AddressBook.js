@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Card} from '../../views/Card.js';
-import {__ALERT_ERROR, __FIFTH} from '../../../helpers/colors.js';
+import {__FIFTH} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import Modal from '../../design-components/Modal.js';
 import chroma from 'chroma-js';
@@ -220,6 +220,12 @@ class AddressBook extends React.Component {
       .then(async response => {
         if (response.status === 200) {
           await this.fetchContacts();
+          this.setState({
+            firstName: null,
+            lastName: null,
+            address: null,
+            label: null
+          });
         } else
           this.setState({
             errorMessage: 'Ouh. Something went wrong.'

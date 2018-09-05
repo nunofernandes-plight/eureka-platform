@@ -1,6 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__ALERT_ERROR, __GRAY_200, __THIRD} from '../../../helpers/colors.js';
+import {
+  __ALERT_ERROR,
+  __ALERT_WARNING,
+  __GRAY_200,
+  __THIRD
+} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import AddressBookField from './AddressBookField.js';
 import chroma from 'chroma-js';
@@ -10,6 +15,7 @@ const Tr = styled.tr`
     background: ${__GRAY_200};
   }
   transition: 0.5s all;
+  border-bottom: 1px solid ${__GRAY_200};
 `;
 
 const MyLabel = styled.div`
@@ -27,6 +33,23 @@ const Td = styled.td`
   padding: 15px 0;
 `;
 
+const Icons = styled.td`
+  text-align: center;
+  padding-left: 8px;
+  border-left: 1px solid ${__GRAY_200};
+`;
+
+const Labels = styled.td`
+  text-align: center;
+  padding-right: 8px;
+`;
+
+const Circle = styled.div`
+  background: ${props => props.background};
+  color: ${props => props.color};
+  border-radius: 50%;
+  margin-bottom: 2px;
+`;
 const AddressBookMyTableRow = props => {
   return (
     <Tr key={props.contact.contactAddress}>
@@ -47,7 +70,7 @@ const AddressBookMyTableRow = props => {
           props.onChange(field, address, value);
         }}
       />
-      <td style={{textAlign: 'center'}}>
+      <Labels>
         {props.contact.label ? (
           props.contact.label.map((l, index) => {
             const alpha = chroma(l.color)
@@ -63,39 +86,37 @@ const AddressBookMyTableRow = props => {
         ) : (
           <i>No labels.</i>
         )}
-      </td>
-      <td style={{textAlign: 'center'}}>
-        {props.contact.onEdit ? (
+      </Labels>
+      <Icons>
+        <Circle
+          color={__THIRD}
+          background={chroma(__THIRD)
+            .alpha(0.2)
+            .css()}
+          onClick={() => {
+            props.onEdit(props.contact.contactAddress);
+          }}
+        >
           <Icon
-            icon={'save'}
-            width={12}
-            height={12}
-            color={__THIRD}
-            onClick={() => {
-              props.onSave(props.contact.contactAddress);
-            }}
+            icon={'material'}
+            material={'edit'}
+            bottom={1}
+            width={15}
+            height={15}
           />
-        ) : (
-          <Icon
-            icon={'edit'}
-            width={12}
-            height={12}
-            color={__THIRD}
-            onClick={() => {
-              props.onEdit(props.contact.contactAddress);
-            }}
-          />
-        )}
-        <Icon
-          icon={'delete'}
-          width={12}
-          height={12}
+        </Circle>
+        <Circle
           color={__ALERT_ERROR}
+          background={chroma(__ALERT_ERROR)
+            .alpha(0.2)
+            .css()}
           onClick={() => {
             props.onDelete(props.contact.contactAddress);
           }}
-        />
-      </td>
+        >
+          <Icon bottom={1} icon={'delete'} width={13} height={13} />
+        </Circle>
+      </Icons>
     </Tr>
   );
 };
