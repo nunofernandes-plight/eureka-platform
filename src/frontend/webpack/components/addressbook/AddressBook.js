@@ -269,12 +269,12 @@ class AddressBook extends React.Component {
                 this.setState({contacts: newContacts});
               }}
               onSave={address => this.saveContact(address)}
-              // onDelete={contactAddress => {
-              //   this.setState({
-              //     showDeleteModal: true,
-              //     contactToDelete: contactAddress
-              //   });
-              // }}
+              onDelete={contactAddress => {
+                this.setState({
+                  showDeleteModal: true,
+                  contactToDelete: contactAddress
+                });
+              }}
             />
           ) : (
             <div style={{marginTop: 25}}>
