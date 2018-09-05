@@ -3,6 +3,7 @@ import {asyncHandler} from '../api/requestHandler.mjs';
 
 const router = express.Router();
 import addressBookService from '../db/address-book-service.mjs';
+import userService from '../db/user-service.mjs';
 import accesController from '../controller/acess-controller.mjs';
 
 
@@ -17,7 +18,7 @@ router.get(
 router.post(
   '/',
   asyncHandler(async req => {
-    return await addressBookService.createContact(req.user.ethereumAddress, req.body);
+    return await userService.addAddressBookContact(req.user.ethereumAddress, req.body);
   })
 );
 
