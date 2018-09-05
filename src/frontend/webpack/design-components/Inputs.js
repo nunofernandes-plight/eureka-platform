@@ -10,15 +10,15 @@ import {
 import Icon from '../views/icons/Icon.js';
 
 const getColor = (props, placeholder) => {
+  if (placeholder) {
+    const rgb = hexRgb(__THIRD);
+    return `rgba(${rgb.red},${rgb.green},${rgb.blue},0.4)`;
+  }
   if (props.status === 'valid') {
     return `${__ALERT_SUCCESS}`;
   }
   if (props.status === 'error') {
     return `${__ALERT_ERROR}`;
-  }
-  if (placeholder) {
-    const rgb = hexRgb(__THIRD);
-    return `rgba(${rgb.red},${rgb.green},${rgb.blue},0.4)`;
   }
   return `${__GRAY_200}`;
 };
