@@ -48,7 +48,7 @@ const colourStyles = {
 export default () => (
   <Select
     closeMenuOnSelect={false}
-    defaultValue={[ContactLabels[8]]}
+    defaultValue={[ContactLabels[6]]}
     isMulti
     options={ContactLabels}
     styles={colourStyles}
