@@ -2,39 +2,59 @@ import React from 'react';
 import styled from 'styled-components';
 import {
   __ALERT_ERROR,
-  __ALERT_SUCCESS,
+  __ALERT_WARNING,
   __GRAY_200,
-  __GRAY_300,
-  __MAIN,
   __THIRD
 } from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
-import {InputField} from '../../design-components/Inputs.js';
 import AddressBookField from './AddressBookField.js';
+import chroma from 'chroma-js';
 
 const Tr = styled.tr`
   &:hover {
     background: ${__GRAY_200};
   }
   transition: 0.5s all;
+  border-bottom: 1px solid ${__GRAY_200};
+`;
+
+const MyLabel = styled.div`
+  color: ${props => props.color};
+  background: ${props => props.alpha};
+  font-size: 10px;
+  text-transform: uppercase;
+  padding: 1.5px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+  margin: 8px 0;
 `;
 
 const Td = styled.td`
   padding: 15px 0;
 `;
 
-const Tick = styled(Icon)`
-  opacity: ${props => (props.valid ? '1' : '0.5')};
-  pointer-events: ${props => (props.valid ? 'auto' : 'none')};
-  background-color: ${props => (props.valid ? __ALERT_SUCCESS : __GRAY_300)};
+const Icons = styled.td`
+  text-align: center;
+  padding-left: 8px;
+  border-left: 1px solid ${__GRAY_200};
 `;
 
+const Labels = styled.td`
+  text-align: center;
+  padding-right: 8px;
+`;
+
+const Circle = styled.div`
+  background: ${props => props.background};
+  color: ${props => props.color};
+  border-radius: 50%;
+  margin-bottom: 2px;
+`;
 const AddressBookMyTableRow = props => {
   return (
     <Tr key={props.contact.contactAddress}>
-      <Td width={'42%'}>{props.contact.contactAddress}</Td>
+      <Td>{props.contact.contactAddress}</Td>
       <AddressBookField
-        width={'16%'}
         contact={props.contact}
         placeholder={'First Name'}
         field={'preName'}
@@ -43,7 +63,6 @@ const AddressBookMyTableRow = props => {
         }}
       />
       <AddressBookField
-        width={'16%'}
         contact={props.contact}
         placeholder={'Last Name'}
         field={'lastName'}
@@ -51,49 +70,53 @@ const AddressBookMyTableRow = props => {
           props.onChange(field, address, value);
         }}
       />
-      <AddressBookField
-        width={'16%'}
-        contact={props.contact}
-        placeholder={'Comment'}
-        field={'info'}
-        onChange={(field, address, value) => {
-          props.onChange(field, address, value);
-        }}
-      />
-      <td>
-        {props.contact.onEdit ? (
-          <Icon
-            icon={'save'}
-            width={12}
-            height={12}
-            color={__THIRD}
-            onClick={() => {
-              props.onSave(props.contact.contactAddress);
-            }}
-          />
+      <Labels>
+        {props.contact.label ? (
+          props.contact.label.map((l, index) => {
+            const alpha = chroma(l.color)
+              .alpha(0.1)
+              .css();
+            console.log(alpha);
+            return (
+              <MyLabel key={index} alpha={alpha} color={l.color}>
+                {l.label}
+              </MyLabel>
+            );
+          })
         ) : (
-          <Icon
-            icon={'edit'}
-            width={12}
-            height={12}
-            color={__THIRD}
-            onClick={() => {
-              props.onEdit(props.contact.contactAddress);
-            }}
-          />
+          <i>No labels.</i>
         )}
-      </td>
-      <td>
-        <Icon
-          icon={'delete'}
-          width={12}
-          height={12}
+      </Labels>
+      <Icons>
+        <Circle
+          color={__THIRD}
+          background={chroma(__THIRD)
+            .alpha(0.2)
+            .css()}
+          onClick={() => {
+            props.onEdit(props.contact.contactAddress);
+          }}
+        >
+          <Icon
+            icon={'material'}
+            material={'edit'}
+            bottom={1}
+            width={15}
+            height={15}
+          />
+        </Circle>
+        <Circle
           color={__ALERT_ERROR}
+          background={chroma(__ALERT_ERROR)
+            .alpha(0.2)
+            .css()}
           onClick={() => {
             props.onDelete(props.contact.contactAddress);
           }}
-        />
-      </td>
+        >
+          <Icon bottom={1} icon={'delete'} width={13} height={13} />
+        </Circle>
+      </Icons>
     </Tr>
   );
 };

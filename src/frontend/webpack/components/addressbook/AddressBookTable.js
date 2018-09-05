@@ -6,9 +6,9 @@ import AddressBookMyTableRow from './AddressBookMyTableRow.js';
 const ContactsContainer = styled.div`
   font-size: 14px;
   width: 100%;
-  padding: 10px 25px;
   max-height: 400px;
   overflow: scroll;
+  padding: 5px 25px;
 `;
 
 const Contacts = styled.table`
@@ -49,8 +49,8 @@ const AddressBookTable = props => {
               <th>
                 <TableTitle>Last Name</TableTitle>
               </th>
-              <th>
-                <TableTitle>Comment</TableTitle>
+              <th style={{textAlign: 'center'}}>
+                <TableTitle>Labels</TableTitle>
               </th>
               <th />
             </tr>
@@ -71,7 +71,7 @@ const AddressBookTable = props => {
                   props.onChange(field, address, value);
                 }}
                 onSave={address => {
-                    props.onSave(address);
+                  props.onSave(address);
                 }}
               />
             ))}

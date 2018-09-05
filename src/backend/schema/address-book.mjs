@@ -12,7 +12,7 @@ const addressBookSchema = mongoose.Schema(
     },
     preName: String,
     lastName: String,
-    info: String
+    label: Array,
   },
   {collection: 'addressBook'}
 );
