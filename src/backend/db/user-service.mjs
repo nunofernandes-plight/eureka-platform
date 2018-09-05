@@ -99,6 +99,16 @@ export default {
   },
 
   /**
+   * Get one user by ethereumAddress and populate by scTransactions
+   * @param ethereumAddress
+   * @returns {Promise<Query|void|*|Promise<Object>|Promise<TSchema | null>|Promise>}
+   */
+  getUserByEthereumAddressWithScTransactions: async ethereumAddress => {
+    return User.findOne({ethereumAddress: ethereumAddress}).populate('scTransactions');
+  },
+
+
+  /**
    * Get one user by the ID
    * @param userId
    * @returns {Promise<Query|void|*|ThenPromise<Object>|Promise<TSchema | null>|Promise>}
@@ -116,6 +126,14 @@ export default {
 
     return user.roles;
   },
+
+  getOwnScTransactions: async ethereumAddress => {
+    if (!ethereumAddress) errorThrower.missingParameter('Ethereum-address');
+    const user = await User.findOne({ethereumAddress: ethereumAddress}).populate('scTransactions');
+    if (!user) errorThrower.noEntryFoundById(ethereumAddress);
+    return user.scTransactions;
+  },
+
   /**
    * Add the role to the given user
    * if the role matches a roles-enum

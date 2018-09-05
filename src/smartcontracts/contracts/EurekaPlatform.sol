@@ -175,13 +175,13 @@ contract EurekaPlatform {
     }
 
 
-    event EditorSignUp(address editorAddress);
+    event EditorSignUp(address submissionOwner, address editorAddress, uint256 stateTimestamp);
 
     function signUpEditor(address editor) public {
 
         require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
         isEditor[editor] = true;
-        emit EditorSignUp(editor);
+        emit EditorSignUp(msg.sender, editor, block.timestamp);
     }
 
     event SubmissionProcessStart(uint256 submissionId, address submissionOwner, bytes32 articleHash, bytes32 articleURL, uint256 stateTimestamp);

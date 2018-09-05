@@ -10,10 +10,6 @@ export const scTransactionSchema = mongoose.Schema(
       type: String,
       required: true
     },
-    receiverAddress: {
-      type: String,
-      required: true
-    },
     transactionType: {
       type: String,
       enum: Object.values(ScTransactionType),
@@ -25,7 +21,9 @@ export const scTransactionSchema = mongoose.Schema(
     },
     txHash: {
       type: String,
-    }
+      required: true
+    },
+    additionalInfo: {}
   },
   {
     collection: 'scTransaction',

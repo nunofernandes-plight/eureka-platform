@@ -26,7 +26,7 @@ export const getContacts = () => {
   });
 };
 
-export const updateContact = (contactAddress, preName, lastName, info) => {
+export const updateContact = contact => {
   return fetch(`${getDomain()}/api/book`, {
     method: 'PUT',
     headers: {
@@ -34,15 +34,15 @@ export const updateContact = (contactAddress, preName, lastName, info) => {
     },
     credentials: 'include',
     body: JSON.stringify({
-      contactAddress: contactAddress,
-      preName: preName,
-      lastName: lastName,
-      info: info
+      contactAddress: contact.contactAddress,
+      preName: contact.preName,
+      lastName: contact.lastName,
+      info: contact.info
     })
   });
 };
 
-export const deleteContact = (contactAddress) => {
+export const deleteContact = contactAddress => {
   return fetch(`${getDomain()}/api/book`, {
     method: 'DELETE',
     headers: {

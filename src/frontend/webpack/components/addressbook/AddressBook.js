@@ -5,7 +5,12 @@ import {InputField} from '../../design-components/Inputs.js';
 import {__FIFTH, __GRAY_300, __THIRD} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import Modal from '../../design-components/Modal.js';
-import {createContact, deleteContact, getContacts, updateContact} from './AddressBookMethods.js';
+import {
+  createContact,
+  deleteContact,
+  getContacts,
+  updateContact
+} from './AddressBookMethods.js';
 import CircleSpinner from '../../views/spinners/CircleSpinner.js';
 import AddressBookTable from './AddressBookTable.js';
 
@@ -117,7 +122,12 @@ class AddressBook extends React.Component {
   }
 
   addContact() {
-    createContact(this.state.address, this.state.firstName, this.state.lastName, this.state.comment)
+    createContact(
+      this.state.address,
+      this.state.firstName,
+      this.state.lastName,
+      this.state.comment
+    )
       .then(response => {
         if (response.status === 200) {
           this.fetchContacts();
@@ -127,10 +137,10 @@ class AddressBook extends React.Component {
             lastName: null,
             comment: null
           });
-        }
-        else if (response.status === 409)
+        } else if (response.status === 409)
           this.setState({
-            errorMessage: 'There exists already a contact with the same address.'
+            errorMessage:
+              'There exists already a contact with the same address.'
           });
         else
           this.setState({
@@ -144,14 +154,16 @@ class AddressBook extends React.Component {
       });
   }
 
-  editContact(contactAddress, firstName, lastName, info) {
-    updateContact(contactAddress, firstName, lastName, info)
-      .then(response => {
+  saveContact(contactAddress) {
+    const contact = this.state.contacts.find(c => {
+      return contactAddress === c.contactAddress;
+    });
+
+    updateContact(contact)
+      .then(async response => {
         if (response.status === 200) {
-          this.setState({contactToEdit: null});
-          this.fetchContacts();
-        }
-        else
+          await this.fetchContacts();
+        } else
           this.setState({
             errorMessage: 'Ouh. Something went wrong.'
           });
@@ -166,18 +178,17 @@ class AddressBook extends React.Component {
   removeContact() {
     deleteContact(this.state.contactToDelete)
       .then(response => {
-      if (response.status === 200) {
-        this.setState({
-          showDeleteModal: false,
-          contactToDelete: null
-        });
-        this.fetchContacts();
-      }
-      else
-        this.setState({
-          errorMessage: 'Ouh. Something went wrong.'
-        });
-    })
+        if (response.status === 200) {
+          this.setState({
+            showDeleteModal: false,
+            contactToDelete: null
+          });
+          this.fetchContacts();
+        } else
+          this.setState({
+            errorMessage: 'Ouh. Something went wrong.'
+          });
+      })
       .catch(err => {
         this.setState({
           errorMessage: 'Ouh. Something went wrong.'
@@ -217,7 +228,6 @@ class AddressBook extends React.Component {
         {this.renderModals()}
         <Card width={1000} title={'My Ethereum Address Book'}>
           <AddContact>
-
             <CustomInputField
               width={'42%'}
               placeholder={'Ethereum Address'}
@@ -243,25 +253,37 @@ class AddressBook extends React.Component {
               onChange={e => this.handleInput('comment', e)}
             />
 
-            <Circle
-              valid={this.validate()}
-              onClick={() => this.addContact()}
-            >
+            <Circle valid={this.validate()} onClick={() => this.addContact()}>
               <Icon icon={'material'} material={'add'} width={25} noMove />
             </Circle>
           </AddContact>
           {this.state.contacts ? (
             <AddressBookTable
               contacts={this.state.contacts}
-              contactToEdit={this.state.contactToEdit}
-              onEdit={contactAddress => this.setState({contactToEdit: contactAddress})}
-              onSave={(contactAddress, firstName, lastName, info) => this.editContact(contactAddress, firstName, lastName, info)}
-              onDelete={contactAddress => {
-                this.setState({
-                  showDeleteModal: true,
-                  contactToDelete: contactAddress
+              onEdit={address => {
+                const contacts = [...this.state.contacts];
+                contacts.map(c => {
+                  if (c.contactAddress === address) {
+                    c.onEdit = true;
+                    return c;
+                  }
                 });
+                this.setState({contacts});
               }}
+              onChange={(field, address, value) => {
+                const newContacts = this.state.contacts.map(contact => {
+                  if (contact.contactAddress !== address) return contact;
+                  return {...contact, [field]: value};
+                });
+                this.setState({contacts: newContacts});
+              }}
+              onSave={address => this.saveContact(address)}
+              // onDelete={contactAddress => {
+              //   this.setState({
+              //     showDeleteModal: true,
+              //     contactToDelete: contactAddress
+              //   });
+              // }}
             />
           ) : (
             <div style={{marginTop: 25}}>
