@@ -1,12 +1,16 @@
 export const ContactLabels = [
-  {value: 'EUREKA team', label: 'smartContract', color: '#00B8D9'},
-  {value: 'University', label: 'university', color: '#0052CC'},
-  {value: 'Author', label: 'friend', color: '#5243AA'},
-  {value: 'Editor', label: 'editor', color: '#FF5630'},
-  {value: 'Linked Author', label: 'reviewer', color: '#FF8B00'},
-  {value: 'Reviewer', label: 'smartContractOwner', color: '#FFC400'},
-  {value: 'Friend', label: 'Green', color: '#36B37E', isFixed: true},
-  {value: 'Smart contract', label: 'Forest', color: '#00875A'},
-  {value: 'Smart contract Owner', label: 'Slate', color: '#253858'},
-  {value: 'Other', label: 'Silver', color: '#666666'}
+  {value: 'eurekaTeam', label: 'EUREKA team', color: '#00B8D9'},
+  {value: 'university', label: 'University', color: '#0052CC'},
+  {value: 'author', label: 'Author', color: '#5243AA'},
+  {value: 'editor', label: 'Editor', color: '#FF5630'},
+  {value: 'linkedAuthor', label: 'Linked Author', color: '#FF8B00'},
+  {value: 'reviewer', label: 'Reviewer', color: '#FFC400'},
+  {value: 'friend', label: 'Friend', color: '#36B37E'},
+  {value: 'smartContract', label: 'Smart contract', color: '#00875A'},
+  {
+    value: 'smartContractOwner',
+    label: 'Smart contract Owner',
+    color: '#253858'
+  },
+  {value: 'other', label: 'Other', color: '#666666'}
 ];
