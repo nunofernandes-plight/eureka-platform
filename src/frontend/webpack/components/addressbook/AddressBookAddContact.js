@@ -43,6 +43,37 @@ const LabelContainer = styled.div`
   flex: 1;
 `;
 
+const validateNames = (field, props) => {
+  if (props.submitted && !props[field]) {
+    return 'error';
+  }
+  if (props[field] === null) {
+    return null;
+  }
+  if (!props[field]) {
+    return 'error';
+  } else {
+    return 'valid';
+  }
+};
+
+const validateAddress = props => {
+  const isAddress = props.web3.utils.isAddress(props.address);
+  if (props.submitted && !isAddress) {
+    return 'error';
+  }
+
+  if (props.address === null) {
+    return null;
+  }
+
+  if (!isAddress) {
+    return 'error';
+  } else {
+    return 'valid';
+  }
+};
+
 const AddressBookAddContact = props => {
   return (
     <Container>
@@ -54,14 +85,15 @@ const AddressBookAddContact = props => {
 
       <Label>Ethereum Address</Label>
       <InputField
+        status={validateAddress(props)}
         placeholder={'0x94C5fE31Ec15A4e55679155de555e22903D7156b'}
-        status={props.address ? props.addressStatus : null}
         onChange={e => props.handleInput('address', e.target.value)}
       />
       <RowFlex>
         <LabelContainer>
           <Label>First Name</Label>
           <InputField
+            status={validateNames('firstName', props)}
             right={10}
             style={{flex: '1'}}
             placeholder={'Enter a first name..'}
@@ -71,6 +103,7 @@ const AddressBookAddContact = props => {
         <LabelContainer>
           <Label>Last Name</Label>
           <InputField
+            status={validateNames('lastName', props)}
             style={{flex: '1'}}
             placeholder={'Enter a last name..'}
             onChange={e => props.handleInput('lastName', e.target.value)}

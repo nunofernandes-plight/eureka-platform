@@ -62,7 +62,7 @@ class AddressBook extends React.Component {
     };
   }
 
-  validate() {
+  isInputValid() {
     return (
       this.props.web3.utils.isAddress(this.state.address) &&
       this.state.firstName &&
@@ -71,13 +71,7 @@ class AddressBook extends React.Component {
   }
 
   handleInput(stateKey, value) {
-    if (stateKey === 'address') {
-      if (this.props.web3.utils.isAddress(value)) {
-        this.setState({addressStatus: 'valid'});
-      } else {
-        this.setState({addressStatus: 'error'});
-      }
-    }
+    this.computeInputStatus(stateKey, value);
     this.setState({[stateKey]: value});
   }
 
@@ -111,10 +105,14 @@ class AddressBook extends React.Component {
           permanent.
         </Modal>
         <Modal
-          action={'ADD'}
-          callback={() => {
-            this.setState({showAddContactModal: false});
-            this.addContact();
+          action={'ADD CONTACT'}
+          callback={async () => {
+            this.setState({submitted: true});
+            if (this.isInputValid()) {
+              this.setState({showAddContactModal: false});
+              this.addContact();
+              this.setState({submitted: false});
+            }
           }}
           show={this.state.showAddContactModal}
           toggle={showAddContactModal => {
@@ -123,7 +121,10 @@ class AddressBook extends React.Component {
           title={'Add a new contact'}
         >
           <AddressBookAddContact
-            addressStatus={this.state.addressStatus}
+            web3={this.props.web3}
+            submitted={this.state.submitted}
+            firstName={this.state.firstName}
+            lastName={this.state.lastName}
             address={this.state.address}
             onChangeLabel={label => {
               this.handleInput('label', label);
