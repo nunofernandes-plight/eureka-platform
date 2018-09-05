@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Card} from '../../views/Card.js';
-import {__FIFTH} from '../../../helpers/colors.js';
+import {__ALERT_ERROR, __FIFTH} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import Modal from '../../design-components/Modal.js';
+import chroma from 'chroma-js';
 import {
   createContact,
   deleteContact,
@@ -33,12 +34,17 @@ const Circle = styled.div`
     transform: translateY(3px);
     cursor: pointer;
   }
-  border-radius: 50%;
+  border-radius: 4px;
   padding: 0.4rem;
   transition: 0.3s all;
-  color: #fff;
-  background-color: ${__FIFTH};
+  color: ${__FIFTH};
+  background: rgba(255, 139, 0, 0.1);
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  display: flex;
+  font-weight: bold;
+  background: ${chroma(__FIFTH)
+    .alpha(0.1)
+    .css()};
 `;
 
 class AddressBook extends React.Component {
@@ -243,12 +249,10 @@ class AddressBook extends React.Component {
     return (
       <Container>
         {this.renderModals()}
-        <Card
-          width={1000}
-          title={'My Ethereum Address Book'}
-        >
+        <Card width={1000} title={'My Ethereum Address Book'}>
           <AddContact>
             <Circle onClick={() => this.setState({showAddContactModal: true})}>
+              <div>Add a new contact</div>
               <Icon icon={'material'} material={'add'} width={25} noMove />
             </Circle>
           </AddContact>
