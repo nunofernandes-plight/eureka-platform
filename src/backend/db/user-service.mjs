@@ -73,6 +73,11 @@ export default {
     });
 
     const contractOwner = await ContractOwner.findById(1);
+
+    // add default roles
+    newUser.roles.push(Roles.AUTHOR);
+    newUser.roles.push(Roles.REVIEWER);
+
     if (contractOwner.address === ethereumAddress) {
       newUser.roles.push(Roles.CONTRACT_OWNER);
     }
@@ -142,10 +147,10 @@ export default {
    * @param role
    * @returns {Promise<void>}
    */
-  addRole: async (user_id, role) => {
+  addRole: async (userAddress, role) => {
     if (Roles.hasOwnProperty(role)) {
-      return User.findByIdAndUpdate(
-        user_id,
+      return await User.findOneAndUpdate(
+        {ethereumAddress: userAddress},
         {
           $addToSet: {
             roles: role
@@ -153,15 +158,25 @@ export default {
         },
         function(err, user) {
           if (err) throw err;
-          console.log(
-            'User ' + user_id + ' was granted the role "' + role + '"'
-          );
           return user;
         }
       );
-    } else {
-      throw new Error('No matching role found in DB');
     }
+    errorThrower.notExistingRole(role);
+  },
+  /**
+   * Remove role from the given user
+   * @param ethereumAddress
+   * @returns {Promise<void>}
+   */
+  removeRole: async (userAddress, role) => {
+    if (Roles.hasOwnProperty(role)) {
+      let user = await User.findOne({ethereumAddress: userAddress});
+      if (!user) errorThrower.noEntryFoundById(userAddress);
+      user.roles.pull(role);
+      return await user.save();
+    }
+    errorThrower.notExistingRole(role);
   },
 
   makeEditor: async ethereumAddress => {

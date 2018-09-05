@@ -169,8 +169,8 @@ test(PRETEXT + 'Sign up Editor', async t => {
 
   let user = await userService.getUserByEthereumAddress(contractOwner);
   // t.is(user.isEditor, false);
-  t.is(user.roles.length, 1);
-  t.is(user.roles[0], Roles.CONTRACT_OWNER);
+  t.is(user.roles.length, 3);
+  t.is(user.roles[2], Roles.CONTRACT_OWNER);
 
   await signUpEditor(eurekaPlatformContract, contractOwner, contractOwner);
 
@@ -185,8 +185,8 @@ test(PRETEXT + 'Sign up Editor', async t => {
     counter++;
   }
 
-  t.is(user.roles.length, 2);
-  t.is(user.roles[1], Roles.EDITOR);
+  t.is(user.roles.length, 4); // [REVIEWER, AUTHOR, CONTRACT-OWNER, EDITOR]
+  t.is(user.roles[3], Roles.EDITOR);
   t.is(user.scTransactions.length, 1);
   t.is(user.scTransactions[0].transactionType, ScTransactionType.EDITOR_ASSIGNED);
 });

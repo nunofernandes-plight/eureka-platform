@@ -51,6 +51,42 @@ router.get(
   })
 );
 
+router.put(
+  '/ownRoles',
+  asyncHandler(async req => {
+    let role;
+    if(!req.body.role) {
+      errorThrower.missingBodyValue('role');
+    }
+    role = req.body.role;
+    // restrictions for role updating
+    if(role !== Roles.AUTHOR && role!== Roles.REVIEWER) {
+      let error = new Error('No authorization to add the role '+ role);
+      error.status = 400;
+      throw error;
+    }
+    return await userService.addRole(req.user.ethereumAddress, role);
+  })
+);
+
+router.delete(
+  '/ownRoles',
+  asyncHandler(async req => {
+    let role;
+    if(!req.body.role) {
+      errorThrower.missingBodyValue('role');
+    }
+    role = req.body.role;
+    // restrictions for role updating
+    if(role !== Roles.AUTHOR && role!== Roles.REVIEWER) {
+      let error = new Error('No authorization to add the role '+ role);
+      error.status = 400;
+      throw error;
+    }
+    return await userService.removeRole(req.user.ethereumAddress, role);
+  })
+);
+
 router.get(
   '/scTransactions',
   asyncHandler(async req => {
