@@ -62,7 +62,7 @@ export default {
   updateSubmissionStartByArticleHash: async (scSubmissionId, articleHash, articleUrl) => {
     let articleVersion = await ArticleVersion.findOne({articleHash: articleHash});
 
-    // error checking
+    //error checking
     if(!articleVersion) errorThrower.noEntryFoundById(articleHash);
     if(articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT)
       errorThrower.notCorrectStatus(ArticleVersionState.FINISHED_DRAFT, articleVersion.articleVersionState);
@@ -71,9 +71,10 @@ export default {
     await articleVersion.save();
 
     let articleSubmission = await ArticleSubmission.findOne({'articleVersions': articleVersion._id});
-    articleSubmission.scSubmissionID = scSubmissionId;
-    articleSubmission.articleUrl = articleUrl;
-    await articleSubmission.save();
+    if(!articleSubmission) errorThrower.noEntryFoundById(articleVersion._id);
+    // articleSubmission.scSubmissionID = scSubmissionId;
+    // articleSubmission.articleUrl = articleUrl;
+    // articleSubmission = await articleSubmission.save();
     return articleSubmission;
   },
 
