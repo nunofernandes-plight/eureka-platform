@@ -33,7 +33,7 @@ class MyReviews extends React.Component {
         <Card width={1000} title={'My Reviews'}>
           <Table
             data={this.state.data}
-            columnWidth={['33.3', '33.3', '33.3']}
+            columnWidth={['50', '25', '25']}
             header={['First', 'Second', 'Third']}
           />
         </Card>
