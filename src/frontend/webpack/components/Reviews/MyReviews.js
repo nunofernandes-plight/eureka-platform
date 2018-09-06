@@ -15,7 +15,7 @@ class MyReviews extends React.Component {
     return (
       <Container>
         <Card width={1000} title={'My Reviews'}>
-          <Table />
+          <Table width={700}/>
         </Card>
       </Container>
     );
