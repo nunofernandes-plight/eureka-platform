@@ -10,10 +10,17 @@ const Container = styled.div`
   align-items: center;
 `;
 
+const SContainer = styled.div`
+  font-weight: bold;
+`;
 class MyReviews extends React.Component {
   state = {
     data: [
-      {firstName: 'lucas', lastName: 'pelloni', role: 'Client Developer'},
+      {
+        firstName: <SContainer>OJjoOJJOojASF</SContainer>,
+        lastName: 'pelloni',
+        role: 'Client Developer'
+      },
       {firstName: 'sevi', lastName: 'wulli', role: 'SC Developer'},
       {firstName: 'andi', lastName: 'schaufel', role: 'Backend Developer'},
       {firstName: 'andi', lastName: 'schaufel', role: 'Backend Developer'},
@@ -25,7 +32,6 @@ class MyReviews extends React.Component {
       <Container>
         <Card width={1000} title={'My Reviews'}>
           <Table
-            tableWidth={700}
             data={this.state.data}
             columnWidth={['33.3', '33.3', '33.3']}
             header={['First', 'Second', 'Third']}

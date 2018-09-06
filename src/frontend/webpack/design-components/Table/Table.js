@@ -4,7 +4,7 @@ import {TableHeader} from './TableHeader.js';
 import {TableBody} from './TableBody.js';
 
 const TableWrapper = styled.div`
-  width: ${props => props.tableWidth}px;
+  width: 100%;
   margin: 20px 0;
 `;
 
