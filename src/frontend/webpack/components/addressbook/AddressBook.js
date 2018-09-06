@@ -70,6 +70,10 @@ class AddressBook extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.fetchContacts();
+  }
+
   isInputValid() {
     return (
       this.props.web3.utils.isAddress(this.state.address) &&
@@ -279,10 +283,6 @@ class AddressBook extends React.Component {
           fetchingContactsLoading: false
         });
       });
-  }
-
-  componentDidMount() {
-    this.fetchContacts();
   }
 
   render() {

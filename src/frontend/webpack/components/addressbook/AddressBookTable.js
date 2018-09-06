@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import AddressBookTableRow from './AddressBookTableRow.js';
 import AddressBookMyTableRow from './AddressBookMyTableRow.js';
 
 const ContactsContainer = styled.div`

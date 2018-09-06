@@ -3,6 +3,7 @@ import {Route} from 'react-router';
 import {Redirect} from 'react-router-dom';
 import Dashboard from '../Dashboard.js';
 import MyAccount from '../MyAccount.js';
+import MyHistory from '../MyHistory/MyHistory.js';
 import TopContainer from '../../views/TopContainer.js';
 import {BottomContainer} from '../../views/BottomContainer.js';
 import ArticlesRouter from './ArticlesRouter.js';
@@ -10,6 +11,7 @@ import AddressBook from '../addressbook/AddressBook.js';
 import ContractOwnerDashboard from '../ContractOwnerDashboard.js';
 import {ContractOwnerGuard} from '../guards/Guards.js';
 import EditorArticleRouter from './EditorRouter.js';
+import MyReviews from '../Reviews/MyReviews.js';
 
 class DashboardRouter extends Component {
   render() {
@@ -60,6 +62,30 @@ class DashboardRouter extends Component {
             path={`${this.props.base}/account`}
             render={() => (
               <MyAccount
+                user={this.props.user}
+                selectedAccount={this.props.selectedAccount}
+              />
+            )}
+          />
+
+          <Route
+            exact
+            path={`${this.props.base}/actions`}
+            render={() => (
+              <MyHistory
+                base={`${this.props.base}/actions`}
+                user={this.props.user}
+                selectedAccount={this.props.selectedAccount}
+              />
+            )}
+          />
+
+          <Route
+            exact
+            path={`${this.props.base}/reviews`}
+            render={() => (
+              <MyReviews
+                base={`${this.props.base}/reviews`}
                 user={this.props.user}
                 selectedAccount={this.props.selectedAccount}
               />

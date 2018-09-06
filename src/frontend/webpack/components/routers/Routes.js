@@ -18,7 +18,7 @@ export const Routes = [
     role: Roles.USER
   },
   {
-    path: 'editorApprovedReviews',
+    path: 'reviews',
     name: 'My Reviews',
     icon: 'material',
     material: 'rate_review',
