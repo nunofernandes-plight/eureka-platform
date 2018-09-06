@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import {__FIFTH} from '../../../helpers/colors.js';
-import {MyTable} from "./Table.js";
-import {TableRow} from "./TableRow.js";
+import {MyTable} from './Table.js';
+import {TableRow} from './TableRow.js';
 
 const MyTableHeader = styled.div`
   position: absolute;
@@ -10,7 +10,6 @@ const MyTableHeader = styled.div`
   top: 0;
   left: 0;
 `;
-
 
 const TableHeaderCell = styled.th`
   &:first-child {
@@ -22,6 +21,7 @@ const TableHeaderCell = styled.th`
   color: #fff;
   line-height: 1.4;
   background-color: ${__FIFTH};
+  width: ${props => props.width}%;
 `;
 
 export const TableHeader = props => {
@@ -30,9 +30,13 @@ export const TableHeader = props => {
       <MyTable>
         <thead>
           <TableRow>
-            <TableHeaderCell>First column</TableHeaderCell>
-            <TableHeaderCell>Second column</TableHeaderCell>
-            <TableHeaderCell>Third column</TableHeaderCell>
+            {props.header.map((title, i) => {
+              return (
+                <TableHeaderCell width={props.columnWidth[i]} key={i}>
+                  {title}
+                </TableHeaderCell>
+              );
+            })}
           </TableRow>
         </thead>
       </MyTable>

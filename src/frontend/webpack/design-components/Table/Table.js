@@ -4,7 +4,8 @@ import {TableHeader} from './TableHeader.js';
 import {TableBody} from './TableBody.js';
 
 const TableWrapper = styled.div`
-  width: ${props => props.width}px;
+  width: ${props => props.tableWidth}px;
+  margin: 20px 0;
 `;
 
 const TableContainer = styled.div`
@@ -24,10 +25,10 @@ export const MyTable = styled.table`
 
 export const Table = props => {
   return (
-    <TableWrapper width={props.width}>
+    <TableWrapper tableWidth={props.tableWidth}>
       <TableContainer>
-        <TableHeader />
-        <TableBody />
+        <TableHeader header={props.header} columnWidth={props.columnWidth} />
+        <TableBody data={props.data} columnWidth={props.columnWidth} />
       </TableContainer>
     </TableWrapper>
   );

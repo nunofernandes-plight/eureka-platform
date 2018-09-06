@@ -20,6 +20,7 @@ const TableBodyCell = styled.td`
   line-height: 1.4;
   padding-top: 16px;
   padding-bottom: 16px;
+  width: ${props => props.width}%;
 `;
 
 export const TableBody = props => {
@@ -27,23 +28,19 @@ export const TableBody = props => {
     <MyTableBody>
       <MyTable>
         <tbody>
-          <TableRow>
-            <TableBodyCell>jfasjsaijf</TableBodyCell>
-            <TableBodyCell>fhdfhdfh</TableBodyCell>
-            <TableBodyCell>jfasjsahfkjhjklhjgijf</TableBodyCell>
-          </TableRow>
-
-          <TableRow>
-            <TableBodyCell>jfasjsaijf</TableBodyCell>
-            <TableBodyCell>fhdfhdfh</TableBodyCell>
-            <TableBodyCell>jfasjsahfkjhjklhjgijf</TableBodyCell>
-          </TableRow>
-
-          <TableRow>
-            <TableBodyCell>jfasjsaijf</TableBodyCell>
-            <TableBodyCell>fhdfhdfh</TableBodyCell>
-            <TableBodyCell>jfasjsahfkjhjklhjgijf</TableBodyCell>
-          </TableRow>
+          {props.data.map((obj, i) => {
+            return (
+              <TableRow key={i}>
+                {Object.keys(obj).map((field, i) => {
+                  return (
+                    <TableBodyCell width={props.columnWidth[i]} key={i}>
+                      {obj[field]}
+                    </TableBodyCell>
+                  );
+                })}
+              </TableRow>
+            );
+          })}
         </tbody>
       </MyTable>
     </MyTableBody>
