@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {
+  __ALERT_DANGER,
   __ALERT_ERROR,
   __ALERT_WARNING,
   __GRAY_200,
@@ -44,12 +45,6 @@ const Labels = styled.td`
   padding-right: 8px;
 `;
 
-const Circle = styled.div`
-  background: ${props => props.background};
-  color: ${props => props.color};
-  border-radius: 50%;
-  margin-bottom: 2px;
-`;
 const AddressBookMyTableRow = props => {
   return (
     <Tr key={props.contact.contactAddress}>
@@ -88,34 +83,30 @@ const AddressBookMyTableRow = props => {
         )}
       </Labels>
       <Icons>
-        <Circle
-          color={__THIRD}
-          background={chroma(__THIRD)
-            .alpha(0.2)
-            .css()}
-          onClick={() => {
-            props.onEdit(props.contact.contactAddress);
-          }}
-        >
+        <div>
           <Icon
             icon={'material'}
             material={'edit'}
             bottom={1}
             width={15}
             height={15}
+            onClick={() => {
+              props.onEdit(props.contact.contactAddress);
+            }}
           />
-        </Circle>
-        <Circle
-          color={__ALERT_ERROR}
-          background={chroma(__ALERT_ERROR)
-            .alpha(0.2)
-            .css()}
-          onClick={() => {
-            props.onDelete(props.contact.contactAddress);
-          }}
-        >
-          <Icon bottom={1} icon={'delete'} width={13} height={13} />
-        </Circle>
+        </div>
+        <div>
+          <Icon
+            color={__ALERT_ERROR}
+            bottom={1}
+            icon={'delete'}
+            width={13}
+            height={13}
+            onClick={() => {
+              props.onDelete(props.contact.contactAddress);
+            }}
+          />
+        </div>
       </Icons>
     </Tr>
   );
