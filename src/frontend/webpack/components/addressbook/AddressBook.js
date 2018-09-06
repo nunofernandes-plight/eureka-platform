@@ -264,7 +264,7 @@ class AddressBook extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          this.setState({contacts: response.data});
+          this.setState({contacts: response.data.reverse()});
         } else {
           this.setState({
             errorMessage: response.error,
