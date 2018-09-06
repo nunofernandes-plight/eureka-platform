@@ -36,13 +36,7 @@ const userSchema = mongoose.Schema(
     scTransactions: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'ScTransaction'
-    }],
-    addressBook: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Contact'
-      }
-    ]
+    }]
   },
   {collection: 'users'}
 );

@@ -230,41 +230,47 @@ export default {
 
   /*
     Pushes an address book entry to the users address book
+
+    ERROR HANDLING TO COMPLEX -> WHAT IF FIRST CALL SUCCEEDS BUT SECOND FAILS,
+    CONTACT NEED TO BE REMOVED AGAIN
    */
-  addAddressBookContact: async (addressBookOwnerAddress,
-                                {
-                                  contactAddress,
-                                  preName,
-                                  lastName,
-                                  label
-                                }) => {
-
-    const contact = await addressBookService.createContact(addressBookOwnerAddress,
-      {
-        contactAddress,
-        preName,
-        lastName,
-        label
-      });
-
-    User.findOneAndUpdate(
-      {ethereumAddress: addressBookOwnerAddress},
-      {$push: {addressBook: contact._id}},
-      (err, user) => {
-        if (err) {
-          let error = new Error(
-            'Could not update user ' + addressBookOwnerAddress + ': ' + err
-          );
-          error.status = 400;
-          throw error;
-        } else {
-          console.log(
-            'A new Contact with the address ' + contact.contactAddress
-           + ' was added to the user with the address ' + addressBookOwnerAddress
-          );
-          return user;
-        }
-      }
-    );
-  }
+  // addAddressBookContact: (addressBookOwnerAddress,
+  //                               {
+  //                                 contactAddress,
+  //                                 preName,
+  //                                 lastName,
+  //                                 label
+  //                               }) => {
+  //
+  //   addressBookService.createContact(addressBookOwnerAddress,
+  //     {
+  //       contactAddress,
+  //       preName,
+  //       lastName,
+  //       label
+  //     })
+  //     .then((contact) => {
+  //
+  //       User.findOneAndUpdate(
+  //         {ethereumAddress: addressBookOwnerAddress},
+  //         {$push: {addressBook: contact._id}},
+  //         (err, user) => {
+  //           if (err) {
+  //             let error = new Error(
+  //               'Could not update user ' + addressBookOwnerAddress + ': ' + err
+  //             );
+  //             error.status = 400;
+  //             throw error;
+  //           } else {
+  //             console.log(
+  //               'A new Contact with the address ' + contact.contactAddress
+  //               + ' was added to the user with the address ' + addressBookOwnerAddress
+  //             );
+  //             return user;
+  //           }
+  //         }
+  //       );
+  //
+  //     });
+  // }
 };

@@ -63,6 +63,6 @@ export default {
       contactAddress: contactAddress
     });
     if (!contact) errorThrower.noEntryFoundByParameters();
-    else return await contact.remove();
+    else return contact.remove();
   }
 };

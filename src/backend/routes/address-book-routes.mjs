@@ -3,7 +3,6 @@ import {asyncHandler} from '../api/requestHandler.mjs';
 
 const router = express.Router();
 import addressBookService from '../db/address-book-service.mjs';
-import userService from '../db/user-service.mjs';
 import accesController from '../controller/acess-controller.mjs';
 
 
@@ -18,21 +17,21 @@ router.get(
 router.post(
   '/',
   asyncHandler(async req => {
-    return await userService.addAddressBookContact(req.user.ethereumAddress, req.body);
+    return await addressBookService.createContact(req.user.ethereumAddress, req.body);
   })
 );
 
 router.put(
   '/',
   asyncHandler(async req => {
-    return addressBookService.updateContact(req.user.ethereumAddress, req.body);
+    return await addressBookService.updateContact(req.user.ethereumAddress, req.body);
   })
 );
 
 router.delete(
   '/',
   asyncHandler(async req => {
-    return addressBookService.deleteContact(req.user.ethereumAddress, req.body.contactAddress);
+    return await addressBookService.deleteContact(req.user.ethereumAddress, req.body.contactAddress);
   })
 );
 
