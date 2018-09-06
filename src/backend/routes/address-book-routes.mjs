@@ -24,14 +24,14 @@ router.post(
 router.put(
   '/',
   asyncHandler(async req => {
-    return addressBookService.updateContact(req.user.ethereumAddress, req.body);
+    return await addressBookService.updateContact(req.user.ethereumAddress, req.body);
   })
 );
 
 router.delete(
   '/',
   asyncHandler(async req => {
-    return addressBookService.deleteContact(req.user.ethereumAddress, req.body.contactAddress);
+    return await addressBookService.deleteContact(req.user.ethereumAddress, req.body.contactAddress);
   })
 );
 

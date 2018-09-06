@@ -1,6 +1,4 @@
 import mongoose from 'mongoose';
-import {articleSubmissionSchema} from './article-submission.mjs';
-import {reviewSchema} from './review.mjs';
 import Roles from './roles-enum.mjs';
 
 /**
@@ -37,7 +35,7 @@ const userSchema = mongoose.Schema(
     ],
     scTransactions: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'ScTransaction',
+      ref: 'ScTransaction'
     }]
   },
   {collection: 'users'}
