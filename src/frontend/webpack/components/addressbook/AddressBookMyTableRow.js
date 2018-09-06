@@ -71,7 +71,6 @@ const AddressBookMyTableRow = props => {
             const alpha = chroma(l.color)
               .alpha(0.1)
               .css();
-            console.log(alpha);
             return (
               <MyLabel key={index} alpha={alpha} color={l.color}>
                 {l.label}
