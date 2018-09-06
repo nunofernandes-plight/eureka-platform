@@ -226,7 +226,7 @@ export default {
         }
       }
     );
-  },
+  }
 
   /*
     Pushes an address book entry to the users address book
