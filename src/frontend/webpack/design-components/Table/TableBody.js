@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__THIRD} from '../../../helpers/colors.js';
+import {__GRAY_200, __THIRD} from '../../../helpers/colors.js';
 import {MyTable} from './Table.js';
 import {TableRow} from './TableRow.js';
 
@@ -18,6 +18,7 @@ const TableBodyCell = styled.td`
   line-height: 1.4;
   padding: ${props => (props.padding ? props.padding : '18px 0')};
   width: ${props => props.width}%;
+  border-bottom: 1px solid ${__GRAY_200};
 `;
 
 export const TableBody = props => {
@@ -30,7 +31,11 @@ export const TableBody = props => {
               <TableRow key={i}>
                 {Object.keys(obj).map((field, i) => {
                   return (
-                    <TableBodyCell padding={props.padding} width={props.columnWidth[i]} key={i}>
+                    <TableBodyCell
+                      padding={props.padding}
+                      width={props.columnWidth[i]}
+                      key={i}
+                    >
                       {obj[field]}
                     </TableBodyCell>
                   );
