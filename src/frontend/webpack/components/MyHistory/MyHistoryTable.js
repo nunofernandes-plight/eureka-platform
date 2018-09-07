@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import SC_TRANSACTIONS_TYPE from '../../../../backend/schema/sc-transaction-state-enum.mjs';
+import TxType from './TxType.js';
 import {Link} from 'react-router-dom';
 import {Table} from '../../design-components/Table/Table.js';
 
@@ -28,11 +28,9 @@ const getData = props => {
 };
 
 const getTxType = type => {
-  switch (type) {
-      case SC_TRANSACTIONS_TYPE.SUBMIT_ARTICLE:
-        return 
-  }
-}
+  console.log(type);
+  return <TxType type={type}/>;
+};
 
 const MyHistoryTable = props => {
   console.log(props);
