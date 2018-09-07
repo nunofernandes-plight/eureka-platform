@@ -34,3 +34,16 @@ export const __LABEL_PRIMARY_BACK = '#cbd2f6';
 
 // FOOTER
 export const __FOOTER = '#233143';
+
+
+// COLOR SCALE
+export const __SCALE_ONE = '#00B8D9';
+export const __SCALE_TWO = '#0052CC';
+export const __SCALE_THREE = '#5243AA';
+export const __SCALE_FOUR = '#FF5630';
+export const __SCALE_FIVE = '#FF8B00';
+export const __SCALE_SIX = '#FFC400';
+export const __SCALE_SEVEN = '#36B37E';
+export const __SCALE_EIGHT = '#00875A';
+export const __SCALE_NINE = '#253858';
+export const __SCALE_TEN = '#666666';
