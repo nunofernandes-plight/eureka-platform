@@ -13,10 +13,14 @@ const MyTableHeader = styled.div`
 
 const TableHeaderCell = styled.th`
   &:first-child {
-    padding-left: 40px;
+    padding-left: 30px;
+    border-top-left-radius: 10px;
+  }
+  &:last-child {
+    border-top-right-radius: 10px;
   }
   font-size: 15px;
-  padding: 14px 0; 
+  padding: 14px 0;
   color: #fff;
   line-height: 1.4;
   background-color: ${__FIFTH};

@@ -16,8 +16,7 @@ const TableBodyCell = styled.td`
   font-size: 13px;
   color: ${__THIRD};
   line-height: 1.4;
-  padding-top: 16px;
-  padding-bottom: 16px;
+  padding: 18px 0;
   width: ${props => props.width}%;
 `;
 

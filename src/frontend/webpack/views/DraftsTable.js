@@ -4,13 +4,11 @@ import {Link} from 'react-router-dom';
 import {
   __ALERT_ERROR,
   __GRAY_600,
-  __GRAY_200,
   __THIRD,
   __FIFTH
 } from '../../helpers/colors.js';
 import {renderField} from '../components/editor/DocumentRenderer.js';
 import {renderTimestamp} from '../../helpers/timestampRenderer.js';
-import {MEDIUM_DEVICES} from '../../helpers/mobile.js';
 import Icon from './icons/Icon.js';
 import AnimatedTooltip from '../design-components/AnimatedTooltip.js';
 import CircleSpinner from '../views/spinners/CircleSpinner.js';
@@ -21,26 +19,6 @@ const DraftsContainer = styled.div`
   font-size: 14px;
   width: 100%;
   padding: 10px 25px;
-`;
-
-const Drafts = styled.table`
-  width: 100%;
-  text-align: left;
-  position: relative;
-  border-collapse: collapse;
-  white-space: nowrap;
-`;
-
-const TableTitle = styled.p`
-  font-size: 16px;
-  font-weight: bold;
-`;
-
-const Tr = styled.tr`
-  &:hover {
-    background: ${__GRAY_200};
-  }
-  transition: 0.5s all;
 `;
 
 const NoDrafts = styled.div`
@@ -72,18 +50,6 @@ const MyLink = styled(Link)`
   text-decoration: none;
 `;
 
-const Authors = styled.td`
-  ${MEDIUM_DEVICES`
-    display: none; 
-  `};
-`;
-
-const AuthorsTitle = styled.th`
-  ${MEDIUM_DEVICES`
-    display: none; 
-  `};
-`;
-
 const getData = props => {
   const data = [];
   props.drafts.map(draft => {
@@ -102,13 +68,18 @@ const getIcon = draft => {
   return (
     <AnimatedTooltip
       isVisible={() => {}}
-      width={80}
       noTitle
-      position={'bottom'}
+      position={'left'}
+      width={75}
       content={draft.articleVersionState}
     >
       {' '}
-      <Icon icon={'file'} width={20} height={20} color={__GRAY_600} />
+      <Icon
+        icon={'file'}
+        width={20}
+        height={20}
+        color={__GRAY_600}
+      />
     </AnimatedTooltip>
   );
 };

@@ -10,10 +10,9 @@ const TableWrapper = styled.div`
 
 const TableContainer = styled.div`
   border-radius: 10px;
-  overflow: hidden;
   box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.15);
   position: relative;
-  padding-top: 58px;
+  padding-top: 48px;
   background-color: #fff;
 `;
 

@@ -1,6 +1,8 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import {__FIFTH, __GRAY_200, __THIRD} from '../../helpers/colors.js';
+import {SizeMe} from 'react-sizeme';
+import {__FIFTH, __GRAY_200} from '../../helpers/colors.js';
 
 const Container = styled.div`
   position: relative;
@@ -9,13 +11,13 @@ const Container = styled.div`
 
 const Element = styled.span`
   display: inline;
+  width: inherit;
 `;
 
 const ToolTip = styled.span`
   opacity: ${props => (props.isActive ? 1 : 0)};
   visibility: ${props => (props.isActive ? 'visible' : 'hidden')};
   transition: opacity 600ms, visibility 600ms;
-  width: ${props => props.width}px;
   z-index: 100000;
   position: absolute;
   padding: 15px;
@@ -26,6 +28,7 @@ const ToolTip = styled.span`
 `;
 
 const ToolTipTitle = styled.h3`
+  margin-top: 0;
   padding-bottom: 8px;
   color: ${__FIFTH};
   border-bottom: 1px solid ${__GRAY_200};
@@ -63,6 +66,8 @@ class AnimatedTooltip extends React.Component {
     };
   }
 
+  componentDidMount() {}
+
   toggle() {
     const isActive = !this.state.isActive;
     this.props.isVisible(isActive);
@@ -73,7 +78,6 @@ class AnimatedTooltip extends React.Component {
     return (
       <Container isActive={this.state.isActive}>
         <ToolTip
-          width={this.props.width}
           isActive={this.state.isActive}
           style={getStyle(this.props.position, this.props.width)}
         >
