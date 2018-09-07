@@ -199,8 +199,7 @@ contract EurekaPlatform {
         ArticleSubmission storage submission = articleSubmissions[submissionId];
 
         submission.submissionId = submissionId;
-        submission.submissionOwner = tx.origin;
-        // doc: sender of the transaction (full call chain)
+        submission.submissionOwner = _from;
 
         submitArticleVersion(submissionId, _articleHash, _articleURL, _authors, _authorContributionRatios, _linkedArticles, _linkedArticlesSplitRatios);
 
