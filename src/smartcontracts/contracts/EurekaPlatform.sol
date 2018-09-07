@@ -193,7 +193,7 @@ contract EurekaPlatform {
         uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) public {
 
         //        require(msg.sender == address(eurekaTokenContract));
-        //        require(_value == submissionFee, 'transferred amount needs to equal the submission fee');
+        require(_value == submissionFee, 'transferred amount needs to equal the submission fee');
 
         uint submissionId = submissionCounter++;
         ArticleSubmission storage submission = articleSubmissions[submissionId];
