@@ -5,7 +5,6 @@ import {__FIFTH, __GRAY_200, __THIRD} from '../../helpers/colors.js';
 const Container = styled.div`
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black;
 `;
 
 const Element = styled.span`
@@ -23,7 +22,6 @@ const ToolTip = styled.span`
   background: rgb(255, 255, 255);
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.2), 0 5px 15px rgba(0, 0, 0, 0.17);
   border-radius: 4px;
-  min-width: 180px;
   color: ${__FIFTH};
 `;
 
@@ -45,14 +43,14 @@ const getStyle = (position, width) => {
         left: '50%',
         top: '100%',
         marginLeft: `${-(width / 2)}px`,
-        paddintTop: '10px'
+        marginTop: '10px'
       };
     case 'top':
       return {
         left: '50%',
         bottom: '100%',
         marginLeft: `${-(width / 2)}px`,
-        paddingBottom: '10px'
+        marginBottom: '10px'
       };
   }
 };
@@ -79,7 +77,10 @@ class AnimatedTooltip extends React.Component {
           isActive={this.state.isActive}
           style={getStyle(this.props.position, this.props.width)}
         >
-          <ToolTipTitle>{this.props.title}</ToolTipTitle>
+          {this.props.noTitle ? null : (
+            <ToolTipTitle>{this.props.title}</ToolTipTitle>
+          )}
+
           {this.props.content}
         </ToolTip>
         <Element

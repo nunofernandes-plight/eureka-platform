@@ -15,6 +15,7 @@ import Icon from './icons/Icon.js';
 import AnimatedTooltip from '../design-components/AnimatedTooltip.js';
 import CircleSpinner from '../views/spinners/CircleSpinner.js';
 import Author from './Author.js';
+import {Table} from '../design-components/Table/Table.js';
 
 const DraftsContainer = styled.div`
   font-size: 14px;
@@ -82,6 +83,95 @@ const AuthorsTitle = styled.th`
     display: none; 
   `};
 `;
+
+const getData = props => {
+  const data = [];
+  props.drafts.map(draft => {
+    data.push({
+      icon: getIcon(draft),
+      title: getTitle(props, draft),
+      authors: getAuthors(props, draft),
+      lastChange: getLastChange(draft),
+      delIcon: getDeleteIcon(props, draft)
+    });
+  });
+  return data;
+};
+
+const getIcon = draft => {
+  return (
+    <AnimatedTooltip
+      isVisible={() => {}}
+      width={80}
+      noTitle
+      position={'bottom'}
+      content={draft.articleVersionState}
+    >
+      {' '}
+      <Icon icon={'file'} width={20} height={20} color={__GRAY_600} />
+    </AnimatedTooltip>
+  );
+};
+
+const getTitle = (props, draft) => {
+  return (
+    <MyLink to={`${props.base}/${draft._id}`}>
+      {renderField(draft.document, 'title')}
+    </MyLink>
+  );
+};
+
+const getLastChange = draft => {
+  return renderTimestamp(draft.timestamp);
+};
+const getAuthors = (props, draft) => {
+  return draft.document.authors.map(address => {
+    return (
+      <div style={{padding: '6px 0'}} key={address}>
+        <AnimatedTooltip
+          isVisible={isVisible => {
+            if (isVisible) {
+              props.getAuthor(address);
+            }
+          }}
+          title={'Author lookup'}
+          width={418}
+          position={'top'}
+          content={
+            <div>
+              {props.authorsData ? (
+                <Author
+                  author={props.authorsData[0]}
+                  width={27}
+                  height={27}
+                  right={10}
+                />
+              ) : (
+                <CircleSpinner />
+              )}
+            </div>
+          }
+        >
+          {address}
+        </AnimatedTooltip>
+      </div>
+    );
+  });
+};
+
+const getDeleteIcon = (props, draft) => {
+  return (
+    <Icon
+      icon={'delete'}
+      width={20}
+      height={20}
+      color={__ALERT_ERROR}
+      onClick={() => {
+        props.onDelete(draft._id);
+      }}
+    />
+  );
+};
 const DraftsTable = props => {
   return (
     <DraftsContainer>
@@ -100,89 +190,11 @@ const DraftsTable = props => {
           </StartWriting>
         </NoDrafts>
       ) : (
-        <Drafts>
-          <tbody>
-            <tr>
-              <th />
-              <th>
-                <TableTitle>Name</TableTitle>
-              </th>
-              <AuthorsTitle>
-                <TableTitle>Authors</TableTitle>
-              </AuthorsTitle>
-              <th>
-                <TableTitle>Last changed</TableTitle>
-              </th>
-              <th />
-            </tr>
-          </tbody>
-
-          <tbody>
-            {props.drafts.map(draft => (
-              <Tr key={draft._id}>
-                <td style={{padding: '20px 15px'}}>
-                  <Icon
-                    icon={'file'}
-                    width={20}
-                    height={20}
-                    color={__GRAY_600}
-                  />
-                </td>
-                <td>
-                  <MyLink to={`${props.base}/${draft._id}`}>
-                    {renderField(draft.document, 'title')}
-                  </MyLink>
-                </td>
-                <Authors>
-                  {draft.document.authors.map(address => {
-                    return (
-                      <div style={{padding: '6px 0'}} key={address}>
-                        <AnimatedTooltip
-                          isVisible={isVisible => {
-                            if (isVisible) {
-                              props.getAuthor(address);
-                            }
-                          }}
-                          title={'Author lookup'}
-                          width={418}
-                          position={'top'}
-                          content={
-                            <div>
-                              {props.authorsData ? (
-                                <Author
-                                  author={props.authorsData[0]}
-                                  width={27}
-                                  height={27}
-                                  right={10}
-                                />
-                              ) : (
-                                <CircleSpinner />
-                              )}
-                            </div>
-                          }
-                        >
-                          {address}
-                        </AnimatedTooltip>
-                      </div>
-                    );
-                  })}
-                </Authors>
-                <td>{renderTimestamp(draft.timestamp)}</td>
-                <td>
-                  <Icon
-                    icon={'delete'}
-                    width={20}
-                    height={20}
-                    color={__ALERT_ERROR}
-                    onClick={() => {
-                      props.onDelete(draft._id);
-                    }}
-                  />
-                </td>
-              </Tr>
-            ))}
-          </tbody>
-        </Drafts>
+        <Table
+          header={['', 'Name', 'Authors', 'Last Changed', '']}
+          columnWidth={['5', '30', '40', '20', '5']}
+          data={getData(props)}
+        />
       )}
     </DraftsContainer>
   );

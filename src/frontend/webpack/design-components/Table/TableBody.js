@@ -1,12 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__GRAY_900} from '../../../helpers/colors.js';
+import {__THIRD} from '../../../helpers/colors.js';
 import {MyTable} from './Table.js';
 import {TableRow} from './TableRow.js';
 
 const MyTableBody = styled.div`
-  max-height: 585px;
-  overflow: hidden !important;
   touch-action: auto;
   position: relative;
 `;
@@ -16,7 +14,7 @@ const TableBodyCell = styled.td`
     padding-left: 40px;
   }
   font-size: 13px;
-  color: ${__GRAY_900};
+  color: ${__THIRD};
   line-height: 1.4;
   padding-top: 16px;
   padding-bottom: 16px;

@@ -5,7 +5,7 @@ import {TableBody} from './TableBody.js';
 
 const TableWrapper = styled.div`
   width: 100%;
-  margin: 20px 0;
+  margin: 30px 0;
 `;
 
 const TableContainer = styled.div`
@@ -13,7 +13,7 @@ const TableContainer = styled.div`
   overflow: hidden;
   box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.15);
   position: relative;
-  padding-top: 60px;
+  padding-top: 58px;
   background-color: #fff;
 `;
 
