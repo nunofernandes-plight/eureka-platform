@@ -1,7 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import {SizeMe} from 'react-sizeme';
 import {__FIFTH, __GRAY_200} from '../../helpers/colors.js';
 
 const Container = styled.div`

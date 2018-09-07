@@ -25,6 +25,8 @@ const TableHeaderCell = styled.th`
   line-height: 1.4;
   background-color: ${__FIFTH};
   width: ${props => props.width}%;
+  text-align: ${props =>
+    props.textCenter === props.title ? 'center' : 'left'};
 `;
 
 export const TableHeader = props => {
@@ -35,7 +37,12 @@ export const TableHeader = props => {
           <TableRow>
             {props.header.map((title, i) => {
               return (
-                <TableHeaderCell width={props.columnWidth[i]} key={i}>
+                <TableHeaderCell
+                  textCenter={props.textCenter}
+                  title={title}
+                  width={props.columnWidth[i]}
+                  key={i}
+                >
                   {title}
                 </TableHeaderCell>
               );
