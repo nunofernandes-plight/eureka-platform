@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import AddressBookMyTableRow from './AddressBookMyTableRow.js';
 import {__ALERT_ERROR} from '../../../helpers/colors.js';
 import chroma from 'chroma-js';
 import AddressBookField from './AddressBookField.js';
@@ -15,18 +14,6 @@ const ContactsContainer = styled.div`
   padding: 5px 25px;
 `;
 
-const Contacts = styled.table`
-  width: 100%;
-  text-align: left;
-  position: relative;
-  border-collapse: collapse;
-  white-space: nowrap;
-`;
-
-const TableTitle = styled.p`
-  font-size: 16px;
-  font-weight: bold;
-`;
 
 const NoAddresses = styled.div`
   display: flex;
