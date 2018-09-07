@@ -87,21 +87,21 @@ const testSubmitArticle = async () => {
     address: EurekaPlatformContract.options.address,
   };
 
-  let logSups = web3.eth.subscribe('logs', logOptions, function(error, result) {
-    if (!error)
-
-
-      console.log('TEST BLA');
-    console.log(result);
-  })
-    .on('data', function(log) {
-      console.log('LOGS:  !!!!!!');
-      console.log(log);
-    })
-    .on('changed', function(log) {
-      console.log('LOGS CHANGED: ');
-      console.log(log);
-    });
+  // let logSups = web3.eth.subscribe('logs', logOptions, function(error, result) {
+  //   if (!error)
+  //
+  //
+  //     console.log('TEST BLA');
+  //   console.log(result);
+  // })
+  //   .on('data', function(log) {
+  //     console.log('LOGS:  !!!!!!');
+  //     console.log(log);
+  //   })
+  //   .on('changed', function(log) {
+  //     console.log('LOGS CHANGED: ');
+  //     console.log(log);
+  //   });
 
 
   await submitArticle(
@@ -113,43 +113,43 @@ const testSubmitArticle = async () => {
     80000000
   );
 
-  // console.log(
-  //   'The balance of the service contract is ' +
-  //   (await getBalanceOf(
-  //     EurekaTokenContract,
-  //     EurekaPlatformContract.options.address
-  //   ))
-  // );
-  // console.log(
-  //   'URL of the article: ' +
-  //   (await getUrl(EurekaPlatformContract, articleHashHex, contractOwner))
-  // );
-  // console.log(
-  //   'Authors: ' +
-  //   (await getAuthors(EurekaPlatformContract, articleHashHex, contractOwner))
-  // );
-  // console.log(
-  //   'Linked articles: ' +
-  //   (await getLinkedArticles(
-  //     EurekaPlatformContract,
-  //     articleHashHex,
-  //     contractOwner
-  //   ))
-  // );
-  // console.log(
-  //   (await getArticleVersion(
-  //     EurekaPlatformContract,
-  //     articleHashHex,
-  //     contractOwner
-  //   ))
-  // );
-  // console.log(
-  //   (await getSubmissionProcess(
-  //     EurekaPlatformContract,
-  //     articleHashHex,
-  //     contractOwner
-  //   ))
-  // );
+  console.log(
+    'The balance of the service contract is ' +
+    (await getBalanceOf(
+      EurekaTokenContract,
+      EurekaPlatformContract.options.address
+    ))
+  );
+  console.log(
+    (await getSubmissionProcess(
+      EurekaPlatformContract,
+      articleHashHex,
+      contractOwner
+    ))
+  );
+  console.log(
+    (await getArticleVersion(
+      EurekaPlatformContract,
+      articleHashHex,
+      contractOwner
+    ))
+  );
+  console.log(
+    'URL of the article: ' +
+    (await getUrl(EurekaPlatformContract, articleHashHex, contractOwner))
+  );
+  console.log(
+    'Authors: ' +
+    (await getAuthors(EurekaPlatformContract, articleHashHex, contractOwner))
+  );
+  console.log(
+    'Linked articles: ' +
+    (await getLinkedArticles(
+      EurekaPlatformContract,
+      articleHashHex,
+      contractOwner
+    ))
+  );
 };
 
 export default run();
