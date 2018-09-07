@@ -192,7 +192,7 @@ const DraftsTable = props => {
       ) : (
         <Table
           header={['', 'Name', 'Authors', 'Last Changed', '']}
-          columnWidth={['5', '30', '40', '20', '5']}
+          columnWidth={['8', '30', '40', '17', '5']}
           data={getData(props)}
         />
       )}

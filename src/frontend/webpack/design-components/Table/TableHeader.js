@@ -15,9 +15,8 @@ const TableHeaderCell = styled.th`
   &:first-child {
     padding-left: 40px;
   }
-  font-size: 16px;
-  padding-top: 18px;
-  padding-bottom: 18px;
+  font-size: 15px;
+  padding: 14px 0; 
   color: #fff;
   line-height: 1.4;
   background-color: ${__FIFTH};

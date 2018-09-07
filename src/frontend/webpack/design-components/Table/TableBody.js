@@ -11,7 +11,7 @@ const MyTableBody = styled.div`
 
 const TableBodyCell = styled.td`
   &:first-child {
-    padding-left: 40px;
+    padding-left: 30px;
   }
   font-size: 13px;
   color: ${__THIRD};
