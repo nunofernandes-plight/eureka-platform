@@ -16,7 +16,7 @@ const TableBodyCell = styled.td`
   font-size: 13px;
   color: ${__THIRD};
   line-height: 1.4;
-  padding: 18px 0;
+  padding: ${props => (props.padding ? props.padding : '18px 0')};
   width: ${props => props.width}%;
 `;
 
@@ -30,7 +30,7 @@ export const TableBody = props => {
               <TableRow key={i}>
                 {Object.keys(obj).map((field, i) => {
                   return (
-                    <TableBodyCell width={props.columnWidth[i]} key={i}>
+                    <TableBodyCell padding={props.padding} width={props.columnWidth[i]} key={i}>
                       {obj[field]}
                     </TableBodyCell>
                   );

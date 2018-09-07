@@ -33,13 +33,16 @@ const ToolTipTitle = styled.h3`
   color: ${__FIFTH};
   border-bottom: 1px solid ${__GRAY_200};
 `;
-const getStyle = (position, width) => {
+
+// for right and left --> height needed
+// for top and bottom --> width needed
+const getStyle = (position, height, width) => {
   switch (position) {
     case 'right':
-      return {left: '105%', top: '-5px'};
+      return {left: '105%', top: `${-(height / 2)}px`};
 
     case 'left':
-      return {right: '105%', top: '-5px'};
+      return {right: '105%', top: `${-(height / 2)}px`};
 
     case 'bottom':
       return {
@@ -79,7 +82,11 @@ class AnimatedTooltip extends React.Component {
       <Container isActive={this.state.isActive}>
         <ToolTip
           isActive={this.state.isActive}
-          style={getStyle(this.props.position, this.props.width)}
+          style={getStyle(
+            this.props.position,
+            this.props.height ? this.props.height : 'auto',
+            this.props.width ? this.props.width : 'auto'
+          )}
         >
           {this.props.noTitle ? null : (
             <ToolTipTitle>{this.props.title}</ToolTipTitle>

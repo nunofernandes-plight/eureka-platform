@@ -69,17 +69,12 @@ const getIcon = draft => {
     <AnimatedTooltip
       isVisible={() => {}}
       noTitle
+      height={30}
       position={'left'}
-      width={75}
       content={draft.articleVersionState}
     >
       {' '}
-      <Icon
-        icon={'file'}
-        width={20}
-        height={20}
-        color={__GRAY_600}
-      />
+      <Icon icon={'file'} width={20} height={20} color={__GRAY_600} />
     </AnimatedTooltip>
   );
 };
@@ -106,7 +101,7 @@ const getAuthors = (props, draft) => {
             }
           }}
           title={'Author lookup'}
-          width={418}
+          width={400}
           position={'top'}
           content={
             <div>
@@ -162,6 +157,7 @@ const DraftsTable = props => {
         </NoDrafts>
       ) : (
         <Table
+          padding={'30px 0'}
           header={['', 'Name', 'Authors', 'Last Changed', '']}
           columnWidth={['8', '30', '40', '17', '5']}
           data={getData(props)}
