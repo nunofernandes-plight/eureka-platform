@@ -63,7 +63,7 @@ const article = {
 	linkedArticlesSplitRatios: [3334, 3333, 3333]
 };
 
-const dataInHex = getArticleHex(article);
+const dataInHex = getArticleHex(web3, article);
 const articleHashHex = '0x' + article.articleHash;
 
 test('submit article', async t => {

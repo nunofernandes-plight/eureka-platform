@@ -38,6 +38,7 @@ import ArticleVersion from '../../src/backend/schema/article-version.mjs';
 import Review from '../../src/backend/schema/review.mjs';
 import Roles from '../../src/backend/schema/roles-enum.mjs';
 import SC_TRANSACTIONS_TYPE from '../../src/backend/schema/sc-transaction-state-enum.mjs';
+import web3 from '../../src/backend/web3/web3Instance.mjs';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
@@ -60,7 +61,7 @@ const ARTICLE1 = {
   ],
   linkedArticlesSplitRatios: [3334, 3333, 3333]
 };
-const ARTICLE1_DATA_IN_HEX = getArticleHex(ARTICLE1);
+const ARTICLE1_DATA_IN_HEX = getArticleHex(web3, ARTICLE1);
 const ARTICLE1_HASH_HEX = '0x' + ARTICLE1.articleHash;
 
 const ARTICLE2 = {
@@ -78,7 +79,7 @@ const ARTICLE2 = {
   ],
   linkedArticlesSplitRatios: [2000, 2000, 6000]
 };
-const ARTICLE2_DATA_IN_HEX = getArticleHex(ARTICLE2);
+const ARTICLE2_DATA_IN_HEX = getArticleHex(web3, ARTICLE2);
 const ARTICLE2_HASH_HEX = '0x' + ARTICLE2.articleHash;
 
 const REVIEW1 = {
