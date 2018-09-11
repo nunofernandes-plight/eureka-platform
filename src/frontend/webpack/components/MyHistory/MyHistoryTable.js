@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import MyHistoryTableRow from './MyHistoryTableRow.js';
+import TxType from './TxType.js';
 import {Link} from 'react-router-dom';
+import {Table} from '../../design-components/Table/Table.js';
 
 const ContactsContainer = styled.div`
   font-size: 14px;
@@ -11,19 +12,6 @@ const ContactsContainer = styled.div`
   padding: 5px 25px;
 `;
 
-const Contacts = styled.table`
-  width: 100%;
-  text-align: left;
-  position: relative;
-  border-collapse: collapse;
-  white-space: nowrap;
-`;
-
-const TableTitle = styled.p`
-  font-size: 16px;
-  font-weight: bold;
-`;
-
 const NoTxs = styled.div`
   display: flex;
   justify-content: center;
@@ -31,7 +19,21 @@ const NoTxs = styled.div`
   align-items: center;
 `;
 
+const getData = props => {
+  let data = [];
+  props.txs.map(tx => {
+    data.push({transactionType: getTxType(tx.transactionType)});
+  });
+  return data;
+};
+
+const getTxType = type => {
+  console.log(type);
+  return <TxType type={type}/>;
+};
+
 const MyHistoryTable = props => {
+  console.log(props);
   return (
     <ContactsContainer>
       {!props.txs || props.txs.length === 0 ? (
@@ -43,27 +45,11 @@ const MyHistoryTable = props => {
           </Link>
         </NoTxs>
       ) : (
-        <Contacts>
-          <tbody>
-            <tr>
-              <th>
-                <TableTitle>X </TableTitle>
-              </th>
-              <th>
-                <TableTitle>X </TableTitle>
-              </th>
-              <th>
-                <TableTitle>X </TableTitle>
-              </th>
-              <th>
-                <TableTitle>X</TableTitle>
-              </th>
-              <th />
-            </tr>
-          </tbody>
-
-          <tbody>{props.txs.map(tx => <MyHistoryTableRow tx={tx} />)}</tbody>
-        </Contacts>
+        <Table
+          header={['Transaction Type', '', '', '']}
+          data={getData(props)}
+          columnWidth={['20', '20', '20', '20']}
+        />
       )}
     </ContactsContainer>
   );
