@@ -187,20 +187,19 @@ contract EurekaPlatform {
     event SubmissionProcessStart(uint256 submissionId, address submissionOwner, bytes32 articleHash, bytes32 articleURL, uint256 stateTimestamp);
 
     function startSubmissionProcess(
-//        address _from,
-//        uint256 _value,
+        address _from,
+        uint256 _value,
         bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
         uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) public {
 
         //        require(msg.sender == address(eurekaTokenContract));
-        //        require(_value == submissionFee, 'transferred amount needs to equal the submission fee');
+        require(_value == submissionFee, 'transferred amount needs to equal the submission fee');
 
         uint submissionId = submissionCounter++;
         ArticleSubmission storage submission = articleSubmissions[submissionId];
 
         submission.submissionId = submissionId;
-        submission.submissionOwner = tx.origin;
-        // doc: sender of the transaction (full call chain)
+        submission.submissionOwner = _from;
 
         submitArticleVersion(submissionId, _articleHash, _articleURL, _authors, _authorContributionRatios, _linkedArticles, _linkedArticlesSplitRatios);
 

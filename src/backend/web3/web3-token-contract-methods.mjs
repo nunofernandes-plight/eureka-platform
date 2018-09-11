@@ -28,9 +28,7 @@ export const submitArticle = (_contract, _from, _to, _amount, _data, _gas) => {
     .transferAndCall(
       _to,
       _amount,
-      // '0x0861681c',
-      '0x20159e37',
-      //'0x9b718dd9',
+      '0x0861681c',
       _data
     )
     .send({
