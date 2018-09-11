@@ -5,7 +5,7 @@ const web3 = new Web3();
 const initProvider = () => {
   if (!isProduction()) {
     web3.setProvider(
-      new web3.providers.WebsocketProvider('ws://127.0.0.1:7545')
+      new web3.providers.WebsocketProvider('ws://127.0.0.1:7545') //('wss://kovan.infura.io/v3/8d782240377d497a9a2168b0137e7e89')  //('ws://127.0.0.1:7545')
     ); //changed to Websocket, as HttpProvider is deprecated
   } else {
     // TODO: initialize web3 provider with Ethereum Node hosted by DigitalOcean
