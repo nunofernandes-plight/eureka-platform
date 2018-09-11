@@ -14,7 +14,7 @@ import tokenAddress from './web3/eurekaToken-Address.json';
 import {
   PLATFORM_KOVAN_ADDRESS,
   TOKEN_KOVAN_ADDRESS
-} from './web3/KovanAddresses.js';
+} from './web3/KovanAddresses.mjs';
 
 class App extends Component {
   constructor() {
