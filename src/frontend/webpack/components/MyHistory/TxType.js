@@ -9,16 +9,16 @@ import {
   __SCALE_TWO
 } from '../../../helpers/colors.js';
 
-const getColor = type => {
+const getTypeAttributes = type => {
   switch (type) {
     case SC_TRANSACTIONS_TYPE.SUBMIT_ARTICLE:
-      return __SCALE_ONE;
+      return {color: __SCALE_ONE, text: 'ARTICLE SUBMISSION'};
 
     case SC_TRANSACTIONS_TYPE.EDITOR_ASSIGNED:
-      return __SCALE_TWO;
+      return {color: __SCALE_TWO, text: 'ARTICLE ASSIGNATION'};
 
     case SC_TRANSACTIONS_TYPE.MINTING:
-      return __SCALE_THREE;
+      return {color: __SCALE_THREE, text: 'MINTING'};
 
     default:
       return __SCALE_TEN;
@@ -28,18 +28,20 @@ const getColor = type => {
 const Type = styled.div`
   background: ${props => props.background};
   color: ${props => props.color};
+  padding: 8px 5px;
+  border-radius: 10px;
+  font-weight: bold;
 `;
-const TxType = type => {
-    console.log(type);
-  const color = getColor(type);
+const TxType = props => {
+  const color = getTypeAttributes(props.type).color;
   return (
     <Type
       color={color}
       background={chroma(color)
-        .alpha(0.2)
+        .alpha(0.25)
         .css()}
     >
-      12312
+      {getTypeAttributes(props.type).text}
     </Type>
   );
 };
