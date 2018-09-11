@@ -12,6 +12,15 @@ import contractEventListener from '../controller/contract-event-controller.mjs';
 import uploadRouter from '../routes/file-upload.routes.mjs';
 import {getContractOwner} from '../web3/web3-platform-contract-methods.mjs';
 import ContractOwner from '../schema/contract-owner.mjs';
+import eurekaPlatformABI from '../../frontend/web3/eurekaPlatform-ABI.json';
+import eurekaTokenABI from '../../frontend/web3/eurekaToken-ABI.json';
+import web3 from '../web3/web3Instance.mjs';
+import {
+  PLATFORM_KOVAN_ADDRESS,
+  TOKEN_KOVAN_ADDRESS
+} from '../../frontend/web3/KovanAddresses.mjs';
+import transactionService from '../db/transaction-service.mjs';
+
 
 if (!isProduction) {
   dotenv.config();
@@ -61,6 +70,30 @@ export default {
       writeContractOwnerInDB(eurekaPlatformContract);
     } else {
       // TODO setup with constant public address
+      const platformContract = new web3.eth.Contract(eurekaPlatformABI, PLATFORM_KOVAN_ADDRESS);
+      const tokenContract = new web3.eth.Contract(eurekaTokenABI, TOKEN_KOVAN_ADDRESS);
+      // contractEventListener.setup(platformContract);
+      writeContractOwnerInDB(platformContract);
+
+      /** Pending Transaction listener **/
+      web3.eth.subscribe('pendingTransactions')
+        .on('data', async (transactionHash) => {
+          console.log(transactionHash);
+          const transaction = await web3.eth.getTransaction(transactionHash);
+          if ( transaction
+            && ( transaction.to === platformContract.options.address
+                || transaction.from === platformContract.options.address
+                || transaction.to === tokenContract.options.address
+                || transaction.from === tokenContract.options.address
+              )
+            ) {
+
+            //TODO save transaction because related with platform
+            // check status firs if transaction receipt call is necessary
+            const transactionReceipt = await web3.eth.getTransactionReceipt(transactionHash);
+            console.log(transactionReceipt);
+          }
+        });
     }
 
     //set global variable isAuthenticated -> call ir everywhere dynamically
