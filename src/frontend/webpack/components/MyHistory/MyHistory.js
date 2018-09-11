@@ -64,6 +64,7 @@ class MyHistory extends React.Component {
   render() {
     return (
       <Container>
+        {this.renderModals()}
         <Card width={1000} title={'Your Ethereum History'}>
           <MyHistoryTable txs={this.state.txs} />
         </Card>
