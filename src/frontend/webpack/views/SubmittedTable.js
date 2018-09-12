@@ -74,7 +74,7 @@ const MyLink = styled(Link)`
   text-decoration: none;
 `;
 
-const Hash = styled.td`
+const Hash = styled.div`
   ${MEDIUM_DEVICES`
     display: none; 
   `};
