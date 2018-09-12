@@ -7,9 +7,9 @@ import MyHistory from '../MyHistory/MyHistory.js';
 import TopContainer from '../../views/TopContainer.js';
 import {BottomContainer} from '../../views/BottomContainer.js';
 import ArticlesRouter from './ArticlesRouter.js';
-import AddressBook from '../addressbook/AddressBook.js';
+import AddressBook from '../AddressBook/AddressBook.js';
 import ContractOwnerDashboard from '../ContractOwnerDashboard.js';
-import {ContractOwnerGuard} from '../guards/Guards.js';
+import {ContractOwnerGuard} from '../Guards/Guards.js';
 import EditorArticleRouter from './EditorRouter.js';
 import MyReviews from '../Reviews/MyReviews.js';
 
