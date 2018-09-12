@@ -31,6 +31,8 @@ const Type = styled.div`
   padding: 8px 5px;
   border-radius: 10px;
   font-weight: bold;
+  margin: 0 20px;
+  text-align: center;
 `;
 const TxType = props => {
   const color = getTypeAttributes(props.type).color;

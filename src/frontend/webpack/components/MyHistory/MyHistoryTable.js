@@ -29,21 +29,35 @@ const getData = props => {
       logo: getLogo(),
       transactionType: getTxType(tx),
       txHash: getTxHash(tx),
-      timestamp: getTimestamp(tx)
+      timestamp: getTimestamp(tx),
+      from: getOwner(tx),
+      to: getAffectedAddress(tx)
     });
   });
   return data;
 };
 
+const getOwner = tx => {
+  return <div>{tx.ownerAddress.substr(0, 15)}...</div>;
+};
+const getAffectedAddress = tx => {
+  const to = tx.additionalInfo.affectedAddress;
+  if (to) {
+    return <div>{to.substr(0, 15)}...</div>;
+  } else {
+    return <i>EUREKA Smart Contract</i>;
+  }
+};
 const getLogo = () => {
-  return <EurekaLogo width={20} height={20} />;
+  return <EurekaLogo width={25} height={25} />;
 };
 const getTimestamp = tx => {
-  return <div>{renderTimestamp(tx.timestamp)}</div>;
+  const date = new Date(tx.updatedAt);
+  return <div>{renderTimestamp(date.getTime())}</div>;
 };
 const getTxHash = tx => {
   return (
-    <TxHash txHash={tx.txHash}>{tx.txHash.toString().substr(0, 15)}...</TxHash>
+    <TxHash txHash={tx.txHash}>{tx.txHash.toString().substr(0, 20)}...</TxHash>
   );
 };
 const getTxType = tx => {
@@ -68,11 +82,12 @@ const MyHistoryTable = props => {
             'Transaction Type',
             'Tx Hash',
             'Transaction date',
-            'Receiver Address',
+            'From',
             'To'
           ]}
+          textCenter={'Transaction Type'}
           data={getData(props)}
-          columnWidth={['5', '20', '20', '20', '20']}
+          columnWidth={['6', '25', '20', '17', '17', '15']}
         />
       )}
     </ContactsContainer>
