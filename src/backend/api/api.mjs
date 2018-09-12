@@ -19,7 +19,6 @@ import {
   PLATFORM_KOVAN_ADDRESS,
   TOKEN_KOVAN_ADDRESS
 } from '../../frontend/web3/KovanAddresses.mjs';
-import transactionService from '../db/transaction-service.mjs';
 
 
 if (!isProduction) {
@@ -84,7 +83,6 @@ export default {
             && ( transaction.to === platformContract.options.address
                 || transaction.from === platformContract.options.address
                 || transaction.to === tokenContract.options.address
-                || transaction.from === tokenContract.options.address
               )
             ) {
 
