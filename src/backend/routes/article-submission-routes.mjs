@@ -17,4 +17,12 @@ router.get('/',
   })
 );
 
+router.get('/unassigned',
+  asyncHandler(async req => {
+    const ethereumAddress = req.session.passport.user.ethereumAddress;
+    if (!ethereumAddress) errorThrower.notLoggedIn();
+    return await articleSubmissionService.getUnassignedSubmissions();
+  })
+);
+
 export default router;

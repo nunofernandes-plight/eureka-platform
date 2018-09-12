@@ -26,6 +26,7 @@ router.use('/sctransactions', scTransactionRoutes);
 router.use('/articles/drafts', articleDraftRoutes);
 router.use('/articles/submitted', articleSubmittedRoutes);
 router.use('/book', addressBook);
+router.use('/submissions', articleSubmissionRoutes);
 
 
 export default router;
