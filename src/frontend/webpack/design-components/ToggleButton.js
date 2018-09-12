@@ -53,7 +53,7 @@ class ToggleButton extends React.Component {
   }
 
   handleCheckBoxChange = e => {
-    this.props.isMobileMode(e.target.checked);
+    this.props.onChange(e.target.checked);
   };
 
   render() {

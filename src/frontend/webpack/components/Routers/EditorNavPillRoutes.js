@@ -1,5 +1,11 @@
 export const EditorNavPillRoutes = [
   {
+    path: 'articles',
+    name: 'Assign',
+    icon: 'material',
+    material: 'search'
+  },
+  {
     path: 'signoff',
     name: 'Sign Off',
     icon: 'material',

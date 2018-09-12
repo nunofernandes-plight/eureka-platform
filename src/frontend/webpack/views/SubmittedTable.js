@@ -79,13 +79,6 @@ const Hash = styled.div`
     display: none; 
   `};
 `;
-
-const AuthorsTitle = styled.th`
-  ${MEDIUM_DEVICES`
-    display: none; 
-  `};
-`;
-
 const IconContainer = styled.div`
   border-radius: 50%;
   padding: 0.25rem;

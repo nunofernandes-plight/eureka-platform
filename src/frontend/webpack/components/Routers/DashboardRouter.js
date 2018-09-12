@@ -107,13 +107,13 @@ class DashboardRouter extends Component {
           />
 
           <Route
-            path={`${this.props.base}/assigned`}
+            path={`${this.props.base}/editor`}
             render={() => (
               <EditorArticleRouter
                 web3={this.props.web3}
                 tokenContract={this.props.tokenContract}
                 platformContract={this.props.platformContract}
-                base={`${this.props.base}/assigned`}
+                base={`${this.props.base}/editor`}
                 user={this.props.user}
                 selectedAccount={this.props.selectedAccount}
               />

@@ -39,7 +39,7 @@ export const Routes = [
     role: Roles.USER
   },
   {
-    path: 'assigned',
+    path: 'editor',
     name: 'Assigned Articles',
     icon: 'material',
     material: 'playlist_add_check',
