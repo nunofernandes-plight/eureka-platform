@@ -8,6 +8,30 @@ export default {
   getAllSubmissions: () => {
     return ArticleSubmission.find({}).populate('articleVersions');
   },
+
+  getUnassignedSubmissions: async () => {
+
+    const submissions = await ArticleSubmission.find({editor: null}).populate('articleVersions');
+    let resSubmissions = [];
+    submissions.map(submission => {
+      let resSubmission = {};
+      let lastArticleVersion = submission.articleVersions[submission.articleVersions.length - 1];
+      resSubmission._id = lastArticleVersion._id;
+      resSubmission.articleHash = lastArticleVersion.articleHash;
+      resSubmission.articleVersionState = lastArticleVersion.articleVersionState;
+      resSubmission.ownerAddress = lastArticleVersion.ownerAddress;
+      resSubmission.updatedAt = lastArticleVersion.updatedAt;
+
+      resSubmission.title = lastArticleVersion.document.title;
+      resSubmission.authors = lastArticleVersion.document.authors;
+      resSubmission.abstract = lastArticleVersion.document.abstract;
+      resSubmission.figure = lastArticleVersion.document.figure;
+
+      resSubmissions.push(resSubmission);
+      });
+    return resSubmissions;
+  },
+
   createSubmission: async (ownerAddress) => {
     // create first article version
     const firstArticle = await articleVersionService.createArticleVersion(ownerAddress);
