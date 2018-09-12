@@ -1,6 +1,4 @@
-import web3 from './web3Instance.mjs';
-
-const getArticleHex = article => {
+const getArticleHex = (web3, article) => {
 
   let amountOfArrays = 4;
   let arrayDataStartByte = 0
