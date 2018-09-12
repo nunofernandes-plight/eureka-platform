@@ -4,7 +4,7 @@ import {Card} from '../views/Card.js';
 import {Row} from '../../helpers/layout.js';
 import {InputField} from '../design-components/Inputs.js';
 import Icon from '../views/icons/Icon.js';
-import {Methods} from './routers/ContractOwnerMethods.js';
+import {Methods} from './Routers/ContractOwnerMethods.js';
 import {__GRAY_200, __GRAY_700, __THIRD} from '../../helpers/colors.js';
 import {signUpEditor} from '../../../backend/web3/web3-platform-contract-methods.mjs';
 import Modal from '../design-components/Modal.js';
@@ -115,7 +115,7 @@ class ContractOwnerDashboard extends React.Component {
         //     progressClassName: '__BAR'
         //   }
         // );
-        console.log(res); 
+        console.log(res);
       })
       .catch(err => {
         console.error('submitArticle error: ', err);

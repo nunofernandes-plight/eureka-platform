@@ -9,7 +9,7 @@ import MetaMaskGuide from '../../views/MetaMaskGuide';
 import {getDomain} from '../../../../helpers/getDomain.js';
 import SignUp from '../SignUp.js';
 import PanelLeft from '../PanelLeft.js';
-import {DashBoardGuard} from '../guards/Guards.js';
+import {DashBoardGuard} from '../Guards/Guards.js';
 import {MAKE_MOBILE} from '../../../helpers/mobile.js';
 import {
   PANEL_LEFT_BREAK_POINT,

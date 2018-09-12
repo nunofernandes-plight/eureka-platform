@@ -10,7 +10,7 @@ import {
   PANEL_LEFT_NORMAL_WIDTH
 } from '../../helpers/layout.js';
 import ToggleButton from '../design-components/ToggleButton.js';
-import {Routes} from './routers/Routes.js';
+import {Routes} from './Routers/Routes.js';
 
 const Container = styled.div`
   display: flex;

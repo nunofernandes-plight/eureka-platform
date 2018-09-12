@@ -6,12 +6,12 @@ import {Card} from '../views/Card.js';
 import sha256 from 'js-sha256';
 import {getDomain} from '../../../helpers/getDomain.js';
 import GridSpinner from '../views/spinners/GridSpinner.js';
-import './editor/new-article.css';
+import './TextEditor/new-article.css';
 import 'draft-js/dist/Draft.css';
 import {deserializeDocument} from '../../../helpers/documentSerializer.mjs';
 import getChangedFields from '../../../helpers/compareDocuments.js';
 import {pick, debounce} from 'underscore';
-import DocumentPickers from './editor/DocumentPickers.js';
+import DocumentPickers from './TextEditor/DocumentPickers.js';
 import Modal from '../../webpack/design-components/Modal.js';
 import SmartContractInputData from '../views/SmartContractInputData.js';
 import {SUBMISSION_PRICE} from '../constants/Constants.js';
@@ -21,15 +21,15 @@ import {
   submitArticleDB,
   revertArticleToDraft,
   saveArticle
-} from './editor/DocumentMainMethods.js';
+} from './TextEditor/DocumentMainMethods.js';
 import ARTICLE_VERSION_STATE from '../../../backend/schema/article-version-state-enum.mjs';
 import Document from '../../../models/Document.mjs';
-import DocumentTitle from './editor/DocumentTitle.js';
-import DocumentFigures from './editor/DocumentFigures.js';
-import DocumentAuthors from './editor/DocumentAuthors.js';
-import DocumentAuthorsSelection from './editor/DocumentAuthorsSelection.js';
-import DocumentLeftPart from './editor/DocumentLeftPart.js';
-import DocumentRightPart from './editor/DocumentRightPart.js';
+import DocumentTitle from './TextEditor/DocumentTitle.js';
+import DocumentFigures from './TextEditor/DocumentFigures.js';
+import DocumentAuthors from './TextEditor/DocumentAuthors.js';
+import DocumentAuthorsSelection from './TextEditor/DocumentAuthorsSelection.js';
+import DocumentLeftPart from './TextEditor/DocumentLeftPart.js';
+import DocumentRightPart from './TextEditor/DocumentRightPart.js';
 import getArticleHex from '../../../backend/web3/get-articleHex.mjs';
 
 const Parent = styled.div`

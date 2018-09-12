@@ -10,7 +10,7 @@ import {
 } from '../../helpers/colors.js';
 import {renderTimestamp} from '../../helpers/timestampRenderer.js';
 import {MEDIUM_DEVICES} from '../../helpers/mobile.js';
-import {renderField} from '../components/editor/DocumentRenderer.js';
+import {renderField} from '../components/TextEditor/DocumentRenderer.js';
 import ARTICLE_VERSION_STATE from '../../../backend/schema/article-version-state-enum.mjs';
 import Icon from './icons/Icon.js';
 import PulseSpinner from './spinners/PulseSpinner.js';
@@ -74,7 +74,7 @@ const MyLink = styled(Link)`
   text-decoration: none;
 `;
 
-const Hash = styled.td`
+const Hash = styled.div`
   ${MEDIUM_DEVICES`
     display: none; 
   `};
