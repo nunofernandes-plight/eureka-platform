@@ -24,8 +24,6 @@ yarn-error.log*
 .idea
 src/smartcontracts/build/
 package-lock.json
-src/frontend/web3/eurekaPlatform-Address.json
-src/frontend/web3/eurekaToken-Address.json
 src/frontend/web3/eurekaPlatform-ABI.json
 src/frontend/web3/eurekaPlatform-Address.json
 src/frontend/web3/eurekaToken-ABI.json
