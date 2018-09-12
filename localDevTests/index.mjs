@@ -80,7 +80,7 @@ const testSubmitArticle = async () => {
     linkedArticlesSplitRatios: [3334, 3333, 3333]
   };
 
-  const dataInHex = getArticleHex(web3, article);
+  const dataInHex = getArticleHex(article);
   const articleHashHex = '0x' + article.articleHash;
 
   const logOptions = {
@@ -110,7 +110,7 @@ const testSubmitArticle = async () => {
     EurekaPlatformContract.options.address,
     5000,
     dataInHex,
-    8000000
+    80000000
   );
 
   console.log(

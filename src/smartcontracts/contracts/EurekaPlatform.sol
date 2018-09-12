@@ -205,7 +205,7 @@ contract EurekaPlatform {
 
         submission.submissionState = SubmissionState.OPEN;
         submission.stateTimestamp = block.timestamp;
-        emit SubmissionProcessStart(submission.submissionId, submission.submissionOwner, _articleHash, _articleURL, block.timestamp);
+        emit SubmissionProcessStart(submission.submissionId, tx.origin, _articleHash, _articleURL, block.timestamp);
     }
 
     function submitArticleVersion(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL,
