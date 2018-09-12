@@ -14,7 +14,6 @@ import {pick, debounce} from 'underscore';
 import DocumentPickers from './editor/DocumentPickers.js';
 import Modal from '../../webpack/design-components/Modal.js';
 import SmartContractInputData from '../views/SmartContractInputData.js';
-import {getArticleHex} from '../../web3/Helpers.js';
 import {SUBMISSION_PRICE} from '../constants/Constants.js';
 import {submitArticle} from '../../../backend/web3/web3-token-contract-methods.mjs';
 import {
@@ -31,6 +30,7 @@ import DocumentAuthors from './editor/DocumentAuthors.js';
 import DocumentAuthorsSelection from './editor/DocumentAuthorsSelection.js';
 import DocumentLeftPart from './editor/DocumentLeftPart.js';
 import DocumentRightPart from './editor/DocumentRightPart.js';
+import getArticleHex from '../../../backend/web3/get-articleHex.mjs';
 
 const Parent = styled.div`
   display: flex;
