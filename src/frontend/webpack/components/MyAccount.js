@@ -108,71 +108,71 @@ const SeeHistory = styled.div`
 `;
 
 const numberWithCommas = x => {
-	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\'');
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
 };
 
 const MyAccount = props => {
-	return (
-		<Container>
-			<CardContainer>
-				<Card>
-					<PhotoContainer>
-						<Photo src={'/' + props.user.avatar} />
-					</PhotoContainer>
-					<EmailContainer>
-						<Email>{props.user.email}</Email>
-					</EmailContainer>
-					<ProfileRow style={{margin: 0}}>
-						<EthereumAddress>{props.user.ethereumAddress}</EthereumAddress>
-					</ProfileRow>
-					<ProfileRow>
-						<Separator />
-					</ProfileRow>
-					<ProfileRow>
-						{props.selectedAccount.EKABalance &&
+  return (
+    <Container>
+      <CardContainer>
+        <Card>
+          <PhotoContainer>
+            <Photo src={'/' + props.user.avatar} />
+          </PhotoContainer>
+          <EmailContainer>
+            <Email>{props.user.email}</Email>
+          </EmailContainer>
+          <ProfileRow style={{margin: 0}}>
+            <EthereumAddress>{props.user.ethereumAddress}</EthereumAddress>
+          </ProfileRow>
+          <ProfileRow>
+            <Separator />
+          </ProfileRow>
+          <ProfileRow>
+            {props.selectedAccount.EKABalance &&
             props.selectedAccount.balance ? (
-								<Balances>
-									<SubTitle>Your Balances</SubTitle>
-									<Balance>
-										<EurekaLogo width={30} height={30} />
-										<Number>
-											{numberWithCommas(props.selectedAccount.EKABalance)} EKA
-										</Number>
-										<SeeHistory>
-											<Icon
-												width={22}
-												height={22}
-												material={'history'}
-												icon={'material'}
-												top={8}
-											/>
-											<div style={{marginTop: '-5px'}}>See History</div>
-										</SeeHistory>
-									</Balance>
-									<Balance>
-										<Icon
-											icon={'ethereum'}
-											width={25}
-											height={25}
-											right={5}
-											noMove
-										/>
-										<Number>
-											{numberWithCommas(
-												props.selectedAccount.balance.toString().substr(0, 6)
-											)}{' '}
+              <Balances>
+                <SubTitle>Your Balances</SubTitle>
+                <Balance>
+                  <EurekaLogo width={30} height={30} />
+                  <Number>
+                    {numberWithCommas(props.selectedAccount.EKABalance)} EKA
+                  </Number>
+                  <SeeHistory>
+                    <Icon
+                      width={22}
+                      height={22}
+                      material={'history'}
+                      icon={'material'}
+                      top={8}
+                    />
+                    <div style={{marginTop: '-5px'}}>See History</div>
+                  </SeeHistory>
+                </Balance>
+                <Balance>
+                  <Icon
+                    icon={'ethereum'}
+                    width={25}
+                    height={25}
+                    right={5}
+                    noMove
+                  />
+                  <Number>
+                    {numberWithCommas(
+                      props.selectedAccount.balance.toString().substr(0, 6)
+                    )}{' '}
                     ETH
-										</Number>
-									</Balance>
-								</Balances>
-							) : (
-								<CircleSpinner />
-							)}
-					</ProfileRow>
-				</Card>
-			</CardContainer>
-		</Container>
-	);
+                  </Number>
+                </Balance>
+              </Balances>
+            ) : (
+              <CircleSpinner />
+            )}
+          </ProfileRow>
+        </Card>
+      </CardContainer>
+    </Container>
+  );
 };
 
 export default MyAccount;

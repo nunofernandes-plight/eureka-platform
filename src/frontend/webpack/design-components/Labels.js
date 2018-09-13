@@ -1,17 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__LABEL_PRIMARY_TEXT, __LABEL_PRIMARY_BACK} from '../../helpers/colors.js';
+import {
+  __LABEL_PRIMARY_TEXT,
+  __LABEL_PRIMARY_BACK
+} from '../../helpers/colors.js';
 
 const getTextColor = props => {
-	if (props.status === 'primary') {
-		return `${__LABEL_PRIMARY_TEXT}`;
-	}
+  if (props.status === 'primary') {
+    return `${__LABEL_PRIMARY_TEXT}`;
+  }
 };
 
 const getBackColor = props => {
-	if (props.status === 'primary') {
-		return `${__LABEL_PRIMARY_BACK}`;
-	}
+  if (props.status === 'primary') {
+    return `${__LABEL_PRIMARY_BACK}`;
+  }
 };
 const LabelContainer = styled.div`
   padding-right: 0.875em;
@@ -35,5 +38,5 @@ const LabelContainer = styled.div`
 `;
 
 export const Label = props => {
-	return <LabelContainer {...props}>{props.children}</LabelContainer>;
+  return <LabelContainer {...props}>{props.children}</LabelContainer>;
 };

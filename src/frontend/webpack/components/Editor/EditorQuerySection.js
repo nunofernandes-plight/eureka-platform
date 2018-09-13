@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {InputField} from '../../design-components/Inputs.js';
 import ToggleButton from '../../design-components/ToggleButton.js';
+import Icon from '../../views/icons/Icon.js';
 
 const QuerySection = styled.div`
   display: flex;
@@ -9,6 +10,7 @@ const QuerySection = styled.div`
   margin-top: 25px;
   align-items: center;
   width: 75%;
+  position: relative;
 `;
 
 const MyLabel = styled.label`

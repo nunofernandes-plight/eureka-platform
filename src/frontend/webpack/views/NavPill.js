@@ -29,7 +29,7 @@ const MyLink = styled(NavLink)`
 `;
 
 MyLink.defaultProps = {
-	activeClassName: 'active'
+  activeClassName: 'active'
 };
 const IconContainer = styled.div`
   width: 125px;
@@ -42,28 +42,28 @@ const IconContainer = styled.div`
 `;
 
 const Name = styled.div`
-	white-space: nowrap;
+  white-space: nowrap;
   ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
     display: none; 
   `};
 `;
 
 const NavPill = props => {
-	return (
-		<MyLink to={`${props.base}/${props.path}`}>
-			<IconContainer {...props}>
-				<Name>{props.name}</Name>
-				<Icon
-					noMove
-					left={5}
-					icon={props.icon}
-					material={props.material}
-					width={props.width}
-					height={props.height}
-				/>
-			</IconContainer>
-		</MyLink>
-	);
+  return (
+    <MyLink to={`${props.base}/${props.path}`}>
+      <IconContainer {...props}>
+        <Name>{props.name}</Name>
+        <Icon
+          noMove
+          left={5}
+          icon={props.icon}
+          material={props.material}
+          width={props.width}
+          height={props.height}
+        />
+      </IconContainer>
+    </MyLink>
+  );
 };
 
 export default NavPill;

@@ -20,7 +20,7 @@ const Email = styled.div`
 const AuthorContainer = styled.div`
   display: flex;
   align-items: center;
-  padding: 12px;
+  padding: ${props => (props.padding !== undefined ? props.padding : '12')};
   border-bottom: 1px solid ${__GRAY_100};
   width: 100%;
 `;
@@ -28,7 +28,7 @@ const AuthorContainer = styled.div`
 const Author = props => {
   const author = props.author;
   return (
-    <AuthorContainer>
+    <AuthorContainer padding={props.padding}>
       <Avatar avatar={author.avatar} {...props} />
       <AuthorCredentials>
         <Address>{author.ethereumAddress}</Address>
