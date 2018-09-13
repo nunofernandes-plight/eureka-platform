@@ -33,13 +33,16 @@ export default {
   },
 
   createSubmission: async (ownerAddress) => {
-    // create first article version
-    const firstArticle = await articleVersionService.createArticleVersion(ownerAddress);
-    if (!firstArticle) errorThrower.noCreationOfEntry('Article Version');
 
-    // create article submission and save article version within it
+    // create article submission
     const submission = new ArticleSubmission(
       {ownerAddress: ownerAddress});
+
+    // create first article version
+    const firstArticle = await articleVersionService.createArticleVersion(ownerAddress, submission._id);
+    if (!firstArticle) errorThrower.noCreationOfEntry('Article Version');
+
+    // save article version within submission
     submission.articleVersions.push(firstArticle._id);
 
     const dbSubmission = await submission.save();
