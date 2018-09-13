@@ -6,13 +6,36 @@ import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 
+const getArticlesResponse = articles => {
+  let resArticles = [];
+  articles.map(article => {
+    let resArticle = {};
+    resArticle._id = article._id;
+    resArticle.articleHash = article.articleHash;
+    resArticle.articleVersionState = article.articleVersionState;
+    resArticle.updatedAt = article.updatedAt;
+
+    resArticle.title = article.document.title;
+    resArticle.authors = article.document.authors;
+    resArticle.abstract = article.document.abstract;
+    resArticle.figure = article.document.figure;
+    resArticle.keywords = article.document.keywords;
+
+    resArticle.articleSubmission = article.articleSubmission;
+
+    resArticles.push(resArticle);
+  });
+  return resArticles;
+};
+
 export default {
   getAllArticleVersions: () => {
     return ArticleVersion.find({});
   },
 
   getArticlesAssignedTo: async (ethereumAddress, articleVersionState) => {
-    return await ArticleVersion.find({articleVersionState: articleVersionState}).populate('articleSubmission').find({editor: ethereumAddress});
+    const articles = await ArticleVersion.find({articleVersionState: articleVersionState}).populate('articleSubmission').find({editor: ethereumAddress});
+    return getArticlesResponse(articles);
   },
 
   createArticleVersion: async (ethereumAddress, submissionId) => {
