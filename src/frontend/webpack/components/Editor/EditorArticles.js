@@ -7,6 +7,7 @@ import Modal from '../../design-components/Modal.js';
 import Article from '../../views/Article.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import ArticleCard from '../../views/ArticleCard.js';
+import {assignForSubmissionProcess} from '../../../../backend/web3/web3-platform-contract-methods.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -60,6 +61,10 @@ class EditorArticles extends React.Component {
       });
   }
 
+  assignArticle(id) {
+    assignForSubmissionProcess(this.props.platformContract);
+  }
+
   renderModals() {
     return (
       <Modal
@@ -105,6 +110,9 @@ class EditorArticles extends React.Component {
                     }}
                     onMouseLeave={id => {
                       this.setState({articleOnHover: null});
+                    }}
+                    assignArticle={id => {
+                      this.assignArticle(id);
                     }}
                   />
                 );

@@ -75,7 +75,11 @@ class ArticlesRouter extends Component {
                 exact
                 path={`${this.props.base}/articles`}
                 render={() => (
-                  <EditorArticles base={`${this.props.base}/articles`} />
+                  <EditorArticles
+                    selectedAccount={this.props.selectedAccount}
+                    platformContract={this.props.platformContract}
+                    base={`${this.props.base}/articles`}
+                  />
                 )}
               />
             </MarginTop>

@@ -46,11 +46,6 @@ const Title = styled.h2`
   line-height: 1.3;
 `;
 
-const FieldsSection = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 const TitleSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -136,7 +131,14 @@ const ArticleCard = ({article, ...otherProps}) => {
       }}
     >
       <ButtonContainer onHover={otherProps.onHover}>
-        <Button>Assign to me</Button>
+        <Button
+          onClick={() => {
+            // TODO: insert the submission id instead of the article id
+            otherProps.assignArticle(article._id);
+          }}
+        >
+          Assign article to me
+        </Button>
       </ButtonContainer>
       <Container onHover={otherProps.onHover}>
         <FigureSection>
