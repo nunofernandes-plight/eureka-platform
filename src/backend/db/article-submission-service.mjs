@@ -10,8 +10,7 @@ export default {
   },
 
   getUnassignedSubmissions: async () => {
-
-    const submissions = await ArticleSubmission.find({editor: null}).populate('articleVersions');
+    const submissions = await ArticleSubmission.find({editor: null, articleSubmissionState: 'OPEN'}).populate('articleVersions');
     let resSubmissions = [];
     submissions.map(submission => {
       let resSubmission = {};
