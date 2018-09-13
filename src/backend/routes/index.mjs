@@ -25,7 +25,7 @@ router.use('/users', userRoutes);
 router.use('/sctransactions', scTransactionRoutes);
 router.use('/submissions', articleSubmissionRoutes);
 router.use('/articles/drafts', articleDraftRoutes);
-router.use('/articles/submitted', articleVersionRoutes);
+router.use('/articles', articleVersionRoutes);
 router.use('/book', addressBook);
 
 

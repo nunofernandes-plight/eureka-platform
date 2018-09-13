@@ -54,7 +54,7 @@ contract EurekaPlatform {
     }
 
 
-    mapping(address => bool) isEditor;
+    mapping(address => bool) public isEditor;
 
     // primary key mappings
     uint256 submissionCounter;
