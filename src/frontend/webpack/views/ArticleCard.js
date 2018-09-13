@@ -4,13 +4,15 @@ import {__THIRD} from '../../helpers/colors.js';
 import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
 import Author from './Author.js';
 import {LARGE_DEVICES} from '../../helpers/mobile.js';
+import AuthorLookup from '../components/AuthorLookup.js';
 
 const Container = styled.div`
   display: flex;
   border: 1px solid ${__THIRD};
   margin: 25px 0;
   width: 100%;
-  min-height: 300px;
+  padding: 10px 0;
+  min-height: 350px;
 `;
 
 const FigureSection = styled.div`
@@ -18,7 +20,7 @@ const FigureSection = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 40%;
+  width: 45%;
 `;
 
 const Figure = styled.img`
@@ -59,9 +61,12 @@ const ArticleCard = ({article}) => {
         )}
 
         <Authors>
-          {article.authors.map((a, i) => {
-            return <Author key={i} author={a} />;
-          })}
+          <AuthorLookup
+            addresses={article.authors}
+            right={10}
+            width={40}
+            height={40}
+          />
         </Authors>
       </FigureSection>
 
