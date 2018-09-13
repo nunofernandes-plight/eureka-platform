@@ -149,7 +149,8 @@ export default {
   updateEditorToSubmission: async (_submissionId, _editor) => {
     ArticleSubmission.findOneAndUpdate({scSubmissionID: _submissionId},
       {
-        editor: _editor
+        editor: _editor,
+        articleSubmissionState: ARTICLE_SUBMISSION_STATE.EDITOR_ASSIGNED
       }, (err, submission) => {
         if (err) throw err;
         else {
