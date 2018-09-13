@@ -15,11 +15,17 @@ const colourStyles = {
       ...styles,
       backgroundColor: isDisabled
         ? null
-        : isSelected ? data.color : isFocused ? color.alpha(0.1).css() : null,
+        : isSelected
+          ? data.color
+          : isFocused
+            ? color.alpha(0.1).css()
+            : null,
       color: isDisabled
         ? '#ccc'
         : isSelected
-          ? chroma.contrast(color, 'white') > 2 ? 'white' : 'black'
+          ? chroma.contrast(color, 'white') > 2
+            ? 'white'
+            : 'black'
           : data.color,
       cursor: isDisabled ? 'not-allowed' : 'default'
     };
@@ -45,7 +51,7 @@ const colourStyles = {
   })
 };
 
-export default (props) => (
+export default props => (
   <Select
     closeMenuOnSelect={false}
     isMulti

@@ -37,111 +37,111 @@ const DropDownMenuParent = styled.div`
 `;
 
 class TopContainer extends React.Component {
-	constructor() {
-		super();
-		this.state = {
-			dropMenuVisible: false
-		};
-	}
+  constructor() {
+    super();
+    this.state = {
+      dropMenuVisible: false
+    };
+  }
 
-	toggle() {
-		const dropMenuVisible = !this.state.dropMenuVisible;
-		this.setState({dropMenuVisible});
-	}
+  toggle() {
+    const dropMenuVisible = !this.state.dropMenuVisible;
+    this.setState({dropMenuVisible});
+  }
 
-	render() {
-		return (
-			<Container>
-				<Profile>
-					<div style={{display: 'flex', marginTop: '12px'}}>
-						<RenderNetwork network={this.props.network} />
-						<MetaMaskLabel metaMaskStatus={this.props.metaMaskStatus} />
-						<DropDownMenuParent
-							onMouseEnter={() => this.toggle()}
-							onMouseLeave={() => this.toggle()}
-						>
-							<Avatar
-								avatar={this.props.user.avatar}
-								width={40}
-								height={40}
-								right={15}
-								cursor={'pointer'}
-							/>
-							<UserDropDownMenu
-								visible={this.state.dropMenuVisible}
-								action={item => this.props.action(item)}
-							/>
-						</DropDownMenuParent>
-					</div>
-				</Profile>
-				<BallContainer>
-					<Ball
-						rgb={'255, 255, 255'}
-						left={50}
-						top={20}
-						width={120}
-						intensity={0.07}
-					/>
-					<Ball
-						rgb={'255, 255, 255'}
-						left={160}
-						top={130}
-						width={90}
-						intensity={0.2}
-					/>
-					<Ball
-						rgb={'255, 255, 255'}
-						left={400}
-						top={90}
-						width={120}
-						intensity={0.15}
-					/>
-					<Ball
-						rgb={'255, 255, 255'}
-						left={670}
-						top={23}
-						width={55}
-						intensity={0.1}
-					/>
-					<Ball
-						rgb={'255, 255, 255'}
-						left={720}
-						top={50}
-						width={60}
-						intensity={0.05}
-					/>
-					<Ball
-						rgb={'255, 255, 255'}
-						right={200}
-						top={180}
-						width={150}
-						intensity={0.15}
-					/>
-					<Ball
-						rgb={'255, 255, 255'}
-						right={600}
-						top={60}
-						width={200}
-						intensity={0.3}
-					/>
-					<Ball
-						rgb={'255, 255, 255'}
-						right={280}
-						top={50}
-						width={100}
-						intensity={0.08}
-					/>
-					<Ball
-						rgb={'255, 255, 255'}
-						right={340}
-						top={80}
-						width={70}
-						intensity={0.18}
-					/>
-				</BallContainer>
-			</Container>
-		);
-	}
+  render() {
+    return (
+      <Container>
+        <Profile>
+          <div style={{display: 'flex', marginTop: '12px'}}>
+            <RenderNetwork network={this.props.network} />
+            <MetaMaskLabel metaMaskStatus={this.props.metaMaskStatus} />
+            <DropDownMenuParent
+              onMouseEnter={() => this.toggle()}
+              onMouseLeave={() => this.toggle()}
+            >
+              <Avatar
+                avatar={this.props.user.avatar}
+                width={40}
+                height={40}
+                right={15}
+                cursor={'pointer'}
+              />
+              <UserDropDownMenu
+                visible={this.state.dropMenuVisible}
+                action={item => this.props.action(item)}
+              />
+            </DropDownMenuParent>
+          </div>
+        </Profile>
+        <BallContainer>
+          <Ball
+            rgb={'255, 255, 255'}
+            left={50}
+            top={20}
+            width={120}
+            intensity={0.07}
+          />
+          <Ball
+            rgb={'255, 255, 255'}
+            left={160}
+            top={130}
+            width={90}
+            intensity={0.2}
+          />
+          <Ball
+            rgb={'255, 255, 255'}
+            left={400}
+            top={90}
+            width={120}
+            intensity={0.15}
+          />
+          <Ball
+            rgb={'255, 255, 255'}
+            left={670}
+            top={23}
+            width={55}
+            intensity={0.1}
+          />
+          <Ball
+            rgb={'255, 255, 255'}
+            left={720}
+            top={50}
+            width={60}
+            intensity={0.05}
+          />
+          <Ball
+            rgb={'255, 255, 255'}
+            right={200}
+            top={180}
+            width={150}
+            intensity={0.15}
+          />
+          <Ball
+            rgb={'255, 255, 255'}
+            right={600}
+            top={60}
+            width={200}
+            intensity={0.3}
+          />
+          <Ball
+            rgb={'255, 255, 255'}
+            right={280}
+            top={50}
+            width={100}
+            intensity={0.08}
+          />
+          <Ball
+            rgb={'255, 255, 255'}
+            right={340}
+            top={80}
+            width={70}
+            intensity={0.18}
+          />
+        </BallContainer>
+      </Container>
+    );
+  }
 }
 
 export default TopContainer;

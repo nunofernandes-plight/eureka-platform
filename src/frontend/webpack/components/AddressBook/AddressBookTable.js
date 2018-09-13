@@ -14,7 +14,6 @@ const ContactsContainer = styled.div`
   padding: 5px 25px;
 `;
 
-
 const NoAddresses = styled.div`
   display: flex;
   justify-content: center;

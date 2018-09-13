@@ -26,7 +26,11 @@ export const Table = props => {
   return (
     <TableWrapper tableWidth={props.tableWidth}>
       <TableContainer>
-        <TableHeader header={props.header} columnWidth={props.columnWidth} textCenter={props.textCenter}/>
+        <TableHeader
+          header={props.header}
+          columnWidth={props.columnWidth}
+          textCenter={props.textCenter}
+        />
         <TableBody
           padding={props.padding}
           data={props.data}

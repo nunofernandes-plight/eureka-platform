@@ -4,8 +4,9 @@ import {
   __ALERT_DANGER,
   __ALERT_WARNING,
   __GRAY_100,
-  __GRAY_200
+  getScale
 } from '../../helpers/colors.js';
+import chroma from 'chroma-js';
 import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
 import {LARGE_DEVICES} from '../../helpers/mobile.js';
 import AuthorLookup from '../components/AuthorLookup.js';
@@ -83,10 +84,26 @@ const ReadMore = styled.a`
   font-weight: bold;
 `;
 
-const Disciplines = styled.div``;
+const Keywords = styled.div`
+  display: flex;
+`;
+
+const Keyword = styled.div`
+  &:first-child {
+    margin: 0;
+  }
+  margin: 0 4px;
+  color: ${props => props.color};
+  background: ${props =>
+    chroma(props.color)
+      .alpha(0.2)
+      .css()};
+  text-transform: uppercase;
+  padding: 4px 6px;
+  border-radius: 5px;
+`;
 const ArticleCard = ({article}) => {
-  console.log(article);
-  console.log(article);
+  console.log(article.keywords);
   return (
     <Container>
       <FigureSection>
@@ -135,8 +152,20 @@ const ArticleCard = ({article}) => {
           />
         </Abstract>
 
-        <MyLabel top={9}>Discipline</MyLabel>
-        {/*   <Disciplines>{article.main}</Disciplines>*/}
+        <MyLabel top={9}>Keywords</MyLabel>
+        <Keywords>
+          {article.keywords.length === 0 ? (
+            <i>No keywords found.</i>
+          ) : (
+            article.keywords.map((keyword, i) => {
+              return (
+                <Keyword color={getScale()[i]} key={i}>
+                  {keyword.value}
+                </Keyword>
+              );
+            })
+          )}
+        </Keywords>
       </TitleSection>
     </Container>
   );

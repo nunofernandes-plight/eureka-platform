@@ -5,11 +5,12 @@ import errorThrower from '../helpers/error-thrower.mjs';
 import articleVersionService from './article-version-service.mjs';
 import ARTICLE_SUBMISSION_STATE from '../schema/article-submission-state-enum.mjs';
 
-const getSubmissionResponse = (submissions) => {
+const getSubmissionResponse = submissions => {
   let resSubmissions = [];
   submissions.map(submission => {
     let resSubmission = {};
-    let lastArticleVersion = submission.articleVersions[submission.articleVersions.length - 1];
+    let lastArticleVersion =
+      submission.articleVersions[submission.articleVersions.length - 1];
     resSubmission._id = lastArticleVersion._id;
     resSubmission.articleHash = lastArticleVersion.articleHash;
     resSubmission.articleVersionState = lastArticleVersion.articleVersionState;
@@ -20,7 +21,7 @@ const getSubmissionResponse = (submissions) => {
     resSubmission.authors = lastArticleVersion.document.authors;
     resSubmission.abstract = lastArticleVersion.document.abstract;
     resSubmission.figure = lastArticleVersion.document.figure;
-
+    resSubmission.keywords = lastArticleVersion.document.keywords;
     resSubmissions.push(resSubmission);
   });
   return resSubmissions;
@@ -32,50 +33,55 @@ export default {
   },
 
   getUnassignedSubmissions: async () => {
-    const submissions = await ArticleSubmission.find({editor: null, articleSubmissionState: 'OPEN'}).populate('articleVersions');
+    const submissions = await ArticleSubmission.find({
+      editor: null,
+/*      articleSubmissionState: 'OPEN'*/
+    }).populate('articleVersions');
     return getSubmissionResponse(submissions);
   },
 
-  getAssignedSubmissions: async (ethereumAddress) => {
+  getAssignedSubmissions: async ethereumAddress => {
     // const submissions = await ArticleSubmission.find({editor: ethereumAddress, articleSubmissionState: {$ne: 'CLOSED'}}).populate('articleVersions');
-    const submissions = await ArticleSubmission.find({editor: ethereumAddress}).populate('articleVersions');
+    const submissions = await ArticleSubmission.find({
+      editor: ethereumAddress
+    }).populate('articleVersions');
     return getSubmissionResponse(submissions);
   },
 
-  createSubmission: async (ownerAddress) => {
-
+  createSubmission: async ownerAddress => {
     // create article submission
-    const submission = new ArticleSubmission(
-      {ownerAddress: ownerAddress});
+    const submission = new ArticleSubmission({ownerAddress: ownerAddress});
 
     // create first article version
-    const firstArticle = await articleVersionService.createArticleVersion(ownerAddress, submission._id);
+    const firstArticle = await articleVersionService.createArticleVersion(
+      ownerAddress,
+      submission._id
+    );
     if (!firstArticle) errorThrower.noCreationOfEntry('Article Version');
 
     // save article version within submission
     submission.articleVersions.push(firstArticle._id);
 
     const dbSubmission = await submission.save();
-    if(!dbSubmission) errorThrower.noCreationOfEntry('Article-Submission');
+    if (!dbSubmission) errorThrower.noCreationOfEntry('Article-Submission');
 
-    const  response = {
+    const response = {
       articleVersionId: firstArticle._id,
       articleSubmissionId: submission._id
     };
     return response;
   },
 
-
   /**
    * Get all the article-submissions of an user
    * @param userAddress
    * @returns {Promise<*>}
    */
-  getSubmissionsOfUser: async (userAddress) => {
+  getSubmissionsOfUser: async userAddress => {
     const submissions = await ArticleSubmission.find({
       ownerAddress: userAddress
     }).populate('articleVersions');
-    if(!submissions) errorThrower.noEntryFoundById('EthereumAddress');
+    if (!submissions) errorThrower.noEntryFoundById('EthereumAddress');
     return submissions;
   },
 
@@ -96,19 +102,32 @@ export default {
    * @param articleUrl
    * @returns {Promise<void>}
    */
-  updateSubmissionStartByArticleHash: async (scSubmissionId, articleHash, articleUrl) => {
-    let articleVersion = await ArticleVersion.findOne({articleHash: articleHash});
+  updateSubmissionStartByArticleHash: async (
+    scSubmissionId,
+    articleHash,
+    articleUrl
+  ) => {
+    let articleVersion = await ArticleVersion.findOne({
+      articleHash: articleHash
+    });
 
     //error checking
-    if(!articleVersion) errorThrower.noEntryFoundById(articleHash);
-    if(articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT)
-      errorThrower.notCorrectStatus(ArticleVersionState.FINISHED_DRAFT, articleVersion.articleVersionState);
+    if (!articleVersion) errorThrower.noEntryFoundById(articleHash);
+    if (
+      articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT
+    )
+      errorThrower.notCorrectStatus(
+        ArticleVersionState.FINISHED_DRAFT,
+        articleVersion.articleVersionState
+      );
 
     articleVersion.articleVersionState = ArticleVersionState.SUBMITTED;
     await articleVersion.save();
 
-    let articleSubmission = await ArticleSubmission.findOne({'articleVersions': articleVersion._id});
-    if(!articleSubmission) errorThrower.noEntryFoundById(articleVersion._id);
+    let articleSubmission = await ArticleSubmission.findOne({
+      articleVersions: articleVersion._id
+    });
+    if (!articleSubmission) errorThrower.noEntryFoundById(articleVersion._id);
     articleSubmission.scSubmissionID = scSubmissionId;
     articleSubmission.articleUrl = articleUrl;
     articleSubmission.articleSubmissionState = ARTICLE_SUBMISSION_STATE.OPEN;
@@ -116,11 +135,13 @@ export default {
     return articleSubmission;
   },
 
-
   deleteSubmissionById: async (userAddress, submissionId) => {
-    const articleSubmission = await ArticleSubmission.findOneAndDelete({scSubmissionID: submissionId});
-    if(!articleSubmission) errorThrower.noEntryFoundById(submissionId);
-    if(articleSubmission.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+    const articleSubmission = await ArticleSubmission.findOneAndDelete({
+      scSubmissionID: submissionId
+    });
+    if (!articleSubmission) errorThrower.noEntryFoundById(submissionId);
+    if (articleSubmission.ownerAddress !== userAddress)
+      errorThrower.notCorrectEthereumAddress();
 
     // delete all article version related to the article submission
     await Promise.all(
@@ -141,9 +162,12 @@ export default {
    * @returns {Promise<void>}
    */
   deleteSubmissionByDraftId: async (userAddress, articleVersionID) => {
-    const articleSubmission = await ArticleSubmission.findOne({'articleVersions': articleVersionID});
-    if(!articleSubmission) errorThrower.noEntryFoundById(articleVersionID);
-    if(articleSubmission.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+    const articleSubmission = await ArticleSubmission.findOne({
+      articleVersions: articleVersionID
+    });
+    if (!articleSubmission) errorThrower.noEntryFoundById(articleVersionID);
+    if (articleSubmission.ownerAddress !== userAddress)
+      errorThrower.notCorrectEthereumAddress();
 
     // delete all article version related to the article submission
     await Promise.all(
@@ -160,31 +184,41 @@ export default {
    * @returns {Promise<void>}
    */
   updateEditorToSubmission: async (_submissionId, _editor) => {
-    ArticleSubmission.findOneAndUpdate({scSubmissionID: _submissionId},
+    ArticleSubmission.findOneAndUpdate(
+      {scSubmissionID: _submissionId},
       {
         editor: _editor,
         articleSubmissionState: ARTICLE_SUBMISSION_STATE.EDITOR_ASSIGNED
-      }, (err, submission) => {
+      },
+      (err, submission) => {
         if (err) throw err;
         else {
-          console.log('Submission ' + submission._id + ' has got the editor ' + _editor);
+          console.log(
+            'Submission ' + submission._id + ' has got the editor ' + _editor
+          );
           return submission;
         }
-      });
+      }
+    );
   },
 
-  removeEditorFromSubmission: async (_submissionId) => {
-    ArticleSubmission.findOneAndUpdate({scSubmissionID: _submissionId},
+  removeEditorFromSubmission: async _submissionId => {
+    ArticleSubmission.findOneAndUpdate(
+      {scSubmissionID: _submissionId},
       {
         editor: undefined,
         articleSubmissionState: ARTICLE_SUBMISSION_STATE.OPEN
-      }, (err, submission) => {
+      },
+      (err, submission) => {
         if (err) throw err;
         else {
-          console.log('Submission ' + submission._id + ' has the editor removed');
+          console.log(
+            'Submission ' + submission._id + ' has the editor removed'
+          );
           return submission;
         }
-      });
+      }
+    );
   },
   /**
    * Push a new article version to the given submission
@@ -217,11 +251,15 @@ export default {
     }
 
     //get position within article-version array
-    const articleVersionPosition = submission.articleVersions.findIndex((entry) => {
-      return entry.articleHash === _articleHash;
-    });
+    const articleVersionPosition = submission.articleVersions.findIndex(
+      entry => {
+        return entry.articleHash === _articleHash;
+      }
+    );
 
-    submission.articleVersions[articleVersionPosition].editorApprovedReviews.push(review);
+    submission.articleVersions[
+      articleVersionPosition
+    ].editorApprovedReviews.push(review);
 
     return await submission.save();
   }
