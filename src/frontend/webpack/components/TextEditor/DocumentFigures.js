@@ -10,7 +10,7 @@ const FiguresFlex = styled.div`
   align-items: center;
 `;
 
-const DocumentFigures = (props) => {
+const DocumentFigures = props => {
   return (
     <div>
       {' '}
@@ -24,11 +24,9 @@ const DocumentFigures = (props) => {
       <FiguresFlex>
         <DropZoneHandler
           onChangeFigure={f => {
-            let figures = props.document.figure
-              ? props.document.figure
-              : [];
+            let figures = props.document.figure ? props.document.figure : [];
             let figure = f.contents[0];
-            figure.cdn = fromS3toCdn(f.contents[0].url);
+            figure.cdn = fromS3toCdn(f.contents[0].url, 'max-w=700&fm=png');
             figures.push(figure);
 
             props.updateDocument({

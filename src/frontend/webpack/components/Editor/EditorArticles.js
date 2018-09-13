@@ -5,15 +5,20 @@ import EditorQuerySection from './EditorQuerySection.js';
 import {Table} from '../../design-components/Table/Table.js';
 import {getUnassignedSubmissions} from './EditorMethods.js';
 import Modal from '../../design-components/Modal.js';
+import Article from '../../views/Article.js';
+import GridSpinner from '../../views/spinners/GridSpinner.js';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: 1em;
 `;
 
 const Articles = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  margin-top: 1em;
 `;
 
 class EditorArticles extends React.Component {
@@ -84,7 +89,15 @@ class EditorArticles extends React.Component {
             }}
           />
 
-          <Articles />
+          {!this.state.articles ? (
+            <GridSpinner />
+          ) : (
+            <Articles>
+              {this.state.articles.map(article => {
+                return <Article key={article._id} article={article} />;
+              })}
+            </Articles>
+          )}
         </Card>
       </Container>
     );

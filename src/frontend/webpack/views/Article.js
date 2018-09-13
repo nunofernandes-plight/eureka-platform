@@ -1,20 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
+import ArticleCard from './ArticleCard.js';
 
-const Container = styled.div`
-  display: flex;
-`;
-
-const FigureContainer = styled.div``;
-const Figure = styled.img``;
-
-const Title = styled.h4``;
-const Article = props => {
-  return (
-    <Container>
-      <Title>asfoaojsfjoafjos</Title>
-    </Container>
-  );
+const Article = ({article}) => {
+  return <ArticleCard article={article} />;
 };
 
 export default Article;
