@@ -3,6 +3,7 @@ import ArticleVersion from '../schema/article-version.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import articleVersionService from './article-version-service.mjs';
+import ARTICLE_SUBMISSION_STATE from '../schema/article-submission-state-enum.mjs';
 
 export default {
   getAllSubmissions: () => {
@@ -97,6 +98,7 @@ export default {
     if(!articleSubmission) errorThrower.noEntryFoundById(articleVersion._id);
     articleSubmission.scSubmissionID = scSubmissionId;
     articleSubmission.articleUrl = articleUrl;
+    articleSubmission.articleSubmissionState = ARTICLE_SUBMISSION_STATE.OPEN;
     articleSubmission = await articleSubmission.save();
     return articleSubmission;
   },
