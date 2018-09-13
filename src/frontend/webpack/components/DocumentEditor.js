@@ -245,6 +245,7 @@ class DocumentEditor extends Component {
   }
 
   async submit() {
+    this.save();
     const article = this.getArticle();
     // normal API call for storing hash into the db
     const draftId = this.props.match.params.id;
