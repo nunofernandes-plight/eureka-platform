@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import ArticleSubmissionState from './article-submission-state-enum.mjs';
 /**
  * ArticleSubmission for an article on the eureka platform
  */
@@ -10,6 +11,11 @@ export const articleSubmissionSchema = mongoose.Schema(
     },
     scSubmissionID: {
       type: Number
+    },
+    articleSubmissionState: {
+      type: String,
+      enum: Object.values(ArticleSubmissionState),
+      default: ArticleSubmissionState.DRAFT
     },
     editor: {
       type: String
