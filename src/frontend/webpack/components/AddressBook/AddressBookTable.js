@@ -14,12 +14,12 @@ const ContactsContainer = styled.div`
   padding: 5px 25px;
 `;
 
-
 const NoAddresses = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  padding: 50px 0;
 `;
 
 const MyLabel = styled.div`
