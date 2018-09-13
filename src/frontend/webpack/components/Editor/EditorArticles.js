@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import {Card} from '../../views/Card.js';
 import EditorQuerySection from './EditorQuerySection.js';
-import {Table} from '../../design-components/Table/Table.js';
 import {getUnassignedSubmissions} from './EditorMethods.js';
 import Modal from '../../design-components/Modal.js';
 import Article from '../../views/Article.js';
