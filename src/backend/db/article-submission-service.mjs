@@ -3,6 +3,28 @@ import ArticleVersion from '../schema/article-version.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import articleVersionService from './article-version-service.mjs';
+import ARTICLE_SUBMISSION_STATE from '../schema/article-submission-state-enum.mjs';
+
+const getSubmissionResponse = (submissions) => {
+  let resSubmissions = [];
+  submissions.map(submission => {
+    let resSubmission = {};
+    let lastArticleVersion = submission.articleVersions[submission.articleVersions.length - 1];
+    resSubmission._id = lastArticleVersion._id;
+    resSubmission.articleHash = lastArticleVersion.articleHash;
+    resSubmission.articleVersionState = lastArticleVersion.articleVersionState;
+    resSubmission.ownerAddress = lastArticleVersion.ownerAddress;
+    resSubmission.updatedAt = lastArticleVersion.updatedAt;
+
+    resSubmission.title = lastArticleVersion.document.title;
+    resSubmission.authors = lastArticleVersion.document.authors;
+    resSubmission.abstract = lastArticleVersion.document.abstract;
+    resSubmission.figure = lastArticleVersion.document.figure;
+
+    resSubmissions.push(resSubmission);
+  });
+  return resSubmissions;
+};
 
 export default {
   getAllSubmissions: () => {
@@ -10,36 +32,27 @@ export default {
   },
 
   getUnassignedSubmissions: async () => {
+    const submissions = await ArticleSubmission.find({editor: null, articleSubmissionState: 'OPEN'}).populate('articleVersions');
+    return getSubmissionResponse(submissions);
+  },
 
-    const submissions = await ArticleSubmission.find({editor: null}).populate('articleVersions');
-    let resSubmissions = [];
-    submissions.map(submission => {
-      let resSubmission = {};
-      let lastArticleVersion = submission.articleVersions[submission.articleVersions.length - 1];
-      resSubmission._id = lastArticleVersion._id;
-      resSubmission.articleHash = lastArticleVersion.articleHash;
-      resSubmission.articleVersionState = lastArticleVersion.articleVersionState;
-      resSubmission.ownerAddress = lastArticleVersion.ownerAddress;
-      resSubmission.updatedAt = lastArticleVersion.updatedAt;
-
-      resSubmission.title = lastArticleVersion.document.title;
-      resSubmission.authors = lastArticleVersion.document.authors;
-      resSubmission.abstract = lastArticleVersion.document.abstract;
-      resSubmission.figure = lastArticleVersion.document.figure;
-
-      resSubmissions.push(resSubmission);
-      });
-    return resSubmissions;
+  getAssignedSubmissions: async (ethereumAddress) => {
+    // const submissions = await ArticleSubmission.find({editor: ethereumAddress, articleSubmissionState: {$ne: 'CLOSED'}}).populate('articleVersions');
+    const submissions = await ArticleSubmission.find({editor: ethereumAddress}).populate('articleVersions');
+    return getSubmissionResponse(submissions);
   },
 
   createSubmission: async (ownerAddress) => {
-    // create first article version
-    const firstArticle = await articleVersionService.createArticleVersion(ownerAddress);
-    if (!firstArticle) errorThrower.noCreationOfEntry('Article Version');
 
-    // create article submission and save article version within it
+    // create article submission
     const submission = new ArticleSubmission(
       {ownerAddress: ownerAddress});
+
+    // create first article version
+    const firstArticle = await articleVersionService.createArticleVersion(ownerAddress, submission._id);
+    if (!firstArticle) errorThrower.noCreationOfEntry('Article Version');
+
+    // save article version within submission
     submission.articleVersions.push(firstArticle._id);
 
     const dbSubmission = await submission.save();
@@ -98,6 +111,7 @@ export default {
     if(!articleSubmission) errorThrower.noEntryFoundById(articleVersion._id);
     articleSubmission.scSubmissionID = scSubmissionId;
     articleSubmission.articleUrl = articleUrl;
+    articleSubmission.articleSubmissionState = ARTICLE_SUBMISSION_STATE.OPEN;
     articleSubmission = await articleSubmission.save();
     return articleSubmission;
   },
@@ -148,7 +162,8 @@ export default {
   updateEditorToSubmission: async (_submissionId, _editor) => {
     ArticleSubmission.findOneAndUpdate({scSubmissionID: _submissionId},
       {
-        editor: _editor
+        editor: _editor,
+        articleSubmissionState: ARTICLE_SUBMISSION_STATE.EDITOR_ASSIGNED
       }, (err, submission) => {
         if (err) throw err;
         else {
@@ -161,9 +176,8 @@ export default {
   removeEditorFromSubmission: async (_submissionId) => {
     ArticleSubmission.findOneAndUpdate({scSubmissionID: _submissionId},
       {
-        $unset: {
-          editor: 1
-        }
+        editor: undefined,
+        articleSubmissionState: ARTICLE_SUBMISSION_STATE.OPEN
       }, (err, submission) => {
         if (err) throw err;
         else {

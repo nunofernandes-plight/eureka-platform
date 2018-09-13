@@ -10,12 +10,13 @@ export default {
   getAllArticleVersions: () => {
     return ArticleVersion.find({});
   },
-  createArticleVersion: async ethereumAddress => {
+  createArticleVersion: async (ethereumAddress, submissionId) => {
     const document = new Document(serializeDocument(createNewEmpty()));
     document.authors.push(ethereumAddress);
 
     const timestamp = new Date().getTime();
     const version = new ArticleVersion({
+      articleSubmission: submissionId,
       ownerAddress: ethereumAddress,
       document,
       timestamp

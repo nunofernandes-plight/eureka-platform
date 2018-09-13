@@ -8,7 +8,7 @@ import registerRoutes from './register-routes.mjs';
 import userRoutes from './user-routes.mjs';
 import scTransactionRoutes from './sc-transaction-routes.mjs';
 import articleDraftRoutes from './article-draft-routes.mjs';
-import articleSubmittedRoutes from './article-submitted-routes.mjs';
+import articleVersionRoutes from './article-version-routes.mjs';
 import articleSubmissionRoutes from './article-submission-routes.mjs';
 import addressBook from './address-book-routes.mjs';
 
@@ -23,10 +23,10 @@ router.use('/logout', logoutRoutes);
 router.use('/register', registerRoutes);
 router.use('/users', userRoutes);
 router.use('/sctransactions', scTransactionRoutes);
-router.use('/articles/drafts', articleDraftRoutes);
-router.use('/articles/submitted', articleSubmittedRoutes);
-router.use('/book', addressBook);
 router.use('/submissions', articleSubmissionRoutes);
+router.use('/articles/drafts', articleDraftRoutes);
+router.use('/articles/submitted', articleVersionRoutes);
+router.use('/book', addressBook);
 
 
 export default router;

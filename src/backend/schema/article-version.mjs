@@ -25,6 +25,10 @@ export const articleVersionSchema = mongoose.Schema(
       enum: Object.values(ArticleVersionState),
       default: ArticleVersionState.DRAFT
     },
+    articleSubmission: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ArticleSubmission'
+    },
     editorApprovedReviews: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Review'
