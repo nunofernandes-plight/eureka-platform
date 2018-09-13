@@ -86,13 +86,14 @@ const ReadMore = styled.a`
 
 const Keywords = styled.div`
   display: flex;
+  flex-wrap: wrap;
 `;
 
 const Keyword = styled.div`
   &:first-child {
     margin: 0;
   }
-  margin: 0 4px;
+  margin: 0 5px;
   color: ${props => props.color};
   background: ${props =>
     chroma(props.color)
