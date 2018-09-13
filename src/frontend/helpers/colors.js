@@ -35,7 +35,6 @@ export const __LABEL_PRIMARY_BACK = '#cbd2f6';
 // FOOTER
 export const __FOOTER = '#233143';
 
-
 // COLOR SCALE
 export const __SCALE_ONE = '#00B8D9';
 export const __SCALE_TWO = '#0052CC';
@@ -47,3 +46,18 @@ export const __SCALE_SEVEN = '#36B37E';
 export const __SCALE_EIGHT = '#00875A';
 export const __SCALE_NINE = '#253858';
 export const __SCALE_TEN = '#666666';
+
+export const getScale = () => {
+  return [
+    __SCALE_ONE,
+    __SCALE_TWO,
+    __SCALE_THREE,
+    __SCALE_FOUR,
+    __SCALE_FIVE,
+    __SCALE_SIX,
+    __SCALE_SEVEN,
+    __SCALE_EIGHT,
+    __SCALE_NINE,
+    __SCALE_TEN
+  ];
+};
