@@ -10,6 +10,11 @@ export default {
   getAllArticleVersions: () => {
     return ArticleVersion.find({});
   },
+
+  getArticlesAssignedTo: async (ethereumAddress, articleVersionState) => {
+    return await ArticleVersion.find({articleVersionState: articleVersionState}).populate('articleSubmission').find({editor: ethereumAddress});
+  },
+
   createArticleVersion: async (ethereumAddress, submissionId) => {
     const document = new Document(serializeDocument(createNewEmpty()));
     document.authors.push(ethereumAddress);
