@@ -15,7 +15,7 @@ router.get('/submitted',
   })
 );
 
-// router.use(accesController.rolesOnly([Roles.EDITOR, Roles.ADMIN, Roles.CONTRACT_OWNER]));
+//TODO: only for editors: router.use(accesController.rolesOnly(Roles.EDITOR));
 router.get('/assigned/signoff',
   asyncHandler(async req => {
     return await articleVersionService.getArticlesAssignedTo(req.session.passport.user.ethereumAddress, ARTICLE_VERSION_STATE.SUBMITTED);
