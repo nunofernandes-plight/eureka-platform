@@ -5,6 +5,27 @@ import errorThrower from '../helpers/error-thrower.mjs';
 import articleVersionService from './article-version-service.mjs';
 import ARTICLE_SUBMISSION_STATE from '../schema/article-submission-state-enum.mjs';
 
+const getSubmissionResponse = (submissions) => {
+  let resSubmissions = [];
+  submissions.map(submission => {
+    let resSubmission = {};
+    let lastArticleVersion = submission.articleVersions[submission.articleVersions.length - 1];
+    resSubmission._id = lastArticleVersion._id;
+    resSubmission.articleHash = lastArticleVersion.articleHash;
+    resSubmission.articleVersionState = lastArticleVersion.articleVersionState;
+    resSubmission.ownerAddress = lastArticleVersion.ownerAddress;
+    resSubmission.updatedAt = lastArticleVersion.updatedAt;
+
+    resSubmission.title = lastArticleVersion.document.title;
+    resSubmission.authors = lastArticleVersion.document.authors;
+    resSubmission.abstract = lastArticleVersion.document.abstract;
+    resSubmission.figure = lastArticleVersion.document.figure;
+
+    resSubmissions.push(resSubmission);
+  });
+  return resSubmissions;
+};
+
 export default {
   getAllSubmissions: () => {
     return ArticleSubmission.find({}).populate('articleVersions');
@@ -12,24 +33,13 @@ export default {
 
   getUnassignedSubmissions: async () => {
     const submissions = await ArticleSubmission.find({editor: null, articleSubmissionState: 'OPEN'}).populate('articleVersions');
-    let resSubmissions = [];
-    submissions.map(submission => {
-      let resSubmission = {};
-      let lastArticleVersion = submission.articleVersions[submission.articleVersions.length - 1];
-      resSubmission._id = lastArticleVersion._id;
-      resSubmission.articleHash = lastArticleVersion.articleHash;
-      resSubmission.articleVersionState = lastArticleVersion.articleVersionState;
-      resSubmission.ownerAddress = lastArticleVersion.ownerAddress;
-      resSubmission.updatedAt = lastArticleVersion.updatedAt;
+    return getSubmissionResponse(submissions);
+  },
 
-      resSubmission.title = lastArticleVersion.document.title;
-      resSubmission.authors = lastArticleVersion.document.authors;
-      resSubmission.abstract = lastArticleVersion.document.abstract;
-      resSubmission.figure = lastArticleVersion.document.figure;
-
-      resSubmissions.push(resSubmission);
-      });
-    return resSubmissions;
+  getAssignedSubmissions: async (ethereumAddress) => {
+    // const submissions = await ArticleSubmission.find({editor: ethereumAddress, articleSubmissionState: {$ne: 'CLOSED'}}).populate('articleVersions');
+    const submissions = await ArticleSubmission.find({editor: ethereumAddress}).populate('articleVersions');
+    return getSubmissionResponse(submissions);
   },
 
   createSubmission: async (ownerAddress) => {
