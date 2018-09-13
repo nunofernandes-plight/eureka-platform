@@ -163,9 +163,8 @@ export default {
   removeEditorFromSubmission: async (_submissionId) => {
     ArticleSubmission.findOneAndUpdate({scSubmissionID: _submissionId},
       {
-        $unset: {
-          editor: 1
-        }
+        editor: undefined,
+        articleSubmissionState: ARTICLE_SUBMISSION_STATE.OPEN
       }, (err, submission) => {
         if (err) throw err;
         else {
