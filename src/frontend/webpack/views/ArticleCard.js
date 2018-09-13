@@ -52,9 +52,7 @@ const FieldsSection = styled.div`
 const TitleSection = styled.div`
   display: flex;
   flex-direction: column;
-  width: 35%;
   padding: 1em;
-  font-family: 'Roboto', sans-serif;
   margin-left: 1em;
 `;
 const getFigureLink = (url, width, height) => {
@@ -77,19 +75,28 @@ const Abstract = styled.p`
 const MyLabel = styled.label`
   font-size: 12px;
   font-weight: bold;
+  margin-top: ${props => (props.top ? props.top + 'px' : null)};
 `;
 const ReadMore = styled.a`
   color: ${__ALERT_DANGER};
   font-style: italic;
   font-weight: bold;
 `;
+
+const Disciplines = styled.div``;
 const ArticleCard = ({article}) => {
+  console.log(article);
   console.log(article);
   return (
     <Container>
       <FigureSection>
         {article.figure.length === 0 ? (
-          <Figure src="/img/noPicture.png" width={'auto'} height={140} />
+          <Figure
+            src="/img/noPicture.png"
+            width={170}
+            height={'auto'}
+            style={{alignSelf: 'center', marginTop: 15}}
+          />
         ) : (
           <Figure src={getFigureLink(article.figure[0].url, 375, 250)} />
         )}
@@ -109,7 +116,7 @@ const ArticleCard = ({article}) => {
         <MyLabel>Title</MyLabel>
         <Title>{renderField(article, 'title')}</Title>
 
-        <MyLabel style={{marginTop: '25px'}}>Abstract</MyLabel>
+        <MyLabel top={25}>Abstract</MyLabel>
         <Abstract>
           <TextTruncate
             text={
@@ -127,8 +134,10 @@ const ArticleCard = ({article}) => {
             textTruncateChild={<ReadMore href="#">Read More</ReadMore>}
           />
         </Abstract>
+
+        <MyLabel top={9}>Discipline</MyLabel>
+        {/*   <Disciplines>{article.main}</Disciplines>*/}
       </TitleSection>
-      <FieldsSection />
     </Container>
   );
 };
