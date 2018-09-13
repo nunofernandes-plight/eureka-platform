@@ -6,6 +6,7 @@ import {getUnassignedSubmissions} from './EditorMethods.js';
 import Modal from '../../design-components/Modal.js';
 import Article from '../../views/Article.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
+import ArticleCard from '../../views/ArticleCard.js';
 
 const Container = styled.div`
   display: flex;
@@ -27,7 +28,8 @@ class EditorArticles extends React.Component {
       query: null,
       articles: null,
       filtersActive: false,
-      loading: false
+      loading: false,
+      articleOnHover: null
     };
   }
 
@@ -93,7 +95,19 @@ class EditorArticles extends React.Component {
           ) : (
             <Articles>
               {this.state.articles.map(article => {
-                return <Article key={article._id} article={article} />;
+                return (
+                  <Article
+                    key={article._id}
+                    onHover={this.state.articleOnHover === article._id}
+                    article={article}
+                    onMouseEnter={id => {
+                      this.setState({articleOnHover: id});
+                    }}
+                    onMouseLeave={id => {
+                      this.setState({articleOnHover: null});
+                    }}
+                  />
+                );
               })}
             </Articles>
           )}
