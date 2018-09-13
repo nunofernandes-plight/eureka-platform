@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.use(accesController.loggedInOnly);
 
-router.get('/',
+router.get('/submitted',
   asyncHandler(async req => {
     return await articleVersionService.getSubmittedAndFinishedDraftOfUser(req.session.passport.user.ethereumAddress);
   })
