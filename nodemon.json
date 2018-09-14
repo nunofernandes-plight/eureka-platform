@@ -1,4 +1,4 @@
 {
-  "ignore": ["node_modules/**", "src/frontend/**", "src/smartcontract/**", "src/tests/**"]
+  "ignore": ["node_modules/**", "src/frontend/**", "src/smartcontracts/**", "src/tests/**"]
 }
 
