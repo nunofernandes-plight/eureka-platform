@@ -6,24 +6,31 @@ import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 
+export const getRelevantArticleData = (submission, articleVersion) => {
+  let resArticle = {};
+
+  resArticle.scSubmissionID = submission.scSubmissionID;
+  resArticle.ownerAddress = submission.ownerAddress;
+  resArticle.articleSubmissionState = submission.articleSubmissionState;
+
+  resArticle._id = articleVersion._id;
+  resArticle.articleHash = articleVersion.articleHash;
+  resArticle.articleVersionState = articleVersion.articleVersionState;
+  resArticle.updatedAt = articleVersion.updatedAt;
+
+  resArticle.title = articleVersion.document.title;
+  resArticle.authors = articleVersion.document.authors;
+  resArticle.abstract = articleVersion.document.abstract;
+  resArticle.figure = articleVersion.document.figure;
+  resArticle.keywords = articleVersion.document.keywords;
+
+  return resArticle;
+};
+
 const getArticlesResponse = articles => {
   let resArticles = [];
   articles.map(article => {
-    let resArticle = {};
-    resArticle._id = article._id;
-    resArticle.articleHash = article.articleHash;
-    resArticle.articleVersionState = article.articleVersionState;
-    resArticle.updatedAt = article.updatedAt;
-
-    resArticle.title = article.document.title;
-    resArticle.authors = article.document.authors;
-    resArticle.abstract = article.document.abstract;
-    resArticle.figure = article.document.figure;
-    resArticle.keywords = article.document.keywords;
-
-    resArticle.articleSubmission = article.articleSubmission;
-
-    resArticles.push(resArticle);
+    resArticles.push(getRelevantArticleData(article.articleSubmission, article));
   });
   return resArticles;
 };

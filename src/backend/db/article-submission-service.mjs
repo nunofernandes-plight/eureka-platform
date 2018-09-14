@@ -2,27 +2,15 @@ import ArticleSubmission from '../schema/article-submission.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
-import articleVersionService from './article-version-service.mjs';
+import articleVersionService, {getRelevantArticleData} from './article-version-service.mjs';
 import ARTICLE_SUBMISSION_STATE from '../schema/article-submission-state-enum.mjs';
 
 const getSubmissionResponse = submissions => {
   let resSubmissions = [];
   submissions.map(submission => {
-    let resSubmission = {};
     let lastArticleVersion =
       submission.articleVersions[submission.articleVersions.length - 1];
-    resSubmission._id = lastArticleVersion._id;
-    resSubmission.articleHash = lastArticleVersion.articleHash;
-    resSubmission.articleVersionState = lastArticleVersion.articleVersionState;
-    resSubmission.ownerAddress = lastArticleVersion.ownerAddress;
-    resSubmission.updatedAt = lastArticleVersion.updatedAt;
-
-    resSubmission.title = lastArticleVersion.document.title;
-    resSubmission.authors = lastArticleVersion.document.authors;
-    resSubmission.abstract = lastArticleVersion.document.abstract;
-    resSubmission.figure = lastArticleVersion.document.figure;
-    resSubmission.keywords = lastArticleVersion.document.keywords;
-    resSubmissions.push(resSubmission);
+    resSubmissions.push(getRelevantArticleData(submission, lastArticleVersion));
   });
   return resSubmissions;
 };
