@@ -68,9 +68,14 @@
     "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
     "eject": "react-scripts eject",
     "dev-client": "react-scripts start",
+    "client-kov": "set BC_NETWORK=kovan && react-scripts start",
+    "client-gan": "set BC_NETWORK=ganache && react-scripts start",
     "dev-server": "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" src/backend babel-node",
+    "server-kov": "set BC_NETWORK=kovan && set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" src/backend babel-node",
+    "server-gan": "set BC_NETWORK=ganache && set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" src/backend babel-node",
     "dev-contracts": "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" src/backend/web3/deployer-script.mjs babel-node",
-    "dev-run": "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" localDevTests/index.mjs babel-node"
+    "deploy-ganache-contracts": "set BC_NETWORK=ganache && set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" src/backend/web3/deployer-script.mjs babel-node",
+    "nodemon-dev": "set NODE_ENV=development && nodemon --exec \"node --experimental-modules\" localDevTests/index.mjs babel-node"
   },
   "devDependencies": {
     "ava": "^0.25.0",
