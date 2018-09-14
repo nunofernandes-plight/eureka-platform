@@ -5,6 +5,7 @@ import {Card} from '../views/Card.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import Modal from '../design-components/Modal.js';
 import SubmittedTable from '../views/SubmittedTable.js';
+import {getEtherscanLink} from '../../../helpers/getEtherscanLink.js';
 
 const Container = styled.div``;
 
@@ -107,7 +108,13 @@ class MySubmitted extends React.Component {
         >
           Dear user, your article has successfully triggered our Smart Contract.
           If you are interested, you can track the Blockchain approval process
-          at the following link: <a href={'google.ch'}>{this.state.tx} </a>.
+          at the following link:{' '}
+          <a
+            href={getEtherscanLink(this.props.network) + 'tx/' + this.state.tx}
+            target={'_blank'}
+          >
+            {this.state.tx}{' '}
+          </a>.
           <br />
           We will inform you once the blockchain-based peer-review process will
           start.

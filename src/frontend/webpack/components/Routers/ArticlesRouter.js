@@ -86,7 +86,10 @@ class ArticlesRouter extends Component {
                 exact
                 path={`${this.props.base}/submitted`}
                 render={() => (
-                  <MySubmitted base={`${this.props.base}/submitted`} />
+                  <MySubmitted
+                    base={`${this.props.base}/submitted`}
+                    network={this.props.network}
+                  />
                 )}
               />
             </MarginTop>
