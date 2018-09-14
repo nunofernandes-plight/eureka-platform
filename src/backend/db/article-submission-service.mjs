@@ -23,7 +23,7 @@ export default {
   getUnassignedSubmissions: async () => {
     const submissions = await ArticleSubmission.find({
       editor: null,
-/*      articleSubmissionState: 'OPEN'*/
+      articleSubmissionState: 'OPEN'
     }).populate('articleVersions');
     return getSubmissionResponse(submissions);
   },
