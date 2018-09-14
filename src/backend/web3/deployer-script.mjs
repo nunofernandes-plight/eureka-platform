@@ -67,7 +67,7 @@ const setup = async (eurekaTokenContract, eurekaPlatformContract) => {
   const contractOwner = accounts[0];
   let tokenAmounts = [];
   accounts.forEach(() => {
-    tokenAmounts.push(20000);
+    tokenAmounts.push(200000000);
   });
   await mintEurekaTokens(
     eurekaTokenContract,
