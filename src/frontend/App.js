@@ -7,20 +7,18 @@ import Web3Providers from './web3/Web3Providers.js';
 import NoConnection from './webpack/views/NoConnection.js';
 import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
 import {getAllAccounts, getNetwork} from './web3/Helpers.js';
-import platformABI from './web3/eurekaPlatform-ABI.json';
-import tokenABI from './web3/eurekaToken-ABI.json';
-import platformAddress from './web3/eurekaPlatform-Address.json';
-import tokenAddress from './web3/eurekaToken-Address.json';
+import platformABI from '../smartcontracts/constants/GanachePlatformContractABI.json';
+import tokenABI from '../smartcontracts/constants/GanacheTokenContractABI.json';
+import platformAddress from '../smartcontracts/constants/GanachePlatformContractAddress.json';
+import tokenAddress from '../smartcontracts/constants/GanacheTokenContractAddress.json';
 import {
   PLATFORM_KOVAN_ADDRESS,
   TOKEN_KOVAN_ADDRESS
-} from './web3/KovanAddresses.mjs';
+} from '../smartcontracts/constants/KovanContractAddresses.mjs';
 
 class App extends Component {
   constructor() {
     super();
-    // const EUREKA_PLATFORM_PROD_ADDRESS = ''; // TODO: change this to the EUREKA_PLATFORM_PROD_ADDRESS once deployed
-    // const EUREKA_TOKEN_PROD_ADDRESS = ''; // TODO: change this to the EUREKA_TOKEN_PROD_ADDRESS once deployed
     const web3 = window.web3;
     let web3Instance = null;
     let platformContract = null;
