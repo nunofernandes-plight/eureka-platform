@@ -71,7 +71,7 @@ export default {
       // TODO setup with constant public address
       const platformContract = new web3.eth.Contract(eurekaPlatformABI, PLATFORM_KOVAN_ADDRESS);
       const tokenContract = new web3.eth.Contract(eurekaTokenABI, TOKEN_KOVAN_ADDRESS);
-      // contractEventListener.setup(platformContract);
+      contractEventListener.setup(platformContract);
       writeContractOwnerInDB(platformContract);
 
       /** Pending Transaction listener **/
