@@ -133,8 +133,7 @@ const ArticleCard = ({article, ...otherProps}) => {
       <ButtonContainer onHover={otherProps.onHover}>
         <Button
           onClick={() => {
-            // TODO: insert the submission id instead of the article id
-            otherProps.assignArticle(article._id);
+            otherProps.assignArticle(article.scSubmissionID);
           }}
         >
           Assign article to me

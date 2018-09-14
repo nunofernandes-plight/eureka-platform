@@ -61,8 +61,12 @@ class EditorArticles extends React.Component {
       });
   }
 
-  assignArticle(id) {
-    assignForSubmissionProcess(this.props.platformContract);
+  assignArticle(scSubmissionID) {
+    assignForSubmissionProcess(
+      this.props.platformContract,
+      scSubmissionID,
+      this.props.selectedAccount.address
+    );
   }
 
   renderModals() {
