@@ -3,28 +3,33 @@ import {isProduction} from '../../helpers/isProduction.mjs';
 const web3 = new Web3();
 
 const initProvider = () => {
-  if (!isProduction()) {
-    web3.setProvider(getProvider());
-  } else {
-    // TODO: initialize web3 provider with Ethereum Node hosted by DigitalOcean
-  }
+  web3.setProvider(getProvider());
 };
 
 const getProvider = () => {
-  const provider = new Web3.providers.WebsocketProvider(
-    // 'wss://kovan.infura.io/ws'
-    'ws://127.0.0.1:7545'
-  );
-  provider.on('connect', () => console.log('WS Connected'));
+  let provider;
+  if (isProduction()) {
+    provider = new Web3.providers.WebsocketProvider('wss://infura.io/ws');
+  }
+  else if (process.env.BC_NETWORK === 'ganache') {
+    provider = new Web3.providers.WebsocketProvider('ws://127.0.0.1:7545');
+  }
+  else if (process.env.BC_NETWORK === 'kovan') {
+    provider = new Web3.providers.WebsocketProvider('wss://kovan.infura.io/ws');
+  }
+  else {
+    console.error("provider couldn't be found");
+    process.exit(1);
+  }
+  provider.on('connect', () => console.log('Web3 Provider connected'));
   provider.on('error', e => {
-    console.error('WS Error', e);
+    console.error('Web3 Provider Error', e);
     web3.setProvider(getProvider());
   });
   provider.on('end', e => {
-    console.error('WS End', e);
+    console.error('Web3 Provider Ended', e);
     web3.setProvider(getProvider());
   });
-
   return provider;
 };
 
