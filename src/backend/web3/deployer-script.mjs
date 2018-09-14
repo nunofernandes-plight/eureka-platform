@@ -1,6 +1,5 @@
 import deployContracts from './index.mjs';
 import fs from 'fs';
-import app from '../../../src/backend/api/api.mjs';
 
 import {
   finishMinting,
@@ -13,56 +12,55 @@ const deploy = async () => {
   // get a valid Ethereum address, all the smart contracts gets also deployed.
   // the method returns a web3 instance of the smart contract itself.
   const [eurekaTokenContract, eurekaPlatformContract] = await deployContracts();
-  await setup(eurekaTokenContract, eurekaPlatformContract);
-
-  app.setupApp(eurekaPlatformContract);
-  app.listenTo(process.env.PORT || 8080);
-
+  await mintEKATokens(eurekaTokenContract);
 
   // for front-end
   const fileNames = {
     eurekaPlatform: {
-      addressPath: 'src/frontend/web3/eurekaPlatform-Address.json',
-      abiPath: 'src/frontend/web3/eurekaPlatform-ABI.json',
+      addressPath: 'src/smartcontracts/constants/GanachePlatformContractAddress.json',
+      abiPath: 'src/smartcontracts/constants/GanachePlatformContractABI.json',
       abi: JSON.stringify(eurekaPlatformContract._jsonInterface),
       address: JSON.stringify(eurekaPlatformContract.options.address)
     },
     eurekaToken: {
-      addressPath: 'src/frontend/web3/eurekaToken-Address.json',
-      abiPath: 'src/frontend/web3/eurekaToken-ABI.json',
+      addressPath: 'src/smartcontracts/constants/GanacheTokenContractAddress.json',
+      abiPath: 'src/smartcontracts/constants/GanacheTokenContractABI.json',
       abi: JSON.stringify(eurekaTokenContract._jsonInterface),
       address: JSON.stringify(eurekaTokenContract.options.address)
     }
   };
 
-  Object.keys(fileNames).map(contract => {
-    fs.writeFileSync(
-      fileNames[contract].abiPath,
-      fileNames[contract].abi,
-      function(err) {
-        if (err) {
-          return console.log(err);
-        } else {
-          console.log('ABI has been written in ' + contract.path);
+  await Promise.all(
+    Object.keys(fileNames).map(contract => {
+      fs.writeFileSync(
+        fileNames[contract].abiPath,
+        fileNames[contract].abi,
+        function(err) {
+          if (err) {
+            return console.log(err);
+          } else {
+            console.log('ABI has been written in ' + contract.path);
+          }
         }
-      }
-    );
+      );
 
-    fs.writeFileSync(
-      fileNames[contract].addressPath,
-      fileNames[contract].address,
-      function(err) {
-        if (err) {
-          return console.log(err);
-        } else {
-          console.log('ABI has been written in ' + contract.path);
+      fs.writeFileSync(
+        fileNames[contract].addressPath,
+        fileNames[contract].address,
+        function(err) {
+          if (err) {
+            return console.log(err);
+          } else {
+            console.log('ABI has been written in ' + contract.path);
+          }
         }
-      }
-    );
-  });
+      );
+    })
+  );
+  process.exit();
 };
 
-const setup = async (eurekaTokenContract, eurekaPlatformContract) => {
+const mintEKATokens = async (eurekaTokenContract) => {
   const accounts = await getAccounts();
   const contractOwner = accounts[0];
   let tokenAmounts = [];
