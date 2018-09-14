@@ -10,7 +10,7 @@ import ArticlesRouter from './ArticlesRouter.js';
 import AddressBook from '../AddressBook/AddressBook.js';
 import ContractOwnerDashboard from '../ContractOwnerDashboard.js';
 import {ContractOwnerGuard} from '../Guards/Guards.js';
-import EditorArticleRouter from './EditorRouter.js';
+import EditorRouter from './EditorRouter.js';
 import MyReviews from '../Reviews/MyReviews.js';
 
 class DashboardRouter extends Component {
@@ -110,7 +110,7 @@ class DashboardRouter extends Component {
           <Route
             path={`${this.props.base}/editor`}
             render={() => (
-              <EditorArticleRouter
+              <EditorRouter
                 web3={this.props.web3}
                 tokenContract={this.props.tokenContract}
                 platformContract={this.props.platformContract}

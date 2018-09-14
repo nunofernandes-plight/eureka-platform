@@ -30,7 +30,7 @@ const MarginTop = styled.div`
 `;
 
 const Container = styled.div``;
-class ArticlesRouter extends Component {
+class EditorRouter extends Component {
   constructor() {
     super();
     this.state = {
@@ -96,4 +96,4 @@ class ArticlesRouter extends Component {
   }
 }
 
-export default withRouter(ArticlesRouter);
+export default withRouter(EditorRouter);
