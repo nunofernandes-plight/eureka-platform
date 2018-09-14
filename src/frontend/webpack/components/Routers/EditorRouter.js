@@ -79,6 +79,7 @@ class EditorRouter extends Component {
                     selectedAccount={this.props.selectedAccount}
                     platformContract={this.props.platformContract}
                     base={`${this.props.base}/articles`}
+                    network={this.props.network}
                   />
                 )}
               />

@@ -6,8 +6,9 @@ import {getUnassignedSubmissions} from './EditorMethods.js';
 import Modal from '../../design-components/Modal.js';
 import Article from '../../views/Article.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
-import ArticleCard from '../../views/ArticleCard.js';
 import {assignForSubmissionProcess} from '../../../../backend/web3/web3-platform-contract-methods.mjs';
+import {withRouter} from 'react-router-dom';
+import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 
 const Container = styled.div`
   display: flex;
@@ -30,7 +31,9 @@ class EditorArticles extends React.Component {
       articles: null,
       filtersActive: false,
       loading: false,
-      articleOnHover: null
+      articleOnHover: null,
+      tx: null,
+      showTxModal: false
     };
   }
 
@@ -66,21 +69,66 @@ class EditorArticles extends React.Component {
       this.props.platformContract,
       scSubmissionID,
       this.props.selectedAccount.address
-    );
+    )
+      .on('transactionHash', tx => {
+        this.setState({
+          tx,
+          showTxModal: true
+        });
+      })
+      .on('receipt', receipt => {
+        console.log(
+          'Assigning the editor to the submission exited with the TX status: ' +
+            receipt.status
+        );
+        return receipt;
+      })
+      .catch(err => {
+        console.error(err);
+        this.setState({
+          errorMessage:
+            'Ouh. Something went wrong with the Smart Contract call: ' +
+            err.toString()
+        });
+      });
   }
 
   renderModals() {
     return (
-      <Modal
-        type={'notification'}
-        toggle={isErrorMessage => {
-          this.setState({errorMessage: null});
-        }}
-        show={this.state.errorMessage}
-        title={'You got the following error'}
-      >
-        {this.state.errorMessage}
-      </Modal>
+      <div>
+        <Modal
+          type={'notification'}
+          toggle={isErrorMessage => {
+            this.setState({errorMessage: null});
+          }}
+          show={this.state.errorMessage}
+          title={'You got the following error'}
+        >
+          {this.state.errorMessage}
+        </Modal>
+
+        <Modal
+          action={'GOT IT'}
+          callback={() => {
+            this.setState({showTxModal: false});
+            this.props.history.push(`${this.props.base}/articles`);
+          }}
+          noClose
+          show={this.state.showTxModal}
+          title={'Your article has been successfully submitted!'}
+        >
+          Dear editor, your request for assigning yourself to this article
+          submission process has successfully triggered our Smart Contract. If
+          you are interested, you can track the Blockchain approval process at
+          the following link: <br />
+          <a
+            href={getEtherscanLink(this.props.network) + 'tx/' + this.state.tx}
+            target={'_blank'}
+          >
+            {this.state.tx}{' '}
+          </a>
+        </Modal>
+      </div>
     );
   }
 
@@ -129,4 +177,4 @@ class EditorArticles extends React.Component {
   }
 }
 
-export default EditorArticles;
+export default withRouter(EditorArticles);

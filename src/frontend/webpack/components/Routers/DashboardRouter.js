@@ -117,6 +117,7 @@ class DashboardRouter extends Component {
                 base={`${this.props.base}/editor`}
                 user={this.props.user}
                 selectedAccount={this.props.selectedAccount}
+                network={this.props.network}
               />
             )}
           />
