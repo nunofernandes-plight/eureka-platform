@@ -21,18 +21,18 @@ export const assignForSubmissionProcess = (contract, _submissionId, _from) => {
     .send({
       from: _from
     })
-    .then(receipt => {
-      console.log(
-        'The assignement on the Submission Process with ID ' +
-        _submissionId +
-        ' exited with the TX status: ' +
-        receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+    // .then(receipt => {
+    //   console.log(
+    //     'The assignement on the Submission Process with ID ' +
+    //     _submissionId +
+    //     ' exited with the TX status: ' +
+    //     receipt.status
+    //   );
+    //   return receipt;
+    // })
+    // .catch(err => {
+    //   console.error(err);
+    // });
 };
 
 export const removeEditorFromSubmissionProcess = (contract, _submissionId, _from) => {
