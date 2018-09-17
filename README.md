@@ -101,12 +101,23 @@ DB_USER=admin
 DB_PASSWORD=admin
 ```
 
-
-#### Build Server
+#### Deploy Contracts to Ganache
 
 ```
-npm run dev-server
+npm run deploy-contracts
 ```
+
+#### Build Server and connect the monitor...
+##### ... to Ganache
+```
+npm run gan-server
+```
+
+##### ...to Kovan Network
+```
+npm run kov-server
+```
+
 > Default dev port: `http://localhost:8080/`
 
 ### Testing
