@@ -1,5 +1,3 @@
-import web3 from './web3Instance.mjs';
-
 export const getContractOwner = (contract) => {
   return contract.methods.contractOwner().call((err, res) => {
     if(err) throw err;
@@ -295,14 +293,14 @@ export const getArticleVersion = (contract, articleHashHex, account) => {
     });
 };
 
-export const getUrl = (contract, articleHashHex, account) => {
+export const getUrl = (web3Provider, contract, articleHashHex, account) => {
   return contract.methods
     .articleVersions(articleHashHex)
     .call({
       from: account
     })
     .then(receipt => {
-      return web3.utils.hexToUtf8(receipt.articleUrl);
+      return web3Provider.utils.hexToUtf8(receipt.articleUrl);
     })
     .catch(err => {
       console.error(err);

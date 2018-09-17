@@ -136,7 +136,7 @@ const testSubmitArticle = async () => {
   );
   console.log(
     'URL of the article: ' +
-    (await getUrl(EurekaPlatformContract, articleHashHex, contractOwner))
+    (await getUrl(web3, EurekaPlatformContract, articleHashHex, contractOwner))
   );
   console.log(
     'Authors: ' +
