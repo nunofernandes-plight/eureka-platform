@@ -7,14 +7,15 @@ const initProvider = () => {
 };
 
 const getProvider = () => {
+  console.log('_'+process.env.BC_NETWORK+'_');
   let provider;
   if (isProduction()) {
     provider = new Web3.providers.WebsocketProvider('wss://infura.io/ws');
   }
-  else if (process.env.BC_NETWORK === 'ganache') {
+  else if (process.env.BC_NETWORK === 'ganache ') {
     provider = new Web3.providers.WebsocketProvider('ws://127.0.0.1:7545');
   }
-  else if (process.env.BC_NETWORK === 'kovan') {
+  else if (process.env.BC_NETWORK === 'kovan ') {
     provider = new Web3.providers.WebsocketProvider('wss://kovan.infura.io/ws');
   }
   else {
