@@ -7,7 +7,7 @@ import {
 import test from 'ava';
 import app from '../../src/backend/api/api.mjs';
 import deployContracts from '../../src/backend/web3/index.mjs';
-import getAccounts from '../../src/backend/web3/get-accounts.mjs';
+import getAccounts from '../../src/smartcontracts/methods/get-accounts.mjs';
 import User from '../../src/backend/schema/user.mjs';
 import ArticleSubmission from '../../src/backend/schema/article-submission.mjs';
 import ArticleVersionState from '../../src/backend/schema/article-version-state-enum.mjs';
