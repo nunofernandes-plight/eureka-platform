@@ -30,6 +30,7 @@ export const getRelevantArticleData = (submission, articleVersion) => {
 const getArticlesResponse = articles => {
   let resArticles = [];
   articles.map(article => {
+    // populate() from mongoose sets articleSubmission to null if the editor address does not match the user
     if (article.articleSubmission)
       resArticles.push(getRelevantArticleData(article.articleSubmission, article));
   });
