@@ -68,7 +68,7 @@ class EditorSignOff extends React.Component {
       });
   }
 
-  <signOffArticle(articleHash) {
+  signOffArticle(articleHash) {
     setSanityToOk(
       this.props.platformContract,
       articleHash,
