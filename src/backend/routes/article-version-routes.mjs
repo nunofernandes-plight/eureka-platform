@@ -16,6 +16,13 @@ router.get('/submitted',
 );
 
 //TODO: only for editors: router.use(accesController.rolesOnly(Roles.EDITOR));
+
+router.get('/assigned/:id',
+  // asyncHandler(async req => {
+  //   return await articleVersionService.getArticleAssignedTo(req.session.passport.user.ethereumAddress, req.params.id);
+  // })
+);
+
 router.get('/assigned/signoff',
   asyncHandler(async req => {
     return await articleVersionService.getArticlesAssignedTo(req.session.passport.user.ethereumAddress, ARTICLE_VERSION_STATE.SUBMITTED);

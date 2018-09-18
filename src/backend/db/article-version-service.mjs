@@ -41,7 +41,8 @@ export default {
   },
 
   getArticlesAssignedTo: async (ethereumAddress, articleVersionState) => {
-    const articles = await ArticleVersion.find({articleVersionState: articleVersionState}).populate('articleSubmission').find({editor: ethereumAddress});
+    const articles = await ArticleVersion.find({articleVersionState: articleVersionState}).populate('articleSubmission') ;//.find({articleSubmission.editor: ethereumAddress});
+    console.log(articles);
     return getArticlesResponse(articles);
   },
 
