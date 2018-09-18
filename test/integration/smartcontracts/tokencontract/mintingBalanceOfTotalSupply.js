@@ -7,7 +7,7 @@ import {
   getTotalSupplyOf,
   mintEurekaTokens
 } from '../../../../src/smartcontracts/methods/web3-token-contract-methods.mjs';
-import web3 from '../../../../src/backend/web3/web3Instance.mjs';
+import web3 from '../../../../src/helpers/web3Instance.mjs';
 
 let EurekaPlatformContract;
 let EurekaTokenContract;

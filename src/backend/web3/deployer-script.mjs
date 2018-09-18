@@ -6,7 +6,7 @@ import {
   mintEurekaTokens
 } from '../../smartcontracts/methods/web3-token-contract-methods.mjs';
 import getAccounts from '../../smartcontracts/methods/get-accounts.mjs';
-import web3 from './web3Instance.mjs';
+import web3 from '../../helpers/web3Instance.mjs';
 
 const deploy = async () => {
   // deployContracts will deploy all libraries specified in the input file and once they

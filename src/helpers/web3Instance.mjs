@@ -1,5 +1,5 @@
 import Web3 from 'web3';
-import {isProduction} from '../../helpers/isProduction.mjs';
+import {isProduction} from './isProduction.mjs';
 const web3 = new Web3();
 
 const initProvider = () => {

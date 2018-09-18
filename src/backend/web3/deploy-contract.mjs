@@ -1,5 +1,5 @@
 import solc from 'solc';
-import web3 from './web3Instance.mjs';
+import web3 from '../../helpers/web3Instance.mjs';
 import linker from 'solc/linker';
 
 export const deployContract = async (contractInput, addressMap, accounts) => {

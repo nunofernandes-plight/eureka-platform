@@ -14,7 +14,7 @@ import {getContractOwner} from '../../smartcontracts/methods/web3-platform-contr
 import ContractOwner from '../schema/contract-owner.mjs';
 import ganachePlatformABI from '../../smartcontracts/constants/GanachePlatformContractABI.json';
 import ganacheTokenABI from '../../smartcontracts/constants/GanacheTokenContractABI.json';
-import web3 from '../web3/web3Instance.mjs';
+import web3 from '../../helpers/web3Instance.mjs';
 import {
   PLATFORM_KOVAN_ADDRESS,
   TOKEN_KOVAN_ADDRESS

@@ -1,5 +1,5 @@
 import test from 'ava';
-import web3 from '../../../../src/backend/web3/web3Instance.mjs';
+import web3 from '../../../../src/helpers/web3Instance.mjs';
 import deployContracts from '../../../../src/backend/web3/index.mjs';
 import getAccounts from '../../../../src/smartcontracts/methods/get-accounts.mjs';
 import {

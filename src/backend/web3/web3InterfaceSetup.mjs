@@ -1,5 +1,5 @@
 import contractEventListener from './contract-event-lister.mjs';
-import web3 from './web3Instance.mjs';
+import web3 from '../../helpers/web3Instance.mjs';
 import GanachePlatformContractABI from '../../smartcontracts/constants/GanachePlatformContractABI.json';
 import GanachePlatformContractAddress from '../../smartcontracts/constants/GanachePlatformContractAddress.json';
 import GanacheTokenContractAddress from '../../smartcontracts/constants/GanacheTokenContractAddress.json';

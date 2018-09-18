@@ -1,4 +1,4 @@
-import web3 from './web3Instance.mjs';
+import web3 from '../../helpers/web3Instance.mjs';
 import {deployLibraries, deployContract} from './deploy-contract.mjs';
 import getEurekaSmartContractInput from './get-input.mjs';
 import getAccounts from '../../smartcontracts/methods/get-accounts.mjs';
