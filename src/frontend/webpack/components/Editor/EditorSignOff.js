@@ -6,6 +6,12 @@ import Article from '../../views/Article.js';
 import {Card} from '../../views/Card.js';
 import {__THIRD} from '../../../helpers/colors.js';
 import {Link} from 'react-router-dom';
+import {
+  assignForSubmissionProcess,
+  setSanityToOk
+} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import Modal from '../../design-components/Modal.js';
+import TxHash from '../../views/TxHash.js';
 
 const Container = styled.div`
   display: flex;
@@ -58,9 +64,65 @@ class EditorSignOff extends React.Component {
       });
   }
 
+  signOffArticle(articleHash) {
+    setSanityToOk(
+      this.props.platformContract,
+      articleHash,
+      this.props.selectedAccount.address
+    )
+      .on('transactionHash', tx => {
+        this.setState({
+          tx,
+          showTxModal: true
+        });
+      })
+      .on('receipt', receipt => {
+        console.log('Sanity check:  ' + receipt.status);
+        return receipt;
+      })
+      .catch(err => {
+        console.error(err);
+        this.setState({
+          errorMessage:
+            'Ouh. Something went wrong with the Smart Contract call: ' +
+            err.toString()
+        });
+      });
+  }
+
+  renderModals() {
+    return (
+      <div>
+        <Modal
+          type={'notification'}
+          toggle={isErrorMessage => {
+            this.setState({errorMessage: null});
+          }}
+          show={this.state.errorMessage}
+          title={'You got the following error'}
+        >
+          {this.state.errorMessage}
+        </Modal>
+
+        <Modal
+          toggle={isTx => {
+            this.setState({tx: null});
+          }}
+          show={this.state.tx}
+          title={'We got your request!'}
+        >
+          This article successfully passed the sanity check! You can find its tx
+          hash here: <TxHash txHash={this.state.tx}>Transaction Hash</TxHash>.{' '}
+          <br />
+        </Modal>
+      </div>
+    );
+  }
+
   render() {
     return (
       <Container>
+        {this.renderModals()}
         {this.state.loading ? (
           <GridSpinner />
         ) : (
@@ -80,8 +142,8 @@ class EditorSignOff extends React.Component {
                       onMouseLeave={id => {
                         this.setState({articleOnHover: null});
                       }}
-                      action={id => {
-                        // TODO : select action
+                      action={(_, article) => {
+                        this.signOffArticle(article.articleHash);
                       }}
                     />
                   );

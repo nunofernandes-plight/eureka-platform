@@ -4,8 +4,8 @@ import ArticleCard from './ArticleCard.js';
 const Article = ({article, ...otherProps}) => {
   return (
     <ArticleCard
-      action={id => {
-        otherProps.action(id);
+      action={(id, article) => {
+        otherProps.action(id, article);
       }}
       buttonText={otherProps.buttonText}
       onHover={otherProps.onHover}

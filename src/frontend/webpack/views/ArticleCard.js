@@ -149,19 +149,17 @@ const ArticleCard = ({article, ...otherProps}) => {
       <ButtonContainer onHover={otherProps.onHover}>
         <Button
           onClick={() => {
-            otherProps.action(article.scSubmissionID);
+            otherProps.action(article.scSubmissionID, article);
           }}
         >
           {otherProps.buttonText}
         </Button>
         <ReadButton
           onClick={() => {
-            otherProps.history.push(
-              `/app/articles/preview/${article._id}`
-            );
+            otherProps.history.push(`/app/articles/preview/${article._id}`);
           }}
         >
-          Read
+          More
         </ReadButton>
       </ButtonContainer>
       <Container onHover={otherProps.onHover}>
