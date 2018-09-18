@@ -5,6 +5,7 @@ import {Redirect, withRouter} from 'react-router-dom';
 import NavPill from '../../views/NavPill.js';
 import {EditorNavPillRoutes} from './EditorNavPillRoutes.js';
 import EditorArticles from '../Editor/EditorArticles.js';
+import EditorSignOff from '../Editor/EditorSignOff.js';
 
 const Parent = styled.div`
   display: flex;
@@ -85,6 +86,20 @@ class EditorRouter extends Component {
               />
             </MarginTop>
 
+            <MarginTop>
+              <Route
+                exact
+                path={`${this.props.base}/signoff`}
+                render={() => (
+                  <EditorSignOff
+                    selectedAccount={this.props.selectedAccount}
+                    platformContract={this.props.platformContract}
+                    base={`${this.props.base}/signoff`}
+                    network={this.props.network}
+                  />
+                )}
+              />
+            </MarginTop>
             <Route
               exact
               path={`${this.props.base}`}
