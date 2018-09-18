@@ -136,7 +136,7 @@ class EditorArticles extends React.Component {
     return (
       <Container>
         {this.renderModals()}
-        <Card width={1000} title={'Allocate articles'}>
+        <Card width={1000} title={'Assign articles'}>
           <EditorQuerySection
             checked={this.state.filtersActive}
             handleFilters={filtersActive => {
