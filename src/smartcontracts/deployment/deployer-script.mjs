@@ -4,8 +4,8 @@ import fs from 'fs';
 import {
   finishMinting,
   mintEurekaTokens
-} from '../../smartcontracts/methods/web3-token-contract-methods.mjs';
-import getAccounts from '../../smartcontracts/methods/get-accounts.mjs';
+} from '../methods/web3-token-contract-methods.mjs';
+import getAccounts from '../methods/get-accounts.mjs';
 import web3 from '../../helpers/web3Instance.mjs';
 
 const deploy = async () => {

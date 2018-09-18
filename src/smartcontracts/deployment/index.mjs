@@ -1,7 +1,7 @@
 import web3 from '../../helpers/web3Instance.mjs';
 import {deployLibraries, deployContract} from './deploy-contract.mjs';
 import getEurekaSmartContractInput from './get-input.mjs';
-import getAccounts from '../../smartcontracts/methods/get-accounts.mjs';
+import getAccounts from '../methods/get-accounts.mjs';
 
 const deployContracts = async () => {
   console.log('Current Web3 Provider ', web3.currentProvider.connection._url);
