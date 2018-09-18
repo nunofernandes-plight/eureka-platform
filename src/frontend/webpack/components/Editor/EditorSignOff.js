@@ -36,7 +36,8 @@ class EditorSignOff extends React.Component {
     super();
     this.state = {
       articles: null,
-      loading: false
+      loading: false,
+      articleOnHover: null
     };
   }
 
@@ -69,12 +70,18 @@ class EditorSignOff extends React.Component {
                 this.state.articles.map(article => {
                   return (
                     <Article
+                      buttonText={'Sign off article'}
                       key={article._id}
                       article={article}
-                      onMouseEnter={id => {}}
-                      onMouseLeave={id => {}}
-                      assignArticle={id => {
-                        this.assignArticle(id);
+                      onHover={this.state.articleOnHover === article._id}
+                      onMouseEnter={id => {
+                        this.setState({articleOnHover: id});
+                      }}
+                      onMouseLeave={id => {
+                        this.setState({articleOnHover: null});
+                      }}
+                      action={id => {
+                        // TODO : select action
                       }}
                     />
                   );
