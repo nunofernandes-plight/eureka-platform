@@ -4,8 +4,8 @@ import ArticleCard from './ArticleCard.js';
 const Article = ({article, ...otherProps}) => {
   return (
     <ArticleCard
-      assignArticle={id => {
-        otherProps.assignArticle(id);
+      action={id => {
+        otherProps.action(id);
       }}
       buttonText={otherProps.buttonText}
       onHover={otherProps.onHover}
