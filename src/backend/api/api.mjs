@@ -10,7 +10,7 @@ import {isProduction} from '../../helpers/isProduction.mjs';
 import router from '../routes/index.mjs';
 import contractEventListener from '../web3/contract-event-lister.mjs';
 import uploadRouter from '../routes/file-upload.routes.mjs';
-import {getContractOwner} from '../web3/web3-platform-contract-methods.mjs';
+import {getContractOwner} from '../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import ContractOwner from '../schema/contract-owner.mjs';
 import ganachePlatformABI from '../../smartcontracts/constants/GanachePlatformContractABI.json';
 import ganacheTokenABI from '../../smartcontracts/constants/GanacheTokenContractABI.json';

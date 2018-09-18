@@ -4,7 +4,7 @@ import {
   getBalanceOf,
   mintEurekaTokens,
   submitArticle
-} from '../src/backend/web3/web3-token-contract-methods.mjs';
+} from '../src/smartcontracts/methods/web3-token-contract-methods.mjs';
 import {
   getArticleVersion,
   getAuthors,
@@ -12,7 +12,7 @@ import {
   getSubmissionProcess,
   getUrl
   // signUpEditor
-} from '../src/backend/web3/web3-platform-contract-methods.mjs';
+} from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import getAccounts from '../src/backend/web3/get-accounts.mjs';
 import deployContracts from '../src/backend/web3/index.mjs';
 import web3 from '../src/backend/web3/web3Instance.mjs';

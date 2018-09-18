@@ -1,4 +1,4 @@
-import {getContractOwner} from '../web3/web3-platform-contract-methods.mjs';
+import {getContractOwner} from '../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import ContractOwner from '../schema/contract-owner.mjs';
 
 export const writeContractOwnerInDB = async contract => {

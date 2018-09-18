@@ -15,7 +15,7 @@ import DocumentPickers from './TextEditor/DocumentPickers.js';
 import Modal from '../../webpack/design-components/Modal.js';
 import SmartContractInputData from '../views/SmartContractInputData.js';
 import {SUBMISSION_PRICE} from '../constants/Constants.js';
-import {submitArticle} from '../../../backend/web3/web3-token-contract-methods.mjs';
+import {submitArticle} from '../../../smartcontracts/methods/web3-token-contract-methods.mjs';
 import {
   fetchArticle,
   submitArticleDB,

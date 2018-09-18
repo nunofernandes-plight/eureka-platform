@@ -6,7 +6,7 @@ import {InputField} from '../design-components/Inputs.js';
 import Icon from '../views/icons/Icon.js';
 import {Methods} from './Routers/ContractOwnerMethods.js';
 import {__GRAY_200, __GRAY_700, __THIRD} from '../../helpers/colors.js';
-import {signUpEditor} from '../../../backend/web3/web3-platform-contract-methods.mjs';
+import {signUpEditor} from '../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../design-components/Modal.js';
 import 'react-toastify/dist/ReactToastify.css';
 import '../design-components/Notification.css';

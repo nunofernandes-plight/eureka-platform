@@ -7,14 +7,14 @@ import {
   getBalanceOf,
   mintEurekaTokens,
   submitArticle
-} from '../../../../src/backend/web3/web3-token-contract-methods.mjs';
+} from '../../../../src/smartcontracts/methods/web3-token-contract-methods.mjs';
 import getArticleHex from '../../../../src/backend/web3/get-articleHex.mjs';
 import {
   getAuthors,
   getLinkedArticles,
   getSubmissionProcess,
   getUrl
-} from '../../../../src/backend/web3/web3-platform-contract-methods.mjs';
+} from '../../../../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 
 let EurekaPlatformContract;
 let EurekaTokenContract;
