@@ -4,16 +4,33 @@ import {getArticlesToSignOff} from './EditorMethods.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Article from '../../views/Article.js';
 import {Card} from '../../views/Card.js';
+import {__THIRD} from '../../../helpers/colors.js';
+import {Link} from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const Articles = styled.div`
+const NoArtDiv = styled.div`
   display: flex;
-  flex-direction: column;
+  font-style: italic;
+  margin-top: 25px;
+  color: ${__THIRD};
+  font-size: 16px;
 `;
+const NoArticles = () => {
+  return (
+    <NoArtDiv>
+      You don't have any articles to sign off. If you want to assign yourself to
+      an article{' '}
+      <Link to={'/app/editor/articles'} style={{marginLeft: 2.5}}>
+        {' '}
+        <strong>click here.</strong>
+      </Link>
+    </NoArtDiv>
+  );
+};
 class EditorSignOff extends React.Component {
   constructor() {
     super();
@@ -47,8 +64,9 @@ class EditorSignOff extends React.Component {
           <GridSpinner />
         ) : (
           <Card title={'Sign Off Articles'} width={1000}>
-            {this.state.articles
-              ? this.state.articles.map(article => {
+            {this.state.articles ? (
+              this.state.articles.length > 0 ? (
+                this.state.articles.map(article => {
                   return (
                     <Article
                       key={article._id}
@@ -61,7 +79,12 @@ class EditorSignOff extends React.Component {
                     />
                   );
                 })
-              : null}
+              ) : (
+                <NoArticles />
+              )
+            ) : (
+              <NoArticles />
+            )}
           </Card>
         )}
       </Container>
