@@ -52,7 +52,7 @@ const deploy = async () => {
           if (err) {
             return console.log(err);
           } else {
-            console.log('ABI has been written in ' + contract.path);
+            console.log('Address has been written in ' + contract.path);
           }
         }
       );
