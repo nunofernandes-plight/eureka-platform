@@ -48,8 +48,12 @@ class EditorSignOff extends React.Component {
   }
 
   async componentDidMount() {
+    await this.getArticlesToSignOff();
+  }
+
+  async getArticlesToSignOff() {
     this.setState({loading: true});
-    await getArticlesToSignOff()
+    return getArticlesToSignOff()
       .then(response => response.json())
       .then(response => {
         if (response.success) {
@@ -64,7 +68,7 @@ class EditorSignOff extends React.Component {
       });
   }
 
-  signOffArticle(articleHash) {
+  <signOffArticle(articleHash) {
     setSanityToOk(
       this.props.platformContract,
       articleHash,
@@ -76,8 +80,9 @@ class EditorSignOff extends React.Component {
           showTxModal: true
         });
       })
-      .on('receipt', receipt => {
+      .on('receipt', async receipt => {
         console.log('Sanity check:  ' + receipt.status);
+        await this.getArticlesToSignOff();
         return receipt;
       })
       .catch(err => {
