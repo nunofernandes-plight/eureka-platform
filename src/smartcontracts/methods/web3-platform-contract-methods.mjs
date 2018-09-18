@@ -18,19 +18,7 @@ export const assignForSubmissionProcess = (contract, _submissionId, _from) => {
     .assignForSubmissionProcess(_submissionId)
     .send({
       from: _from
-    })
-    // .then(receipt => {
-    //   console.log(
-    //     'The assignement on the Submission Process with ID ' +
-    //     _submissionId +
-    //     ' exited with the TX status: ' +
-    //     receipt.status
-    //   );
-    //   return receipt;
-    // })
-    // .catch(err => {
-    //   console.error(err);
-    // });
+    });
 };
 
 export const removeEditorFromSubmissionProcess = (contract, _submissionId, _from) => {
@@ -79,18 +67,6 @@ export const setSanityToOk = (contract, _articleHash, _from) => {
     .sanityIsOk(_articleHash)
     .send({
       from: _from
-    })
-    .then(receipt => {
-      console.log(
-        'Sanity check for Article ' +
-        _articleHash +
-        ' is got accepted with the TX status: ' +
-        receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
     });
 };
 
@@ -99,18 +75,6 @@ export const setSanityIsNotOk = (contract, _articleHash, _from) => {
     .sanityIsNotOk(_articleHash)
     .send({
       from: _from
-    })
-    .then(receipt => {
-      console.log(
-        'Sanity check for Article ' +
-        _articleHash +
-        ' is got declined with the TX status: ' +
-        receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
     });
 };
 
