@@ -1,12 +1,20 @@
 import React from 'react';
 import styled, {keyframes} from 'styled-components';
-import {__ALERT_DANGER, __GRAY_100, getScale} from '../../helpers/colors.js';
+import {
+  __ALERT_DANGER,
+  __FIFTH,
+  __GRAY_100,
+  __GRAY_900,
+  __THIRD,
+  getScale
+} from '../../helpers/colors.js';
 import chroma from 'chroma-js';
 import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
 import {LARGE_DEVICES} from '../../helpers/mobile.js';
 import AuthorLookup from '../components/AuthorLookup.js';
 import {renderField} from '../components/TextEditor/DocumentRenderer.js';
 import TextTruncate from 'react-text-truncate';
+import {withRouter} from 'react-router-dom';
 
 const Parent = styled.div`
   position: relative;
@@ -115,6 +123,14 @@ const ButtonContainer = styled.div`
   opacity: ${props => (props.onHover ? 1 : 0)};
   visibility: ${props => (props.onHover ? 'visible' : 'hidden')};
   transition: 0.3s ease-in-out;
+  flex-direction: column;
+`;
+
+const ReadButton = styled.button`
+  color: white;
+  background: ${__FIFTH};
+  cursor: pointer;
+  padding: 12px 15px;
 `;
 
 const Button = styled.button`
@@ -133,11 +149,20 @@ const ArticleCard = ({article, ...otherProps}) => {
       <ButtonContainer onHover={otherProps.onHover}>
         <Button
           onClick={() => {
-            otherProps.assignArticle(article.scSubmissionID);
+            otherProps.action(article.scSubmissionID);
           }}
         >
           {otherProps.buttonText}
         </Button>
+        <ReadButton
+          onClick={() => {
+            otherProps.history.push(
+              `/app/articles/preview/${article._id}`
+            );
+          }}
+        >
+          Read
+        </ReadButton>
       </ButtonContainer>
       <Container onHover={otherProps.onHover}>
         <FigureSection>
@@ -205,4 +230,4 @@ const ArticleCard = ({article, ...otherProps}) => {
   );
 };
 
-export default ArticleCard;
+export default withRouter(ArticleCard);
