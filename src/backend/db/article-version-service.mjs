@@ -30,7 +30,8 @@ export const getRelevantArticleData = (submission, articleVersion) => {
 const getArticlesResponse = articles => {
   let resArticles = [];
   articles.map(article => {
-    resArticles.push(getRelevantArticleData(article.articleSubmission, article));
+    if (article.articleSubmission)
+      resArticles.push(getRelevantArticleData(article.articleSubmission, article));
   });
   return resArticles;
 };
@@ -41,8 +42,11 @@ export default {
   },
 
   getArticlesAssignedTo: async (ethereumAddress, articleVersionState) => {
-    const articles = await ArticleVersion.find({articleVersionState: articleVersionState}).populate('articleSubmission') ;//.find({articleSubmission.editor: ethereumAddress});
-    console.log(articles);
+    const articles = await ArticleVersion.find({articleVersionState: articleVersionState})
+      .populate({
+        path: 'articleSubmission',
+        match: { editor: ethereumAddress}
+      });
     return getArticlesResponse(articles);
   },
 
