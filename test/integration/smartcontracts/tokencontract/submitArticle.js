@@ -14,7 +14,7 @@ import {
   getSubmissionProcess,
   getUrl
 } from '../../../../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
-import {deployContracts} from '../../../../src/smartcontracts/deployment/deploy-contract.mjs';
+import {deployContracts} from '../../../../src/smartcontracts/deployment/deploy-contracts.mjs';
 
 let EurekaPlatformContract;
 let EurekaTokenContract;

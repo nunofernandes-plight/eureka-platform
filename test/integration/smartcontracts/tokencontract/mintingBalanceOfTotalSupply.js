@@ -7,7 +7,7 @@ import {
   mintEurekaTokens
 } from '../../../../src/smartcontracts/methods/web3-token-contract-methods.mjs';
 import web3 from '../../../../src/helpers/web3Instance.mjs';
-import {deployContracts} from '../../../../src/smartcontracts/deployment/deploy-contract.mjs';
+import {deployContracts} from '../../../../src/smartcontracts/deployment/deploy-contracts.mjs';
 
 let EurekaPlatformContract;
 let EurekaTokenContract;

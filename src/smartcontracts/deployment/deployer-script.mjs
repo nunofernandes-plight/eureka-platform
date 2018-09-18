@@ -5,7 +5,7 @@ import {
 } from '../methods/web3-token-contract-methods.mjs';
 import getAccounts from '../methods/get-accounts.mjs';
 import web3 from '../../helpers/web3Instance.mjs';
-import {deployContracts} from './deploy-contract.mjs';
+import {deployContracts} from './deploy-contracts.mjs';
 
 const deploy = async () => {
   // deployContracts will deploy all libraries specified in the input file and once they

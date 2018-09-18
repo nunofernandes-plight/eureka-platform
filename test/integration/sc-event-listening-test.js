@@ -38,7 +38,7 @@ import Review from '../../src/backend/schema/review.mjs';
 import Roles from '../../src/backend/schema/roles-enum.mjs';
 import SC_TRANSACTIONS_TYPE from '../../src/backend/schema/sc-transaction-state-enum.mjs';
 import web3 from '../../src/helpers/web3Instance.mjs';
-import {deployContracts} from '../../src/smartcontracts/deployment/deploy-contract.mjs';
+import {deployContracts} from '../../src/smartcontracts/deployment/deploy-contracts.mjs';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
