@@ -6,7 +6,6 @@ import {
 } from '../../src/smartcontracts/methods/web3-token-contract-methods.mjs';
 import test from 'ava';
 import app from '../../src/backend/api/api.mjs';
-import deployContracts from '../../src/smartcontracts/deployment/index.mjs';
 import getAccounts from '../../src/smartcontracts/methods/get-accounts.mjs';
 import User from '../../src/backend/schema/user.mjs';
 import ArticleSubmission from '../../src/backend/schema/article-submission.mjs';
@@ -39,6 +38,7 @@ import Review from '../../src/backend/schema/review.mjs';
 import Roles from '../../src/backend/schema/roles-enum.mjs';
 import SC_TRANSACTIONS_TYPE from '../../src/backend/schema/sc-transaction-state-enum.mjs';
 import web3 from '../../src/helpers/web3Instance.mjs';
+import {deployContracts} from '../../src/smartcontracts/deployment/deploy-contract.mjs';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;

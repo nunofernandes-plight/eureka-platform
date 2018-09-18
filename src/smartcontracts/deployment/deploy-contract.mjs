@@ -1,6 +1,21 @@
 import solc from 'solc';
 import web3 from '../../helpers/web3Instance.mjs';
 import linker from 'solc/linker';
+import getAccounts from '../methods/get-accounts.mjs';
+import getEurekaSmartContractInput from './get-input.mjs';
+
+
+export const deployContracts = async () => {
+  console.log('Current Web3 Provider ', web3.currentProvider.connection._url);
+  const accounts = await getAccounts(web3);
+  if (web3) {
+    let eurekaInput = getEurekaSmartContractInput();
+    const addressMap = await deployLibraries(eurekaInput.libraries, accounts);
+    return deployContract(eurekaInput, addressMap, accounts);
+  } else {
+    console.log('Web3 Instance is not set!');
+  }
+};
 
 export const deployContract = async (contractInput, addressMap, accounts) => {
   let input = {};

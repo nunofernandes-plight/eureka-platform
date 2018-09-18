@@ -14,8 +14,8 @@ import {
   // signUpEditor
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import getAccounts from '../src/smartcontracts/methods/get-accounts.mjs';
-import deployContracts from '../src/smartcontracts/deployment/index.mjs';
 import web3 from '../src/helpers/web3Instance.mjs';
+import {deployContracts} from '../src/smartcontracts/deployment/deploy-contract.mjs';
 
 let EurekaPlatformContract = undefined;
 let EurekaTokenContract = undefined;

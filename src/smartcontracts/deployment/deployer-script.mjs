@@ -1,12 +1,11 @@
-import deployContracts from './index.mjs';
 import fs from 'fs';
-
 import {
   finishMinting,
   mintEurekaTokens
 } from '../methods/web3-token-contract-methods.mjs';
 import getAccounts from '../methods/get-accounts.mjs';
 import web3 from '../../helpers/web3Instance.mjs';
+import {deployContracts} from './deploy-contract.mjs';
 
 const deploy = async () => {
   // deployContracts will deploy all libraries specified in the input file and once they
