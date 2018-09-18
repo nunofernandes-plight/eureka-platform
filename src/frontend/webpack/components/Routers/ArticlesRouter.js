@@ -8,6 +8,8 @@ import NavPill from '../../views/NavPill.js';
 import MySubmitted from '../MySubmitted.js';
 import Preview from '../Preview.js';
 import {ArticlesNavPillRoutes} from './ArticlesNavPillRoutes.js';
+import {GoBack} from './GoBack.js';
+import {GoForward} from './GoForward.js';
 
 const Parent = styled.div`
   display: flex;
@@ -58,6 +60,7 @@ class ArticlesRouter extends Component {
       <Parent>
         <Container>
           <NavPills>
+            <GoBack {...this.props} />
             {ArticlesNavPillRoutes.map((item, index) => {
               return (
                 <NavPill
@@ -71,6 +74,7 @@ class ArticlesRouter extends Component {
                 />
               );
             })}
+            <GoForward {...this.props} />
           </NavPills>
           <CardContainer>
             <MarginTop>
