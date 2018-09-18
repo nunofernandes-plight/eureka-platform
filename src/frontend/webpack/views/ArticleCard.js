@@ -136,7 +136,7 @@ const ArticleCard = ({article, ...otherProps}) => {
             otherProps.assignArticle(article.scSubmissionID);
           }}
         >
-          Assign article to me
+          {otherProps.buttonText}
         </Button>
       </ButtonContainer>
       <Container onHover={otherProps.onHover}>

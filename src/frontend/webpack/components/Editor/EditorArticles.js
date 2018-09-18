@@ -154,6 +154,7 @@ class EditorArticles extends React.Component {
               {this.state.articles.map(article => {
                 return (
                   <Article
+                    buttonText={"Assign article to me"}
                     key={article._id}
                     onHover={this.state.articleOnHover === article._id}
                     article={article}

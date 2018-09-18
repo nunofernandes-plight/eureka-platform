@@ -7,6 +7,7 @@ const Article = ({article, ...otherProps}) => {
       assignArticle={id => {
         otherProps.assignArticle(id);
       }}
+      buttonText={otherProps.buttonText}
       onHover={otherProps.onHover}
       onMouseEnter={id => {
         otherProps.onMouseEnter(id);
