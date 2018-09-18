@@ -1,6 +1,4 @@
-import web3 from './web3Instance.mjs';
-
-const getAccounts = async () => {
+const getAccounts = async (web3) => {
   return web3.eth
     .getAccounts()
     .then(accounts => {

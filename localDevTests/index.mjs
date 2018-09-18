@@ -1,4 +1,4 @@
-import getArticleHex from '../src/backend/web3/get-articleHex.mjs';
+import getArticleHex from '../src/smartcontracts/methods/get-articleHex.mjs';
 import {
   finishMinting,
   getBalanceOf,
@@ -31,7 +31,7 @@ const run = async () => {
 };
 
 const setup = async (eurekaTokenContract, eurekaPlatformContract) => {
-  accounts = await getAccounts();
+  accounts = await getAccounts(web3);
   contractOwner = accounts[0];
   EurekaPlatformContract = eurekaPlatformContract;
   EurekaTokenContract = eurekaTokenContract;

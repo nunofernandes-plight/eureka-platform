@@ -7,6 +7,7 @@ import {
   getTotalSupplyOf,
   mintEurekaTokens
 } from '../../../../src/smartcontracts/methods/web3-token-contract-methods.mjs';
+import web3 from '../../../../src/backend/web3/web3Instance.mjs';
 
 let EurekaPlatformContract;
 let EurekaTokenContract;
@@ -14,7 +15,7 @@ let contractOwner;
 let accounts = [];
 
 const setup = async (eurekaTokenContract, eurekaPlatformContract) => {
-  accounts = await getAccounts();
+  accounts = await getAccounts(web3);
   contractOwner = accounts[0];
   EurekaPlatformContract = eurekaPlatformContract;
   EurekaTokenContract = eurekaTokenContract;
@@ -36,7 +37,7 @@ test.beforeEach(async () => {
   const [eurekaTokenContract, eurekaPlatformContract] = await deployContracts();
   EurekaPlatformContract = eurekaPlatformContract;
   EurekaTokenContract = eurekaTokenContract;
-  accounts = await getAccounts();
+  accounts = await getAccounts(web3);
 });
 
 test('minting and total supply', async t => {

@@ -18,7 +18,7 @@ import articleSubmissionService from '../../src/backend/db/article-submission-se
 import articleVersionService from '../../src/backend/db/article-version-service.mjs';
 import reviewService from '../../src/backend/db/review-service.mjs';
 import {cleanDB} from '../helpers.js';
-import getArticleHex from '../../src/backend/web3/get-articleHex.mjs';
+import getArticleHex from '../../src/smartcontracts/methods/get-articleHex.mjs';
 import {
   assignForSubmissionProcess,
   removeEditorFromSubmissionProcess,
@@ -148,7 +148,7 @@ test.afterEach(async () => {
 test.after(() => {});
 
 async function setupContract(eurekaContract, platformContract) {
-  accounts = await getAccounts();
+  accounts = await getAccounts(web3);
   contractOwner = accounts[0];
   eurekaTokenContract = eurekaContract;
   eurekaPlatformContract = platformContract;
@@ -274,7 +274,7 @@ test(
   PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process',
   async t => {
     // Create author and editor
-    const testAccounts = await getAccounts();
+    const testAccounts = await getAccounts(web3);
     const author = await userService.createUser(
       'testAuthor',
       'author@test.test',
@@ -382,7 +382,7 @@ test(
 
 test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   // Create author and editor
-  const testAccounts = await getAccounts();
+  const testAccounts = await getAccounts(web3);
   const author = await userService.createUser(
     'testAuthor',
     'author@test.test',
@@ -538,7 +538,7 @@ test(
     'Invite reviewers for review article & Reviewers accept Invitation ',
   async t => {
     // Create author and editor
-    const testAccounts = await getAccounts();
+    const testAccounts = await getAccounts(web3);
     const author = await userService.createUser(
       'testAuthor',
       'author@test.test',

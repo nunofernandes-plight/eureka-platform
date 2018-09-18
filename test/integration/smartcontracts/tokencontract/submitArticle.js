@@ -8,7 +8,7 @@ import {
   mintEurekaTokens,
   submitArticle
 } from '../../../../src/smartcontracts/methods/web3-token-contract-methods.mjs';
-import getArticleHex from '../../../../src/backend/web3/get-articleHex.mjs';
+import getArticleHex from '../../../../src/smartcontracts/methods/get-articleHex.mjs';
 import {
   getAuthors,
   getLinkedArticles,
@@ -22,7 +22,7 @@ let contractOwner;
 let accounts = [];
 
 const setup = async (eurekaTokenContract, eurekaPlatformContract) => {
-  accounts = await getAccounts();
+  accounts = await getAccounts(web3);
   contractOwner = accounts[0];
   EurekaPlatformContract = eurekaPlatformContract;
   EurekaTokenContract = eurekaTokenContract;

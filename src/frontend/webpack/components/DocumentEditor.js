@@ -30,7 +30,7 @@ import DocumentAuthors from './TextEditor/DocumentAuthors.js';
 import DocumentAuthorsSelection from './TextEditor/DocumentAuthorsSelection.js';
 import DocumentLeftPart from './TextEditor/DocumentLeftPart.js';
 import DocumentRightPart from './TextEditor/DocumentRightPart.js';
-import getArticleHex from '../../../backend/web3/get-articleHex.mjs';
+import getArticleHex from '../../../smartcontracts/methods/get-articleHex.mjs';
 
 const Parent = styled.div`
   display: flex;

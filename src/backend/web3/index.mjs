@@ -5,7 +5,7 @@ import getAccounts from './get-accounts.mjs';
 
 const deployContracts = async () => {
   console.log('Current Web3 Provider ', web3.currentProvider.connection._url);
-  const accounts = await getAccounts();
+  const accounts = await getAccounts(web3);
   if (web3) {
     let eurekaInput = getEurekaSmartContractInput();
     const addressMap = await deployLibraries(eurekaInput.libraries, accounts);

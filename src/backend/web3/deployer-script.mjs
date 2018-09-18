@@ -6,6 +6,7 @@ import {
   mintEurekaTokens
 } from '../../smartcontracts/methods/web3-token-contract-methods.mjs';
 import getAccounts from './get-accounts.mjs';
+import web3 from './web3Instance.mjs';
 
 const deploy = async () => {
   // deployContracts will deploy all libraries specified in the input file and once they
@@ -61,7 +62,7 @@ const deploy = async () => {
 };
 
 const mintEKATokens = async (eurekaTokenContract) => {
-  const accounts = await getAccounts();
+  const accounts = await getAccounts(web3);
   const contractOwner = accounts[0];
   let tokenAmounts = [];
   accounts.forEach(() => {
