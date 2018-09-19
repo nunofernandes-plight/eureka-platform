@@ -123,7 +123,7 @@ class App extends Component {
       <div>
         <Detector
           render={({online}) =>
-            online || !isProduction() ? (
+            online || this.state.provider === Web3Providers.LOCALHOST ? (
               <MainRouter
                 platformContract={this.state.platformContract}
                 tokenContract={this.state.tokenContract}
