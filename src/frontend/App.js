@@ -15,6 +15,7 @@ import {
   PLATFORM_KOVAN_ADDRESS,
   TOKEN_KOVAN_ADDRESS
 } from '../smartcontracts/constants/KovanContractAddresses.mjs';
+import {isProduction} from '../helpers/isProduction.mjs';
 
 class App extends Component {
   constructor() {
@@ -122,7 +123,7 @@ class App extends Component {
       <div>
         <Detector
           render={({online}) =>
-            online ? (
+            online || !isProduction() ? (
               <MainRouter
                 platformContract={this.state.platformContract}
                 tokenContract={this.state.tokenContract}
