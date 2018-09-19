@@ -45,6 +45,39 @@ contract EurekaPlatform {
 
     uint constant maxReviewRounds = 3;
 
+    function getJournalParameters() public returns (
+        address _contractOwner,
+        uint _minAmountOfEditorApprovedReviews,
+        uint _maxAmountOfRewardedEditorApprovedReviews,
+        uint _minAmountOfCommunityReviews,
+        uint _maxAmountOfRewardedCommunityReviews,
+        uint _sciencemattersFoundationReward,
+        uint _editorReward,
+        uint _linkedArticlesReward,
+        uint _invalidationWorkReward,
+        uint _editorApprovedReviewerRewardPerReviewer,
+        uint _communityReviewerRewardPerReviewer,
+        uint _secondReviewerRewardPerReviewer,
+        uint _submissionFee,
+        uint _maxReviewRounds
+    ) {
+        return (
+        contractOwner,
+        minAmountOfEditorApprovedReviews,
+        maxAmountOfRewardedEditorApprovedReviews,
+        minAmountOfCommunityReviews,
+        maxAmountOfRewardedCommunityReviews,
+        sciencemattersFoundationReward,
+        editorReward,
+        linkedArticlesReward,
+        invalidationWorkReward,
+        editorApprovedReviewerRewardPerReviewer,
+        communityReviewerRewardPerReviewer,
+        secondReviewerRewardPerReviewer,
+        submissionFee,
+        maxReviewRounds
+        );
+    }
 
     //    constructor(address _eurekaTokenContractAddress) public {
     constructor() public {
@@ -310,6 +343,7 @@ contract EurekaPlatform {
     }
 
     event ReviewersAreInvited(uint256 submissionId, bytes32 articleHash, address[] editorApprovedReviewers, uint256 stateTimestamp);
+
     function inviteReviewers(bytes32 _articleHash, address[] _allowedEditorApprovedReviewers) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
@@ -328,6 +362,7 @@ contract EurekaPlatform {
     }
 
     event InvitationIsAccepted(bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp);
+
     function acceptReviewInvitation(bytes32 _articleHash) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
@@ -350,6 +385,7 @@ contract EurekaPlatform {
 
 
     event EditorApprovedReviewIsAdded(bytes32 articleHash, uint256 stateTimestamp, bytes32 reviewHash, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
+
     function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
@@ -380,6 +416,7 @@ contract EurekaPlatform {
     }
 
     event CommunityReviewIsAdded(bytes32 articleHash, uint256 stateTimestamp, bytes32 reviewHash, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
+
     function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
@@ -408,6 +445,7 @@ contract EurekaPlatform {
     }
 
     event ReviewIsCorrected(bytes32 articleHash, uint256 stateTimestamp, bytes32 reviewHash, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
+
     function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
@@ -432,6 +470,7 @@ contract EurekaPlatform {
     }
 
     event ReviewIsAccepted(bytes32 articleHash, uint256 stateTimestamp, address reviewer);
+
     function acceptReview(bytes32 _articleHash, address _reviewerAddress) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
@@ -450,6 +489,7 @@ contract EurekaPlatform {
     }
 
     event ReviewIsDeclined(bytes32 articleHash, uint256 stateTimestamp, address reviewer);
+
     function declineReview(bytes32 _articleHash, address _reviewerAddress) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
