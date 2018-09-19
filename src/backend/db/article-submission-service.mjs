@@ -2,8 +2,12 @@ import ArticleSubmission from '../schema/article-submission.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
-import articleVersionService, {getRelevantArticleData} from './article-version-service.mjs';
+import articleVersionService, {
+  getRelevantArticleData
+} from './article-version-service.mjs';
 import ARTICLE_SUBMISSION_STATE from '../schema/article-submission-state-enum.mjs';
+import User from '../schema/user.mjs';
+import Roles from '../schema/roles-enum.mjs';
 
 const getSubmissionResponse = submissions => {
   let resSubmissions = [];
@@ -37,6 +41,11 @@ export default {
   },
 
   createSubmission: async ownerAddress => {
+    // set user's role to AUTHOR once he creates the first draft
+    const user = await User.findOne({ethereumAddress: ownerAddress});
+    user.roles.push(Roles.AUTHOR);
+    await user.save(); 
+
     // create article submission
     const submission = new ArticleSubmission({ownerAddress: ownerAddress});
 

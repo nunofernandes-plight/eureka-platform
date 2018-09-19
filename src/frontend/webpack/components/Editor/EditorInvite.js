@@ -15,6 +15,7 @@ import {
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
+import {getGasEstimation} from '../../../../smartcontracts/methods/web3-utils-methods.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -71,13 +72,23 @@ class EditorInvite extends React.Component {
       });
   }
 
-  chooseArticleToInviteReviewers(articleHash) {
+  async chooseArticleToInviteReviewers(articleHash) {
     console.log('open invite modal/view here');
+
+    const reviewers = ['0x9ea02Ac11419806aB9d5A512c7d79AC422cB36F7'];
+
+    const fn = this.props.platformContract.methods.inviteReviewers(
+      articleHash,
+      reviewers
+    );
+
+    const gas = await getGasEstimation(fn, this.props.selectedAccount.address);
     inviteReviewersForArticle(
       this.props.platformContract,
       articleHash,
-      ['0x9ea02Ac11419806aB9d5A512c7d79AC422cB36F7'],
-      this.props.selectedAccount.address
+      reviewers,
+      this.props.selectedAccount.address,
+      gas
     )
       .on('transactionHash', tx => {
         this.setState({
