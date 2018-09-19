@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import {Card} from '../../views/Card.js';
 import {Table} from '../../design-components/Table/Table.js';
@@ -13,8 +13,12 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const SContainer = styled.div`
-  font-weight: bold;
+const Box = styled.div`
+  margin-top: 1.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
 
 class MyReviews extends React.Component {
@@ -59,9 +63,21 @@ class MyReviews extends React.Component {
   }
 
   render() {
-    return (
-      <Container>
-        <Card width={1000} title={'My Reviews'}>
+    const IsReviewer = () => {
+      return (
+        <Box>
+          <i>
+            {' '}
+            Congratulations! You are a reviewer for EUREKA. If want want to
+            start reviewing your first article, <a href={''}>click here. </a>
+          </i>
+        </Box>
+      );
+    };
+
+    const IsNotReviewer = () => {
+      return (
+        <Box>
           <i>
             It seems like you are not a reviewer yet. If you want to start
             reviewing your first article, click the button below
@@ -73,6 +89,18 @@ class MyReviews extends React.Component {
           >
             Become a reviewer
           </button>
+        </Box>
+      );
+    };
+
+    return (
+      <Container>
+        <Card width={1000} title={'My Reviews'}>
+          {this.props.user.roles.includes(Roles.REVIEWER) ? (
+            <IsReviewer />
+          ) : (
+            <IsNotReviewer />
+          )}
         </Card>
       </Container>
     );
