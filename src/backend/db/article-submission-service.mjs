@@ -44,7 +44,7 @@ export default {
     // set user's role to AUTHOR once he creates the first draft
     const user = await User.findOne({ethereumAddress: ownerAddress});
     user.roles.push(Roles.AUTHOR);
-    await user.save(); 
+    await user.save();
 
     // create article submission
     const submission = new ArticleSubmission({ownerAddress: ownerAddress});
