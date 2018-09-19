@@ -80,17 +80,18 @@ export const setSanityIsNotOk = (contract, _articleHash, _from) => {
     });
 };
 
+// export const inviteReviewersForArticle = (contract, _articleHash, _editorApprovedReviewers, _from) => {
 export const inviteReviewersForArticle = (contract, _articleHash, _editorApprovedReviewers, _from) => {
-// export const inviteReviewersForArticle = async (contract, _articleHash, _editorApprovedReviewers, _from) => {
-  // let gasEstimation = await getGasEstimation(contract.methods
-  //   .inviteReviewers(_articleHash, _editorApprovedReviewers), _from);
-  let gasEstimation = 8000000;
-  return contract.methods
-    .inviteReviewers(_articleHash, _editorApprovedReviewers)
-    .send({
-      from: _from,
-      gas: gasEstimation
-    })
+  return getGasEstimation(contract.methods
+    .inviteReviewers(_articleHash, _editorApprovedReviewers), _from)
+    .then(gasEstimation => {
+      return contract.methods
+        .inviteReviewers(_articleHash, _editorApprovedReviewers)
+        .send({
+          from: _from,
+          gas: gasEstimation
+        });
+    });
 };
 
 export const acceptReviewInvitation = (contract, _articleHash, _from) => {
