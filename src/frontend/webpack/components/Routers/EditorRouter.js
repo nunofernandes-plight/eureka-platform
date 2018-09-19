@@ -9,6 +9,7 @@ import EditorSignOff from '../Editor/EditorSignOff.js';
 import Icon from '../../views/icons/Icon.js';
 import {GoBack} from './GoBack.js';
 import {GoForward} from './GoForward.js';
+import EditorInvite from '../Editor/EditorInvite.js';
 
 const Parent = styled.div`
   display: flex;
@@ -106,6 +107,22 @@ class EditorRouter extends Component {
                 )}
               />
             </MarginTop>
+
+            <MarginTop>
+              <Route
+                exact
+                path={`${this.props.base}/invite`}
+                render={() => (
+                  <EditorInvite
+                    selectedAccount={this.props.selectedAccount}
+                    platformContract={this.props.platformContract}
+                    base={`${this.props.base}/invite`}
+                    network={this.props.network}
+                  />
+                )}
+              />
+            </MarginTop>
+
             <Route
               exact
               path={`${this.props.base}`}
