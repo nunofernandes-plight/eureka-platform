@@ -1,3 +1,5 @@
+import {getGasEstimation} from './web3-utils-methods.mjs';
+
 export const getContractOwner = (contract) => {
   return contract.methods.contractOwner().call((err, res) => {
     if(err) throw err;
@@ -79,23 +81,16 @@ export const setSanityIsNotOk = (contract, _articleHash, _from) => {
 };
 
 export const inviteReviewersForArticle = (contract, _articleHash, _editorApprovedReviewers, _from) => {
+// export const inviteReviewersForArticle = async (contract, _articleHash, _editorApprovedReviewers, _from) => {
+  // let gasEstimation = await getGasEstimation(contract.methods
+  //   .inviteReviewers(_articleHash, _editorApprovedReviewers), _from);
+  let gasEstimation = 8000000;
   return contract.methods
     .inviteReviewers(_articleHash, _editorApprovedReviewers)
     .send({
-      from: _from
+      from: _from,
+      gas: gasEstimation
     })
-    .then(receipt => {
-      console.log(
-        'Invitation for Reviewers on' +
-        _articleHash +
-        ' is sent out with the TX status: ' +
-        receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
-    });
 };
 
 export const acceptReviewInvitation = (contract, _articleHash, _from) => {
