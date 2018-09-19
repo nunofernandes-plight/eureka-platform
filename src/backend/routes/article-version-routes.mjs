@@ -43,7 +43,7 @@ router.get('/assigned/checkReviews',
 
 router.get('/assigned/finalize',
   asyncHandler(async req => {
-    return await articleVersionService.getArticlesAssignedTo(req.session.passport.user.ethereumAddress, ARTICLE_VERSION_STATE.REVIEWERS_INVITED);
+    return await articleVersionService.getArticlesToFinalize(req.session.passport.user.ethereumAddress, ARTICLE_VERSION_STATE.REVIEWERS_INVITED);
   })
 );
 

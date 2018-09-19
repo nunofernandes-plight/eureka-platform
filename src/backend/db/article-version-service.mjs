@@ -5,6 +5,7 @@ import createNewEmpty from '../../helpers/createEditorDocument.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
+import REVIEW_STATE from '../schema/review-state-enum.mjs';
 
 export const getRelevantArticleData = (submission, articleVersion) => {
   let resArticle = {};
@@ -37,6 +38,39 @@ const getArticlesResponse = articles => {
   return resArticles;
 };
 
+const getFinalizableArticles = (articles) => {
+  let finalizableArticles = [];
+  articles.forEach(article => {
+    if (isFinalizable(article))
+      finalizableArticles.push(article);
+  });
+  return finalizableArticles;
+};
+
+const isFinalizable = article => {
+  const minEAReviews = 1; //minAmountOfEditorApprovedReviews
+  const minCReviews = 0; //minAmountOfCommunityReviews
+  return (
+    areReviewsOK(minEAReviews, article.editorApprovedReviews)
+    &&
+    areReviewsOK(minCReviews, article.communityReviews)
+  );
+};
+
+const areReviewsOK = (minAmount, reviews) => {
+  let count = 0;
+  reviews.forEach(review => {
+    if (review.reviewState !== REVIEW_STATE.ACCEPTED)
+    // if (review.reviewState !== REVIEW_STATE.INVITED)   for testing purposes
+      return false;
+    if (review.hasMajorIssues)
+      return false;
+
+    count++;
+  });
+  return count >= minAmount;
+};
+
 export default {
   getAllArticleVersions: () => {
     return ArticleVersion.find({});
@@ -46,8 +80,27 @@ export default {
     const articles = await ArticleVersion.find({articleVersionState: articleVersionState})
       .populate({
         path: 'articleSubmission',
-        match: { editor: ethereumAddress}
+        match: {editor: ethereumAddress}
       });
+    return getArticlesResponse(articles);
+  },
+
+  getArticlesToFinalize: async (ethereumAddress) => {
+    const articles = await ArticleVersion.find({
+      articleVersionState: 'REVIEWERS_INVITED'
+    })
+      .populate({
+        path: 'articleSubmission',
+        match: {editor: ethereumAddress}
+      })
+      .populate({
+        path: 'editorApprovedReviews'
+      })
+      .populate({
+        path: 'communityReviews '
+      });
+    const finalizableArticles = getFinalizableArticles(articles);
+    console.log(finalizableArticles);
     return getArticlesResponse(articles);
   },
 
@@ -134,7 +187,7 @@ export default {
     if (articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT) {
       errorThrower.notCorrectStatus(ArticleVersionState.FINISHED_DRAFT, articleVersion.articleVersionState);
     }
-    if(articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress(userAddress);
+    if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress(userAddress);
 
     articleVersion.articleVersionState = ArticleVersionState.DRAFT;
     await articleVersion.save();
