@@ -55,13 +55,13 @@ router.put(
   '/ownRoles',
   asyncHandler(async req => {
     let role;
-    if(!req.body.role) {
+    if (!req.body.role) {
       errorThrower.missingBodyValue('role');
     }
     role = req.body.role;
     // restrictions for role updating
-    if(role !== Roles.AUTHOR && role!== Roles.REVIEWER) {
-      let error = new Error('No authorization to add the role '+ role);
+    if (role !== Roles.AUTHOR && role !== Roles.REVIEWER) {
+      let error = new Error('No authorization to add the role ' + role);
       error.status = 400;
       throw error;
     }
@@ -73,13 +73,13 @@ router.delete(
   '/ownRoles',
   asyncHandler(async req => {
     let role;
-    if(!req.body.role) {
+    if (!req.body.role) {
       errorThrower.missingBodyValue('role');
     }
     role = req.body.role;
     // restrictions for role updating
-    if(role !== Roles.AUTHOR && role!== Roles.REVIEWER) {
-      let error = new Error('No authorization to add the role '+ role);
+    if (role !== Roles.AUTHOR && role !== Roles.REVIEWER) {
+      let error = new Error('No authorization to add the role ' + role);
       error.status = 400;
       throw error;
     }

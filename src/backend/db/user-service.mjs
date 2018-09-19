@@ -75,8 +75,8 @@ export default {
     const contractOwner = await ContractOwner.findById(1);
 
     // add default roles
-    newUser.roles.push(Roles.AUTHOR);
-    newUser.roles.push(Roles.REVIEWER);
+/*
+    newUser.roles.push(Roles.REVIEWER);*/
 
     if (contractOwner.address === ethereumAddress) {
       newUser.roles.push(Roles.CONTRACT_OWNER);
