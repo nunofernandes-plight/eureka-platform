@@ -183,7 +183,7 @@ export default {
   becomeReviewer: async userAddress => {
     let user = await User.findOne({ethereumAddress: userAddress});
     if (!user) errorThrower.notCorrectEthereumAddress(userAddress);
-    user.roles.push(Roles.REVIEWER);
+    if (!user.roles.includes(Roles.REVIEWER)) user.roles.push(Roles.REVIEWER);
     return await user.save();
   },
 
