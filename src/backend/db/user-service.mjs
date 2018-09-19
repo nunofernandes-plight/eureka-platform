@@ -19,7 +19,7 @@ export default {
 
   getUsersAddressByEmailQuery: async queryParam => {
     const regexQuery = '.*' + queryParam + '.*';
-    const users = await User.find({'email': {$regex: regexQuery, $options: 'i'}});
+    const users = await User.find({email: {$regex: regexQuery, $options: 'i'}});
     //const users = await User.find({'email': 'test@test.ch'});
     if (!users) errorThrower.noEntryFoundById(regexQuery);
 
@@ -75,13 +75,12 @@ export default {
     const contractOwner = await ContractOwner.findById(1);
 
     // add default roles
-/*
+    /*
     newUser.roles.push(Roles.REVIEWER);*/
 
     if (contractOwner.address === ethereumAddress) {
       newUser.roles.push(Roles.CONTRACT_OWNER);
     }
-
 
     return newUser.save().then(
       function() {
@@ -110,9 +109,10 @@ export default {
    * @returns {Promise<Query|void|*|Promise<Object>|Promise<TSchema | null>|Promise>}
    */
   getUserByEthereumAddressWithScTransactions: async ethereumAddress => {
-    return User.findOne({ethereumAddress: ethereumAddress}).populate('scTransactions');
+    return User.findOne({ethereumAddress: ethereumAddress}).populate(
+      'scTransactions'
+    );
   },
-
 
   /**
    * Get one user by the ID
@@ -123,8 +123,7 @@ export default {
     return User.findOne({_id: userId});
   },
 
-
-  getOwnRoles: async (ethereumAddress) => {
+  getOwnRoles: async ethereumAddress => {
     if (!ethereumAddress) errorThrower.missingParameter('Ethereum-address');
 
     const user = await User.findOne({ethereumAddress: ethereumAddress});
@@ -135,7 +134,9 @@ export default {
 
   getOwnScTransactions: async ethereumAddress => {
     if (!ethereumAddress) errorThrower.missingParameter('Ethereum-address');
-    const user = await User.findOne({ethereumAddress: ethereumAddress}).populate('scTransactions');
+    const user = await User.findOne({
+      ethereumAddress: ethereumAddress
+    }).populate('scTransactions');
     if (!user) errorThrower.noEntryFoundById(ethereumAddress);
     return user.scTransactions;
   },
@@ -179,6 +180,13 @@ export default {
     errorThrower.notExistingRole(role);
   },
 
+  becomeReviewer: async userAddress => {
+    let user = await User.findOne({ethereumAddress: userAddress});
+    if (!user) errorThrower.notCorrectEthereumAddress(userAddress);
+    user.roles.push(Roles.REVIEWER);
+    return await user.save();
+  },
+
   makeEditor: async ethereumAddress => {
     let user = await User.findOne({ethereumAddress: ethereumAddress});
     if (!user) {
@@ -218,9 +226,9 @@ export default {
         } else {
           console.log(
             'User ' +
-            user.ethereumAddress +
-            ' got the submission with ID: ' +
-            articleSubmission._id
+              user.ethereumAddress +
+              ' got the submission with ID: ' +
+              articleSubmission._id
           );
           return user;
         }

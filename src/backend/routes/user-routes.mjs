@@ -94,6 +94,13 @@ router.get(
   })
 );
 
+router.post(
+  '/becomeReviewer',
+  asyncHandler(async req => {
+    return userService.becomeReviewer(req.body.ethereumAddress);
+  })
+);
+
 router.use(accesController.rolesOnly(Roles.ADMIN));
 router.post(
   '/addRole',

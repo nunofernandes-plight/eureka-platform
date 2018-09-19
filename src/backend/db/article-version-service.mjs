@@ -178,7 +178,7 @@ export default {
     articleVersion.articleVersionState = ArticleVersionStates.FINISHED_DRAFT;
 
     await articleVersion.save();
-    return 'Succesful finished draft of article-version';
+    return 'Successful finished draft of article-version';
   },
 
   revertToDraft: async (userAddress, articleVersionId) => {
