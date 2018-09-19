@@ -82,7 +82,6 @@ export const setSanityIsNotOk = (contract, _articleHash, _from) => {
   });
 };
 
-// export const inviteReviewersForArticle = (contract, _articleHash, _editorApprovedReviewers, _from) => {
 export const inviteReviewersForArticle = (
   contract,
   _articleHash,
@@ -95,6 +94,18 @@ export const inviteReviewersForArticle = (
     .send({
       from: _from,
       gas
+    });
+};
+export const getGasInviteReviewersForArticle = (
+  contract,
+  _articleHash,
+  _editorApprovedReviewers,
+  _from
+) => {
+  return contract.methods
+    .inviteReviewers(_articleHash, _editorApprovedReviewers)
+    .estimateGas({
+      from: _from
     });
 };
 

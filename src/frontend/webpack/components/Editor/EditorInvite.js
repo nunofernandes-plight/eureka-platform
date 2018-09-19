@@ -1,17 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  getArticlesToSignOff,
-  getInviteReviewersArticles
-} from './EditorMethods.js';
+import {getInviteReviewersArticles} from './EditorMethods.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Article from '../../views/Article.js';
 import {Card} from '../../views/Card.js';
 import {__THIRD} from '../../../helpers/colors.js';
 import {Link} from 'react-router-dom';
 import {
-  inviteReviewersForArticle,
-  setSanityToOk
+  getGasInviteReviewersForArticle,
+  inviteReviewersForArticle
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
@@ -77,12 +74,12 @@ class EditorInvite extends React.Component {
 
     const reviewers = ['0x9ea02Ac11419806aB9d5A512c7d79AC422cB36F7'];
 
-    const fn = this.props.platformContract.methods.inviteReviewers(
+    const gas = await getGasInviteReviewersForArticle(
+      this.props.platformContract,
       articleHash,
-      reviewers
+      reviewers,
+      this.props.selectedAccount.address
     );
-
-    const gas = await getGasEstimation(fn, this.props.selectedAccount.address);
     inviteReviewersForArticle(
       this.props.platformContract,
       articleHash,
