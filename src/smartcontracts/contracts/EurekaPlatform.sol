@@ -507,6 +507,9 @@ contract EurekaPlatform {
         emit ReviewIsDeclined(_articleHash, block.timestamp, _reviewerAddress);
     }
 
+
+    // TODO     event EditorSignUp(address submissionOwner, address editorAddress, uint256 stateTimestamp);
+    event ArticleVersionIsAccepted(bytes32 articleHash, uint256 stateTimestamp, address editor);
     function acceptArticleVersion(bytes32 _articleHash) public {
 
         require(isEditor[msg.sender], "msg.sender needs to be an editor.");
@@ -531,6 +534,7 @@ contract EurekaPlatform {
         article.stateTimestamp = block.timestamp;
 
         closeSubmissionProcess(article.submissionId);
+        emit ArticleVersionIsAccepted(_articleHash, block.timestamp, msg.sender);
     }
 
     function declineArticleVersion(bytes32 _articleHash) public {
