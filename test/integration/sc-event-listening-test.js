@@ -7,8 +7,6 @@ import {
 import test from 'ava';
 import app from '../../src/backend/api/api.mjs';
 import getAccounts from '../../src/smartcontracts/methods/get-accounts.mjs';
-import User from '../../src/backend/schema/user.mjs';
-import ArticleSubmission from '../../src/backend/schema/article-submission.mjs';
 import ArticleVersionState from '../../src/backend/schema/article-version-state-enum.mjs';
 import ScTransactionType from '../../src/backend/schema/sc-transaction-state-enum.mjs';
 import ReviewState from '../../src/backend/schema/review-state-enum.mjs';
@@ -28,20 +26,25 @@ import {
   acceptReviewInvitation,
   addEditorApprovedReview,
   addCommunityReview,
-  correctReview,
   acceptReview,
   declineReview
 } from '../../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {sleepSync} from '../helpers.js';
-import ArticleVersion from '../../src/backend/schema/article-version.mjs';
-import Review from '../../src/backend/schema/review.mjs';
 import Roles from '../../src/backend/schema/roles-enum.mjs';
-import SC_TRANSACTIONS_TYPE from '../../src/backend/schema/sc-transaction-state-enum.mjs';
 import web3 from '../../src/helpers/web3Instance.mjs';
-import {deployContracts} from '../../src/smartcontracts/deployment/deploy-contracts.mjs';
 
-let eurekaTokenContract;
-let eurekaPlatformContract;
+import dotenv from 'dotenv';
+import {setupWeb3Interface} from '../../src/backend/web3/web3InterfaceSetup.mjs';
+
+import GanachePlatformContractABI from '../../src/smartcontracts/constants/GanachePlatformContractABI.json';
+import GanachePlatformContractAddress from '../../src/smartcontracts/constants/GanachePlatformContractAddress.json';
+import GanacheTokenContractAddress from '../../src/smartcontracts/constants/GanacheTokenContractAddress.json';
+import GanacheTokenContractABI from '../../src/smartcontracts/constants/GanacheTokenContractABI.json';
+
+
+
+let eurekaTokenContract = new web3.eth.Contract(GanacheTokenContractABI, GanacheTokenContractAddress);
+let eurekaPlatformContract = new web3.eth.Contract(GanachePlatformContractABI, GanachePlatformContractAddress);
 let accounts;
 let contractOwner;
 
@@ -130,45 +133,61 @@ const REVIEW3_HASH_HEX = '0x' + REVIEW3.reviewHash;
 
 /** ************** TESTING ****************/
 
-test.beforeEach(async () => {
-  const [eurekaContract, platformContract] = await deployContracts();
-  await setupContract(eurekaContract, platformContract);
-  contractOwner = accounts[0];
+// test.beforeEach(async () => {
+//   const [eurekaContract, platformContract] = await deployContracts();
+//   await setupContract(eurekaContract, platformContract);
+//   contractOwner = accounts[0];
+//
+//   app.setupApp(eurekaPlatformContract);
+//   app.listenTo(process.env.PORT || 8080);
+//   await cleanDB();
+// });
+//
+// test.afterEach(async () => {
+//   await app.close();
+//   await cleanDB();
+// });
 
-  app.setupApp(eurekaPlatformContract);
-  app.listenTo(process.env.PORT || 8080);
-  await cleanDB();
-});
-
-test.afterEach(async () => {
-  await app.close();
-  await cleanDB();
-});
-
-test.after(() => {});
-
-async function setupContract(eurekaContract, platformContract) {
+test.before(async () => {
+  setupWeb3Interface();
   accounts = await getAccounts(web3);
   contractOwner = accounts[0];
-  eurekaTokenContract = eurekaContract;
-  eurekaPlatformContract = platformContract;
 
-  const tokenAmounts = [];
-  accounts.forEach(() => {
-    tokenAmounts.push(20000);
-  });
-  await mintEurekaTokens(
-    eurekaTokenContract,
-    accounts,
-    tokenAmounts,
-    contractOwner
-  );
-  await finishMinting(eurekaTokenContract, contractOwner);
-}
+  await dotenv.config();
+
+  app.setupApp();
+  app.listenTo(process.env.PORT || 8080);
+});
+test.beforeEach(async () => {
+  await cleanDB();
+});
+test.after(() => {
+  app.close();
+});
+
+// Wurde vorher benötigt
+// async function setupContract(eurekaContract, platformContract) {
+//   accounts = await getAccounts(web3);
+//   contractOwner = accounts[0];
+//   eurekaTokenContract = eurekaContract;
+//   eurekaPlatformContract = platformContract;
+//
+//   const tokenAmounts = [];
+//   accounts.forEach(() => {
+//     tokenAmounts.push(20000);
+//   });
+//   await mintEurekaTokens(
+//     eurekaTokenContract,
+//     accounts,
+//     tokenAmounts,
+//     contractOwner
+//   );
+//   await finishMinting(eurekaTokenContract, contractOwner);
+// }
 
 /************************ Sign up Editor ************************/
 
-test(PRETEXT + 'Sign up Editor', async t => {
+test.only(PRETEXT + 'Sign up Editor', async t => {
   await userService.createUser(
     'test',
     'test@test.test',
@@ -176,10 +195,11 @@ test(PRETEXT + 'Sign up Editor', async t => {
     'test-avatar'
   );
 
+
   let user = await userService.getUserByEthereumAddress(contractOwner);
   // t.is(user.isEditor, false);
-  t.is(user.roles.length, 3);
-  t.is(user.roles[2], Roles.CONTRACT_OWNER);
+  t.is(user.roles.length, 1);
+  t.is(user.roles[0], Roles.CONTRACT_OWNER);
 
   await signUpEditor(eurekaPlatformContract, contractOwner, contractOwner);
 
@@ -196,9 +216,9 @@ test(PRETEXT + 'Sign up Editor', async t => {
     counter++;
   }
 
-  t.is(user.roles.length, 4); // [REVIEWER, AUTHOR, CONTRACT-OWNER, EDITOR]
-  t.is(user.roles[3], Roles.EDITOR);
-  t.is(user.scTransactions.length, 1);
+  t.is(user.roles.length, 2); // [REVIEWER, AUTHOR, CONTRACT-OWNER, EDITOR]
+  t.is(user.roles[1], Roles.EDITOR);
+  t.is(user.scTransactions.length, 2);
   t.is(
     user.scTransactions[0].transactionType,
     ScTransactionType.EDITOR_ASSIGNED
@@ -213,7 +233,7 @@ test(
   async t => {
     // Create user on DB
     t.is((await userService.getAllUsers()).length, 0);
-    const contractOwner = await userService.createUser(
+    contractOwner = await userService.createUser(
       'test',
       'test@test.test',
       accounts[0],

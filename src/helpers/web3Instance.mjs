@@ -18,7 +18,7 @@ const getProvider = () => {
     provider = new Web3.providers.WebsocketProvider('wss://kovan.infura.io/ws');
   }
   else {
-    console.error("provider couldn't be found");
+    console.error('provider couldn\'t be found');
     process.exit(1);
   }
   provider.on('connect', () => console.log('Web3 Provider connected'));
