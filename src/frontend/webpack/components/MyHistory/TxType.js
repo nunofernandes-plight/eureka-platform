@@ -15,7 +15,7 @@ const getTypeAttributes = type => {
       return {color: __SCALE_ONE, text: 'ARTICLE SUBMISSION'};
 
     case SC_TRANSACTIONS_TYPE.EDITOR_ASSIGNED:
-      return {color: __SCALE_TWO, text: 'EDITOR ASSIGNATION'};
+      return {color: __SCALE_TWO, text: 'EDITOR ASSIGNMENT'};
 
     case SC_TRANSACTIONS_TYPE.MINTING:
       return {color: __SCALE_THREE, text: 'MINTING'};
