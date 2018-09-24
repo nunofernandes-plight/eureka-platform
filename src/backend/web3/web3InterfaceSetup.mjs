@@ -19,7 +19,7 @@ import {writeContractOwnerInDB} from '../db/contract-owner-service.mjs';
 export let platformContract;
 export let tokenContract;
 
-export const setupWeb3Interface = () => {
+export const setupWeb3Interface = async () => {
 
   let platformContractAddress;
   let platformContractABI;
@@ -51,8 +51,8 @@ export const setupWeb3Interface = () => {
   platformContract = new web3.eth.Contract(platformContractABI, platformContractAddress);
   tokenContract = new web3.eth.Contract(tokenContractABI, tokenContractAddress);
 
-  contractEventListener.setup(platformContract);
-  writeContractOwnerInDB(platformContract);
+  await contractEventListener.setup(platformContract);
+  await writeContractOwnerInDB(platformContract);
 
 
   /** Pending Transaction listener **/
