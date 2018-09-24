@@ -70,7 +70,7 @@
     "dev-client": "react-scripts start",
     "kov-server": "cross-env BC_NETWORK=kovan NODE_ENV=development nodemon --exec \"node --experimental-modules\" src/backend babel-node",
     "gan-server": "cross-env BC_NETWORK=ganache NODE_ENV=development nodemon --exec \"node --experimental-modules\" src/backend babel-node",
-    "deploy-gan-server": "cross-env BC_NETWORK=ganache NODE_ENV=development npm run deploy-contracts && npm run gan-server",
+    "deploy-gan-server": "npm run deploy-contracts && npm run gan-server",
     "deploy-contracts": "cross-env BC_NETWORK=ganache NODE_ENV=development node --experimental-modules src/smartcontracts/deployment/deployer-script.mjs babel-node",
     "nodemon-dev": "cross-env BC_NETWORK=ganache NODE_ENV=development nodemon --exec \"node --experimental-modules\" localDevTests/index.mjs babel-node"
   },
