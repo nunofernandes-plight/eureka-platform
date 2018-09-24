@@ -26,8 +26,8 @@ export const articleVersionSchema = mongoose.Schema(
       default: ArticleVersionState.DRAFT
     },
     articleSubmission: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'ArticleSubmission'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ArticleSubmission'
     },
     editorApprovedReviews: [{
       type: mongoose.Schema.Types.ObjectId,

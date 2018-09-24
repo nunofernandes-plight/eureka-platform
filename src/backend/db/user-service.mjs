@@ -77,7 +77,6 @@ export default {
     // add default roles
     /*
     newUser.roles.push(Roles.REVIEWER);*/
-
     if (contractOwner.address === ethereumAddress) {
       newUser.roles.push(Roles.CONTRACT_OWNER);
     }

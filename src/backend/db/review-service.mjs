@@ -149,8 +149,6 @@ export default {
     review.stateTimestamp = stateTimestamp;
     await review.save();
 
-
-    let review2 = await Review.findById(review._id);
     return 'Decline of review ' + reviewId;
   }
 };

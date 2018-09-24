@@ -209,6 +209,7 @@ export default {
     return articleVersion;
   },
 
+
   changeArticleVersionState: async (articleHash, versionState) => {
     if (!(versionState in ArticleVersionState)) {
       let error = new Error('Internal error: Provided param "versionState" is not a actual ArticleVersionState');
@@ -222,6 +223,7 @@ export default {
       }
     );
   }
+
 };
 
 /**

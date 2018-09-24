@@ -227,5 +227,17 @@ export default {
         );
       }
     );
+
+    EurekaPlatformContract.events.ArticleVersionIsAccepted(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+
+        await articleVersionService.changeArticleVersionState(
+          event.returnValues.articleHash,
+          ArticleVersionState.ACCEPTED
+        );
+      }
+    );
   }
 };
