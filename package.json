@@ -63,7 +63,7 @@
     "test-sc": "ava --serial test/integration/smartcontracts",
     "test-ci": "if [ \"${CIRCLE_BRANCH}\" = \"dev\" ]; then ava --serial ./test/unit/NormalTests.js; elif [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then ava --serial ./test/unit/NormalTests.js; else ava --serial;fi",
     "test-db": "ava --serial test/db",
-    "test-int": "cross-env BC_NETWORK=ganache NODE_ENV=development npm run deploy-contracts && ava --serial test/integration/sc-event-listening-test.js",
+    "test-int": "npm run deploy-contracts && cross-env BC_NETWORK=ganache ava --serial test/integration/sc-event-listening-test.js",
     "lint": "eslint **/*.mjs --ignore-path .gitignore",
     "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
     "eject": "react-scripts eject",
