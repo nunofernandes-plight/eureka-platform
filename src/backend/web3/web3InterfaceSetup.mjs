@@ -44,7 +44,7 @@ export const setupWeb3Interface = async () => {
     tokenContractABI = TOKEN_KOVAN_ABI;
   }
   else {
-    console.error('provider couldn\'t be found');
+    console.error('BC_NETWORK ' + process.env.BC_NETWORK + ' couldn\'t be found');
     process.exit(1);
   }
 
