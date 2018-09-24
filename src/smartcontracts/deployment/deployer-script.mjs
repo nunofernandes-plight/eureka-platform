@@ -7,7 +7,7 @@ import getAccounts from '../methods/get-accounts.mjs';
 import web3 from '../../helpers/web3Instance.mjs';
 import {deployContracts} from './deploy-contracts.mjs';
 
-const deploy = async () => {
+export const deploy = async () => {
   // deployContracts will deploy all libraries specified in the input file and once they
   // get a valid Ethereum address, all the smart contracts gets also deployed.
   // the method returns a web3 instance of the smart contract itself.
