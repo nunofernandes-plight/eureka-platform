@@ -17,8 +17,7 @@ export const removeEditorFromSubmissionProcess = (
 export const changeEditorFromSubmissionProcess = (
   contract,
   _submissionId,
-  _newEditor,
-  _from
+  _newEditor
 ) => {
   return contract.methods
     .changeEditorFromSubmissionProcess(_submissionId, _newEditor);
