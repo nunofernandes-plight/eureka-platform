@@ -375,9 +375,10 @@ test(
     // Change editor to editor2 for the submission process
     await changeEditorFromSubmissionProcess(
       eurekaPlatformContract,
-      articleSubmission.scSubmissionID,
-      editor2.ethereumAddress
-    );
+      articleSubmission.scSubmissionID
+    ).send({
+      from: editor2.ethereumAddress
+    });
     articleSubmission = await articleSubmissionService.getSubmissionById(
       articleSubmission._id
     );

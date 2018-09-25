@@ -21,24 +21,7 @@ export const changeEditorFromSubmissionProcess = (
   _from
 ) => {
   return contract.methods
-    .changeEditorFromSubmissionProcess(_submissionId, _newEditor)
-    .send({
-      from: _from
-    })
-    .then(receipt => {
-      console.log(
-        'Changing Editor on the Submission Process with ID ' +
-          _submissionId +
-          ' to ' +
-          _newEditor +
-          ' exited with the TX status: ' +
-          receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+    .changeEditorFromSubmissionProcess(_submissionId, _newEditor);
 };
 
 export const setSanityToOk = (contract, _articleHash, _from) => {
