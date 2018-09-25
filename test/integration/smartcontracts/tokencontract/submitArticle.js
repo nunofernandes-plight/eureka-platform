@@ -81,11 +81,13 @@ test('submit article', async t => {
 
   await submitArticle(
     EurekaTokenContract,
-    accounts[1],
     EurekaPlatformContract.options.address,
     5000,
     dataInHex
-  );
+  ).send({
+    from: accounts[1],
+    gas: 80000000
+  });
 
   balance = await getBalanceOf(
     EurekaTokenContract,

@@ -29,7 +29,7 @@ let app;
 let server;
 
 export default {
-  setupApp: () => {
+  setupApp: async () => {
     app = express();
 
     /** Parser **/
@@ -63,7 +63,7 @@ export default {
     app.use(passport.session());
 
     /** Web3 Interface: SC Events Listener, Transaction Listener**/
-    setupWeb3Interface();
+    await setupWeb3Interface();
 
     //set global variable isAuthenticated -> call ir everywhere dynamically
     app.use(function(req, res, next) {
