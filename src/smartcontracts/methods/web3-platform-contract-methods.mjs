@@ -8,26 +8,10 @@ export const assignForSubmissionProcess = (contract, _submissionId) => {
 
 export const removeEditorFromSubmissionProcess = (
   contract,
-  _submissionId,
-  _from
+  _submissionId
 ) => {
   return contract.methods
-    .removeEditorFromSubmissionProcess(_submissionId)
-    .send({
-      from: _from
-    })
-    .then(receipt => {
-      console.log(
-        'Removement of Editor on the Submission Process with ID ' +
-          _submissionId +
-          ' exited with the TX status: ' +
-          receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+    .removeEditorFromSubmissionProcess(_submissionId);
 };
 
 export const changeEditorFromSubmissionProcess = (

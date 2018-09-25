@@ -386,9 +386,10 @@ test(
     // Remove editor from the submission process
     await removeEditorFromSubmissionProcess(
       eurekaPlatformContract,
-      articleSubmission.scSubmissionID,
-      editor2.ethereumAddress
-    );
+      articleSubmission.scSubmissionID
+    ).send({
+      from: editor2.ethereumAddress
+    });
     articleSubmission = await articleSubmissionService.getSubmissionById(
       articleSubmission._id
     );
