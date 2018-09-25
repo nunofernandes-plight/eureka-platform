@@ -1,7 +1,5 @@
-export const signUpEditor = (contract, editor, _from) => {
-  return contract.methods.signUpEditor(editor).send({
-    from: _from
-  });
+export const signUpEditor = (contract, editor) => {
+  return contract.methods.signUpEditor(editor);
 };
 
 export const assignForSubmissionProcess = (contract, _submissionId, _from) => {

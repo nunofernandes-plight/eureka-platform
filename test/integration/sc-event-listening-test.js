@@ -196,7 +196,9 @@ test(PRETEXT + 'Sign up Editor', async t => {
   t.is(user.roles.length, 1);
   t.is(user.roles[0], Roles.CONTRACT_OWNER);
 
-  await signUpEditor(eurekaPlatformContract, contractOwner, contractOwner);
+  await signUpEditor(eurekaPlatformContract, contractOwner).send({
+    from: contractOwner
+  });
 
   user = await userService.getUserByEthereumAddressWithScTransactions(
     contractOwner
@@ -311,16 +313,12 @@ test(
     t.is(true, true);
 
     // Signup editor 1 & 2
-    await signUpEditor(
-      eurekaPlatformContract,
-      editor.ethereumAddress,
-      contractOwner
-    );
-    await signUpEditor(
-      eurekaPlatformContract,
-      editor2.ethereumAddress,
-      contractOwner
-    );
+    await signUpEditor(eurekaPlatformContract, editor.ethereumAddress).send({
+      from: contractOwner
+    });
+    await signUpEditor(eurekaPlatformContract, editor2.ethereumAddress).send({
+      from: contractOwner
+    });
 
     // Setup article draft
     await articleSubmissionService.createSubmission(author.ethereumAddress);
@@ -433,11 +431,9 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   );
 
   // Signup editor and submit article 1 & 2
-  await signUpEditor(
-    eurekaPlatformContract,
-    editor.ethereumAddress,
-    contractOwner
-  );
+  await signUpEditor(eurekaPlatformContract, editor.ethereumAddress).send({
+    from: contractOwner
+  });
   await submitArticle(
     eurekaTokenContract,
     eurekaPlatformContract.options.address,
@@ -606,11 +602,9 @@ test.only(
     );
 
     // Signup editor and submit article 1 & 2
-    await signUpEditor(
-      eurekaPlatformContract,
-      editor.ethereumAddress,
-      contractOwner
-    );
+    await signUpEditor(eurekaPlatformContract, editor.ethereumAddress).send({
+      from: contractOwner
+    });
     await submitArticle(
       eurekaTokenContract,
       eurekaPlatformContract.options.address,
