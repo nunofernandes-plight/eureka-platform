@@ -500,10 +500,10 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
     articleVersion1._id
   );
   t.is(articleVersion1.articleVersionState, ArticleVersionState.SUBMITTED);
-  await setSanityToOk(
-    eurekaPlatformContract,
-    articleVersion1.articleHash,
-    editor.ethereumAddress
+  await setSanityToOk(eurekaPlatformContract, articleVersion1.articleHash).send(
+    {
+      from: editor.ethereumAddress
+    }
   );
   articleVersion1 = await articleVersionService.getArticleVersionById(
     author.ethereumAddress,
@@ -645,9 +645,10 @@ test(
     );
     await setSanityToOk(
       eurekaPlatformContract,
-      articleVersion.articleHash,
-      editor.ethereumAddress
-    );
+      articleVersion.articleHash
+    ).send({
+      from: editor.ethereumAddress
+    });
 
     // Invite reviewers
     t.is(articleVersion.editorApprovedReviews.length, 0);

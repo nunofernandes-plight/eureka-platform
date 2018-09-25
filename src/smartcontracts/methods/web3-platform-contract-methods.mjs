@@ -23,10 +23,8 @@ export const changeEditorFromSubmissionProcess = (
     .changeEditorFromSubmissionProcess(_submissionId, _newEditor);
 };
 
-export const setSanityToOk = (contract, _articleHash, _from) => {
-  return contract.methods.sanityIsOk(_articleHash).send({
-    from: _from
-  });
+export const setSanityToOk = (contract, _articleHash) => {
+  return contract.methods.sanityIsOk(_articleHash);
 };
 
 export const setSanityIsNotOk = (contract, _articleHash, _from) => {
