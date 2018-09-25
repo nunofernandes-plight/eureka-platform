@@ -877,9 +877,10 @@ test(
     await acceptReview(
       eurekaPlatformContract,
       articleVersion.articleHash,
-      reviewer1.ethereumAddress,
-      editor.ethereumAddress
-    );
+      reviewer1.ethereumAddress
+    ).send({
+      from: editor.ethereumAddress
+    });
     review = await reviewService.getReviewById(
       reviewer1.ethereumAddress,
       review._id
@@ -899,9 +900,10 @@ test(
     await declineReview(
       eurekaPlatformContract,
       articleVersion.articleHash,
-      reviewer2.ethereumAddress,
-      editor.ethereumAddress
-    );
+      reviewer2.ethereumAddress
+    ).send({
+      from: editor.ethereumAddress
+    });
     review2 = await reviewService.getReviewById(
       reviewer2.ethereumAddress,
       review2._id
