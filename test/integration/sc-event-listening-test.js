@@ -183,7 +183,7 @@ test.after(() => {
 
 /************************ Sign up Editor ************************/
 
-test(PRETEXT + 'Sign up Editor', async t => {
+test.only(PRETEXT + 'Sign up Editor', async t => {
   await userService.createUser(
     'test',
     'test@test.test',
@@ -363,9 +363,10 @@ test(
     // Assign first editor for submission process
     await assignForSubmissionProcess(
       eurekaPlatformContract,
-      articleSubmission.scSubmissionID,
-      editor.ethereumAddress
-    );
+      articleSubmission.scSubmissionID
+    ).send({
+      from: editor.ethereumAddress
+    });
     articleSubmission = await articleSubmissionService.getSubmissionById(
       articleSubmission._id
     );
@@ -471,9 +472,10 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   // assign editor for the submission process of article 1 & 2
   await assignForSubmissionProcess(
     eurekaPlatformContract,
-    articleSubmissions[0].scSubmissionID,
-    editor.ethereumAddress
-  );
+    articleSubmissions[0].scSubmissionID
+  ).send({
+    from: editor.ethereumAddress
+  });
   articleSubmission1 = await articleSubmissionService.getSubmissionById(
     articleSubmissions[0]._id
   );
@@ -481,9 +483,10 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
 
   await assignForSubmissionProcess(
     eurekaPlatformContract,
-    articleSubmissions[1].scSubmissionID,
-    editor.ethereumAddress
-  );
+    articleSubmissions[1].scSubmissionID
+  ).send({
+    from: editor.ethereumAddress
+  });
   articleSubmission2 = await articleSubmissionService.getSubmissionById(
     articleSubmissions[1]._id
   );
@@ -550,7 +553,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
 });
 
 /**************** Invite reviewers for review article & Reviewers accept Invitation  ******************/
-test.only(
+test(
   PRETEXT +
     'Invite reviewers for review article & Reviewers accept Invitation ',
   async t => {
@@ -628,9 +631,10 @@ test.only(
     // Assign editor for the submission process of article
     await assignForSubmissionProcess(
       eurekaPlatformContract,
-      articleSubmission.scSubmissionID,
-      editor.ethereumAddress
-    );
+      articleSubmission.scSubmissionID
+    ).send({
+      from: editor.ethereumAddress
+    });
 
     // Accept sanity check for article 1
     articleVersion = await articleVersionService.getArticleVersionById(
