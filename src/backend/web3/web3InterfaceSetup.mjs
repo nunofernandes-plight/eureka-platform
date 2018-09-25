@@ -58,7 +58,7 @@ export const setupWeb3Interface = async () => {
   /** Pending Transaction listener **/
   web3.eth.subscribe('pendingTransactions')
     .on('data', async (transactionHash) => {
-      console.log(transactionHash);
+      // console.log(transactionHash);
       const transaction = await web3.eth.getTransaction(transactionHash);
       if ( transaction
         && ( transaction.to === platformContract.options.address
@@ -70,7 +70,7 @@ export const setupWeb3Interface = async () => {
         //TODO save transaction because related with platform
         // check status firs if transaction receipt call is necessary
         const transactionReceipt = await web3.eth.getTransactionReceipt(transactionHash);
-        console.log(transactionReceipt);
+        // console.log(transactionReceipt);
       }
     });
 
