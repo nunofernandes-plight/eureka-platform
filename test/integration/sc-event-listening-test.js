@@ -742,9 +742,11 @@ test.only(
       REVIEW1.articleHasMajorIssues,
       REVIEW1.articleHasMinorIssues,
       REVIEW1.score1,
-      REVIEW1.score2,
-      reviewer1.ethereumAddress
-    );
+      REVIEW1.score2
+    ).send({
+      from: reviewer1.ethereumAddress,
+      gas: 80000000
+    });
 
     // Check if status changed on DB
     review = await reviewService.getReviewById(
@@ -788,9 +790,11 @@ test.only(
       REVIEW2.articleHasMajorIssues,
       REVIEW2.articleHasMinorIssues,
       REVIEW2.score1,
-      REVIEW2.score2,
-      reviewer2.ethereumAddress
-    );
+      REVIEW2.score2
+    ).send({
+      from: reviewer2.ethereumAddress,
+      gas: 80000000
+    });
 
     // Check if status changed on DB
     review2 = await reviewService.getReviewById(
