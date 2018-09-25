@@ -129,6 +129,17 @@ const REVIEW3 = {
 };
 const REVIEW3_HASH_HEX = '0x' + REVIEW3.reviewHash;
 
+const REVIEW4 = {
+  reviewHash:
+    '333cc57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', // TODO change?
+  reviewText: 'Fourth review which will get accepted',
+  score1: 2,
+  score2: 2,
+  articleHasMajorIssues: false,
+  articleHasMinorIssues: false
+};
+const REVIEW4_HASH_HEX = '0x' + REVIEW4.reviewHash;
+
 /** ************** TESTING ****************/
 
 
@@ -540,7 +551,6 @@ test.only(
   'Invite reviewers for review article & Reviewers accept Invitation ',
   async t => {
     // Create author and editor
-    const testAccounts = await getAccounts(web3);
     const author = await userService.createUser(
       'testAuthor',
       'author@test.test',
@@ -550,28 +560,36 @@ test.only(
     const editor = await userService.createUser(
       'testEditor',
       'editor@test.test',
-      testAccounts[4],
+      accounts[4],
       'test-editor-avatar'
     );
 
     const reviewer1 = await userService.createUser(
       'testReviewer1',
       'reviewer1@test.test',
-      testAccounts[5],
+      accounts[5],
       'test-reviewer-avatar',
       Roles.REVIEWER
     );
     const reviewer2 = await userService.createUser(
       'testReviewer2',
       'reviewer2@test.test',
-      testAccounts[6],
+      accounts[6],
       'test-reviewer-avatar',
       Roles.REVIEWER
     );
     const reviewer3 = await userService.createUser(
       'testReviewer3',
       'reviewer3@test.test',
-      testAccounts[7],
+      accounts[7],
+      'test-reviewer-avatar',
+      Roles.REVIEWER
+    );
+
+    const reviewer4 = await userService.createUser(
+      'testReviewer4',
+      'reviewer4@test.test',
+      accounts[8],
       'test-reviewer-avatar',
       Roles.REVIEWER
     );
@@ -635,7 +653,7 @@ test.only(
     await inviteReviewersForArticle(
       eurekaPlatformContract,
       articleVersion.articleHash,
-      [reviewer1.ethereumAddress, reviewer2.ethereumAddress]
+      [reviewer1.ethereumAddress, reviewer2.ethereumAddress, reviewer4.ethereumAddress]
     ).send({
       from: editor.ethereumAddress,
       gas: 80000000
@@ -648,7 +666,7 @@ test.only(
 
     // Check if article-version in DB holds reviewers
     counter = 0;
-    while (articleVersion.editorApprovedReviews.length < 2 && counter < 5) {
+    while (articleVersion.editorApprovedReviews.length < 3 && counter < 5) {
       sleepSync(5000);
       articleVersion = await articleVersionService.getArticleVersionById(
         author.ethereumAddress,
@@ -656,7 +674,7 @@ test.only(
       );
       counter++;
     }
-    t.is(articleVersion.editorApprovedReviews.length, 2);
+    t.is(articleVersion.editorApprovedReviews.length, 3);
 
     // Reviewer1 accept --> check for new state in DB
     await acceptReviewInvitation(
@@ -703,6 +721,31 @@ test.only(
       counter++;
     }
     t.is(review2.reviewState, ReviewState.INVITATION_ACCEPTED);
+
+
+    // Reviewer4 accept --> check for new state in DB
+    await acceptReviewInvitation(
+      eurekaPlatformContract,
+      articleVersion.articleHash
+    ).send({
+      from: reviewer4.ethereumAddress,
+      gas: 80000000
+    });
+    let review4 = await reviewService.getReviewById(
+      reviewer4.ethereumAddress,
+      articleVersion.editorApprovedReviews[2]
+    );
+    counter = 0;
+    while (review.reviewState === ReviewState.INVITED && counter < 5) {
+      sleepSync(5000);
+      review4 = await reviewService.getReviewById(
+        reviewer4.ethereumAddress,
+        articleVersion.editorApprovedReviews[2]
+      );
+      counter++;
+    }
+    t.is(review4.reviewState, ReviewState.INVITATION_ACCEPTED);
+
 
     // Add editor-approved review1 into DB
     await reviewService.addEditorApprovedReview(
@@ -794,11 +837,12 @@ test.only(
       sleepSync(5000);
       review2 = await reviewService.getReviewById(
         reviewer2.ethereumAddress,
-        review._id
+        review2._id
       );
       counter++;
     }
     t.is(review2.reviewState, ReviewState.HANDED_IN_SC);
+
 
     // Write a community review as reviewer3
     t.is(articleVersion.communityReviews.length, 0);
@@ -852,6 +896,48 @@ test.only(
     }
     t.is(review3.reviewState, ReviewState.HANDED_IN_SC);
 
+    // Add editor-approved review4 into DB
+    await reviewService.addEditorApprovedReview(
+      reviewer4.ethereumAddress,
+      review4._id,
+      REVIEW4.reviewText,
+      REVIEW4_HASH_HEX,
+      REVIEW4.score1,
+      REVIEW4.score2,
+      REVIEW4.articleHasMajorIssues,
+      REVIEW4.articleHasMinorIssues
+    );
+
+    // Add review4 in SC
+    await addEditorApprovedReview(
+      eurekaPlatformContract,
+      articleVersion.articleHash,
+      REVIEW4_HASH_HEX,
+      REVIEW4.articleHasMajorIssues,
+      REVIEW4.articleHasMinorIssues,
+      REVIEW4.score1,
+      REVIEW4.score2
+    ).send({
+      from: reviewer4.ethereumAddress,
+      gas: 80000000
+    });
+
+    // Check if status changed on DB
+    review4 = await reviewService.getReviewById(
+      reviewer4.ethereumAddress,
+      review4._id
+    );
+    counter = 0;
+    while (review4.reviewState === ReviewState.HANDED_IN_DB && counter < 5) {
+      sleepSync(5000);
+      review4 = await reviewService.getReviewById(
+        reviewer4.ethereumAddress,
+        review4._id
+      );
+      counter++;
+    }
+    t.is(review4.reviewState, ReviewState.HANDED_IN_SC);
+
     // Accept review1
     await acceptReview(
       eurekaPlatformContract,
@@ -874,6 +960,29 @@ test.only(
       counter++;
     }
     t.is(review.reviewState, ReviewState.ACCEPTED);
+
+    // Accept review4
+    await acceptReview(
+      eurekaPlatformContract,
+      articleVersion.articleHash,
+      reviewer4.ethereumAddress
+    ).send({
+      from: editor.ethereumAddress
+    });
+    review4 = await reviewService.getReviewById(
+      reviewer4.ethereumAddress,
+      review4._id
+    );
+    counter = 0;
+    while (review4.reviewState === ReviewState.HANDED_IN_SC && counter < 5) {
+      sleepSync(5000);
+      review4 = await reviewService.getReviewById(
+        reviewer4.ethereumAddress,
+        review4._id
+      );
+      counter++;
+    }
+    t.is(review4.reviewState, ReviewState.ACCEPTED);
 
     // Decline review2
     await declineReview(
