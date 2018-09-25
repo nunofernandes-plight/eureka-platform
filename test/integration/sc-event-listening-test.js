@@ -577,19 +577,22 @@ test.only(
       'testReviewer1',
       'reviewer1@test.test',
       testAccounts[5],
-      'test-reviewer-avatar'
+      'test-reviewer-avatar',
+      Roles.REVIEWER
     );
     const reviewer2 = await userService.createUser(
       'testReviewer2',
       'reviewer2@test.test',
       testAccounts[6],
-      'test-reviewer-avatar'
+      'test-reviewer-avatar',
+      Roles.REVIEWER
     );
     const reviewer3 = await userService.createUser(
       'testReviewer3',
       'reviewer3@test.test',
       testAccounts[7],
-      'test-reviewer-avatar'
+      'test-reviewer-avatar',
+      Roles.REVIEWER
     );
 
     // Setup article draft 1 & 2
