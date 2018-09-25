@@ -31,6 +31,19 @@ router.get(
 );
 
 router.get(
+  '/roles',
+  asyncHandler(async req => {
+    if (req.query.role) {
+      if (Roles.hasOwnProperty(req.query.role)) {
+        return await userService.getAllUsersByRole(req.query.role);
+      }
+      return new Error(req.query.role + ' is not a valid role!');
+    }
+    errorThrower.noQueryParameterProvided();
+  })
+);
+
+router.get(
   '/data',
   asyncHandler(async req => {
     let user = await userService.getUserByEthereumAddress(

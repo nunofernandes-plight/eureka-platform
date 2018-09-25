@@ -17,6 +17,10 @@ export default {
     return User.find({});
   },
 
+  getAllUsersByRole: async role => {
+    return await User.find({roles: role});
+  },
+
   getUsersAddressByEmailQuery: async queryParam => {
     const regexQuery = '.*' + queryParam + '.*';
     const users = await User.find({email: {$regex: regexQuery, $options: 'i'}});
