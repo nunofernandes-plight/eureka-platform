@@ -14,6 +14,7 @@ import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 import {getGasEstimation} from '../../../../smartcontracts/methods/web3-utils-methods.mjs';
 import EdiorReviewersPicker from './EdiorReviewersPicker.js';
+import EmailPreview from '../Email/EmailPreview.js';
 
 const Container = styled.div`
   display: flex;
@@ -39,6 +40,7 @@ const NoArticles = () => {
     </NoArtDiv>
   );
 };
+
 class EditorInvite extends React.Component {
   constructor() {
     super();
@@ -47,7 +49,8 @@ class EditorInvite extends React.Component {
       article: null,
       loading: false,
       articleOnHover: null,
-      showReviewersPickerModal: false
+      showReviewersPickerModal: false,
+      reviewersToInvite: null
     };
   }
 
@@ -100,10 +103,39 @@ class EditorInvite extends React.Component {
           show={this.state.showReviewersPickerModal}
           title={'Invite Reviewers for the article: '}
         >
+          <EmailPreview
+            reviewersToInvite={this.state.reviewersToInvite}
+            article={this.state.article}
+            selectedAccount={this.props.selectedAccount}
+          />
           <EdiorReviewersPicker
             platformContract={this.props.platformContract}
             article={this.state.article}
             selectedAccount={this.props.selectedAccount}
+            reviewersToInvite={this.state.reviewersToInvite}
+            addReviewer={u => {
+              const reviewersToInvite = this.state.reviewersToInvite
+                ? [...this.state.reviewersToInvite]
+                : [];
+              reviewersToInvite.push(u);
+              this.setState({
+                reviewersToInvite
+              });
+            }}
+            removeReviewer={u => {
+              const reviewersToInvite = [...this.state.reviewersToInvite];
+              const indexToDelete = reviewersToInvite
+                .map(ur => {
+                  return ur.ethereumAddress;
+                })
+                .indexOf(u.ethereumAddress);
+              if (indexToDelete > -1) {
+                reviewersToInvite.splice(indexToDelete, 1);
+              }
+              this.setState({
+                reviewersToInvite
+              });
+            }}
           />
         </Modal>
       </div>
@@ -151,4 +183,5 @@ class EditorInvite extends React.Component {
     );
   }
 }
+
 export default EditorInvite;

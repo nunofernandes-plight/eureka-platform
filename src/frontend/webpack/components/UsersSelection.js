@@ -4,14 +4,11 @@ import {InputField} from '../design-components/Inputs.js';
 import {getDomain} from '../../../helpers/getDomain.js';
 import Avatar from '../views/Avatar.js';
 import {
-  __ALERT_DANGER,
   __ALERT_ERROR,
   __GRAY_100,
   __GRAY_200,
-  __GRAY_300,
-  __GRAY_800
+  __GRAY_300
 } from '../../helpers/colors.js';
-import {serializeSavePatch} from '../../../helpers/documentSerializer.mjs';
 import Author from '../views/Author.js';
 import Icon from '../views/icons/Icon.js';
 import queryString from 'query-string';
