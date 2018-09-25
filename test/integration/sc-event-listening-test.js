@@ -530,9 +530,10 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   t.is(articleVersion2.articleVersionState, ArticleVersionState.SUBMITTED);
   await setSanityIsNotOk(
     eurekaPlatformContract,
-    articleVersion2.articleHash,
-    editor.ethereumAddress
-  );
+    articleVersion2.articleHash
+  ).send({
+    from: editor.ethereumAddress
+  });
   articleVersion2 = await articleVersionService.getArticleVersionById(
     author.ethereumAddress,
     articleVersion2._id

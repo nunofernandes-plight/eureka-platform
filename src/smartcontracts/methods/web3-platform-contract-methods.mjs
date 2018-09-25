@@ -27,10 +27,8 @@ export const setSanityToOk = (contract, _articleHash) => {
   return contract.methods.sanityIsOk(_articleHash);
 };
 
-export const setSanityIsNotOk = (contract, _articleHash, _from) => {
-  return contract.methods.sanityIsNotOk(_articleHash).send({
-    from: _from
-  });
+export const setSanityIsNotOk = (contract, _articleHash) => {
+  return contract.methods.sanityIsNotOk(_articleHash);
 };
 
 export const inviteReviewersForArticle = (
