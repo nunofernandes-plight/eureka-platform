@@ -13,6 +13,7 @@ import {
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 import {getGasEstimation} from '../../../../smartcontracts/methods/web3-utils-methods.mjs';
+import EdiorReviewersPicker from './EdiorReviewersPicker.js';
 
 const Container = styled.div`
   display: flex;
@@ -43,8 +44,10 @@ class EditorInvite extends React.Component {
     super();
     this.state = {
       articles: null,
+      article: null,
       loading: false,
-      articleOnHover: null
+      articleOnHover: null,
+      showReviewersPickerModal: false
     };
   }
 
@@ -69,43 +72,10 @@ class EditorInvite extends React.Component {
       });
   }
 
-  async chooseArticleToInviteReviewers(articleHash) {
+  async chooseArticleToInviteReviewers(article) {
     console.log('open invite modal/view here');
 
-    const reviewers = ['0x9ea02Ac11419806aB9d5A512c7d79AC422cB36F7'];
-
-    const gas = await getGasInviteReviewersForArticle(
-      this.props.platformContract,
-      articleHash,
-      reviewers,
-      this.props.selectedAccount.address
-    );
-    inviteReviewersForArticle(
-      this.props.platformContract,
-      articleHash,
-      reviewers,
-      this.props.selectedAccount.address,
-      gas
-    )
-      .on('transactionHash', tx => {
-        this.setState({
-          tx,
-          showTxModal: true
-        });
-      })
-      .on('receipt', async receipt => {
-        console.log('Invite Reviewers:  ' + receipt.status);
-        await this.getInviteReviewersArticles();
-        return receipt;
-      })
-      .catch(err => {
-        console.error(err);
-        this.setState({
-          errorMessage:
-            'Ouh. Something went wrong with the Smart Contract call: ' +
-            err.toString()
-        });
-      });
+    this.setState({showReviewersPickerModal: true, article});
   }
 
   renderModals() {
@@ -123,15 +93,18 @@ class EditorInvite extends React.Component {
         </Modal>
 
         <Modal
-          toggle={isTx => {
-            this.setState({tx: null});
+          toggle={showReviewersPickerModal => {
+            this.setState({showReviewersPickerModal});
+            this.setState({article: null});
           }}
-          show={this.state.tx}
-          title={'We got your request!'}
+          show={this.state.showReviewersPickerModal}
+          title={'Invite Reviewers for the article: '}
         >
-          The request of inviting the specified reviewers has sucessfully
-          triggered the smart contract. You can find the transaction status
-          here: <TxHash txHash={this.state.tx}>Transaction Hash</TxHash>. <br />
+          <EdiorReviewersPicker
+            platformContract={this.props.platformContract}
+            article={this.state.article}
+            selectedAccount={this.props.selectedAccount}
+          />
         </Modal>
       </div>
     );
@@ -161,9 +134,7 @@ class EditorInvite extends React.Component {
                         this.setState({articleOnHover: null});
                       }}
                       action={(_, article) => {
-                        this.chooseArticleToInviteReviewers(
-                          article.articleHash
-                        );
+                        this.chooseArticleToInviteReviewers(article);
                       }}
                     />
                   );
