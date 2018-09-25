@@ -20,7 +20,7 @@ const Email = styled.div`
 const AuthorContainer = styled.div`
   display: flex;
   align-items: center;
-  padding: ${props => (props.padding !== undefined ? props.padding : '12')};
+  padding: ${props => (props.padding !== undefined ? props.padding : '12px')};
   border-bottom: 1px solid ${__GRAY_100};
   width: 100%;
 `;
