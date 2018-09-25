@@ -1,9 +1,5 @@
 import {signUpEditor} from '../../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
-import {
-  mintEurekaTokens,
-  finishMinting,
-  submitArticle
-} from '../../src/smartcontracts/methods/web3-token-contract-methods.mjs';
+import {submitArticle} from '../../src/smartcontracts/methods/web3-token-contract-methods.mjs';
 import test from 'ava';
 import app from '../../src/backend/api/api.mjs';
 import getAccounts from '../../src/smartcontracts/methods/get-accounts.mjs';
@@ -34,17 +30,15 @@ import Roles from '../../src/backend/schema/roles-enum.mjs';
 import web3 from '../../src/helpers/web3Instance.mjs';
 
 import dotenv from 'dotenv';
-import {setupWeb3Interface} from '../../src/backend/web3/web3InterfaceSetup.mjs';
+import {
+  platformContract,
+  setupWeb3Interface,
+  tokenContract
+} from '../../src/backend/web3/web3InterfaceSetup.mjs';
+import {deploy} from '../../src/smartcontracts/deployment/deployer-and-mint.mjs';
 
-import GanachePlatformContractABI from '../../src/smartcontracts/constants/GanachePlatformContractABI.json';
-import GanachePlatformContractAddress from '../../src/smartcontracts/constants/GanachePlatformContractAddress.json';
-import GanacheTokenContractAddress from '../../src/smartcontracts/constants/GanacheTokenContractAddress.json';
-import GanacheTokenContractABI from '../../src/smartcontracts/constants/GanacheTokenContractABI.json';
-
-
-
-let eurekaTokenContract = new web3.eth.Contract(GanacheTokenContractABI, GanacheTokenContractAddress);
-let eurekaPlatformContract = new web3.eth.Contract(GanachePlatformContractABI, GanachePlatformContractAddress);
+let eurekaTokenContract;
+let eurekaPlatformContract;
 let accounts;
 let contractOwner;
 
@@ -149,17 +143,19 @@ const REVIEW3_HASH_HEX = '0x' + REVIEW3.reviewHash;
 // });
 
 test.before(async () => {
-  setupWeb3Interface();
   accounts = await getAccounts(web3);
   contractOwner = accounts[0];
 
   await dotenv.config();
-
   app.setupApp();
   app.listenTo(process.env.PORT || 8080);
 });
 test.beforeEach(async () => {
   await cleanDB();
+  await deploy();
+  await setupWeb3Interface();
+  eurekaPlatformContract = platformContract;
+  eurekaTokenContract = tokenContract;
 });
 test.after(() => {
   app.close();
@@ -194,7 +190,6 @@ test(PRETEXT + 'Sign up Editor', async t => {
     contractOwner,
     'test-avatar'
   );
-
 
   let user = await userService.getUserByEthereumAddress(contractOwner);
   // t.is(user.isEditor, false);
