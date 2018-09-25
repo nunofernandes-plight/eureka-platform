@@ -15,9 +15,7 @@ class EdiorReviewersPicker extends React.Component {
   constructor() {
     super();
     this.state = {
-      showReviewersModal: false,
-      searchableReviewers: null,
-      reviewersToInvite: null
+      showReviewersModal: false
     };
   }
 
@@ -102,31 +100,14 @@ class EdiorReviewersPicker extends React.Component {
       <Container>
         <UsersSelection
           listedTitle={'Reviewers'}
-          listedUsers={this.state.reviewersToInvite}
+          listedUsers={this.props.reviewersToInvite}
           searchableRoles={[Roles.REVIEWER, Roles.AUTHOR]}
           cannotBeAdded={this.props.selectedAccount.address}
           addToList={u => {
-            const reviewersToInvite = this.state.reviewersToInvite
-              ? [...this.state.reviewersToInvite]
-              : [];
-            reviewersToInvite.push(u);
-            this.setState({
-              reviewersToInvite
-            });
+            this.props.addReviewer(u);
           }}
           deleteFromList={u => {
-            const reviewersToInvite = [...this.state.reviewersToInvite];
-            const indexToDelete = reviewersToInvite
-              .map(ur => {
-                return ur.ethereumAddress;
-              })
-              .indexOf(u.ethereumAddress);
-            if (indexToDelete > -1) {
-              reviewersToInvite.splice(indexToDelete, 1);
-            }
-            this.setState({
-              reviewersToInvite
-            });
+            this.props.removeReviewer(u);
           }}
         />
       </Container>
