@@ -30,7 +30,7 @@ export const submitArticle = (_contract, _to, _amount, _data) => {
       _amount,
       '0x0861681c',
       _data
-    )
+    );
 };
 
 /*

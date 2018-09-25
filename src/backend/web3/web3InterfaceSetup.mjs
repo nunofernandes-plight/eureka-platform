@@ -51,8 +51,9 @@ export const setupWeb3Interface = async () => {
   platformContract = new web3.eth.Contract(platformContractABI, platformContractAddress);
   tokenContract = new web3.eth.Contract(tokenContractABI, tokenContractAddress);
 
-  await contractEventListener.setup(platformContract);
+
   await writeContractOwnerInDB(platformContract);
+
 
 
   /** Pending Transaction listener **/
@@ -75,4 +76,9 @@ export const setupWeb3Interface = async () => {
     });
 
 };
+
+export async function clearSubscribtions() {
+  return await web3.eth.clearSubscriptions();
+}
+
 

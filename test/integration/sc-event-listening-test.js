@@ -33,12 +33,16 @@ import dotenv from 'dotenv';
 import {
   platformContract,
   setupWeb3Interface,
+  clearSubscribtions,
   tokenContract
 } from '../../src/backend/web3/web3InterfaceSetup.mjs';
 import {deploy} from '../../src/smartcontracts/deployment/deployer-and-mint.mjs';
+import contractEventListener from '../../src/backend/web3/contract-event-lister.mjs';
 
 let eurekaTokenContract;
+let eurekaTokenContracts = [];
 let eurekaPlatformContract;
+let eurekaPlatformContracts = [];
 let accounts;
 let contractOwner;
 
@@ -127,63 +131,35 @@ const REVIEW3_HASH_HEX = '0x' + REVIEW3.reviewHash;
 
 /** ************** TESTING ****************/
 
-// test.beforeEach(async () => {
-//   const [eurekaContract, platformContract] = await deployContracts();
-//   await setupContract(eurekaContract, platformContract);
-//   contractOwner = accounts[0];
-//
-//   app.setupApp(eurekaPlatformContract);
-//   app.listenTo(process.env.PORT || 8080);
-//   await cleanDB();
-// });
-//
-// test.afterEach(async () => {
-//   await app.close();
-//   await cleanDB();
-// });
+
 
 test.before(async () => {
   accounts = await getAccounts(web3);
   contractOwner = accounts[0];
-
   await dotenv.config();
-  app.setupApp();
-  app.listenTo(process.env.PORT || 8080);
+
+  await deploy();
+  await app.setupApp();
+  await app.listenTo(process.env.PORT || 8080);
 });
+
 test.beforeEach(async () => {
+
   await cleanDB();
   await deploy();
-  await setupWeb3Interface();
+
   eurekaPlatformContract = platformContract;
   eurekaTokenContract = tokenContract;
 });
-test.after(() => {
-  app.close();
+
+test.after(async () => {
+  await app.close();
 });
 
-// Wurde vorher benötigt
-// async function setupContract(eurekaContract, platformContract) {
-//   accounts = await getAccounts(web3);
-//   contractOwner = accounts[0];
-//   eurekaTokenContract = eurekaContract;
-//   eurekaPlatformContract = platformContract;
-//
-//   const tokenAmounts = [];
-//   accounts.forEach(() => {
-//     tokenAmounts.push(20000);
-//   });
-//   await mintEurekaTokens(
-//     eurekaTokenContract,
-//     accounts,
-//     tokenAmounts,
-//     contractOwner
-//   );
-//   await finishMinting(eurekaTokenContract, contractOwner);
-// }
 
 /************************ Sign up Editor ************************/
 
-test.only(PRETEXT + 'Sign up Editor', async t => {
+test(PRETEXT + 'Sign up Editor', async t => {
   await userService.createUser(
     'test',
     'test@test.test',
@@ -226,7 +202,7 @@ test.only(PRETEXT + 'Sign up Editor', async t => {
 
 test(
   PRETEXT +
-    'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED',
+  'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED',
   async t => {
     // Create user on DB
     t.is((await userService.getAllUsers()).length, 0);
@@ -291,7 +267,6 @@ test(
   PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process',
   async t => {
     // Create author and editor
-    const testAccounts = await getAccounts(web3);
     const author = await userService.createUser(
       'testAuthor',
       'author@test.test',
@@ -301,16 +276,16 @@ test(
     const editor = await userService.createUser(
       'testEditor',
       'editor@test.test',
-      testAccounts[2],
+      accounts[2],
       'test-editor-avatar'
     );
     const editor2 = await userService.createUser(
       'testEditor2',
       'editor2@test.test',
-      testAccounts[3],
+      accounts[3],
       'test-editor2-avatar'
     );
-    t.is(true, true);
+
 
     // Signup editor 1 & 2
     await signUpEditor(eurekaPlatformContract, editor.ethereumAddress).send({
@@ -319,6 +294,8 @@ test(
     await signUpEditor(eurekaPlatformContract, editor2.ethereumAddress).send({
       from: contractOwner
     });
+    t.is(editor.ethereumAddress, accounts[2]);
+    t.is(editor2.ethereumAddress, accounts[3]);
 
     // Setup article draft
     await articleSubmissionService.createSubmission(author.ethereumAddress);
@@ -340,6 +317,7 @@ test(
       from: author.ethereumAddress,
       gas: 80000000
     });
+
     articleVersion = await articleVersionService.getArticleVersionById(
       author.ethereumAddress,
       articleVersion._id
@@ -375,9 +353,10 @@ test(
     // Change editor to editor2 for the submission process
     await changeEditorFromSubmissionProcess(
       eurekaPlatformContract,
-      articleSubmission.scSubmissionID
+      articleSubmission.scSubmissionID,
+      editor2.ethereumAddress
     ).send({
-      from: editor2.ethereumAddress
+      from: editor.ethereumAddress
     });
     articleSubmission = await articleSubmissionService.getSubmissionById(
       articleSubmission._id
@@ -394,7 +373,7 @@ test(
     articleSubmission = await articleSubmissionService.getSubmissionById(
       articleSubmission._id
     );
-    t.is(articleSubmission.editor, undefined);
+    t.is(articleSubmission.editor, null);
   }
 );
 
@@ -556,9 +535,9 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
 });
 
 /**************** Invite reviewers for review article & Reviewers accept Invitation  ******************/
-test(
+test.only(
   PRETEXT +
-    'Invite reviewers for review article & Reviewers accept Invitation ',
+  'Invite reviewers for review article & Reviewers accept Invitation ',
   async t => {
     // Create author and editor
     const testAccounts = await getAccounts(web3);

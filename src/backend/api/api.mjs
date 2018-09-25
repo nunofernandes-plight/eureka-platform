@@ -19,7 +19,7 @@ import {
   PLATFORM_KOVAN_ADDRESS,
   TOKEN_KOVAN_ADDRESS
 } from '../../smartcontracts/constants/KovanContractAddresses.mjs';
-import {setupWeb3Interface} from '../web3/web3InterfaceSetup.mjs';
+import {platformContract, setupWeb3Interface} from '../web3/web3InterfaceSetup.mjs';
 
 if (!isProduction) {
   dotenv.config();
@@ -64,6 +64,8 @@ export default {
 
     /** Web3 Interface: SC Events Listener, Transaction Listener**/
     await setupWeb3Interface();
+    await contractEventListener.setup(platformContract);
+
 
     //set global variable isAuthenticated -> call ir everywhere dynamically
     app.use(function(req, res, next) {
@@ -83,7 +85,11 @@ export default {
     server = app.listen(port || 8080);
   },
 
-  close: () => {
-    server.close();
+  close: async () => {
+    return new Promise((resolve) => {
+      server.close(() => {
+        resolve();
+      });
+    })
   }
 };

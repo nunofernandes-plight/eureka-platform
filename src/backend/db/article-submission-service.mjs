@@ -112,11 +112,13 @@ export default {
     if (!articleVersion) errorThrower.noEntryFoundById(articleHash);
     if (
       articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT
-    )
+    ) {
+      console.log('THIS IS HAPPENING: ' + articleVersion.articleVersionState);
       errorThrower.notCorrectStatus(
         ArticleVersionState.FINISHED_DRAFT,
         articleVersion.articleVersionState
       );
+    }
 
     articleVersion.articleVersionState = ArticleVersionState.SUBMITTED;
     await articleVersion.save();
