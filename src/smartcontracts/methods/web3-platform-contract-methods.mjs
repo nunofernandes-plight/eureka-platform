@@ -1,14 +1,8 @@
-export const getContractOwner = contract => {
-  return contract.methods.contractOwner().call((err, res) => {
-    if (err) throw err;
-    return res;
-  });
-};
-
 export const signUpEditor = (contract, editor, _from) => {
-  return contract.methods.signUpEditor(editor).send({
-    from: _from
-  });
+  return contract.methods.signUpEditor(editor)
+    .send({
+      from: _from
+    });
 };
 
 export const assignForSubmissionProcess = (contract, _submissionId, _from) => {
@@ -30,9 +24,9 @@ export const removeEditorFromSubmissionProcess = (
     .then(receipt => {
       console.log(
         'Removement of Editor on the Submission Process with ID ' +
-          _submissionId +
-          ' exited with the TX status: ' +
-          receipt.status
+        _submissionId +
+        ' exited with the TX status: ' +
+        receipt.status
       );
       return receipt;
     })
@@ -55,11 +49,11 @@ export const changeEditorFromSubmissionProcess = (
     .then(receipt => {
       console.log(
         'Changing Editor on the Submission Process with ID ' +
-          _submissionId +
-          ' to ' +
-          _newEditor +
-          ' exited with the TX status: ' +
-          receipt.status
+        _submissionId +
+        ' to ' +
+        _newEditor +
+        ' exited with the TX status: ' +
+        receipt.status
       );
       return receipt;
     })
@@ -83,10 +77,10 @@ export const setSanityIsNotOk = (contract, _articleHash, _from) => {
 export const inviteReviewersForArticle = (
   contract,
   _articleHash,
-  _editorApprovedReviewers,
+  _editorApprovedReviewers
 ) => {
   return contract.methods
-    .inviteReviewers(_articleHash, _editorApprovedReviewers)
+    .inviteReviewers(_articleHash, _editorApprovedReviewers);
 };
 
 export const getGasInviteReviewersForArticle = (
@@ -104,7 +98,7 @@ export const getGasInviteReviewersForArticle = (
 
 export const acceptReviewInvitation = (contract, _articleHash) => {
   return contract.methods
-    .acceptReviewInvitation(_articleHash)
+    .acceptReviewInvitation(_articleHash);
 };
 
 export const addEditorApprovedReview = (
@@ -124,7 +118,7 @@ export const addEditorApprovedReview = (
       _articleHasMinorIssues,
       _score1,
       _score2
-    )
+    );
 };
 
 export const addCommunityReview = (
@@ -144,7 +138,7 @@ export const addCommunityReview = (
       _articleHasMinorIssues,
       _score1,
       _score2
-    )
+    );
 };
 
 export const correctReview = (
@@ -172,9 +166,9 @@ export const correctReview = (
     .then(receipt => {
       console.log(
         'Review ' +
-          _reviewHash +
-          ' is corrected with the TX status: ' +
-          receipt.status
+        _reviewHash +
+        ' is corrected with the TX status: ' +
+        receipt.status
       );
       return receipt;
     })
@@ -197,9 +191,9 @@ export const acceptReview = (
     .then(receipt => {
       console.log(
         'Review from  user ' +
-          _reviewerAddress +
-          ' is accepted with the TX status: ' +
-          receipt.status
+        _reviewerAddress +
+        ' is accepted with the TX status: ' +
+        receipt.status
       );
       return receipt;
     })
@@ -222,9 +216,9 @@ export const declineReview = (
     .then(receipt => {
       console.log(
         'Review from  user ' +
-          _reviewerAddress +
-          ' is declined with the TX status: ' +
-          receipt.status
+        _reviewerAddress +
+        ' is declined with the TX status: ' +
+        receipt.status
       );
       return receipt;
     })
@@ -237,6 +231,14 @@ export const declineReview = (
   Getters
  */
 
+export const getContractOwner = contract => {
+  return contract.methods.contractOwner()
+    .call((err, res) => {
+      if (err) throw err;
+      return res;
+    });
+};
+
 export const getSubmissionProcess = async (
   contract,
   articleHashHex,
@@ -247,17 +249,10 @@ export const getSubmissionProcess = async (
     articleHashHex,
     account
   );
-
   return contract.methods
     .articleSubmissions(articleVersion.submissionId)
     .call({
       from: account
-    })
-    .then(process => {
-      return process;
-    })
-    .catch(err => {
-      console.error(err);
     });
 };
 
@@ -266,12 +261,6 @@ export const getArticleVersion = (contract, articleHashHex, account) => {
     .articleVersions(articleHashHex)
     .call({
       from: account
-    })
-    .then(articleVersion => {
-      return articleVersion;
-    })
-    .catch(err => {
-      console.error(err);
     });
 };
 
@@ -280,12 +269,6 @@ export const getUrl = (web3Provider, contract, articleHashHex, account) => {
     .articleVersions(articleHashHex)
     .call({
       from: account
-    })
-    .then(receipt => {
-      return web3Provider.utils.hexToUtf8(receipt.articleUrl);
-    })
-    .catch(err => {
-      console.error(err);
     });
 };
 
@@ -294,12 +277,6 @@ export const getAuthors = (contract, articleHashHex, account) => {
     .getAuthors(articleHashHex)
     .call({
       from: account
-    })
-    .then(authors => {
-      return authors;
-    })
-    .catch(err => {
-      console.error(err);
     });
 };
 
@@ -308,11 +285,5 @@ export const getLinkedArticles = (contract, articleHashHex, account) => {
     .getLinkedArticles(articleHashHex)
     .call({
       from: account
-    })
-    .then(authors => {
-      return authors;
-    })
-    .catch(err => {
-      console.error(err);
     });
 };
