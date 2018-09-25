@@ -134,8 +134,7 @@ export const addCommunityReview = (
   _articleHasMajorIssues,
   _articleHasMinorIssues,
   _score1,
-  _score2,
-  _from
+  _score2
 ) => {
   return contract.methods
     .addCommunityReview(
@@ -146,21 +145,6 @@ export const addCommunityReview = (
       _score1,
       _score2
     )
-    .send({
-      from: _from
-    })
-    .then(receipt => {
-      console.log(
-        'Adding an community review with hash ' +
-          _reviewHash +
-          ' is sent out with the TX status: ' +
-          receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
-    });
 };
 
 export const correctReview = (

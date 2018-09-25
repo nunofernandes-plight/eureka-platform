@@ -846,9 +846,11 @@ test.only(
       REVIEW3.articleHasMajorIssues,
       REVIEW3.articleHasMinorIssues,
       REVIEW3.score1,
-      REVIEW3.score2,
-      reviewer3.ethereumAddress
-    );
+      REVIEW3.score2
+    ).send({
+      from: reviewer3.ethereumAddress,
+      gas: 80000000
+    });
 
     review3 = await reviewService.getReviewById(
       reviewer3.ethereumAddress,
