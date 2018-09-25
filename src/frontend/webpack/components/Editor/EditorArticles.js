@@ -65,11 +65,10 @@ class EditorArticles extends React.Component {
   }
 
   assignArticle(scSubmissionID) {
-    assignForSubmissionProcess(
-      this.props.platformContract,
-      scSubmissionID,
-      this.props.selectedAccount.address
-    )
+    assignForSubmissionProcess(this.props.platformContract, scSubmissionID)
+      .send({
+        from: this.props.selectedAccount.address
+      })
       .on('transactionHash', tx => {
         this.setState({
           tx,

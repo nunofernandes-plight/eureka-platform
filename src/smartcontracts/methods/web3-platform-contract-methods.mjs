@@ -2,10 +2,8 @@ export const signUpEditor = (contract, editor) => {
   return contract.methods.signUpEditor(editor);
 };
 
-export const assignForSubmissionProcess = (contract, _submissionId, _from) => {
-  return contract.methods.assignForSubmissionProcess(_submissionId).send({
-    from: _from
-  });
+export const assignForSubmissionProcess = (contract, _submissionId) => {
+  return contract.methods.assignForSubmissionProcess(_submissionId);
 };
 
 export const removeEditorFromSubmissionProcess = (
