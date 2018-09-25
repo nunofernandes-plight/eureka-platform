@@ -6,10 +6,6 @@ import Article from '../../views/Article.js';
 import {Card} from '../../views/Card.js';
 import {__THIRD} from '../../../helpers/colors.js';
 import {Link} from 'react-router-dom';
-import {
-  getGasInviteReviewersForArticle,
-  inviteReviewersForArticle
-} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 import {getGasEstimation} from '../../../../smartcontracts/methods/web3-utils-methods.mjs';

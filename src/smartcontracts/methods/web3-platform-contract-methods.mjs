@@ -42,19 +42,6 @@ export const inviteReviewersForArticle = (
   );
 };
 
-export const getGasInviteReviewersForArticle = (
-  contract,
-  _articleHash,
-  _editorApprovedReviewers,
-  _from
-) => {
-  return contract.methods
-    .inviteReviewers(_articleHash, _editorApprovedReviewers)
-    .estimateGas({
-      from: _from
-    });
-};
-
 export const acceptReviewInvitation = (contract, _articleHash) => {
   return contract.methods.acceptReviewInvitation(_articleHash);
 };
