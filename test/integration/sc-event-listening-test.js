@@ -612,7 +612,8 @@ test.only(
       author.ethereumAddress,
       eurekaPlatformContract.options.address,
       5000,
-      ARTICLE1_DATA_IN_HEX
+      ARTICLE1_DATA_IN_HEX,
+      80000000
     );
 
     let counter = 0;
