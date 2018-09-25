@@ -31,6 +31,7 @@ import DocumentAuthorsSelection from './TextEditor/DocumentAuthorsSelection.js';
 import DocumentLeftPart from './TextEditor/DocumentLeftPart.js';
 import DocumentRightPart from './TextEditor/DocumentRightPart.js';
 import getArticleHex from '../../../smartcontracts/methods/get-articleHex.mjs';
+import {isGanache} from '../../../helpers/isGanache.mjs';
 
 const Parent = styled.div`
   display: flex;
@@ -264,14 +265,29 @@ class DocumentEditor extends Component {
         });
       });
 
+    let gasAmount;
+    // gas estimation on ganache doesn't work properly
+    if (!isGanache(this.props.web3))
+      gasAmount = await submitArticle(
+        this.props.tokenContract,
+        this.props.platformContract.options.address,
+        SUBMISSION_PRICE,
+        getArticleHex(this.props.web3, article)
+      ).estimateGas({
+        from: this.props.selectedAccount.address
+      });
+    else gasAmount = 80000000;
+
     await submitArticle(
       this.props.tokenContract,
-      this.props.selectedAccount.address,
       this.props.platformContract.options.address,
       SUBMISSION_PRICE,
-      getArticleHex(this.props.web3, article),
-      8000000
+      getArticleHex(this.props.web3, article)
     )
+      .send({
+        from: this.props.selectedAccount.address,
+        gas: gasAmount
+      })
       .on('transactionHash', tx => {
         this.props.history.push(`${this.props.base}/submitted?tx=${tx}`);
       })

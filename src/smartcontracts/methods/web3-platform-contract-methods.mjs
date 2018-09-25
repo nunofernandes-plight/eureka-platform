@@ -1,5 +1,3 @@
-import {getGasEstimation} from './web3-utils-methods.mjs';
-
 export const getContractOwner = contract => {
   return contract.methods.contractOwner().call((err, res) => {
     if (err) throw err;
