@@ -12,14 +12,13 @@ router.get(
   '/',
   asyncHandler(async req => {
     if (req.query.email && req.query.roles) {
-      return await userService.getUsersAddressByEmailQueryandRole(
+      return await userService.getUsersAddressByEmailQueryAndRole(
         req.query.email,
         req.query.roles
       );
     }
     if (req.query.ethAddress) {
       const query = req.query.ethAddress;
-
       if (!Array.isArray(query)) {
         return await userService.getUserByEthereumAddress(query);
       }

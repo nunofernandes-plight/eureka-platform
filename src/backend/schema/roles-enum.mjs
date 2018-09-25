@@ -7,7 +7,8 @@ const Roles = Object.freeze({
   AUTHOR: 'AUTHOR',
   REVIEWER: 'REVIEWER',
   EDITOR: 'EDITOR',
-  USER: 'USER'
+  USER: 'USER',
+  ALL: 'ALL'
 });
 
 export const getAllRoles = () => {

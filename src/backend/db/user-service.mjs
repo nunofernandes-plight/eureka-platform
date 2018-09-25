@@ -21,17 +21,21 @@ export default {
     return await User.find({roles: role});
   },
 
-  getUsersAddressByEmailQueryandRole: async (queryParam, roles) => {
-    roles.map(role => {
-      if (!Roles.hasOwnProperty(role)) {
-        return new Error(role + ' is not a valid role');
-      }
-    });
+  getUsersAddressByEmailQueryAndRole: async (queryParam, roles) => {
     const regexQuery = '.*' + queryParam + '.*';
-    const users = await User.find({
-      email: {$regex: regexQuery, $options: 'i'},
-      roles: {$in: roles}
-    });
+
+    let users;
+    if (roles === Roles.ALL) {
+      users = await User.find({
+        email: {$regex: regexQuery, $options: 'i'}
+      });
+    } else {
+      users = await User.find({
+        email: {$regex: regexQuery, $options: 'i'},
+        roles: {$in: roles}
+      });
+    }
+
     //const users = await User.find({'email': 'test@test.ch'});
     if (!users) errorThrower.noEntryFoundById(regexQuery);
 

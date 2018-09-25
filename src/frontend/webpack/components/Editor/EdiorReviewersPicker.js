@@ -115,15 +115,11 @@ class EdiorReviewersPicker extends React.Component {
           }}
           deleteFromList={u => {
             const reviewersToInvite = [...this.state.reviewersToInvite];
-            console.log(reviewersToInvite);
             const indexToDelete = reviewersToInvite
               .map(ur => {
                 return ur.ethereumAddress;
               })
               .indexOf(u.ethereumAddress);
-            console.log(indexToDelete);
-
-            console.log(indexToDelete);
             if (indexToDelete > -1) {
               reviewersToInvite.splice(indexToDelete, 1);
             }
