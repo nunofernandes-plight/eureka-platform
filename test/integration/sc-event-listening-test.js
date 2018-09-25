@@ -187,7 +187,7 @@ test.after(() => {
 
 /************************ Sign up Editor ************************/
 
-test.only(PRETEXT + 'Sign up Editor', async t => {
+test(PRETEXT + 'Sign up Editor', async t => {
   await userService.createUser(
     'test',
     'test@test.test',
@@ -218,7 +218,7 @@ test.only(PRETEXT + 'Sign up Editor', async t => {
 
   t.is(user.roles.length, 2); // [REVIEWER, AUTHOR, CONTRACT-OWNER, EDITOR]
   t.is(user.roles[1], Roles.EDITOR);
-  t.is(user.scTransactions.length, 2);
+  t.is(user.scTransactions.length, 1);
   t.is(
     user.scTransactions[0].transactionType,
     ScTransactionType.EDITOR_ASSIGNED
@@ -553,7 +553,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
 });
 
 /**************** Invite reviewers for review article & Reviewers accept Invitation  ******************/
-test(
+test.only(
   PRETEXT +
     'Invite reviewers for review article & Reviewers accept Invitation ',
   async t => {
