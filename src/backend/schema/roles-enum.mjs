@@ -7,7 +7,11 @@ const Roles = Object.freeze({
   AUTHOR: 'AUTHOR',
   REVIEWER: 'REVIEWER',
   EDITOR: 'EDITOR',
-  USER: 'USER',
+  USER: 'USER'
 });
+
+export const getAllRoles = () => {
+  return Object.keys(Roles);
+};
 
 export default Roles;
