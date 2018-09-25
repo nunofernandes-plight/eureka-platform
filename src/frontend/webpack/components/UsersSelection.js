@@ -135,16 +135,18 @@ class UsersSelection extends React.Component {
   }
 
   renderUser(user) {
+    if (user.ethereumAddress === this.props.cannotBeAdded) {
+      return null;
+    }
     const listed = this.props.listedUsers;
     if (listed) {
+      const addresses = listed.map(u => {
+        return u.ethereumAddress;
+      });
       // look if the selected user of the searchable list has been already inserted in the listed user
-      if (
-        !listed
-          .map(u => {
-            return u.ethereumAddress;
-          })
-          .includes(user.ethereumAddress)
-      ) {
+      const isAlreadyListed = addresses.includes(user.ethereumAddress);
+
+      if (!isAlreadyListed) {
         return this.getUserToRender(user);
       }
     } else {
@@ -153,6 +155,9 @@ class UsersSelection extends React.Component {
   }
 
   renderDeleteButton(u) {
+    if (u.ethereumAddress === this.props.cannotBeDeleted) {
+      return null;
+    }
     return (
       <Delete>
         <Icon

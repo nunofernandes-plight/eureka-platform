@@ -104,6 +104,7 @@ class EdiorReviewersPicker extends React.Component {
           listedTitle={'Reviewers'}
           listedUsers={this.state.reviewersToInvite}
           searchableRoles={[Roles.REVIEWER, Roles.AUTHOR]}
+          cannotBeAdded={this.props.selectedAccount.address}
           addToList={u => {
             const reviewersToInvite = this.state.reviewersToInvite
               ? [...this.state.reviewersToInvite]

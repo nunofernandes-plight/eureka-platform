@@ -379,20 +379,11 @@ class DocumentEditor extends Component {
           show={this.state.addAuthorModal}
           title={'Search and add authors for your manuscript.'}
         >
-          {/*<DocumentAuthorsSelection
-            updateDocument={({document}) => {
-              this.updateDocument({document});
-              this.fetchAuthorsData();
-            }}
-            selectedAccount={this.props.selectedAccount}
-            authorsData={this.state.authorsData}
-            document={this.state.document}
-          />*/}
-
           <UsersSelection
             listedTitle={'Authors'}
             searchableRoles={Roles.ALL}
             listedUsers={this.state.authorsData}
+            cannotBeDeleted={this.props.selectedAccount.address}
             addToList={u => {
               const authors = this.state.document.authors;
               authors.push(u.ethereumAddress);
