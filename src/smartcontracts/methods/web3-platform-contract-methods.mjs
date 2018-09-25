@@ -102,24 +102,9 @@ export const getGasInviteReviewersForArticle = (
     });
 };
 
-export const acceptReviewInvitation = (contract, _articleHash, _from) => {
+export const acceptReviewInvitation = (contract, _articleHash) => {
   return contract.methods
     .acceptReviewInvitation(_articleHash)
-    .send({
-      from: _from
-    })
-    .then(receipt => {
-      console.log(
-        'Acception for ReviewInvitation on article ' +
-          _articleHash +
-          ' is sent out with the TX status: ' +
-          receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
-    });
 };
 
 export const addEditorApprovedReview = (

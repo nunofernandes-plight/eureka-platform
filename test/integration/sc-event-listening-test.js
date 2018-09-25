@@ -677,9 +677,11 @@ test.only(
     // Reviewer1 accept --> check for new state in DB
     await acceptReviewInvitation(
       eurekaPlatformContract,
-      articleVersion.articleHash,
-      reviewer1.ethereumAddress
-    );
+      articleVersion.articleHash
+    ).send({
+      from: reviewer1.ethereumAddress,
+      gas: 80000000
+    });
     let review = await reviewService.getReviewById(
       reviewer1.ethereumAddress,
       articleVersion.editorApprovedReviews[0]
@@ -698,9 +700,11 @@ test.only(
     // Reviewer2 accept --> check for new state in DB
     await acceptReviewInvitation(
       eurekaPlatformContract,
-      articleVersion.articleHash,
-      reviewer2.ethereumAddress
-    );
+      articleVersion.articleHash
+    ).send({
+      from: reviewer2.ethereumAddress,
+      gas: 80000000
+    });
     let review2 = await reviewService.getReviewById(
       reviewer2.ethereumAddress,
       articleVersion.editorApprovedReviews[1]
