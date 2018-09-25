@@ -11,8 +11,11 @@ router.use(accesController.loggedInOnly);
 router.get(
   '/',
   asyncHandler(async req => {
-    if (req.query.email) {
-      return await userService.getUsersAddressByEmailQuery(req.query.email);
+    if (req.query.email && req.query.roles) {
+      return await userService.getUsersAddressByEmailQueryandRole(
+        req.query.email,
+        req.query.roles
+      );
     }
     if (req.query.ethAddress) {
       const query = req.query.ethAddress;
