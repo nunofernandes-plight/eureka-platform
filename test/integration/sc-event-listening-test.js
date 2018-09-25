@@ -335,11 +335,13 @@ test(
     // Submit articleHash on SC
     await submitArticle(
       eurekaTokenContract,
-      author.ethereumAddress,
       eurekaPlatformContract.options.address,
       5000,
       ARTICLE1_DATA_IN_HEX
-    );
+    ).send({
+      from: author.ethereumAddress,
+      gas: 80000000
+    });
     articleVersion = await articleVersionService.getArticleVersionById(
       author.ethereumAddress,
       articleVersion._id
@@ -438,18 +440,22 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   );
   await submitArticle(
     eurekaTokenContract,
-    author.ethereumAddress,
     eurekaPlatformContract.options.address,
     5000,
     ARTICLE1_DATA_IN_HEX
-  );
+  ).send({
+    from: author.ethereumAddress,
+    gas: 80000000
+  });
   await submitArticle(
     eurekaTokenContract,
-    author.ethereumAddress,
     eurekaPlatformContract.options.address,
     5000,
     ARTICLE2_DATA_IN_HEX
-  );
+  ).send({
+    from: author.ethereumAddress,
+    gas: 80000000
+  });
 
   let articleSubmissions = await articleSubmissionService.getAllSubmissions();
   t.is(articleSubmissions.length, 2);
@@ -604,12 +610,13 @@ test.only(
     );
     await submitArticle(
       eurekaTokenContract,
-      author.ethereumAddress,
       eurekaPlatformContract.options.address,
       5000,
-      ARTICLE1_DATA_IN_HEX,
-      80000000
-    );
+      ARTICLE1_DATA_IN_HEX
+    ).send({
+      from: author.ethereumAddress,
+      gas: 80000000
+    });
 
     let counter = 0;
     while (
