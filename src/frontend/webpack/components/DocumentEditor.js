@@ -27,12 +27,11 @@ import Document from '../../../models/Document.mjs';
 import DocumentTitle from './TextEditor/DocumentTitle.js';
 import DocumentFigures from './TextEditor/DocumentFigures.js';
 import DocumentAuthors from './TextEditor/DocumentAuthors.js';
-import DocumentAuthorsSelection from './TextEditor/DocumentAuthorsSelection.js';
 import DocumentLeftPart from './TextEditor/DocumentLeftPart.js';
 import DocumentRightPart from './TextEditor/DocumentRightPart.js';
 import getArticleHex from '../../../smartcontracts/methods/get-articleHex.mjs';
 import UsersSelection from './UsersSelection.js';
-import Roles, {getAllRoles} from '../../../backend/schema/roles-enum.mjs';
+import Roles from '../../../backend/schema/roles-enum.mjs';
 
 const Parent = styled.div`
   display: flex;
