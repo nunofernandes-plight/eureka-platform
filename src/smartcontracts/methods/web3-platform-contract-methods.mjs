@@ -84,16 +84,11 @@ export const inviteReviewersForArticle = (
   contract,
   _articleHash,
   _editorApprovedReviewers,
-  _from,
-  gas
 ) => {
   return contract.methods
     .inviteReviewers(_articleHash, _editorApprovedReviewers)
-    .send({
-      from: _from,
-      gas
-    });
 };
+
 export const getGasInviteReviewersForArticle = (
   contract,
   _articleHash,

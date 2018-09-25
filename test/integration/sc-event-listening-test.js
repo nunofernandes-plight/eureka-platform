@@ -651,9 +651,11 @@ test.only(
     await inviteReviewersForArticle(
       eurekaPlatformContract,
       articleVersion.articleHash,
-      [reviewer1.ethereumAddress, reviewer2.ethereumAddress],
-      editor.ethereumAddress
-    );
+      [reviewer1.ethereumAddress, reviewer2.ethereumAddress]
+    ).send({
+      from: editor.ethereumAddress,
+      gas: 80000000
+    });
 
     articleVersion = await articleVersionService.getArticleVersionById(
       author.ethereumAddress,
