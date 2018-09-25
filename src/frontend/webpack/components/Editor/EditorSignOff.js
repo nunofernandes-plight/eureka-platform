@@ -5,7 +5,7 @@ import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Article from '../../views/Article.js';
 import {Card} from '../../views/Card.js';
 import {__THIRD} from '../../../helpers/colors.js';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import {
   assignForSubmissionProcess,
   setSanityToOk
@@ -113,6 +113,10 @@ class EditorSignOff extends React.Component {
           toggle={isTx => {
             this.setState({tx: null});
           }}
+          action={'GOT IT'}
+          callback={() => {
+            this.props.history.push('/app/editor/invite');
+          }}
           show={this.state.tx}
           title={'We got your request!'}
         >
@@ -165,4 +169,4 @@ class EditorSignOff extends React.Component {
     );
   }
 }
-export default EditorSignOff;
+export default withRouter(EditorSignOff);

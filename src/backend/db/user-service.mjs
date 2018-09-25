@@ -17,9 +17,25 @@ export default {
     return User.find({});
   },
 
-  getUsersAddressByEmailQuery: async queryParam => {
+  getAllUsersByRole: async role => {
+    return await User.find({roles: role});
+  },
+
+  getUsersAddressByEmailQueryAndRole: async (queryParam, roles) => {
     const regexQuery = '.*' + queryParam + '.*';
-    const users = await User.find({email: {$regex: regexQuery, $options: 'i'}});
+
+    let users;
+    if (roles === Roles.ALL) {
+      users = await User.find({
+        email: {$regex: regexQuery, $options: 'i'}
+      });
+    } else {
+      users = await User.find({
+        email: {$regex: regexQuery, $options: 'i'},
+        roles: {$in: roles}
+      });
+    }
+
     //const users = await User.find({'email': 'test@test.ch'});
     if (!users) errorThrower.noEntryFoundById(regexQuery);
 

@@ -111,7 +111,7 @@ class EditorArticles extends React.Component {
           action={'GOT IT'}
           callback={() => {
             this.setState({showTxModal: false});
-            this.props.history.push(`${this.props.base}/articles`);
+            this.props.history.push(`/app/editor/signoff`);
           }}
           noClose
           show={this.state.showTxModal}

@@ -11,12 +11,14 @@ router.use(accesController.loggedInOnly);
 router.get(
   '/',
   asyncHandler(async req => {
-    if (req.query.email) {
-      return await userService.getUsersAddressByEmailQuery(req.query.email);
+    if (req.query.email && req.query.roles) {
+      return await userService.getUsersAddressByEmailQueryAndRole(
+        req.query.email,
+        req.query.roles
+      );
     }
     if (req.query.ethAddress) {
       const query = req.query.ethAddress;
-
       if (!Array.isArray(query)) {
         return await userService.getUserByEthereumAddress(query);
       }
@@ -25,6 +27,19 @@ router.get(
           return await userService.getUserByEthereumAddress(address);
         })
       );
+    }
+    errorThrower.noQueryParameterProvided();
+  })
+);
+
+router.get(
+  '/roles',
+  asyncHandler(async req => {
+    if (req.query.role) {
+      if (Roles.hasOwnProperty(req.query.role)) {
+        return await userService.getAllUsersByRole(req.query.role);
+      }
+      return new Error(req.query.role + ' is not a valid role!');
     }
     errorThrower.noQueryParameterProvided();
   })

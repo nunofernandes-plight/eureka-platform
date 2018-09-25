@@ -27,10 +27,11 @@ import Document from '../../../models/Document.mjs';
 import DocumentTitle from './TextEditor/DocumentTitle.js';
 import DocumentFigures from './TextEditor/DocumentFigures.js';
 import DocumentAuthors from './TextEditor/DocumentAuthors.js';
-import DocumentAuthorsSelection from './TextEditor/DocumentAuthorsSelection.js';
 import DocumentLeftPart from './TextEditor/DocumentLeftPart.js';
 import DocumentRightPart from './TextEditor/DocumentRightPart.js';
 import getArticleHex from '../../../smartcontracts/methods/get-articleHex.mjs';
+import UsersSelection from './UsersSelection.js';
+import Roles from '../../../backend/schema/roles-enum.mjs';
 import {isGanache} from '../../../helpers/isGanache.mjs';
 
 const Parent = styled.div`
@@ -394,7 +395,7 @@ class DocumentEditor extends Component {
           show={this.state.addAuthorModal}
           title={'Search and add authors for your manuscript.'}
         >
-          <DocumentAuthorsSelection
+          {/*<DocumentAuthorsSelection
             updateDocument={({document}) => {
               this.updateDocument({document});
               this.fetchAuthorsData();
@@ -402,6 +403,37 @@ class DocumentEditor extends Component {
             selectedAccount={this.props.selectedAccount}
             authorsData={this.state.authorsData}
             document={this.state.document}
+          />*/}
+
+          <UsersSelection
+            listedTitle={'Authors'}
+            searchableRoles={Roles.ALL}
+            listedUsers={this.state.authorsData}
+            addToList={u => {
+              const authors = this.state.document.authors;
+              authors.push(u.ethereumAddress);
+              this.updateDocument({
+                document: {
+                  ...this.state.document,
+                  authors
+                }
+              });
+              this.fetchAuthorsData();
+            }}
+            deleteFromList={u => {
+              const authors = this.state.document.authors;
+              const indexToDelete = authors.indexOf(u.ethereumAddress);
+              if (indexToDelete > -1) {
+                authors.splice(indexToDelete, 1);
+              }
+              this.updateDocument({
+                document: {
+                  ...this.state.document,
+                  authors
+                }
+              });
+              this.fetchAuthorsData();
+            }}
           />
         </Modal>
       </div>
