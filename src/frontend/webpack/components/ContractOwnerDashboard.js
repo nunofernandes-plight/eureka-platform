@@ -11,6 +11,7 @@ import Modal from '../design-components/Modal.js';
 import 'react-toastify/dist/ReactToastify.css';
 import '../design-components/Notification.css';
 import {ToastContainer, toast} from 'react-toastify';
+import {isGanache} from '../../../helpers/isGanache.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -93,11 +94,25 @@ class ContractOwnerDashboard extends React.Component {
   }
 
   async assignEditor() {
+    let gasAmount;
+    // gas estimation on ganache doesn't work properly
+    if (!isGanache(this.props.web3))
+      gasAmount = await signUpEditor(
+        this.props.platformContract,
+        this.state.editorAddress
+      ).estimateGas({
+        from: this.props.selectedAccount.address
+      });
+    else gasAmount = 80000000;
+
     const receipt = await signUpEditor(
       this.props.platformContract,
-      this.state.editorAddress,
-      this.props.selectedAccount.address
+      this.state.editorAddress
     )
+      .send({
+        from: this.props.selectedAccount.address,
+        gas: gasAmount
+      })
       .on('transactionHash', tx => {
         this.setState({tx});
       })
