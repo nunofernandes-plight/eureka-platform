@@ -69,11 +69,10 @@ class EditorSignOff extends React.Component {
   }
 
   signOffArticle(articleHash) {
-    setSanityToOk(
-      this.props.platformContract,
-      articleHash,
-      this.props.selectedAccount.address
-    )
+    setSanityToOk(this.props.platformContract, articleHash)
+      .send({
+        from: this.props.selectedAccount.address
+      })
       .on('transactionHash', tx => {
         this.setState({
           tx,

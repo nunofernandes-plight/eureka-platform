@@ -5,12 +5,14 @@ import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Article from '../../views/Article.js';
 import {Card} from '../../views/Card.js';
 import {__THIRD} from '../../../helpers/colors.js';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 import {getGasEstimation} from '../../../../smartcontracts/methods/web3-utils-methods.mjs';
 import EdiorReviewersPicker from './EdiorReviewersPicker.js';
 import EmailPreview from '../Email/EmailPreview.js';
+import {isGanache} from '../../../../helpers/isGanache.mjs';
+import {inviteReviewersForArticle} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -71,10 +73,54 @@ class EditorInvite extends React.Component {
       });
   }
 
-  async chooseArticleToInviteReviewers(article) {
-    console.log('open invite modal/view here');
+  async inviteReviewers() {
+    if (!this.state.reviewersToInvite) return;
 
-    this.setState({showReviewersPickerModal: true, article});
+    this.setState({showReviewersPickerModal: false});
+    const reviewers = this.state.reviewersToInvite.map(r => {
+      return r.ethereumAddress;
+    });
+    let gasAmount;
+    console.log(this.state.article.articleHash);
+    // gas estimation on ganache doesn't work properly
+    if (!isGanache(this.props.web3))
+      gasAmount = await inviteReviewersForArticle(
+        this.props.platformContract,
+        this.state.article.articleHash,
+        reviewers
+      ).estimateGas({
+        from: this.props.selectedAccount.address
+      });
+    else gasAmount = 80000000;
+
+    inviteReviewersForArticle(
+      this.props.platformContract,
+      this.state.article.articleHash,
+      reviewers
+    )
+      .send({
+        from: this.props.selectedAccount.address,
+        gas: gasAmount
+      })
+      .on('transactionHash', tx => {
+        this.setState({
+          tx,
+          showTxModal: true
+        });
+      })
+      .on('receipt', async receipt => {
+        console.log('Invite Reviewers:  ' + receipt.status);
+        await this.getInviteReviewersArticles();
+        return receipt;
+      })
+      .catch(err => {
+        console.error(err);
+        this.setState({
+          errorMessage:
+            'Ouh. Something went wrong with the Smart Contract call: ' +
+            err.toString()
+        });
+      });
   }
 
   renderModals() {
@@ -92,9 +138,29 @@ class EditorInvite extends React.Component {
         </Modal>
 
         <Modal
+          toggle={isTx => {
+            this.setState({tx: null});
+          }}
+          action={'GOT IT'}
+          callback={() => {
+            this.props.history.push('/app/editor/reviews');
+          }}
+          show={this.state.tx}
+          title={'We got your request!'}
+        >
+          This article successfully passed the sanity check! You can find its tx
+          hash here: <TxHash txHash={this.state.tx}>Transaction Hash</TxHash>.{' '}
+          <br />
+        </Modal>
+
+        <Modal
           toggle={showReviewersPickerModal => {
             this.setState({showReviewersPickerModal});
             this.setState({article: null});
+          }}
+          action={'SEND INVITATIONS'}
+          callback={async () => {
+            await this.inviteReviewers();
           }}
           show={this.state.showReviewersPickerModal}
           title={'Invite Reviewers for the article: '}
@@ -162,7 +228,10 @@ class EditorInvite extends React.Component {
                         this.setState({articleOnHover: null});
                       }}
                       action={(_, article) => {
-                        this.chooseArticleToInviteReviewers(article);
+                        this.setState({
+                          showReviewersPickerModal: true,
+                          article
+                        });
                       }}
                     />
                   );
@@ -180,4 +249,4 @@ class EditorInvite extends React.Component {
   }
 }
 
-export default EditorInvite;
+export default withRouter(EditorInvite);

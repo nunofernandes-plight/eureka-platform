@@ -9,20 +9,32 @@ import ScTransactionType from '../schema/sc-transaction-state-enum.mjs';
 import ReviewState from '../schema/review-state-enum.mjs';
 import Review from '../schema/review.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
+import queryString from 'query-string';
+import User from '../schema/user.mjs';
+import {sendEmail} from '../email/index.mjs';
+import {getReviewersInvitationTemplate} from '../email/templates/EmailTemplates.mjs';
 
 export default {
   setup: EurekaPlatformContract => {
     /** Editor Sign up **/
-    EurekaPlatformContract.events.EditorSignUp(undefined, async (error, event) => {
-      if (error) throw error;
-      await userService.makeEditor(event.returnValues.editorAddress);
+    EurekaPlatformContract.events.EditorSignUp(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+        await userService.makeEditor(event.returnValues.editorAddress);
 
-      const additionalInfo = {
-        affectedAddress: event.returnValues.editorAddress
-      };
-      await scTransactionService.createScTransaction(event.returnValues.submissionOwner,
-        ScTransactionType.EDITOR_ASSIGNED, event.returnValues.stateTimestamp, event.transactionHash, additionalInfo);
-    });
+        const additionalInfo = {
+          affectedAddress: event.returnValues.editorAddress
+        };
+        await scTransactionService.createScTransaction(
+          event.returnValues.submissionOwner,
+          ScTransactionType.EDITOR_ASSIGNED,
+          event.returnValues.stateTimestamp,
+          event.transactionHash,
+          additionalInfo
+        );
+      }
+    );
 
     /** Submission Process Start **/
     EurekaPlatformContract.events.SubmissionProcessStart(
@@ -39,9 +51,13 @@ export default {
           articleHash: event.returnValues.articleHash,
           articleURL: event.returnValues.articleURL
         };
-        await scTransactionService.createScTransaction(event.returnValues.submissionOwner,
-          ScTransactionType.SUBMIT_ARTICLE, event.returnValues.stateTimestamp, event.transactionHash, additionalInfo);
-
+        await scTransactionService.createScTransaction(
+          event.returnValues.submissionOwner,
+          ScTransactionType.SUBMIT_ARTICLE,
+          event.returnValues.stateTimestamp,
+          event.transactionHash,
+          additionalInfo
+        );
       }
     );
 
@@ -126,8 +142,6 @@ export default {
           articleHash: articleHash
         });
         if (!articleVersion) errorThrower.noEntryFoundById(articleHash);
-
-
         for (let i = 0; i < approvedReviewers.length; i++) {
           const review = new Review({
             stateTimestamp: timestamp,
@@ -138,6 +152,24 @@ export default {
         }
         await articleVersion.save();
 
+        // TODO: send email
+        // TODO: get email addresses from a list of ethereum addresses
+
+        const reviewers = await userService.getUsersByEthereumAddress(
+          approvedReviewers
+        );
+
+        await Promise.all(
+          reviewers.map(async reviewer => {
+            const html = getReviewersInvitationTemplate(articleVersion);
+            return await sendEmail({
+              to: reviewer.email,
+              from: 'info@eurekatoken.io',
+              subject: 'Reviewer Invitation',
+              html
+            });
+          })
+        );
       }
     );
 
@@ -157,13 +189,16 @@ export default {
         let articleReviews = articleVersion.editorApprovedReviews;
         for (let i = 0; i < articleReviews.length; i++) {
           if (articleReviews[i].reviewerAddress == reviewerAddress) {
-            articleReviews[i].stateTimestamp = event.returnValues.stateTimestamp;
+            articleReviews[i].stateTimestamp =
+              event.returnValues.stateTimestamp;
             articleReviews[i].reviewState = ReviewState.INVITATION_ACCEPTED;
             await articleReviews[i].save();
             break;
           }
           if (i === articleReviews.length - 1) {
-            let error = new Error('Invitation Acception: corresponding review could not be found');
+            let error = new Error(
+              'Invitation Acception: corresponding review could not be found'
+            );
             error.status = 500;
             throw error;
           }
@@ -201,7 +236,6 @@ export default {
       }
     );
 
-
     EurekaPlatformContract.events.ReviewIsAccepted(
       undefined,
       async (error, event) => {
@@ -233,7 +267,7 @@ export default {
       async (error, event) => {
         if (error) throw error;
 
-        console.log("ARTICLE IS ACCEPTED");
+        console.log('ARTICLE IS ACCEPTED');
         await articleVersionService.changeArticleVersionState(
           event.returnValues.articleHash,
           ArticleVersionState.ACCEPTED

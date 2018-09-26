@@ -49,6 +49,7 @@ export default {
     });
     return usersData;
   },
+
   /**
    * create a new user in the DB
    * @param password
@@ -91,8 +92,7 @@ export default {
     const contractOwner = await ContractOwner.findById(1);
 
     // add default roles
-    if(roles)
-      newUser.roles.push(roles);
+    if (roles) newUser.roles.push(roles);
     if (contractOwner.address === ethereumAddress) {
       newUser.roles.push(Roles.CONTRACT_OWNER);
     }
@@ -116,6 +116,17 @@ export default {
    */
   getUserByEthereumAddress: async ethereumAddress => {
     return User.findOne({ethereumAddress: ethereumAddress});
+  },
+
+  getUsersByEthereumAddress: async ethereumAddresses => {
+    if (!Array.isArray(ethereumAddresses)) {
+      return new Error('Addresses must be an array');
+    }
+    return Promise.all(
+      ethereumAddresses.map(async address => {
+        return await User.findOne({ethereumAddress: address});
+      })
+    );
   },
 
   /**
