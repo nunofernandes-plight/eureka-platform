@@ -31,16 +31,9 @@ import {
 import {sleepSync} from '../helpers.js';
 import Roles from '../../src/backend/schema/roles-enum.mjs';
 import web3 from '../../src/helpers/web3Instance.mjs';
-
 import dotenv from 'dotenv';
-import {
-  platformContract,
-  setupWeb3Interface,
-  clearSubscribtions,
-  tokenContract
-} from '../../src/backend/web3/web3InterfaceSetup.mjs';
+import {setupWeb3Interface} from '../../src/backend/web3/web3InterfaceSetup.mjs';
 import {deploy} from '../../src/smartcontracts/deployment/deployer-and-mint.mjs';
-import contractEventListener from '../../src/backend/web3/contract-event-lister.mjs';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
@@ -148,15 +141,14 @@ test.before(async () => {
   contractOwner = accounts[0];
   await dotenv.config();
 
-  await deploy();
   await app.setupApp();
   await app.listenTo(process.env.PORT || 8080);
 });
 
 test.beforeEach(async () => {
   await cleanDB();
-  await deploy();
-
+  let [tokenContract, platformContract] = await deploy();
+  await setupWeb3Interface(platformContract, tokenContract);
   eurekaPlatformContract = platformContract;
   eurekaTokenContract = tokenContract;
 });
