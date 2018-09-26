@@ -1,4 +1,4 @@
-import {signUpEditor} from '../../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {acceptArticleVersion, signUpEditor} from '../../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {submitArticle} from '../../src/smartcontracts/methods/web3-token-contract-methods.mjs';
 import test from 'ava';
 import app from '../../src/backend/api/api.mjs';
@@ -40,9 +40,7 @@ import {deploy} from '../../src/smartcontracts/deployment/deployer-and-mint.mjs'
 import contractEventListener from '../../src/backend/web3/contract-event-lister.mjs';
 
 let eurekaTokenContract;
-let eurekaTokenContracts = [];
 let eurekaPlatformContract;
-let eurekaPlatformContracts = [];
 let accounts;
 let contractOwner;
 
@@ -91,7 +89,7 @@ const REVIEW1 = {
   reviewText: 'This is the test-text for the review or reviewer 1',
   score1: 3,
   score2: 5,
-  articleHasMajorIssues: true,
+  articleHasMajorIssues: false,
   articleHasMinorIssues: true
 };
 const REVIEW1_HASH_HEX = '0x' + REVIEW1.reviewHash;
@@ -113,7 +111,7 @@ const REVIEW2 = {
   reviewText: 'That one is the second review. So it comes from reviewer2',
   score1: 1,
   score2: 1,
-  articleHasMajorIssues: true,
+  articleHasMajorIssues: false,
   articleHasMinorIssues: true
 };
 const REVIEW2_HASH_HEX = '0x' + REVIEW2.reviewHash;
@@ -124,8 +122,8 @@ const REVIEW3 = {
   reviewText: 'Third review. So it comes from reviewer3',
   score1: 4,
   score2: 4,
-  articleHasMajorIssues: true,
-  articleHasMinorIssues: false
+  articleHasMajorIssues: false,
+  articleHasMinorIssues: true
 };
 const REVIEW3_HASH_HEX = '0x' + REVIEW3.reviewHash;
 
@@ -1006,5 +1004,15 @@ test.only(
       counter++;
     }
     t.is(review2.reviewState, ReviewState.DECLINED);
+
+
+
+    // Editor accepts articleVersion
+    await acceptArticleVersion(
+      eurekaPlatformContract,
+      articleVersion.articleHash,
+    ).send({
+      from: editor.ethereumAddress
+    });
   }
 );

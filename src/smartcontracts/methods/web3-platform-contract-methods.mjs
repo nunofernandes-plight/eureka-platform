@@ -119,7 +119,15 @@ export const declineReview = (
   _reviewerAddress
 ) => {
   return contract.methods
-    .declineReview(_articleHash, _reviewerAddress)
+    .declineReview(_articleHash, _reviewerAddress);
+};
+
+export const acceptArticleVersion = (
+  contract,
+  _articleHash,
+) => {
+  return contract.methods
+    .acceptArticleVersion(_articleHash);
 };
 
 /*
