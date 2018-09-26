@@ -88,6 +88,7 @@ class EditorRouter extends Component {
                     platformContract={this.props.platformContract}
                     base={`${this.props.base}/articles`}
                     network={this.props.network}
+                    web3={this.props.web3}
                   />
                 )}
               />
@@ -103,6 +104,7 @@ class EditorRouter extends Component {
                     platformContract={this.props.platformContract}
                     base={`${this.props.base}/signoff`}
                     network={this.props.network}
+                    web3={this.props.web3}
                   />
                 )}
               />
@@ -118,6 +120,7 @@ class EditorRouter extends Component {
                     platformContract={this.props.platformContract}
                     base={`${this.props.base}/invite`}
                     network={this.props.network}
+                    web3={this.props.web3}
                   />
                 )}
               />
