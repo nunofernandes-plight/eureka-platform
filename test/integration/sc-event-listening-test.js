@@ -744,7 +744,7 @@ test.only(
     );
     counter = 0;
     while (
-      review.reviewState !== ReviewState.INVITATION_ACCEPTED &&
+      review4.reviewState !== ReviewState.INVITATION_ACCEPTED &&
       counter < 10
     ) {
       sleepSync(5000);
