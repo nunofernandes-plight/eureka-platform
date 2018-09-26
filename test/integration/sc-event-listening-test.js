@@ -735,7 +735,10 @@ test.only(
       articleVersion.editorApprovedReviews[2]
     );
     counter = 0;
-    while (review.reviewState === ReviewState.INVITED && counter < 5) {
+    while (
+      review.reviewState !== ReviewState.INVITATION_ACCEPTED &&
+      counter < 10
+    ) {
       sleepSync(5000);
       review4 = await reviewService.getReviewById(
         reviewer4.ethereumAddress,
