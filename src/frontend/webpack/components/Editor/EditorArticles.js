@@ -6,9 +6,13 @@ import {getUnassignedSubmissions} from './EditorMethods.js';
 import Modal from '../../design-components/Modal.js';
 import Article from '../../views/Article.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
-import {assignForSubmissionProcess} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {
+  assignForSubmissionProcess,
+  signUpEditor
+} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {withRouter} from 'react-router-dom';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
+import {isGanache} from '../../../../helpers/isGanache.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -64,12 +68,23 @@ class EditorArticles extends React.Component {
       });
   }
 
-  assignArticle(scSubmissionID) {
-    assignForSubmissionProcess(
-      this.props.platformContract,
-      scSubmissionID,
-      this.props.selectedAccount.address
-    )
+  async assignArticle(scSubmissionID) {
+    let gasAmount;
+    // gas estimation on ganache doesn't work properly
+    if (!isGanache(this.props.web3))
+      gasAmount = await assignForSubmissionProcess(
+        this.props.platformContract,
+        scSubmissionID
+      ).estimateGas({
+        from: this.props.selectedAccount.address
+      });
+    else gasAmount = 80000000;
+
+    assignForSubmissionProcess(this.props.platformContract, scSubmissionID)
+      .send({
+        from: this.props.selectedAccount.address,
+        gas: gasAmount
+      })
       .on('transactionHash', tx => {
         this.setState({
           tx,

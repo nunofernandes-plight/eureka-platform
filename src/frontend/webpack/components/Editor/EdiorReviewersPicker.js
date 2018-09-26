@@ -1,14 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  getGasInviteReviewersForArticle,
-  inviteReviewersForArticle
-} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 import UsersSelection from '../UsersSelection.js';
 import {getDomain} from '../../../../helpers/getDomain.js';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
+import {
+  inviteReviewersForArticle,
+  signUpEditor
+} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {isGanache} from '../../../../helpers/isGanache.mjs';
 
 const Container = styled.div``;
 class EdiorReviewersPicker extends React.Component {
@@ -25,20 +26,26 @@ class EdiorReviewersPicker extends React.Component {
 
   /*async inviteReviewers() {
     const reviewers = ['0x9ea02Ac11419806aB9d5A512c7d79AC422cB36F7'];
+    let gasAmount;
+    // gas estimation on ganache doesn't work properly
+    if (!isGanache(this.props.web3))
+      gasAmount = await inviteReviewersForArticle(
+        this.props.platformContract,
+        article.articleHash,
+        reviewers
+      ).estimateGas({
+        from: this.props.selectedAccount.address
+      });
+    else gasAmount = 80000000;
 
-    const gas = await getGasInviteReviewersForArticle(
-      this.props.platformContract,
-      article.articleHash,
-      reviewers,
-      this.props.selectedAccount.address
-    );
     inviteReviewersForArticle(
       this.props.platformContract,
       article.articleHash,
-      reviewers,
-      this.props.selectedAccount.address,
-      gas
-    )
+      reviewers
+    ).send({
+      from: this.props.selectedAccount.address,
+      gas: gasAmount
+    })
       .on('transactionHash', tx => {
         this.setState({
           tx,
@@ -58,8 +65,7 @@ class EdiorReviewersPicker extends React.Component {
             err.toString()
         });
       });
-  }
-*/
+  }*/
 
   fetchReviewers() {
     fetch(`${getDomain()}/api/users/roles?role=${Roles.REVIEWER}`, {

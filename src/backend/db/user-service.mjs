@@ -55,7 +55,7 @@ export default {
    * @param email
    * @returns {Promise<Model>}
    */
-  createUser: async (password, email, ethereumAddress, avatar) => {
+  createUser: async (password, email, ethereumAddress, avatar, roles) => {
     let user = await userService.getUserByEthereumAddress(ethereumAddress);
     if (user) {
       let error = new Error(
@@ -91,8 +91,8 @@ export default {
     const contractOwner = await ContractOwner.findById(1);
 
     // add default roles
-    /*
-    newUser.roles.push(Roles.REVIEWER);*/
+    if(roles)
+      newUser.roles.push(roles);
     if (contractOwner.address === ethereumAddress) {
       newUser.roles.push(Roles.CONTRACT_OWNER);
     }

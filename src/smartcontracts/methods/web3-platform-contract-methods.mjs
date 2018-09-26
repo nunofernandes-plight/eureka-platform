@@ -1,130 +1,49 @@
-export const getContractOwner = contract => {
-  return contract.methods.contractOwner().call((err, res) => {
-    if (err) throw err;
-    return res;
-  });
+export const signUpEditor = (contract, editor) => {
+  return contract.methods.signUpEditor(editor);
 };
 
-export const signUpEditor = (contract, editor, _from) => {
-  return contract.methods.signUpEditor(editor).send({
-    from: _from
-  });
-};
-
-export const assignForSubmissionProcess = (contract, _submissionId, _from) => {
-  return contract.methods.assignForSubmissionProcess(_submissionId).send({
-    from: _from
-  });
+export const assignForSubmissionProcess = (contract, _submissionId) => {
+  return contract.methods.assignForSubmissionProcess(_submissionId);
 };
 
 export const removeEditorFromSubmissionProcess = (
   contract,
-  _submissionId,
-  _from
+  _submissionId
 ) => {
   return contract.methods
-    .removeEditorFromSubmissionProcess(_submissionId)
-    .send({
-      from: _from
-    })
-    .then(receipt => {
-      console.log(
-        'Removement of Editor on the Submission Process with ID ' +
-          _submissionId +
-          ' exited with the TX status: ' +
-          receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+    .removeEditorFromSubmissionProcess(_submissionId);
 };
 
 export const changeEditorFromSubmissionProcess = (
   contract,
   _submissionId,
-  _newEditor,
-  _from
+  _newEditor
 ) => {
   return contract.methods
-    .changeEditorFromSubmissionProcess(_submissionId, _newEditor)
-    .send({
-      from: _from
-    })
-    .then(receipt => {
-      console.log(
-        'Changing Editor on the Submission Process with ID ' +
-          _submissionId +
-          ' to ' +
-          _newEditor +
-          ' exited with the TX status: ' +
-          receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+    .changeEditorFromSubmissionProcess(_submissionId, _newEditor);
 };
 
-export const setSanityToOk = (contract, _articleHash, _from) => {
-  return contract.methods.sanityIsOk(_articleHash).send({
-    from: _from
-  });
+export const setSanityToOk = (contract, _articleHash) => {
+  return contract.methods.sanityIsOk(_articleHash);
 };
 
-export const setSanityIsNotOk = (contract, _articleHash, _from) => {
-  return contract.methods.sanityIsNotOk(_articleHash).send({
-    from: _from
-  });
+export const setSanityIsNotOk = (contract, _articleHash) => {
+  return contract.methods.sanityIsNotOk(_articleHash);
 };
 
 export const inviteReviewersForArticle = (
   contract,
   _articleHash,
-  _editorApprovedReviewers,
-  _from,
-  gas
+  _editorApprovedReviewers
 ) => {
-  return contract.methods
-    .inviteReviewers(_articleHash, _editorApprovedReviewers)
-    .send({
-      from: _from,
-      gas
-    });
-};
-export const getGasInviteReviewersForArticle = (
-  contract,
-  _articleHash,
-  _editorApprovedReviewers,
-  _from
-) => {
-  return contract.methods
-    .inviteReviewers(_articleHash, _editorApprovedReviewers)
-    .estimateGas({
-      from: _from
-    });
+  return contract.methods.inviteReviewers(
+    _articleHash,
+    _editorApprovedReviewers
+  );
 };
 
-export const acceptReviewInvitation = (contract, _articleHash, _from) => {
-  return contract.methods
-    .acceptReviewInvitation(_articleHash)
-    .send({
-      from: _from
-    })
-    .then(receipt => {
-      console.log(
-        'Acception for ReviewInvitation on article ' +
-          _articleHash +
-          ' is sent out with the TX status: ' +
-          receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+export const acceptReviewInvitation = (contract, _articleHash) => {
+  return contract.methods.acceptReviewInvitation(_articleHash);
 };
 
 export const addEditorApprovedReview = (
@@ -134,33 +53,16 @@ export const addEditorApprovedReview = (
   _articleHasMajorIssues,
   _articleHasMinorIssues,
   _score1,
-  _score2,
-  _from
+  _score2
 ) => {
-  return contract.methods
-    .addEditorApprovedReview(
-      _articleHash,
-      _reviewHash,
-      _articleHasMajorIssues,
-      _articleHasMinorIssues,
-      _score1,
-      _score2
-    )
-    .send({
-      from: _from
-    })
-    .then(receipt => {
-      console.log(
-        'Adding an editorial-approved review with hash ' +
-          _reviewHash +
-          ' is sent out with the TX status: ' +
-          receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+  return contract.methods.addEditorApprovedReview(
+    _articleHash,
+    _reviewHash,
+    _articleHasMajorIssues,
+    _articleHasMinorIssues,
+    _score1,
+    _score2
+  );
 };
 
 export const addCommunityReview = (
@@ -170,33 +72,16 @@ export const addCommunityReview = (
   _articleHasMajorIssues,
   _articleHasMinorIssues,
   _score1,
-  _score2,
-  _from
+  _score2
 ) => {
-  return contract.methods
-    .addCommunityReview(
-      _articleHash,
-      _reviewHash,
-      _articleHasMajorIssues,
-      _articleHasMinorIssues,
-      _score1,
-      _score2
-    )
-    .send({
-      from: _from
-    })
-    .then(receipt => {
-      console.log(
-        'Adding an community review with hash ' +
-          _reviewHash +
-          ' is sent out with the TX status: ' +
-          receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+  return contract.methods.addCommunityReview(
+    _articleHash,
+    _reviewHash,
+    _articleHasMajorIssues,
+    _articleHasMinorIssues,
+    _score1,
+    _score2
+  );
 };
 
 export const correctReview = (
@@ -206,8 +91,7 @@ export const correctReview = (
   _articleHasMajorIssues,
   _articleHasMinorIssues,
   _score1,
-  _score2,
-  _from
+  _score2
 ) => {
   return contract.methods
     .correctReview(
@@ -218,76 +102,44 @@ export const correctReview = (
       _score1,
       _score2
     )
-    .send({
-      from: _from
-    })
-    .then(receipt => {
-      console.log(
-        'Review ' +
-          _reviewHash +
-          ' is corrected with the TX status: ' +
-          receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
-    });
 };
 
 export const acceptReview = (
   contract,
   _articleHash,
-  _reviewerAddress,
-  _from
+  _reviewerAddress
 ) => {
   return contract.methods
-    .acceptReview(_articleHash, _reviewerAddress)
-    .send({
-      from: _from
-    })
-    .then(receipt => {
-      console.log(
-        'Review from  user ' +
-          _reviewerAddress +
-          ' is accepted with the TX status: ' +
-          receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+    .acceptReview(_articleHash, _reviewerAddress);
 };
 
 export const declineReview = (
   contract,
   _articleHash,
-  _reviewerAddress,
-  _from
+  _reviewerAddress
 ) => {
   return contract.methods
-    .declineReview(_articleHash, _reviewerAddress)
-    .send({
-      from: _from
-    })
-    .then(receipt => {
-      console.log(
-        'Review from  user ' +
-          _reviewerAddress +
-          ' is declined with the TX status: ' +
-          receipt.status
-      );
-      return receipt;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+    .declineReview(_articleHash, _reviewerAddress);
+};
+
+export const acceptArticleVersion = (
+  contract,
+  _articleHash,
+) => {
+  return contract.methods
+    .acceptArticleVersion(_articleHash);
 };
 
 /*
   Getters
  */
+
+export const getContractOwner = contract => {
+  return contract.methods.contractOwner().call((err, res) => {
+    if (err) throw err;
+    return res;
+  });
+};
 
 export const getSubmissionProcess = async (
   contract,
@@ -299,72 +151,31 @@ export const getSubmissionProcess = async (
     articleHashHex,
     account
   );
-
-  return contract.methods
-    .articleSubmissions(articleVersion.submissionId)
-    .call({
-      from: account
-    })
-    .then(process => {
-      return process;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+  return contract.methods.articleSubmissions(articleVersion.submissionId).call({
+    from: account
+  });
 };
 
 export const getArticleVersion = (contract, articleHashHex, account) => {
-  return contract.methods
-    .articleVersions(articleHashHex)
-    .call({
-      from: account
-    })
-    .then(articleVersion => {
-      return articleVersion;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+  return contract.methods.articleVersions(articleHashHex).call({
+    from: account
+  });
 };
 
 export const getUrl = (web3Provider, contract, articleHashHex, account) => {
-  return contract.methods
-    .articleVersions(articleHashHex)
-    .call({
-      from: account
-    })
-    .then(receipt => {
-      return web3Provider.utils.hexToUtf8(receipt.articleUrl);
-    })
-    .catch(err => {
-      console.error(err);
-    });
+  return contract.methods.articleVersions(articleHashHex).call({
+    from: account
+  });
 };
 
 export const getAuthors = (contract, articleHashHex, account) => {
-  return contract.methods
-    .getAuthors(articleHashHex)
-    .call({
-      from: account
-    })
-    .then(authors => {
-      return authors;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+  return contract.methods.getAuthors(articleHashHex).call({
+    from: account
+  });
 };
 
 export const getLinkedArticles = (contract, articleHashHex, account) => {
-  return contract.methods
-    .getLinkedArticles(articleHashHex)
-    .call({
-      from: account
-    })
-    .then(authors => {
-      return authors;
-    })
-    .catch(err => {
-      console.error(err);
-    });
+  return contract.methods.getLinkedArticles(articleHashHex).call({
+    from: account
+  });
 };

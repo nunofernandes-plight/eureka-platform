@@ -512,28 +512,29 @@ contract EurekaPlatform {
     event ArticleVersionIsAccepted(bytes32 articleHash, uint256 stateTimestamp, address editor);
     function acceptArticleVersion(bytes32 _articleHash) public {
 
-        require(isEditor[msg.sender], "msg.sender needs to be an editor.");
+      require(isEditor[msg.sender], "msg.sender needs to be an editor.");
+
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be EDITOR_CHECKED.");
 
-        require(countAcceptedReviews(article.editorApprovedReviews) >= minAmountOfEditorApprovedReviews,
-            "the article doesn't have enough accepted editor approved reviews to get accepted.");
-        require(countAcceptedReviews(article.communityReviews) >= minAmountOfCommunityReviews,
-            "the article doesn't have enough community reviews to get accepted.");
-
-        require(countAcceptedReviewInvitations(article.editorApprovedReviews) == 0,
-            "there are still people working on reviews.");
-
-        require(countReviewsWithMajorIssues(article.editorApprovedReviews) == 0,
-            "the article needs to be corrected.");
-        require(countReviewsWithMajorIssues(article.communityReviews) == 0,
-            "the article needs to be corrected.");
+//        require(countAcceptedReviews(article.editorApprovedReviews) >= minAmountOfEditorApprovedReviews,
+//            "the article doesn't have enough accepted editor approved reviews to get accepted.");
+//        require(countAcceptedReviews(article.communityReviews) >= minAmountOfCommunityReviews,
+//            "the article doesn't have enough community reviews to get accepted.");
+//
+//        require(countAcceptedReviewInvitations(article.editorApprovedReviews) == 0,
+//            "there are still people working on reviews.");
+//
+//        require(countReviewsWithMajorIssues(article.editorApprovedReviews) == 0,
+//            "the article needs to be corrected.");
+//        require(countReviewsWithMajorIssues(article.communityReviews) == 0,
+//            "the article needs to be corrected.");
 
         article.versionState = ArticleVersionState.ACCEPTED;
         article.stateTimestamp = block.timestamp;
 
-        closeSubmissionProcess(article.submissionId);
+        //closeSubmissionProcess(article.submissionId);
         emit ArticleVersionIsAccepted(_articleHash, block.timestamp, msg.sender);
     }
 

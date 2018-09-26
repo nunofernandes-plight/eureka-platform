@@ -18,6 +18,7 @@ export async function cleanDB() {
   await Review.remove({});
   await ArticleVersion.remove({});
   await ScTransactions.remove({});
+  await ScTransactions.remove({});
 }
 
 /**
@@ -32,6 +33,8 @@ export function sleepSync(milliseconds) {
     }
   }
 }
+
+
 
 test('foo', t => {
   t.pass();

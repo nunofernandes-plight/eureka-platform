@@ -10,16 +10,10 @@ import {isProduction} from '../../helpers/isProduction.mjs';
 import router from '../routes/index.mjs';
 import contractEventListener from '../web3/contract-event-lister.mjs';
 import uploadRouter from '../routes/file-upload.routes.mjs';
-import {getContractOwner} from '../../smartcontracts/methods/web3-platform-contract-methods.mjs';
-import ContractOwner from '../schema/contract-owner.mjs';
-import ganachePlatformABI from '../../smartcontracts/constants/GanachePlatformContractABI.json';
-import ganacheTokenABI from '../../smartcontracts/constants/GanacheTokenContractABI.json';
-import web3 from '../../helpers/web3Instance.mjs';
 import {
-  PLATFORM_KOVAN_ADDRESS,
-  TOKEN_KOVAN_ADDRESS
-} from '../../smartcontracts/constants/KovanContractAddresses.mjs';
-import {setupWeb3Interface} from '../web3/web3InterfaceSetup.mjs';
+  platformContract,
+  setupWeb3Interface
+} from '../web3/web3InterfaceSetup.mjs';
 import {configEmailProvider, sendEmail} from '../email/index.mjs';
 
 if (!isProduction) {
@@ -65,6 +59,7 @@ export default {
 
     /** Web3 Interface: SC Events Listener, Transaction Listener**/
     await setupWeb3Interface();
+    await contractEventListener.setup(platformContract);
 
     /**
      * Config and set Email Provider SendGrid (API key as env variable)
@@ -95,7 +90,11 @@ export default {
     server = app.listen(port || 8080);
   },
 
-  close: () => {
-    server.close();
+  close: async () => {
+    return new Promise(resolve => {
+      server.close(() => {
+        resolve();
+      });
+    });
   }
 };
