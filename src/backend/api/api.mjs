@@ -58,8 +58,8 @@ export default {
     app.use(passport.session());
 
     /** Web3 Interface: SC Events Listener, Transaction Listener**/
-    await setupWeb3Interface();
-    await contractEventListener.setup(platformContract);
+    if (process.env.NODE_ENV !== 'test')
+      await setupWeb3Interface();
 
     /**
      * Config and set Email Provider SendGrid (API key as env variable)
