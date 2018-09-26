@@ -1,8 +1,8 @@
 import sgMail from '@sendgrid/mail';
 import heml from 'heml';
-import writeFileSync from 'fs';
+import {writeFileSync, readFileSync} from 'fs';
 
-export const createEmail = ({content, link}) => {
+export const createEmail = ({content}) => {
   const template = `
 <heml>
   <head>
@@ -75,7 +75,13 @@ export const createEmail = ({content, link}) => {
 };
 
 export const sendEmail = async ({to, from, subject, content, link}) => {
-  const {html} = await this.createEmail({content, link});
+  console.log(to, from, subject);
+  //const {html} = createEmail({content});
+
+  const html = readFileSync(
+    'src/backend/email/templates/reviewers_intivation.html',
+    'utf8'
+  );
   const msg = {
     to,
     from,

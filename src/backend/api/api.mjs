@@ -65,13 +65,13 @@ export default {
      * Config and set Email Provider SendGrid (API key as env variable)
      */
     configEmailProvider();
-    await sendEmail({
+/*    await sendEmail({
       to: 'lucas@eurekatoken.io',
       from: 'info@eurekatoken.io',
       subject: 'Subject test',
       content: 'this is my content',
       link: 'link'
-    });
+    });*/
 
     //set global variable isAuthenticated -> call ir everywhere dynamically
     app.use(function(req, res, next) {
