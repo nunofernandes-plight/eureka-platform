@@ -19,7 +19,7 @@ import {writeContractOwnerInDB} from '../db/contract-owner-service.mjs';
 export let platformContract;
 export let tokenContract;
 
-export const setupWeb3Interface = async () => {
+export const setupWeb3Interface = async (platformContract, tokenContract) => {
 
   let platformContractAddress;
   let platformContractABI;
@@ -48,10 +48,12 @@ export const setupWeb3Interface = async () => {
     process.exit(1);
   }
 
-  platformContract = new web3.eth.Contract(platformContractABI, platformContractAddress);
-  tokenContract = new web3.eth.Contract(tokenContractABI, tokenContractAddress);
+  if (process.env.NODE_ENV !== 'test') {
+    platformContract = new web3.eth.Contract(platformContractABI, platformContractAddress);
+    tokenContract = new web3.eth.Contract(tokenContractABI, tokenContractAddress);
+  }
 
-
+  await contractEventListener.setup(platformContract);
   await writeContractOwnerInDB(platformContract);
 
 
@@ -75,6 +77,7 @@ export const setupWeb3Interface = async () => {
       }
     });
 
+  return [platformContract, tokenContract];
 };
 
 export async function clearSubscribtions() {

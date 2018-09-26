@@ -57,6 +57,7 @@ export const deploy = async () => {
       );
     })
   );
+  return [eurekaTokenContract, eurekaPlatformContract];
 };
 
 const mintEKATokens = async (eurekaTokenContract) => {
