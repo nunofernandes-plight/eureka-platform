@@ -261,7 +261,7 @@ test(
     //   articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id);
     //   let counter = 0;
     //   while (
-    //     articleVersion.articleVersionState === ArticleVersionState.FINISHED_DRAFT &&
+    //     articleVersion.articleVersionState !== ArticleVersionState.SUBMITTED &&
     //     counter < 10) {
     //     sleepSync(5000);
     //     articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id);
@@ -499,7 +499,8 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   // Check for SC status change
   counter = 0;
   while (
-    articleVersion1.articleVersionState === ArticleVersionState.SUBMITTED &&
+    articleVersion1.articleVersionState !==
+      ArticleVersionState.EDITOR_CHECKED &&
     counter < 10
   ) {
     sleepSync(5000);
@@ -528,7 +529,8 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   // Check for SC status change
   counter = 0;
   while (
-    articleVersion2.articleVersionState === ArticleVersionState.SUBMITTED &&
+    articleVersion2.articleVersionState !==
+      ArticleVersionState.DECLINED_SANITY_NOTOK &&
     counter < 10
   ) {
     sleepSync(5000);
@@ -689,7 +691,10 @@ test.only(
       articleVersion.editorApprovedReviews[0]
     );
     counter = 0;
-    while (review.reviewState === ReviewState.INVITED && counter < 10) {
+    while (
+      review.reviewState !== ReviewState.INVITATION_ACCEPTED &&
+      counter < 10
+    ) {
       sleepSync(5000);
       review = await reviewService.getReviewById(
         reviewer1.ethereumAddress,
@@ -712,7 +717,10 @@ test.only(
       articleVersion.editorApprovedReviews[1]
     );
     counter = 0;
-    while (review2.reviewState === ReviewState.INVITED && counter < 10) {
+    while (
+      review2.reviewState !== ReviewState.INVITATION_ACCEPTED &&
+      counter < 10
+    ) {
       sleepSync(5000);
       review2 = await reviewService.getReviewById(
         reviewer2.ethereumAddress,
@@ -786,7 +794,7 @@ test.only(
       review._id
     );
     counter = 0;
-    while (review.reviewState === ReviewState.HANDED_IN_DB && counter < 10) {
+    while (review.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
       sleepSync(5000);
       review = await reviewService.getReviewById(
         reviewer1.ethereumAddress,
@@ -834,7 +842,7 @@ test.only(
       review2._id
     );
     counter = 0;
-    while (review2.reviewState === ReviewState.HANDED_IN_DB && counter < 10) {
+    while (review2.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
       sleepSync(5000);
       review2 = await reviewService.getReviewById(
         reviewer2.ethereumAddress,
@@ -886,7 +894,7 @@ test.only(
     );
 
     counter = 0;
-    while (review3.reviewState === ReviewState.HANDED_IN_DB && counter < 10) {
+    while (review3.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
       sleepSync(5000);
       review3 = await reviewService.getReviewById(
         reviewer3.ethereumAddress,
@@ -928,7 +936,7 @@ test.only(
       review4._id
     );
     counter = 0;
-    while (review4.reviewState === ReviewState.HANDED_IN_DB && counter < 10) {
+    while (review4.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
       sleepSync(5000);
       review4 = await reviewService.getReviewById(
         reviewer4.ethereumAddress,
@@ -951,7 +959,7 @@ test.only(
       review._id
     );
     counter = 0;
-    while (review.reviewState === ReviewState.HANDED_IN_SC && counter < 10) {
+    while (review.reviewState !== ReviewState.ACCEPTED && counter < 10) {
       sleepSync(5000);
       review = await reviewService.getReviewById(
         reviewer1.ethereumAddress,
@@ -974,7 +982,7 @@ test.only(
       review4._id
     );
     counter = 0;
-    while (review4.reviewState === ReviewState.HANDED_IN_SC && counter < 10) {
+    while (review4.reviewState !== ReviewState.ACCEPTED && counter < 10) {
       sleepSync(5000);
       review4 = await reviewService.getReviewById(
         reviewer4.ethereumAddress,
@@ -997,7 +1005,7 @@ test.only(
       review2._id
     );
     counter = 0;
-    while (review2.reviewState === ReviewState.HANDED_IN_SC && counter < 10) {
+    while (review2.reviewState !== ReviewState.DECLINED && counter < 10) {
       sleepSync(5000);
       review2 = await reviewService.getReviewById(
         reviewer2.ethereumAddress,
