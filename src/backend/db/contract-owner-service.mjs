@@ -13,5 +13,5 @@ export const writeContractOwnerInDB = async contract => {
   } else {
     contractOwner.address = contractOwnerAddress;
   }
-  return contractOwner.save();
+  return await contractOwner.save();
 };
