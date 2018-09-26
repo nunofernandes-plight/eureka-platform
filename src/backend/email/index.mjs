@@ -10,7 +10,7 @@ export const sendEmail = async ({to, from, subject, html}) => {
     subject,
     html
   };
-  console.log('Email has been sent to ' + to);
+  console.log('Email has been sent to ' + to + ' from : ' + from);
   return sgMail.send(msg);
 };
 

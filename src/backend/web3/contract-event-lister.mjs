@@ -9,6 +9,10 @@ import ScTransactionType from '../schema/sc-transaction-state-enum.mjs';
 import ReviewState from '../schema/review-state-enum.mjs';
 import Review from '../schema/review.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
+import queryString from 'query-string';
+import User from '../schema/user.mjs';
+import {sendEmail} from '../email/index.mjs';
+import {getReviewersInvitationTemplate} from '../email/templates/EmailTemplates.mjs';
 
 export default {
   setup: EurekaPlatformContract => {
@@ -151,8 +155,21 @@ export default {
         // TODO: send email
         // TODO: get email addresses from a list of ethereum addresses
 
+        const reviewers = await userService.getUsersByEthereumAddress(
+          approvedReviewers
+        );
 
-
+        await Promise.all(
+          reviewers.map(async reviewer => {
+            const html = getReviewersInvitationTemplate(articleVersion);
+            return await sendEmail({
+              to: reviewer.email,
+              from: 'info@eurekatoken.io',
+              subject: 'Reviewer Invitation',
+              html
+            });
+          })
+        );
       }
     );
 

@@ -5,7 +5,7 @@ import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Article from '../../views/Article.js';
 import {Card} from '../../views/Card.js';
 import {__THIRD} from '../../../helpers/colors.js';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 import {getGasEstimation} from '../../../../smartcontracts/methods/web3-utils-methods.mjs';
@@ -249,4 +249,4 @@ class EditorInvite extends React.Component {
   }
 }
 
-export default EditorInvite;
+export default withRouter(EditorInvite);
