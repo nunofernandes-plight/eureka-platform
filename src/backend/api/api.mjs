@@ -20,6 +20,7 @@ import {
   TOKEN_KOVAN_ADDRESS
 } from '../../smartcontracts/constants/KovanContractAddresses.mjs';
 import {setupWeb3Interface} from '../web3/web3InterfaceSetup.mjs';
+import {configEmailProvider, sendEmail} from '../email/index.mjs';
 
 if (!isProduction) {
   dotenv.config();
@@ -65,12 +66,23 @@ export default {
     /** Web3 Interface: SC Events Listener, Transaction Listener**/
     await setupWeb3Interface();
 
+    /**
+     * Config and set Email Provider SendGrid (API key as env variable)
+     */
+    configEmailProvider();
+    await sendEmail({
+      to: 'lucas@eurekatoken.io',
+      from: 'info@eurekatoken.io',
+      subject: 'Subject test',
+      content: 'this is my content',
+      link: 'link'
+    });
+
     //set global variable isAuthenticated -> call ir everywhere dynamically
     app.use(function(req, res, next) {
       res.locals.isAuthenticated = req.isAuthenticated();
       next();
     });
-
 
     //Parses the text as JSON and exposes the resulting object on req.body.
     app.use(bodyParser.json());
