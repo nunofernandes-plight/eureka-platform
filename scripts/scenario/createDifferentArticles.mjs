@@ -2,6 +2,7 @@ import articleSubmissionService from '../../src/backend/db/article-submission-se
 import articleVersionService from '../../src/backend/db/article-version-service.mjs';
 import getAccounts from '../../src/smartcontracts/methods/get-accounts.mjs';
 import web3 from '../../src/helpers/web3Instance.mjs';
+import ArticleVersion from '../../src/backend/schema/article-version.mjs';
 
 const getFigures = () => {
   return [
@@ -185,29 +186,60 @@ const getTitle = () => {
 export const createDifferentDrafts = async () => {
   const accounts = await getAccounts(web3);
 
-  await Promise.all(
+  return Promise.all(
     accounts.map(async account => {
-      getFigures().map(async (figure, i) => {
-        const newArticle = await articleSubmissionService.createSubmission(
-          account
-        );
-        const article = await articleVersionService.getArticleVersionById(
-          account,
-          newArticle.articleVersionId
-        );
+      return await Promise.all(
+        getFigures().map(async (figure, i) => {
+          const newArticle = await articleSubmissionService.createSubmission(
+            account
+          );
+          const article = await articleVersionService.getArticleVersionById(
+            account,
+            newArticle.articleVersionId
+          );
 
-        // set the title of the article
-        article.document.title.blocks[0].text = getTitle()[i];
+          // set the title of the article
+          article.document.title.blocks[0].text = getTitle()[i];
 
-        // set figures
-        article.document.figure.push(figure);
-        await articleVersionService.updateDraftById(
-          account,
-          article._id,
-          article.document
-        );
-      });
-      console.log('Created articles for account', account);
+          // set figures
+          article.document.figure.push(figure);
+          return articleVersionService.updateDraftById(
+            account,
+            article._id,
+            article.document
+          );
+        })
+      );
     })
   );
+};
+
+export const submitDifferentArticles = async (
+  tokenContract,
+  platformContract
+) => {
+  //const accounts = await getAccounts(web3);
+  let drafts = await articleVersionService
+    .getDraftsOfUser('0x269cbAfc4253C7516CE2D576d139808F3EBE40FC')
+    .then(v => {
+      return v;
+    })
+    .catch(err => console.err(err));
+  console.log(drafts.length);
+
+  /*submitArticle(tokenContract, platformContract.options.address, 5000)
+    .send({
+      from: this.props.selectedAccount.address,
+      gas: 8000000
+    })
+    .on('transactionHash', tx => {
+      console.log(tx);
+    })
+    .on('receipt', receipt => {
+      console.log(
+        'The article submission exited with the TX status: ' + receipt.status
+      );
+      return receipt;
+    })
+    .catch(err => console.log(err));*/
 };
