@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {Card} from '../../views/Card.js';
 import {Table} from '../../design-components/Table/Table.js';
 import {getDomain} from '../../../../helpers/getDomain.js';
-import {getRandomAvatar} from '../../../helpers/getRandomAvatar.js';
+import {getRandomAvatar} from '../../../helpers/getRandomAvatar.mjs';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
 
 const Container = styled.div`
