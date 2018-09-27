@@ -188,7 +188,8 @@ export const createDifferentDrafts = async () => {
 
   return Promise.all(
     accounts.map(async account => {
-      return await Promise.all(
+      console.log('Creating drafts for account ', account);
+      const drafts = await Promise.all(
         getFigures().map(async (figure, i) => {
           const newArticle = await articleSubmissionService.createSubmission(
             account
@@ -210,6 +211,7 @@ export const createDifferentDrafts = async () => {
           );
         })
       );
+      console.log('Created ' + drafts.length + ' drafts for account ', account);
     })
   );
 };
