@@ -399,7 +399,6 @@ class DocumentEditor extends Component {
           <UsersSelection
             listedTitle={'Authors'}
             searchableRoles={Roles.ALL}
-            searchableRoles={Roles.ALL}
             listedUsers={this.state.authorsData}
             cannotBeDeleted={this.props.selectedAccount.address}
             addToList={u => {
