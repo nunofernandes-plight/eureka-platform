@@ -5,6 +5,7 @@ import ArticleSubmission from '../../src/backend/schema/article-submission.mjs';
 import Review from '../../src/backend/schema/review.mjs';
 import ArticleVersion from '../../src/backend/schema/article-version.mjs';
 import ScTransactions from '../../src/backend/schema/sc-transaction.mjs';
+import {createDifferentDrafts} from './createDifferentArticles.mjs';
 
 const cleanCollections = async () => {
   await User.remove({});
@@ -13,11 +14,13 @@ const cleanCollections = async () => {
   await ArticleVersion.remove({});
   await ScTransactions.remove({});
   await ScTransactions.remove({});
+  console.log('Collections have been cleaned');
 };
 const start = async () => {
   await cleanCollections();
   await app.setupApp();
   await createDifferentUsers();
+  await createDifferentDrafts();
 };
 
 start();

@@ -27,7 +27,7 @@ const getFakePsw = () => {
 export const createDifferentUsers = async () => {
   const accounts = await getAccounts(web3);
 
-  const users = await Promise.all(
+  await Promise.all(
     getEmails().map(async (email, i) => {
       const user = await userService.getUserByEthereumAddress(accounts[i]);
       if (!user) {
@@ -37,8 +37,17 @@ export const createDifferentUsers = async () => {
           accounts[i],
           'img/icons/avatars/' + getRandomAvatar()
         );
-        newUser.roles.push(Roles.REVIEWER);
-        newUser.save();
+        if (i > 5) {
+          newUser.roles.push(Roles.REVIEWER);
+          await newUser.save();
+        }
+
+        console.log(
+          'New user created with email : ' +
+            newUser.email +
+            ', roles: ' +
+            newUser.roles
+        );
       }
       return user;
     })

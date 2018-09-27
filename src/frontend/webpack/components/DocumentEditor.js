@@ -221,6 +221,7 @@ class DocumentEditor extends Component {
 
   computeInputData() {
     // TODO: check which fields are missing and display the errors
+    // TODO: canociate JSON FILE for avoiding fields switching
     const hashedDocument = sha256(JSON.stringify(this.state.document));
     this.setState({
       showSubmitModal: true,
@@ -397,6 +398,7 @@ class DocumentEditor extends Component {
         >
           <UsersSelection
             listedTitle={'Authors'}
+            searchableRoles={Roles.ALL}
             searchableRoles={Roles.ALL}
             listedUsers={this.state.authorsData}
             cannotBeDeleted={this.props.selectedAccount.address}
