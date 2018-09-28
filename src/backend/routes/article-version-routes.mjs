@@ -36,14 +36,25 @@ router.get('/assigned/inviteReviewers',
 );
 
 router.get('/assigned/checkReviews',
+/*
+  articles open for a reviewer
+  */
+// TODO clear editor roles only and use: router.use(accesController.rolesOnly([Roles.REVIEWER]));
+router.get(
+  '/reviewable/invited',
   asyncHandler(async req => {
-    return await articleVersionService.getArticlesAssignedTo(req.session.passport.user.ethereumAddress, ARTICLE_VERSION_STATE.REVIEWERS_INVITED);
+    return await articleVersionService.getArticlesInvitedForReviewing(
+      req.session.passport.user.ethereumAddress
+    );
   })
 );
 
-router.get('/assigned/finalize',
+router.get(
+  '/reviewable/community',
   asyncHandler(async req => {
-    return await articleVersionService.getArticlesToFinalize(req.session.passport.user.ethereumAddress, ARTICLE_VERSION_STATE.REVIEWERS_INVITED);
+    return await articleVersionService.getArticlesOpenForCommunityReviews(
+      req.session.passport.user.ethereumAddress
+    );
   })
 );
 
