@@ -18,6 +18,10 @@ export const reviewSchema = mongoose.Schema(
       type: String,
       required: true
     },
+    articleVersion: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ArticleVersion'
+    },
     reviewerAddress: {
       type: String,
     },
@@ -42,8 +46,8 @@ export const reviewSchema = mongoose.Schema(
       default: false
     }
   },
-  {collection: 'editorApprovedReviews'}
+  {collection: 'review'}
 );
 
-const Review = mongoose.model('Review', reviewSchema, 'editorApprovedReviews');
+const Review = mongoose.model('Reviews', reviewSchema, 'Reviews');
 export default Review;
