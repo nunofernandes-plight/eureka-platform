@@ -3,14 +3,15 @@ import {asyncHandler} from '../api/requestHandler.mjs';
 import reviewService from '../db/review-service.mjs';
 import accesController from '../controller/acess-controller.mjs';
 const router = express.Router();
+
 router.use(accesController.loggedInOnly);
 
-// router.get(
-//   '/',
-//   asyncHandler(async () => {
-//     return reviewService.getAllReviews();
-//   })
-// );
+router.get(
+  '/',
+  asyncHandler(async () => {
+    return reviewService.getAllReviews();
+  })
+);
 //
 // router.post(
 //   '/',
