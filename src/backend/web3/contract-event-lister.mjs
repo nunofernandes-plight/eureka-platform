@@ -147,7 +147,7 @@ export default {
           const review = new Review({
             stateTimestamp: timestamp,
             reviewerAddress: approvedReviewers[i],
-            articleVersionId: articleVersion._id,
+            articleVersion: articleVersion._id,
             reviewType: ReviewType.EDITOR_APPROVED_REVIEW
           });
           await review.save();
