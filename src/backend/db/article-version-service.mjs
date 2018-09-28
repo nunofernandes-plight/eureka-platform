@@ -149,12 +149,11 @@ export default {
     const articleVersionIdObjects = await ReviewService.getReviewInvitations(ethereumAddress)
       .select('articleVersion -_id');
     const articles = await getArticleVersionsByIdObjects(articleVersionIdObjects)
-      .populate({
-        path: 'editorApprovedReviews'
-      })
-      .populate({
-        path: 'communityReviews'
-      });
+      .populate([
+        {path: 'articleSubmission'},
+        {path: 'editorApprovedReviews'},
+        {path: 'communityReviews'}
+      ]);
     return getArticlesResponse(articles);
   },
 
