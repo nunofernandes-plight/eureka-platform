@@ -118,6 +118,26 @@ export default {
     return getArticlesResponse(articles);
   },
 
+  getArticlesOpenForCommunityReviews: async (ethereumAddress) => {
+    // gettin reviews first to check which articles where already reviewed
+    const articleVersionIdObjects = await ReviewService.getMyReviews(ethereumAddress)
+      .select('articleVersion -_id');
+    const ids = getArticleVersionIds(articleVersionIdObjects);
+
+    const articles = await ArticleVersion.find({
+      // hide articles already reviewed
+      _id: {$nin: ids},
+      articleVersionState: {$in: ['EDITOR_CHECKED', 'REVIEWERS_INVITED']},
+      ownerAddress: {$ne: ethereumAddress},
+      'document.authors': {$ne: ethereumAddress}
+    })
+      .populate([
+        {path: 'articleSubmission'},
+        {path: 'editorApprovedReviews'},
+        {path: 'communityReviews'}
+      ]);
+    return getArticlesResponse(articles);
+  },
 
   /* tipp not used anymore
   * Query for a document nested in an array
