@@ -46,8 +46,8 @@ export const reviewSchema = mongoose.Schema(
       default: false
     }
   },
-  {collection: 'review'}
+  {collection: 'reviews'}
 );
 
-const Review = mongoose.model('Reviews', reviewSchema, 'Reviews');
+const Review = mongoose.model('Review', reviewSchema, 'reviews');
 export default Review;

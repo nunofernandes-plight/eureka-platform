@@ -11,8 +11,8 @@ export const contractOwnerSchema = mongoose.Schema(
       required: true
     }
   },
-  {collection: 'contractOwner'}
+  {collection: 'contractOwners'}
 );
 
-const ContractOwner = mongoose.model('ContractOwners', contractOwnerSchema, 'contractOwners');
+const ContractOwner = mongoose.model('ContractOwner', contractOwnerSchema, 'contractOwners');
 export default ContractOwner;

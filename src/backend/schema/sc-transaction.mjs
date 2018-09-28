@@ -26,7 +26,7 @@ export const scTransactionSchema = mongoose.Schema(
     additionalInfo: {}
   },
   {
-    collection: 'scTransaction',
+    collection: 'scTransactions',
     timestamps: true
   }
 );
