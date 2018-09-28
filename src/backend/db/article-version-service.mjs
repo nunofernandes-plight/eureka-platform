@@ -75,10 +75,14 @@ const areReviewsOK = (minAmount, reviews) => {
 };
 
 const getArticleVersionsByIdObjects = (idObjects) => {
-  let ids = idObjects.map((i) => {
+  let ids = getArticleVersionIds(idObjects);
+  return getArticleVersionsByIds(ids);
+};
+
+const getArticleVersionIds = (idObjects) => {
+  return idObjects.map((i) => {
     return i.articleVersion;
   });
-  return getArticleVersionsByIds(ids);
 };
 
 const getArticleVersionsByIds = (ids) => {
@@ -114,7 +118,6 @@ export default {
         path: 'communityReviews '
       });
     const finalizableArticles = getFinalizableArticles(articles);
-    console.log(finalizableArticles);
     return getArticlesResponse(articles);
   },
 
