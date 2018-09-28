@@ -6,6 +6,7 @@ import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import REVIEW_STATE from '../schema/review-state-enum.mjs';
+import ReviewService from './review-service.mjs';
 
 export const getRelevantArticleData = (submission, articleVersion) => {
   let resArticle = {};
@@ -24,6 +25,9 @@ export const getRelevantArticleData = (submission, articleVersion) => {
   resArticle.abstract = articleVersion.document.abstract;
   resArticle.figure = articleVersion.document.figure;
   resArticle.keywords = articleVersion.document.keywords;
+
+  resArticle.editorApprovedReviews = articleVersion.editorApprovedReviews;
+  resArticle.communityReviews = articleVersion.communityReviews;
 
   return resArticle;
 };
@@ -61,7 +65,6 @@ const areReviewsOK = (minAmount, reviews) => {
   let count = 0;
   reviews.forEach(review => {
     if (review.reviewState !== REVIEW_STATE.ACCEPTED)
-    // if (review.reviewState !== REVIEW_STATE.INVITED)   for testing purposes
       return false;
     if (review.hasMajorIssues)
       return false;
@@ -69,6 +72,17 @@ const areReviewsOK = (minAmount, reviews) => {
     count++;
   });
   return count >= minAmount;
+};
+
+const getArticleVersionsByIdObjects = (idObjects) => {
+  let ids = idObjects.map((i) => {
+    return i.articleVersion;
+  });
+  return getArticleVersionsByIds(ids);
+};
+
+const getArticleVersionsByIds = (ids) => {
+  return ArticleVersion.find({_id: {$in: ids}});
 };
 
 export default {
@@ -101,6 +115,26 @@ export default {
       });
     const finalizableArticles = getFinalizableArticles(articles);
     console.log(finalizableArticles);
+    return getArticlesResponse(articles);
+  },
+
+
+  /* tipp not used anymore
+  * Query for a document nested in an array
+  *   const cursor = db.collection('inventory').find({
+        'instock.qty': { $lte: 20 }
+      });
+  * */
+  getArticlesInvitedForReviewing: async (ethereumAddress) => {
+    const articleVersionIdObjects = await ReviewService.getReviewInvitations(ethereumAddress)
+      .select('articleVersion -_id');
+    const articles = await getArticleVersionsByIdObjects(articleVersionIdObjects)
+      .populate({
+        path: 'editorApprovedReviews'
+      })
+      .populate({
+        path: 'communityReviews'
+      });
     return getArticlesResponse(articles);
   },
 
