@@ -1014,5 +1014,7 @@ test.only(
     ).send({
       from: editor.ethereumAddress
     });
+    articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
+    t.is(articleVersion.articleVersionState, ArticleVersionState.ACCEPTED);
   }
 );

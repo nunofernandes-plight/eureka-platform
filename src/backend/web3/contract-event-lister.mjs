@@ -270,7 +270,6 @@ export default {
       async (error, event) => {
         if (error) throw error;
 
-        console.log('ARTICLE IS ACCEPTED');
         await articleVersionService.changeArticleVersionState(
           event.returnValues.articleHash,
           ArticleVersionState.ACCEPTED
