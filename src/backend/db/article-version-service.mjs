@@ -8,12 +8,12 @@ import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import REVIEW_STATE from '../schema/review-state-enum.mjs';
 import ReviewService from './review-service.mjs';
 
-export const getRelevantArticleData = (submission, articleVersion) => {
+export const getRelevantArticleData = (articleVersion) => {
   let resArticle = {};
 
-  resArticle.scSubmissionID = submission.scSubmissionID;
-  resArticle.ownerAddress = submission.ownerAddress;
-  resArticle.articleSubmissionState = submission.articleSubmissionState;
+  resArticle.scSubmissionID = articleVersion.articleSubmission.scSubmissionID;
+  resArticle.ownerAddress = articleVersion.articleSubmission.ownerAddress;
+  resArticle.articleSubmissionState = articleVersion.articleSubmission.articleSubmissionState;
 
   resArticle._id = articleVersion._id;
   resArticle.articleHash = articleVersion.articleHash;
@@ -35,9 +35,9 @@ export const getRelevantArticleData = (submission, articleVersion) => {
 const getArticlesResponse = articles => {
   let resArticles = [];
   articles.map(article => {
-    // populate() from mongoose sets articleSubmission to null if the editor address does not match the user
-    if (article.articleSubmission)
-      resArticles.push(getRelevantArticleData(article.articleSubmission, article));
+      resArticles.push(
+        getRelevantArticleData(article)
+      );
   });
   return resArticles;
 };
