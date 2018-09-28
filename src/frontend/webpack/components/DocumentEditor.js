@@ -222,6 +222,7 @@ class DocumentEditor extends Component {
   computeInputData() {
     // TODO: check which fields are missing and display the errors
     // TODO: canociate JSON FILE for avoiding fields switching
+    // TODO migrated hash function to getHexAndHash.mjs file
     const hashedDocument = sha256(JSON.stringify(this.state.document));
     this.setState({
       showSubmitModal: true,
