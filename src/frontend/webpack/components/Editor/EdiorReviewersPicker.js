@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 import UsersSelection from '../UsersSelection.js';
-import {getDomain} from '../../../../helpers/getDomain.js';
+import {getDomain} from '../../../../helpers/getDomain.mjs';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
 
 const Container = styled.div``;

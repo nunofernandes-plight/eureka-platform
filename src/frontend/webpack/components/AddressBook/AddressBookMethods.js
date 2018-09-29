@@ -1,4 +1,4 @@
-import {getDomain} from '../../../../helpers/getDomain.js';
+import {getDomain} from '../../../../helpers/getDomain.mjs';
 
 export const createContact = (contactAddress, preName, lastName, label) => {
   return fetch(`${getDomain()}/api/book`, {

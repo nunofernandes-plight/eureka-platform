@@ -1,4 +1,4 @@
-import {getDomain} from '../../../../helpers/getDomain.js';
+import {getDomain} from '../../../../helpers/getDomain.mjs';
 import {serializeSavePatch} from '../../../../helpers/documentSerializer.mjs';
 
 export const submitArticleDB = (draftId, article) => {

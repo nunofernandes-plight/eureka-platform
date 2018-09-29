@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import queryString from 'query-string';
 import {Card} from '../views/Card.js';
 import sha256 from 'js-sha256';
-import {getDomain} from '../../../helpers/getDomain.js';
+import {getDomain} from '../../../helpers/getDomain.mjs';
 import GridSpinner from '../views/spinners/GridSpinner.js';
 import './TextEditor/new-article.css';
 import 'draft-js/dist/Draft.css';

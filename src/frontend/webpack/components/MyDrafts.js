@@ -4,7 +4,7 @@ import {withRouter} from 'react-router-dom';
 import DraftsTable from '../views/DraftsTable.js';
 import {Card, CardTitle} from '../views/Card.js';
 import {__ALERT_ERROR, __FIFTH} from '../../helpers/colors.js';
-import {getDomain} from '../../../helpers/getDomain.js';
+import {getDomain} from '../../../helpers/getDomain.mjs';
 import Modal from '../design-components/Modal.js';
 import CircleSpinner from '../views/spinners/CircleSpinner.js';
 import Icon from '../views/icons/Icon.js';

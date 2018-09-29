@@ -8,7 +8,7 @@ import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
 import Modal from '../design-components/Modal.js';
 import AccountBalance from '../../web3/AccountBalance.js';
 import GridSpinner from '../views/spinners/GridSpinner.js';
-import {getDomain} from '../../../helpers/getDomain.js';
+import {getDomain} from '../../../helpers/getDomain.mjs';
 import {
   Container,
   Paragraph,

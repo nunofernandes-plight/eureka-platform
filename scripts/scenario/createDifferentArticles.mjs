@@ -251,7 +251,15 @@ export const submitDifferentArticles = async (
   const drafts = await articleVersionService.getDraftsOfUser(accounts[0]);
 
   const hash = getArticleHashFromDocument(drafts[0].document);
-  const articleHex = getArticleHexFromDocument();
+
+  await articleVersionService.finishDraftById(accounts[0], drafts[0]._id, hash);
+
+  const submittedArticle = await articleVersionService.getArticleVersionById(
+    accounts[0],
+    drafts[0]._id
+  );
+
+  const articleHex = getArticleHexFromDocument(submittedArticle);
   console.log(hash);
 
   /*const hex = getArticleHex(web3, drafts[0].document);*/
