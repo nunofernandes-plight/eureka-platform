@@ -6,7 +6,10 @@ import ArticleVersion from '../../src/backend/schema/article-version.mjs';
 import {submitArticle} from '../../src/smartcontracts/methods/web3-token-contract-methods.mjs';
 import getArticleHex from '../../src/smartcontracts/methods/get-articleHex.mjs';
 import sha256 from 'js-sha256';
-import {getArticleHashFromDocument} from '../../src/helpers/getHexAndHash.mjs';
+import {
+  getArticleHashFromDocument,
+  getArticleHexFromDocument
+} from '../../src/helpers/getHexAndHash.mjs';
 
 const getFigures = () => {
   return [
@@ -246,7 +249,9 @@ export const submitDifferentArticles = async (
 ) => {
   const accounts = await getAccounts(web3);
   const drafts = await articleVersionService.getDraftsOfUser(accounts[0]);
+
   const hash = getArticleHashFromDocument(drafts[0].document);
+  const articleHex = getArticleHexFromDocument();
   console.log(hash);
 
   /*const hex = getArticleHex(web3, drafts[0].document);*/
