@@ -2,6 +2,8 @@ import sha256 from 'js-sha256';
 import CANON from 'canon';
 import Document from '../models/Document.mjs';
 import {getDomain} from './getDomain.mjs';
+import getArticleHex from '../smartcontracts/methods/get-articleHex.mjs';
+import web3 from './web3Instance.mjs';
 
 export const getArticleHashFromDocument = document => {
   const doc = new Document(document);
@@ -30,5 +32,5 @@ const getInputData = article => {
 };
 export const getArticleHexFromDocument = article => {
   const input = getInputData(article);
-  console.log(input);
+  return getArticleHex(web3, input);
 };

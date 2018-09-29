@@ -248,27 +248,38 @@ export const submitDifferentArticles = async (
   platformContract
 ) => {
   const accounts = await getAccounts(web3);
-  const drafts = await articleVersionService.getDraftsOfUser(accounts[0]);
+  const account = accounts[0];
+  const drafts = await articleVersionService.getDraftsOfUser(account);
+  const draft = drafts[0];
 
-  const hash = getArticleHashFromDocument(drafts[0].document);
+  const hash = getArticleHashFromDocument(draft.document);
 
-  await articleVersionService.finishDraftById(accounts[0], drafts[0]._id, hash);
+  console.log(
+    'Finishing Draft By Id for account ' +
+      account +
+      ' and draft with id ' +
+      draft._id +
+      ' and hash : ' +
+      hash
+  );
+  await articleVersionService.finishDraftById(account, draft._id, hash);
 
   const submittedArticle = await articleVersionService.getArticleVersionById(
-    accounts[0],
-    drafts[0]._id
+    account,
+    draft._id
   );
 
   const articleHex = getArticleHexFromDocument(submittedArticle);
-  console.log(hash);
 
-  /*const hex = getArticleHex(web3, drafts[0].document);*/
+  console.log(platformContract.options.address);
 
-  /*submitArticle(tokenContract, platformContract.options.address, 5000, hex)
-    .send({
-      from: accounts[0],
-      gas: 8000000
-    })
+  submitArticle(
+    tokenContract,
+    platformContract.options.address,
+    5000,
+    articleHex
+  )
+    .send({from: account, gas: 8000000})
     .on('transactionHash', tx => {
       console.log(tx);
     })
@@ -278,5 +289,5 @@ export const submitDifferentArticles = async (
       );
       return receipt;
     })
-    .catch(err => console.log(err));*/
+    .catch(err => console.log(err));
 };
