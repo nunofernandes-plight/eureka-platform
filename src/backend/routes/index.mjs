@@ -16,7 +16,7 @@ const router = express.Router();
 
 //Different backend routes goes here
 router.use('/welcome', welcomeRoutes);
-router.use('/editorApprovedReviews', reviewRoutes);
+router.use('/reviews', reviewRoutes);
 router.use('/signup', signupRoutes);
 router.use('/login', loginRoutes);
 router.use('/logout', logoutRoutes);

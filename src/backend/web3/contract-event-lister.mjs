@@ -7,6 +7,7 @@ import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import ScTransactionType from '../schema/sc-transaction-state-enum.mjs';
 import ReviewState from '../schema/review-state-enum.mjs';
+import ReviewType from '../schema/review-type-enum.mjs';
 import Review from '../schema/review.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
 import queryString from 'query-string';
@@ -145,7 +146,9 @@ export default {
         for (let i = 0; i < approvedReviewers.length; i++) {
           const review = new Review({
             stateTimestamp: timestamp,
-            reviewerAddress: approvedReviewers[i]
+            reviewerAddress: approvedReviewers[i],
+            articleVersion: articleVersion._id,
+            reviewType: ReviewType.EDITOR_APPROVED_REVIEW
           });
           await review.save();
           articleVersion.editorApprovedReviews.push(review._id);
@@ -267,7 +270,6 @@ export default {
       async (error, event) => {
         if (error) throw error;
 
-        console.log('ARTICLE IS ACCEPTED');
         await articleVersionService.changeArticleVersionState(
           event.returnValues.articleHash,
           ArticleVersionState.ACCEPTED

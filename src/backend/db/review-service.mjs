@@ -7,6 +7,14 @@ export default {
   getAllReviews: () => {
     return Review.find({});
   },
+
+  getReviewInvitations: (address) => {
+    return Review.find({
+      reviewerAddress: address,
+      reviewState: 'INVITED'
+    });
+  },
+
   createReview: async (submissionId, articleHash, stateTimestamp) => {
     const review = new Review({submissionId, articleHash, stateTimestamp});
     return review.save(err => {
@@ -141,7 +149,6 @@ export default {
     const reviewId = articleVersion.editorApprovedReviews.find((review) => {
       return review.reviewerAddress === reviewerAddress;
     });
-
 
 
     let review = await Review.findById(reviewId);

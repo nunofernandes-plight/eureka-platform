@@ -39,7 +39,7 @@ export const articleVersionSchema = mongoose.Schema(
     }]
   },
   {
-    collection: 'articleVersionState',
+    collection: 'articleVersions',
     timestamps: true
   }
 );

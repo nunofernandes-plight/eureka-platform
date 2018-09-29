@@ -33,17 +33,16 @@ const getArticlesResponse = articles => {
   articles.map(article => {
     // populate() from mongoose sets articleSubmission to null if the editor address does not match the user
     if (article.articleSubmission)
-      resArticles.push(
-        getRelevantArticleData(article.articleSubmission, article)
-      );
+      resArticles.push(getRelevantArticleData(article.articleSubmission, article));
   });
   return resArticles;
 };
 
-const getFinalizableArticles = articles => {
+const getFinalizableArticles = (articles) => {
   let finalizableArticles = [];
   articles.forEach(article => {
-    if (isFinalizable(article)) finalizableArticles.push(article);
+    if (isFinalizable(article))
+      finalizableArticles.push(article);
   });
   return finalizableArticles;
 };
@@ -52,7 +51,8 @@ const isFinalizable = article => {
   const minEAReviews = 1; //minAmountOfEditorApprovedReviews
   const minCReviews = 0; //minAmountOfCommunityReviews
   return (
-    areReviewsOK(minEAReviews, article.editorApprovedReviews) &&
+    areReviewsOK(minEAReviews, article.editorApprovedReviews)
+    &&
     areReviewsOK(minCReviews, article.communityReviews)
   );
 };
@@ -61,9 +61,10 @@ const areReviewsOK = (minAmount, reviews) => {
   let count = 0;
   reviews.forEach(review => {
     if (review.reviewState !== REVIEW_STATE.ACCEPTED)
-      // if (review.reviewState !== REVIEW_STATE.INVITED)   for testing purposes
+    // if (review.reviewState !== REVIEW_STATE.INVITED)   for testing purposes
       return false;
-    if (review.hasMajorIssues) return false;
+    if (review.hasMajorIssues)
+      return false;
 
     count++;
   });
@@ -76,16 +77,15 @@ export default {
   },
 
   getArticlesAssignedTo: async (ethereumAddress, articleVersionState) => {
-    const articles = await ArticleVersion.find({
-      articleVersionState: articleVersionState
-    }).populate({
-      path: 'articleSubmission',
-      match: {editor: ethereumAddress}
-    });
+    const articles = await ArticleVersion.find({articleVersionState: articleVersionState})
+      .populate({
+        path: 'articleSubmission',
+        match: {editor: ethereumAddress}
+      });
     return getArticlesResponse(articles);
   },
 
-  getArticlesToFinalize: async ethereumAddress => {
+  getArticlesToFinalize: async (ethereumAddress) => {
     const articles = await ArticleVersion.find({
       articleVersionState: 'REVIEWERS_INVITED'
     })
@@ -127,7 +127,7 @@ export default {
    * @param userAddress
    * @returns {Promise<Array>}
    */
-  getDraftsOfUser: async userAddress => {
+  getDraftsOfUser: async (userAddress) => {
     let drafts = await ArticleVersion.find({
       ownerAddress: userAddress,
       articleVersionState: ArticleVersionStates.DRAFT
@@ -138,13 +138,10 @@ export default {
     return getDraftInfos(drafts);
   },
 
-  getSubmittedAndFinishedDraftOfUser: async userAddress => {
+  getSubmittedAndFinishedDraftOfUser: async (userAddress) => {
     const drafts = await ArticleVersion.find({
       ownerAddress: userAddress,
-      $or: [
-        {articleVersionState: ArticleVersionState.FINISHED_DRAFT},
-        {articleVersionState: ArticleVersionState.SUBMITTED}
-      ]
+      $or: [{articleVersionState: ArticleVersionState.FINISHED_DRAFT}, {articleVersionState: ArticleVersionState.SUBMITTED}]
     });
     return getDraftInfos(drafts);
   },
@@ -154,12 +151,8 @@ export default {
     let articleVersion = await ArticleVersion.findById(articleVersionId);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
     if (articleVersion.articleVersionState !== ArticleVersionStates.DRAFT)
-      errorThrower.notCorrectStatus(
-        ArticleVersionStates.DRAFT,
-        articleVersion.articleVersionState
-      );
-    if (articleVersion.ownerAddress !== userAddress)
-      errorThrower.notCorrectEthereumAddress();
+      errorThrower.notCorrectStatus(ArticleVersionStates.DRAFT, articleVersion.articleVersionState);
+    if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
 
     // add new document variables
     for (let property in document) {
@@ -195,27 +188,15 @@ export default {
   revertToDraft: async (userAddress, articleVersionId) => {
     let articleVersion = await ArticleVersion.findById(articleVersionId);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
-    if (
-      articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT
-    ) {
-      errorThrower.notCorrectStatus(
-        ArticleVersionState.FINISHED_DRAFT,
-        articleVersion.articleVersionState
-      );
+    if (articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT) {
+      errorThrower.notCorrectStatus(ArticleVersionState.FINISHED_DRAFT, articleVersion.articleVersionState);
     }
-    if (articleVersion.ownerAddress !== userAddress)
-      errorThrower.notCorrectEthereumAddress(userAddress);
+    if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress(userAddress);
 
     articleVersion.articleVersionState = ArticleVersionState.DRAFT;
     await articleVersion.save();
-    return (
-      'Articleversion ' +
-      articleVersion._id +
-      'has reverted Status: ' +
-      ArticleVersionState.FINISHED_DRAFT +
-      ' to ' +
-      ArticleVersionState.DRAFT
-    );
+    return 'Articleversion ' + articleVersion._id + 'has reverted Status: '
+      + ArticleVersionState.FINISHED_DRAFT + ' to ' + ArticleVersionState.DRAFT;
   },
 
   /**
@@ -228,27 +209,25 @@ export default {
   getArticleVersionById: async (userAddress, articleVersionID) => {
     const articleVersion = await ArticleVersion.findById(articleVersionID);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionID);
-    if (articleVersion.ownerAddress !== userAddress)
-      errorThrower.notCorrectEthereumAddress();
+    if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
     return articleVersion;
   },
 
+
   changeArticleVersionState: async (articleHash, versionState) => {
     if (!(versionState in ArticleVersionState)) {
-      let error = new Error(
-        'Internal error: Provided param "versionState" is not a actual ArticleVersionState'
-      );
+      let error = new Error('Internal error: Provided param "versionState" is not a actual ArticleVersionState');
       error.status = 500;
       throw error;
     }
 
-    await ArticleVersion.findOneAndUpdate(
-      {articleHash: articleHash},
+    await ArticleVersion.findOneAndUpdate({articleHash: articleHash},
       {
         articleVersionState: versionState
       }
     );
   }
+
 };
 
 /**
@@ -262,6 +241,7 @@ function getDraftInfos(drafts) {
     let draftInfo = {
       document: {}
     };
+
     draftInfo.articleVersionState = draft.articleVersionState;
     draftInfo.articleHash = draft.articleHash;
     draftInfo._id = draft._id;

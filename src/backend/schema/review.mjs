@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import ReviewState from './review-state-enum.mjs';
+import ReviewType from './review-type-enum.mjs';
 
 export const reviewSchema = mongoose.Schema(
   {
@@ -8,9 +9,18 @@ export const reviewSchema = mongoose.Schema(
       enum: Object.values(ReviewState),
       default: ReviewState.INVITED
     },
+    reviewType: {
+      type: String,
+      enum: Object.values(ReviewType),
+      default: ReviewType.COMMUNITY_REVIEW
+    },
     stateTimestamp: {
       type: String,
       required: true
+    },
+    articleVersion: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ArticleVersion'
     },
     reviewerAddress: {
       type: String,
@@ -36,8 +46,8 @@ export const reviewSchema = mongoose.Schema(
       default: false
     }
   },
-  {collection: 'editorApprovedReviews'}
+  {collection: 'reviews'}
 );
 
-const Review = mongoose.model('Review', reviewSchema, 'editorApprovedReviews');
+const Review = mongoose.model('Review', reviewSchema, 'reviews');
 export default Review;
