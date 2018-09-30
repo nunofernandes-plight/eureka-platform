@@ -14,7 +14,6 @@ import articleSubmissionService from '../../src/backend/db/article-submission-se
 import articleVersionService from '../../src/backend/db/article-version-service.mjs';
 import reviewService from '../../src/backend/db/review-service.mjs';
 import {cleanDB} from '../helpers.js';
-import getArticleHex from '../../src/smartcontracts/methods/get-articleHex.mjs';
 import {
   assignForSubmissionProcess,
   removeEditorFromSubmissionProcess,
@@ -34,6 +33,11 @@ import web3 from '../../src/helpers/web3Instance.mjs';
 import dotenv from 'dotenv';
 import {setupWeb3Interface} from '../../src/backend/web3/web3InterfaceSetup.mjs';
 import {deploy} from '../../src/smartcontracts/deployment/deployer-and-mint.mjs';
+import {
+  TEST_ARTICLE_1_DATA_IN_HEX, TEST_ARTICLE_1_HASH_HEX, TEST_ARTICLE_2_DATA_IN_HEX,
+  TEST_ARTICLE_2_HASH_HEX, REVIEW_1, REVIEW_1_HASH_HEX, REVIEW_2,
+  REVIEW_2_HASH_HEX, REVIEW_3, REVIEW_3_HASH_HEX, REVIEW_4, REVIEW_4_HASH_HEX, createUserContractOwner, setAccounts
+} from '../test-data';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
@@ -41,103 +45,11 @@ let accounts;
 let contractOwner;
 
 const PRETEXT = 'INTEGRATION: ';
-const ARTICLE1 = {
-  articleHash:
-    '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
-  url: 'article1.url',
-  authors: [
-    '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88',
-    '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'
-  ],
-  contributorRatios: [4000, 6000],
-  linkedArticles: [
-    '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
-    '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
-    'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
-  ],
-  linkedArticlesSplitRatios: [3334, 3333, 3333]
-};
-const ARTICLE1_DATA_IN_HEX = getArticleHex(web3, ARTICLE1);
-const ARTICLE1_HASH_HEX = '0x' + ARTICLE1.articleHash;
-
-const ARTICLE2 = {
-  articleHash:
-    '551aa99a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
-  url: 'article2.url',
-  authors: [
-    '0x8a19ee7f2f65da61e288455d33baeea283b9ea97',
-    '0xc81c582875967d6d134ebe513c2a79b4490f6ecb'
-  ],
-  contributorRatios: [2000, 8000],
-  linkedArticles: [
-    '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
-    '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
-    'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
-  ],
-  linkedArticlesSplitRatios: [2000, 2000, 6000]
-};
-const ARTICLE2_DATA_IN_HEX = getArticleHex(web3, ARTICLE2);
-const ARTICLE2_HASH_HEX = '0x' + ARTICLE2.articleHash;
-
-const REVIEW1 = {
-  reviewHash:
-    '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', // TODO change?
-  reviewText: 'This is the test-text for the review or reviewer 1',
-  score1: 3,
-  score2: 5,
-  articleHasMajorIssues: false,
-  articleHasMinorIssues: true
-};
-const REVIEW1_HASH_HEX = '0x' + REVIEW1.reviewHash;
-
-const REVIEW1_CORRECTED = {
-  reviewHash:
-    '999aa57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
-  reviewText: 'Corrected version of review2',
-  score1: 3,
-  score2: 3,
-  articleHasMajorIssues: false,
-  articleHasMinorIssues: false
-};
-const REVIEW1_CORRECTED_HASH_HEX = '0x' + REVIEW1_CORRECTED.reviewHash;
-
-const REVIEW2 = {
-  reviewHash:
-    '000ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', // TODO change?
-  reviewText: 'That one is the second review. So it comes from reviewer2',
-  score1: 1,
-  score2: 1,
-  articleHasMajorIssues: false,
-  articleHasMinorIssues: true
-};
-const REVIEW2_HASH_HEX = '0x' + REVIEW2.reviewHash;
-
-const REVIEW3 = {
-  reviewHash:
-    '333cc57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', // TODO change?
-  reviewText: 'Third review. So it comes from reviewer3',
-  score1: 4,
-  score2: 4,
-  articleHasMajorIssues: false,
-  articleHasMinorIssues: true
-};
-const REVIEW3_HASH_HEX = '0x' + REVIEW3.reviewHash;
-
-const REVIEW4 = {
-  reviewHash:
-    '333cc57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7', // TODO change?
-  reviewText: 'Fourth review which will get accepted',
-  score1: 2,
-  score2: 2,
-  articleHasMajorIssues: false,
-  articleHasMinorIssues: false
-};
-const REVIEW4_HASH_HEX = '0x' + REVIEW4.reviewHash;
-
 /** ************** TESTING ****************/
 
 test.before(async () => {
   accounts = await getAccounts(web3);
+  setAccounts(accounts);
   contractOwner = accounts[0];
   await dotenv.config();
 
@@ -159,13 +71,14 @@ test.after(async () => {
 
 /************************ Sign up Editor ************************/
 
-test(PRETEXT + 'Sign up Editor', async t => {
-  await userService.createUser(
-    'test',
-    'test@test.test',
-    contractOwner,
-    'test-avatar'
-  );
+test.only(PRETEXT + 'Sign up Editor', async t => {
+  // await userService.createUser(
+  //   'test',
+  //   'test@test.test',
+  //   contractOwner,
+  //   'test-avatar'
+  // );
+  await createUserContractOwner();
 
   let user = await userService.getUserByEthereumAddress(contractOwner);
   // t.is(user.isEditor, false);
@@ -202,7 +115,7 @@ test(PRETEXT + 'Sign up Editor', async t => {
 
 test(
   PRETEXT +
-    'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED',
+  'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED',
   async t => {
     // Create user on DB
     t.is((await userService.getAllUsers()).length, 0);
@@ -236,7 +149,7 @@ test(
     await articleVersionService.finishDraftById(
       user.ethereumAddress,
       articleVersion._id,
-      ARTICLE1_HASH_HEX
+      TEST_ARTICLE_1_HASH_HEX
     );
     articleVersion = await articleVersionService.getArticleVersionById(
       user.ethereumAddress,
@@ -246,7 +159,7 @@ test(
       articleVersion.articleVersionState,
       ArticleVersionState.FINISHED_DRAFT
     );
-    t.is(articleVersion.articleHash, ARTICLE1_HASH_HEX);
+    t.is(articleVersion.articleHash, TEST_ARTICLE_1_HASH_HEX);
 
     //  Submission on the SC //TODO fix, why it does not find the user in DB?
     //   await submitArticle(eurekaTokenContract, user.ethereumAddress, eurekaPlatformContract.options.address, 5000, ARTICLE1_DATA_IN_HEX);
@@ -303,7 +216,7 @@ test(
     await articleVersionService.finishDraftById(
       author.ethereumAddress,
       articleVersion._id,
-      ARTICLE1_HASH_HEX
+      TEST_ARTICLE_1_HASH_HEX
     );
 
     // Submit articleHash on SC
@@ -311,7 +224,7 @@ test(
       eurekaTokenContract,
       eurekaPlatformContract.options.address,
       5000,
-      ARTICLE1_DATA_IN_HEX
+      TEST_ARTICLE_1_DATA_IN_HEX
     ).send({
       from: author.ethereumAddress,
       gas: 80000000
@@ -399,7 +312,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   await articleVersionService.finishDraftById(
     author.ethereumAddress,
     articleVersion1._id,
-    ARTICLE1_HASH_HEX
+    TEST_ARTICLE_1_HASH_HEX
   );
 
   await articleSubmissionService.createSubmission(author.ethereumAddress);
@@ -408,7 +321,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   await articleVersionService.finishDraftById(
     author.ethereumAddress,
     articleVersion2._id,
-    ARTICLE2_HASH_HEX
+    TEST_ARTICLE_2_HASH_HEX
   );
 
   // Signup editor and submit article 1 & 2
@@ -419,7 +332,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
     eurekaTokenContract,
     eurekaPlatformContract.options.address,
     5000,
-    ARTICLE1_DATA_IN_HEX
+    TEST_ARTICLE_1_DATA_IN_HEX
   ).send({
     from: author.ethereumAddress,
     gas: 80000000
@@ -428,7 +341,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
     eurekaTokenContract,
     eurekaPlatformContract.options.address,
     5000,
-    ARTICLE2_DATA_IN_HEX
+    TEST_ARTICLE_2_DATA_IN_HEX
   ).send({
     from: author.ethereumAddress,
     gas: 80000000
@@ -492,7 +405,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   counter = 0;
   while (
     articleVersion1.articleVersionState !==
-      ArticleVersionState.EDITOR_CHECKED &&
+    ArticleVersionState.EDITOR_CHECKED &&
     counter < 10
   ) {
     sleepSync(5000);
@@ -522,7 +435,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   counter = 0;
   while (
     articleVersion2.articleVersionState !==
-      ArticleVersionState.DECLINED_SANITY_NOTOK &&
+    ArticleVersionState.DECLINED_SANITY_NOTOK &&
     counter < 10
   ) {
     sleepSync(5000);
@@ -538,7 +451,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
 /**************** Invite reviewers for review article & Reviewers accept Invitation  ******************/
 test.only(
   PRETEXT +
-    'Invite reviewers for review article & Reviewers accept Invitation ',
+  'Invite reviewers for review article & Reviewers accept Invitation ',
   async t => {
     // Create author and editor
     const author = await userService.createUser(
@@ -591,7 +504,7 @@ test.only(
     await articleVersionService.finishDraftById(
       author.ethereumAddress,
       articleVersion._id,
-      ARTICLE1_HASH_HEX
+      TEST_ARTICLE_1_HASH_HEX
     );
 
     // Signup editor and submit article 1 & 2
@@ -602,7 +515,7 @@ test.only(
       eurekaTokenContract,
       eurekaPlatformContract.options.address,
       5000,
-      ARTICLE1_DATA_IN_HEX
+      TEST_ARTICLE_1_DATA_IN_HEX
     ).send({
       from: author.ethereumAddress,
       gas: 80000000
@@ -737,8 +650,7 @@ test.only(
     counter = 0;
     while (
       review4.reviewState !== ReviewState.INVITATION_ACCEPTED &&
-      counter < 10
-    ) {
+      counter < 10) {
       sleepSync(5000);
       review4 = await reviewService.getReviewById(
         reviewer4.ethereumAddress,
@@ -752,12 +664,12 @@ test.only(
     await reviewService.addEditorApprovedReview(
       reviewer1.ethereumAddress,
       review._id,
-      REVIEW1.reviewText,
-      REVIEW1_HASH_HEX,
-      REVIEW1.score1,
-      REVIEW1.score2,
-      REVIEW1.articleHasMajorIssues,
-      REVIEW1.articleHasMinorIssues
+      REVIEW_1.reviewText,
+      REVIEW_1_HASH_HEX,
+      REVIEW_1.score1,
+      REVIEW_1.score2,
+      REVIEW_1.articleHasMajorIssues,
+      REVIEW_1.articleHasMinorIssues
     );
 
     review = await reviewService.getReviewById(
@@ -770,11 +682,11 @@ test.only(
     await addEditorApprovedReview(
       eurekaPlatformContract,
       articleVersion.articleHash,
-      REVIEW1_HASH_HEX,
-      REVIEW1.articleHasMajorIssues,
-      REVIEW1.articleHasMinorIssues,
-      REVIEW1.score1,
-      REVIEW1.score2
+      REVIEW_1_HASH_HEX,
+      REVIEW_1.articleHasMajorIssues,
+      REVIEW_1.articleHasMinorIssues,
+      REVIEW_1.score1,
+      REVIEW_1.score2
     ).send({
       from: reviewer1.ethereumAddress,
       gas: 80000000
@@ -800,12 +712,12 @@ test.only(
     await reviewService.addEditorApprovedReview(
       reviewer2.ethereumAddress,
       review2._id,
-      REVIEW2.reviewText,
-      REVIEW2_HASH_HEX,
-      REVIEW2.score1,
-      REVIEW2.score2,
-      REVIEW2.articleHasMajorIssues,
-      REVIEW2.articleHasMinorIssues
+      REVIEW_2.reviewText,
+      REVIEW_2_HASH_HEX,
+      REVIEW_2.score1,
+      REVIEW_2.score2,
+      REVIEW_2.articleHasMajorIssues,
+      REVIEW_2.articleHasMinorIssues
     );
 
     review2 = await reviewService.getReviewById(
@@ -818,11 +730,11 @@ test.only(
     await addEditorApprovedReview(
       eurekaPlatformContract,
       articleVersion.articleHash,
-      REVIEW2_HASH_HEX,
-      REVIEW2.articleHasMajorIssues,
-      REVIEW2.articleHasMinorIssues,
-      REVIEW2.score1,
-      REVIEW2.score2
+      REVIEW_2_HASH_HEX,
+      REVIEW_2.articleHasMajorIssues,
+      REVIEW_2.articleHasMinorIssues,
+      REVIEW_2.score1,
+      REVIEW_2.score2
     ).send({
       from: reviewer2.ethereumAddress,
       gas: 80000000
@@ -849,12 +761,12 @@ test.only(
     let review3 = await reviewService.addNewCommunitydReview(
       reviewer3.ethereumAddress,
       articleVersion.articleHash,
-      REVIEW3.reviewText,
-      REVIEW3_HASH_HEX,
-      REVIEW3.score1,
-      REVIEW3.score2,
-      REVIEW3.articleHasMajorIssues,
-      REVIEW3.articleHasMinorIssues
+      REVIEW_3.reviewText,
+      REVIEW_3_HASH_HEX,
+      REVIEW_3.score1,
+      REVIEW_3.score2,
+      REVIEW_3.articleHasMajorIssues,
+      REVIEW_3.articleHasMinorIssues
     );
     review3 = await reviewService.getReviewById(
       reviewer3.ethereumAddress,
@@ -870,11 +782,11 @@ test.only(
     await addCommunityReview(
       eurekaPlatformContract,
       articleVersion.articleHash,
-      REVIEW3_HASH_HEX,
-      REVIEW3.articleHasMajorIssues,
-      REVIEW3.articleHasMinorIssues,
-      REVIEW3.score1,
-      REVIEW3.score2
+      REVIEW_3_HASH_HEX,
+      REVIEW_3.articleHasMajorIssues,
+      REVIEW_3.articleHasMinorIssues,
+      REVIEW_3.score1,
+      REVIEW_3.score2
     ).send({
       from: reviewer3.ethereumAddress,
       gas: 80000000
@@ -900,23 +812,23 @@ test.only(
     await reviewService.addEditorApprovedReview(
       reviewer4.ethereumAddress,
       review4._id,
-      REVIEW4.reviewText,
-      REVIEW4_HASH_HEX,
-      REVIEW4.score1,
-      REVIEW4.score2,
-      REVIEW4.articleHasMajorIssues,
-      REVIEW4.articleHasMinorIssues
+      REVIEW_4.reviewText,
+      REVIEW_4_HASH_HEX,
+      REVIEW_4.score1,
+      REVIEW_4.score2,
+      REVIEW_4.articleHasMajorIssues,
+      REVIEW_4.articleHasMinorIssues
     );
 
     // Add review4 in SC
     await addEditorApprovedReview(
       eurekaPlatformContract,
       articleVersion.articleHash,
-      REVIEW4_HASH_HEX,
-      REVIEW4.articleHasMajorIssues,
-      REVIEW4.articleHasMinorIssues,
-      REVIEW4.score1,
-      REVIEW4.score2
+      REVIEW_4_HASH_HEX,
+      REVIEW_4.articleHasMajorIssues,
+      REVIEW_4.articleHasMinorIssues,
+      REVIEW_4.score1,
+      REVIEW_4.score2
     ).send({
       from: reviewer4.ethereumAddress,
       gas: 80000000
