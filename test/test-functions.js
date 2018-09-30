@@ -70,7 +70,7 @@ export default {
     // Create an article-draft on DB
     const articleSubmissionslength = (await articleSubmissionService.getAllSubmissions()).length;
     await articleSubmissionService.createSubmission(user.ethereumAddress);
-    const articleSubmission = (await articleSubmissionService.getAllSubmissions())[articleSubmissionslength];
+    let articleSubmission = (await articleSubmissionService.getAllSubmissions())[articleSubmissionslength];
 
     t.is(articleSubmission.articleVersions.length, 1);
     let articleVersion = articleSubmission.articleVersions[0];
@@ -119,6 +119,25 @@ export default {
       counter++;
     }
     t.is(articleVersion.articleVersionState, ArticleVersionState.SUBMITTED);
+
+    // test if submission exist
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[articleSubmissionslength];
+    counter = 0;
+    while (!articleSubmission && counter < 5) {
+      sleepSync(5000);
+      articleSubmission = (await articleSubmissionService.getAllSubmissions())[articleSubmissionslength];
+      counter++;
+    }
+
+    // test if scSubmissionID is on DB
+    counter = 0;
+    while (articleSubmission.scSubmissionID !== articleSubmissionslength && counter < 5) {
+      sleepSync(5000);
+      articleSubmission = (await articleSubmissionService.getAllSubmissions())[articleSubmissionslength];
+      counter++;
+    }
+
+    t.is(articleSubmission.scSubmissionID, articleSubmissionslength);
     return t;
   },
 
@@ -134,7 +153,8 @@ export default {
   assignEditorForSubmissionProcess: async function(t, editor, articleSubmission) {
     await assignForSubmissionProcess(
       eurekaPlatformContract,
-      articleSubmission.scSubmissionID
+      // articleSubmission.scSubmissionID
+      0
     ).send({
       from: editor.ethereumAddress
     });
