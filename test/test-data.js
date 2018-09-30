@@ -1,19 +1,103 @@
 import getArticleHex from '../src/smartcontracts/methods/get-articleHex.mjs';
 import web3 from '../src/helpers/web3Instance.mjs';
 import userService from '../src/backend/db/user-service.mjs';
+import Roles from '../src/backend/schema/roles-enum.mjs';
 
 let accounts;
 let contractOwner;
-export function setAccounts(_accounts)  {
+let user1;
+let editor1;
+let editor2;
+let reviewer1;
+let reviewer2;
+let reviewer3;
+let reviewer4;
+
+export function setAccounts(_accounts) {
   accounts = _accounts;
   contractOwner = _accounts[0];
+  user1 = _accounts[1];
+  editor1 = _accounts[2];
+  editor2 = _accounts[3];
+  reviewer1 = _accounts[4];
+  reviewer2 = _accounts[5];
+  reviewer3 = _accounts[6];
+  reviewer4 = _accounts[7];
 }
+
 export async function createUserContractOwner() {
   return await userService.createUser(
     'test',
     'test@test.test',
     contractOwner,
     'test-avatar'
+  );
+}
+
+export async function createUser1() {
+  return await userService.createUser(
+    'test2',
+    'test2@test.test',
+    user1,
+    'test-avatar2'
+  );
+}
+
+export async function createEditor1() {
+  return await userService.createUser(
+    'testEditor',
+    'editor@test.test',
+    editor1,
+    'test-editor-avatar'
+  );
+}
+
+export async function createEditor2() {
+  return await userService.createUser(
+    'testEditor2',
+    'editor2@test.test',
+    editor2,
+    'test-editor2-avatar'
+  );
+}
+
+export async function createReviewer1() {
+  return await userService.createUser(
+    'testReviewer1',
+    'reviewer1@test.test',
+    reviewer1,
+    'test-reviewer-avatar',
+    Roles.REVIEWER
+  );
+}
+
+export async function createReviewer2() {
+  return await userService.createUser(
+    'testReviewer2',
+    'reviewer2@test.test',
+    reviewer2,
+    'test-reviewer-avatar',
+    Roles.REVIEWER
+  );
+}
+
+export async function createReviewer3() {
+  return await userService.createUser(
+    'testReviewer3',
+    'reviewer3@test.test',
+    reviewer3,
+    'test-reviewer-avatar',
+    Roles.REVIEWER
+  );
+}
+
+export async function createReviewer4() {
+  return await userService.createUser(
+    'testReviewer4',
+    'reviewer4@test.test',
+    reviewer4,
+    'test-reviewer-avatar',
+    Roles.REVIEWER
   );
 }
 export const TEST_ARTICLE_1 = {

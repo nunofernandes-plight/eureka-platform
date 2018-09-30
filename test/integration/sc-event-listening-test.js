@@ -34,9 +34,21 @@ import dotenv from 'dotenv';
 import {setupWeb3Interface} from '../../src/backend/web3/web3InterfaceSetup.mjs';
 import {deploy} from '../../src/smartcontracts/deployment/deployer-and-mint.mjs';
 import {
-  TEST_ARTICLE_1_DATA_IN_HEX, TEST_ARTICLE_1_HASH_HEX, TEST_ARTICLE_2_DATA_IN_HEX,
-  TEST_ARTICLE_2_HASH_HEX, REVIEW_1, REVIEW_1_HASH_HEX, REVIEW_2,
-  REVIEW_2_HASH_HEX, REVIEW_3, REVIEW_3_HASH_HEX, REVIEW_4, REVIEW_4_HASH_HEX, createUserContractOwner, setAccounts
+  TEST_ARTICLE_1_DATA_IN_HEX,
+  TEST_ARTICLE_1_HASH_HEX,
+  TEST_ARTICLE_2_DATA_IN_HEX,
+  TEST_ARTICLE_2_HASH_HEX,
+  REVIEW_1,
+  REVIEW_1_HASH_HEX,
+  REVIEW_2,
+  REVIEW_2_HASH_HEX,
+  REVIEW_3,
+  REVIEW_3_HASH_HEX,
+  REVIEW_4,
+  REVIEW_4_HASH_HEX,
+  createUserContractOwner,
+  setAccounts,
+  createUser1, createEditor1, createEditor2, createReviewer1, createReviewer2, createReviewer3, createReviewer4
 } from '../test-data';
 
 let eurekaTokenContract;
@@ -71,17 +83,10 @@ test.after(async () => {
 
 /************************ Sign up Editor ************************/
 
-test.only(PRETEXT + 'Sign up Editor', async t => {
-  // await userService.createUser(
-  //   'test',
-  //   'test@test.test',
-  //   contractOwner,
-  //   'test-avatar'
-  // );
+test(PRETEXT + 'Sign up Editor', async t => {
   await createUserContractOwner();
 
   let user = await userService.getUserByEthereumAddress(contractOwner);
-  // t.is(user.isEditor, false);
   t.is(user.roles.length, 1);
   t.is(user.roles[0], Roles.CONTRACT_OWNER);
 
@@ -102,7 +107,7 @@ test.only(PRETEXT + 'Sign up Editor', async t => {
     counter++;
   }
 
-  t.is(user.roles.length, 2); // [REVIEWER, AUTHOR, CONTRACT-OWNER, EDITOR]
+  t.is(user.roles.length, 2); // [CONTRACT-OWNER, EDITOR]
   t.is(user.roles[1], Roles.EDITOR);
   t.is(user.scTransactions.length, 1);
   t.is(
@@ -119,27 +124,14 @@ test(
   async t => {
     // Create user on DB
     t.is((await userService.getAllUsers()).length, 0);
-    contractOwner = await userService.createUser(
-      'test',
-      'test@test.test',
-      accounts[0],
-      'test-avatar'
-    );
-    const user = await userService.createUser(
-      'test2',
-      'test2@test.test',
-      accounts[1],
-      'test-avatar2'
-    );
+    contractOwner = await createUserContractOwner();
+    const user = await createUser1();
     t.is((await userService.getAllUsers()).length, 2);
 
     // Create an article-draft on DB
     t.is((await articleSubmissionService.getAllSubmissions()).length, 0);
     await articleSubmissionService.createSubmission(user.ethereumAddress);
     const articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
-
-    // await articleSubmissionService.createSubmission(user.ethereumAddress);
-    // const articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
 
     t.is(articleSubmission.articleVersions.length, 1);
     let articleVersion = articleSubmission.articleVersions[0];
@@ -160,44 +152,16 @@ test(
       ArticleVersionState.FINISHED_DRAFT
     );
     t.is(articleVersion.articleHash, TEST_ARTICLE_1_HASH_HEX);
-
-    //  Submission on the SC //TODO fix, why it does not find the user in DB?
-    //   await submitArticle(eurekaTokenContract, user.ethereumAddress, eurekaPlatformContract.options.address, 5000, ARTICLE1_DATA_IN_HEX);
-    //   articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id);
-    //   let counter = 0;
-    //   while (
-    //     articleVersion.articleVersionState !== ArticleVersionState.SUBMITTED &&
-    //     counter < 10) {
-    //     sleepSync(5000);
-    //     articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id);
-    //     counter++;
-    //   }
-    //   t.is(articleVersion.articleVersionState, ArticleVersionState.SUBMITTED);
   }
 );
 
 test(
   PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process',
   async t => {
-    // Create author and editor
-    const author = await userService.createUser(
-      'testAuthor',
-      'author@test.test',
-      contractOwner,
-      'test-author-avatar'
-    );
-    const editor = await userService.createUser(
-      'testEditor',
-      'editor@test.test',
-      accounts[2],
-      'test-editor-avatar'
-    );
-    const editor2 = await userService.createUser(
-      'testEditor2',
-      'editor2@test.test',
-      accounts[3],
-      'test-editor2-avatar'
-    );
+    // Create author and editor 1 & 2
+    const author = await createUserContractOwner();
+    const editor = await createEditor1();
+    const editor2 = await createEditor2();
 
     // Signup editor 1 & 2
     await signUpEditor(eurekaPlatformContract, editor.ethereumAddress).send({
@@ -291,19 +255,8 @@ test(
 
 test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   // Create author and editor
-  const testAccounts = await getAccounts(web3);
-  const author = await userService.createUser(
-    'testAuthor',
-    'author@test.test',
-    contractOwner,
-    'test-author-avatar'
-  );
-  const editor = await userService.createUser(
-    'testEditor',
-    'editor@test.test',
-    testAccounts[4],
-    'test-editor-avatar'
-  );
+  const author = await createUserContractOwner();
+  const editor = await createEditor1();
 
   // Setup article draft 1 & 2
   await articleSubmissionService.createSubmission(author.ethereumAddress);
@@ -454,48 +407,12 @@ test.only(
   'Invite reviewers for review article & Reviewers accept Invitation ',
   async t => {
     // Create author and editor
-    const author = await userService.createUser(
-      'testAuthor',
-      'author@test.test',
-      contractOwner,
-      'test-author-avatar'
-    );
-    const editor = await userService.createUser(
-      'testEditor',
-      'editor@test.test',
-      accounts[4],
-      'test-editor-avatar'
-    );
-
-    const reviewer1 = await userService.createUser(
-      'testReviewer1',
-      'reviewer1@test.test',
-      accounts[5],
-      'test-reviewer-avatar',
-      Roles.REVIEWER
-    );
-    const reviewer2 = await userService.createUser(
-      'testReviewer2',
-      'reviewer2@test.test',
-      accounts[6],
-      'test-reviewer-avatar',
-      Roles.REVIEWER
-    );
-    const reviewer3 = await userService.createUser(
-      'testReviewer3',
-      'reviewer3@test.test',
-      accounts[7],
-      'test-reviewer-avatar',
-      Roles.REVIEWER
-    );
-
-    const reviewer4 = await userService.createUser(
-      'testReviewer4',
-      'reviewer4@test.test',
-      accounts[8],
-      'test-reviewer-avatar',
-      Roles.REVIEWER
-    );
+    const author = await createUserContractOwner();
+    const editor = await createEditor1();
+    const reviewer1 = await createReviewer1();
+    const reviewer2 = await createReviewer2();
+    const reviewer3 = await createReviewer3();
+    const reviewer4 = await createReviewer4();
 
     // Setup article draft 1 & 2
     await articleSubmissionService.createSubmission(author.ethereumAddress);
