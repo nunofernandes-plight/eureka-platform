@@ -94,7 +94,7 @@ test(PRETEXT + 'Sign up Editor', async t => {
 
 
 /************************ Submit an Article &  auto change of Status from DRAFT --> SUBMITTED ************************/
-test.only(
+test(
   PRETEXT +
   'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED',
   async t => {
@@ -108,7 +108,7 @@ test.only(
   }
 );
 
-test(
+test.only(
   PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process',
   async t => {
     // Create author and editor 1 & 2
@@ -116,75 +116,18 @@ test(
     const editor = await createEditor1();
     const editor2 = await createEditor2();
 
-    TestFunctions.signUpEditorAndTest(t, editor);
-    TestFunctions.signUpEditorAndTest(t, editor2);
+    // Sign up editor1 & 2
+    await TestFunctions.signUpEditorAndTest(t, editor);
+    await TestFunctions.signUpEditorAndTest(t, editor2);
 
-
-    // Setup article draft
-    await articleSubmissionService.createSubmission(author.ethereumAddress);
+    // Submit article
+    await TestFunctions.createArticleDraftAndSubmitIt(t, author, TEST_ARTICLE_1_HASH_HEX, TEST_ARTICLE_1_DATA_IN_HEX);
     let articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
-    let articleVersion = articleSubmission.articleVersions[0];
-    await articleVersionService.finishDraftById(
-      author.ethereumAddress,
-      articleVersion._id,
-      TEST_ARTICLE_1_HASH_HEX
-    );
-
-    // Submit articleHash on SC
-    await submitArticle(
-      eurekaTokenContract,
-      eurekaPlatformContract.options.address,
-      5000,
-      TEST_ARTICLE_1_DATA_IN_HEX
-    ).send({
-      from: author.ethereumAddress,
-      gas: 80000000
-    });
-
-    articleVersion = await articleVersionService.getArticleVersionById(
-      author.ethereumAddress,
-      articleVersion._id
-    );
-    articleSubmission = await articleSubmissionService.getSubmissionById(
-      articleSubmission._id
-    );
-
-    let counter = 0;
-    while (
-      typeof articleSubmission.scSubmissionID === 'undefined' &&
-      counter < 10
-    ) {
-      sleepSync(5000);
-      articleSubmission = await articleSubmissionService.getSubmissionById(
-        articleSubmission._id
-      );
-      counter++;
-    }
 
     // Assign first editor for submission process
-    await assignForSubmissionProcess(
-      eurekaPlatformContract,
-      articleSubmission.scSubmissionID
-    ).send({
-      from: editor.ethereumAddress
-    });
-    articleSubmission = await articleSubmissionService.getSubmissionById(
-      articleSubmission._id
-    );
-    t.is(articleSubmission.editor, editor.ethereumAddress);
-
-    // Change editor to editor2 for the submission process
-    await changeEditorFromSubmissionProcess(
-      eurekaPlatformContract,
-      articleSubmission.scSubmissionID,
-      editor2.ethereumAddress
-    ).send({
-      from: editor.ethereumAddress
-    });
-    articleSubmission = await articleSubmissionService.getSubmissionById(
-      articleSubmission._id
-    );
-    t.is(articleSubmission.editor, editor2.ethereumAddress);
+    await TestFunctions.assignEditorForSubmissionProcess(t, editor, articleSubmission);
+    // Change to second editor for submission process
+    await TestFunctions.changeEditorForSubmissionProcess(t, editor2, articleSubmission);
 
     // Remove editor from the submission process
     await removeEditorFromSubmissionProcess(

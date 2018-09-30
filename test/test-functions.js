@@ -1,4 +1,8 @@
-import {signUpEditor} from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {
+  signUpEditor,
+  assignForSubmissionProcess,
+  changeEditorFromSubmissionProcess
+} from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
 import {sleepSync} from './helpers.js';
@@ -6,7 +10,6 @@ import articleSubmissionService from '../src/backend/db/article-submission-servi
 import ArticleVersionState from '../src/backend/schema/article-version-state-enum.mjs';
 import articleVersionService from '../src/backend/db/article-version-service.mjs';
 import {submitArticle} from '../src/smartcontracts/methods/web3-token-contract-methods.mjs';
-import {TEST_ARTICLE_1_DATA_IN_HEX} from './test-data';
 
 let eurekaPlatformContract;
 let eurekaTokenContract;
@@ -54,6 +57,15 @@ export default {
     return t;
   },
 
+  /**
+   * Create an articleDraft on the DB and submit it afterward to the SC.
+   * Test if the articleVersion has Status 'SUBMITTED' at the end.
+   * @param t
+   * @param user
+   * @param articleHashHex
+   * @param articleDataInHex
+   * @returns {Promise<*>}
+   */
   createArticleDraftAndSubmitIt: async function(t, user, articleHashHex, articleDataInHex) {
     // Create an article-draft on DB
     const articleSubmissionslength = (await articleSubmissionService.getAllSubmissions()).length;
@@ -107,6 +119,44 @@ export default {
       counter++;
     }
     t.is(articleVersion.articleVersionState, ArticleVersionState.SUBMITTED);
+    return t;
+  },
+
+  /**
+   * Assigns the editor provided on the articleSubmission.
+   * Works only of the ethereumAddress of the editor is assigned as editor
+   * in the SC
+   * @param t
+   * @param editor
+   * @param articleSubmission
+   * @returns {Promise<void>}
+   */
+  assignEditorForSubmissionProcess: async function(t, editor, articleSubmission) {
+    await assignForSubmissionProcess(
+      eurekaPlatformContract,
+      articleSubmission.scSubmissionID
+    ).send({
+      from: editor.ethereumAddress
+    });
+    articleSubmission = await articleSubmissionService.getSubmissionById(
+      articleSubmission._id
+    );
+    t.is(articleSubmission.editor, editor.ethereumAddress);
+    return t;
+  },
+
+  changeEditorForSubmissionProcess: async function(t, newEditor, articleSubmission) {
+    await changeEditorFromSubmissionProcess(
+      eurekaPlatformContract,
+      articleSubmission.scSubmissionID,
+      newEditor.ethereumAddress
+    ).send({
+      from: contractOwner
+    });
+    articleSubmission = await articleSubmissionService.getSubmissionById(
+      articleSubmission._id
+    );
+    t.is(articleSubmission.editor, newEditor.ethereumAddress);
     return t;
   }
 };
