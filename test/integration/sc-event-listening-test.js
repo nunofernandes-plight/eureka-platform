@@ -108,7 +108,7 @@ test(
   }
 );
 
-test.only(
+test(
   PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process',
   async t => {
     // Create author and editor 1 & 2
@@ -129,26 +129,18 @@ test.only(
     // Change to second editor for submission process
     await TestFunctions.changeEditorForSubmissionProcess(t, editor2, articleSubmission);
 
-    // Remove editor from the submission process
-    await removeEditorFromSubmissionProcess(
-      eurekaPlatformContract,
-      articleSubmission.scSubmissionID
-    ).send({
-      from: editor2.ethereumAddress
-    });
-    articleSubmission = await articleSubmissionService.getSubmissionById(
-      articleSubmission._id
-    );
-    t.is(articleSubmission.editor, null);
+    await TestFunctions.removeEditorFromSubmissionProcessAndTest(t, editor2, articleSubmission);
   }
 );
 
-test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
+test.only(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   // Create author and editor
   const author = await createUserContractOwner();
   const editor = await createEditor1();
 
   // Setup article draft 1 & 2
+
+
   await articleSubmissionService.createSubmission(author.ethereumAddress);
   let articleSubmission1 = (await articleSubmissionService.getAllSubmissions())[0];
   let articleVersion1 = articleSubmission1.articleVersions[0];

@@ -1,7 +1,8 @@
 import {
   signUpEditor,
   assignForSubmissionProcess,
-  changeEditorFromSubmissionProcess
+  changeEditorFromSubmissionProcess,
+  removeEditorFromSubmissionProcess
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -178,5 +179,18 @@ export default {
     );
     t.is(articleSubmission.editor, newEditor.ethereumAddress);
     return t;
+  },
+
+  removeEditorFromSubmissionProcessAndTest: async function(t, editor, articleSubmission) {
+    await removeEditorFromSubmissionProcess(
+      eurekaPlatformContract,
+      articleSubmission.scSubmissionID
+    ).send({
+      from: editor.ethereumAddress
+    });
+    let dbArticleSubmission = await articleSubmissionService.getSubmissionById(
+      articleSubmission._id
+    );
+    t.is(dbArticleSubmission.editor, null);
   }
 };
