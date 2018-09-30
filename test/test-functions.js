@@ -2,7 +2,8 @@ import {
   signUpEditor,
   assignForSubmissionProcess,
   changeEditorFromSubmissionProcess,
-  removeEditorFromSubmissionProcess
+  removeEditorFromSubmissionProcess,
+  setSanityToOk
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -154,8 +155,7 @@ export default {
   assignEditorForSubmissionProcess: async function(t, editor, articleSubmission) {
     await assignForSubmissionProcess(
       eurekaPlatformContract,
-      // articleSubmission.scSubmissionID
-      0
+      articleSubmission.scSubmissionID
     ).send({
       from: editor.ethereumAddress
     });
@@ -192,5 +192,31 @@ export default {
       articleSubmission._id
     );
     t.is(dbArticleSubmission.editor, null);
-  }
+  },
+
+  acceptSanityCheckAndTest: async function(t, editor, author, articleVersion) {
+    await setSanityToOk(eurekaPlatformContract, articleVersion.articleHash).send({
+      from: editor.ethereumAddress
+    });
+
+    let dbArticleVersion = await articleVersionService.getArticleVersionById(
+      author.ethereumAddress,
+      articleVersion._id
+    );
+
+    let counter = 0;
+    while (
+      articleVersion.articleVersionState !==
+      ArticleVersionState.EDITOR_CHECKED &&
+      counter < 5
+    ) {
+      sleepSync(5000);
+      dbArticleVersion = await articleVersionService.getArticleVersionById(
+        author.ethereumAddress,
+        articleVersion._id
+      );
+      counter++;
+    }
+    t.is(dbArticleVersion.articleVersionState, ArticleVersionState.EDITOR_CHECKED);
+  },
 };

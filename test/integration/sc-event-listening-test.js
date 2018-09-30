@@ -138,149 +138,82 @@ test.only(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   const author = await createUserContractOwner();
   const editor = await createEditor1();
 
-  // Setup article draft 1 & 2
+  // Submit article 1 & 2
+  await TestFunctions.createArticleDraftAndSubmitIt(t, author, TEST_ARTICLE_1_HASH_HEX, TEST_ARTICLE_1_DATA_IN_HEX);
+  await TestFunctions.createArticleDraftAndSubmitIt(t, author, TEST_ARTICLE_2_HASH_HEX, TEST_ARTICLE_2_DATA_IN_HEX);
 
-
-  await articleSubmissionService.createSubmission(author.ethereumAddress);
   let articleSubmission1 = (await articleSubmissionService.getAllSubmissions())[0];
   let articleVersion1 = articleSubmission1.articleVersions[0];
-  await articleVersionService.finishDraftById(
-    author.ethereumAddress,
-    articleVersion1._id,
-    TEST_ARTICLE_1_HASH_HEX
-  );
-
-  await articleSubmissionService.createSubmission(author.ethereumAddress);
   let articleSubmission2 = (await articleSubmissionService.getAllSubmissions())[1];
   let articleVersion2 = articleSubmission2.articleVersions[0];
-  await articleVersionService.finishDraftById(
-    author.ethereumAddress,
-    articleVersion2._id,
-    TEST_ARTICLE_2_HASH_HEX
-  );
 
-  // Signup editor and submit article 1 & 2
-  await signUpEditor(eurekaPlatformContract, editor.ethereumAddress).send({
-    from: contractOwner
-  });
-  await submitArticle(
-    eurekaTokenContract,
-    eurekaPlatformContract.options.address,
-    5000,
-    TEST_ARTICLE_1_DATA_IN_HEX
-  ).send({
-    from: author.ethereumAddress,
-    gas: 80000000
-  });
-  await submitArticle(
-    eurekaTokenContract,
-    eurekaPlatformContract.options.address,
-    5000,
-    TEST_ARTICLE_2_DATA_IN_HEX
-  ).send({
-    from: author.ethereumAddress,
-    gas: 80000000
-  });
+  // Signup editor & assign him for article 1 & 2
+  await TestFunctions.signUpEditorAndTest(t, editor);
+  await TestFunctions.assignEditorForSubmissionProcess(t, editor, articleSubmission1);
+  await TestFunctions.assignEditorForSubmissionProcess(t, editor, articleSubmission2);
 
-  let articleSubmissions = await articleSubmissionService.getAllSubmissions();
-  t.is(articleSubmissions.length, 2);
+  // Accept sanity-check for article 1
+  await TestFunctions.acceptSanityCheckAndTest(t, editor, author, articleVersion2);
 
-  let counter = 0;
-  while (
-    (typeof articleSubmissions[0].scSubmissionID === 'undefined' ||
-      typeof articleSubmissions[1].scSubmissionID === 'undefined') &&
-    counter < 10
-  ) {
-    sleepSync(5000);
-    articleSubmissions = await articleSubmissionService.getAllSubmissions();
-    counter++;
-  }
+  // Decline sanity-check for article 2
 
-  // TODO try sanity check without being assign first --> expected behavior: must fail
-  // assign editor for the submission process of article 1 & 2
-  await assignForSubmissionProcess(
-    eurekaPlatformContract,
-    articleSubmissions[0].scSubmissionID
-  ).send({
-    from: editor.ethereumAddress
-  });
-  articleSubmission1 = await articleSubmissionService.getSubmissionById(
-    articleSubmissions[0]._id
-  );
-  t.is(articleSubmission1.editor, editor.ethereumAddress);
 
-  await assignForSubmissionProcess(
-    eurekaPlatformContract,
-    articleSubmissions[1].scSubmissionID
-  ).send({
-    from: editor.ethereumAddress
-  });
-  articleSubmission2 = await articleSubmissionService.getSubmissionById(
-    articleSubmissions[1]._id
-  );
-  t.is(articleSubmission2.editor, editor.ethereumAddress);
+  // await setSanityToOk(eurekaPlatformContract, articleVersion1.articleHash).send(
+  //   {
+  //     from: editor.ethereumAddress
+  //   }
+  // );
+  // articleVersion1 = await articleVersionService.getArticleVersionById(
+  //   author.ethereumAddress,
+  //   articleVersion1._id
+  // );
 
-  // Accept sanity check for article 1
-  articleVersion1 = await articleVersionService.getArticleVersionById(
-    author.ethereumAddress,
-    articleVersion1._id
-  );
-  t.is(articleVersion1.articleVersionState, ArticleVersionState.SUBMITTED);
-  await setSanityToOk(eurekaPlatformContract, articleVersion1.articleHash).send(
-    {
-      from: editor.ethereumAddress
-    }
-  );
-  articleVersion1 = await articleVersionService.getArticleVersionById(
-    author.ethereumAddress,
-    articleVersion1._id
-  );
 
-  // Check for SC status change
-  counter = 0;
-  while (
-    articleVersion1.articleVersionState !==
-    ArticleVersionState.EDITOR_CHECKED &&
-    counter < 10
-  ) {
-    sleepSync(5000);
-    articleSubmissions = await articleSubmissionService.getAllSubmissions();
-    counter++;
-  }
-  t.is(articleVersion1.articleVersionState, ArticleVersionState.EDITOR_CHECKED);
-
-  // Decline sanity check for article 2
-  articleVersion2 = await articleVersionService.getArticleVersionById(
-    author.ethereumAddress,
-    articleVersion2._id
-  );
-  t.is(articleVersion2.articleVersionState, ArticleVersionState.SUBMITTED);
-  await setSanityIsNotOk(
-    eurekaPlatformContract,
-    articleVersion2.articleHash
-  ).send({
-    from: editor.ethereumAddress
-  });
-  articleVersion2 = await articleVersionService.getArticleVersionById(
-    author.ethereumAddress,
-    articleVersion2._id
-  );
-
-  // Check for SC status change
-  counter = 0;
-  while (
-    articleVersion2.articleVersionState !==
-    ArticleVersionState.DECLINED_SANITY_NOTOK &&
-    counter < 10
-  ) {
-    sleepSync(5000);
-    articleSubmissions = await articleSubmissionService.getAllSubmissions();
-    counter++;
-  }
-  t.is(
-    articleVersion2.articleVersionState,
-    ArticleVersionState.DECLINED_SANITY_NOTOK
-  );
+  // // Check for SC status change
+  // counter = 0;
+  // while (
+  //   articleVersion1.articleVersionState !==
+  //   ArticleVersionState.EDITOR_CHECKED &&
+  //   counter < 10
+  // ) {
+  //   sleepSync(5000);
+  //   articleSubmissions = await articleSubmissionService.getAllSubmissions();
+  //   counter++;
+  // }
+  // t.is(articleVersion1.articleVersionState, ArticleVersionState.EDITOR_CHECKED);
+  //
+  // // Decline sanity check for article 2
+  // articleVersion2 = await articleVersionService.getArticleVersionById(
+  //   author.ethereumAddress,
+  //   articleVersion2._id
+  // );
+  // t.is(articleVersion2.articleVersionState, ArticleVersionState.SUBMITTED);
+  // await setSanityIsNotOk(
+  //   eurekaPlatformContract,
+  //   articleVersion2.articleHash
+  // ).send({
+  //   from: editor.ethereumAddress
+  // });
+  // articleVersion2 = await articleVersionService.getArticleVersionById(
+  //   author.ethereumAddress,
+  //   articleVersion2._id
+  // );
+  //
+  // // Check for SC status change
+  // counter = 0;
+  // while (
+  //   articleVersion2.articleVersionState !==
+  //   ArticleVersionState.DECLINED_SANITY_NOTOK &&
+  //   counter < 10
+  // ) {
+  //   sleepSync(5000);
+  //   articleSubmissions = await articleSubmissionService.getAllSubmissions();
+  //   counter++;
+  // }
+  // t.is(
+  //   articleVersion2.articleVersionState,
+  //   ArticleVersionState.DECLINED_SANITY_NOTOK
+  // );
 });
 
 /**************** Invite reviewers for review article & Reviewers accept Invitation  ******************/
