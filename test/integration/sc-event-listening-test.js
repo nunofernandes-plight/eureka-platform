@@ -50,6 +50,7 @@ import {
   setAccounts,
   createUser1, createEditor1, createEditor2, createReviewer1, createReviewer2, createReviewer3, createReviewer4
 } from '../test-data';
+import TestFunctions from '../test-functions';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
@@ -75,6 +76,7 @@ test.beforeEach(async () => {
   await setupWeb3Interface(platformContract, tokenContract);
   eurekaPlatformContract = platformContract;
   eurekaTokenContract = tokenContract;
+  TestFunctions.setContractsForTestingFunctions(eurekaPlatformContract, eurekaTokenContract);
 });
 
 test.after(async () => {
@@ -83,37 +85,12 @@ test.after(async () => {
 
 /************************ Sign up Editor ************************/
 
-test(PRETEXT + 'Sign up Editor', async t => {
-  await createUserContractOwner();
-
-  let user = await userService.getUserByEthereumAddress(contractOwner);
+test.only(PRETEXT + 'Sign up Editor', async t => {
+  let user = await createUserContractOwner();
   t.is(user.roles.length, 1);
   t.is(user.roles[0], Roles.CONTRACT_OWNER);
 
-  await signUpEditor(eurekaPlatformContract, contractOwner).send({
-    from: contractOwner
-  });
-
-  user = await userService.getUserByEthereumAddressWithScTransactions(
-    contractOwner
-  );
-
-  let counter = 0;
-  while (user.scTransactions.length < 1 && counter < 10) {
-    sleepSync(5000);
-    user = await userService.getUserByEthereumAddressWithScTransactions(
-      contractOwner
-    );
-    counter++;
-  }
-
-  t.is(user.roles.length, 2); // [CONTRACT-OWNER, EDITOR]
-  t.is(user.roles[1], Roles.EDITOR);
-  t.is(user.scTransactions.length, 1);
-  t.is(
-    user.scTransactions[0].transactionType,
-    ScTransactionType.EDITOR_ASSIGNED
-  );
+  await TestFunctions.signUpEditorAndTest(t, user);
 });
 
 /************************ Submit an Article &  auto change of Status from DRAFT --> SUBMITTED ************************/
@@ -402,7 +379,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
 });
 
 /**************** Invite reviewers for review article & Reviewers accept Invitation  ******************/
-test.only(
+test(
   PRETEXT +
   'Invite reviewers for review article & Reviewers accept Invitation ',
   async t => {
