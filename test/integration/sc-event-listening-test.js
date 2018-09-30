@@ -84,8 +84,7 @@ test.after(async () => {
 });
 
 /************************ Sign up Editor ************************/
-
-test.only(PRETEXT + 'Sign up Editor', async t => {
+test(PRETEXT + 'Sign up Editor', async t => {
   let user = await createUserContractOwner();
   t.is(user.roles.length, 1);
   t.is(user.roles[0], Roles.CONTRACT_OWNER);
@@ -93,42 +92,19 @@ test.only(PRETEXT + 'Sign up Editor', async t => {
   await TestFunctions.signUpEditorAndTest(t, user);
 });
 
-/************************ Submit an Article &  auto change of Status from DRAFT --> SUBMITTED ************************/
 
-test(
+/************************ Submit an Article &  auto change of Status from DRAFT --> SUBMITTED ************************/
+test.only(
   PRETEXT +
   'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED',
   async t => {
     // Create user on DB
     t.is((await userService.getAllUsers()).length, 0);
-    contractOwner = await createUserContractOwner();
-    const user = await createUser1();
+    const contractOwnerUser = await createUserContractOwner();
+    const user1 = await createUser1();
     t.is((await userService.getAllUsers()).length, 2);
 
-    // Create an article-draft on DB
-    t.is((await articleSubmissionService.getAllSubmissions()).length, 0);
-    await articleSubmissionService.createSubmission(user.ethereumAddress);
-    const articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
-
-    t.is(articleSubmission.articleVersions.length, 1);
-    let articleVersion = articleSubmission.articleVersions[0];
-    t.is(articleVersion.articleVersionState, ArticleVersionState.DRAFT);
-
-    // Send articleHash to DB
-    await articleVersionService.finishDraftById(
-      user.ethereumAddress,
-      articleVersion._id,
-      TEST_ARTICLE_1_HASH_HEX
-    );
-    articleVersion = await articleVersionService.getArticleVersionById(
-      user.ethereumAddress,
-      articleVersion._id
-    );
-    t.is(
-      articleVersion.articleVersionState,
-      ArticleVersionState.FINISHED_DRAFT
-    );
-    t.is(articleVersion.articleHash, TEST_ARTICLE_1_HASH_HEX);
+    await TestFunctions.createArticleDraftAndSubmitIt(t, user1, TEST_ARTICLE_1_HASH_HEX);
   }
 );
 
