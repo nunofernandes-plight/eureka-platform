@@ -3,7 +3,8 @@ import {
   assignForSubmissionProcess,
   changeEditorFromSubmissionProcess,
   removeEditorFromSubmissionProcess,
-  setSanityToOk
+  setSanityToOk,
+  setSanityIsNotOk
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -208,8 +209,7 @@ export default {
     while (
       articleVersion.articleVersionState !==
       ArticleVersionState.EDITOR_CHECKED &&
-      counter < 5
-    ) {
+      counter < 5) {
       sleepSync(5000);
       dbArticleVersion = await articleVersionService.getArticleVersionById(
         author.ethereumAddress,
@@ -219,4 +219,31 @@ export default {
     }
     t.is(dbArticleVersion.articleVersionState, ArticleVersionState.EDITOR_CHECKED);
   },
+
+  declineSanityCheckAndTest: async function(t, editor, author, articleVersion) {
+    await setSanityIsNotOk(
+      eurekaPlatformContract,
+      articleVersion.articleHash
+    ).send({
+      from: editor.ethereumAddress
+    });
+    let dbArticleVersion = await articleVersionService.getArticleVersionById(
+      author.ethereumAddress,
+      articleVersion._id
+    );
+
+    let counter = 0;
+    while (
+      articleVersion.articleVersionState !==
+      ArticleVersionState.DECLINED_SANITY_NOTOK &&
+      counter < 5) {
+      sleepSync(5000);
+      dbArticleVersion = await articleVersionService.getArticleVersionById(
+        author.ethereumAddress,
+        articleVersion._id
+      );
+      counter++;
+      t.is(dbArticleVersion.articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
+    }
+  }
 };

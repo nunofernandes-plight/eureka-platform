@@ -153,67 +153,10 @@ test.only(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   await TestFunctions.assignEditorForSubmissionProcess(t, editor, articleSubmission2);
 
   // Accept sanity-check for article 1
-  await TestFunctions.acceptSanityCheckAndTest(t, editor, author, articleVersion2);
+  await TestFunctions.acceptSanityCheckAndTest(t, editor, author, articleVersion1);
 
   // Decline sanity-check for article 2
-
-
-  // await setSanityToOk(eurekaPlatformContract, articleVersion1.articleHash).send(
-  //   {
-  //     from: editor.ethereumAddress
-  //   }
-  // );
-  // articleVersion1 = await articleVersionService.getArticleVersionById(
-  //   author.ethereumAddress,
-  //   articleVersion1._id
-  // );
-
-
-  // // Check for SC status change
-  // counter = 0;
-  // while (
-  //   articleVersion1.articleVersionState !==
-  //   ArticleVersionState.EDITOR_CHECKED &&
-  //   counter < 10
-  // ) {
-  //   sleepSync(5000);
-  //   articleSubmissions = await articleSubmissionService.getAllSubmissions();
-  //   counter++;
-  // }
-  // t.is(articleVersion1.articleVersionState, ArticleVersionState.EDITOR_CHECKED);
-  //
-  // // Decline sanity check for article 2
-  // articleVersion2 = await articleVersionService.getArticleVersionById(
-  //   author.ethereumAddress,
-  //   articleVersion2._id
-  // );
-  // t.is(articleVersion2.articleVersionState, ArticleVersionState.SUBMITTED);
-  // await setSanityIsNotOk(
-  //   eurekaPlatformContract,
-  //   articleVersion2.articleHash
-  // ).send({
-  //   from: editor.ethereumAddress
-  // });
-  // articleVersion2 = await articleVersionService.getArticleVersionById(
-  //   author.ethereumAddress,
-  //   articleVersion2._id
-  // );
-  //
-  // // Check for SC status change
-  // counter = 0;
-  // while (
-  //   articleVersion2.articleVersionState !==
-  //   ArticleVersionState.DECLINED_SANITY_NOTOK &&
-  //   counter < 10
-  // ) {
-  //   sleepSync(5000);
-  //   articleSubmissions = await articleSubmissionService.getAllSubmissions();
-  //   counter++;
-  // }
-  // t.is(
-  //   articleVersion2.articleVersionState,
-  //   ArticleVersionState.DECLINED_SANITY_NOTOK
-  // );
+  await TestFunctions.declineSanityCheckAndTest(t, editor, author, articleVersion2);
 });
 
 /**************** Invite reviewers for review article & Reviewers accept Invitation  ******************/
