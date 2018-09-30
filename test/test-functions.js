@@ -5,6 +5,8 @@ import {sleepSync} from './helpers.js';
 import articleSubmissionService from '../src/backend/db/article-submission-service.mjs';
 import ArticleVersionState from '../src/backend/schema/article-version-state-enum.mjs';
 import articleVersionService from '../src/backend/db/article-version-service.mjs';
+import {submitArticle} from '../src/smartcontracts/methods/web3-token-contract-methods.mjs';
+import {TEST_ARTICLE_1_DATA_IN_HEX} from './test-data';
 
 let eurekaPlatformContract;
 let eurekaTokenContract;
@@ -52,7 +54,7 @@ export default {
     return t;
   },
 
-  createArticleDraftAndSubmitIt: async function(t, user, articleHashHex) {
+  createArticleDraftAndSubmitIt: async function(t, user, articleHashHex, articleDataInHex) {
     // Create an article-draft on DB
     const articleSubmissionslength = (await articleSubmissionService.getAllSubmissions()).length;
     await articleSubmissionService.createSubmission(user.ethereumAddress);
@@ -79,8 +81,32 @@ export default {
     );
     t.is(articleVersion.articleHash, articleHashHex);
 
-    // TODO submission on SC
-    return t;
 
+    // Submit articleHash on SC
+    await submitArticle(
+      eurekaTokenContract,
+      eurekaPlatformContract.options.address,
+      5000,
+      articleDataInHex
+    ).send({
+      from: user.ethereumAddress,
+      gas: 80000000
+    });
+
+    articleVersion = await articleVersionService.getArticleVersionById(
+      user.ethereumAddress,
+      articleVersion._id
+    );
+    let counter = 0;
+    while (articleVersion.articleVersionState === ArticleVersionState.FINISHED_DRAFT && counter < 5) {
+      sleepSync(5000);
+      articleVersion = await articleVersionService.getArticleVersionById(
+        user.ethereumAddress,
+        articleVersion._id
+      );
+      counter++;
+    }
+    t.is(articleVersion.articleVersionState, ArticleVersionState.SUBMITTED);
+    return t;
   }
 };

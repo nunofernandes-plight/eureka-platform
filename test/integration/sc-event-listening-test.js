@@ -100,11 +100,11 @@ test.only(
   async t => {
     // Create user on DB
     t.is((await userService.getAllUsers()).length, 0);
-    const contractOwnerUser = await createUserContractOwner();
+    await createUserContractOwner();
     const user1 = await createUser1();
     t.is((await userService.getAllUsers()).length, 2);
 
-    await TestFunctions.createArticleDraftAndSubmitIt(t, user1, TEST_ARTICLE_1_HASH_HEX);
+    await TestFunctions.createArticleDraftAndSubmitIt(t, user1, TEST_ARTICLE_1_HASH_HEX, TEST_ARTICLE_1_DATA_IN_HEX);
   }
 );
 
@@ -116,15 +116,9 @@ test(
     const editor = await createEditor1();
     const editor2 = await createEditor2();
 
-    // Signup editor 1 & 2
-    await signUpEditor(eurekaPlatformContract, editor.ethereumAddress).send({
-      from: contractOwner
-    });
-    await signUpEditor(eurekaPlatformContract, editor2.ethereumAddress).send({
-      from: contractOwner
-    });
-    t.is(editor.ethereumAddress, accounts[2]);
-    t.is(editor2.ethereumAddress, accounts[3]);
+    TestFunctions.signUpEditorAndTest(t, editor);
+    TestFunctions.signUpEditorAndTest(t, editor2);
+
 
     // Setup article draft
     await articleSubmissionService.createSubmission(author.ethereumAddress);
