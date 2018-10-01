@@ -8,13 +8,13 @@ import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import REVIEW_STATE from '../schema/review-state-enum.mjs';
 import ReviewService from './review-service.mjs';
 
-export const getRelevantArticleData = articleVersion => {
+export const getRelevantArticleData = (submission, articleVersion) => {
   let resArticle = {};
 
-  resArticle.scSubmissionID = articleVersion.articleSubmission.scSubmissionID;
-  resArticle.ownerAddress = articleVersion.articleSubmission.ownerAddress;
+  resArticle.scSubmissionID = submission.scSubmissionID;
+  resArticle.ownerAddress = submission.ownerAddress;
   resArticle.articleSubmissionState =
-    articleVersion.articleSubmission.articleSubmissionState;
+    submission.articleSubmissionState;
 
   resArticle._id = articleVersion._id;
   resArticle.articleHash = articleVersion.articleHash;
@@ -37,7 +37,7 @@ const getArticlesResponse = articles => {
   let resArticles = [];
   articles.map(article => {
     if(article.articleSubmission)
-      resArticles.push(getRelevantArticleData(article));
+      resArticles.push(getRelevantArticleData(article.articleSubmission, article));
   });
   return resArticles;
 };
