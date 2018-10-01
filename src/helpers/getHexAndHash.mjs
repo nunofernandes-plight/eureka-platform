@@ -8,8 +8,9 @@ import web3 from './web3Instance.mjs';
 export const getArticleHashFromDocument = document => {
   const doc = new Document(document);
   let articleHash = '';
+
   doc.getAllFields().map(field => {
-    articleHash += hashField(field);
+    articleHash += hashField(doc[field]);
   });
   return sha256(CANON.stringify(articleHash));
 };
