@@ -6,7 +6,8 @@ import {
   setSanityToOk,
   setSanityIsNotOk,
   inviteReviewersForArticle,
-  acceptReviewInvitation
+  acceptReviewInvitation,
+  addEditorApprovedReview
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -313,6 +314,14 @@ export default {
     t.is(dbArticleVersion.editorApprovedReviews.length, (existingReviewersLength + newReviewersLength));
   },
 
+  /**
+   * Accepts the invitation to become editor-approved reviewer
+   * @param t
+   * @param reviewer that has been invited before by the editor
+   * @param index position within the editorApprovedReviews, the review here should be updated after the call
+   * @param articleVersion
+   * @returns {Promise<void>}
+   */
   acceptInvitationAndTest: async function(t, reviewer, index, articleVersion) {
     await acceptReviewInvitation(
       eurekaPlatformContract,
@@ -340,5 +349,55 @@ export default {
       counter++;
     }
     t.is(dbReview.reviewState, ReviewState.INVITATION_ACCEPTED);
+  },
+
+  addEditorApprovedReviewAndTest: async function(t, reviewer, review, reviewData, reviewDataInHex, articleVersion){
+    // Add editor-approved review1 into DB
+    await reviewService.addEditorApprovedReview(
+      reviewer.ethereumAddress,
+      review._id,
+      reviewData.reviewText,
+      reviewDataInHex,
+      reviewData.score1,
+      reviewData.score2,
+      reviewData.articleHasMajorIssues,
+      reviewData.articleHasMinorIssues
+    );
+
+    let dbReview = await reviewService.getReviewById(
+      reviewer.ethereumAddress,
+      review._id
+    );
+    t.is(dbReview.reviewState, ReviewState.HANDED_IN_DB);
+
+    // Add review1 in SC
+    await addEditorApprovedReview(
+      eurekaPlatformContract,
+      articleVersion.articleHash,
+      reviewDataInHex,
+      reviewData.articleHasMajorIssues,
+      reviewData.articleHasMinorIssues,
+      reviewData.score1,
+      reviewData.score2
+    ).send({
+      from: reviewer.ethereumAddress,
+      gas: 80000000
+    });
+
+    // Check if status changed on DB
+    dbReview = await reviewService.getReviewById(
+      reviewer.ethereumAddress,
+      review._id
+    );
+    let counter = 0;
+    while (review.reviewState !== ReviewState.HANDED_IN_SC && counter < 5) {
+      sleepSync(5000);
+      dbReview = await reviewService.getReviewById(
+        reviewer.ethereumAddress,
+        review._id
+      );
+      counter++;
+    }
+    t.is(dbReview.reviewState, ReviewState.HANDED_IN_SC);
   }
 };
