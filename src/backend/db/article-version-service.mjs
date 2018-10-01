@@ -6,6 +6,7 @@ import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import REVIEW_STATE from '../schema/review-state-enum.mjs';
+import ReviewService from './review-service.mjs';
 
 export const getRelevantArticleData = articleVersion => {
   let resArticle = {};
@@ -35,7 +36,8 @@ export const getRelevantArticleData = articleVersion => {
 const getArticlesResponse = articles => {
   let resArticles = [];
   articles.map(article => {
-    resArticles.push(getRelevantArticleData(article));
+    if(article.articleSubmission)
+      resArticles.push(getRelevantArticleData(article));
   });
   return resArticles;
 };

@@ -14,7 +14,7 @@ const getSubmissionResponse = submissions => {
   submissions.map(submission => {
     let lastArticleVersion =
       submission.articleVersions[submission.articleVersions.length - 1];
-    resSubmissions.push(getRelevantArticleData(submission, lastArticleVersion));
+    resSubmissions.push(getRelevantArticleData(lastArticleVersion));
   });
   return resSubmissions;
 };
