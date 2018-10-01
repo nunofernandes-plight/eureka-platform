@@ -237,7 +237,8 @@ export const submitDifferentArticles = async (
 
       await Promise.all(
         drafts.map(async draft => {
-          const hash = '0x' + getArticleHashFromDocument(draft.document);
+          const realHash = '0x' + getArticleHashFromDocument(draft.document);
+          const hash = sha256(new Date() + realHash);
 
           console.log(
             'Finishing Draft By Id for account ' +
@@ -258,7 +259,7 @@ export const submitDifferentArticles = async (
 
           console.log(submittedArticle.articleHash);
 
-          /* submitArticle(
+          submitArticle(
             tokenContract,
             platformContract.options.address,
             5000,
@@ -276,7 +277,7 @@ export const submitDifferentArticles = async (
             .catch(async err => {
               console.log(err);
               await articleVersionService.revertToDraft(account, draft._id);
-            });*/
+            });
         })
       );
     })
