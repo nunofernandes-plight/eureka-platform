@@ -36,7 +36,8 @@ export const getRelevantArticleData = articleVersion => {
 const getArticlesResponse = articles => {
   let resArticles = [];
   articles.map(article => {
-    resArticles.push(getRelevantArticleData(article));
+    if(article.articleSubmission)
+      resArticles.push(getRelevantArticleData(article));
   });
   return resArticles;
 };
