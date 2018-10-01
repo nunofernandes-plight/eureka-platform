@@ -15,6 +15,14 @@ export default {
     });
   },
 
+  getMyReviews: (address) => {
+    return Review.find({
+      reviewerAddress: address,
+      // TODO which states should be shown as my reviews
+      // reviewState: {$in: ['HANDED_IN_SC','DECLINED','ACCEPTED']}
+    })
+  },
+
   createReview: async (submissionId, articleHash, stateTimestamp) => {
     const review = new Review({submissionId, articleHash, stateTimestamp});
     return review.save(err => {

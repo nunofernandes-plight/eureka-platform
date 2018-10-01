@@ -9,41 +9,86 @@ const router = express.Router();
 
 router.use(accesController.loggedInOnly);
 
-router.get('/submitted',
+router.get(
+  '/submitted',
   asyncHandler(async req => {
-    return await articleVersionService.getSubmittedAndFinishedDraftOfUser(req.session.passport.user.ethereumAddress);
+    return await articleVersionService.getSubmittedAndFinishedDraftOfUser(
+      req.session.passport.user.ethereumAddress
+    );
   })
 );
 
-//TODO: only for editors: router.use(accesController.rolesOnly(Roles.EDITOR));
-
-router.get('/assigned/:id',
+/*
+  articles assigned to an Editor
+  */
+// TODO: router.use(accesController.rolesOnly([Roles.EDITOR]));
+router.get(
+  '/assigned/:id'
   // asyncHandler(async req => {
   //   return await articleVersionService.getArticleAssignedTo(req.session.passport.user.ethereumAddress, req.params.id);
   // })
 );
 
-router.get('/assigned/signoff',
+router.get(
+  '/assigned/signoff',
   asyncHandler(async req => {
-    return await articleVersionService.getArticlesAssignedTo(req.session.passport.user.ethereumAddress, ARTICLE_VERSION_STATE.SUBMITTED);
+    return await articleVersionService.getArticlesAssignedTo(
+      req.session.passport.user.ethereumAddress,
+      ARTICLE_VERSION_STATE.SUBMITTED
+    );
   })
 );
 
-router.get('/assigned/inviteReviewers',
+router.get(
+  '/assigned/inviteReviewers',
   asyncHandler(async req => {
-    return await articleVersionService.getArticlesAssignedTo(req.session.passport.user.ethereumAddress, ARTICLE_VERSION_STATE.EDITOR_CHECKED);
+    return await articleVersionService.getArticlesAssignedTo(
+      req.session.passport.user.ethereumAddress,
+      ARTICLE_VERSION_STATE.EDITOR_CHECKED
+    );
   })
 );
 
-router.get('/assigned/checkReviews',
+router.get(
+  '/assigned/checkReviews',
   asyncHandler(async req => {
-    return await articleVersionService.getArticlesAssignedTo(req.session.passport.user.ethereumAddress, ARTICLE_VERSION_STATE.REVIEWERS_INVITED);
+    return await articleVersionService.getArticlesAssignedTo(
+      req.session.passport.user.ethereumAddress,
+      ARTICLE_VERSION_STATE.REVIEWERS_INVITED
+    );
   })
 );
 
-router.get('/assigned/finalize',
+router.get(
+  '/assigned/finalize',
   asyncHandler(async req => {
-    return await articleVersionService.getArticlesToFinalize(req.session.passport.user.ethereumAddress, ARTICLE_VERSION_STATE.REVIEWERS_INVITED);
+    return await articleVersionService.getArticlesToFinalize(
+      req.session.passport.user.ethereumAddress,
+      ARTICLE_VERSION_STATE.REVIEWERS_INVITED
+    );
+  })
+);
+
+
+/*
+  articles open for a reviewer
+  */
+// TODO clear editor roles only and use: router.use(accesController.rolesOnly([Roles.REVIEWER]));
+router.get(
+  '/reviewable/invited',
+  asyncHandler(async req => {
+    return await articleVersionService.getArticlesInvitedForReviewing(
+      req.session.passport.user.ethereumAddress
+    );
+  })
+);
+
+router.get(
+  '/reviewable/community',
+  asyncHandler(async req => {
+    return await articleVersionService.getArticlesOpenForCommunityReviews(
+      req.session.passport.user.ethereumAddress
+    );
   })
 );
 

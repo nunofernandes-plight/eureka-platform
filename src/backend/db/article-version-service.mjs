@@ -7,12 +7,12 @@ import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import REVIEW_STATE from '../schema/review-state-enum.mjs';
 
-export const getRelevantArticleData = (submission, articleVersion) => {
+export const getRelevantArticleData = (articleVersion) => {
   let resArticle = {};
 
-  resArticle.scSubmissionID = submission.scSubmissionID;
-  resArticle.ownerAddress = submission.ownerAddress;
-  resArticle.articleSubmissionState = submission.articleSubmissionState;
+  resArticle.scSubmissionID = articleVersion.articleSubmission.scSubmissionID;
+  resArticle.ownerAddress = articleVersion.articleSubmission.ownerAddress;
+  resArticle.articleSubmissionState = articleVersion.articleSubmission.articleSubmissionState;
 
   resArticle._id = articleVersion._id;
   resArticle.articleHash = articleVersion.articleHash;
@@ -25,15 +25,18 @@ export const getRelevantArticleData = (submission, articleVersion) => {
   resArticle.figure = articleVersion.document.figure;
   resArticle.keywords = articleVersion.document.keywords;
 
+  resArticle.editorApprovedReviews = articleVersion.editorApprovedReviews;
+  resArticle.communityReviews = articleVersion.communityReviews;
+
   return resArticle;
 };
 
 const getArticlesResponse = articles => {
   let resArticles = [];
   articles.map(article => {
-    // populate() from mongoose sets articleSubmission to null if the editor address does not match the user
-    if (article.articleSubmission)
-      resArticles.push(getRelevantArticleData(article.articleSubmission, article));
+      resArticles.push(
+        getRelevantArticleData(article)
+      );
   });
   return resArticles;
 };
@@ -61,7 +64,6 @@ const areReviewsOK = (minAmount, reviews) => {
   let count = 0;
   reviews.forEach(review => {
     if (review.reviewState !== REVIEW_STATE.ACCEPTED)
-    // if (review.reviewState !== REVIEW_STATE.INVITED)   for testing purposes
       return false;
     if (review.hasMajorIssues)
       return false;
@@ -69,6 +71,21 @@ const areReviewsOK = (minAmount, reviews) => {
     count++;
   });
   return count >= minAmount;
+};
+
+const getArticleVersionsByIdObjects = (idObjects) => {
+  let ids = getArticleVersionIds(idObjects);
+  return getArticleVersionsByIds(ids);
+};
+
+const getArticleVersionIds = (idObjects) => {
+  return idObjects.map((i) => {
+    return i.articleVersion;
+  });
+};
+
+const getArticleVersionsByIds = (ids) => {
+  return ArticleVersion.find({_id: {$in: ids}});
 };
 
 export default {
@@ -100,7 +117,45 @@ export default {
         path: 'communityReviews '
       });
     const finalizableArticles = getFinalizableArticles(articles);
-    console.log(finalizableArticles);
+    return getArticlesResponse(articles);
+  },
+
+  getArticlesOpenForCommunityReviews: async (ethereumAddress) => {
+    // gettin reviews first to check which articles where already reviewed
+    const articleVersionIdObjects = await ReviewService.getMyReviews(ethereumAddress)
+      .select('articleVersion -_id');
+    const ids = getArticleVersionIds(articleVersionIdObjects);
+
+    const articles = await ArticleVersion.find({
+      // hide articles already reviewed
+      _id: {$nin: ids},
+      articleVersionState: {$in: ['EDITOR_CHECKED', 'REVIEWERS_INVITED']},
+      ownerAddress: {$ne: ethereumAddress},
+      'document.authors': {$ne: ethereumAddress}
+    })
+      .populate([
+        {path: 'articleSubmission'},
+        {path: 'editorApprovedReviews'},
+        {path: 'communityReviews'}
+      ]);
+    return getArticlesResponse(articles);
+  },
+
+  /* tipp not used anymore
+  * Query for a document nested in an array
+  *   const cursor = db.collection('inventory').find({
+        'instock.qty': { $lte: 20 }
+      });
+  * */
+  getArticlesInvitedForReviewing: async (ethereumAddress) => {
+    const articleVersionIdObjects = await ReviewService.getReviewInvitations(ethereumAddress)
+      .select('articleVersion -_id');
+    const articles = await getArticleVersionsByIdObjects(articleVersionIdObjects)
+      .populate([
+        {path: 'articleSubmission'},
+        {path: 'editorApprovedReviews'},
+        {path: 'communityReviews'}
+      ]);
     return getArticlesResponse(articles);
   },
 
