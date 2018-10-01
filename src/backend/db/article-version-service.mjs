@@ -6,6 +6,7 @@ import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import REVIEW_STATE from '../schema/review-state-enum.mjs';
+import ReviewService from './review-service.mjs';
 
 export const getRelevantArticleData = articleVersion => {
   let resArticle = {};
