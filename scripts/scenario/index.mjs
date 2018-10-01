@@ -14,7 +14,11 @@ import tokenContractABI from '../../src/smartcontracts/constants/GanacheTokenCon
 import platformContractAddress from '../../src/smartcontracts/constants/GanachePlatformContractAddress.json';
 import tokenContractAddress from '../../src/smartcontracts/constants/GanacheTokenContractAddress.json';
 import web3 from '../../src/helpers/web3Instance.mjs';
-import {CREATE_DRAFTS, SUBMIT_ALL_ARTICLES} from './scenariosNames.mjs';
+import {
+  CREATE_DRAFTS,
+  SUBMIT_ALL_ARTICLES,
+  SUBMIT_FEW_ARTICLES
+} from './scenariosNames.mjs';
 import {platformContract} from '../../src/backend/web3/web3InterfaceSetup.mjs';
 
 const cleanCollections = async () => {
@@ -53,18 +57,19 @@ const startScenario = async (platformContract, tokenContract) => {
   await createDifferentUsers();
   switch (process.env.SCENARIO) {
     case CREATE_DRAFTS:
-       await createDifferentDrafts();
-       break;
+      await createDifferentDrafts();
+      break;
 
-    case SUBMIT_ALL_ARTICLES:
+    case SUBMIT_ALL_ARTICLES || SUBMIT_FEW_ARTICLES:
       await createDifferentDrafts();
       await submitDifferentArticles(tokenContract, platformContract);
       break;
 
     default:
-      console.err(
+      console.log(
         'No valid scenario has been set as env. variable. For possible scenario names check the scenarioNames.mjs file'
       );
+      break;
   }
 };
 
