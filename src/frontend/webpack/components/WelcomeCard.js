@@ -94,7 +94,8 @@ class Cards extends Component {
             <CardTitle>Become an author</CardTitle>
             <CardFigure src="img/icons/submit.png" />
             <CardDescription>
-              Submit your article to be peer-reviewed in the EUREKA ecosystem
+              Submit your article to be peer-reviewed and rated in the EUREKA
+              ecosystem
             </CardDescription>
           </Card>
           <Card key="back" onMouseLeave={() => this.flipCard('1')}>
