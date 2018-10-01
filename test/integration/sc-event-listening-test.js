@@ -171,7 +171,6 @@ test.only(
     const reviewer2 = await createReviewer2();
     const reviewer3 = await createReviewer3();
     const editorApprovedReviewers = [reviewer1, reviewer2, reviewer3];
-
     const reviewer4 = await createReviewer4();
 
     // Setup article draft
@@ -193,110 +192,21 @@ test.only(
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
     articleVersion = articleSubmission.articleVersions[0];
 
-
-
     await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[0], 0, articleVersion);
     await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[1], 1, articleVersion);
     await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[2], 2, articleVersion);
 
-    
-    //
-    // // Add editor-approved review1 into DB
-    // await reviewService.addEditorApprovedReview(
-    //   reviewer1.ethereumAddress,
-    //   review._id,
-    //   REVIEW_1.reviewText,
-    //   REVIEW_1_HASH_HEX,
-    //   REVIEW_1.score1,
-    //   REVIEW_1.score2,
-    //   REVIEW_1.articleHasMajorIssues,
-    //   REVIEW_1.articleHasMinorIssues
-    // );
-    //
-    // review = await reviewService.getReviewById(
-    //   reviewer1.ethereumAddress,
-    //   review._id
-    // );
-    // t.is(review.reviewState, ReviewState.HANDED_IN_DB);
-    //
-    // // Add review1 in SC
-    // await addEditorApprovedReview(
-    //   eurekaPlatformContract,
-    //   articleVersion.articleHash,
-    //   REVIEW_1_HASH_HEX,
-    //   REVIEW_1.articleHasMajorIssues,
-    //   REVIEW_1.articleHasMinorIssues,
-    //   REVIEW_1.score1,
-    //   REVIEW_1.score2
-    // ).send({
-    //   from: reviewer1.ethereumAddress,
-    //   gas: 80000000
-    // });
-    //
-    // // Check if status changed on DB
-    // review = await reviewService.getReviewById(
-    //   reviewer1.ethereumAddress,
-    //   review._id
-    // );
-    // counter = 0;
-    // while (review.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
-    //   sleepSync(5000);
-    //   review = await reviewService.getReviewById(
-    //     reviewer1.ethereumAddress,
-    //     review._id
-    //   );
-    //   counter++;
-    // }
-    // t.is(review.reviewState, ReviewState.HANDED_IN_SC);
-    //
-    // // Add editor-approved review2 into DB
-    // await reviewService.addEditorApprovedReview(
-    //   reviewer2.ethereumAddress,
-    //   review2._id,
-    //   REVIEW_2.reviewText,
-    //   REVIEW_2_HASH_HEX,
-    //   REVIEW_2.score1,
-    //   REVIEW_2.score2,
-    //   REVIEW_2.articleHasMajorIssues,
-    //   REVIEW_2.articleHasMinorIssues
-    // );
-    //
-    // review2 = await reviewService.getReviewById(
-    //   reviewer2.ethereumAddress,
-    //   review2._id
-    // );
-    // t.is(review2.reviewState, ReviewState.HANDED_IN_DB);
-    //
-    // // Add review2 in SC
-    // await addEditorApprovedReview(
-    //   eurekaPlatformContract,
-    //   articleVersion.articleHash,
-    //   REVIEW_2_HASH_HEX,
-    //   REVIEW_2.articleHasMajorIssues,
-    //   REVIEW_2.articleHasMinorIssues,
-    //   REVIEW_2.score1,
-    //   REVIEW_2.score2
-    // ).send({
-    //   from: reviewer2.ethereumAddress,
-    //   gas: 80000000
-    // });
-    //
-    // // Check if status changed on DB
-    // review2 = await reviewService.getReviewById(
-    //   reviewer2.ethereumAddress,
-    //   review2._id
-    // );
-    // counter = 0;
-    // while (review2.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
-    //   sleepSync(5000);
-    //   review2 = await reviewService.getReviewById(
-    //     reviewer2.ethereumAddress,
-    //     review2._id
-    //   );
-    //   counter++;
-    // }
-    // t.is(review2.reviewState, ReviewState.HANDED_IN_SC);
-    //
+    // Get the reviews from DB
+    let review1 = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.editorApprovedReviews[0]);
+    let review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, articleVersion.editorApprovedReviews[1]);
+    let review3 = await reviewService.getReviewById(reviewer3.ethereumAddress, articleVersion.editorApprovedReviews[2]);
+
+    // Add editor-approved review into DB
+    await TestFunctions.addEditorApprovedReviewAndTest(t, reviewer1, review1, REVIEW_1, REVIEW_1_HASH_HEX, articleVersion);
+    await TestFunctions.addEditorApprovedReviewAndTest(t, reviewer2, review2, REVIEW_2, REVIEW_2_HASH_HEX, articleVersion);
+    await TestFunctions.addEditorApprovedReviewAndTest(t, reviewer3, review3, REVIEW_3, REVIEW_3_HASH_HEX, articleVersion);
+
+
     // // Write a community review as reviewer3
     // t.is(articleVersion.communityReviews.length, 0);
     // let review3 = await reviewService.addNewCommunitydReview(
