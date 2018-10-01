@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import {Card} from '../../views/Card.js';
 import {Table} from '../../design-components/Table/Table.js';
-import {getDomain} from '../../../../helpers/getDomain.js';
+import {getDomain} from '../../../../helpers/getDomain.mjs';
 import {getRandomAvatar} from '../../../helpers/getRandomAvatar.mjs';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
 

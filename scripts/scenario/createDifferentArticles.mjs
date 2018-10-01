@@ -3,6 +3,13 @@ import articleVersionService from '../../src/backend/db/article-version-service.
 import getAccounts from '../../src/smartcontracts/methods/get-accounts.mjs';
 import web3 from '../../src/helpers/web3Instance.mjs';
 import ArticleVersion from '../../src/backend/schema/article-version.mjs';
+import {submitArticle} from '../../src/smartcontracts/methods/web3-token-contract-methods.mjs';
+import getArticleHex from '../../src/smartcontracts/methods/get-articleHex.mjs';
+import sha256 from 'js-sha256';
+import {
+  getArticleHashFromDocument,
+  getArticleHexFromDocument
+} from '../../src/helpers/getHexAndHash.mjs';
 
 const getFigures = () => {
   return [
@@ -204,6 +211,7 @@ export const createDifferentDrafts = async () => {
 
           // set figures
           article.document.figure.push(figure);
+
           return articleVersionService.updateDraftById(
             account,
             article._id,
@@ -216,24 +224,62 @@ export const createDifferentDrafts = async () => {
   );
 };
 
+const getHexFromDocument = () => {
+  const ARTICLE1 = {
+    articleHash:
+      '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+    url: 'article1.url',
+    authors: [
+      '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88',
+      '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'
+    ],
+    contributorRatios: [4000, 6000],
+    linkedArticles: [
+      '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
+      '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
+      'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
+    ],
+    linkedArticlesSplitRatios: [3334, 3333, 3333]
+  };
+};
+
 export const submitDifferentArticles = async (
   tokenContract,
   platformContract
 ) => {
-  //const accounts = await getAccounts(web3);
-  let drafts = await articleVersionService
-    .getDraftsOfUser('0x269cbAfc4253C7516CE2D576d139808F3EBE40FC')
-    .then(v => {
-      return v;
-    })
-    .catch(err => console.err(err));
-  console.log(drafts.length);
+  const accounts = await getAccounts(web3);
+  const account = accounts[0];
+  const drafts = await articleVersionService.getDraftsOfUser(account);
+  const draft = drafts[0];
 
-  /*submitArticle(tokenContract, platformContract.options.address, 5000)
-    .send({
-      from: this.props.selectedAccount.address,
-      gas: 8000000
-    })
+  const hash = getArticleHashFromDocument(draft.document);
+
+  console.log(
+    'Finishing Draft By Id for account ' +
+      account +
+      ' and draft with id ' +
+      draft._id +
+      ' and hash : ' +
+      hash
+  );
+  await articleVersionService.finishDraftById(account, draft._id, hash);
+
+  const submittedArticle = await articleVersionService.getArticleVersionById(
+    account,
+    draft._id
+  );
+
+  const articleHex = getArticleHexFromDocument(submittedArticle);
+
+  console.log(platformContract.options.address);
+
+  submitArticle(
+    tokenContract,
+    platformContract.options.address,
+    5000,
+    articleHex
+  )
+    .send({from: account, gas: 8000000})
     .on('transactionHash', tx => {
       console.log(tx);
     })
@@ -243,5 +289,5 @@ export const submitDifferentArticles = async (
       );
       return receipt;
     })
-    .catch(err => console.log(err));*/
+    .catch(err => console.log(err));
 };

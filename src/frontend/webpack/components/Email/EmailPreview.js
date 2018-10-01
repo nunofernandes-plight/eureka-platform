@@ -6,7 +6,7 @@ import {
   __GRAY_800,
   __GRAY_900
 } from '../../../helpers/colors.js';
-import {renderField} from '../TextEditor/DocumentRenderer.js';
+import {renderField} from '../TextEditor/DocumentRenderer.mjs';
 
 const Container = styled.div`
   margin-bottom: 30px;

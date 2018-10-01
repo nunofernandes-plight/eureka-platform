@@ -1,6 +1,8 @@
-import {EditorState, convertToRaw} from 'draft-js';
+import draftJs from 'draft-js';
 import Document from '../../../../models/Document.mjs';
 import {deserializeDocument} from '../../../../helpers/documentSerializer.mjs';
+const EditorState = draftJs.EditorState;
+const convertToRaw = draftJs.convertToRaw;
 
 export const renderField = (document, field) => {
   const deserialized = deserializeDocument(new Document(document));

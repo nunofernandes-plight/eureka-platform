@@ -1,4 +1,4 @@
-import {getDomain} from '../../../../helpers/getDomain.js';
+import {getDomain} from '../../../../helpers/getDomain.mjs';
 
 export const getUnassignedSubmissions = () => {
   return fetch(`${getDomain()}/api/submissions/unassigned`, {

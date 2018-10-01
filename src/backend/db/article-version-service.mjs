@@ -6,7 +6,6 @@ import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import REVIEW_STATE from '../schema/review-state-enum.mjs';
-import ReviewService from './review-service.mjs';
 
 export const getRelevantArticleData = (articleVersion) => {
   let resArticle = {};
@@ -227,8 +226,12 @@ export default {
     let articleVersion = await ArticleVersion.findById(articleVersionId);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
     if (articleVersion.articleVersionState !== ArticleVersionStates.DRAFT)
-      errorThrower.notCorrectStatus(ArticleVersionStates.DRAFT, articleVersion.articleVersionState);
-    if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+      errorThrower.notCorrectStatus(
+        ArticleVersionStates.DRAFT,
+        articleVersion.articleVersionState
+      );
+    if (articleVersion.ownerAddress !== userAddress)
+      errorThrower.notCorrectEthereumAddress();
 
     articleVersion.articleHash = articleHash;
     articleVersion.articleVersionState = ArticleVersionStates.FINISHED_DRAFT;
@@ -300,6 +303,7 @@ function getDraftInfos(drafts) {
     draftInfo.document.title = draft.document.title;
     draftInfo.document.authors = draft.document.authors;
     draftInfo.timestamp = draft.timestamp;
+    draftInfo.document.figure = draft.document.figure;
     draftInfos.push(draftInfo);
   });
   return draftInfos;

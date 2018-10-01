@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import {InputField} from '../design-components/Inputs.js';
-import {getDomain} from '../../../helpers/getDomain.js';
+import {getDomain} from '../../../helpers/getDomain.mjs';
 import Avatar from '../views/Avatar.js';
 import {
   __ALERT_ERROR,

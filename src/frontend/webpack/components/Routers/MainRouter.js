@@ -6,7 +6,7 @@ import WelcomePage from '../../views/WelcomePage';
 import Header from '../Header';
 import Login from '../Login';
 import MetaMaskGuide from '../../views/MetaMaskGuide';
-import {getDomain} from '../../../../helpers/getDomain.js';
+import {getDomain} from '../../../../helpers/getDomain.mjs';
 import SignUp from '../SignUp.js';
 import PanelLeft from '../PanelLeft.js';
 import {DashBoardGuard} from '../Guards/Guards.js';
