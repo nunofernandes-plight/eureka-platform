@@ -143,7 +143,7 @@ class Cards extends Component {
 
         <ReactCardFlip isFlipped={this.state['4']}>
           <Card key="front" onMouseEnter={() => this.flipCard('4')}>
-            <CardTitle>Our Journal</CardTitle>
+            <CardTitle>Our Journals</CardTitle>
             <EurekaLogo width={70} height={70} />
             <CardDescription>
               Have a look at the articles which have been published into our
