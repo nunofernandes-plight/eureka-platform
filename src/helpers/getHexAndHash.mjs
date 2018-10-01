@@ -13,7 +13,7 @@ export const getArticleHashFromDocument = document => {
   doc.getAllFields().map(field => {
     if (doc[field]) {
       const value = renderField(doc, field);
-      articleHash += hashField(value) + randomness;
+      articleHash += hashField(value);
     }
   });
   return sha256(CANON.stringify(articleHash));

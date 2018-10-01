@@ -256,7 +256,9 @@ export const submitDifferentArticles = async (
 
           const articleHex = getArticleHexFromDocument(submittedArticle);
 
-          submitArticle(
+          console.log(submittedArticle.articleHash);
+
+          /* submitArticle(
             tokenContract,
             platformContract.options.address,
             5000,
@@ -274,7 +276,7 @@ export const submitDifferentArticles = async (
             .catch(async err => {
               console.log(err);
               await articleVersionService.revertToDraft(account, draft._id);
-            });
+            });*/
         })
       );
     })
