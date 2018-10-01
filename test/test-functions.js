@@ -7,7 +7,8 @@ import {
   setSanityIsNotOk,
   inviteReviewersForArticle,
   acceptReviewInvitation,
-  addEditorApprovedReview
+  addEditorApprovedReview,
+  addCommunityReview
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -340,7 +341,7 @@ export default {
     while (
       dbReview.reviewState !== ReviewState.INVITATION_ACCEPTED &&
       counter < 5
-    ) {
+      ) {
       sleepSync(5000);
       dbReview = await reviewService.getReviewById(
         reviewer.ethereumAddress,
@@ -351,7 +352,7 @@ export default {
     t.is(dbReview.reviewState, ReviewState.INVITATION_ACCEPTED);
   },
 
-  addEditorApprovedReviewAndTest: async function(t, reviewer, review, reviewData, reviewDataInHex, articleVersion){
+  addEditorApprovedReviewAndTest: async function(t, reviewer, review, reviewData, reviewDataInHex, articleVersion) {
     // Add editor-approved review1 into DB
     await reviewService.addEditorApprovedReview(
       reviewer.ethereumAddress,
@@ -395,6 +396,64 @@ export default {
       dbReview = await reviewService.getReviewById(
         reviewer.ethereumAddress,
         review._id
+      );
+      counter++;
+    }
+    t.is(dbReview.reviewState, ReviewState.HANDED_IN_SC);
+  },
+
+  addNewCommunitydReviewAndTest: async function(t, reviewer, reviewData,reviewDataInHex, author, articleVersion) {
+    const existingCommunityReviewsLength = articleVersion.communityReviews.length;
+
+    // Add a new communityReview into the DB
+    let dbReview = await reviewService.addNewCommunitydReview(
+      reviewer.ethereumAddress,
+      articleVersion.articleHash,
+      reviewData.reviewText,
+      reviewDataInHex,
+      reviewData.score1,
+      reviewData.score2,
+      reviewData.articleHasMajorIssues,
+      reviewData.articleHasMinorIssues
+    );
+
+    // check if community review has been added and status has changed on DB
+    articleVersion = await articleVersionService.getArticleVersionById(
+      author.ethereumAddress,
+      articleVersion._id
+    );
+    t.is(articleVersion.communityReviews.length, (existingCommunityReviewsLength + 1));
+    dbReview = await reviewService.getReviewById(
+      reviewer.ethereumAddress,
+      dbReview._id
+    );
+    t.is(dbReview.reviewState, ReviewState.HANDED_IN_DB);
+
+    // Add the communityReview into the SC
+    await addCommunityReview(
+      eurekaPlatformContract,
+      articleVersion.articleHash,
+      reviewDataInHex,
+      reviewData.articleHasMajorIssues,
+      reviewData.articleHasMinorIssues,
+      reviewData.score1,
+      reviewData.score2
+    ).send({
+      from: reviewer.ethereumAddress,
+      gas: 80000000
+    });
+
+    // check if status on DB has changed from SC Event
+    dbReview = await reviewService.getReviewById(
+      reviewer.ethereumAddress,
+      dbReview._id
+    );
+    let counter = 0;
+    while (dbReview.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
+      sleepSync(5000);
+      dbReview = await reviewService.getReviewById(
+        reviewer.ethereumAddress,
+        dbReview._id
       );
       counter++;
     }

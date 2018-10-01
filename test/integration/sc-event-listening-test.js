@@ -206,7 +206,12 @@ test.only(
     await TestFunctions.addEditorApprovedReviewAndTest(t, reviewer2, review2, REVIEW_2, REVIEW_2_HASH_HEX, articleVersion);
     await TestFunctions.addEditorApprovedReviewAndTest(t, reviewer3, review3, REVIEW_3, REVIEW_3_HASH_HEX, articleVersion);
 
+    //update from DB
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    articleVersion = articleSubmission.articleVersions[0];
 
+    // Add a community review as reviewer4
+    await TestFunctions.addNewCommunitydReviewAndTest(t, reviewer4, REVIEW_4, REVIEW_4_HASH_HEX, author, articleVersion);
     // // Write a community review as reviewer3
     // t.is(articleVersion.communityReviews.length, 0);
     // let review3 = await reviewService.addNewCommunitydReview(
@@ -230,6 +235,7 @@ test.only(
     // t.is(articleVersion.communityReviews.length, 1);
     //
     // t.is(review3.reviewState, ReviewState.HANDED_IN_DB);
+
     // await addCommunityReview(
     //   eurekaPlatformContract,
     //   articleVersion.articleHash,

@@ -156,7 +156,7 @@ export const REVIEW_1 = {
 export const REVIEW_1_HASH_HEX = '0x' + REVIEW_1.reviewHash;
 export const REVIEW_1_CORRECTED = {
   reviewHash:
-    '999aa57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+    '111aa57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
   reviewText: 'Corrected version of review2',
   score1: 3,
   score2: 3,
@@ -166,7 +166,7 @@ export const REVIEW_1_CORRECTED = {
 
 export const REVIEW_2 = {
   reviewHash:
-    '000ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+    '222ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
   reviewText: 'That one is the second review. So it comes from reviewer2',
   score1: 1,
   score2: 1,
@@ -188,7 +188,7 @@ export const REVIEW_3_HASH_HEX = '0x' + REVIEW_3.reviewHash;
 
 export const REVIEW_4 = {
   reviewHash:
-    '333cc57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+    '444cc57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
   reviewText: 'Fourth review which will get accepted',
   score1: 2,
   score2: 2,
