@@ -7,12 +7,13 @@ import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import REVIEW_STATE from '../schema/review-state-enum.mjs';
 
-export const getRelevantArticleData = (articleVersion) => {
+export const getRelevantArticleData = articleVersion => {
   let resArticle = {};
 
   resArticle.scSubmissionID = articleVersion.articleSubmission.scSubmissionID;
   resArticle.ownerAddress = articleVersion.articleSubmission.ownerAddress;
-  resArticle.articleSubmissionState = articleVersion.articleSubmission.articleSubmissionState;
+  resArticle.articleSubmissionState =
+    articleVersion.articleSubmission.articleSubmissionState;
 
   resArticle._id = articleVersion._id;
   resArticle.articleHash = articleVersion.articleHash;
@@ -34,18 +35,15 @@ export const getRelevantArticleData = (articleVersion) => {
 const getArticlesResponse = articles => {
   let resArticles = [];
   articles.map(article => {
-      resArticles.push(
-        getRelevantArticleData(article)
-      );
+    resArticles.push(getRelevantArticleData(article));
   });
   return resArticles;
 };
 
-const getFinalizableArticles = (articles) => {
+const getFinalizableArticles = articles => {
   let finalizableArticles = [];
   articles.forEach(article => {
-    if (isFinalizable(article))
-      finalizableArticles.push(article);
+    if (isFinalizable(article)) finalizableArticles.push(article);
   });
   return finalizableArticles;
 };
@@ -54,8 +52,7 @@ const isFinalizable = article => {
   const minEAReviews = 1; //minAmountOfEditorApprovedReviews
   const minCReviews = 0; //minAmountOfCommunityReviews
   return (
-    areReviewsOK(minEAReviews, article.editorApprovedReviews)
-    &&
+    areReviewsOK(minEAReviews, article.editorApprovedReviews) &&
     areReviewsOK(minCReviews, article.communityReviews)
   );
 };
@@ -63,28 +60,26 @@ const isFinalizable = article => {
 const areReviewsOK = (minAmount, reviews) => {
   let count = 0;
   reviews.forEach(review => {
-    if (review.reviewState !== REVIEW_STATE.ACCEPTED)
-      return false;
-    if (review.hasMajorIssues)
-      return false;
+    if (review.reviewState !== REVIEW_STATE.ACCEPTED) return false;
+    if (review.hasMajorIssues) return false;
 
     count++;
   });
   return count >= minAmount;
 };
 
-const getArticleVersionsByIdObjects = (idObjects) => {
+const getArticleVersionsByIdObjects = idObjects => {
   let ids = getArticleVersionIds(idObjects);
   return getArticleVersionsByIds(ids);
 };
 
-const getArticleVersionIds = (idObjects) => {
-  return idObjects.map((i) => {
+const getArticleVersionIds = idObjects => {
+  return idObjects.map(i => {
     return i.articleVersion;
   });
 };
 
-const getArticleVersionsByIds = (ids) => {
+const getArticleVersionsByIds = ids => {
   return ArticleVersion.find({_id: {$in: ids}});
 };
 
@@ -94,15 +89,16 @@ export default {
   },
 
   getArticlesAssignedTo: async (ethereumAddress, articleVersionState) => {
-    const articles = await ArticleVersion.find({articleVersionState: articleVersionState})
-      .populate({
-        path: 'articleSubmission',
-        match: {editor: ethereumAddress}
-      });
+    const articles = await ArticleVersion.find({
+      articleVersionState: articleVersionState
+    }).populate({
+      path: 'articleSubmission',
+      match: {editor: ethereumAddress}
+    });
     return getArticlesResponse(articles);
   },
 
-  getArticlesToFinalize: async (ethereumAddress) => {
+  getArticlesToFinalize: async ethereumAddress => {
     const articles = await ArticleVersion.find({
       articleVersionState: 'REVIEWERS_INVITED'
     })
@@ -120,10 +116,11 @@ export default {
     return getArticlesResponse(articles);
   },
 
-  getArticlesOpenForCommunityReviews: async (ethereumAddress) => {
+  getArticlesOpenForCommunityReviews: async ethereumAddress => {
     // gettin reviews first to check which articles where already reviewed
-    const articleVersionIdObjects = await ReviewService.getMyReviews(ethereumAddress)
-      .select('articleVersion -_id');
+    const articleVersionIdObjects = await ReviewService.getMyReviews(
+      ethereumAddress
+    ).select('articleVersion -_id');
     const ids = getArticleVersionIds(articleVersionIdObjects);
 
     const articles = await ArticleVersion.find({
@@ -132,12 +129,11 @@ export default {
       articleVersionState: {$in: ['EDITOR_CHECKED', 'REVIEWERS_INVITED']},
       ownerAddress: {$ne: ethereumAddress},
       'document.authors': {$ne: ethereumAddress}
-    })
-      .populate([
-        {path: 'articleSubmission'},
-        {path: 'editorApprovedReviews'},
-        {path: 'communityReviews'}
-      ]);
+    }).populate([
+      {path: 'articleSubmission'},
+      {path: 'editorApprovedReviews'},
+      {path: 'communityReviews'}
+    ]);
     return getArticlesResponse(articles);
   },
 
@@ -147,15 +143,17 @@ export default {
         'instock.qty': { $lte: 20 }
       });
   * */
-  getArticlesInvitedForReviewing: async (ethereumAddress) => {
-    const articleVersionIdObjects = await ReviewService.getReviewInvitations(ethereumAddress)
-      .select('articleVersion -_id');
-    const articles = await getArticleVersionsByIdObjects(articleVersionIdObjects)
-      .populate([
-        {path: 'articleSubmission'},
-        {path: 'editorApprovedReviews'},
-        {path: 'communityReviews'}
-      ]);
+  getArticlesInvitedForReviewing: async ethereumAddress => {
+    const articleVersionIdObjects = await ReviewService.getReviewInvitations(
+      ethereumAddress
+    ).select('articleVersion -_id');
+    const articles = await getArticleVersionsByIdObjects(
+      articleVersionIdObjects
+    ).populate([
+      {path: 'articleSubmission'},
+      {path: 'editorApprovedReviews'},
+      {path: 'communityReviews'}
+    ]);
     return getArticlesResponse(articles);
   },
 
@@ -182,7 +180,7 @@ export default {
    * @param userAddress
    * @returns {Promise<Array>}
    */
-  getDraftsOfUser: async (userAddress) => {
+  getDraftsOfUser: async userAddress => {
     let drafts = await ArticleVersion.find({
       ownerAddress: userAddress,
       articleVersionState: ArticleVersionStates.DRAFT
@@ -193,10 +191,13 @@ export default {
     return getDraftInfos(drafts);
   },
 
-  getSubmittedAndFinishedDraftOfUser: async (userAddress) => {
+  getSubmittedAndFinishedDraftOfUser: async userAddress => {
     const drafts = await ArticleVersion.find({
       ownerAddress: userAddress,
-      $or: [{articleVersionState: ArticleVersionState.FINISHED_DRAFT}, {articleVersionState: ArticleVersionState.SUBMITTED}]
+      $or: [
+        {articleVersionState: ArticleVersionState.FINISHED_DRAFT},
+        {articleVersionState: ArticleVersionState.SUBMITTED}
+      ]
     });
     return getDraftInfos(drafts);
   },
@@ -206,8 +207,12 @@ export default {
     let articleVersion = await ArticleVersion.findById(articleVersionId);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
     if (articleVersion.articleVersionState !== ArticleVersionStates.DRAFT)
-      errorThrower.notCorrectStatus(ArticleVersionStates.DRAFT, articleVersion.articleVersionState);
-    if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+      errorThrower.notCorrectStatus(
+        ArticleVersionStates.DRAFT,
+        articleVersion.articleVersionState
+      );
+    if (articleVersion.ownerAddress !== userAddress)
+      errorThrower.notCorrectEthereumAddress();
 
     // add new document variables
     for (let property in document) {
@@ -243,15 +248,27 @@ export default {
   revertToDraft: async (userAddress, articleVersionId) => {
     let articleVersion = await ArticleVersion.findById(articleVersionId);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
-    if (articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT) {
-      errorThrower.notCorrectStatus(ArticleVersionState.FINISHED_DRAFT, articleVersion.articleVersionState);
+    if (
+      articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT
+    ) {
+      errorThrower.notCorrectStatus(
+        ArticleVersionState.FINISHED_DRAFT,
+        articleVersion.articleVersionState
+      );
     }
-    if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress(userAddress);
+    if (articleVersion.ownerAddress !== userAddress)
+      errorThrower.notCorrectEthereumAddress(userAddress);
 
     articleVersion.articleVersionState = ArticleVersionState.DRAFT;
     await articleVersion.save();
-    return 'Articleversion ' + articleVersion._id + 'has reverted Status: '
-      + ArticleVersionState.FINISHED_DRAFT + ' to ' + ArticleVersionState.DRAFT;
+    return (
+      'Articleversion ' +
+      articleVersion._id +
+      'has reverted Status: ' +
+      ArticleVersionState.FINISHED_DRAFT +
+      ' to ' +
+      ArticleVersionState.DRAFT
+    );
   },
 
   /**
@@ -264,25 +281,27 @@ export default {
   getArticleVersionById: async (userAddress, articleVersionID) => {
     const articleVersion = await ArticleVersion.findById(articleVersionID);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionID);
-    if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+    if (articleVersion.ownerAddress !== userAddress)
+      errorThrower.notCorrectEthereumAddress();
     return articleVersion;
   },
 
-
   changeArticleVersionState: async (articleHash, versionState) => {
     if (!(versionState in ArticleVersionState)) {
-      let error = new Error('Internal error: Provided param "versionState" is not a actual ArticleVersionState');
+      let error = new Error(
+        'Internal error: Provided param "versionState" is not a actual ArticleVersionState'
+      );
       error.status = 500;
       throw error;
     }
 
-    await ArticleVersion.findOneAndUpdate({articleHash: articleHash},
+    await ArticleVersion.findOneAndUpdate(
+      {articleHash: articleHash},
       {
         articleVersionState: versionState
       }
     );
   }
-
 };
 
 /**

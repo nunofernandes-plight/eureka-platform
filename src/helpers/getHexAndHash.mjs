@@ -20,8 +20,8 @@ export const hashField = field => {
 
 const getInputData = article => {
   return {
-    articleHash: article.articleHash,
-    url: `${getDomain()}/app/articles/preview/${article._id}`, //this.state.inputData.url,
+    articleHash: article.articleHash.toString().substr(2),
+    url: `${getDomain()}/app/articles/preview/${article._id}`,
     authors: article.document.authors,
     contributorRatios: [4000, 6000],
     linkedArticles: [

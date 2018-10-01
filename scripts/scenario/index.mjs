@@ -21,7 +21,6 @@ const cleanCollections = async () => {
   await Review.remove({});
   await ArticleVersion.remove({});
   await ScTransactions.remove({});
-  await ScTransactions.remove({});
   console.log('Collections have been cleaned');
 };
 
@@ -39,7 +38,8 @@ const setupContracts = async () => {
 };
 const start = async () => {
   await cleanCollections();
-  await app.setupApp();
+  app.setupApp();
+  app.listenTo(process.env.PORT || 8080);
   const [platformContract, tokenContract] = await setupContracts();
   await createDifferentUsers();
   await createDifferentDrafts();

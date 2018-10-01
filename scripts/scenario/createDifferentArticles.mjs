@@ -224,25 +224,6 @@ export const createDifferentDrafts = async () => {
   );
 };
 
-const getHexFromDocument = () => {
-  const ARTICLE1 = {
-    articleHash:
-      '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
-    url: 'article1.url',
-    authors: [
-      '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88',
-      '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'
-    ],
-    contributorRatios: [4000, 6000],
-    linkedArticles: [
-      '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
-      '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
-      'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
-    ],
-    linkedArticlesSplitRatios: [3334, 3333, 3333]
-  };
-};
-
 export const submitDifferentArticles = async (
   tokenContract,
   platformContract
@@ -252,7 +233,7 @@ export const submitDifferentArticles = async (
   const drafts = await articleVersionService.getDraftsOfUser(account);
   const draft = drafts[0];
 
-  const hash = getArticleHashFromDocument(draft.document);
+  const hash = '0x' + getArticleHashFromDocument(draft.document);
 
   console.log(
     'Finishing Draft By Id for account ' +
