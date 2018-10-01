@@ -8,7 +8,10 @@ import {
   inviteReviewersForArticle,
   acceptReviewInvitation,
   addEditorApprovedReview,
-  addCommunityReview
+  addCommunityReview,
+  acceptReview,
+  declineReview,
+  acceptArticleVersion
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -402,7 +405,7 @@ export default {
     t.is(dbReview.reviewState, ReviewState.HANDED_IN_SC);
   },
 
-  addNewCommunitydReviewAndTest: async function(t, reviewer, reviewData,reviewDataInHex, author, articleVersion) {
+  addNewCommunitydReviewAndTest: async function(t, reviewer, reviewData, reviewDataInHex, author, articleVersion) {
     const existingCommunityReviewsLength = articleVersion.communityReviews.length;
 
     // Add a new communityReview into the DB
@@ -458,5 +461,74 @@ export default {
       counter++;
     }
     t.is(dbReview.reviewState, ReviewState.HANDED_IN_SC);
+  },
+
+  acceptReviewAndTest: async function(t, editor, review, articleVersion) {
+    await acceptReview(
+      eurekaPlatformContract,
+      articleVersion.articleHash,
+      review.reviewerAddress
+    ).send({
+      from: editor.ethereumAddress
+    });
+
+    let dbReview = await reviewService.getReviewById(
+      review.reviewerAddress,
+      review._id
+    );
+
+    let counter = 0;
+    while (review.reviewState !== ReviewState.ACCEPTED && counter < 10) {
+      sleepSync(5000);
+      dbReview = await reviewService.getReviewById(
+        review.reviewerAddress,
+        review._id
+      );
+      counter++;
+    }
+    t.is(dbReview.reviewState, ReviewState.ACCEPTED);
+  },
+
+  declineReviewAndTest: async function(t, editor, review, articleVersion) {
+    await declineReview(
+      eurekaPlatformContract,
+      articleVersion.articleHash,
+      review.reviewerAddress
+    ).send({
+      from: editor.ethereumAddress
+    });
+
+    let dbReview = await reviewService.getReviewById(
+      review.reviewerAddress,
+      review._id
+    );
+
+    let counter = 0;
+    while (review.reviewState !== ReviewState.ACCEPTED && counter < 10) {
+      sleepSync(5000);
+      dbReview = await reviewService.getReviewById(
+        review.reviewerAddress,
+        review._id
+      );
+      counter++;
+    }
+    t.is(dbReview.reviewState, ReviewState.DECLINED);
+  },
+
+  acceptArticleVersionAndTest: async function(t, editor, articleVersion) {
+    await acceptArticleVersion(
+      eurekaPlatformContract,
+      articleVersion.articleHash
+    ).send({
+      from: editor.ethereumAddress
+    });
+    let dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, articleVersion._id);
+    let counter = 0;
+    while (dbArticleVersion.articleVersionState !== ArticleVersionState.ACCEPTED && counter < 5) {
+      sleepSync(5000);
+      dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, articleVersion._id);
+      counter++;
+    }
+    t.is(dbArticleVersion.articleVersionState, ArticleVersionState.ACCEPTED);
   }
 };
