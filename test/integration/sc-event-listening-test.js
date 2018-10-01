@@ -133,7 +133,7 @@ test(
   }
 );
 
-test.only(PRETEXT + 'Submission of article, Sanity-Check', async t => {
+test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   // Create author and editor
   const author = await createUserContractOwner();
   const editor = await createEditor1();
@@ -160,7 +160,7 @@ test.only(PRETEXT + 'Submission of article, Sanity-Check', async t => {
 });
 
 /**************** Invite reviewers for review article & Reviewers accept Invitation  ******************/
-test(
+test.only(
   PRETEXT +
   'Invite reviewers for review article & Reviewers accept Invitation ',
   async t => {
@@ -172,436 +172,366 @@ test(
     const reviewer3 = await createReviewer3();
     const reviewer4 = await createReviewer4();
 
-    // Setup article draft 1 & 2
-    await articleSubmissionService.createSubmission(author.ethereumAddress);
+    // Setup article draft
+    await TestFunctions.createArticleDraftAndSubmitIt(t, author, TEST_ARTICLE_1_HASH_HEX, TEST_ARTICLE_1_DATA_IN_HEX);
     let articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
     let articleVersion = articleSubmission.articleVersions[0];
-    await articleVersionService.finishDraftById(
-      author.ethereumAddress,
-      articleVersion._id,
-      TEST_ARTICLE_1_HASH_HEX
-    );
 
-    // Signup editor and submit article 1 & 2
-    await signUpEditor(eurekaPlatformContract, editor.ethereumAddress).send({
-      from: contractOwner
-    });
-    await submitArticle(
-      eurekaTokenContract,
-      eurekaPlatformContract.options.address,
-      5000,
-      TEST_ARTICLE_1_DATA_IN_HEX
-    ).send({
-      from: author.ethereumAddress,
-      gas: 80000000
-    });
-
-    let counter = 0;
-    while (
-      typeof articleSubmission.scSubmissionID === 'undefined' &&
-      counter < 10
-    ) {
-      sleepSync(5000);
-      articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
-      counter++;
-    }
-
-    // Assign editor for the submission process of article
-    await assignForSubmissionProcess(
-      eurekaPlatformContract,
-      articleSubmission.scSubmissionID
-    ).send({
-      from: editor.ethereumAddress
-    });
+    // Signup editor & assign him on article
+    await TestFunctions.signUpEditorAndTest(t, editor);
+    await TestFunctions.assignEditorForSubmissionProcess(t, editor, articleSubmission);
 
     // Accept sanity check for article 1
-    articleVersion = await articleVersionService.getArticleVersionById(
-      author.ethereumAddress,
-      articleVersion._id
-    );
-    await setSanityToOk(
-      eurekaPlatformContract,
-      articleVersion.articleHash
-    ).send({
-      from: editor.ethereumAddress
-    });
+    await TestFunctions.acceptSanityCheckAndTest(t, editor, author, articleVersion);
 
-    // Invite reviewers
-    t.is(articleVersion.editorApprovedReviews.length, 0);
-    await inviteReviewersForArticle(
-      eurekaPlatformContract,
-      articleVersion.articleHash,
-      [
-        reviewer1.ethereumAddress,
-        reviewer2.ethereumAddress,
-        reviewer4.ethereumAddress
-      ]
-    ).send({
-      from: editor.ethereumAddress,
-      gas: 80000000
-    });
-
-    articleVersion = await articleVersionService.getArticleVersionById(
-      author.ethereumAddress,
-      articleVersion._id
-    );
-
-    // Check if article-version in DB holds reviewers
-    counter = 0;
-    while (articleVersion.editorApprovedReviews.length < 3 && counter < 10) {
-      sleepSync(5000);
-      articleVersion = await articleVersionService.getArticleVersionById(
-        author.ethereumAddress,
-        articleVersion._id
-      );
-      counter++;
-    }
-    t.is(articleVersion.editorApprovedReviews.length, 3);
-
-    // Reviewer1 accept --> check for new state in DB
-    await acceptReviewInvitation(
-      eurekaPlatformContract,
-      articleVersion.articleHash
-    ).send({
-      from: reviewer1.ethereumAddress,
-      gas: 80000000
-    });
-    let review = await reviewService.getReviewById(
-      reviewer1.ethereumAddress,
-      articleVersion.editorApprovedReviews[0]
-    );
-    counter = 0;
-    while (
-      review.reviewState !== ReviewState.INVITATION_ACCEPTED &&
-      counter < 10
-    ) {
-      sleepSync(5000);
-      review = await reviewService.getReviewById(
-        reviewer1.ethereumAddress,
-        articleVersion.editorApprovedReviews[0]
-      );
-      counter++;
-    }
-    t.is(review.reviewState, ReviewState.INVITATION_ACCEPTED);
-
-    // Reviewer2 accept --> check for new state in DB
-    await acceptReviewInvitation(
-      eurekaPlatformContract,
-      articleVersion.articleHash
-    ).send({
-      from: reviewer2.ethereumAddress,
-      gas: 80000000
-    });
-    let review2 = await reviewService.getReviewById(
-      reviewer2.ethereumAddress,
-      articleVersion.editorApprovedReviews[1]
-    );
-    counter = 0;
-    while (
-      review2.reviewState !== ReviewState.INVITATION_ACCEPTED &&
-      counter < 10
-    ) {
-      sleepSync(5000);
-      review2 = await reviewService.getReviewById(
-        reviewer2.ethereumAddress,
-        articleVersion.editorApprovedReviews[1]
-      );
-      counter++;
-    }
-    t.is(review2.reviewState, ReviewState.INVITATION_ACCEPTED);
-
-    // Reviewer4 accept --> check for new state in DB
-    await acceptReviewInvitation(
-      eurekaPlatformContract,
-      articleVersion.articleHash
-    ).send({
-      from: reviewer4.ethereumAddress,
-      gas: 80000000
-    });
-    let review4 = await reviewService.getReviewById(
-      reviewer4.ethereumAddress,
-      articleVersion.editorApprovedReviews[2]
-    );
-    counter = 0;
-    while (
-      review4.reviewState !== ReviewState.INVITATION_ACCEPTED &&
-      counter < 10) {
-      sleepSync(5000);
-      review4 = await reviewService.getReviewById(
-        reviewer4.ethereumAddress,
-        articleVersion.editorApprovedReviews[2]
-      );
-      counter++;
-    }
-    t.is(review4.reviewState, ReviewState.INVITATION_ACCEPTED);
-
-    // Add editor-approved review1 into DB
-    await reviewService.addEditorApprovedReview(
-      reviewer1.ethereumAddress,
-      review._id,
-      REVIEW_1.reviewText,
-      REVIEW_1_HASH_HEX,
-      REVIEW_1.score1,
-      REVIEW_1.score2,
-      REVIEW_1.articleHasMajorIssues,
-      REVIEW_1.articleHasMinorIssues
-    );
-
-    review = await reviewService.getReviewById(
-      reviewer1.ethereumAddress,
-      review._id
-    );
-    t.is(review.reviewState, ReviewState.HANDED_IN_DB);
-
-    // Add review1 in SC
-    await addEditorApprovedReview(
-      eurekaPlatformContract,
-      articleVersion.articleHash,
-      REVIEW_1_HASH_HEX,
-      REVIEW_1.articleHasMajorIssues,
-      REVIEW_1.articleHasMinorIssues,
-      REVIEW_1.score1,
-      REVIEW_1.score2
-    ).send({
-      from: reviewer1.ethereumAddress,
-      gas: 80000000
-    });
-
-    // Check if status changed on DB
-    review = await reviewService.getReviewById(
-      reviewer1.ethereumAddress,
-      review._id
-    );
-    counter = 0;
-    while (review.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
-      sleepSync(5000);
-      review = await reviewService.getReviewById(
-        reviewer1.ethereumAddress,
-        review._id
-      );
-      counter++;
-    }
-    t.is(review.reviewState, ReviewState.HANDED_IN_SC);
-
-    // Add editor-approved review2 into DB
-    await reviewService.addEditorApprovedReview(
-      reviewer2.ethereumAddress,
-      review2._id,
-      REVIEW_2.reviewText,
-      REVIEW_2_HASH_HEX,
-      REVIEW_2.score1,
-      REVIEW_2.score2,
-      REVIEW_2.articleHasMajorIssues,
-      REVIEW_2.articleHasMinorIssues
-    );
-
-    review2 = await reviewService.getReviewById(
-      reviewer2.ethereumAddress,
-      review2._id
-    );
-    t.is(review2.reviewState, ReviewState.HANDED_IN_DB);
-
-    // Add review2 in SC
-    await addEditorApprovedReview(
-      eurekaPlatformContract,
-      articleVersion.articleHash,
-      REVIEW_2_HASH_HEX,
-      REVIEW_2.articleHasMajorIssues,
-      REVIEW_2.articleHasMinorIssues,
-      REVIEW_2.score1,
-      REVIEW_2.score2
-    ).send({
-      from: reviewer2.ethereumAddress,
-      gas: 80000000
-    });
-
-    // Check if status changed on DB
-    review2 = await reviewService.getReviewById(
-      reviewer2.ethereumAddress,
-      review2._id
-    );
-    counter = 0;
-    while (review2.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
-      sleepSync(5000);
-      review2 = await reviewService.getReviewById(
-        reviewer2.ethereumAddress,
-        review2._id
-      );
-      counter++;
-    }
-    t.is(review2.reviewState, ReviewState.HANDED_IN_SC);
-
-    // Write a community review as reviewer3
-    t.is(articleVersion.communityReviews.length, 0);
-    let review3 = await reviewService.addNewCommunitydReview(
-      reviewer3.ethereumAddress,
-      articleVersion.articleHash,
-      REVIEW_3.reviewText,
-      REVIEW_3_HASH_HEX,
-      REVIEW_3.score1,
-      REVIEW_3.score2,
-      REVIEW_3.articleHasMajorIssues,
-      REVIEW_3.articleHasMinorIssues
-    );
-    review3 = await reviewService.getReviewById(
-      reviewer3.ethereumAddress,
-      review3._id
-    );
-    articleVersion = await articleVersionService.getArticleVersionById(
-      author.ethereumAddress,
-      articleVersion._id
-    );
-    t.is(articleVersion.communityReviews.length, 1);
-
-    t.is(review3.reviewState, ReviewState.HANDED_IN_DB);
-    await addCommunityReview(
-      eurekaPlatformContract,
-      articleVersion.articleHash,
-      REVIEW_3_HASH_HEX,
-      REVIEW_3.articleHasMajorIssues,
-      REVIEW_3.articleHasMinorIssues,
-      REVIEW_3.score1,
-      REVIEW_3.score2
-    ).send({
-      from: reviewer3.ethereumAddress,
-      gas: 80000000
-    });
-
-    review3 = await reviewService.getReviewById(
-      reviewer3.ethereumAddress,
-      review3._id
-    );
-
-    counter = 0;
-    while (review3.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
-      sleepSync(5000);
-      review3 = await reviewService.getReviewById(
-        reviewer3.ethereumAddress,
-        review3._id
-      );
-      counter++;
-    }
-    t.is(review3.reviewState, ReviewState.HANDED_IN_SC);
-
-    // Add editor-approved review4 into DB
-    await reviewService.addEditorApprovedReview(
-      reviewer4.ethereumAddress,
-      review4._id,
-      REVIEW_4.reviewText,
-      REVIEW_4_HASH_HEX,
-      REVIEW_4.score1,
-      REVIEW_4.score2,
-      REVIEW_4.articleHasMajorIssues,
-      REVIEW_4.articleHasMinorIssues
-    );
-
-    // Add review4 in SC
-    await addEditorApprovedReview(
-      eurekaPlatformContract,
-      articleVersion.articleHash,
-      REVIEW_4_HASH_HEX,
-      REVIEW_4.articleHasMajorIssues,
-      REVIEW_4.articleHasMinorIssues,
-      REVIEW_4.score1,
-      REVIEW_4.score2
-    ).send({
-      from: reviewer4.ethereumAddress,
-      gas: 80000000
-    });
-
-    // Check if status changed on DB
-    review4 = await reviewService.getReviewById(
-      reviewer4.ethereumAddress,
-      review4._id
-    );
-    counter = 0;
-    while (review4.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
-      sleepSync(5000);
-      review4 = await reviewService.getReviewById(
-        reviewer4.ethereumAddress,
-        review4._id
-      );
-      counter++;
-    }
-    t.is(review4.reviewState, ReviewState.HANDED_IN_SC);
-
-    // Accept review1
-    await acceptReview(
-      eurekaPlatformContract,
-      articleVersion.articleHash,
-      reviewer1.ethereumAddress
-    ).send({
-      from: editor.ethereumAddress
-    });
-    review = await reviewService.getReviewById(
-      reviewer1.ethereumAddress,
-      review._id
-    );
-    counter = 0;
-    while (review.reviewState !== ReviewState.ACCEPTED && counter < 10) {
-      sleepSync(5000);
-      review = await reviewService.getReviewById(
-        reviewer1.ethereumAddress,
-        review._id
-      );
-      counter++;
-    }
-    t.is(review.reviewState, ReviewState.ACCEPTED);
-
-    // Accept review4
-    await acceptReview(
-      eurekaPlatformContract,
-      articleVersion.articleHash,
-      reviewer4.ethereumAddress
-    ).send({
-      from: editor.ethereumAddress
-    });
-    review4 = await reviewService.getReviewById(
-      reviewer4.ethereumAddress,
-      review4._id
-    );
-    counter = 0;
-    while (review4.reviewState !== ReviewState.ACCEPTED && counter < 10) {
-      sleepSync(5000);
-      review4 = await reviewService.getReviewById(
-        reviewer4.ethereumAddress,
-        review4._id
-      );
-      counter++;
-    }
-    t.is(review4.reviewState, ReviewState.ACCEPTED);
-
-    // Decline review2
-    await declineReview(
-      eurekaPlatformContract,
-      articleVersion.articleHash,
-      reviewer2.ethereumAddress
-    ).send({
-      from: editor.ethereumAddress
-    });
-    review2 = await reviewService.getReviewById(
-      reviewer2.ethereumAddress,
-      review2._id
-    );
-    counter = 0;
-    while (review2.reviewState !== ReviewState.DECLINED && counter < 10) {
-      sleepSync(5000);
-      review2 = await reviewService.getReviewById(
-        reviewer2.ethereumAddress,
-        review2._id
-      );
-      counter++;
-    }
-    t.is(review2.reviewState, ReviewState.DECLINED);
-
-    // Editor accepts articleVersion
-    await acceptArticleVersion(
-      eurekaPlatformContract,
-      articleVersion.articleHash
-    ).send({
-      from: editor.ethereumAddress
-    });
-    articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
-    t.is(articleVersion.articleVersionState, ArticleVersionState.ACCEPTED);
+    // Invite reviewers 1,2 & 3 to become editor-approved reviewers
+    await TestFunctions.inviteReviewersAndTest(t, editor, author, [reviewer1, reviewer2, reviewer3], articleVersion);
+    
+    //
+    // // Reviewer1 accept --> check for new state in DB
+    // await acceptReviewInvitation(
+    //   eurekaPlatformContract,
+    //   articleVersion.articleHash
+    // ).send({
+    //   from: reviewer1.ethereumAddress,
+    //   gas: 80000000
+    // });
+    // let review = await reviewService.getReviewById(
+    //   reviewer1.ethereumAddress,
+    //   articleVersion.editorApprovedReviews[0]
+    // );
+    // counter = 0;
+    // while (
+    //   review.reviewState !== ReviewState.INVITATION_ACCEPTED &&
+    //   counter < 10
+    // ) {
+    //   sleepSync(5000);
+    //   review = await reviewService.getReviewById(
+    //     reviewer1.ethereumAddress,
+    //     articleVersion.editorApprovedReviews[0]
+    //   );
+    //   counter++;
+    // }
+    // t.is(review.reviewState, ReviewState.INVITATION_ACCEPTED);
+    //
+    // // Reviewer2 accept --> check for new state in DB
+    // await acceptReviewInvitation(
+    //   eurekaPlatformContract,
+    //   articleVersion.articleHash
+    // ).send({
+    //   from: reviewer2.ethereumAddress,
+    //   gas: 80000000
+    // });
+    // let review2 = await reviewService.getReviewById(
+    //   reviewer2.ethereumAddress,
+    //   articleVersion.editorApprovedReviews[1]
+    // );
+    // counter = 0;
+    // while (
+    //   review2.reviewState !== ReviewState.INVITATION_ACCEPTED &&
+    //   counter < 10
+    // ) {
+    //   sleepSync(5000);
+    //   review2 = await reviewService.getReviewById(
+    //     reviewer2.ethereumAddress,
+    //     articleVersion.editorApprovedReviews[1]
+    //   );
+    //   counter++;
+    // }
+    // t.is(review2.reviewState, ReviewState.INVITATION_ACCEPTED);
+    //
+    // // Reviewer4 accept --> check for new state in DB
+    // await acceptReviewInvitation(
+    //   eurekaPlatformContract,
+    //   articleVersion.articleHash
+    // ).send({
+    //   from: reviewer4.ethereumAddress,
+    //   gas: 80000000
+    // });
+    // let review4 = await reviewService.getReviewById(
+    //   reviewer4.ethereumAddress,
+    //   articleVersion.editorApprovedReviews[2]
+    // );
+    // counter = 0;
+    // while (
+    //   review4.reviewState !== ReviewState.INVITATION_ACCEPTED &&
+    //   counter < 10) {
+    //   sleepSync(5000);
+    //   review4 = await reviewService.getReviewById(
+    //     reviewer4.ethereumAddress,
+    //     articleVersion.editorApprovedReviews[2]
+    //   );
+    //   counter++;
+    // }
+    // t.is(review4.reviewState, ReviewState.INVITATION_ACCEPTED);
+    //
+    // // Add editor-approved review1 into DB
+    // await reviewService.addEditorApprovedReview(
+    //   reviewer1.ethereumAddress,
+    //   review._id,
+    //   REVIEW_1.reviewText,
+    //   REVIEW_1_HASH_HEX,
+    //   REVIEW_1.score1,
+    //   REVIEW_1.score2,
+    //   REVIEW_1.articleHasMajorIssues,
+    //   REVIEW_1.articleHasMinorIssues
+    // );
+    //
+    // review = await reviewService.getReviewById(
+    //   reviewer1.ethereumAddress,
+    //   review._id
+    // );
+    // t.is(review.reviewState, ReviewState.HANDED_IN_DB);
+    //
+    // // Add review1 in SC
+    // await addEditorApprovedReview(
+    //   eurekaPlatformContract,
+    //   articleVersion.articleHash,
+    //   REVIEW_1_HASH_HEX,
+    //   REVIEW_1.articleHasMajorIssues,
+    //   REVIEW_1.articleHasMinorIssues,
+    //   REVIEW_1.score1,
+    //   REVIEW_1.score2
+    // ).send({
+    //   from: reviewer1.ethereumAddress,
+    //   gas: 80000000
+    // });
+    //
+    // // Check if status changed on DB
+    // review = await reviewService.getReviewById(
+    //   reviewer1.ethereumAddress,
+    //   review._id
+    // );
+    // counter = 0;
+    // while (review.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
+    //   sleepSync(5000);
+    //   review = await reviewService.getReviewById(
+    //     reviewer1.ethereumAddress,
+    //     review._id
+    //   );
+    //   counter++;
+    // }
+    // t.is(review.reviewState, ReviewState.HANDED_IN_SC);
+    //
+    // // Add editor-approved review2 into DB
+    // await reviewService.addEditorApprovedReview(
+    //   reviewer2.ethereumAddress,
+    //   review2._id,
+    //   REVIEW_2.reviewText,
+    //   REVIEW_2_HASH_HEX,
+    //   REVIEW_2.score1,
+    //   REVIEW_2.score2,
+    //   REVIEW_2.articleHasMajorIssues,
+    //   REVIEW_2.articleHasMinorIssues
+    // );
+    //
+    // review2 = await reviewService.getReviewById(
+    //   reviewer2.ethereumAddress,
+    //   review2._id
+    // );
+    // t.is(review2.reviewState, ReviewState.HANDED_IN_DB);
+    //
+    // // Add review2 in SC
+    // await addEditorApprovedReview(
+    //   eurekaPlatformContract,
+    //   articleVersion.articleHash,
+    //   REVIEW_2_HASH_HEX,
+    //   REVIEW_2.articleHasMajorIssues,
+    //   REVIEW_2.articleHasMinorIssues,
+    //   REVIEW_2.score1,
+    //   REVIEW_2.score2
+    // ).send({
+    //   from: reviewer2.ethereumAddress,
+    //   gas: 80000000
+    // });
+    //
+    // // Check if status changed on DB
+    // review2 = await reviewService.getReviewById(
+    //   reviewer2.ethereumAddress,
+    //   review2._id
+    // );
+    // counter = 0;
+    // while (review2.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
+    //   sleepSync(5000);
+    //   review2 = await reviewService.getReviewById(
+    //     reviewer2.ethereumAddress,
+    //     review2._id
+    //   );
+    //   counter++;
+    // }
+    // t.is(review2.reviewState, ReviewState.HANDED_IN_SC);
+    //
+    // // Write a community review as reviewer3
+    // t.is(articleVersion.communityReviews.length, 0);
+    // let review3 = await reviewService.addNewCommunitydReview(
+    //   reviewer3.ethereumAddress,
+    //   articleVersion.articleHash,
+    //   REVIEW_3.reviewText,
+    //   REVIEW_3_HASH_HEX,
+    //   REVIEW_3.score1,
+    //   REVIEW_3.score2,
+    //   REVIEW_3.articleHasMajorIssues,
+    //   REVIEW_3.articleHasMinorIssues
+    // );
+    // review3 = await reviewService.getReviewById(
+    //   reviewer3.ethereumAddress,
+    //   review3._id
+    // );
+    // articleVersion = await articleVersionService.getArticleVersionById(
+    //   author.ethereumAddress,
+    //   articleVersion._id
+    // );
+    // t.is(articleVersion.communityReviews.length, 1);
+    //
+    // t.is(review3.reviewState, ReviewState.HANDED_IN_DB);
+    // await addCommunityReview(
+    //   eurekaPlatformContract,
+    //   articleVersion.articleHash,
+    //   REVIEW_3_HASH_HEX,
+    //   REVIEW_3.articleHasMajorIssues,
+    //   REVIEW_3.articleHasMinorIssues,
+    //   REVIEW_3.score1,
+    //   REVIEW_3.score2
+    // ).send({
+    //   from: reviewer3.ethereumAddress,
+    //   gas: 80000000
+    // });
+    //
+    // review3 = await reviewService.getReviewById(
+    //   reviewer3.ethereumAddress,
+    //   review3._id
+    // );
+    //
+    // counter = 0;
+    // while (review3.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
+    //   sleepSync(5000);
+    //   review3 = await reviewService.getReviewById(
+    //     reviewer3.ethereumAddress,
+    //     review3._id
+    //   );
+    //   counter++;
+    // }
+    // t.is(review3.reviewState, ReviewState.HANDED_IN_SC);
+    //
+    // // Add editor-approved review4 into DB
+    // await reviewService.addEditorApprovedReview(
+    //   reviewer4.ethereumAddress,
+    //   review4._id,
+    //   REVIEW_4.reviewText,
+    //   REVIEW_4_HASH_HEX,
+    //   REVIEW_4.score1,
+    //   REVIEW_4.score2,
+    //   REVIEW_4.articleHasMajorIssues,
+    //   REVIEW_4.articleHasMinorIssues
+    // );
+    //
+    // // Add review4 in SC
+    // await addEditorApprovedReview(
+    //   eurekaPlatformContract,
+    //   articleVersion.articleHash,
+    //   REVIEW_4_HASH_HEX,
+    //   REVIEW_4.articleHasMajorIssues,
+    //   REVIEW_4.articleHasMinorIssues,
+    //   REVIEW_4.score1,
+    //   REVIEW_4.score2
+    // ).send({
+    //   from: reviewer4.ethereumAddress,
+    //   gas: 80000000
+    // });
+    //
+    // // Check if status changed on DB
+    // review4 = await reviewService.getReviewById(
+    //   reviewer4.ethereumAddress,
+    //   review4._id
+    // );
+    // counter = 0;
+    // while (review4.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
+    //   sleepSync(5000);
+    //   review4 = await reviewService.getReviewById(
+    //     reviewer4.ethereumAddress,
+    //     review4._id
+    //   );
+    //   counter++;
+    // }
+    // t.is(review4.reviewState, ReviewState.HANDED_IN_SC);
+    //
+    // // Accept review1
+    // await acceptReview(
+    //   eurekaPlatformContract,
+    //   articleVersion.articleHash,
+    //   reviewer1.ethereumAddress
+    // ).send({
+    //   from: editor.ethereumAddress
+    // });
+    // review = await reviewService.getReviewById(
+    //   reviewer1.ethereumAddress,
+    //   review._id
+    // );
+    // counter = 0;
+    // while (review.reviewState !== ReviewState.ACCEPTED && counter < 10) {
+    //   sleepSync(5000);
+    //   review = await reviewService.getReviewById(
+    //     reviewer1.ethereumAddress,
+    //     review._id
+    //   );
+    //   counter++;
+    // }
+    // t.is(review.reviewState, ReviewState.ACCEPTED);
+    //
+    // // Accept review4
+    // await acceptReview(
+    //   eurekaPlatformContract,
+    //   articleVersion.articleHash,
+    //   reviewer4.ethereumAddress
+    // ).send({
+    //   from: editor.ethereumAddress
+    // });
+    // review4 = await reviewService.getReviewById(
+    //   reviewer4.ethereumAddress,
+    //   review4._id
+    // );
+    // counter = 0;
+    // while (review4.reviewState !== ReviewState.ACCEPTED && counter < 10) {
+    //   sleepSync(5000);
+    //   review4 = await reviewService.getReviewById(
+    //     reviewer4.ethereumAddress,
+    //     review4._id
+    //   );
+    //   counter++;
+    // }
+    // t.is(review4.reviewState, ReviewState.ACCEPTED);
+    //
+    // // Decline review2
+    // await declineReview(
+    //   eurekaPlatformContract,
+    //   articleVersion.articleHash,
+    //   reviewer2.ethereumAddress
+    // ).send({
+    //   from: editor.ethereumAddress
+    // });
+    // review2 = await reviewService.getReviewById(
+    //   reviewer2.ethereumAddress,
+    //   review2._id
+    // );
+    // counter = 0;
+    // while (review2.reviewState !== ReviewState.DECLINED && counter < 10) {
+    //   sleepSync(5000);
+    //   review2 = await reviewService.getReviewById(
+    //     reviewer2.ethereumAddress,
+    //     review2._id
+    //   );
+    //   counter++;
+    // }
+    // t.is(review2.reviewState, ReviewState.DECLINED);
+    //
+    // // Editor accepts articleVersion
+    // await acceptArticleVersion(
+    //   eurekaPlatformContract,
+    //   articleVersion.articleHash
+    // ).send({
+    //   from: editor.ethereumAddress
+    // });
+    // articleVersion = await articleVersionService.getArticleVersionById(author.ethereumAddress, articleVersion._id);
+    // t.is(articleVersion.articleVersionState, ArticleVersionState.ACCEPTED);
   }
 );
