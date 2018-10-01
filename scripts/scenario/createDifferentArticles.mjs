@@ -206,7 +206,7 @@ export const createDifferentDrafts = async () => {
             newArticle.articleVersionId
           );
 
-          // set the title of the article
+          // set the title of the article (insert a tiny change for each title for having different hashes)
           article.document.title.blocks[0].text = getTitle()[i];
 
           // set figures
@@ -229,45 +229,54 @@ export const submitDifferentArticles = async (
   platformContract
 ) => {
   const accounts = await getAccounts(web3);
-  const account = accounts[0];
-  const drafts = await articleVersionService.getDraftsOfUser(account);
-  const draft = drafts[0];
 
-  const hash = '0x' + getArticleHashFromDocument(draft.document);
+  return Promise.all(
+    accounts.map(async account => {
+      /*    const account = accounts[0];*/
+      const drafts = await articleVersionService.getDraftsOfUser(account);
 
-  console.log(
-    'Finishing Draft By Id for account ' +
-      account +
-      ' and draft with id ' +
-      draft._id +
-      ' and hash : ' +
-      hash
-  );
-  await articleVersionService.finishDraftById(account, draft._id, hash);
+      await Promise.all(
+        drafts.map(async draft => {
+          const hash = '0x' + getArticleHashFromDocument(draft.document);
 
-  const submittedArticle = await articleVersionService.getArticleVersionById(
-    account,
-    draft._id
-  );
+          console.log(
+            'Finishing Draft By Id for account ' +
+              account +
+              ' and draft with id ' +
+              draft._id +
+              ' and hash : ' +
+              hash
+          );
+          await articleVersionService.finishDraftById(account, draft._id, hash);
 
-  const articleHex = getArticleHexFromDocument(submittedArticle);
+          const submittedArticle = await articleVersionService.getArticleVersionById(
+            account,
+            draft._id
+          );
 
-  submitArticle(
-    tokenContract,
-    platformContract.options.address,
-    5000,
-    articleHex
-  )
-    .send({from: account, gas: 8000000})
-    .on('transactionHash', tx => {})
-    .on('receipt', receipt => {
-      console.log(
-        'The article submission exited with the TX status: ' + receipt.status
+          const articleHex = getArticleHexFromDocument(submittedArticle);
+
+          submitArticle(
+            tokenContract,
+            platformContract.options.address,
+            5000,
+            articleHex
+          )
+            .send({from: account, gas: 8000000})
+            .on('transactionHash', tx => {})
+            .on('receipt', receipt => {
+              console.log(
+                'The article submission exited with the TX status: ' +
+                  receipt.status
+              );
+              return receipt;
+            })
+            .catch(async err => {
+              console.log(err);
+              await articleVersionService.revertToDraft(account, draft._id);
+            });
+        })
       );
-      return receipt;
     })
-    .catch(async err => {
-      console.log(err);
-      await articleVersionService.revertToDraft(account, draft._id);
-    });
+  );
 };
