@@ -170,6 +170,8 @@ test.only(
     const reviewer1 = await createReviewer1();
     const reviewer2 = await createReviewer2();
     const reviewer3 = await createReviewer3();
+    const editorApprovedReviewers = [reviewer1, reviewer2, reviewer3];
+
     const reviewer4 = await createReviewer4();
 
     // Setup article draft
@@ -185,85 +187,19 @@ test.only(
     await TestFunctions.acceptSanityCheckAndTest(t, editor, author, articleVersion);
 
     // Invite reviewers 1,2 & 3 to become editor-approved reviewers
-    await TestFunctions.inviteReviewersAndTest(t, editor, author, [reviewer1, reviewer2, reviewer3], articleVersion);
+    await TestFunctions.inviteReviewersAndTest(t, editor, author, editorApprovedReviewers, articleVersion);
+
+    //update from DB
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    articleVersion = articleSubmission.articleVersions[0];
+
+
+
+    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[0], 0, articleVersion);
+    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[1], 1, articleVersion);
+    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[2], 2, articleVersion);
+
     
-    //
-    // // Reviewer1 accept --> check for new state in DB
-    // await acceptReviewInvitation(
-    //   eurekaPlatformContract,
-    //   articleVersion.articleHash
-    // ).send({
-    //   from: reviewer1.ethereumAddress,
-    //   gas: 80000000
-    // });
-    // let review = await reviewService.getReviewById(
-    //   reviewer1.ethereumAddress,
-    //   articleVersion.editorApprovedReviews[0]
-    // );
-    // counter = 0;
-    // while (
-    //   review.reviewState !== ReviewState.INVITATION_ACCEPTED &&
-    //   counter < 10
-    // ) {
-    //   sleepSync(5000);
-    //   review = await reviewService.getReviewById(
-    //     reviewer1.ethereumAddress,
-    //     articleVersion.editorApprovedReviews[0]
-    //   );
-    //   counter++;
-    // }
-    // t.is(review.reviewState, ReviewState.INVITATION_ACCEPTED);
-    //
-    // // Reviewer2 accept --> check for new state in DB
-    // await acceptReviewInvitation(
-    //   eurekaPlatformContract,
-    //   articleVersion.articleHash
-    // ).send({
-    //   from: reviewer2.ethereumAddress,
-    //   gas: 80000000
-    // });
-    // let review2 = await reviewService.getReviewById(
-    //   reviewer2.ethereumAddress,
-    //   articleVersion.editorApprovedReviews[1]
-    // );
-    // counter = 0;
-    // while (
-    //   review2.reviewState !== ReviewState.INVITATION_ACCEPTED &&
-    //   counter < 10
-    // ) {
-    //   sleepSync(5000);
-    //   review2 = await reviewService.getReviewById(
-    //     reviewer2.ethereumAddress,
-    //     articleVersion.editorApprovedReviews[1]
-    //   );
-    //   counter++;
-    // }
-    // t.is(review2.reviewState, ReviewState.INVITATION_ACCEPTED);
-    //
-    // // Reviewer4 accept --> check for new state in DB
-    // await acceptReviewInvitation(
-    //   eurekaPlatformContract,
-    //   articleVersion.articleHash
-    // ).send({
-    //   from: reviewer4.ethereumAddress,
-    //   gas: 80000000
-    // });
-    // let review4 = await reviewService.getReviewById(
-    //   reviewer4.ethereumAddress,
-    //   articleVersion.editorApprovedReviews[2]
-    // );
-    // counter = 0;
-    // while (
-    //   review4.reviewState !== ReviewState.INVITATION_ACCEPTED &&
-    //   counter < 10) {
-    //   sleepSync(5000);
-    //   review4 = await reviewService.getReviewById(
-    //     reviewer4.ethereumAddress,
-    //     articleVersion.editorApprovedReviews[2]
-    //   );
-    //   counter++;
-    // }
-    // t.is(review4.reviewState, ReviewState.INVITATION_ACCEPTED);
     //
     // // Add editor-approved review1 into DB
     // await reviewService.addEditorApprovedReview(

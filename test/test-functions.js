@@ -5,7 +5,8 @@ import {
   removeEditorFromSubmissionProcess,
   setSanityToOk,
   setSanityIsNotOk,
-  inviteReviewersForArticle
+  inviteReviewersForArticle,
+  acceptReviewInvitation
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -14,6 +15,8 @@ import articleSubmissionService from '../src/backend/db/article-submission-servi
 import ArticleVersionState from '../src/backend/schema/article-version-state-enum.mjs';
 import articleVersionService from '../src/backend/db/article-version-service.mjs';
 import {submitArticle} from '../src/smartcontracts/methods/web3-token-contract-methods.mjs';
+import reviewService from '../src/backend/db/review-service.mjs';
+import ReviewState from '../src/backend/schema/review-state-enum.mjs';
 
 let eurekaPlatformContract;
 let eurekaTokenContract;
@@ -168,6 +171,16 @@ export default {
     return t;
   },
 
+  /**
+   * Change the editor for a submission process.
+   * Only the contractowner or the editor already assigned to the submission
+   * is allowed to do this.
+   * Here it is always tested by the contract owner
+   * @param t
+   * @param newEditor
+   * @param articleSubmission
+   * @returns {Promise<*>}
+   */
   changeEditorForSubmissionProcess: async function(t, newEditor, articleSubmission) {
     await changeEditorFromSubmissionProcess(
       eurekaPlatformContract,
@@ -183,6 +196,14 @@ export default {
     return t;
   },
 
+  /**
+   * Remove a preassigned editor from the submission.
+   * Leave the editor as value null afterwards
+   * @param t
+   * @param editor
+   * @param articleSubmission
+   * @returns {Promise<void>}
+   */
   removeEditorFromSubmissionProcessAndTest: async function(t, editor, articleSubmission) {
     await removeEditorFromSubmissionProcess(
       eurekaPlatformContract,
@@ -248,6 +269,16 @@ export default {
     }
   },
 
+  /**
+   * Invite all the users coming in an array for
+   * becoming a reviewer of the articleVersion submitted.
+   * @param t
+   * @param editor
+   * @param author
+   * @param reviewers is an array of users, which should become reviewers
+   * @param articleVersion
+   * @returns {Promise<void>}
+   */
   inviteReviewersAndTest: async function(t, editor, author, reviewers, articleVersion) {
     const existingReviewersLength = articleVersion.editorApprovedReviews.length;
     const newReviewersLength = reviewers.length;
@@ -280,5 +311,34 @@ export default {
       counter++;
     }
     t.is(dbArticleVersion.editorApprovedReviews.length, (existingReviewersLength + newReviewersLength));
+  },
+
+  acceptInvitationAndTest: async function(t, reviewer, index, articleVersion) {
+    await acceptReviewInvitation(
+      eurekaPlatformContract,
+      articleVersion.articleHash
+    ).send({
+      from: reviewer.ethereumAddress,
+      gas: 80000000
+    });
+
+    let dbReview = await reviewService.getReviewById(
+      reviewer.ethereumAddress,
+      articleVersion.editorApprovedReviews[index]
+    );
+
+    let counter = 0;
+    while (
+      dbReview.reviewState !== ReviewState.INVITATION_ACCEPTED &&
+      counter < 5
+    ) {
+      sleepSync(5000);
+      dbReview = await reviewService.getReviewById(
+        reviewer.ethereumAddress,
+        articleVersion.editorApprovedReviews[index]
+      );
+      counter++;
+    }
+    t.is(dbReview.reviewState, ReviewState.INVITATION_ACCEPTED);
   }
 };
