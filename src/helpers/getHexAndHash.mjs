@@ -4,12 +4,17 @@ import Document from '../models/Document.mjs';
 import {getDomain} from './getDomain.mjs';
 import getArticleHex from '../smartcontracts/methods/get-articleHex.mjs';
 import web3 from './web3Instance.mjs';
+import {renderField} from '../frontend/webpack/components/TextEditor/DocumentRenderer.mjs';
 
 export const getArticleHashFromDocument = document => {
   const doc = new Document(document);
   let articleHash = '';
+
   doc.getAllFields().map(field => {
-    articleHash += hashField(field);
+    if (doc[field]) {
+      const value = renderField(doc, field);
+      articleHash += hashField(value);
+    }
   });
   return sha256(CANON.stringify(articleHash));
 };
