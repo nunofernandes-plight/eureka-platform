@@ -4,7 +4,8 @@ import {
   changeEditorFromSubmissionProcess,
   removeEditorFromSubmissionProcess,
   setSanityToOk,
-  setSanityIsNotOk
+  setSanityIsNotOk,
+  inviteReviewersForArticle
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -245,5 +246,39 @@ export default {
       counter++;
       t.is(dbArticleVersion.articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
     }
+  },
+
+  inviteReviewersAndTest: async function(t, editor, author, reviewers, articleVersion) {
+    const existingReviewersLength = articleVersion.editorApprovedReviews.length;
+    const newReviewersLength = reviewers.length;
+
+    const reviewersAddress = reviewers.map(reviewer => {
+      return reviewer.ethereumAddress;
+    });
+
+    await inviteReviewersForArticle(
+      eurekaPlatformContract,
+      articleVersion.articleHash,
+      reviewersAddress
+    ).send({
+      from: editor.ethereumAddress,
+      gas: 80000000
+    });
+
+    let dbArticleVersion = await articleVersionService.getArticleVersionById(
+      author.ethereumAddress,
+      articleVersion._id
+    );
+    // Check if article-version in DB holds reviewers
+    let counter = 0;
+    while (dbArticleVersion.editorApprovedReviews.length < 3 && counter < 5) {
+      sleepSync(5000);
+      dbArticleVersion = await articleVersionService.getArticleVersionById(
+        author.ethereumAddress,
+        articleVersion._id
+      );
+      counter++;
+    }
+    t.is(dbArticleVersion.editorApprovedReviews.length, (existingReviewersLength + newReviewersLength));
   }
 };
