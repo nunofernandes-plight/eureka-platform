@@ -271,8 +271,6 @@ export const submitDifferentArticles = async (
 
   const articleHex = getArticleHexFromDocument(submittedArticle);
 
-  console.log(platformContract.options.address);
-
   submitArticle(
     tokenContract,
     platformContract.options.address,
@@ -280,14 +278,15 @@ export const submitDifferentArticles = async (
     articleHex
   )
     .send({from: account, gas: 8000000})
-    .on('transactionHash', tx => {
-      console.log(tx);
-    })
+    .on('transactionHash', tx => {})
     .on('receipt', receipt => {
       console.log(
         'The article submission exited with the TX status: ' + receipt.status
       );
       return receipt;
     })
-    .catch(err => console.log(err));
+    .catch(async err => {
+      console.log(err);
+      await articleVersionService.revertToDraft(account, draft._id);
+    });
 };
