@@ -43,7 +43,9 @@ export default {
   createSubmission: async ownerAddress => {
     // set user's role to AUTHOR once he creates the first draft
     const user = await User.findOne({ethereumAddress: ownerAddress});
-    if (!user.roles.includes(Roles.AUTHOR)) user.roles.push(Roles.AUTHOR);
+    if (!user.roles.includes(Roles.AUTHOR)) {
+      user.roles.push(Roles.AUTHOR);
+    }
     await user.save();
 
     // create article submission

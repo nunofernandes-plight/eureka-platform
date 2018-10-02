@@ -54,20 +54,18 @@ const start = async () => {
 };
 
 const startScenario = async (platformContract, tokenContract) => {
-  await createDifferentUsers();
+  await createDifferentUsers(platformContract);
   switch (process.env.SCENARIO) {
     case CREATE_DRAFTS:
       await createDifferentDrafts();
       break;
 
     case SUBMIT_ALL_ARTICLES:
-      await createDifferentDrafts();
-      await submitDifferentArticles(tokenContract, platformContract);
+      await submitArticles(tokenContract, platformContract);
       break;
 
     case SUBMIT_FEW_ARTICLES:
-      await createDifferentDrafts();
-      await submitDifferentArticles(tokenContract, platformContract);
+      await submitArticles(tokenContract, platformContract);
       break;
 
     default:
@@ -78,6 +76,11 @@ const startScenario = async (platformContract, tokenContract) => {
       );
       break;
   }
+};
+
+const submitArticles = async (tokenContract, platformContract) => {
+  await createDifferentDrafts();
+  await submitDifferentArticles(tokenContract, platformContract);
 };
 
 start();
