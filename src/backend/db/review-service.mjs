@@ -37,6 +37,12 @@ export default {
     return review;
   },
 
+  getArticleVersionIds: idObjects => {
+    return idObjects.map(i => {
+      return i.articleVersion;
+    });
+  },
+
   /**
    * Frontend sends the data of an review right
    * before he submits the editorApprovedReviews hash into the SC

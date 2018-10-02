@@ -2,43 +2,52 @@ import ArticleSubmission from '../schema/article-submission.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
-import articleVersionService, {
-  getRelevantArticleData
-} from './article-version-service.mjs';
+import articleVersionService from './article-version-service.mjs';
 import ARTICLE_SUBMISSION_STATE from '../schema/article-submission-state-enum.mjs';
 import User from '../schema/user.mjs';
 import Roles from '../schema/roles-enum.mjs';
 import {sleepSync} from '../../helpers/sleepSync.mjs';
 
-const getSubmissionResponse = submissions => {
-  let resSubmissions = [];
-  submissions.map(submission => {
-    let lastArticleVersion =
-      submission.articleVersions[submission.articleVersions.length - 1];
-    resSubmissions.push(getRelevantArticleData(submission, lastArticleVersion));
-  });
-  return resSubmissions;
-};
 
 export default {
   getAllSubmissions: () => {
-    return ArticleSubmission.find({}).populate('articleVersions');
+    return ArticleSubmission.find({})
+      .populate('articleVersions')
+      .populate([
+        {path: 'articleVersions.editorApprovedReviews'},
+        {path: 'articleVersions.communityReviews'}
+      ]);
+  },
+
+  getSubmissionIds: objects => {
+    return objects.map(i => {
+      return i._id;
+    });
   },
 
   getUnassignedSubmissions: async () => {
-    const submissions = await ArticleSubmission.find({
+    return await ArticleSubmission.find({
       editor: null,
       articleSubmissionState: 'OPEN'
-    }).populate('articleVersions');
-    return getSubmissionResponse(submissions);
+    })
+      .populate('articleVersions')
+      .populate([
+        {path: 'articleVersions.editorApprovedReviews'},
+        {path: 'articleVersions.communityReviews'}
+      ]);
   },
 
   getAssignedSubmissions: async ethereumAddress => {
     // const submissions = await ArticleSubmission.find({editor: ethereumAddress, articleSubmissionState: {$ne: 'CLOSED'}}).populate('articleVersions');
-    const submissions = await ArticleSubmission.find({
-      editor: ethereumAddress
-    }).populate('articleVersions');
-    return getSubmissionResponse(submissions);
+    return await ArticleSubmission.find({
+      editor: ethereumAddress,
+      articleSubmissionState: {$ne: 'CLOSED'}
+    })
+      .populate('articleVersions')
+      .populate([
+        {path: 'articleVersions.editorApprovedReviews'},
+        {path: 'articleVersions.communityReviews'}
+      ]);
   },
 
   createSubmission: async ownerAddress => {

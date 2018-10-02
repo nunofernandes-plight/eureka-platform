@@ -7,40 +7,7 @@ import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import REVIEW_STATE from '../schema/review-state-enum.mjs';
 import ReviewService from './review-service.mjs';
-
-export const getRelevantArticleData = (submission, articleVersion) => {
-  let resArticle = {};
-
-  resArticle.scSubmissionID = submission.scSubmissionID;
-  resArticle.ownerAddress = submission.ownerAddress;
-  resArticle.articleSubmissionState =
-    submission.articleSubmissionState;
-
-  resArticle._id = articleVersion._id;
-  resArticle.articleHash = articleVersion.articleHash;
-  resArticle.articleVersionState = articleVersion.articleVersionState;
-  resArticle.updatedAt = articleVersion.updatedAt;
-
-  resArticle.title = articleVersion.document.title;
-  resArticle.authors = articleVersion.document.authors;
-  resArticle.abstract = articleVersion.document.abstract;
-  resArticle.figure = articleVersion.document.figure;
-  resArticle.keywords = articleVersion.document.keywords;
-
-  resArticle.editorApprovedReviews = articleVersion.editorApprovedReviews;
-  resArticle.communityReviews = articleVersion.communityReviews;
-
-  return resArticle;
-};
-
-const getArticlesResponse = articles => {
-  let resArticles = [];
-  articles.map(article => {
-    if(article.articleSubmission)
-      resArticles.push(getRelevantArticleData(article.articleSubmission, article));
-  });
-  return resArticles;
-};
+import ArticleSubmissionService from './article-submission-service.mjs';
 
 const getFinalizableArticles = articles => {
   let finalizableArticles = [];
@@ -70,62 +37,46 @@ const areReviewsOK = (minAmount, reviews) => {
   return count >= minAmount;
 };
 
-const getArticleVersionsByIdObjects = idObjects => {
-  let ids = getArticleVersionIds(idObjects);
-  return getArticleVersionsByIds(ids);
-};
-
-const getArticleVersionIds = idObjects => {
-  return idObjects.map(i => {
-    return i.articleVersion;
-  });
-};
-
-const getArticleVersionsByIds = ids => {
-  return ArticleVersion.find({_id: {$in: ids}});
-};
-
 export default {
   getAllArticleVersions: () => {
     return ArticleVersion.find({});
   },
 
   getArticlesAssignedTo: async (ethereumAddress, articleVersionState) => {
-    const articles = await ArticleVersion.find({
-      articleVersionState: articleVersionState
-    }).populate({
-      path: 'articleSubmission',
-      match: {editor: ethereumAddress}
-    });
-    return getArticlesResponse(articles);
+    const submissions = await ArticleSubmissionService.getAssignedSubmissions(ethereumAddress);
+    const submissionIds = ArticleSubmissionService.getSubmissionIds(submissions);
+
+    return await ArticleVersion.find({
+      articleVersionState: articleVersionState,
+      articleSubmission: {$in: submissionIds}
+    }).populate([
+      {path: 'articleSubmission'},
+      {path: 'editorApprovedReviews'},
+      {path: 'communityReviews'}
+    ]);
   },
 
   getArticlesToFinalize: async ethereumAddress => {
+    const submissions = await ArticleSubmissionService.getAssignedSubmissions(ethereumAddress);
+    const submissionIds = ArticleSubmissionService.getSubmissionIds(submissions);
+
     const articles = await ArticleVersion.find({
-      articleVersionState: 'REVIEWERS_INVITED'
-    })
-      .populate({
-        path: 'articleSubmission',
-        match: {editor: ethereumAddress}
-      })
-      .populate({
-        path: 'editorApprovedReviews'
-      })
-      .populate({
-        path: 'communityReviews '
-      });
-    const finalizableArticles = getFinalizableArticles(articles);
-    return getArticlesResponse(articles);
+      articleVersionState: 'REVIEWERS_INVITED',
+      articleSubmission: {$in: submissionIds}
+    }).populate([
+      {path: 'articleSubmission'},
+      {path: 'editorApprovedReviews'},
+      {path: 'communityReviews'}
+    ]);
+    return getFinalizableArticles(articles);
   },
 
   getArticlesOpenForCommunityReviews: async ethereumAddress => {
     // gettin reviews first to check which articles where already reviewed
-    const articleVersionIdObjects = await ReviewService.getMyReviews(
-      ethereumAddress
-    ).select('articleVersion -_id');
-    const ids = getArticleVersionIds(articleVersionIdObjects);
+    const reviews = await ReviewService.getMyReviews(ethereumAddress);
+    const ids = ReviewService.getArticleVersionIds(reviews);
 
-    const articles = await ArticleVersion.find({
+    return await ArticleVersion.find({
       // hide articles already reviewed
       _id: {$nin: ids},
       articleVersionState: {$in: ['EDITOR_CHECKED', 'REVIEWERS_INVITED']},
@@ -136,7 +87,6 @@ export default {
       {path: 'editorApprovedReviews'},
       {path: 'communityReviews'}
     ]);
-    return getArticlesResponse(articles);
   },
 
   /* tipp not used anymore
@@ -146,17 +96,15 @@ export default {
       });
   * */
   getArticlesInvitedForReviewing: async ethereumAddress => {
-    const articleVersionIdObjects = await ReviewService.getReviewInvitations(
-      ethereumAddress
-    ).select('articleVersion -_id');
-    const articles = await getArticleVersionsByIdObjects(
-      articleVersionIdObjects
-    ).populate([
-      {path: 'articleSubmission'},
-      {path: 'editorApprovedReviews'},
-      {path: 'communityReviews'}
-    ]);
-    return getArticlesResponse(articles);
+    const reviews = await ReviewService.getReviewInvitations(ethereumAddress);
+    const ids = ReviewService.getArticleVersionIds(reviews);
+
+    return await ArticleVersion.find({_id: {$in: ids}})
+      .populate([
+        {path: 'articleSubmission'},
+        {path: 'editorApprovedReviews'},
+        {path: 'communityReviews'}
+      ]);
   },
 
   createArticleVersion: async (ethereumAddress, submissionId) => {
