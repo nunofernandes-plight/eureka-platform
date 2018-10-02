@@ -97,7 +97,7 @@ class App extends Component {
       const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
       // Const accounts = await getAllAccounts(this.state.web3);
       this.setState({metaMaskStatus});
-    }, 5000);
+    }, 7500);
   }
 
   // Ganache switch addresses

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 import {getInviteReviewersArticles} from './EditorMethods.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Article from '../../views/Article.js';
@@ -13,6 +13,7 @@ import EdiorReviewersPicker from './EdiorReviewersPicker.js';
 import EmailPreview from '../Email/EmailPreview.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import {inviteReviewersForArticle} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import SendEmailAnimation from './SendEmailAnimation.js';
 
 const Container = styled.div`
   display: flex;
@@ -26,6 +27,7 @@ const NoArtDiv = styled.div`
   color: ${__THIRD};
   font-size: 16px;
 `;
+
 const NoArticles = () => {
   return (
     <NoArtDiv>
@@ -170,6 +172,7 @@ class EditorInvite extends React.Component {
             article={this.state.article}
             selectedAccount={this.props.selectedAccount}
           />
+          <SendEmailAnimation />
           <EdiorReviewersPicker
             platformContract={this.props.platformContract}
             article={this.state.article}

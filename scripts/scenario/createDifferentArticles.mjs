@@ -197,29 +197,32 @@ export const createDifferentDrafts = async () => {
   return Promise.all(
     accounts.map(async account => {
       console.log('Creating drafts for account ', account);
-      const drafts = await Promise.all(
-        getFigures().map(async (figure, i) => {
-          const newArticle = await articleSubmissionService.createSubmission(
-            account
-          );
-          const article = await articleVersionService.getArticleVersionById(
-            account,
-            newArticle.articleVersionId
-          );
+      const drafts = [];
+      let i = 0;
+      for (let figure of getFigures()) {
+        const newArticle = await articleSubmissionService.createSubmission(
+          account
+        );
+        const article = await articleVersionService.getArticleVersionById(
+          account,
+          newArticle.articleVersionId
+        );
 
-          // set the title of the article (insert a tiny change for each title for having different hashes)
-          article.document.title.blocks[0].text = getTitle()[i];
+        // set the title of the article (insert a tiny change for each title for having different hashes)
+        article.document.title.blocks[0].text = getTitle()[i];
 
-          // set figures
-          article.document.figure.push(figure);
+        // set figures
+        article.document.figure.push(figure);
 
-          return articleVersionService.updateDraftById(
+        drafts.push(
+          await articleVersionService.updateDraftById(
             account,
             article._id,
             article.document
-          );
-        })
-      );
+          )
+        );
+        i++;
+      }
       console.log('Created ' + drafts.length + ' drafts for account ', account);
     })
   );
