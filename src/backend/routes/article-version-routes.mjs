@@ -2,8 +2,8 @@ import express from 'express';
 import accesController from '../controller/acess-controller.mjs';
 import {asyncHandler} from '../api/requestHandler.mjs';
 import articleVersionService from '../db/article-version-service.mjs';
-import Roles from '../schema/roles-enum.mjs';
 import ARTICLE_VERSION_STATE from '../schema/article-version-state-enum.mjs';
+import {getRelevantArticleData} from '../helpers/relevant-article-data.mjs';
 
 const router = express.Router();
 
@@ -32,40 +32,44 @@ router.get(
 router.get(
   '/assigned/signoff',
   asyncHandler(async req => {
-    return await articleVersionService.getArticlesAssignedTo(
+    let articles = await articleVersionService.getArticlesAssignedTo(
       req.session.passport.user.ethereumAddress,
       ARTICLE_VERSION_STATE.SUBMITTED
     );
+    return getArticlesResponse(articles);
   })
 );
 
 router.get(
   '/assigned/inviteReviewers',
   asyncHandler(async req => {
-    return await articleVersionService.getArticlesAssignedTo(
+    let articles = await articleVersionService.getArticlesAssignedTo(
       req.session.passport.user.ethereumAddress,
       ARTICLE_VERSION_STATE.EDITOR_CHECKED
     );
+    return getArticlesResponse(articles);
   })
 );
 
 router.get(
   '/assigned/checkReviews',
   asyncHandler(async req => {
-    return await articleVersionService.getArticlesAssignedTo(
+    let articles = await articleVersionService.getArticlesAssignedTo(
       req.session.passport.user.ethereumAddress,
       ARTICLE_VERSION_STATE.REVIEWERS_INVITED
     );
+    return getArticlesResponse(articles);
   })
 );
 
 router.get(
   '/assigned/finalize',
   asyncHandler(async req => {
-    return await articleVersionService.getArticlesToFinalize(
+    let articles = await articleVersionService.getArticlesToFinalize(
       req.session.passport.user.ethereumAddress,
       ARTICLE_VERSION_STATE.REVIEWERS_INVITED
     );
+    return getArticlesResponse(articles);
   })
 );
 
@@ -77,19 +81,30 @@ router.get(
 router.get(
   '/reviewable/invited',
   asyncHandler(async req => {
-    return await articleVersionService.getArticlesInvitedForReviewing(
+    let articles = await articleVersionService.getArticlesInvitedForReviewing(
       req.session.passport.user.ethereumAddress
     );
+    return getArticlesResponse(articles);
   })
 );
 
 router.get(
   '/reviewable/community',
   asyncHandler(async req => {
-    return await articleVersionService.getArticlesOpenForCommunityReviews(
+    let articles = await articleVersionService.getArticlesOpenForCommunityReviews(
       req.session.passport.user.ethereumAddress
     );
+    return getArticlesResponse(articles);
   })
 );
 
 export default router;
+
+export const getArticlesResponse = articles => {
+  let resArticles = [];
+  articles.map(article => {
+    if (article.articleSubmission)
+      resArticles.push(getRelevantArticleData(article.articleSubmission, article));
+  });
+  return resArticles;
+};
