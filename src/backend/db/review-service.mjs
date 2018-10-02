@@ -18,7 +18,6 @@ export default {
   getMyReviews: (address) => {
     return Review.find({
       reviewerAddress: address,
-      // TODO which states should be shown as my reviews
       reviewState: {$in: ['HANDED_IN_DB', 'HANDED_IN_SC', 'DECLINED','ACCEPTED']}
     })
   },
