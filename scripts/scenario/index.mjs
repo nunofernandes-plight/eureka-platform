@@ -47,7 +47,8 @@ const start = async () => {
   app.setupApp();
   app.listenTo(process.env.PORT || 8080);
   const [platformContract, tokenContract] = await setupContracts();
-  startScenario(platformContract, tokenContract);
+  await startScenario(platformContract, tokenContract);
+  process.exit();
   /*  await createDifferentUsers();
   await createDifferentDrafts();
   await submitDifferentArticles(tokenContract, platformContract);*/
