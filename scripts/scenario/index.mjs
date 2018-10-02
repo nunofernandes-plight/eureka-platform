@@ -60,14 +60,21 @@ const startScenario = async (platformContract, tokenContract) => {
       await createDifferentDrafts();
       break;
 
-    case SUBMIT_ALL_ARTICLES || SUBMIT_FEW_ARTICLES:
+    case SUBMIT_ALL_ARTICLES:
+      await createDifferentDrafts();
+      await submitDifferentArticles(tokenContract, platformContract);
+      break;
+
+    case SUBMIT_FEW_ARTICLES:
       await createDifferentDrafts();
       await submitDifferentArticles(tokenContract, platformContract);
       break;
 
     default:
       console.log(
-        'No valid scenario has been set as env. variable. For possible scenario names check the scenarioNames.mjs file'
+        'The scenario ' +
+          process.env.SCENARIO +
+          ' is not a valid scenario has been set as env. variable. For possible scenario names check the scenarioNames.mjs file'
       );
       break;
   }
