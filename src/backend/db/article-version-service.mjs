@@ -71,14 +71,18 @@ export default {
     return getFinalizableArticles(articles);
   },
 
-  getArticlesOpenForCommunityReviews: async ethereumAddress => {
+  getArticlesOpenForReviews: async ethereumAddress => {
     // gettin reviews first to check which articles where already reviewed
-    const reviews = await ReviewService.getMyReviews(ethereumAddress);
+    let reviews = await ReviewService.getMyReviews(ethereumAddress);
     const ids = ReviewService.getArticleVersionIds(reviews);
+    reviews = await ReviewService.getReviewInvitations(ethereumAddress);
+    const invite_ids = ReviewService.getArticleVersionIds(reviews);
+    //TODO: don't show article if user is editor of submission process
 
     return await ArticleVersion.find({
-      // hide articles already reviewed
-      _id: {$nin: ids},
+      // show article if invited or if not reviewed yet
+      $or : [ { _id :{$nin: ids} }, { _id : {$in: invite_ids} } ],
+      // community reviews can be reviewed as soon as the editor has checked it
       articleVersionState: {$in: ['EDITOR_CHECKED', 'REVIEWERS_INVITED']},
       ownerAddress: {$ne: ethereumAddress},
       'document.authors': {$ne: ethereumAddress}
@@ -99,12 +103,37 @@ export default {
     const reviews = await ReviewService.getReviewInvitations(ethereumAddress);
     const ids = ReviewService.getArticleVersionIds(reviews);
 
-    return await ArticleVersion.find({_id: {$in: ids}})
+    return await ArticleVersion.find({
+      _id: {$in: ids},
+      articleVersionState: 'REVIEWERS_INVITED'
+    })
       .populate([
         {path: 'articleSubmission'},
         {path: 'editorApprovedReviews'},
         {path: 'communityReviews'}
       ]);
+  },
+
+  getArticlesOpenForCommunityReviews: async ethereumAddress => {
+    // gettin reviews first to check which articles where already reviewed
+    let reviews = await ReviewService.getMyReviews(ethereumAddress);
+    const ids = ReviewService.getArticleVersionIds(reviews);
+    reviews = await ReviewService.getReviewInvitations(ethereumAddress);
+    const invite_ids = ReviewService.getArticleVersionIds(reviews);
+    //TODO: don't show article if user is editor of submission process
+
+    return await ArticleVersion.find({
+      // hide articles already reviewed or already invited
+      $and : [ { _id :{$nin: ids} }, { _id : {$nin: invite_ids} } ],
+      // community reviews can be reviewed as soon as the editor has checked it
+      articleVersionState: {$in: ['EDITOR_CHECKED', 'REVIEWERS_INVITED']},
+      ownerAddress: {$ne: ethereumAddress},
+      'document.authors': {$ne: ethereumAddress}
+    }).populate([
+      {path: 'articleSubmission'},
+      {path: 'editorApprovedReviews'},
+      {path: 'communityReviews'}
+    ]);
   },
 
   createArticleVersion: async (ethereumAddress, submissionId) => {

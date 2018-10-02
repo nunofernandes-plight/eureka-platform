@@ -79,6 +79,16 @@ router.get(
   */
 // TODO clear editor roles only and use: router.use(accesController.rolesOnly([Roles.REVIEWER]));
 router.get(
+  '/reviewable',
+  asyncHandler(async req => {
+    let articles = await articleVersionService.getArticlesOpenForReviews(
+      req.session.passport.user.ethereumAddress
+    );
+    return getArticlesResponse(articles);
+  })
+);
+
+router.get(
   '/reviewable/invited',
   asyncHandler(async req => {
     let articles = await articleVersionService.getArticlesInvitedForReviewing(
