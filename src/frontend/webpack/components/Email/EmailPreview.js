@@ -25,12 +25,14 @@ const Line = styled.div`
 
 const LineTitle = styled.h4`
   align-self: flex-start;
-  margin: 0;
+  width: 55px;
+  text-align: left;
+  margin: 0 10px 0 0;
 `;
 
 const LineContent = styled.div`
   color: ${__GRAY_900};
-  margin-left: 10px;
+  text-align: left;
 `;
 
 const EmailContent = styled.p`
