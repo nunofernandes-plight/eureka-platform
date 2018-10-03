@@ -84,13 +84,13 @@ class ReviewsOpen extends React.Component {
         {this.state.loading ? (
           <GridSpinner />
         ) : (
-          <Card title={'Articles you are invited to review'} width={1000}>
+          <Card title={'Articles open to review'} width={1000}>
             {this.state.articles ? (
               this.state.articles.length > 0 ? (
                 this.state.articles.map(article => {
                   return (
                     <Article
-                      buttonText={'Accept Invitation'}
+                      buttonText={'Write a Review'}
                       key={article._id}
                       article={article}
                       onHover={this.state.articleOnHover === article._id}
