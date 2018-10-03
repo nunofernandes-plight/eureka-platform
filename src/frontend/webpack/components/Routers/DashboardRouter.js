@@ -14,6 +14,7 @@ import EditorRouter from './EditorRouter.js';
 import Reviewers from '../Reviewers.js';
 import UserExploration from '../UserExploration.js';
 import ReviewsRouter from './ReviewsRouter.js';
+import Preview from '../Preview.js';
 
 class DashboardRouter extends Component {
   render() {
@@ -129,8 +130,7 @@ class DashboardRouter extends Component {
             )}
           />
 
-          {/*ROUTES IN DASHBOARD WHICH ARE NOT INCLUDED IN THE PANEL LEFT */}
-
+          {/*ROUTES IN DASHBOARD WHICH ARE NOT INCLUDED IN PANEL LEFT */}
           <Route
             exact
             path={`${this.props.base}/reviewers`}
@@ -143,6 +143,13 @@ class DashboardRouter extends Component {
             render={() => <UserExploration />}
           />
 
+          <Route
+            exact
+            path={`${this.props.base}/preview/:id`}
+            render={() => <Preview base={`${this.props.base}/preview`} />}
+          />
+
+          {/*Redirect to dashboard. Leave it at the bottom!*/}
           <Route
             exact
             path={`${this.props.base}`}

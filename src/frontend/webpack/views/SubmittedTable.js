@@ -136,11 +136,7 @@ const getHash = sub => {
 };
 const getName = (props, sub) => {
   return (
-    <MyLink
-      to={`${props.base.toString().replace('/submitted', '')}/preview/${
-        sub._id
-      }`}
-    >
+    <MyLink to={`/app/preview/${sub._id}`}>
       {renderField(sub.document, 'title')}
     </MyLink>
   );
