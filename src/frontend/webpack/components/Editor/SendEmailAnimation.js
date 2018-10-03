@@ -3,23 +3,13 @@ import Lottie from 'react-lottie';
 import * as animationData from './email.json';
 
 class SendEmailAnimation extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {isStopped: false, isPaused: false};
-  }
-
   render() {
-    const buttonStyle = {
-      display: 'block',
-      margin: '10px auto'
-    };
-
     const defaultOptions = {
-      loop: true,
+      loop: false,
       autoplay: true,
       animationData: animationData,
       rendererSettings: {
-        preserveAspectRatio: 'xMidYMid slice'
+        preserveAspectRatio: 'xMidYMid slice',
       }
     };
 
@@ -27,29 +17,18 @@ class SendEmailAnimation extends React.Component {
       <div>
         <Lottie
           options={defaultOptions}
-          height={400}
-          width={400}
-          isStopped={this.state.isStopped}
-          isPaused={this.state.isPaused}
+          height={700}
+          width={700}
+          margin={-24}
+          eventListeners={[
+            {
+              eventName: 'complete',
+              callback: () => {
+                this.props.onComplete();
+              }
+            }
+          ]}
         />
-        <button
-          style={buttonStyle}
-          onClick={() => this.setState({isStopped: true})}
-        >
-          stop
-        </button>
-        <button
-          style={buttonStyle}
-          onClick={() => this.setState({isStopped: false})}
-        >
-          play
-        </button>
-        <button
-          style={buttonStyle}
-          onClick={() => this.setState({isPaused: !this.state.isPaused})}
-        >
-          pause
-        </button>
       </div>
     );
   }
