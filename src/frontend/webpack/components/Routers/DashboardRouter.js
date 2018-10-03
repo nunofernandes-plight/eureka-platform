@@ -11,7 +11,6 @@ import AddressBook from '../AddressBook/AddressBook.js';
 import ContractOwnerDashboard from '../ContractOwnerDashboard.js';
 import {ContractOwnerGuard} from '../Guards/Guards.js';
 import EditorRouter from './EditorRouter.js';
-import MyReviews from '../Reviews/MyReviews.js';
 import ReviewsRouter from './ReviewsRouter.js';
 import {Card} from '../../views/Card.js';
 

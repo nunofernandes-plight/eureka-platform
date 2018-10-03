@@ -21,7 +21,7 @@ const Box = styled.div`
   flex-direction: column;
 `;
 
-class MyReviews extends React.Component {
+class BecomeReviewer extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -29,9 +29,7 @@ class MyReviews extends React.Component {
     };
   }
 
-  componentDidMount() {
-    console.log(this.props.user);
-  }
+  componentDidMount() {}
 
   becomeReviewer() {
     this.setState({loading: true});
@@ -63,18 +61,6 @@ class MyReviews extends React.Component {
   }
 
   render() {
-    const IsReviewer = () => {
-      return (
-        <Box>
-          <i>
-            {' '}
-            Congratulations! You are a reviewer for EUREKA. If want want to
-            start reviewing your first article, <a href={''}>click here. </a>
-          </i>
-        </Box>
-      );
-    };
-
     const IsNotReviewer = () => {
       return (
         <Box>
@@ -96,15 +82,11 @@ class MyReviews extends React.Component {
     return (
       <Container>
         <Card width={1000} title={'My Reviews'}>
-          {this.props.user.roles.includes(Roles.REVIEWER) ? (
-            <IsReviewer />
-          ) : (
-            <IsNotReviewer />
-          )}
+          <IsNotReviewer />
         </Card>
       </Container>
     );
   }
 }
 
-export default MyReviews;
+export default BecomeReviewer;
