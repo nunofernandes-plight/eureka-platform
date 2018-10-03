@@ -5,17 +5,11 @@ import * as animationData from './email.json';
 class SendEmailAnimation extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {isStopped: false, isPaused: false};
   }
 
   render() {
-    const buttonStyle = {
-      display: 'block',
-      margin: '10px auto'
-    };
-
     const defaultOptions = {
-      loop: true,
+      loop: false,
       autoplay: true,
       animationData: animationData,
       rendererSettings: {
@@ -29,27 +23,13 @@ class SendEmailAnimation extends React.Component {
           options={defaultOptions}
           height={400}
           width={400}
-          isStopped={this.state.isStopped}
-          isPaused={this.state.isPaused}
+          eventListeners={[
+            {
+              eventName: 'complete',
+              callback: () => console.log('the animation completed')
+            }
+          ]}
         />
-        <button
-          style={buttonStyle}
-          onClick={() => this.setState({isStopped: true})}
-        >
-          stop
-        </button>
-        <button
-          style={buttonStyle}
-          onClick={() => this.setState({isStopped: false})}
-        >
-          play
-        </button>
-        <button
-          style={buttonStyle}
-          onClick={() => this.setState({isPaused: !this.state.isPaused})}
-        >
-          pause
-        </button>
       </div>
     );
   }
