@@ -9,7 +9,7 @@ class SendEmailAnimation extends React.Component {
       autoplay: true,
       animationData: animationData,
       rendererSettings: {
-        preserveAspectRatio: 'xMidYMid slice'
+        preserveAspectRatio: 'xMidYMid slice',
       }
     };
 
@@ -24,7 +24,6 @@ class SendEmailAnimation extends React.Component {
             {
               eventName: 'complete',
               callback: () => {
-                console.log('animation complete');
                 this.props.onComplete();
               }
             }
