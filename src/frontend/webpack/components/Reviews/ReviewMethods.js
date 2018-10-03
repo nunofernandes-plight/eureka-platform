@@ -9,3 +9,13 @@ export const getArticlesInvitedForReviewing = () => {
     credentials: 'include'
   });
 };
+
+export const getArticlesOpenToReview = () => {
+  return fetch(`${getDomain()}/api/articles/reviewable/community`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include'
+  });
+};
