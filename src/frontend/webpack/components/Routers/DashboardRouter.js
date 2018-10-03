@@ -12,6 +12,8 @@ import ContractOwnerDashboard from '../ContractOwnerDashboard.js';
 import {ContractOwnerGuard} from '../Guards/Guards.js';
 import EditorRouter from './EditorRouter.js';
 import MyReviews from '../Reviews/MyReviews.js';
+import Reviewers from '../Reviewers.js';
+import UserExploration from '../UserExploration.js';
 
 class DashboardRouter extends Component {
   render() {
@@ -120,6 +122,19 @@ class DashboardRouter extends Component {
                 network={this.props.network}
               />
             )}
+          />
+
+          {/*ROUTES IN DASHBOARD WHICH ARE NOT INCLUDED IN THE PANEL LEFT */}
+          <Route
+            exact
+            path={`${this.props.base}/reviewers`}
+            render={() => <Reviewers />}
+          />
+
+          <Route
+            exact
+            path={`${this.props.base}/users/:ethereumAddress`}
+            render={() => <UserExploration />}
           />
 
           <Route
