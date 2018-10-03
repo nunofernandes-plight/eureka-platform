@@ -231,6 +231,9 @@ class EditorInvite extends React.Component {
             <GridSpinner />
           ) : (
             <Card title={'Invite to Review an Article'} width={1000}>
+              <Link to={'/app/reviewers'}>
+                <button>See all reviewers in the community</button>
+              </Link>
               {this.state.articles ? (
                 this.state.articles.length > 0 ? (
                   this.state.articles.map(article => {

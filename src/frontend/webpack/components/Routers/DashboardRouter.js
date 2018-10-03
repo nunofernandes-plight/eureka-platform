@@ -14,6 +14,14 @@ import EditorRouter from './EditorRouter.js';
 import MyReviews from '../Reviews/MyReviews.js';
 import Reviewers from '../Reviewers.js';
 import UserExploration from '../UserExploration.js';
+import styled from 'styled-components';
+const CardContainer = styled.div`
+  transition: all 0.5s;
+  display: flex;
+  max-width: 1200px;
+  justify-content: center;
+  margin: 0 auto;
+`;
 
 class DashboardRouter extends Component {
   render() {
@@ -125,6 +133,7 @@ class DashboardRouter extends Component {
           />
 
           {/*ROUTES IN DASHBOARD WHICH ARE NOT INCLUDED IN THE PANEL LEFT */}
+
           <Route
             exact
             path={`${this.props.base}/reviewers`}

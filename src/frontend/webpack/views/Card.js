@@ -6,6 +6,7 @@ import {
   LARGE_DEVICES,
   MEDIUM_DEVICES
 } from '../../helpers/mobile.js';
+import {Go} from '../components/Routers/Go.js';
 
 export const CardTitle = styled.h2`
   font-size: 1.5rem;
@@ -47,6 +48,7 @@ export const Card = props => {
   return (
     <CardContainer {...props}>
       {props.title ? <CardTitle>{props.title}</CardTitle> : null}
+
       {props.children}
     </CardContainer>
   );
