@@ -3,15 +3,8 @@ import styled from 'styled-components';
 import {Route} from 'react-router';
 import {Redirect, withRouter} from 'react-router-dom';
 import NavPill from '../../views/NavPill.js';
-import EditorArticles from '../Editor/EditorArticles.js';
-import EditorSignOff from '../Editor/EditorSignOff.js';
-import Icon from '../../views/icons/Icon.js';
-import {GoBack} from './GoBack.js';
-import {GoForward} from './GoForward.js';
-import EditorInvite from '../Editor/EditorInvite.js';
 import {ReviewsNavPillRoutes} from './ReviewsNavPillRoutes.js';
 import ReviewsInvited from '../Reviews/ReviewsInvited.js';
-import {Card} from '../../views/Card.js';
 import ReviewsOpen from '../Reviews/ReviewsOpen.js';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
 import BecomeReviewer from '../Reviews/BecomeReviewer.js';
@@ -56,8 +49,6 @@ class ReviewsRouter extends Component {
         {this.props.user.roles.includes(Roles.REVIEWER) ? (
           <Container>
             <NavPills>
-              {' '}
-              <GoBack {...this.props} />
               {ReviewsNavPillRoutes.map((item, index) => {
                 return (
                   <NavPill
@@ -71,7 +62,6 @@ class ReviewsRouter extends Component {
                   />
                 );
               })}
-              <GoForward {...this.props} />
             </NavPills>
             <CardContainer>
               <MarginTop>
