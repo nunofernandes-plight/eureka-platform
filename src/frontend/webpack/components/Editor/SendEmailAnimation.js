@@ -3,10 +3,6 @@ import Lottie from 'react-lottie';
 import * as animationData from './email.json';
 
 class SendEmailAnimation extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const defaultOptions = {
       loop: false,
@@ -21,12 +17,16 @@ class SendEmailAnimation extends React.Component {
       <div>
         <Lottie
           options={defaultOptions}
-          height={400}
-          width={400}
+          height={700}
+          width={700}
+          margin={-24}
           eventListeners={[
             {
               eventName: 'complete',
-              callback: () => console.log('the animation completed')
+              callback: () => {
+                console.log('animation complete');
+                this.props.onComplete();
+              }
             }
           ]}
         />

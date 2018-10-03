@@ -142,17 +142,20 @@ class Modal extends Component {
         {this.props.show ? (
           <ModalParent {...this.props}>
             <MyModal {...this.props}>
-              <MyModalHeader {...this.props}>
-                <ModalTitle>{this.props.title}</ModalTitle>
-                {this.props.noClose ? null : (
-                  <Icon
-                    icon={'close'}
-                    width={10}
-                    height={18}
-                    onClick={() => this.toggle()}
-                  />
-                )}
-              </MyModalHeader>
+              {this.props.hideHeader ? null : (
+                <MyModalHeader {...this.props}>
+                  <ModalTitle>{this.props.title}</ModalTitle>
+                  {this.props.noClose ? null : (
+                    <Icon
+                      icon={'close'}
+                      width={10}
+                      height={18}
+                      onClick={() => this.toggle()}
+                    />
+                  )}
+                </MyModalHeader>
+              )}
+
               <MyModalBody>
                 {this.props.type === 'notification' && !this.props.noBell ? (
                   <div style={{display: 'flex', justifyContent: 'center'}}>
@@ -167,16 +170,20 @@ class Modal extends Component {
                 ) : null}
                 <Content>{this.props.children}</Content>
               </MyModalBody>
-              <MyModalFooter {...this.props}>
-                {this.props.noClose ? null : (
-                  <CloseButton onClick={() => this.toggle()}>CLOSE</CloseButton>
-                )}
-                {this.props.action ? (
-                  <ActionButton onClick={() => this.props.callback()}>
-                    {this.props.action}
-                  </ActionButton>
-                ) : null}
-              </MyModalFooter>
+              {this.props.hideFooter ? null : (
+                <MyModalFooter {...this.props}>
+                  {this.props.noClose ? null : (
+                    <CloseButton onClick={() => this.toggle()}>
+                      CLOSE
+                    </CloseButton>
+                  )}
+                  {this.props.action ? (
+                    <ActionButton onClick={() => this.props.callback()}>
+                      {this.props.action}
+                    </ActionButton>
+                  ) : null}
+                </MyModalFooter>
+              )}
             </MyModal>
           </ModalParent>
         ) : null}
