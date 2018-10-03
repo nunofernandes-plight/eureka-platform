@@ -25,11 +25,12 @@ export default {
     });
   },
 
-  getUnassignedSubmissions: async () => {
+  getUnassignedSubmissions: async (pageNumber, nPerPage) => {
     return await ArticleSubmission.find({
       editor: null,
       articleSubmissionState: 'OPEN'
-    })
+    }).skip( pageNumber > 0 ? ( ( pageNumber - 1 ) * nPerPage ) : 0 )
+      .limit( nPerPage )
       .populate('articleVersions')
       .populate([
         {path: 'articleVersions.editorApprovedReviews'},

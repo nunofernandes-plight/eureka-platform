@@ -1,13 +1,13 @@
 export const ReviewsNavPillRoutes = [
   {
     path: 'invited',
-    name: 'Review Invitations',
+    name: 'Invitations',
     icon: 'material',
     material: 'mail'
   },
   {
     path: 'open',
-    name: 'Articles Open to Review',
+    name: 'Open for Review',
     icon: 'material',
     material: 'search'
   },

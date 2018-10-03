@@ -37,7 +37,9 @@ class EditorArticles extends React.Component {
       loading: false,
       articleOnHover: null,
       tx: null,
-      showTxModal: false
+      showTxModal: false,
+      page: 1,
+      limit: 10
     };
   }
 
@@ -47,7 +49,7 @@ class EditorArticles extends React.Component {
 
   componentDidMount() {
     this.setState({loading: true});
-    getUnassignedSubmissions()
+    getUnassignedSubmissions(this.state.page, this.state.limit)
       .then(response => response.json())
       .then(response => {
         if (response.success) {

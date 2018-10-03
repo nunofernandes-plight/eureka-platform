@@ -269,11 +269,12 @@ contract EurekaPlatform {
     // if the process is not already claimed by another editor
     function assignForSubmissionProcess(uint256 _submissionId) public {
 
-        require(isEditor[msg.sender], "msg.sender must be an editor to call this function.");
+        require(isEditor[msg.sender], "the sender of the transaction must be an editor to call this function.");
 
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
         require(submission.submissionState == SubmissionState.OPEN, "the submission process needs to be OPEN to call this method.");
         require(submission.editor == address(0), "the submission process is already assigned to an editor.");
+        require(msg.sender != submission.submissionOwner, "the submission owner can't be the editor of the same submission process");
 
         submission.editor = msg.sender;
         submission.submissionState = SubmissionState.EDITOR_ASSIGNED;

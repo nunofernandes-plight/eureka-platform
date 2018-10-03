@@ -1,13 +1,19 @@
 import {getDomain} from '../../../../helpers/getDomain.mjs';
 
-export const getUnassignedSubmissions = () => {
-  return fetch(`${getDomain()}/api/submissions/unassigned`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    credentials: 'include'
-  });
+export const getUnassignedSubmissions = (page, limit) => {
+  return fetch(
+    `${getDomain()}/api/submissions/unassigned?page=` +
+      page +
+      `&limit=` +
+      limit,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    }
+  );
 };
 
 export const getArticlesToSignOff = () => {
