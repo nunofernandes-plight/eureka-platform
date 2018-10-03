@@ -12,6 +12,8 @@ import ContractOwnerDashboard from '../ContractOwnerDashboard.js';
 import {ContractOwnerGuard} from '../Guards/Guards.js';
 import EditorRouter from './EditorRouter.js';
 import MyReviews from '../Reviews/MyReviews.js';
+import ReviewsRouter from './ReviewsRouter.js';
+import {Card} from '../../views/Card.js';
 
 class DashboardRouter extends Component {
   render() {
@@ -81,15 +83,20 @@ class DashboardRouter extends Component {
           />
 
           <Route
-            exact
             path={`${this.props.base}/reviews`}
-            render={() => (
-              <MyReviews
-                base={`${this.props.base}/reviews`}
-                user={this.props.user}
-                selectedAccount={this.props.selectedAccount}
-              />
-            )}
+            render={() => {
+              return (
+                <ReviewsRouter
+                  web3={this.props.web3}
+                  tokenContract={this.props.tokenContract}
+                  platformContract={this.props.platformContract}
+                  base={`${this.props.base}/reviews`}
+                  user={this.props.user}
+                  selectedAccount={this.props.selectedAccount}
+                  network={this.props.network}
+                />
+              );
+            }}
           />
 
           <Route
