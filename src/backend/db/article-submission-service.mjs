@@ -7,7 +7,7 @@ import ARTICLE_SUBMISSION_STATE from '../schema/article-submission-state-enum.mj
 import User from '../schema/user.mjs';
 import Roles from '../schema/roles-enum.mjs';
 import {sleepSync} from '../../helpers/sleepSync.mjs';
-
+import Review from '../schema/review.mjs';
 
 export default {
   getAllSubmissions: () => {
@@ -25,17 +25,18 @@ export default {
     });
   },
 
+  //TODO: Assignable are only submissions where user is not equal submission owner or author
   getUnassignedSubmissions: async (pageNumber, nPerPage) => {
     return await ArticleSubmission.find({
       editor: null,
       articleSubmissionState: 'OPEN'
-    }).skip( pageNumber > 0 ? ( ( pageNumber - 1 ) * nPerPage ) : 0 )
-      .limit( nPerPage )
-      .populate('articleVersions')
-      .populate([
-        {path: 'articleVersions.editorApprovedReviews'},
-        {path: 'articleVersions.communityReviews'}
-      ]);
+    })
+      .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
+      .limit(nPerPage)
+      .populate({
+        path: 'articleVersions',
+        populate: [{path: 'editorApprovedReviews'}, {path: 'communityReviews'}]
+      });
   },
 
   getAssignedSubmissions: async ethereumAddress => {
@@ -43,12 +44,10 @@ export default {
     return await ArticleSubmission.find({
       editor: ethereumAddress,
       articleSubmissionState: {$ne: 'CLOSED'}
-    })
-      .populate('articleVersions')
-      .populate([
-        {path: 'articleVersions.editorApprovedReviews'},
-        {path: 'articleVersions.communityReviews'}
-      ]);
+    }).populate({
+      path: 'articleVersions',
+      populate: [{path: 'editorApprovedReviews'}, {path: 'communityReviews'}]
+    });
   },
 
   createSubmission: async ownerAddress => {
