@@ -44,6 +44,7 @@ class BecomeReviewer extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
+          this.props.updateUser();
         } else {
           this.setState({
             errorMessage: response.error,

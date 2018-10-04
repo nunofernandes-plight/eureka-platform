@@ -122,7 +122,12 @@ class ReviewsRouter extends Component {
             </CardContainer>
           </Container>
         ) : (
-          <BecomeReviewer user={this.props.user} />
+          <BecomeReviewer
+            user={this.props.user}
+            updateUser={() => {
+              this.props.updateUser();
+            }}
+          />
         )}
       </Parent>
     );
