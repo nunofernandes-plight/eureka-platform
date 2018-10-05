@@ -8,11 +8,18 @@ export default {
     return Review.find({});
   },
 
-  getReviewInvitations: (address) => {
-    return Review.find({
+  getReviewInvitations: async (address) => {
+    return await Review.find({
       reviewerAddress: address,
       reviewState: {$in: ['INVITED', 'INVITATION_ACCEPTED']}
-    });
+    })
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}]
+      });
   },
 
   getMyReviews: (address) => {
