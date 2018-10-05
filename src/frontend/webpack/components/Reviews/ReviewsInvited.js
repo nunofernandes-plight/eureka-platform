@@ -43,8 +43,6 @@ class ReviewsInvited extends React.Component {
       article: null,
       loading: false,
       articleOnHover: null,
-      showReviewersPickerModal: false,
-      reviewersToInvite: null,
       errorMessage: false
     };
   }
@@ -99,7 +97,11 @@ class ReviewsInvited extends React.Component {
                 this.state.articles.map(article => {
                   return (
                     <Article
-                      buttonText={'Accept Invitation'}
+                      buttonText={
+                        article.reviewState === 'INVITED'
+                          ? 'Accept Invitation'
+                          : 'Write Review'
+                      }
                       key={article._id}
                       article={article}
                       onHover={this.state.articleOnHover === article._id}
