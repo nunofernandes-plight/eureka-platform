@@ -22,10 +22,11 @@ Example:
 [EKA192af1d185a829dedac13f58d051002dCC]
 
 ## EUREKA address supporting site
-Since the address also shows the track record of a scientist, a web page needs to be built to display this information.
 
-Another web page needs to be built where such an address can be created. The public private key generation needs to be done exclusively on the client. The output is the EUREKA address and alternatively QR-Code, or LaTeX code that could be used directly in a paper.
+* Since the address also shows the track record of a scientist, a web page needs to be built to display this information.
 
-Furthermore, a web page needs to be built where the address can be linked to an email address and name. With the private key, name and email can be changed. By changed, it means it can be added, but previous records will not be removed, only marked as outdated. The email needs to be verified in order to prevent spoofing. The verification of public-key/email requires a proof of the posession of the private key and that one is able to receive email on that account.
+* Another web page needs to be built where such an address can be created. The public private key generation needs to be done exclusively on the client. The output is the EUREKA address and alternatively QR-Code, or LaTeX code that could be used directly in a paper.
 
-A web page needs to be built where a PDF can be uploaded and the relevent EUREKA addresses are being displayed. If none is found, the user has the possibility to propose EUREKA address/email links.
+* Furthermore, a web page needs to be built where the address can be linked to an email address and name. With the private key, name and email can be changed. By changed, it means it can be added, but previous records will not be removed, only marked as outdated. The email needs to be verified in order to prevent spoofing. The verification of public-key/email requires a proof of the posession of the private key and that one is able to receive email on that account.
+
+* A web page needs to be built where a PDF can be uploaded and the relevent EUREKA addresses are being displayed. If none is found, the user has the possibility to propose EUREKA address/email links.
