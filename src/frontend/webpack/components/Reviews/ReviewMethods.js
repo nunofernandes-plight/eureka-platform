@@ -1,7 +1,7 @@
 import {getDomain} from '../../../../helpers/getDomain.mjs';
 
 export const getArticlesInvitedForReviewing = () => {
-  return fetch(`${getDomain()}/api/articles/reviewable/invited`, {
+  return fetch(`${getDomain()}/api/reviews/invited`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
