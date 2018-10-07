@@ -15,10 +15,10 @@ const LeftTopContainer = styled.div`
   margin-top: 21px;
 `;
 const PreviewIcon = styled.div``;
-const DocumentLeftPart = () => {
+const DocumentLeftPart = ({document, ...otherProps}) => {
   return (
     <LeftTopContainer>
-      <Toolbar />
+      <Toolbar document={document}/>
 
     </LeftTopContainer>
   );

@@ -95,7 +95,13 @@ const getContent = style => {
 
 const InlineStyleButton = props => {
   return (
-    <StyledButton tooltip={props.tooltip} id={props.style} onClick={() => {}}>
+    <StyledButton
+      tooltip={props.tooltip}
+      id={props.style}
+      onClick={() => {
+        props.onClick();
+      }}
+    >
       {getContent(props.style)}
     </StyledButton>
   );
@@ -139,7 +145,9 @@ const InsertTextButton = props => {
   );
 };
 
-const Toolbar = props => {
+const Toolbar = ({document, ...otherProps}) => {
+  console.log(document);
+  const props = otherProps;
   return (
     <ToolbarContainer>
       <InlineStyleButton {...props} style={BOLD} tooltip={`Bold`} />
@@ -166,7 +174,13 @@ const Toolbar = props => {
       />
       <Separator />
       <InlineStyleButton style={SAVE} tooltip="Save" />
-      <InlineStyleButton style={PREVIEW} tooltip="Preview" />
+      <InlineStyleButton
+        style={PREVIEW}
+        tooltip="Preview"
+        onClick={() => {
+          alert(document._id);
+        }}
+      />
     </ToolbarContainer>
   );
 };
