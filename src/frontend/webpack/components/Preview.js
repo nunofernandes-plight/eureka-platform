@@ -63,6 +63,8 @@ class Preview extends React.Component {
             document: deserialized
           });
           this.fetchAuthorsData();
+
+          console.log(document);
         } else {
           this.setState({
             errorMessage: response.error

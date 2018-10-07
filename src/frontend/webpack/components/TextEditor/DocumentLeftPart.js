@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Toolbar from './Toolbar.js';
+import {__GRAY_200} from '../../../helpers/colors.js';
 
 const LeftTopContainer = styled.div`
   padding: 15px;
@@ -13,10 +14,22 @@ const LeftTopContainer = styled.div`
   margin-top: 21px;
 `;
 
+const Separator = styled.div`
+  height: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: ${__GRAY_200};
+  margin: 6.5px 0;
+`;
+
+const PreviewIcon = styled.div``;
 const DocumentLeftPart = () => {
   return (
     <LeftTopContainer>
       <Toolbar />
+      <Separator />
+      <PreviewIcon>asfa</PreviewIcon>
     </LeftTopContainer>
   );
 };
