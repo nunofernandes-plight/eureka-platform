@@ -11,6 +11,7 @@ import {getDomain} from '../../../helpers/getDomain.mjs';
 import Modal from '../design-components/Modal.js';
 import {renderField} from './TextEditor/DocumentRenderer.mjs';
 import GridSpinner from '../views/spinners/GridSpinner.js';
+import {Go} from './Routers/Go.js';
 
 const Container = styled.div`
   display: flex;
@@ -35,9 +36,14 @@ const MyPreview = styled.div`
   width: 100%;
 `;
 
-const LeftSide = styled.div``;
+const LeftSide = styled.div`
+  flex: 1 1 0;
+`;
 
-const RightSide = styled.div``;
+const RightSide = styled.div`
+  flex: 3.5 1 0;
+  max-width: 820px;
+`;
 
 const Title = styled.h3``;
 
@@ -63,6 +69,8 @@ class Preview extends React.Component {
             document: deserialized
           });
           this.fetchAuthorsData();
+
+          console.log(document);
         } else {
           this.setState({
             errorMessage: response.error
@@ -128,6 +136,7 @@ class Preview extends React.Component {
       <Container>
         {this.renderModal()}
         <Card width={1000} title={'Your article'}>
+          <Go back {...this.props} />
           <MySeparator />
           {!this.state.document ? (
             <GridSpinner />
