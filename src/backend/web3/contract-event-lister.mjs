@@ -281,7 +281,7 @@ export default {
       undefined,
       async (error, event) => {
         if (error) throw error;
-        
+
         await articleVersionService.changeArticleVersionState(
           event.returnValues.articleHash,
           ArticleVersionState.DECLINED

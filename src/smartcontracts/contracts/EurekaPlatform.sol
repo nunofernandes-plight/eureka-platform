@@ -602,7 +602,7 @@ contract EurekaPlatform {
         }
         return count;
     }
-
+    
     function requestNewReviewRound(uint256 _submissionId) private {
 
         articleSubmissions[_submissionId].submissionState = SubmissionState.NEW_REVIEW_ROUND_REQUESTED;
