@@ -11,6 +11,7 @@ import {getDomain} from '../../../helpers/getDomain.mjs';
 import Modal from '../design-components/Modal.js';
 import {renderField} from './TextEditor/DocumentRenderer.mjs';
 import GridSpinner from '../views/spinners/GridSpinner.js';
+import {Go} from './Routers/Go.js';
 
 const Container = styled.div`
   display: flex;
@@ -130,6 +131,7 @@ class Preview extends React.Component {
       <Container>
         {this.renderModal()}
         <Card width={1000} title={'Your article'}>
+          <Go back {...this.props} />
           <MySeparator />
           {!this.state.document ? (
             <GridSpinner />
