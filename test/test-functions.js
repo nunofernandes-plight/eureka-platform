@@ -12,7 +12,8 @@ import {
   acceptReview,
   declineReview,
   acceptArticleVersion,
-  declineArticleVersion
+  declineArticleVersion,
+  openNewReviewRound
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -547,5 +548,20 @@ export default {
       counter++;
     }
     t.is(dbArticleVersion.articleVersionState, ArticleVersionState.DECLINED);
+  },
+
+  openNewReviewRoundAndTest: async function(t, submissionOwner, submissionId, articleVersion, articleVersionData, articleHash, urlHash) {
+    console.log(t);
+    console.log(submissionOwner);
+    console.log(submissionId);
+    // console.log(articleVersion);
+    // console.log(articleVersionData);
+    await openNewReviewRound(
+      eurekaPlatformContract, submissionId, articleHash, urlHash,
+      articleVersionData.authors, articleVersionData.contributorRatios, articleVersionData.linkedArticles, articleVersionData.linkedArticlesSplitRatios
+    ).send({
+      from: submissionOwner.ethereumAddress
+    });
+
   }
 };

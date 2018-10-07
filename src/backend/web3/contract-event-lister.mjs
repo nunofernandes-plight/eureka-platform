@@ -288,5 +288,14 @@ export default {
         );
       }
     );
+
+    EurekaPlatformContract.events.NewReviewRoundOpened(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+
+        console.log('NEW REVIEW ROUND OPENEND!!!');
+      }
+    );
   }
 };

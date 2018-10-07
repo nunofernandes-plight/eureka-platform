@@ -138,6 +138,22 @@ export const declineArticleVersion = (
     .declineArticleVersion(_articleHash);
 };
 
+export const openNewReviewRound = (
+  contract,
+  _submissionId,
+  _articleHash,
+  _articleUrl,
+  _authors,
+  _authorsContributionRations,
+  _linkedArticles,
+  _linkedArticlesSplitRatios
+) => {
+  return contract.methods
+    .openNewReviewRound(_submissionId, _articleHash, _articleUrl, _authors,
+      _authorsContributionRations, _linkedArticles, _linkedArticlesSplitRatios);
+};
+
+
 /*
   Getters
  */

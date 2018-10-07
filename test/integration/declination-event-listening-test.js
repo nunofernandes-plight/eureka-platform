@@ -13,6 +13,9 @@ import {deploy} from '../../src/smartcontracts/deployment/deployer-and-mint.mjs'
 import {
   TEST_ARTICLE_1_DATA_IN_HEX,
   TEST_ARTICLE_1_HASH_HEX,
+  TEST_ARTICLE_1_SECOND_VERSION,
+  TEST_ARTICLE_1_SECOND_VERSION_HASH_HEX,
+  TEST_ARTICLE1_SECOND_VERSION_HASH_URL,
   TEST_ARTICLE_2_DATA_IN_HEX,
   TEST_ARTICLE_2_HASH_HEX,
   REVIEW_1,
@@ -25,7 +28,13 @@ import {
   REVIEW_4_HASH_HEX,
   createUserContractOwner,
   setAccounts,
-  createUser1, createEditor1, createEditor2, createReviewer1, createReviewer2, createReviewer3, createReviewer4
+  createUser1,
+  createEditor1,
+  createEditor2,
+  createReviewer1,
+  createReviewer2,
+  createReviewer3,
+  createReviewer4
 } from '../test-data';
 import TestFunctions from '../test-functions';
 
@@ -61,7 +70,7 @@ test.after(async () => {
 });
 
 
-/**************** Article declination  ******************/
+/**************** Article declination & open new round  ******************/
 test.only(
   PRETEXT +
   'Article declination  ',
@@ -122,5 +131,13 @@ test.only(
 
     //Decline ArticleVersion
     await TestFunctions.declineArticleVersionAndTest(t, editor, articleVersion);
+
+    //update from DB
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    articleVersion = articleSubmission.articleVersions[0];
+
+    //Open new Review round
+    await TestFunctions.openNewReviewRoundAndTest(t, author, articleSubmission.scSubmissionID, articleVersion, TEST_ARTICLE_1_SECOND_VERSION, TEST_ARTICLE_1_SECOND_VERSION_HASH_HEX, TEST_ARTICLE_1_SECOND_VERSION_HASH_HEX);
+
   }
 );
