@@ -276,5 +276,34 @@ export default {
         );
       }
     );
+
+    EurekaPlatformContract.events.DeclineArticleVersion(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+
+        await articleVersionService.changeArticleVersionState(
+          event.returnValues.articleHash,
+          ArticleVersionState.DECLINED
+        );
+      }
+    );
+
+    EurekaPlatformContract.events.NewReviewRoundOpened(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+        await articleSubmissionService.submitArticleVersion(event.returnValues.submissionId,
+          event.returnValues.articleHash, event.returnValues.articleUrl);
+      }
+    );
+
+    EurekaPlatformContract.events.NewReviewRoundDeclined(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+        console.log('NEW REVIEW ROUND DECLINED!!');
+      }
+    );
   }
 };

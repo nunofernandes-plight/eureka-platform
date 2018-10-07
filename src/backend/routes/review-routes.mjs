@@ -2,6 +2,7 @@ import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
 import reviewService from '../db/review-service.mjs';
 import accesController from '../controller/acess-controller.mjs';
+import {getRelevantArticleData} from '../helpers/relevant-article-data.mjs';
 const router = express.Router();
 
 router.use(accesController.loggedInOnly);
@@ -16,14 +17,15 @@ router.get(
 router.get(
   '/invited',
   asyncHandler(async req => {
-    return reviewService.getReviewInvitations(req.session.passport.user.ethereumAddress);
+    let reviews = await reviewService.getReviewInvitations(req.session.passport.user.ethereumAddress);
+    return getRelevantReviewData(reviews);
   })
 );
 
 router.get(
   '/myreviews',
   asyncHandler(async req => {
-    return reviewService.getMyReviews(req.session.passport.user.ethereumAddress);
+    return await reviewService.getMyReviews(req.session.passport.user.ethereumAddress);
   })
 );
 
@@ -54,3 +56,20 @@ router.put(
 );
 
 export default router;
+
+const getRelevantReviewData = (reviews) => {
+  let reviewObjs = [];
+  reviews.map(review => {
+    let obj = getRelevantArticleData(review.articleVersion.articleSubmission, review.articleVersion);
+    obj.reviewState = review.reviewState;
+    obj.reviewType = review.reviewType;
+    obj.hasMajorIssues = review.hasMajorIssues;
+    obj.hasMinorIssues = review.hasMinorIssues;
+    obj.reviewId = review._id;
+    obj.stateTimestamp = review.stateTimestamp;
+    obj.reviewerAddress = review.reviewerAddress;
+
+    reviewObjs.push(obj);
+  });
+  return reviewObjs;
+};

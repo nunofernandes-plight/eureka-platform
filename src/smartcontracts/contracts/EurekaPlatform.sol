@@ -511,10 +511,11 @@ contract EurekaPlatform {
 
     // TODO     event EditorSignUp(address submissionOwner, address editorAddress, uint256 stateTimestamp);
     event ArticleVersionIsAccepted(bytes32 articleHash, uint256 stateTimestamp, address editor);
+
     function acceptArticleVersion(bytes32 _articleHash) public {
 
-      require(isEditor[msg.sender], "msg.sender needs to be an editor.");
-// TODO  require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
+        require(isEditor[msg.sender], "msg.sender needs to be an editor.");
+        // TODO  require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be EDITOR_CHECKED.");
@@ -539,6 +540,8 @@ contract EurekaPlatform {
         emit ArticleVersionIsAccepted(_articleHash, block.timestamp, msg.sender);
     }
 
+    event DeclineArticleVersion(bytes32 articleHash, uint256 stateTimestamp, address editor);
+
     function declineArticleVersion(bytes32 _articleHash) public {
 
         require(isEditor[msg.sender], "msg.sender needs to be an editor.");
@@ -561,6 +564,8 @@ contract EurekaPlatform {
             closeSubmissionProcess(article.submissionId);
         else
             requestNewReviewRound(article.submissionId);
+
+        emit DeclineArticleVersion(_articleHash, block.timestamp, msg.sender);
     }
 
     function countAcceptedReviewInvitations(bytes32 _articleHash, address[] _reviewers) view private returns (uint count) {
@@ -606,6 +611,8 @@ contract EurekaPlatform {
         articleSubmissions[_submissionId].stateTimestamp = block.timestamp;
     }
 
+    event NewReviewRoundOpened(uint256 submissionId, bytes32 articleHash, bytes32 articleUrl, uint256 stateTimestamp);
+
     function openNewReviewRound(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
         uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) public {
 
@@ -618,7 +625,10 @@ contract EurekaPlatform {
 
         submission.submissionState = SubmissionState.OPEN;
         submission.stateTimestamp = block.timestamp;
+        emit NewReviewRoundOpened(_submissionId, _articleHash, _articleURL, block.timestamp);
     }
+
+    event NewReviewRoundDeclined(uint256 submissionId, uint256 stateTimestamp);
 
     function declineNewReviewRound(uint256 _submissionId) public {
 
@@ -627,7 +637,8 @@ contract EurekaPlatform {
         require(submission.submissionState == SubmissionState.NEW_REVIEW_ROUND_REQUESTED,
             "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
 
-        closeSubmissionProcess(_submissionId);
+        //closeSubmissionProcess(_submissionId);
+        emit NewReviewRoundDeclined(_submissionId, block.timestamp);
     }
 
     // TODO: should it be possible to close a submission process before reaching maxReviewRounds ??

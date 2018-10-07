@@ -1,20 +1,20 @@
 import test from 'ava';
-import web3 from '../../../../src/helpers/web3Instance.mjs';
-import getAccounts from '../../../../src/smartcontracts/methods/get-accounts.mjs';
+import web3 from '../../../src/helpers/web3Instance.mjs';
+import getAccounts from '../../../src/smartcontracts/methods/get-accounts.mjs';
 import {
   finishMinting,
   getBalanceOf,
   mintEurekaTokens,
   submitArticle
-} from '../../../../src/smartcontracts/methods/web3-token-contract-methods.mjs';
-import getArticleHex from '../../../../src/smartcontracts/methods/get-articleHex.mjs';
+} from '../../../src/smartcontracts/methods/web3-token-contract-methods.mjs';
+import getArticleHex from '../../../src/smartcontracts/methods/get-articleHex.mjs';
 import {
   getAuthors,
   getLinkedArticles,
   getSubmissionProcess,
   getUrl
-} from '../../../../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
-import {deployContracts} from '../../../../src/smartcontracts/deployment/deploy-contracts.mjs';
+} from '../../../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {deployContracts} from '../../../src/smartcontracts/deployment/deploy-contracts.mjs';
 
 let EurekaPlatformContract;
 let EurekaTokenContract;

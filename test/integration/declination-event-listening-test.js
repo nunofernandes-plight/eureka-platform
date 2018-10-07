@@ -1,33 +1,10 @@
-import {
-  acceptArticleVersion,
-  signUpEditor
-} from '../../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
-import {submitArticle} from '../../src/smartcontracts/methods/web3-token-contract-methods.mjs';
 import test from 'ava';
 import app from '../../src/backend/api/api.mjs';
 import getAccounts from '../../src/smartcontracts/methods/get-accounts.mjs';
-import ArticleVersionState from '../../src/backend/schema/article-version-state-enum.mjs';
-import ScTransactionType from '../../src/backend/schema/sc-transaction-state-enum.mjs';
-import ReviewState from '../../src/backend/schema/review-state-enum.mjs';
 import userService from '../../src/backend/db/user-service.mjs';
 import articleSubmissionService from '../../src/backend/db/article-submission-service.mjs';
-import articleVersionService from '../../src/backend/db/article-version-service.mjs';
 import reviewService from '../../src/backend/db/review-service.mjs';
 import {cleanDB} from '../helpers.js';
-import {
-  assignForSubmissionProcess,
-  removeEditorFromSubmissionProcess,
-  changeEditorFromSubmissionProcess,
-  setSanityToOk,
-  setSanityIsNotOk,
-  inviteReviewersForArticle,
-  acceptReviewInvitation,
-  addEditorApprovedReview,
-  addCommunityReview,
-  acceptReview,
-  declineReview
-} from '../../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
-import {sleepSync} from '../helpers.js';
 import Roles from '../../src/backend/schema/roles-enum.mjs';
 import web3 from '../../src/helpers/web3Instance.mjs';
 import dotenv from 'dotenv';
@@ -36,6 +13,9 @@ import {deploy} from '../../src/smartcontracts/deployment/deployer-and-mint.mjs'
 import {
   TEST_ARTICLE_1_DATA_IN_HEX,
   TEST_ARTICLE_1_HASH_HEX,
+  TEST_ARTICLE_1_SECOND_VERSION,
+  TEST_ARTICLE_1_SECOND_VERSION_HASH_HEX,
+  TEST_ARTICLE1_SECOND_VERSION_HASH_URL,
   TEST_ARTICLE_2_DATA_IN_HEX,
   TEST_ARTICLE_2_HASH_HEX,
   REVIEW_1,
@@ -48,7 +28,13 @@ import {
   REVIEW_4_HASH_HEX,
   createUserContractOwner,
   setAccounts,
-  createUser1, createEditor1, createEditor2, createReviewer1, createReviewer2, createReviewer3, createReviewer4
+  createUser1,
+  createEditor1,
+  createEditor2,
+  createReviewer1,
+  createReviewer2,
+  createReviewer3,
+  createReviewer4
 } from '../test-data';
 import TestFunctions from '../test-functions';
 
@@ -57,9 +43,9 @@ let eurekaPlatformContract;
 let accounts;
 let contractOwner;
 
-const PRETEXT = 'INTEGRATION: ';
-/** ************** TESTING ****************/
+const PRETEXT = 'DECLINATION INTEGRATION: ';
 
+/** ****************************************** TESTING ********************************************/
 test.before(async () => {
   accounts = await getAccounts(web3);
   setAccounts(accounts);
@@ -83,86 +69,11 @@ test.after(async () => {
   await app.close();
 });
 
-/************************ Sign up Editor ************************/
-test(PRETEXT + 'Sign up Editor', async t => {
-  let user = await createUserContractOwner();
-  t.is(user.roles.length, 1);
-  t.is(user.roles[0], Roles.CONTRACT_OWNER);
 
-  await TestFunctions.signUpEditorAndTest(t, user);
-});
-
-
-/************************ Submit an Article &  auto change of Status from DRAFT --> SUBMITTED ************************/
-test(
-  PRETEXT +
-  'Submit an Article &  auto change of Status from DRAFT --> SUBMITTED',
-  async t => {
-    // Create user on DB
-    t.is((await userService.getAllUsers()).length, 0);
-    await createUserContractOwner();
-    const user1 = await createUser1();
-    t.is((await userService.getAllUsers()).length, 2);
-
-    await TestFunctions.createArticleDraftAndSubmitIt(t, user1, TEST_ARTICLE_1_HASH_HEX, TEST_ARTICLE_1_DATA_IN_HEX);
-  }
-);
-
-test(
-  PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process',
-  async t => {
-    // Create author and editor 1 & 2
-    const author = await createUserContractOwner();
-    const editor = await createEditor1();
-    const editor2 = await createEditor2();
-
-    // Sign up editor1 & 2
-    await TestFunctions.signUpEditorAndTest(t, editor);
-    await TestFunctions.signUpEditorAndTest(t, editor2);
-
-    // Submit article
-    await TestFunctions.createArticleDraftAndSubmitIt(t, author, TEST_ARTICLE_1_HASH_HEX, TEST_ARTICLE_1_DATA_IN_HEX);
-    let articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
-
-    // Assign first editor for submission process
-    await TestFunctions.assignEditorForSubmissionProcess(t, editor, articleSubmission);
-    // Change to second editor for submission process
-    await TestFunctions.changeEditorForSubmissionProcess(t, editor2, articleSubmission);
-
-    await TestFunctions.removeEditorFromSubmissionProcessAndTest(t, editor2, articleSubmission);
-  }
-);
-
-test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
-  // Create author and editor
-  const author = await createUserContractOwner();
-  const editor = await createEditor1();
-
-  // Submit article 1 & 2
-  await TestFunctions.createArticleDraftAndSubmitIt(t, author, TEST_ARTICLE_1_HASH_HEX, TEST_ARTICLE_1_DATA_IN_HEX);
-  await TestFunctions.createArticleDraftAndSubmitIt(t, author, TEST_ARTICLE_2_HASH_HEX, TEST_ARTICLE_2_DATA_IN_HEX);
-
-  let articleSubmission1 = (await articleSubmissionService.getAllSubmissions())[0];
-  let articleVersion1 = articleSubmission1.articleVersions[0];
-  let articleSubmission2 = (await articleSubmissionService.getAllSubmissions())[1];
-  let articleVersion2 = articleSubmission2.articleVersions[0];
-
-  // Signup editor & assign him for article 1 & 2
-  await TestFunctions.signUpEditorAndTest(t, editor);
-  await TestFunctions.assignEditorForSubmissionProcess(t, editor, articleSubmission1);
-  await TestFunctions.assignEditorForSubmissionProcess(t, editor, articleSubmission2);
-
-  // Accept sanity-check for article 1
-  await TestFunctions.acceptSanityCheckAndTest(t, editor, author, articleVersion1);
-
-  // Decline sanity-check for article 2
-  await TestFunctions.declineSanityCheckAndTest(t, editor, author, articleVersion2);
-});
-
-/**************** Invite reviewers for review article & Reviewers accept Invitation  ******************/
+/**************** Article declination & open new ReviewRound  ******************/
 test.only(
   PRETEXT +
-  'Invite reviewers for review article & Reviewers accept Invitation ',
+  'Article declination  ',
   async t => {
     // Create author and editor
     const author = await createUserContractOwner();
@@ -218,7 +129,18 @@ test.only(
     await TestFunctions.acceptReviewAndTest(t, editor, review2, articleVersion);
     await TestFunctions.declineReviewAndTest(t, editor, review3, articleVersion);
 
-    // Accept ArticleVersion
-    await TestFunctions.acceptArticleVersionAndTest(t, editor, articleVersion);
+    //Decline ArticleVersion
+    await TestFunctions.declineArticleVersionAndTest(t, editor, articleVersion);
+
+    //update from DB
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    articleVersion = articleSubmission.articleVersions[0];
+
+    // //Open new Review round
+    // await TestFunctions.openNewReviewRoundAndTest(t, author, articleSubmission.scSubmissionID,
+    //   articleVersion, TEST_ARTICLE_1_SECOND_VERSION, TEST_ARTICLE_1_SECOND_VERSION_HASH_HEX, TEST_ARTICLE_1_SECOND_VERSION_HASH_HEX);
+
+    //Decline new review round
+    await TestFunctions.declineNewReviewRoundAndTest(t, articleSubmission.scSubmissionID, author);
   }
 );

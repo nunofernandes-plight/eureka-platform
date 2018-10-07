@@ -112,6 +112,9 @@ class DashboardRouter extends Component {
                 platformContract={this.props.platformContract}
                 base={`${this.props.base}/articles`}
                 user={this.props.user}
+                updateUser={() => {
+                  this.props.updateUser();
+                }}
                 selectedAccount={this.props.selectedAccount}
                 network={this.props.network}
               />

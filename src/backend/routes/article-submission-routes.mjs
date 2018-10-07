@@ -11,7 +11,8 @@ router.use(accesController.loggedInOnly);
 
 router.use(accesController.loggedInOnly);
 
-router.get('/',
+router.get(
+  '/',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     if (!ethereumAddress) errorThrower.notLoggedIn();
@@ -19,21 +20,30 @@ router.get('/',
   })
 );
 
-router.use(accesController.rolesOnly([Roles.EDITOR, Roles.ADMIN, Roles.CONTRACT_OWNER]));
-router.get('/unassigned',
+router.use(
+  accesController.rolesOnly([Roles.EDITOR, Roles.ADMIN, Roles.CONTRACT_OWNER])
+);
+router.get(
+  '/unassigned',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     if (!ethereumAddress) errorThrower.notLoggedIn();
-    let submissions = await articleSubmissionService.getUnassignedSubmissions(parseInt(req.query.page), parseInt(req.query.limit));
+    let submissions = await articleSubmissionService.getUnassignedSubmissions(
+      parseInt(req.query.page),
+      parseInt(req.query.limit)
+    );
     return getSubmissionResponse(submissions);
   })
 );
 
-router.get('/assigned',
+router.get(
+  '/assigned',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     if (!ethereumAddress) errorThrower.notLoggedIn();
-    let submissions = await articleSubmissionService.getAssignedSubmissions();
+    let submissions = await articleSubmissionService.getAssignedSubmissions(
+      ethereumAddress
+    );
     return getSubmissionResponse(submissions);
   })
 );

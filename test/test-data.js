@@ -119,6 +119,27 @@ export const TEST_ARTICLE_1 = {
 export const TEST_ARTICLE_1_DATA_IN_HEX = getArticleHex(web3, TEST_ARTICLE_1);
 export const TEST_ARTICLE_1_HASH_HEX = '0x' + TEST_ARTICLE_1.articleHash;
 
+export const TEST_ARTICLE_1_SECOND_VERSION = {
+  articleHash:
+    '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+  url: 'article1.url',
+  authors: [
+    '0x32B90146858A1D119AB56202b84A330AaA7639D6',
+    '0xBaa8A96aD1b53c5412D5d89cF85d45e579f17F58'
+  ],
+  contributorRatios: [1000, 9000],
+  linkedArticles: [
+    '0x5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
+    '0x45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
+    '0xd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
+  ],
+  linkedArticlesSplitRatios: [1111, 1111, 8888]
+};
+export const TEST_ARTICLE_1_SECOND_VERSION_DATA_IN_HEX = getArticleHex(web3, TEST_ARTICLE_1_SECOND_VERSION);
+export const TEST_ARTICLE_1_SECOND_VERSION_HASH_HEX = '0x' + TEST_ARTICLE_1_SECOND_VERSION.articleHash;
+export const TEST_ARTICLE1_SECOND_VERSION_HASH_URL = '0x' + TEST_ARTICLE_1_SECOND_VERSION.url;
+
+
 export const TEST_ARTICLE_2 = {
   articleHash:
     '551aa99a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
@@ -139,6 +160,7 @@ export const TEST_ARTICLE_2 = {
   linkedArticlesSplitRatios:
     [2000, 2000, 6000]
 };
+
 
 export const TEST_ARTICLE_2_DATA_IN_HEX = getArticleHex(web3, TEST_ARTICLE_2);
 export const TEST_ARTICLE_2_HASH_HEX = '0x' + TEST_ARTICLE_2.articleHash;

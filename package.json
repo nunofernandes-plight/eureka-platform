@@ -38,6 +38,8 @@
     "query-string": "^6.1.0",
     "randomstring": "^1.1.5",
     "rc-tooltip": "^3.7.2",
+
+
     "react": "^16.4.1",
     "react-card-flip": "^0.2.1",
     "react-detect-offline": "^2.1.2",
@@ -68,7 +70,7 @@
     "test-sc": "ava --serial test/integration/smartcontracts",
     "test-ci": "if [ \"${CIRCLE_BRANCH}\" = \"dev\" ]; then ava --serial ./test/unit/NormalTests.js; elif [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then ava --serial ./test/unit/NormalTests.js; else ava --serial;fi",
     "test-db": "ava --serial test/db",
-    "test-int": "cross-env BC_NETWORK=ganache ava --serial test/integration/sc-event-listening-test.js",
+    "test-int": "cross-env BC_NETWORK=ganache ava --serial test/integration/declination-event-listening-test.js",
     "lint": "eslint **/*.mjs --ignore-path .gitignore",
     "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
     "eject": "react-scripts eject",

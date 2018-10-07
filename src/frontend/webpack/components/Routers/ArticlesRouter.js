@@ -8,6 +8,7 @@ import NavPill from '../../views/NavPill.js';
 import MySubmitted from '../MySubmitted.js';
 import Preview from '../Preview.js';
 import {ArticlesNavPillRoutes} from './ArticlesNavPillRoutes.js';
+import ReviewsRouter from './ReviewsRouter.js';
 
 const Parent = styled.div`
   display: flex;
@@ -77,7 +78,14 @@ class ArticlesRouter extends Component {
               <Route
                 exact
                 path={`${this.props.base}/drafts`}
-                render={() => <MyDrafts base={`${this.props.base}/drafts`} />}
+                render={() => (
+                  <MyDrafts
+                    base={`${this.props.base}/drafts`}
+                    updateUser={() => {
+                      this.props.updateUser();
+                    }}
+                  />
+                )}
               />
             </MarginTop>
 

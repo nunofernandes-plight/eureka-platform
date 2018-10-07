@@ -11,7 +11,10 @@ import {
   addCommunityReview,
   acceptReview,
   declineReview,
-  acceptArticleVersion
+  acceptArticleVersion,
+  declineArticleVersion,
+  openNewReviewRound,
+  declineNewReviewRound
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -343,8 +346,7 @@ export default {
     let counter = 0;
     while (
       dbReview.reviewState !== ReviewState.INVITATION_ACCEPTED &&
-      counter < 5
-      ) {
+      counter < 5){
       sleepSync(5000);
       dbReview = await reviewService.getReviewById(
         reviewer.ethereumAddress,
@@ -530,5 +532,52 @@ export default {
       counter++;
     }
     t.is(dbArticleVersion.articleVersionState, ArticleVersionState.ACCEPTED);
+  },
+
+  declineArticleVersionAndTest: async function(t, editor, articleVersion) {
+    await declineArticleVersion(
+      eurekaPlatformContract,
+      articleVersion.articleHash
+    ).send({
+      from: editor.ethereumAddress
+    });
+    let dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, articleVersion._id);
+    let counter = 0;
+    while (dbArticleVersion.articleVersionState !== ArticleVersionState.DECLINED && counter < 5) {
+      sleepSync(5000);
+      dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, articleVersion._id);
+      counter++;
+    }
+    t.is(dbArticleVersion.articleVersionState, ArticleVersionState.DECLINED);
+  },
+
+  openNewReviewRoundAndTest: async function(t, submissionOwner, scSubmissionId, articleVersion, articleVersionData, articleHash, urlHash) {
+    await openNewReviewRound(
+      eurekaPlatformContract, scSubmissionId, articleHash, urlHash,
+      articleVersionData.authors, articleVersionData.contributorRatios, articleVersionData.linkedArticles, articleVersionData.linkedArticlesSplitRatios
+    ).send({
+      from: submissionOwner.ethereumAddress
+    });
+
+    let dbArticleSubmission = await articleSubmissionService.getSubmissionBySCsubmissionId(scSubmissionId);
+    let dbArticleVersion = await articleVersionService.getArticleVersionById(submissionOwner.ethereumAddress,
+      dbArticleSubmission.articleVersions[dbArticleSubmission.articleVersions.length-1]);
+
+    let counter = 0;
+    while (dbArticleVersion.articleVersionState !== ArticleVersionState.SUBMITTED && counter < 5) {
+      sleepSync(5000);
+      dbArticleVersion = await articleVersionService.getArticleVersionById(submissionOwner.ethereumAddress, dbArticleVersion._id);
+      counter++;
+    }
+    t.is(dbArticleVersion.articleVersionState, ArticleVersionState.SUBMITTED);
+  },
+
+  declineNewReviewRoundAndTest: async function(t, scSubmissionId, submissionOwner) {
+    await declineNewReviewRound(
+      eurekaPlatformContract, scSubmissionId
+    ).send({
+      from: submissionOwner.ethereumAddress
+    });
+
   }
 };
