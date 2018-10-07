@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Popover from '../../design-components/Popover.js';
-import {__GRAY_900, __THIRD} from '../../../helpers/colors.js';
+import {__GRAY_200, __GRAY_900, __THIRD} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import {
   BOLD,
@@ -12,12 +12,13 @@ import {
   TEX,
   CITATION,
   EQUATION,
-  SAVE
+  SAVE,
+  PREVIEW
 } from './EditorStyles.js';
 
 const MyIcon = styled.img`
-  width: 18px;
-  height: 18px;
+  width: ${props => (props.width ? props.width : '18')}px;
+  height: ${props => (props.height ? props.height : '18')}px;
   margin: 7px 0;
   vertical-align: middle;
 `;
@@ -35,6 +36,17 @@ const ToolbarContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+const Separator = styled.div`
+  height: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: ${__GRAY_200};
+  margin-top: 25px;
+  margin-bottom: 10px;
+  width: 100%;
 `;
 
 const getContent = style => {
@@ -73,6 +85,10 @@ const getContent = style => {
         color={__GRAY_900}
       />
     );
+  }
+
+  if (style === PREVIEW) {
+    return <MyIcon width={21} height={21} src="/img/editor/preview.png" />;
   }
   return null;
 };
@@ -148,7 +164,9 @@ const Toolbar = props => {
         tooltip={`Insert equation ($$)`}
         text="$$ e = mc^2 $$"
       />
+      <Separator />
       <InlineStyleButton style={SAVE} tooltip="Save" />
+      <InlineStyleButton style={PREVIEW} tooltip="Preview" />
     </ToolbarContainer>
   );
 };
