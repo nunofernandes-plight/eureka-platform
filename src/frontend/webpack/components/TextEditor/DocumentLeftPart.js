@@ -18,7 +18,7 @@ const PreviewIcon = styled.div``;
 const DocumentLeftPart = ({document, ...otherProps}) => {
   return (
     <LeftTopContainer>
-      <Toolbar document={document}/>
+      <Toolbar document={document} documentId={otherProps.documentId}/>
 
     </LeftTopContainer>
   );

@@ -15,6 +15,7 @@ import {
   SAVE,
   PREVIEW
 } from './EditorStyles.js';
+import {withRouter} from 'react-router-dom';
 
 const MyIcon = styled.img`
   width: ${props => (props.width ? props.width : '18')}px;
@@ -178,11 +179,11 @@ const Toolbar = ({document, ...otherProps}) => {
         style={PREVIEW}
         tooltip="Preview"
         onClick={() => {
-          alert(document._id);
+          props.history.push(`/app/preview/${props.documentId}`);
         }}
       />
     </ToolbarContainer>
   );
 };
 
-export default Toolbar;
+export default withRouter(Toolbar);
