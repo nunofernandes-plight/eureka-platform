@@ -21,6 +21,7 @@ import Roles from '../src/backend/schema/roles-enum.mjs';
 import {sleepSync} from './helpers.js';
 import articleSubmissionService from '../src/backend/db/article-submission-service.mjs';
 import ArticleVersionState from '../src/backend/schema/article-version-state-enum.mjs';
+import ArticleSubmissionState from '../src/backend/schema/article-submission-state-enum.mjs';
 import articleVersionService from '../src/backend/db/article-version-service.mjs';
 import {submitArticle} from '../src/smartcontracts/methods/web3-token-contract-methods.mjs';
 import reviewService from '../src/backend/db/review-service.mjs';
@@ -578,6 +579,15 @@ export default {
     ).send({
       from: submissionOwner.ethereumAddress
     });
+
+    let dbArticleSubmission = await articleSubmissionService.getSubmissionBySCsubmissionId(scSubmissionId);
+    let counter = 0;
+    while (dbArticleSubmission.articleSubmissionState !== ArticleSubmissionState.CLOSED && counter < 5) {
+      sleepSync(5000);
+      dbArticleSubmission = await articleSubmissionService.getSubmissionBySCsubmissionId(scSubmissionId);
+      counter++;
+    }
+    t.is(dbArticleSubmission.articleSubmissionState,   ArticleSubmissionState.CLOSED);
 
   }
 };
