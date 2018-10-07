@@ -293,8 +293,8 @@ export default {
       undefined,
       async (error, event) => {
         if (error) throw error;
-
-        console.log('NEW REVIEW ROUND OPENEND!!!');
+        await articleSubmissionService.submitArticleVersion(event.returnValues.submissionId,
+          event.returnValues.articleHash, event.returnValues.articleUrl);
       }
     );
   }

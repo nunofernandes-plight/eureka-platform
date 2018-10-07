@@ -550,18 +550,24 @@ export default {
     t.is(dbArticleVersion.articleVersionState, ArticleVersionState.DECLINED);
   },
 
-  openNewReviewRoundAndTest: async function(t, submissionOwner, submissionId, articleVersion, articleVersionData, articleHash, urlHash) {
-    console.log(t);
-    console.log(submissionOwner);
-    console.log(submissionId);
-    // console.log(articleVersion);
-    // console.log(articleVersionData);
+  openNewReviewRoundAndTest: async function(t, submissionOwner, scSubmissionId, articleVersion, articleVersionData, articleHash, urlHash) {
     await openNewReviewRound(
-      eurekaPlatformContract, submissionId, articleHash, urlHash,
+      eurekaPlatformContract, scSubmissionId, articleHash, urlHash,
       articleVersionData.authors, articleVersionData.contributorRatios, articleVersionData.linkedArticles, articleVersionData.linkedArticlesSplitRatios
     ).send({
       from: submissionOwner.ethereumAddress
     });
 
+    let dbArticleSubmission = await articleSubmissionService.getSubmissionBySCsubmissionId(scSubmissionId);
+    let dbArticleVersion = await articleVersionService.getArticleVersionById(submissionOwner.ethereumAddress,
+      dbArticleSubmission.articleVersions[dbArticleSubmission.articleVersions.length-1]);
+
+    let counter = 0;
+    while (dbArticleVersion.articleVersionState !== ArticleVersionState.SUBMITTED && counter < 5) {
+      sleepSync(5000);
+      dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, dbArticleVersion._id);
+      counter++;
+    }
+    t.is(dbArticleVersion.articleVersionState, ArticleVersionState.SUBMITTED);
   }
 };

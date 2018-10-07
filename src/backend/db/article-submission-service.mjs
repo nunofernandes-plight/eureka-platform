@@ -104,6 +104,15 @@ export default {
     return ArticleSubmission.findById(_submissionId);
   },
 
+  getSubmissionBySCsubmissionId: async _scSubmissionId => {
+    const articleSubmission =  await ArticleSubmission.findOne(
+      {scSubmissionID: _scSubmissionId}
+    );
+
+    if(!articleSubmission) errorThrower.noEntryFoundById('scSUbmissionId');
+    return articleSubmission;
+  },
+
   /**
    * Gets the submission, which contains an article-version holding the
    * articleHash provided as param with in it.
@@ -240,17 +249,20 @@ export default {
    * @returns {Promise<*>}
    */
   submitArticleVersion: async (_submissionId, _articleHash, _articleUrl) => {
-    let submission = await ArticleSubmission.findById(_submissionId);
+    let submission = await ArticleSubmission.findOne({scSubmissionID: _submissionId});
     if (!submission) {
       errorThrower.noEntryFoundById('_submissionId');
     }
 
     const articleVersion = new ArticleVersion({
+      ownerAddress: submission.ownerAddress,
       submissionId: _submissionId,
       articleHash: _articleHash,
-      articleUrl: _articleUrl
+      articleUrl: _articleUrl,
+      articleVersionState: ArticleVersionState.SUBMITTED
     });
 
+    await articleVersion.save();
     submission.articleVersions.push(articleVersion);
     await submission.save();
     return submission;
