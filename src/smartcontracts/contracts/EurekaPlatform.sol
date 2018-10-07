@@ -609,7 +609,7 @@ contract EurekaPlatform {
         articleSubmissions[_submissionId].stateTimestamp = block.timestamp;
     }
 
-    event NewReviewRoundOpened(uint256 submissionId, bytes32 articleHash, bytes32 articleUrl, address[] authors, uint256 stateTimestamp, address author);
+    event NewReviewRoundOpened(uint256 submissionId, bytes32 articleHash, bytes32 articleUrl, uint256 stateTimestamp);
     function openNewReviewRound(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
         uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) public {
 
@@ -622,8 +622,9 @@ contract EurekaPlatform {
 
         submission.submissionState = SubmissionState.OPEN;
         submission.stateTimestamp = block.timestamp;
-       emit NewReviewRoundOpened(_submissionId, _articleHash, _articleURL, _authors, block.timestamp, msg.sender);
+       emit NewReviewRoundOpened(_submissionId, _articleHash, _articleURL, block.timestamp);
     }
+
 
     function declineNewReviewRound(uint256 _submissionId) public {
 
