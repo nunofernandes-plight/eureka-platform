@@ -539,6 +539,7 @@ contract EurekaPlatform {
         emit ArticleVersionIsAccepted(_articleHash, block.timestamp, msg.sender);
     }
 
+    event DeclineArticleVersion(bytes32 articleHash, uint256 stateTimestamp, address editor);
     function declineArticleVersion(bytes32 _articleHash) public {
 
         require(isEditor[msg.sender], "msg.sender needs to be an editor.");
@@ -561,6 +562,8 @@ contract EurekaPlatform {
             closeSubmissionProcess(article.submissionId);
         else
             requestNewReviewRound(article.submissionId);
+
+        emit DeclineArticleVersion(_articleHash, block.timestamp, msg.sender);
     }
 
     function countAcceptedReviewInvitations(bytes32 _articleHash, address[] _reviewers) view private returns (uint count) {

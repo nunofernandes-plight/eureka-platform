@@ -219,6 +219,8 @@ test.only(
     await TestFunctions.declineReviewAndTest(t, editor, review3, articleVersion);
 
     // Accept ArticleVersion
-    await TestFunctions.acceptArticleVersionAndTest(t, editor, articleVersion);
+    //await TestFunctions.acceptArticleVersionAndTest(t, editor, articleVersion);
+
+    await TestFunctions.declineArticleVersionAndTest(t, editor, articleVersion);
   }
 );

@@ -276,5 +276,14 @@ export default {
         );
       }
     );
+
+    EurekaPlatformContract.events.DeclineArticleVersion(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+
+        console.log('DECLINED ARTICLE VERSION!!!!!');
+      }
+    );
   }
 };

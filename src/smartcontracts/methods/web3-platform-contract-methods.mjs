@@ -130,6 +130,14 @@ export const acceptArticleVersion = (
     .acceptArticleVersion(_articleHash);
 };
 
+export const declineArticleVersion = (
+  contract,
+  _articleHash,
+) => {
+  return contract.methods
+    .declineArticleVersion(_articleHash);
+};
+
 /*
   Getters
  */

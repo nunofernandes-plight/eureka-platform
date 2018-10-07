@@ -11,7 +11,8 @@ import {
   addCommunityReview,
   acceptReview,
   declineReview,
-  acceptArticleVersion
+  acceptArticleVersion,
+  declineArticleVersion
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -530,5 +531,14 @@ export default {
       counter++;
     }
     t.is(dbArticleVersion.articleVersionState, ArticleVersionState.ACCEPTED);
+  },
+
+  declineArticleVersionAndTest: async function(t, editor, articleVersion) {
+    await declineArticleVersion(
+      eurekaPlatformContract,
+      articleVersion.articleHash
+    ).send({
+      from: editor.ethereumAddress
+    });
   }
 };
