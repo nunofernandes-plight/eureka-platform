@@ -36,9 +36,14 @@ const MyPreview = styled.div`
   width: 100%;
 `;
 
-const LeftSide = styled.div``;
+const LeftSide = styled.div`
+  flex: 1 1 0;
+`;
 
-const RightSide = styled.div``;
+const RightSide = styled.div`
+  flex: 3.5 1 0;
+  max-width: 820px;
+`;
 
 const Title = styled.h3``;
 
