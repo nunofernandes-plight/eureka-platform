@@ -602,13 +602,14 @@ contract EurekaPlatform {
         }
         return count;
     }
-    
+
     function requestNewReviewRound(uint256 _submissionId) private {
 
         articleSubmissions[_submissionId].submissionState = SubmissionState.NEW_REVIEW_ROUND_REQUESTED;
         articleSubmissions[_submissionId].stateTimestamp = block.timestamp;
     }
 
+    event NewReviewRoundOpened(uint256 submissionId, bytes32 articleHash, bytes32 articleUrl, address[] authors, uint256 stateTimestamp, address author);
     function openNewReviewRound(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
         uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) public {
 
@@ -621,6 +622,7 @@ contract EurekaPlatform {
 
         submission.submissionState = SubmissionState.OPEN;
         submission.stateTimestamp = block.timestamp;
+       emit NewReviewRoundOpened(_submissionId, _articleHash, _articleURL, _authors, block.timestamp, msg.sender);
     }
 
     function declineNewReviewRound(uint256 _submissionId) public {
