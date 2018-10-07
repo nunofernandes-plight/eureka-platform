@@ -344,8 +344,7 @@ export default {
     let counter = 0;
     while (
       dbReview.reviewState !== ReviewState.INVITATION_ACCEPTED &&
-      counter < 5
-      ) {
+      counter < 5){
       sleepSync(5000);
       dbReview = await reviewService.getReviewById(
         reviewer.ethereumAddress,
@@ -540,5 +539,13 @@ export default {
     ).send({
       from: editor.ethereumAddress
     });
+    let dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, articleVersion._id);
+    let counter = 0;
+    while (dbArticleVersion.articleVersionState !== ArticleVersionState.DECLINED && counter < 5) {
+      sleepSync(5000);
+      dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, articleVersion._id);
+      counter++;
+    }
+    t.is(dbArticleVersion.articleVersionState, ArticleVersionState.DECLINED);
   }
 };
