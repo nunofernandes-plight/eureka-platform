@@ -101,7 +101,7 @@ export const correctReview = (
       _articleHasMinorIssues,
       _score1,
       _score2
-    )
+    );
 };
 
 export const acceptReview = (
@@ -124,7 +124,7 @@ export const declineReview = (
 
 export const acceptArticleVersion = (
   contract,
-  _articleHash,
+  _articleHash
 ) => {
   return contract.methods
     .acceptArticleVersion(_articleHash);
@@ -132,7 +132,7 @@ export const acceptArticleVersion = (
 
 export const declineArticleVersion = (
   contract,
-  _articleHash,
+  _articleHash
 ) => {
   return contract.methods
     .declineArticleVersion(_articleHash);
@@ -151,6 +151,14 @@ export const openNewReviewRound = (
   return contract.methods
     .openNewReviewRound(_submissionId, _articleHash, _articleUrl, _authors,
       _authorsContributionRations, _linkedArticles, _linkedArticlesSplitRatios);
+};
+
+export const declineNewReviewRound = (
+  contract,
+  _submissionId
+) => {
+  return contract.methods
+    .declineNewReviewRound(_submissionId);
 };
 
 

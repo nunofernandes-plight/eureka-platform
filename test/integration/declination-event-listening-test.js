@@ -70,7 +70,7 @@ test.after(async () => {
 });
 
 
-/**************** Article declination & open new round  ******************/
+/**************** Article declination & open new ReviewRound  ******************/
 test.only(
   PRETEXT +
   'Article declination  ',
@@ -136,8 +136,11 @@ test.only(
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
     articleVersion = articleSubmission.articleVersions[0];
 
-    //Open new Review round
-    await TestFunctions.openNewReviewRoundAndTest(t, author, articleSubmission.scSubmissionID, articleVersion, TEST_ARTICLE_1_SECOND_VERSION, TEST_ARTICLE_1_SECOND_VERSION_HASH_HEX, TEST_ARTICLE_1_SECOND_VERSION_HASH_HEX);
+    // //Open new Review round
+    // await TestFunctions.openNewReviewRoundAndTest(t, author, articleSubmission.scSubmissionID,
+    //   articleVersion, TEST_ARTICLE_1_SECOND_VERSION, TEST_ARTICLE_1_SECOND_VERSION_HASH_HEX, TEST_ARTICLE_1_SECOND_VERSION_HASH_HEX);
 
+    //Decline new review round
+    await TestFunctions.declineNewReviewRoundAndTest(t, articleSubmission.scSubmissionID, author);
   }
 );

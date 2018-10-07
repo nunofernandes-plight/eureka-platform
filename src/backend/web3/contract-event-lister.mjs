@@ -297,5 +297,13 @@ export default {
           event.returnValues.articleHash, event.returnValues.articleUrl);
       }
     );
+
+    EurekaPlatformContract.events.NewReviewRoundDeclined(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+        console.log('NEW REVIEW ROUND DECLINED!!');
+      }
+    );
   }
 };

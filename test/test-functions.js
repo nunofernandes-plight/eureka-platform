@@ -13,7 +13,8 @@ import {
   declineReview,
   acceptArticleVersion,
   declineArticleVersion,
-  openNewReviewRound
+  openNewReviewRound,
+  declineNewReviewRound
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -565,9 +566,18 @@ export default {
     let counter = 0;
     while (dbArticleVersion.articleVersionState !== ArticleVersionState.SUBMITTED && counter < 5) {
       sleepSync(5000);
-      dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, dbArticleVersion._id);
+      dbArticleVersion = await articleVersionService.getArticleVersionById(submissionOwner.ethereumAddress, dbArticleVersion._id);
       counter++;
     }
     t.is(dbArticleVersion.articleVersionState, ArticleVersionState.SUBMITTED);
+  },
+
+  declineNewReviewRoundAndTest: async function(t, scSubmissionId, submissionOwner) {
+    await declineNewReviewRound(
+      eurekaPlatformContract, scSubmissionId
+    ).send({
+      from: submissionOwner.ethereumAddress
+    });
+
   }
 };
