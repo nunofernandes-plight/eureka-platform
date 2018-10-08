@@ -138,7 +138,8 @@ export default {
       hasMajorIssues: articleHasMajorIssues,
       hasMinorIssues: articleHasMinorIssues,
       reviewState: ReviewState.HANDED_IN_DB,
-      stateTimestamp: new Date().getTime()
+      stateTimestamp: new Date().getTime(),
+      articleVersion: articleVersion._id,
     });
     await review.save();
     articleVersion.communityReviews.push(review._id);
