@@ -6,7 +6,7 @@ import Article from '../../views/Article.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {Link, withRouter} from 'react-router-dom';
 import {
-  addEditorApprovedReview,
+  saveEditorApprovedReviewToDB,
   getArticlesInvitedForReviewing
 } from './ReviewMethods.js';
 import {__THIRD} from '../../../helpers/colors.js';
@@ -197,7 +197,7 @@ class ReviewsInvited extends React.Component {
                           });
                           //TODO Redirect to article preview and review editor
                           // dummy
-                          addEditorApprovedReview({
+                          saveEditorApprovedReviewToDB({
                             reviewId: article.reviewId,
                             reviewText: 'dummy text',
                             reviewHash: 'dummy hash',

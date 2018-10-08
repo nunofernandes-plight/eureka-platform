@@ -5,7 +5,10 @@ import Modal from '../../design-components/Modal.js';
 import Article from '../../views/Article.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {withRouter} from 'react-router-dom';
-import {getArticlesOpenToReview} from './ReviewMethods.js';
+import {
+  addCommunityReviewToDB,
+  getArticlesOpenToReview
+} from './ReviewMethods.js';
 import {__THIRD} from '../../../helpers/colors.js';
 
 const Container = styled.div`
@@ -105,7 +108,17 @@ class ReviewsOpen extends React.Component {
                           showReviewersPickerModal: true,
                           article
                         });
-                        //TODO Redirect to article preview and review editor
+                        // TODO Redirect to article preview and review editor
+                        // dummy
+                        addCommunityReviewToDB({
+                          articleHash: article.articleHash,
+                          reviewText: 'dummy text community review',
+                          reviewHash: 'dummy hash community review',
+                          score1: 10,
+                          score2: 5,
+                          articleHasMajorIssues: false,
+                          articleHasMinorIssues: true
+                        });
                       }}
                     />
                   );

@@ -57,6 +57,22 @@ router.put(
   })
 );
 
+router.put(
+  '/community',
+  asyncHandler(async req => {
+    const ethereumAddress = req.session.passport.user.ethereumAddress;
+    return await reviewService.addNewCommunitydReview(
+      ethereumAddress,
+      req.body.articleHash,
+      req.body.reviewText,
+      req.body.reviewHash,
+      req.body.score1,
+      req.body.score2,
+      req.body.articleHasMajorIssues,
+      req.body.articleHasMinorIssues);
+  })
+);
+
 export default router;
 
 const getRelevantReviewData = (reviews) => {
