@@ -12,6 +12,7 @@ import Modal from '../design-components/Modal.js';
 import {renderField} from './TextEditor/DocumentRenderer.mjs';
 import GridSpinner from '../views/spinners/GridSpinner.js';
 import {Go} from './Routers/Go.js';
+import Author from '../views/Author.js';
 
 const Container = styled.div`
   display: flex;
@@ -45,7 +46,12 @@ const RightSide = styled.div`
   max-width: 820px;
 `;
 
-const Title = styled.h3``;
+const Title = styled.h3`
+  font-size: 26px;
+  font-weight: bold;
+  line-height: 1.05;
+  font-family: 'Roboto', sans-serif;
+`;
 
 class Preview extends React.Component {
   constructor() {
@@ -138,13 +144,18 @@ class Preview extends React.Component {
         <Card width={1000} title={'Your article'}>
           <Go back {...this.props} />
           <MySeparator />
-          {!this.state.document ? (
+          {!this.state.document || !this.state.authorsData ? (
             <GridSpinner />
           ) : (
             <MyPreview>
               <LeftSide />
               <RightSide>
                 <Title>{renderField(this.state.document, 'title')}</Title>
+                <Author
+                  author={this.state.authorsData}
+                  height={25}
+                  width={25}
+                />
               </RightSide>
             </MyPreview>
           )}
