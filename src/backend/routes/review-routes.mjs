@@ -25,7 +25,8 @@ router.get(
 router.get(
   '/myreviews',
   asyncHandler(async req => {
-    return await reviewService.getMyReviews(req.session.passport.user.ethereumAddress);
+    let reviews = await reviewService.getMyReviews(req.session.passport.user.ethereumAddress);
+    return getRelevantReviewData(reviews);
   })
 );
 

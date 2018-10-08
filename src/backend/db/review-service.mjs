@@ -5,7 +5,14 @@ import ArticleVersion from '../schema/article-version.mjs';
 
 export default {
   getAllReviews: () => {
-    return Review.find({});
+    return Review.find({})
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}]
+      });
   },
 
   getReviewInvitations: async (address) => {
@@ -27,6 +34,13 @@ export default {
       reviewerAddress: address,
       reviewState: {$in: ['HANDED_IN_DB', 'HANDED_IN_SC', 'DECLINED','ACCEPTED']}
     })
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}]
+      });
   },
 
   createReview: async (submissionId, articleHash, stateTimestamp) => {
