@@ -49,8 +49,9 @@ const RightSide = styled.div`
 const Title = styled.h3`
   font-size: 26px;
   font-weight: bold;
-  line-height: 1.05;
+  line-height: 1.3;
   font-family: 'Roboto', sans-serif;
+  margin-bottom: 10px;
 `;
 
 class Preview extends React.Component {
@@ -75,8 +76,6 @@ class Preview extends React.Component {
             document: deserialized
           });
           this.fetchAuthorsData();
-
-          console.log(document);
         } else {
           this.setState({
             errorMessage: response.error
@@ -138,6 +137,7 @@ class Preview extends React.Component {
   }
 
   render() {
+    console.log(this.state.authorsData);
     return (
       <Container>
         {this.renderModal()}
@@ -151,11 +151,18 @@ class Preview extends React.Component {
               <LeftSide />
               <RightSide>
                 <Title>{renderField(this.state.document, 'title')}</Title>
-                <Author
-                  author={this.state.authorsData}
-                  height={25}
-                  width={25}
-                />
+                {this.state.authorsData.map((author, i) => {
+                  return (
+                    <Author
+                      right={15}
+                      padding={'10px 0'}
+                      key={i}
+                      author={author}
+                      height={25}
+                      width={25}
+                    />
+                  );
+                })}
               </RightSide>
             </MyPreview>
           )}
