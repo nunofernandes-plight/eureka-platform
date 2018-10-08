@@ -105,6 +105,7 @@ class ReviewsOpen extends React.Component {
                           showReviewersPickerModal: true,
                           article
                         });
+                        //TODO Redirect to article preview and review editor
                       }}
                     />
                   );
