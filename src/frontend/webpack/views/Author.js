@@ -3,15 +3,12 @@ import styled from 'styled-components';
 import Avatar from './Avatar.js';
 import {__GRAY_100} from '../../helpers/colors.js';
 import {EthereumAddress} from './Address.js';
+import {Email} from './Email.js';
 
 const AuthorCredentials = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-`;
-
-const Email = styled.div`
-  font-size: 12px;
 `;
 
 const AuthorContainer = styled.div`
@@ -29,7 +26,7 @@ const Author = props => {
       <Avatar avatar={author.avatar} {...props} />
       <AuthorCredentials>
         <EthereumAddress ethereumAddress={author.ethereumAddress} />
-        <Email>{author.email}</Email>
+        <Email size={12} noDecoration email={author.email}>{author.email}</Email>
       </AuthorCredentials>
     </AuthorContainer>
   );
