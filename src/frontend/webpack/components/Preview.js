@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {Card} from '../views/Card.js';
 import {withRouter} from 'react-router-dom';
-import {__GRAY_100, __GRAY_200} from '../../helpers/colors.js';
+import {__FIFTH, __GRAY_100, __GRAY_200} from '../../helpers/colors.js';
 import {fetchArticle} from './TextEditor/DocumentMainMethods.js';
 import Document from '../../../models/Document.mjs';
 import {deserializeDocument} from '../../../helpers/documentSerializer.mjs';
@@ -40,7 +40,7 @@ const LeftSide = styled.div`
   flex: 1 1 0;
 `;
 
-const RightSide = styled.div`
+const ArticlePreview = styled.div`
   flex: 3.5 1 0;
   max-width: 820px;
 `;
@@ -52,6 +52,40 @@ const Title = styled.h3`
   font-family: 'Roboto', sans-serif;
   margin-bottom: 10px;
   margin-top: 0;
+`;
+
+const ArticlePreviewNavBar = styled.div`
+  width: 95%;
+  border-radius: 6px;
+  margin: 50px 0;
+`;
+
+const MyInfo = styled.div`
+  background: ${__FIFTH};
+  flex: 1;
+`;
+
+const MyAuthors = styled.div`
+  flex: 1;
+  background: ${__GRAY_200};
+`;
+
+const MyArticle = styled.div`
+  flex: 1;
+  background: ${__GRAY_200};
+`;
+
+const Navs = styled.div`
+  display: flex;
+  height: 4px;
+`;
+
+const MyLabels = styled.div`
+  font-weight: bold;
+  display: flex;
+`;
+const MyLabel = styled.div`
+  flex: 1;
 `;
 
 class Preview extends React.Component {
@@ -149,8 +183,22 @@ class Preview extends React.Component {
           ) : (
             <MyPreview>
               <LeftSide />
-              <RightSide>
+              <ArticlePreview>
                 <Title>{renderField(this.state.document, 'title')}</Title>
+
+                <ArticlePreviewNavBar>
+                  <MyLabels>
+                    <MyLabel>Article</MyLabel>
+                    <MyLabel>Authors</MyLabel>
+                    <MyLabel>Info</MyLabel>
+                  </MyLabels>
+                  <Navs>
+                    <MyArticle />
+                    <MyAuthors />
+                    <MyInfo />
+                  </Navs>
+                </ArticlePreviewNavBar>
+
                 {this.state.authorsData.map((author, i) => {
                   return (
                     <Author
@@ -163,7 +211,7 @@ class Preview extends React.Component {
                     />
                   );
                 })}
-              </RightSide>
+              </ArticlePreview>
             </MyPreview>
           )}
         </Card>
