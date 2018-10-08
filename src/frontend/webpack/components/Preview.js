@@ -13,6 +13,8 @@ import {renderField} from './TextEditor/DocumentRenderer.mjs';
 import GridSpinner from '../views/spinners/GridSpinner.js';
 import {Go} from './Routers/Go.js';
 import Author from '../views/Author.js';
+import Avatar from '../views/Avatar.js';
+import PreviewStatus from '../views/PreviewStatus.js';
 
 const Container = styled.div`
   display: flex;
@@ -58,6 +60,7 @@ const ArticlePreviewNavBar = styled.div`
   width: 95%;
   border-radius: 6px;
   margin: 50px 0;
+  letter-spacing: 0.5px;
 `;
 
 const MyInfo = styled.div`
@@ -86,8 +89,14 @@ const MyLabels = styled.div`
 `;
 const MyLabel = styled.div`
   flex: 1;
+  margin-bottom: 10px;
+  color: ${__FIFTH};
+  font-size: 16px;
 `;
-
+const Avatars = styled.div`
+  display: flex;
+  margin-bottom: 12px;
+`;
 class Preview extends React.Component {
   constructor() {
     super();
@@ -171,7 +180,7 @@ class Preview extends React.Component {
   }
 
   render() {
-    console.log(this.state.authorsData);
+    console.log(this.state.document);
     return (
       <Container>
         {this.renderModal()}
@@ -185,6 +194,20 @@ class Preview extends React.Component {
               <LeftSide />
               <ArticlePreview>
                 <Title>{renderField(this.state.document, 'title')}</Title>
+                <Avatars>
+                  {this.state.authorsData.map((author, i) => {
+                    return (
+                      <Avatar
+                        key={i}
+                        avatar={author.avatar}
+                        width={40}
+                        height={40}
+                        right={18}
+                      />
+                    );
+                  })}
+                </Avatars>
+                <PreviewStatus status={this.state.document.state} />
 
                 <ArticlePreviewNavBar>
                   <MyLabels>
