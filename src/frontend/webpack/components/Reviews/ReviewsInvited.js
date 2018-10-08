@@ -5,7 +5,10 @@ import Modal from '../../design-components/Modal.js';
 import Article from '../../views/Article.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {Link, withRouter} from 'react-router-dom';
-import {getArticlesInvitedForReviewing} from './ReviewMethods.js';
+import {
+  addEditorApprovedReview,
+  getArticlesInvitedForReviewing
+} from './ReviewMethods.js';
 import {__THIRD} from '../../../helpers/colors.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import {
@@ -13,6 +16,7 @@ import {
   inviteReviewersForArticle
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
+import {getRelevantArticleData} from '../../../../backend/helpers/relevant-article-data.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -187,11 +191,22 @@ class ReviewsInvited extends React.Component {
                             article
                           });
                           this.acceptReviewInvitation(article);
-                        } else
+                        } else {
                           this.setState({
                             article
                           });
-                        //TODO Redirect to article preview and review editor
+                          //TODO Redirect to article preview and review editor
+                          // dummy
+                          addEditorApprovedReview({
+                            reviewId: article.reviewId,
+                            reviewText: 'dummy text',
+                            reviewHash: 'dummy hash',
+                            score1: 10,
+                            score2: 5,
+                            articleHasMajorIssues: false,
+                            articleHasMinorIssues: true
+                          });
+                        }
                       }}
                     />
                   );

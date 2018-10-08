@@ -1,4 +1,5 @@
 import {getDomain} from '../../../../helpers/getDomain.mjs';
+import {serializeSavePatch} from '../../../../helpers/documentSerializer.mjs';
 
 export const getArticlesInvitedForReviewing = () => {
   return fetch(`${getDomain()}/api/reviews/invited`, {
@@ -27,5 +28,16 @@ export const getMyReviews = () => {
       'Content-Type': 'application/json'
     },
     credentials: 'include'
+  });
+};
+
+export const addEditorApprovedReview = review => {
+  return fetch(`${getDomain()}/api/reviews/editorApproved`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+    body: JSON.stringify(review)
   });
 };
