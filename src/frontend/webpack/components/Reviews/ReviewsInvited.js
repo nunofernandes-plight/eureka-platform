@@ -7,6 +7,12 @@ import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {Link, withRouter} from 'react-router-dom';
 import {getArticlesInvitedForReviewing} from './ReviewMethods.js';
 import {__THIRD} from '../../../helpers/colors.js';
+import {isGanache} from '../../../../helpers/isGanache.mjs';
+import {
+  acceptReviewInvitation,
+  inviteReviewersForArticle
+} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 
 const Container = styled.div`
   display: flex;
@@ -43,7 +49,11 @@ class ReviewsInvited extends React.Component {
       article: null,
       loading: false,
       articleOnHover: null,
-      errorMessage: false
+      errorMessage: false,
+
+      showTxModal: false,
+      tx: null,
+      showAcceptInvitationModal: false
     };
   }
 
@@ -67,6 +77,45 @@ class ReviewsInvited extends React.Component {
       });
   }
 
+  async acceptReviewInvitation(article) {
+    let gasAmount;
+    // gas estimation on ganache doesn't work properly
+    if (!isGanache(this.props.web3))
+      gasAmount = await acceptReviewInvitation(
+        this.props.platformContract,
+        article.articleHash
+      ).estimateGas({
+        from: this.props.selectedAccount.address
+      });
+    else gasAmount = 80000000;
+
+    acceptReviewInvitation(this.props.platformContract, article.articleHash)
+      .send({
+        from: this.props.selectedAccount.address,
+        gas: gasAmount
+      })
+      .on('transactionHash', tx => {
+        this.setState({
+          showTxModal: true,
+          tx
+        });
+        this.getArticlesInvitedForReviewing();
+        //TODO Redirect to article preview and review editor
+      })
+      .on('receipt', async receipt => {
+        console.log('Accepted Review Invitation:  ' + receipt.status);
+        return receipt;
+      })
+      .catch(err => {
+        console.error(err);
+        this.setState({
+          errorMessage:
+            'Ouh. Something went wrong with the Smart Contract call: ' +
+            err.toString()
+        });
+      });
+  }
+
   renderModals() {
     return (
       <div>
@@ -79,6 +128,26 @@ class ReviewsInvited extends React.Component {
           title={'You got the following error'}
         >
           {this.state.errorMessage}
+        </Modal>
+        <Modal
+          action={'GOT IT'}
+          callback={() => {
+            this.setState({showTxModal: false});
+          }}
+          noClose
+          show={this.state.showTxModal}
+          title={'Your invitationi has been successfully accepted!'}
+        >
+          Dear reviewer, your request for accepting the review invitation has
+          successfully triggered our Smart Contract. If you are interested, you
+          can track the Blockchain approval process at the following link:{' '}
+          <br />
+          <a
+            href={getEtherscanLink(this.props.network) + 'tx/' + this.state.tx}
+            target={'_blank'}
+          >
+            {this.state.tx}{' '}
+          </a>
         </Modal>
       </div>
     );
@@ -112,10 +181,17 @@ class ReviewsInvited extends React.Component {
                         this.setState({articleOnHover: null});
                       }}
                       action={(_, article) => {
-                        this.setState({
-                          showReviewersPickerModal: true,
-                          article
-                        });
+                        if (article.reviewState === 'INVITED') {
+                          this.setState({
+                            showAcceptInvitationModal: true,
+                            article
+                          });
+                          this.acceptReviewInvitation(article);
+                        } else
+                          this.setState({
+                            article
+                          });
+                        //TODO Redirect to article preview and review editor
                       }}
                     />
                   );
