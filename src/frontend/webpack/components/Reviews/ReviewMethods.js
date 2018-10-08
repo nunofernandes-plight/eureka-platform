@@ -19,3 +19,13 @@ export const getArticlesOpenToReview = () => {
     credentials: 'include'
   });
 };
+
+export const getMyReviews = () => {
+  return fetch(`${getDomain()}/api/reviews/myreviews`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include'
+  });
+};
