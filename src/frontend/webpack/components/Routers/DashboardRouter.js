@@ -14,7 +14,6 @@ import EditorRouter from './EditorRouter.js';
 import Reviewers from '../Reviewers.js';
 import UserExploration from '../UserExploration.js';
 import ReviewsRouter from './ReviewsRouter.js';
-import Preview from '../Preview.js';
 import PreviewRouter from './PreviewRouter.js';
 
 class DashboardRouter extends Component {

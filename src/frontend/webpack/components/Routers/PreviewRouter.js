@@ -25,7 +25,6 @@ const Container = styled.div`
 
 const MySeparator = styled.div`
   height: 2px;
-
   display: flex;
   width: 75%;
   background: ${__GRAY_100};
@@ -94,10 +93,12 @@ const MyLabel = styled.div`
   color: ${__FIFTH};
   font-size: 16px;
 `;
+
 const Avatars = styled.div`
   display: flex;
   margin-bottom: 12px;
 `;
+
 class PreviewRouter extends Component {
   constructor() {
     super();
