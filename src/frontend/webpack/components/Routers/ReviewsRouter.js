@@ -8,6 +8,7 @@ import ReviewsInvited from '../Reviews/ReviewsInvited.js';
 import ReviewsOpen from '../Reviews/ReviewsOpen.js';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
 import BecomeReviewer from '../Reviews/BecomeReviewer.js';
+import ReviewsMyReviews from '../Reviews/ReviewsMyReviews.js';
 
 const Parent = styled.div`
   display: flex;
@@ -101,7 +102,7 @@ class ReviewsRouter extends Component {
                   exact
                   path={`${this.props.base}/myreviews`}
                   render={() => (
-                    <ReviewsInvited
+                    <ReviewsMyReviews
                       selectedAccount={this.props.selectedAccount}
                       platformContract={this.props.platformContract}
                       base={`${this.props.base}/myreviews`}

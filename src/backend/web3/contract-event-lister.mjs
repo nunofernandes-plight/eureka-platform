@@ -302,7 +302,7 @@ export default {
       undefined,
       async (error, event) => {
         if (error) throw error;
-        console.log('NEW REVIEW ROUND DECLINED!!');
+        await articleSubmissionService.closeArticleSubmission(event.returnValues.submissionId);
       }
     );
   }

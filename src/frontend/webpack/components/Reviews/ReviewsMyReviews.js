@@ -5,7 +5,7 @@ import Modal from '../../design-components/Modal.js';
 import Article from '../../views/Article.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {withRouter} from 'react-router-dom';
-import {getArticlesOpenToReview} from './ReviewMethods.js';
+import {getArticlesOpenToReview, getMyReviews} from './ReviewMethods.js';
 import {__THIRD} from '../../../helpers/colors.js';
 
 const Container = styled.div`
@@ -23,7 +23,7 @@ const NoArtDiv = styled.div`
 `;
 
 const NoArticles = () => {
-  return <NoArtDiv>There are currently no articles to review.</NoArtDiv>;
+  return <NoArtDiv>There are no reviews to display.</NoArtDiv>;
 };
 
 class ReviewsOpen extends React.Component {
@@ -41,12 +41,12 @@ class ReviewsOpen extends React.Component {
   }
 
   async componentDidMount() {
-    await this.getArticlesOpenToReview();
+    await this.getMyReviews();
   }
 
-  async getArticlesOpenToReview() {
+  async getMyReviews() {
     this.setState({loading: true});
-    return getArticlesOpenToReview()
+    return getMyReviews()
       .then(response => response.json())
       .then(response => {
         if (response.success) {
@@ -84,13 +84,13 @@ class ReviewsOpen extends React.Component {
         {this.state.loading ? (
           <GridSpinner />
         ) : (
-          <Card title={'Articles open to review'} width={1000}>
+          <Card title={'My Reviews'} width={1000}>
             {this.state.articles ? (
               this.state.articles.length > 0 ? (
                 this.state.articles.map(article => {
                   return (
                     <Article
-                      buttonText={'Write a Review'}
+                      buttonText={'Change the review'}
                       key={article._id}
                       article={article}
                       onHover={this.state.articleOnHover === article._id}

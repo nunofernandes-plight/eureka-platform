@@ -25,7 +25,8 @@ router.get(
 router.get(
   '/myreviews',
   asyncHandler(async req => {
-    return await reviewService.getMyReviews(req.session.passport.user.ethereumAddress);
+    let reviews = await reviewService.getMyReviews(req.session.passport.user.ethereumAddress);
+    return getRelevantReviewData(reviews);
   })
 );
 
@@ -41,10 +42,11 @@ router.get(
  *  Add an review including scoring and issues into an existing review object
  */
 router.put(
-  '/',
+  '/editorApproved',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
-    return await reviewService.addEditorApprovedReview(ethereumAddress,
+    return await reviewService.addEditorApprovedReview(
+      ethereumAddress,
       req.body.reviewId,
       req.body.reviewText,
       req.body.reviewHash,

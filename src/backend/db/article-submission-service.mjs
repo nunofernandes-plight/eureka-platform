@@ -3,7 +3,7 @@ import ArticleVersion from '../schema/article-version.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import articleVersionService from './article-version-service.mjs';
-import ARTICLE_SUBMISSION_STATE from '../schema/article-submission-state-enum.mjs';
+import ArticleSubmissionState from '../schema/article-submission-state-enum.mjs';
 import User from '../schema/user.mjs';
 import Roles from '../schema/roles-enum.mjs';
 import {sleepSync} from '../../helpers/sleepSync.mjs';
@@ -151,7 +151,7 @@ export default {
     if (!articleSubmission) errorThrower.noEntryFoundById(articleVersion._id);
     articleSubmission.scSubmissionID = scSubmissionId;
     articleSubmission.articleUrl = articleUrl;
-    articleSubmission.articleSubmissionState = ARTICLE_SUBMISSION_STATE.OPEN;
+    articleSubmission.articleSubmissionState = ArticleSubmissionState.OPEN;
     articleSubmission = await articleSubmission.save();
     return articleSubmission;
   },
@@ -209,7 +209,7 @@ export default {
       {scSubmissionID: _submissionId},
       {
         editor: _editor,
-        articleSubmissionState: ARTICLE_SUBMISSION_STATE.EDITOR_ASSIGNED
+        articleSubmissionState: ArticleSubmissionState.EDITOR_ASSIGNED
       },
       (err, submission) => {
         if (err) throw err;
@@ -228,7 +228,7 @@ export default {
       {scSubmissionID: _submissionId},
       {
         editor: undefined,
-        articleSubmissionState: ARTICLE_SUBMISSION_STATE.OPEN
+        articleSubmissionState: ArticleSubmissionState.OPEN
       },
       (err, submission) => {
         if (err) throw err;
@@ -286,5 +286,14 @@ export default {
     ].editorApprovedReviews.push(review);
 
     return await submission.save();
+  },
+  closeArticleSubmission: async (_scSubmissionId) => {
+    let submission = await ArticleSubmission.findOne({scSubmissionID: _scSubmissionId});
+    if(!submission) {
+      errorThrower.noEntryFoundById('_scSubmissionId');
+    }
+
+    submission.articleSubmissionState = ArticleSubmissionState.CLOSED;
+    await submission.save();
   }
 };
