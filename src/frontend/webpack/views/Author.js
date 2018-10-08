@@ -2,10 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Avatar from './Avatar.js';
 import {__GRAY_100} from '../../helpers/colors.js';
-
-const Address = styled.div`
-  font-weight: bold;
-`;
+import {EthereumAddress} from './Address.js';
 
 const AuthorCredentials = styled.div`
   display: flex;
@@ -31,7 +28,7 @@ const Author = props => {
     <AuthorContainer padding={props.padding}>
       <Avatar avatar={author.avatar} {...props} />
       <AuthorCredentials>
-        <Address>{author.ethereumAddress}</Address>
+        <EthereumAddress ethereumAddress={author.ethereumAddress} />
         <Email>{author.email}</Email>
       </AuthorCredentials>
     </AuthorContainer>

@@ -33,7 +33,6 @@ const MySeparator = styled.div`
 const MyPreview = styled.div`
   display: flex;
   padding: 20px;
-  margin: 15px;
   width: 100%;
 `;
 
@@ -52,6 +51,7 @@ const Title = styled.h3`
   line-height: 1.3;
   font-family: 'Roboto', sans-serif;
   margin-bottom: 10px;
+  margin-top: 0;
 `;
 
 class Preview extends React.Component {
@@ -141,7 +141,7 @@ class Preview extends React.Component {
     return (
       <Container>
         {this.renderModal()}
-        <Card width={1000} title={'Your article'}>
+        <Card width={1000} title={'Preview '}>
           <Go back {...this.props} />
           <MySeparator />
           {!this.state.document || !this.state.authorsData ? (
@@ -155,7 +155,7 @@ class Preview extends React.Component {
                   return (
                     <Author
                       right={15}
-                      padding={'10px 0'}
+                      padding={'7.5px 0'}
                       key={i}
                       author={author}
                       height={25}
