@@ -86,6 +86,10 @@ const getRelevantReviewData = (reviews) => {
     obj.reviewId = review._id;
     obj.stateTimestamp = review.stateTimestamp;
     obj.reviewerAddress = review.reviewerAddress;
+    obj.score1 = review.reviewScore1;
+    obj.score1 = review.reviewScore2;
+    obj.reviewText = review.reviewText;
+    obj.reviewHash = review.reviewHash;
 
     reviewObjs.push(obj);
   });
