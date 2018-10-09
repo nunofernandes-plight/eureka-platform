@@ -110,8 +110,9 @@ export default {
     if (!review) errorThrower.noEntryFoundById(reviewHash);
     review.reviewState = ReviewState.HANDED_IN_SC;
     review.stateTimestamp = stateTimestamp;
-    review.articleHasMajorIssues = articleHasMajorIssues;
-    review.articleHasMinorIssues = articleHasMinorIssues;
+    // web3 event listener returns false as null
+    review.articleHasMajorIssues = !!articleHasMajorIssues;
+    review.articleHasMinorIssues = !!articleHasMinorIssues;
     review.reviewScore1 = score1;
     review.reviewScore2 = score2;
     await review.save();
@@ -168,8 +169,9 @@ export default {
     if (!review) errorThrower.noEntryFoundById(reviewHash);
     review.reviewState = ReviewState.HANDED_IN_SC;
     review.stateTimestamp = stateTimestamp;
-    review.articleHasMajorIssues = articleHasMajorIssues;
-    review.articleHasMinorIssues = articleHasMinorIssues;
+    // web3 event listener returns false as null
+    review.articleHasMajorIssues = !!articleHasMajorIssues;
+    review.articleHasMinorIssues = !!articleHasMinorIssues;
     review.reviewScore1 = score1;
     review.reviewScore2 = score2;
     await review.save();
