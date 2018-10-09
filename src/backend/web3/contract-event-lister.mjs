@@ -15,6 +15,13 @@ import User from '../schema/user.mjs';
 import {sendEmail} from '../email/index.mjs';
 import {getReviewersInvitationTemplate} from '../email/templates/EmailTemplates.mjs';
 
+/*
+  events emit the boolean false as null
+ */
+function getBoolean(boolean) {
+  return boolean !== null;
+}
+
 export default {
   setup: EurekaPlatformContract => {
     /** Editor Sign up **/
@@ -218,8 +225,8 @@ export default {
           event.returnValues.reviewHash,
           event.returnValues.reviewerAddress,
           event.returnValues.stateTimestamp,
-          event.returnValues.articleHasMajorIssues,
-          event.returnValues.articleHasMinorIssues,
+          getBoolean(event.returnValues.articleHasMajorIssues),
+          getBoolean(event.returnValues.articleHasMinorIssues),
           event.returnValues.score1,
           event.returnValues.score2
         );
@@ -235,8 +242,8 @@ export default {
           event.returnValues.reviewHash,
           event.returnValues.reviewerAddress,
           event.returnValues.stateTimestamp,
-          event.returnValues.articleHasMajorIssues,
-          event.returnValues.articleHasMinorIssues,
+          getBoolean(event.returnValues.articleHasMajorIssues),
+          getBoolean(event.returnValues.articleHasMinorIssues),
           event.returnValues.score1,
           event.returnValues.score2
         );
