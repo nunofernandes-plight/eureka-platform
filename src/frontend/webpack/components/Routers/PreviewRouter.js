@@ -17,6 +17,7 @@ import queryString from 'query-string';
 import {getDomain} from '../../../../helpers/getDomain.mjs';
 import Modal from '../../design-components/Modal.js';
 import PreviewAuthors from '../Preview/PreviewAuthors.js';
+import PreviewMetaData from '../Preview/PreviewMetaData.js';
 
 const Container = styled.div`
   display: flex;
@@ -39,9 +40,7 @@ const MyPreview = styled.div`
   width: 100%;
 `;
 
-const LeftSide = styled.div`
-  flex: 1 1 0;
-`;
+
 
 const ArticlePreview = styled.div`
   flex: 3.5 1 0;
@@ -183,7 +182,7 @@ class PreviewRouter extends Component {
             <GridSpinner />
           ) : (
             <MyPreview>
-              <LeftSide />
+              <PreviewMetaData/>
               <ArticlePreview>
                 <Title>{renderField(this.state.document, 'title')}</Title>
                 <PreviewStatus status={this.state.document.state} />
