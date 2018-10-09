@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Route} from 'react-router';
-import {Redirect, withRouter} from 'react-router-dom';
+import {NavLink, Redirect, withRouter} from 'react-router-dom';
 import Preview from '../Preview.js';
 import {Card} from '../../views/Card.js';
 import {Go} from './Go.js';
@@ -16,6 +16,8 @@ import {deserializeDocument} from '../../../../helpers/documentSerializer.mjs';
 import queryString from 'query-string';
 import {getDomain} from '../../../../helpers/getDomain.mjs';
 import Modal from '../../design-components/Modal.js';
+import PreviewAuthors from '../Preview/PreviewAuthors.js';
+import PreviewMetaData from '../Preview/PreviewMetaData.js';
 
 const Container = styled.div`
   display: flex;
@@ -38,10 +40,6 @@ const MyPreview = styled.div`
   width: 100%;
 `;
 
-const LeftSide = styled.div`
-  flex: 1 1 0;
-`;
-
 const ArticlePreview = styled.div`
   flex: 3.5 1 0;
   max-width: 820px;
@@ -59,7 +57,7 @@ const Title = styled.h3`
 const ArticlePreviewNavBar = styled.div`
   width: 95%;
   border-radius: 6px;
-  margin: 50px 0;
+  margin: 22px 0;
   letter-spacing: 0.5px;
 `;
 
@@ -73,11 +71,6 @@ const MyAuthors = styled.div`
   background: ${__GRAY_200};
 `;
 
-const MyArticle = styled.div`
-  flex: 1;
-  background: ${__GRAY_200};
-`;
-
 const Navs = styled.div`
   display: flex;
   height: 4px;
@@ -87,12 +80,35 @@ const MyLabels = styled.div`
   font-weight: bold;
   display: flex;
 `;
-const MyLabel = styled.div`
+const Bar = styled.div`
   flex: 1;
-  margin-bottom: 10px;
-  color: ${__FIFTH};
-  font-size: 16px;
+  background: ${__GRAY_200};
+  height: 4px;
+  margin-top: 10px;
 `;
+
+const MyLink = styled(NavLink)`
+  &:hover {
+    transform: translateY(0.5px);
+  }
+  transition: 0.25s all;
+  text-decoration: none;
+  flex: 1;
+  font-size: 16px;
+  color: ${__FIFTH};
+  margin-bottom: 10px;
+  cursor: pointer;
+  &.${props => props.activeClassName} {
+    ${Bar} {
+      background: ${__FIFTH};
+    }
+    font-weight: bold;
+  }
+`;
+
+MyLink.defaultProps = {
+  activeClassName: 'active'
+};
 
 const Avatars = styled.div`
   display: flex;
@@ -103,8 +119,7 @@ class PreviewRouter extends Component {
   constructor() {
     super();
     this.state = {
-      document: null,
-      authorsData: null
+      document: null
     };
   }
 
@@ -120,7 +135,6 @@ class PreviewRouter extends Component {
             _id: response.data._id,
             document: deserialized
           });
-          this.fetchAuthorsData();
         } else {
           this.setState({
             errorMessage: response.error
@@ -134,32 +148,6 @@ class PreviewRouter extends Component {
           errorMessage: 'Ouh. Something went wrong.',
           loading: false
         });
-      });
-  }
-
-  fetchAuthorsData() {
-    const query = queryString.stringify({
-      ethAddress: this.state.document.authors
-    });
-
-    fetch(`${getDomain()}/api/users?${query}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    })
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          let authorsData = Array.isArray(response.data)
-            ? response.data
-            : [response.data];
-          this.setState({authorsData});
-        }
-      })
-      .catch(err => {
-        console.error(err);
       });
   }
 
@@ -188,41 +176,72 @@ class PreviewRouter extends Component {
         <Card width={1000} title={'Preview '}>
           <Go back {...this.props} />
           <MySeparator />
-          {!this.state.document || !this.state.authorsData ? (
+          {!this.state.document ? (
             <GridSpinner />
           ) : (
             <MyPreview>
-              <LeftSide />
+              <PreviewMetaData document={this.state.document} />
               <ArticlePreview>
                 <Title>{renderField(this.state.document, 'title')}</Title>
-                <Avatars>
-                  {this.state.authorsData.map((author, i) => {
-                    return (
-                      <Avatar
-                        key={i}
-                        avatar={author.avatar}
-                        width={40}
-                        height={40}
-                        right={18}
-                      />
-                    );
-                  })}
-                </Avatars>
-
                 <PreviewStatus status={this.state.document.state} />
 
-                <div>INSERT HERE NAV TAB MENU!!!!!!!!!!!!!</div>
+                <ArticlePreviewNavBar>
+                  <MyLabels>
+                    <MyLink
+                      to={`${this.props.base}/${
+                        this.props.match.params.id
+                      }/article`}
+                    >
+                      Article
+                      <Bar />
+                    </MyLink>
+                    <MyLink
+                      to={`${this.props.base}/${
+                        this.props.match.params.id
+                      }/authors`}
+                    >
+                      Authors
+                      <Bar />
+                    </MyLink>
+                    <MyLink
+                      to={`${this.props.base}/${
+                        this.props.match.params.id
+                      }/info`}
+                    >
+                      Info
+                      <Bar />
+                    </MyLink>
+                  </MyLabels>
+                </ArticlePreviewNavBar>
 
                 <Route
                   exact
-                  path={`${this.props.base}/${this.props.match.params.id}`}
+                  path={`${this.props.base}/${
+                    this.props.match.params.id
+                  }/article`}
                   render={() => <div>QUI RENDERI L'ARTICOLO</div>}
                 />
 
                 <Route
                   exact
-                  path={`${this.props.base}/${this.props.match.params.id}/authors`}
-                  render={() => <div>QUI RENDERI GLI AUTHORS</div>}
+                  path={`${this.props.base}/${
+                    this.props.match.params.id
+                  }/authors`}
+                  render={() => (
+                    <PreviewAuthors authors={this.state.document.authors} />
+                  )}
+                />
+
+                <Route
+                  exact
+                  path={`${this.props.base}/${this.props.match.params.id}`}
+                  render={() => (
+                    <Redirect
+                      to={`${this.props.base}/${
+                        this.props.match.params.id
+                      }/article`}
+                    />
+                  )}
                 />
               </ArticlePreview>
             </MyPreview>
