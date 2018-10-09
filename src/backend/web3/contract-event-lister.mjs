@@ -214,7 +214,9 @@ export default {
       async (error, event) => {
         if (error) throw error;
         await reviewService.updateEditorApprovedReviewFromSC(
+          event.returnValues.articleHash,
           event.returnValues.reviewHash,
+          event.returnValues.reviewerAddress,
           event.returnValues.stateTimestamp,
           event.returnValues.articleHasMajorIssues,
           event.returnValues.articleHasMinorIssues,
@@ -229,7 +231,9 @@ export default {
       async (error, event) => {
         if (error) throw error;
         await reviewService.updateCommunityReviewFromSC(
+          event.returnValues.articleHash,
           event.returnValues.reviewHash,
+          event.returnValues.reviewerAddress,
           event.returnValues.stateTimestamp,
           event.returnValues.articleHasMajorIssues,
           event.returnValues.articleHasMinorIssues,
