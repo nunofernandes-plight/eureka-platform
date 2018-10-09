@@ -221,7 +221,9 @@ class ReviewsOpen extends React.Component {
                 this.state.articles.map(article => {
                   return (
                     <Article
-                      buttonText={'Change the review'}
+                      buttonText={
+                        'dummy: send review to SC / later: Edit review'
+                      }
                       key={article._id}
                       article={article}
                       onHover={this.state.articleOnHover === article._id}
