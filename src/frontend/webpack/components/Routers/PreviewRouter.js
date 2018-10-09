@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Route} from 'react-router';
-import {Redirect, withRouter} from 'react-router-dom';
+import {NavLink, Redirect, withRouter} from 'react-router-dom';
 import Preview from '../Preview.js';
 import {Card} from '../../views/Card.js';
 import {Go} from './Go.js';
@@ -73,11 +73,6 @@ const MyAuthors = styled.div`
   background: ${__GRAY_200};
 `;
 
-const MyArticle = styled.div`
-  flex: 1;
-  background: ${__GRAY_200};
-`;
-
 const Navs = styled.div`
   display: flex;
   height: 4px;
@@ -87,11 +82,33 @@ const MyLabels = styled.div`
   font-weight: bold;
   display: flex;
 `;
-const MyLabel = styled.div`
+
+const MyLink = styled(NavLink)`
+  &:hover {
+    transform: translateY(0.5px);
+  }
+  transition: 0.25s all;
+  text-decoration: none;
   flex: 1;
-  margin-bottom: 10px;
-  color: ${__FIFTH};
   font-size: 16px;
+  color: ${__FIFTH};
+  margin-bottom: 10px;
+  cursor: pointer;
+  &.${props => props.activeClassName} {
+    font-weight: bold;
+    color: red;
+  }
+`;
+
+MyLink.defaultProps = {
+  activeClassName: 'active'
+};
+
+const Bar = styled.div`
+  flex: 1;
+  background: ${__GRAY_200};
+  height: 4px;
+  margin-top: 10px;
 `;
 
 const Avatars = styled.div`
@@ -211,18 +228,59 @@ class PreviewRouter extends Component {
 
                 <PreviewStatus status={this.state.document.state} />
 
-                <div>INSERT HERE NAV TAB MENU!!!!!!!!!!!!!</div>
+                <ArticlePreviewNavBar>
+                  <MyLabels>
+                    <MyLink
+                      to={`${this.props.base}/${
+                        this.props.match.params.id
+                      }/article`}
+                    >
+                      Article
+                      <Bar />
+                    </MyLink>
+                    <MyLink
+                      to={`${this.props.base}/${
+                        this.props.match.params.id
+                      }/authors`}
+                    >
+                      Authors
+                      <Bar />
+                    </MyLink>
+                    <MyLink
+                      to={`${this.props.base}/${
+                        this.props.match.params.id
+                      }/info`}
+                    >
+                      Info
+                      <Bar />
+                    </MyLink>
+                  </MyLabels>
+                </ArticlePreviewNavBar>
 
                 <Route
                   exact
-                  path={`${this.props.base}/${this.props.match.params.id}`}
+                  path={`${this.props.base}/${
+                    this.props.match.params.id
+                  }/article`}
                   render={() => <div>QUI RENDERI L'ARTICOLO</div>}
                 />
 
                 <Route
                   exact
-                  path={`${this.props.base}/${this.props.match.params.id}/authors`}
+                  path={`${this.props.base}/${
+                    this.props.match.params.id
+                  }/authors`}
                   render={() => <div>QUI RENDERI GLI AUTHORS</div>}
+                />
+
+                <Route
+                  render={() => (
+                    <Redirect
+                      to={`${this.props.base}/${
+                        this.props.match.params.id
+                      }/article`}
+                    />
+                  )}
                 />
               </ArticlePreview>
             </MyPreview>
