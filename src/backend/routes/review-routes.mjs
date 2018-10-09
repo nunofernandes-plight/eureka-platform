@@ -30,6 +30,22 @@ router.get(
   })
 );
 
+router.get(
+  '/handedin',
+  asyncHandler(async req => {
+    let reviews = await reviewService.getHandedInReviews();
+    return getRelevantReviewData(reviews);
+  })
+);
+
+router.get(
+  '/handedin/checkable',
+  asyncHandler(async req => {
+    let reviews = await reviewService.getHandedInReviewsAssignedTo(req.session.passport.user.ethereumAddress);
+    return getRelevantReviewData(reviews);
+  })
+);
+
 //
 // router.post(
 //   '/',

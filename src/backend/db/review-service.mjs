@@ -2,6 +2,8 @@ import Review from '../schema/review.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import ReviewState from '../schema/review-state-enum.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
+import articleVersionService from './article-version-service.mjs';
+import ARTICLE_VERSION_STATE from '../schema/article-version-state-enum.mjs';
 
 export default {
   getAllReviews: () => {
@@ -33,6 +35,39 @@ export default {
     return Review.find({
       reviewerAddress: address,
       reviewState: {$in: ['HANDED_IN_DB', 'HANDED_IN_SC', 'DECLINED','ACCEPTED']}
+    })
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}]
+      });
+  },
+
+  getHandedInReviews: async () => {
+    return await Review.find({
+      reviewState: {$in: ['HANDED_IN_SC']}
+    })
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}]
+      });
+  },
+
+  getHandedInReviewsAssignedTo: async (ethereumAddress) => {
+    let articles = await articleVersionService.getArticlesAssignedTo(
+      ethereumAddress,
+      [ARTICLE_VERSION_STATE.REVIEWERS_INVITED]
+    );
+    const articleIds = this.getArticleVersionIds(articles);
+
+    return await Review.find({
+      reviewState: {$in: ['HANDED_IN_SC']},
+      articleVersion: {$in: articleIds}
     })
       .populate({
         path: 'articleVersion',
