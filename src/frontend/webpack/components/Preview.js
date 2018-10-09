@@ -222,18 +222,7 @@ class Preview extends React.Component {
                   </Navs>
                 </ArticlePreviewNavBar>
 
-                {this.state.authorsData.map((author, i) => {
-                  return (
-                    <Author
-                      right={15}
-                      padding={'7.5px 0'}
-                      key={i}
-                      author={author}
-                      height={25}
-                      width={25}
-                    />
-                  );
-                })}
+
               </ArticlePreview>
             </MyPreview>
           )}

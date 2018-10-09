@@ -16,6 +16,7 @@ import {deserializeDocument} from '../../../../helpers/documentSerializer.mjs';
 import queryString from 'query-string';
 import {getDomain} from '../../../../helpers/getDomain.mjs';
 import Modal from '../../design-components/Modal.js';
+import PreviewAuthors from '../Preview/PreviewAuthors.js';
 
 const Container = styled.div`
   display: flex;
@@ -59,7 +60,7 @@ const Title = styled.h3`
 const ArticlePreviewNavBar = styled.div`
   width: 95%;
   border-radius: 6px;
-  margin: 50px 0;
+  margin: 22px 0;
   letter-spacing: 0.5px;
 `;
 
@@ -121,8 +122,7 @@ class PreviewRouter extends Component {
   constructor() {
     super();
     this.state = {
-      document: null,
-      authorsData: null
+      document: null
     };
   }
 
@@ -138,7 +138,6 @@ class PreviewRouter extends Component {
             _id: response.data._id,
             document: deserialized
           });
-          this.fetchAuthorsData();
         } else {
           this.setState({
             errorMessage: response.error
@@ -152,32 +151,6 @@ class PreviewRouter extends Component {
           errorMessage: 'Ouh. Something went wrong.',
           loading: false
         });
-      });
-  }
-
-  fetchAuthorsData() {
-    const query = queryString.stringify({
-      ethAddress: this.state.document.authors
-    });
-
-    fetch(`${getDomain()}/api/users?${query}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    })
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          let authorsData = Array.isArray(response.data)
-            ? response.data
-            : [response.data];
-          this.setState({authorsData});
-        }
-      })
-      .catch(err => {
-        console.error(err);
       });
   }
 
@@ -206,27 +179,13 @@ class PreviewRouter extends Component {
         <Card width={1000} title={'Preview '}>
           <Go back {...this.props} />
           <MySeparator />
-          {!this.state.document || !this.state.authorsData ? (
+          {!this.state.document ? (
             <GridSpinner />
           ) : (
             <MyPreview>
               <LeftSide />
               <ArticlePreview>
                 <Title>{renderField(this.state.document, 'title')}</Title>
-                <Avatars>
-                  {this.state.authorsData.map((author, i) => {
-                    return (
-                      <Avatar
-                        key={i}
-                        avatar={author.avatar}
-                        width={40}
-                        height={40}
-                        right={18}
-                      />
-                    );
-                  })}
-                </Avatars>
-
                 <PreviewStatus status={this.state.document.state} />
 
                 <ArticlePreviewNavBar>
@@ -271,7 +230,9 @@ class PreviewRouter extends Component {
                   path={`${this.props.base}/${
                     this.props.match.params.id
                   }/authors`}
-                  render={() => <div>QUI RENDERI GLI AUTHORS</div>}
+                  render={() => (
+                    <PreviewAuthors authors={this.state.document.authors} />
+                  )}
                 />
 
                 <Route
