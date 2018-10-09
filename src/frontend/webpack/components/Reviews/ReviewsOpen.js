@@ -113,7 +113,9 @@ class ReviewsOpen extends React.Component {
                         addCommunityReviewToDB({
                           articleHash: article.articleHash,
                           reviewText: 'dummy text community review',
-                          reviewHash: 'dummy hash community review',
+                          reviewHash:
+                            '0x' +
+                            '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
                           score1: 10,
                           score2: 5,
                           articleHasMajorIssues: false,
