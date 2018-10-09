@@ -97,8 +97,16 @@ export default {
     return 'Added editor-approved review into DB.';
   },
 
-  updateEditorApprovedReviewFromSC: async (reviewHash, stateTimestamp, articleHasMajorIssues, articleHasMinorIssues, score1, score2) => {
-    let review = await Review.findOne({reviewHash: reviewHash});
+  updateEditorApprovedReviewFromSC: async (articleHash, reviewHash, reviewerAddress, stateTimestamp, articleHasMajorIssues, articleHasMinorIssues, score1, score2) => {
+    let articleVersion = await ArticleVersion.findOne({
+      articleHash: articleHash
+    });
+
+    let review = await Review.findOne({
+      articleVersion: articleVersion._id,
+      reviewHash: reviewHash,
+      reviewerAddress: reviewerAddress
+    });
     if (!review) errorThrower.noEntryFoundById(reviewHash);
     review.reviewState = ReviewState.HANDED_IN_SC;
     review.stateTimestamp = stateTimestamp;
@@ -146,8 +154,16 @@ export default {
     await articleVersion.save();
     return review;
   },
-  updateCommunityReviewFromSC: async (reviewHash, stateTimestamp, articleHasMajorIssues, articleHasMinorIssues, score1, score2) => {
-    let review = await Review.findOne({reviewHash: reviewHash});
+  updateCommunityReviewFromSC: async (articleHash, reviewHash, reviewerAddress, stateTimestamp, articleHasMajorIssues, articleHasMinorIssues, score1, score2) => {
+    let articleVersion = await ArticleVersion.findOne({
+      articleHash: articleHash
+    });
+
+    let review = await Review.findOne({
+      articleVersion: articleVersion._id,
+      reviewHash: reviewHash,
+      reviewerAddress: reviewerAddress
+    });
 
     if (!review) errorThrower.noEntryFoundById(reviewHash);
     review.reviewState = ReviewState.HANDED_IN_SC;
