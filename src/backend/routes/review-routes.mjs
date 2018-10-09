@@ -79,17 +79,17 @@ const getRelevantReviewData = (reviews) => {
   let reviewObjs = [];
   reviews.map(review => {
     let obj = getRelevantArticleData(review.articleVersion.articleSubmission, review.articleVersion);
+    obj.reviewId = review._id;
+    obj.reviewHash = review.reviewHash;
     obj.reviewState = review.reviewState;
     obj.reviewType = review.reviewType;
     obj.hasMajorIssues = review.hasMajorIssues;
     obj.hasMinorIssues = review.hasMinorIssues;
-    obj.reviewId = review._id;
     obj.stateTimestamp = review.stateTimestamp;
     obj.reviewerAddress = review.reviewerAddress;
     obj.score1 = review.reviewScore1;
-    obj.score1 = review.reviewScore2;
+    obj.score2 = review.reviewScore2;
     obj.reviewText = review.reviewText;
-    obj.reviewHash = review.reviewHash;
 
     reviewObjs.push(obj);
   });

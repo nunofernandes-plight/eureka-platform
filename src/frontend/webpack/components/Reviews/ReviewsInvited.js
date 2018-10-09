@@ -200,7 +200,9 @@ class ReviewsInvited extends React.Component {
                           saveEditorApprovedReviewToDB({
                             reviewId: article.reviewId,
                             reviewText: 'dummy text',
-                            reviewHash: 'dummy hash',
+                            reviewHash:
+                              '0x' +
+                              '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
                             score1: 10,
                             score2: 5,
                             articleHasMajorIssues: false,
