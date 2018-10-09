@@ -40,8 +40,6 @@ const MyPreview = styled.div`
   width: 100%;
 `;
 
-
-
 const ArticlePreview = styled.div`
   flex: 3.5 1 0;
   max-width: 820px;
@@ -182,7 +180,7 @@ class PreviewRouter extends Component {
             <GridSpinner />
           ) : (
             <MyPreview>
-              <PreviewMetaData/>
+              <PreviewMetaData document={this.state.document} />
               <ArticlePreview>
                 <Title>{renderField(this.state.document, 'title')}</Title>
                 <PreviewStatus status={this.state.document.state} />
@@ -235,6 +233,8 @@ class PreviewRouter extends Component {
                 />
 
                 <Route
+                  exact
+                  path={`${this.props.base}/${this.props.match.params.id}`}
                   render={() => (
                     <Redirect
                       to={`${this.props.base}/${
