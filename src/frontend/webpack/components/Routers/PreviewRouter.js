@@ -1,20 +1,21 @@
-import React from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
-import {Card} from '../views/Card.js';
-import {withRouter} from 'react-router-dom';
-import {__FIFTH, __GRAY_100, __GRAY_200} from '../../helpers/colors.js';
-import {fetchArticle} from './TextEditor/DocumentMainMethods.js';
-import Document from '../../../models/Document.mjs';
-import {deserializeDocument} from '../../../helpers/documentSerializer.mjs';
+import {Route} from 'react-router';
+import {Redirect, withRouter} from 'react-router-dom';
+import Preview from '../Preview.js';
+import {Card} from '../../views/Card.js';
+import {Go} from './Go.js';
+import GridSpinner from '../../views/spinners/GridSpinner.js';
+import {renderField} from '../TextEditor/DocumentRenderer.mjs';
+import Avatar from '../../views/Avatar.js';
+import PreviewStatus from '../../views/PreviewStatus.js';
+import {__FIFTH, __GRAY_100, __GRAY_200} from '../../../helpers/colors.js';
+import {fetchArticle} from '../TextEditor/DocumentMainMethods.js';
+import Document from '../../../../models/Document.mjs';
+import {deserializeDocument} from '../../../../helpers/documentSerializer.mjs';
 import queryString from 'query-string';
-import {getDomain} from '../../../helpers/getDomain.mjs';
-import Modal from '../design-components/Modal.js';
-import {renderField} from './TextEditor/DocumentRenderer.mjs';
-import GridSpinner from '../views/spinners/GridSpinner.js';
-import {Go} from './Routers/Go.js';
-import Author from '../views/Author.js';
-import Avatar from '../views/Avatar.js';
-import PreviewStatus from '../views/PreviewStatus.js';
+import {getDomain} from '../../../../helpers/getDomain.mjs';
+import Modal from '../../design-components/Modal.js';
 
 const Container = styled.div`
   display: flex;
@@ -24,7 +25,6 @@ const Container = styled.div`
 
 const MySeparator = styled.div`
   height: 2px;
-
   display: flex;
   width: 75%;
   background: ${__GRAY_100};
@@ -93,11 +93,13 @@ const MyLabel = styled.div`
   color: ${__FIFTH};
   font-size: 16px;
 `;
+
 const Avatars = styled.div`
   display: flex;
   margin-bottom: 12px;
 `;
-class Preview extends React.Component {
+
+class PreviewRouter extends Component {
   constructor() {
     super();
     this.state = {
@@ -178,12 +180,11 @@ class Preview extends React.Component {
       </div>
     );
   }
-
   render() {
-    console.log(this.state.document);
     return (
       <Container>
         {this.renderModal()}
+
         <Card width={1000} title={'Preview '}>
           <Go back {...this.props} />
           <MySeparator />
@@ -207,33 +208,22 @@ class Preview extends React.Component {
                     );
                   })}
                 </Avatars>
+
                 <PreviewStatus status={this.state.document.state} />
 
-                <ArticlePreviewNavBar>
-                  <MyLabels>
-                    <MyLabel>Article</MyLabel>
-                    <MyLabel>Authors</MyLabel>
-                    <MyLabel>Info</MyLabel>
-                  </MyLabels>
-                  <Navs>
-                    <MyArticle />
-                    <MyAuthors />
-                    <MyInfo />
-                  </Navs>
-                </ArticlePreviewNavBar>
+                <div>INSERT HERE NAV TAB MENU!!!!!!!!!!!!!</div>
 
-                {this.state.authorsData.map((author, i) => {
-                  return (
-                    <Author
-                      right={15}
-                      padding={'7.5px 0'}
-                      key={i}
-                      author={author}
-                      height={25}
-                      width={25}
-                    />
-                  );
-                })}
+                <Route
+                  exact
+                  path={`${this.props.base}/${this.props.match.params.id}`}
+                  render={() => <div>QUI RENDERI L'ARTICOLO</div>}
+                />
+
+                <Route
+                  exact
+                  path={`${this.props.base}/${this.props.match.params.id}/authors`}
+                  render={() => <div>QUI RENDERI GLI AUTHORS</div>}
+                />
               </ArticlePreview>
             </MyPreview>
           )}
@@ -243,4 +233,4 @@ class Preview extends React.Component {
   }
 }
 
-export default withRouter(Preview);
+export default withRouter(PreviewRouter);
