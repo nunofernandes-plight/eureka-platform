@@ -42,12 +42,12 @@ export default {
     return ArticleVersion.find({});
   },
 
-  getArticlesAssignedTo: async (ethereumAddress, articleVersionState) => {
+  getArticlesAssignedTo: async (ethereumAddress, articleVersionStates) => {
     const submissions = await ArticleSubmissionService.getAssignedSubmissions(ethereumAddress);
     const submissionIds = ArticleSubmissionService.getSubmissionIds(submissions);
 
     return await ArticleVersion.find({
-      articleVersionState: articleVersionState,
+      articleVersionState: {$in: articleVersionStates},
       articleSubmission: {$in: submissionIds}
     }).populate([
       {path: 'articleSubmission'},
