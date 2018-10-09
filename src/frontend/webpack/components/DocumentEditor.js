@@ -442,7 +442,10 @@ class DocumentEditor extends Component {
         ) : (
           <Parent>
             <Container>
-              <DocumentLeftPart />
+              <DocumentLeftPart
+                document={this.state.document}
+                documentId={this.props.match.params.id}
+              />
               <EditorParent>
                 <DocumentRightPart saving={this.state.saving} />
                 <Card

@@ -99,6 +99,16 @@ class Document {
       'comments'
     ];
   }
+  static metaDataFields() {
+    return [
+      'keywords',
+      'main_discipline',
+      'discipline',
+      'other_discipline',
+      'type'
+    ];
+  }
+
   static fieldsToKeepUponRejection() {
     return _.without(
       [

@@ -14,13 +14,18 @@ import tokenContractABI from '../../src/smartcontracts/constants/GanacheTokenCon
 import platformContractAddress from '../../src/smartcontracts/constants/GanachePlatformContractAddress.json';
 import tokenContractAddress from '../../src/smartcontracts/constants/GanacheTokenContractAddress.json';
 import web3 from '../../src/helpers/web3Instance.mjs';
+import {
+  CREATE_DRAFTS,
+  SUBMIT_ALL_ARTICLES,
+  SUBMIT_FEW_ARTICLES
+} from './scenariosNames.mjs';
+import {platformContract} from '../../src/backend/web3/web3InterfaceSetup.mjs';
 
 const cleanCollections = async () => {
   await User.remove({});
   await ArticleSubmission.remove({});
   await Review.remove({});
   await ArticleVersion.remove({});
-  await ScTransactions.remove({});
   await ScTransactions.remove({});
   console.log('Collections have been cleaned');
 };
@@ -39,9 +44,42 @@ const setupContracts = async () => {
 };
 const start = async () => {
   await cleanCollections();
-  await app.setupApp();
+  app.setupApp();
+  app.listenTo(process.env.PORT || 8080);
   const [platformContract, tokenContract] = await setupContracts();
-  await createDifferentUsers();
+  await startScenario(platformContract, tokenContract);
+  process.exit();
+  /*  await createDifferentUsers();
+  await createDifferentDrafts();
+  await submitDifferentArticles(tokenContract, platformContract);*/
+};
+
+const startScenario = async (platformContract, tokenContract) => {
+  await createDifferentUsers(platformContract);
+  switch (process.env.SCENARIO) {
+    case CREATE_DRAFTS:
+      await createDifferentDrafts();
+      break;
+
+    case SUBMIT_ALL_ARTICLES:
+      await submitArticles(tokenContract, platformContract);
+      break;
+
+    case SUBMIT_FEW_ARTICLES:
+      await submitArticles(tokenContract, platformContract);
+      break;
+
+    default:
+      console.log(
+        'The scenario ' +
+          process.env.SCENARIO +
+          ' is not a valid scenario has been set as env. variable. For possible scenario names check the scenarioNames.mjs file'
+      );
+      break;
+  }
+};
+
+const submitArticles = async (tokenContract, platformContract) => {
   await createDifferentDrafts();
   await submitDifferentArticles(tokenContract, platformContract);
 };

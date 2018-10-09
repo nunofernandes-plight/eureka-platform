@@ -10,6 +10,7 @@ import {
   getArticleHashFromDocument,
   getArticleHexFromDocument
 } from '../../src/helpers/getHexAndHash.mjs';
+import {SUBMIT_FEW_ARTICLES} from './scenariosNames.mjs';
 
 const getFigures = () => {
   return [
@@ -169,7 +170,7 @@ const getFigures = () => {
 
 const getTitle = () => {
   return [
-    'Pharmacokinetic profiles reconcile in vitro and in vivo activities of novel trypanocidal compounds',
+    'Pharmacokinetic profiles reconcile vitro and in vivo activities of novel trypanocidal compounds',
     'Reproduction of brooding corals at Scott Reef, Western Australia',
     'Postsynaptic Rab GTPases and Exocyst: a screen at the Drosopbhila',
     'Varied response of garden eels to potential predators and other large-bodied organisms',
@@ -179,14 +180,14 @@ const getTitle = () => {
     'IgM-rheumatoid factor is associated with skin temperature in a patient with longstanding rheumatoid arthritis: a 6-year time series pilot study',
     'Spatio-temporal dynamics of spontaneous ultra-weak photon emission (autoluminescence) from human hands measured with an EMCCD camera: Dependence on time of day, date and individual subject',
     'The presynaptic D2 partial agonist lumateperone acts as a postsynaptic D2 antagonist',
-    'Megasonic elution of waterborne protozoa enhances recovery rates',
-    'An adapted protocol to overcome endosomal damage caused by polyethylenimine (PEI) mediated transfections',
-    'Pharmacokinetic profiles reconcile in vitro and in vivo activities of novel trypanocidal compounds',
-    'Reproduction of brooding corals at Scott Reef, Western Australia',
-    'Postsynaptic Rab GTPases and Exocyst: a screen at the Drosopbhila',
-    'Varied response of garden eels to potential predators and other large-bodied organisms',
-    'Dynasore inhibition on productive infection of HIV-1 in commonly used cell lines is independent of transferrin endocytosis',
-    'Lentiviral gene therapy vector with UCOE stably restores function in iPSC-derived neutrophils of a CDG patient'
+    'Megasonic evolution of waterborne protozoa enhances recovery rates',
+    'An adapted protocol to overcome endosomal damage and eggs caused by polyethylenimine (PEI) mediated transfections',
+    'Pharmacokinetic profiles reconcile in vitro and fitro and in vivo activities of novel trypanocidal compounds',
+    'Reproduction of brooding corals and cats at Scott Reef, Western Australia',
+    'Postsynaptic Rab and Gab GTPases and Exocyst: a screen at the Drosopbhila',
+    'Varied and beautiful response of garden eels to potential predators and other large-bodied organisms',
+    'Dynasore inhibition on productive infection of HIV-2 in commonly used cell lines is independent of transferrin endocytosis',
+    'Lentiviral gene therapy really vector with UCOE stably restores function in iPSC-derived neutrophils of a CDG patient'
   ];
 };
 
@@ -196,51 +197,35 @@ export const createDifferentDrafts = async () => {
   return Promise.all(
     accounts.map(async account => {
       console.log('Creating drafts for account ', account);
-      const drafts = await Promise.all(
-        getFigures().map(async (figure, i) => {
-          const newArticle = await articleSubmissionService.createSubmission(
-            account
-          );
-          const article = await articleVersionService.getArticleVersionById(
-            account,
-            newArticle.articleVersionId
-          );
+      const drafts = [];
+      let i = 0;
+      for (let figure of getFigures()) {
+        const newArticle = await articleSubmissionService.createSubmission(
+          account
+        );
+        const article = await articleVersionService.getArticleVersionById(
+          account,
+          newArticle.articleVersionId
+        );
 
-          // set the title of the article
-          article.document.title.blocks[0].text = getTitle()[i];
+        // set the title of the article (insert a tiny change for each title for having different hashes)
+        article.document.title.blocks[0].text = getTitle()[i];
 
-          // set figures
-          article.document.figure.push(figure);
+        // set figures
+        article.document.figure.push(figure);
 
-          return articleVersionService.updateDraftById(
+        drafts.push(
+          await articleVersionService.updateDraftById(
             account,
             article._id,
             article.document
-          );
-        })
-      );
+          )
+        );
+        i++;
+      }
       console.log('Created ' + drafts.length + ' drafts for account ', account);
     })
   );
-};
-
-const getHexFromDocument = () => {
-  const ARTICLE1 = {
-    articleHash:
-      '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
-    url: 'article1.url',
-    authors: [
-      '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88',
-      '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'
-    ],
-    contributorRatios: [4000, 6000],
-    linkedArticles: [
-      '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
-      '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
-      'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
-    ],
-    linkedArticlesSplitRatios: [3334, 3333, 3333]
-  };
 };
 
 export const submitDifferentArticles = async (
@@ -248,12 +233,33 @@ export const submitDifferentArticles = async (
   platformContract
 ) => {
   const accounts = await getAccounts(web3);
-  const account = accounts[0];
-  const drafts = await articleVersionService.getDraftsOfUser(account);
-  const draft = drafts[0];
 
-  const hash = getArticleHashFromDocument(draft.document);
+  return Promise.all(
+    accounts.map(async account => {
+      const drafts = await articleVersionService.getDraftsOfUser(account);
 
+      await Promise.all(
+        drafts.map(async (draft, i) => {
+          if (process.env.SCENARIO === SUBMIT_FEW_ARTICLES) {
+            if (i < drafts.length / 2) {
+              await submitDraft(
+                tokenContract,
+                platformContract,
+                draft,
+                account
+              );
+            }
+          } else {
+            await submitDraft(tokenContract, platformContract, draft, account);
+          }
+        })
+      );
+    })
+  );
+};
+
+const submitDraft = async (tokenContract, platformContract, draft, account) => {
+  const hash = '0x' + getArticleHashFromDocument(draft.document);
   console.log(
     'Finishing Draft By Id for account ' +
       account +
@@ -271,23 +277,22 @@ export const submitDifferentArticles = async (
 
   const articleHex = getArticleHexFromDocument(submittedArticle);
 
-  console.log(platformContract.options.address);
-
-  submitArticle(
+  const receipt = await submitArticle(
     tokenContract,
     platformContract.options.address,
     5000,
     articleHex
   )
     .send({from: account, gas: 8000000})
-    .on('transactionHash', tx => {
-      console.log(tx);
-    })
+    .on('transactionHash', tx => {})
     .on('receipt', receipt => {
-      console.log(
-        'The article submission exited with the TX status: ' + receipt.status
-      );
       return receipt;
     })
-    .catch(err => console.log(err));
+    .catch(async err => {
+      console.log(err);
+      await articleVersionService.revertToDraft(account, draft._id);
+    });
+  console.log(
+    'Draft ' + draft._id + ' ended with tx hash: ' + receipt.transactionHash
+  );
 };

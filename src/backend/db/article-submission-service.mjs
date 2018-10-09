@@ -2,49 +2,62 @@ import ArticleSubmission from '../schema/article-submission.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
-import articleVersionService, {
-  getRelevantArticleData
-} from './article-version-service.mjs';
-import ARTICLE_SUBMISSION_STATE from '../schema/article-submission-state-enum.mjs';
+import articleVersionService from './article-version-service.mjs';
+import ArticleSubmissionState from '../schema/article-submission-state-enum.mjs';
 import User from '../schema/user.mjs';
 import Roles from '../schema/roles-enum.mjs';
-
-const getSubmissionResponse = submissions => {
-  let resSubmissions = [];
-  submissions.map(submission => {
-    let lastArticleVersion =
-      submission.articleVersions[submission.articleVersions.length - 1];
-    resSubmissions.push(getRelevantArticleData(submission, lastArticleVersion));
-  });
-  return resSubmissions;
-};
+import {sleepSync} from '../../helpers/sleepSync.mjs';
+import Review from '../schema/review.mjs';
 
 export default {
   getAllSubmissions: () => {
-    return ArticleSubmission.find({}).populate('articleVersions');
+    return ArticleSubmission.find({})
+      .populate('articleVersions')
+      .populate([
+        {path: 'articleVersions.editorApprovedReviews'},
+        {path: 'articleVersions.communityReviews'}
+      ]);
   },
 
-  getUnassignedSubmissions: async () => {
-    const submissions = await ArticleSubmission.find({
+  getSubmissionIds: objects => {
+    return objects.map(i => {
+      return i._id;
+    });
+  },
+
+  //TODO: Assignable are only submissions where user is not equal submission owner or author
+  getUnassignedSubmissions: async (pageNumber, nPerPage) => {
+    return await ArticleSubmission.find({
       editor: null,
       articleSubmissionState: 'OPEN'
-    }).populate('articleVersions');
-    return getSubmissionResponse(submissions);
+    })
+      .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
+      .limit(nPerPage)
+      .populate({
+        path: 'articleVersions',
+        populate: [{path: 'editorApprovedReviews'}, {path: 'communityReviews'}]
+      });
   },
 
   getAssignedSubmissions: async ethereumAddress => {
     // const submissions = await ArticleSubmission.find({editor: ethereumAddress, articleSubmissionState: {$ne: 'CLOSED'}}).populate('articleVersions');
-    const submissions = await ArticleSubmission.find({
-      editor: ethereumAddress
-    }).populate('articleVersions');
-    return getSubmissionResponse(submissions);
+    return await ArticleSubmission.find({
+      editor: ethereumAddress,
+      articleSubmissionState: {$ne: 'CLOSED'}
+    }).populate({
+      path: 'articleVersions',
+      populate: [{path: 'editorApprovedReviews'}, {path: 'communityReviews'}]
+    });
   },
 
   createSubmission: async ownerAddress => {
     // set user's role to AUTHOR once he creates the first draft
     const user = await User.findOne({ethereumAddress: ownerAddress});
-    if (!user.roles.includes(Roles.AUTHOR)) user.roles.push(Roles.AUTHOR);
-    await user.save();
+
+    if (!user.roles.includes(Roles.AUTHOR)) {
+      user.roles.push(Roles.AUTHOR);
+      await user.save();
+    }
 
     // create article submission
     const submission = new ArticleSubmission({ownerAddress: ownerAddress});
@@ -91,6 +104,15 @@ export default {
     return ArticleSubmission.findById(_submissionId);
   },
 
+  getSubmissionBySCsubmissionId: async _scSubmissionId => {
+    const articleSubmission =  await ArticleSubmission.findOne(
+      {scSubmissionID: _scSubmissionId}
+    );
+
+    if(!articleSubmission) errorThrower.noEntryFoundById('scSUbmissionId');
+    return articleSubmission;
+  },
+
   /**
    * Gets the submission, which contains an article-version holding the
    * articleHash provided as param with in it.
@@ -129,7 +151,7 @@ export default {
     if (!articleSubmission) errorThrower.noEntryFoundById(articleVersion._id);
     articleSubmission.scSubmissionID = scSubmissionId;
     articleSubmission.articleUrl = articleUrl;
-    articleSubmission.articleSubmissionState = ARTICLE_SUBMISSION_STATE.OPEN;
+    articleSubmission.articleSubmissionState = ArticleSubmissionState.OPEN;
     articleSubmission = await articleSubmission.save();
     return articleSubmission;
   },
@@ -187,7 +209,7 @@ export default {
       {scSubmissionID: _submissionId},
       {
         editor: _editor,
-        articleSubmissionState: ARTICLE_SUBMISSION_STATE.EDITOR_ASSIGNED
+        articleSubmissionState: ArticleSubmissionState.EDITOR_ASSIGNED
       },
       (err, submission) => {
         if (err) throw err;
@@ -206,7 +228,7 @@ export default {
       {scSubmissionID: _submissionId},
       {
         editor: undefined,
-        articleSubmissionState: ARTICLE_SUBMISSION_STATE.OPEN
+        articleSubmissionState: ArticleSubmissionState.OPEN
       },
       (err, submission) => {
         if (err) throw err;
@@ -227,17 +249,20 @@ export default {
    * @returns {Promise<*>}
    */
   submitArticleVersion: async (_submissionId, _articleHash, _articleUrl) => {
-    let submission = await ArticleSubmission.findById(_submissionId);
+    let submission = await ArticleSubmission.findOne({scSubmissionID: _submissionId});
     if (!submission) {
       errorThrower.noEntryFoundById('_submissionId');
     }
 
     const articleVersion = new ArticleVersion({
+      ownerAddress: submission.ownerAddress,
       submissionId: _submissionId,
       articleHash: _articleHash,
-      articleUrl: _articleUrl
+      articleUrl: _articleUrl,
+      articleVersionState: ArticleVersionState.SUBMITTED
     });
 
+    await articleVersion.save();
     submission.articleVersions.push(articleVersion);
     await submission.save();
     return submission;
@@ -261,5 +286,14 @@ export default {
     ].editorApprovedReviews.push(review);
 
     return await submission.save();
+  },
+  closeArticleSubmission: async (_scSubmissionId) => {
+    let submission = await ArticleSubmission.findOne({scSubmissionID: _scSubmissionId});
+    if(!submission) {
+      errorThrower.noEntryFoundById('_scSubmissionId');
+    }
+
+    submission.articleSubmissionState = ArticleSubmissionState.CLOSED;
+    await submission.save();
   }
 };

@@ -11,7 +11,10 @@ import AddressBook from '../AddressBook/AddressBook.js';
 import ContractOwnerDashboard from '../ContractOwnerDashboard.js';
 import {ContractOwnerGuard} from '../Guards/Guards.js';
 import EditorRouter from './EditorRouter.js';
-import MyReviews from '../Reviews/MyReviews.js';
+import Reviewers from '../Reviewers.js';
+import UserExploration from '../UserExploration.js';
+import ReviewsRouter from './ReviewsRouter.js';
+import PreviewRouter from './PreviewRouter.js';
 
 class DashboardRouter extends Component {
   render() {
@@ -81,15 +84,23 @@ class DashboardRouter extends Component {
           />
 
           <Route
-            exact
             path={`${this.props.base}/reviews`}
-            render={() => (
-              <MyReviews
-                base={`${this.props.base}/reviews`}
-                user={this.props.user}
-                selectedAccount={this.props.selectedAccount}
-              />
-            )}
+            render={() => {
+              return (
+                <ReviewsRouter
+                  web3={this.props.web3}
+                  tokenContract={this.props.tokenContract}
+                  platformContract={this.props.platformContract}
+                  base={`${this.props.base}/reviews`}
+                  user={this.props.user}
+                  updateUser={() => {
+                    this.props.updateUser();
+                  }}
+                  selectedAccount={this.props.selectedAccount}
+                  network={this.props.network}
+                />
+              );
+            }}
           />
 
           <Route
@@ -101,6 +112,9 @@ class DashboardRouter extends Component {
                 platformContract={this.props.platformContract}
                 base={`${this.props.base}/articles`}
                 user={this.props.user}
+                updateUser={() => {
+                  this.props.updateUser();
+                }}
                 selectedAccount={this.props.selectedAccount}
                 network={this.props.network}
               />
@@ -122,6 +136,27 @@ class DashboardRouter extends Component {
             )}
           />
 
+          {/*ROUTES IN DASHBOARD WHICH ARE NOT INCLUDED IN PANEL LEFT */}
+          <Route
+            exact
+            path={`${this.props.base}/reviewers`}
+            render={() => <Reviewers />}
+          />
+
+          <Route
+            exact
+            path={`${this.props.base}/users/:ethereumAddress`}
+            render={() => <UserExploration />}
+          />
+
+          <Route
+            path={`${this.props.base}/preview/:id`}
+            render={() => (
+              <PreviewRouter base={`${this.props.base}/preview`} />
+            )}
+          />
+
+          {/*Redirect to dashboard. Leave it at the bottom!*/}
           <Route
             exact
             path={`${this.props.base}`}

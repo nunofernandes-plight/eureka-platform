@@ -6,43 +6,13 @@ import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import REVIEW_STATE from '../schema/review-state-enum.mjs';
+import ReviewService from './review-service.mjs';
+import ArticleSubmissionService from './article-submission-service.mjs';
 
-export const getRelevantArticleData = (submission, articleVersion) => {
-  let resArticle = {};
-
-  resArticle.scSubmissionID = submission.scSubmissionID;
-  resArticle.ownerAddress = submission.ownerAddress;
-  resArticle.articleSubmissionState = submission.articleSubmissionState;
-
-  resArticle._id = articleVersion._id;
-  resArticle.articleHash = articleVersion.articleHash;
-  resArticle.articleVersionState = articleVersion.articleVersionState;
-  resArticle.updatedAt = articleVersion.updatedAt;
-
-  resArticle.title = articleVersion.document.title;
-  resArticle.authors = articleVersion.document.authors;
-  resArticle.abstract = articleVersion.document.abstract;
-  resArticle.figure = articleVersion.document.figure;
-  resArticle.keywords = articleVersion.document.keywords;
-
-  return resArticle;
-};
-
-const getArticlesResponse = articles => {
-  let resArticles = [];
-  articles.map(article => {
-    // populate() from mongoose sets articleSubmission to null if the editor address does not match the user
-    if (article.articleSubmission)
-      resArticles.push(getRelevantArticleData(article.articleSubmission, article));
-  });
-  return resArticles;
-};
-
-const getFinalizableArticles = (articles) => {
+const getFinalizableArticles = articles => {
   let finalizableArticles = [];
   articles.forEach(article => {
-    if (isFinalizable(article))
-      finalizableArticles.push(article);
+    if (isFinalizable(article)) finalizableArticles.push(article);
   });
   return finalizableArticles;
 };
@@ -51,8 +21,7 @@ const isFinalizable = article => {
   const minEAReviews = 1; //minAmountOfEditorApprovedReviews
   const minCReviews = 0; //minAmountOfCommunityReviews
   return (
-    areReviewsOK(minEAReviews, article.editorApprovedReviews)
-    &&
+    areReviewsOK(minEAReviews, article.editorApprovedReviews) &&
     areReviewsOK(minCReviews, article.communityReviews)
   );
 };
@@ -60,11 +29,8 @@ const isFinalizable = article => {
 const areReviewsOK = (minAmount, reviews) => {
   let count = 0;
   reviews.forEach(review => {
-    if (review.reviewState !== REVIEW_STATE.ACCEPTED)
-    // if (review.reviewState !== REVIEW_STATE.INVITED)   for testing purposes
-      return false;
-    if (review.hasMajorIssues)
-      return false;
+    if (review.reviewState !== REVIEW_STATE.ACCEPTED) return false;
+    if (review.hasMajorIssues) return false;
 
     count++;
   });
@@ -77,31 +43,97 @@ export default {
   },
 
   getArticlesAssignedTo: async (ethereumAddress, articleVersionState) => {
-    const articles = await ArticleVersion.find({articleVersionState: articleVersionState})
-      .populate({
-        path: 'articleSubmission',
-        match: {editor: ethereumAddress}
-      });
-    return getArticlesResponse(articles);
+    const submissions = await ArticleSubmissionService.getAssignedSubmissions(ethereumAddress);
+    const submissionIds = ArticleSubmissionService.getSubmissionIds(submissions);
+
+    return await ArticleVersion.find({
+      articleVersionState: articleVersionState,
+      articleSubmission: {$in: submissionIds}
+    }).populate([
+      {path: 'articleSubmission'},
+      {path: 'editorApprovedReviews'},
+      {path: 'communityReviews'}
+    ]);
   },
 
-  getArticlesToFinalize: async (ethereumAddress) => {
+  getArticlesToFinalize: async ethereumAddress => {
+    const submissions = await ArticleSubmissionService.getAssignedSubmissions(ethereumAddress);
+    const submissionIds = ArticleSubmissionService.getSubmissionIds(submissions);
+
     const articles = await ArticleVersion.find({
+      articleVersionState: 'REVIEWERS_INVITED',
+      articleSubmission: {$in: submissionIds}
+    }).populate([
+      {path: 'articleSubmission'},
+      {path: 'editorApprovedReviews'},
+      {path: 'communityReviews'}
+    ]);
+    return getFinalizableArticles(articles);
+  },
+
+  getArticlesOpenForReviews: async ethereumAddress => {
+    // gettin reviews first to check which articles where already reviewed
+    let reviews = await ReviewService.getMyReviews(ethereumAddress);
+    const ids = ReviewService.getArticleVersionIds(reviews);
+    reviews = await ReviewService.getReviewInvitations(ethereumAddress);
+    const invite_ids = ReviewService.getArticleVersionIds(reviews);
+    //TODO: don't show article if user is editor of submission process
+
+    return await ArticleVersion.find({
+      // show article if invited or if not reviewed yet
+      $or : [ { _id :{$nin: ids} }, { _id : {$in: invite_ids} } ],
+      // community reviews can be reviewed as soon as the editor has checked it
+      articleVersionState: {$in: ['EDITOR_CHECKED', 'REVIEWERS_INVITED']},
+      ownerAddress: {$ne: ethereumAddress},
+      'document.authors': {$ne: ethereumAddress}
+    }).populate([
+      {path: 'articleSubmission'},
+      {path: 'editorApprovedReviews'},
+      {path: 'communityReviews'}
+    ]);
+  },
+
+  /* tipp not used anymore
+  * Query for a document nested in an array
+  *   const cursor = db.collection('inventory').find({
+        'instock.qty': { $lte: 20 }
+      });
+  * */
+  getArticlesInvitedForReviewing: async ethereumAddress => {
+    const reviews = await ReviewService.getReviewInvitations(ethereumAddress);
+    const ids = ReviewService.getArticleVersionIds(reviews);
+
+    return await ArticleVersion.find({
+      _id: {$in: ids},
       articleVersionState: 'REVIEWERS_INVITED'
     })
-      .populate({
-        path: 'articleSubmission',
-        match: {editor: ethereumAddress}
-      })
-      .populate({
-        path: 'editorApprovedReviews'
-      })
-      .populate({
-        path: 'communityReviews '
-      });
-    const finalizableArticles = getFinalizableArticles(articles);
-    console.log(finalizableArticles);
-    return getArticlesResponse(articles);
+      .populate([
+        {path: 'articleSubmission'},
+        {path: 'editorApprovedReviews'},
+        {path: 'communityReviews'}
+      ]);
+  },
+
+  getArticlesOpenForCommunityReviews: async ethereumAddress => {
+    // gettin reviews first to check which articles where already reviewed
+    let reviews = await ReviewService.getMyReviews(ethereumAddress);
+    const ids = ReviewService.getArticleVersionIds(reviews);
+    reviews = await ReviewService.getReviewInvitations(ethereumAddress);
+    const invite_ids = ReviewService.getArticleVersionIds(reviews);
+    //TODO: don't show article if user is editor of submission process
+
+    return await ArticleVersion.find({
+      // hide articles already reviewed or already invited
+      $and : [ { _id :{$nin: ids} }, { _id : {$nin: invite_ids} } ],
+      // community reviews can be reviewed as soon as the editor has checked it
+      articleVersionState: {$in: ['EDITOR_CHECKED', 'REVIEWERS_INVITED']},
+      ownerAddress: {$ne: ethereumAddress},
+      'document.authors': {$ne: ethereumAddress}
+    }).populate([
+      {path: 'articleSubmission'},
+      {path: 'editorApprovedReviews'},
+      {path: 'communityReviews'}
+    ]);
   },
 
   createArticleVersion: async (ethereumAddress, submissionId) => {
@@ -127,7 +159,7 @@ export default {
    * @param userAddress
    * @returns {Promise<Array>}
    */
-  getDraftsOfUser: async (userAddress) => {
+  getDraftsOfUser: async userAddress => {
     let drafts = await ArticleVersion.find({
       ownerAddress: userAddress,
       articleVersionState: ArticleVersionStates.DRAFT
@@ -138,10 +170,13 @@ export default {
     return getDraftInfos(drafts);
   },
 
-  getSubmittedAndFinishedDraftOfUser: async (userAddress) => {
+  getSubmittedAndFinishedDraftOfUser: async userAddress => {
     const drafts = await ArticleVersion.find({
       ownerAddress: userAddress,
-      $or: [{articleVersionState: ArticleVersionState.FINISHED_DRAFT}, {articleVersionState: ArticleVersionState.SUBMITTED}]
+      $or: [
+        {articleVersionState: ArticleVersionState.FINISHED_DRAFT},
+        {articleVersionState: ArticleVersionState.SUBMITTED}
+      ]
     });
     return getDraftInfos(drafts);
   },
@@ -151,8 +186,12 @@ export default {
     let articleVersion = await ArticleVersion.findById(articleVersionId);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
     if (articleVersion.articleVersionState !== ArticleVersionStates.DRAFT)
-      errorThrower.notCorrectStatus(ArticleVersionStates.DRAFT, articleVersion.articleVersionState);
-    if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+      errorThrower.notCorrectStatus(
+        ArticleVersionStates.DRAFT,
+        articleVersion.articleVersionState
+      );
+    if (articleVersion.ownerAddress !== userAddress)
+      errorThrower.notCorrectEthereumAddress();
 
     // add new document variables
     for (let property in document) {
@@ -188,15 +227,27 @@ export default {
   revertToDraft: async (userAddress, articleVersionId) => {
     let articleVersion = await ArticleVersion.findById(articleVersionId);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
-    if (articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT) {
-      errorThrower.notCorrectStatus(ArticleVersionState.FINISHED_DRAFT, articleVersion.articleVersionState);
+    if (
+      articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT
+    ) {
+      errorThrower.notCorrectStatus(
+        ArticleVersionState.FINISHED_DRAFT,
+        articleVersion.articleVersionState
+      );
     }
-    if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress(userAddress);
+    if (articleVersion.ownerAddress !== userAddress)
+      errorThrower.notCorrectEthereumAddress(userAddress);
 
     articleVersion.articleVersionState = ArticleVersionState.DRAFT;
     await articleVersion.save();
-    return 'Articleversion ' + articleVersion._id + 'has reverted Status: '
-      + ArticleVersionState.FINISHED_DRAFT + ' to ' + ArticleVersionState.DRAFT;
+    return (
+      'Articleversion ' +
+      articleVersion._id +
+      'has reverted Status: ' +
+      ArticleVersionState.FINISHED_DRAFT +
+      ' to ' +
+      ArticleVersionState.DRAFT
+    );
   },
 
   /**
@@ -209,25 +260,27 @@ export default {
   getArticleVersionById: async (userAddress, articleVersionID) => {
     const articleVersion = await ArticleVersion.findById(articleVersionID);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionID);
-    if (articleVersion.ownerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+    if (articleVersion.ownerAddress !== userAddress)
+      errorThrower.notCorrectEthereumAddress();
     return articleVersion;
   },
 
-
   changeArticleVersionState: async (articleHash, versionState) => {
     if (!(versionState in ArticleVersionState)) {
-      let error = new Error('Internal error: Provided param "versionState" is not a actual ArticleVersionState');
+      let error = new Error(
+        'Internal error: Provided param "versionState" is not a actual ArticleVersionState'
+      );
       error.status = 500;
       throw error;
     }
 
-    await ArticleVersion.findOneAndUpdate({articleHash: articleHash},
+    await ArticleVersion.findOneAndUpdate(
+      {articleHash: articleHash},
       {
         articleVersionState: versionState
       }
     );
   }
-
 };
 
 /**

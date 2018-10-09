@@ -4,13 +4,15 @@ import {asyncHandler} from '../api/requestHandler.mjs';
 import articleSubmissionService from '../db/article-submission-service.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import Roles from '../schema/roles-enum.mjs';
+import {getRelevantArticleData} from '../helpers/relevant-article-data.mjs';
 
 const router = express.Router();
 router.use(accesController.loggedInOnly);
 
 router.use(accesController.loggedInOnly);
 
-router.get('/',
+router.get(
+  '/',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     if (!ethereumAddress) errorThrower.notLoggedIn();
@@ -18,21 +20,42 @@ router.get('/',
   })
 );
 
-router.use(accesController.rolesOnly([Roles.EDITOR, Roles.ADMIN, Roles.CONTRACT_OWNER]));
-router.get('/unassigned',
+router.use(
+  accesController.rolesOnly([Roles.EDITOR, Roles.ADMIN, Roles.CONTRACT_OWNER])
+);
+router.get(
+  '/unassigned',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     if (!ethereumAddress) errorThrower.notLoggedIn();
-    return await articleSubmissionService.getUnassignedSubmissions();
+    let submissions = await articleSubmissionService.getUnassignedSubmissions(
+      parseInt(req.query.page),
+      parseInt(req.query.limit)
+    );
+    return getSubmissionResponse(submissions);
   })
 );
 
-router.get('/assigned',
+router.get(
+  '/assigned',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     if (!ethereumAddress) errorThrower.notLoggedIn();
-    return await articleSubmissionService.getAssignedSubmissions(ethereumAddress);
+    let submissions = await articleSubmissionService.getAssignedSubmissions(
+      ethereumAddress
+    );
+    return getSubmissionResponse(submissions);
   })
 );
 
 export default router;
+
+const getSubmissionResponse = submissions => {
+  let resSubmissions = [];
+  submissions.map(submission => {
+    let lastArticleVersion =
+      submission.articleVersions[submission.articleVersions.length - 1];
+    resSubmissions.push(getRelevantArticleData(submission, lastArticleVersion));
+  });
+  return resSubmissions;
+};

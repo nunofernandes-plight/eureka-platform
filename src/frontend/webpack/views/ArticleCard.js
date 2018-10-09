@@ -156,7 +156,7 @@ const ArticleCard = ({article, ...otherProps}) => {
         </Button>
         <ReadButton
           onClick={() => {
-            otherProps.history.push(`/app/articles/preview/${article._id}`);
+            otherProps.history.push(`/app/preview/${article._id}`);
           }}
         >
           More

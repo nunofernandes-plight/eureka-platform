@@ -4,6 +4,8 @@ import web3 from '../../src/helpers/web3Instance.mjs';
 import getAccounts from '../../src/smartcontracts/methods/get-accounts.mjs';
 import {getRandomAvatar} from '../../src/frontend/helpers/getRandomAvatar.mjs';
 import Roles from '../../src/backend/schema/roles-enum.mjs';
+import {signUpEditor} from '../../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {platformContract} from '../../src/backend/web3/web3InterfaceSetup.mjs';
 
 const getEmails = () => {
   return [
@@ -24,8 +26,9 @@ const getFakePsw = () => {
   return '0xb91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a0291c';
 };
 
-export const createDifferentUsers = async () => {
+export const createDifferentUsers = async platformContract => {
   const accounts = await getAccounts(web3);
+  const SC_OWNER = accounts[0];
 
   await Promise.all(
     getEmails().map(async (email, i) => {
@@ -37,11 +40,22 @@ export const createDifferentUsers = async () => {
           accounts[i],
           'img/icons/avatars/' + getRandomAvatar()
         );
-        if (i > 5) {
+        if (i > 5 && accounts[i] !== SC_OWNER) {
           newUser.roles.push(Roles.REVIEWER);
-          await newUser.save();
+        } else {
+          await signUpEditor(platformContract, accounts[i])
+            .send({
+              from: SC_OWNER,
+              gas: 80000000
+            })
+            .on('receipt', receipt => {
+              return receipt;
+            })
+            .catch(err => {
+              console.error('signUpEditor error: ', err);
+            });
         }
-
+        await newUser.save();
         console.log(
           'New user created with email : ' +
             newUser.email +

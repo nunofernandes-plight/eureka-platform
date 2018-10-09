@@ -6,12 +6,12 @@ import {Table} from '../../design-components/Table/Table.js';
 import TxHash from '../../views/TxHash.js';
 import {renderTimestamp} from '../../../helpers/timestampRenderer';
 import EurekaLogo from '../../views/icons/EurekaLogo';
+import UserExploration from '../UserExploration.js';
+import {EthereumAddress} from '../../views/Address.js';
 
 const ContactsContainer = styled.div`
   font-size: 14px;
   width: 100%;
-  max-height: 400px;
-  overflow: scroll;
   padding: 5px 25px;
 `;
 
@@ -28,7 +28,6 @@ const getData = props => {
     data.push({
       logo: getLogo(),
       transactionType: getTxType(tx),
-      txHash: getTxHash(tx),
       timestamp: getTimestamp(tx),
       from: getOwner(tx),
       to: getAffectedAddress(tx)
@@ -38,7 +37,7 @@ const getData = props => {
 };
 
 const getOwner = tx => {
-  return <div>{tx.ownerAddress.substr(0, 15)}...</div>;
+  return <EthereumAddress ethereumAddress={tx.ownerAddress} />;
 };
 const getAffectedAddress = tx => {
   const to = tx.additionalInfo.affectedAddress;
@@ -80,14 +79,13 @@ const MyHistoryTable = props => {
           header={[
             '',
             'Transaction Type',
-            'Tx Hash',
             'Transaction date',
             'From',
             'To'
           ]}
           textCenter={'Transaction Type'}
           data={getData(props)}
-          columnWidth={['6', '25', '20', '17', '17', '15']}
+          columnWidth={['6', '25', '17', '37', '15']}
         />
       )}
     </ContactsContainer>

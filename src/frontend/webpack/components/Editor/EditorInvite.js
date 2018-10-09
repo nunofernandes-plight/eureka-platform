@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, {Fragment} from 'react';
+import styled, {keyframes} from 'styled-components';
 import {getInviteReviewersArticles} from './EditorMethods.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Article from '../../views/Article.js';
@@ -13,6 +13,7 @@ import EdiorReviewersPicker from './EdiorReviewersPicker.js';
 import EmailPreview from '../Email/EmailPreview.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import {inviteReviewersForArticle} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import SendEmailAnimation from './SendEmailAnimation.js';
 
 const Container = styled.div`
   display: flex;
@@ -26,6 +27,7 @@ const NoArtDiv = styled.div`
   color: ${__THIRD};
   font-size: 16px;
 `;
+
 const NoArticles = () => {
   return (
     <NoArtDiv>
@@ -48,7 +50,8 @@ class EditorInvite extends React.Component {
       loading: false,
       articleOnHover: null,
       showReviewersPickerModal: false,
-      reviewersToInvite: null
+      reviewersToInvite: null,
+      showSendEmailAnimation: false
     };
   }
 
@@ -75,13 +78,12 @@ class EditorInvite extends React.Component {
 
   async inviteReviewers() {
     if (!this.state.reviewersToInvite) return;
-
-    this.setState({showReviewersPickerModal: false});
+    /*
+    this.setState({showReviewersPickerModal: false});*/
     const reviewers = this.state.reviewersToInvite.map(r => {
       return r.ethereumAddress;
     });
     let gasAmount;
-    console.log(this.state.article.articleHash);
     // gas estimation on ganache doesn't work properly
     if (!isGanache(this.props.web3))
       gasAmount = await inviteReviewersForArticle(
@@ -104,8 +106,7 @@ class EditorInvite extends React.Component {
       })
       .on('transactionHash', tx => {
         this.setState({
-          tx,
-          showTxModal: true
+          showSendEmailAnimation: true
         });
       })
       .on('receipt', async receipt => {
@@ -158,6 +159,8 @@ class EditorInvite extends React.Component {
             this.setState({showReviewersPickerModal});
             this.setState({article: null});
           }}
+          hideHeader={this.state.showSendEmailAnimation}
+          hideFooter={this.state.showSendEmailAnimation}
           action={'SEND INVITATIONS'}
           callback={async () => {
             await this.inviteReviewers();
@@ -165,40 +168,55 @@ class EditorInvite extends React.Component {
           show={this.state.showReviewersPickerModal}
           title={'Invite Reviewers for the article: '}
         >
-          <EmailPreview
-            reviewersToInvite={this.state.reviewersToInvite}
-            article={this.state.article}
-            selectedAccount={this.props.selectedAccount}
-          />
-          <EdiorReviewersPicker
-            platformContract={this.props.platformContract}
-            article={this.state.article}
-            selectedAccount={this.props.selectedAccount}
-            reviewersToInvite={this.state.reviewersToInvite}
-            addReviewer={u => {
-              const reviewersToInvite = this.state.reviewersToInvite
-                ? [...this.state.reviewersToInvite]
-                : [];
-              reviewersToInvite.push(u);
-              this.setState({
-                reviewersToInvite
-              });
-            }}
-            removeReviewer={u => {
-              const reviewersToInvite = [...this.state.reviewersToInvite];
-              const indexToDelete = reviewersToInvite
-                .map(ur => {
-                  return ur.ethereumAddress;
-                })
-                .indexOf(u.ethereumAddress);
-              if (indexToDelete > -1) {
-                reviewersToInvite.splice(indexToDelete, 1);
-              }
-              this.setState({
-                reviewersToInvite
-              });
-            }}
-          />
+          {this.state.showSendEmailAnimation ? (
+            <div style={{margin: '-24px'}}>
+              <SendEmailAnimation
+                onComplete={() => {
+                  this.setState({
+                    showReviewersPickerModal: false,
+                    showSendEmailAnimation: false
+                  });
+                }}
+              />
+            </div>
+          ) : (
+            <Fragment>
+              <EmailPreview
+                reviewersToInvite={this.state.reviewersToInvite}
+                article={this.state.article}
+                selectedAccount={this.props.selectedAccount}
+              />
+              <EdiorReviewersPicker
+                platformContract={this.props.platformContract}
+                article={this.state.article}
+                selectedAccount={this.props.selectedAccount}
+                reviewersToInvite={this.state.reviewersToInvite}
+                addReviewer={u => {
+                  const reviewersToInvite = this.state.reviewersToInvite
+                    ? [...this.state.reviewersToInvite]
+                    : [];
+                  reviewersToInvite.push(u);
+                  this.setState({
+                    reviewersToInvite
+                  });
+                }}
+                removeReviewer={u => {
+                  const reviewersToInvite = [...this.state.reviewersToInvite];
+                  const indexToDelete = reviewersToInvite
+                    .map(ur => {
+                      return ur.ethereumAddress;
+                    })
+                    .indexOf(u.ethereumAddress);
+                  if (indexToDelete > -1) {
+                    reviewersToInvite.splice(indexToDelete, 1);
+                  }
+                  this.setState({
+                    reviewersToInvite
+                  });
+                }}
+              />
+            </Fragment>
+          )}
         </Modal>
       </div>
     );
@@ -206,45 +224,50 @@ class EditorInvite extends React.Component {
 
   render() {
     return (
-      <Container>
-        {this.renderModals()}
-        {this.state.loading ? (
-          <GridSpinner />
-        ) : (
-          <Card title={'Invite to Review an Article'} width={1000}>
-            {this.state.articles ? (
-              this.state.articles.length > 0 ? (
-                this.state.articles.map(article => {
-                  return (
-                    <Article
-                      buttonText={'Invite Reviewers'}
-                      key={article._id}
-                      article={article}
-                      onHover={this.state.articleOnHover === article._id}
-                      onMouseEnter={id => {
-                        this.setState({articleOnHover: id});
-                      }}
-                      onMouseLeave={id => {
-                        this.setState({articleOnHover: null});
-                      }}
-                      action={(_, article) => {
-                        this.setState({
-                          showReviewersPickerModal: true,
-                          article
-                        });
-                      }}
-                    />
-                  );
-                })
+      <Fragment>
+        <Container>
+          {this.renderModals()}
+          {this.state.loading ? (
+            <GridSpinner />
+          ) : (
+            <Card title={'Invite to Review an Article'} width={1000}>
+              <Link to={'/app/reviewers'}>
+                <button>See all reviewers in the community</button>
+              </Link>
+              {this.state.articles ? (
+                this.state.articles.length > 0 ? (
+                  this.state.articles.map(article => {
+                    return (
+                      <Article
+                        buttonText={'Invite Reviewers'}
+                        key={article._id}
+                        article={article}
+                        onHover={this.state.articleOnHover === article._id}
+                        onMouseEnter={id => {
+                          this.setState({articleOnHover: id});
+                        }}
+                        onMouseLeave={id => {
+                          this.setState({articleOnHover: null});
+                        }}
+                        action={(_, article) => {
+                          this.setState({
+                            showReviewersPickerModal: true,
+                            article
+                          });
+                        }}
+                      />
+                    );
+                  })
+                ) : (
+                  <NoArticles />
+                )
               ) : (
                 <NoArticles />
-              )
-            ) : (
-              <NoArticles />
-            )}
-          </Card>
-        )}
-      </Container>
+              )}
+            </Card>
+          )}
+        </Container>
+      </Fragment>
     );
   }
 }

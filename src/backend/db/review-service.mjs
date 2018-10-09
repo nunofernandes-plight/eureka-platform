@@ -5,14 +5,42 @@ import ArticleVersion from '../schema/article-version.mjs';
 
 export default {
   getAllReviews: () => {
-    return Review.find({});
+    return Review.find({})
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}]
+      });
   },
 
-  getReviewInvitations: (address) => {
+  getReviewInvitations: async (address) => {
+    return await Review.find({
+      reviewerAddress: address,
+      reviewState: {$in: ['INVITED', 'INVITATION_ACCEPTED']}
+    })
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}]
+      });
+  },
+
+  getMyReviews: (address) => {
     return Review.find({
       reviewerAddress: address,
-      reviewState: 'INVITED'
-    });
+      reviewState: {$in: ['HANDED_IN_DB', 'HANDED_IN_SC', 'DECLINED','ACCEPTED']}
+    })
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}]
+      });
   },
 
   createReview: async (submissionId, articleHash, stateTimestamp) => {
@@ -27,6 +55,12 @@ export default {
     if (!review) errorThrower.noEntryFoundById(reviewId);
     if (review.reviewerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
     return review;
+  },
+
+  getArticleVersionIds: idObjects => {
+    return idObjects.map(i => {
+      return i.articleVersion;
+    });
   },
 
   /**
@@ -104,7 +138,8 @@ export default {
       hasMajorIssues: articleHasMajorIssues,
       hasMinorIssues: articleHasMinorIssues,
       reviewState: ReviewState.HANDED_IN_DB,
-      stateTimestamp: new Date().getTime()
+      stateTimestamp: new Date().getTime(),
+      articleVersion: articleVersion._id,
     });
     await review.save();
     articleVersion.communityReviews.push(review._id);

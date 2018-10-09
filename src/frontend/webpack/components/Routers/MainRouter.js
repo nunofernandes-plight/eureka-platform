@@ -176,6 +176,9 @@ class MainRouter extends Component {
                         platformContract={this.props.platformContract}
                         base={'/app'}
                         user={this.state.user}
+                        updateUser={() => {
+                          this.authenticate();
+                        }}
                         selectedAccount={this.props.selectedAccount}
                         metaMaskStatus={this.props.metaMaskStatus}
                         network={this.props.network}

@@ -94,7 +94,8 @@ class Cards extends Component {
             <CardTitle>Become an author</CardTitle>
             <CardFigure src="img/icons/submit.png" />
             <CardDescription>
-              Submit your article to be peer-reviewed in the EUREKA ecosystem
+              Submit your article to be peer-reviewed and rated in the EUREKA
+              ecosystem
             </CardDescription>
           </Card>
           <Card key="back" onMouseLeave={() => this.flipCard('1')}>
@@ -143,7 +144,7 @@ class Cards extends Component {
 
         <ReactCardFlip isFlipped={this.state['4']}>
           <Card key="front" onMouseEnter={() => this.flipCard('4')}>
-            <CardTitle>Our Journal</CardTitle>
+            <CardTitle>Our Journals</CardTitle>
             <EurekaLogo width={70} height={70} />
             <CardDescription>
               Have a look at the articles which have been published into our

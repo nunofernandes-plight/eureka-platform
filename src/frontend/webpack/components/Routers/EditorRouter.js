@@ -6,9 +6,6 @@ import NavPill from '../../views/NavPill.js';
 import {EditorNavPillRoutes} from './EditorNavPillRoutes.js';
 import EditorArticles from '../Editor/EditorArticles.js';
 import EditorSignOff from '../Editor/EditorSignOff.js';
-import Icon from '../../views/icons/Icon.js';
-import {GoBack} from './GoBack.js';
-import {GoForward} from './GoForward.js';
 import EditorInvite from '../Editor/EditorInvite.js';
 
 const Parent = styled.div`
@@ -60,8 +57,6 @@ class EditorRouter extends Component {
       <Parent>
         <Container>
           <NavPills>
-            {' '}
-            <GoBack {...this.props} />
             {EditorNavPillRoutes.map((item, index) => {
               return (
                 <NavPill
@@ -75,7 +70,6 @@ class EditorRouter extends Component {
                 />
               );
             })}
-            <GoForward {...this.props} />
           </NavPills>
           <CardContainer>
             <MarginTop>
