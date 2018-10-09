@@ -82,6 +82,12 @@ const MyLabels = styled.div`
   font-weight: bold;
   display: flex;
 `;
+const Bar = styled.div`
+  flex: 1;
+  background: ${__GRAY_200};
+  height: 4px;
+  margin-top: 10px;
+`;
 
 const MyLink = styled(NavLink)`
   &:hover {
@@ -95,21 +101,16 @@ const MyLink = styled(NavLink)`
   margin-bottom: 10px;
   cursor: pointer;
   &.${props => props.activeClassName} {
+    ${Bar} {
+      background: ${__FIFTH};
+    }
     font-weight: bold;
-    color: red;
   }
 `;
 
 MyLink.defaultProps = {
   activeClassName: 'active'
 };
-
-const Bar = styled.div`
-  flex: 1;
-  background: ${__GRAY_200};
-  height: 4px;
-  margin-top: 10px;
-`;
 
 const Avatars = styled.div`
   display: flex;
