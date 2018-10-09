@@ -30,7 +30,7 @@ const areReviewsOK = (minAmount, reviews) => {
   let count = 0;
   reviews.forEach(review => {
     if (review.reviewState !== REVIEW_STATE.ACCEPTED) return false;
-    if (review.hasMajorIssues) return false;
+    if (review.articleHasMajorIssues) return false;
 
     count++;
   });

@@ -90,8 +90,8 @@ export default {
     review.reviewText = reviewText;
     review.reviewScore1 = score1;
     review.reviewScore2 = score2;
-    review.hasMajorIssues = articleHasMajorIssues;
-    review.hasMinorIssues = articleHasMinorIssues;
+    review.articleHasMajorIssues = articleHasMajorIssues;
+    review.articleHasMinorIssues = articleHasMinorIssues;
     review.reviewState = ReviewState.HANDED_IN_DB;
     await review.save();
     return 'Added editor-approved review into DB.';
@@ -102,8 +102,8 @@ export default {
     if (!review) errorThrower.noEntryFoundById(reviewHash);
     review.reviewState = ReviewState.HANDED_IN_SC;
     review.stateTimestamp = stateTimestamp;
-    review.hasMajorIssues = articleHasMajorIssues;
-    review.hasMinorIssues = articleHasMinorIssues;
+    review.articleHasMajorIssues = articleHasMajorIssues;
+    review.articleHasMinorIssues = articleHasMinorIssues;
     review.reviewScore1 = score1;
     review.reviewScore2 = score2;
     await review.save();
@@ -135,8 +135,8 @@ export default {
       reviewHash: reviewHash,
       reviewScore1: score1,
       reviewScore2: score2,
-      hasMajorIssues: articleHasMajorIssues,
-      hasMinorIssues: articleHasMinorIssues,
+      articleHasMajorIssues: articleHasMajorIssues,
+      articleHasMinorIssues: articleHasMinorIssues,
       reviewState: ReviewState.HANDED_IN_DB,
       stateTimestamp: new Date().getTime(),
       articleVersion: articleVersion._id,
@@ -152,8 +152,8 @@ export default {
     if (!review) errorThrower.noEntryFoundById(reviewHash);
     review.reviewState = ReviewState.HANDED_IN_SC;
     review.stateTimestamp = stateTimestamp;
-    review.hasMajorIssues = articleHasMajorIssues;
-    review.hasMinorIssues = articleHasMinorIssues;
+    review.articleHasMajorIssues = articleHasMajorIssues;
+    review.articleHasMinorIssues = articleHasMinorIssues;
     review.reviewScore1 = score1;
     review.reviewScore2 = score2;
     await review.save();

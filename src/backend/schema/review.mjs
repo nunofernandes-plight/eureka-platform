@@ -37,11 +37,11 @@ export const reviewSchema = mongoose.Schema(
     reviewScore2: {
       type: Number
     },
-    hasMajorIssues: {
+    articleHasMajorIssues: {
       type: Boolean,
       default: false
     },
-    hasMinorIssues: {
+    articleHasMinorIssues: {
       type: Boolean,
       default: false
     }

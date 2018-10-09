@@ -83,8 +83,8 @@ const getRelevantReviewData = (reviews) => {
     obj.reviewHash = review.reviewHash;
     obj.reviewState = review.reviewState;
     obj.reviewType = review.reviewType;
-    obj.hasMajorIssues = review.hasMajorIssues;
-    obj.hasMinorIssues = review.hasMinorIssues;
+    obj.articleHasMajorIssues = review.articleHasMajorIssues;
+    obj.articleHasMinorIssues = review.articleHasMinorIssues;
     obj.stateTimestamp = review.stateTimestamp;
     obj.reviewerAddress = review.reviewerAddress;
     obj.score1 = review.reviewScore1;
