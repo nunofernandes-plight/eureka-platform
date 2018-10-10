@@ -61,7 +61,7 @@ export default {
   getHandedInReviewsAssignedTo: async (ethereumAddress) => {
     let articles = await articleVersionService.getArticlesAssignedTo(
       ethereumAddress,
-      [ARTICLE_VERSION_STATE.REVIEWERS_INVITED]
+      [ARTICLE_VERSION_STATE.REVIEWERS_INVITED, ARTICLE_VERSION_STATE.EDITOR_CHECKED]
     );
     const articleIds = articleVersionService.getIds(articles);
 
