@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import chroma from 'chroma-js';
 import Document from '../../../../models/Document.mjs';
-import {__ALERT_ERROR, __GRAY_800} from '../../../helpers/colors.js';
+import {__ALERT_ERROR, __THIRD, getScale} from '../../../helpers/colors.js';
 import {
   makeFieldReadable,
   renderField
@@ -20,25 +21,38 @@ const FieldContainer = styled.div`
 
 const Title = styled.h4`
   color: ${__ALERT_ERROR};
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: bold;
   margin-bottom: 0;
   margin-top: 0;
 `;
 
 const Content = styled.div`
-  color: ${__GRAY_800};
-  font-size: 10px;
-  font-style: italic;
+  color: ${__THIRD};
+  font-size: 10.5px;
 `;
-
+const Metadata = styled.div`
+  font-size: 10.5px;
+`;
 const Field = ({doc, field, ...otherProps}) => {
   let content = renderField(doc, field);
   if (!content) content = '-';
   return (
     <FieldContainer>
       <Title>{makeFieldReadable(field)}</Title>
-      <Content>{content}</Content>
+      {Array.isArray(content) ? (
+        <div>
+          {content.map((value, i) => {
+            return (
+              <Metadata key={i} index={i}>
+                {value}
+              </Metadata>
+            );
+          })}
+        </div>
+      ) : (
+        <Content>{content}</Content>
+      )}
     </FieldContainer>
   );
 };

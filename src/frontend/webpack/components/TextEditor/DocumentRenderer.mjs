@@ -31,6 +31,10 @@ const renderMetaDataFields = (desarialized, field) => {
   if (Array.isArray(content)) {
     if (content.length === 0) {
       return '';
+    } else {
+      return content.map(c => {
+        return c.value;
+      });
     }
   }
   return content;
