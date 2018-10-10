@@ -42,6 +42,12 @@ export default {
     return ArticleVersion.find({});
   },
 
+  getIds: articles => {
+    return articles.map(i => {
+      return i._id;
+    });
+  },
+
   getArticlesAssignedTo: async (ethereumAddress, articleVersionStates) => {
     const submissions = await ArticleSubmissionService.getAssignedSubmissions(ethereumAddress);
     const submissionIds = ArticleSubmissionService.getSubmissionIds(submissions);

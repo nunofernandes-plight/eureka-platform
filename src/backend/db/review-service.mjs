@@ -63,7 +63,7 @@ export default {
       ethereumAddress,
       [ARTICLE_VERSION_STATE.REVIEWERS_INVITED]
     );
-    const articleIds = this.getArticleVersionIds(articles);
+    const articleIds = articleVersionService.getIds(articles);
 
     return await Review.find({
       reviewState: {$in: ['HANDED_IN_SC']},
