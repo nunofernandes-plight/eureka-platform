@@ -6,8 +6,9 @@ const convertToRaw = draftJs.convertToRaw;
 
 export const renderField = (document, field) => {
   const deserialized = deserializeDocument(new Document(document));
-  if (!document[field]) {
-    return 'cannot render';
+
+  if (Document.metaDataFields().includes(field)) {
+    return renderMetaDataFields(deserialized, field);
   }
 
   switch (field) {
@@ -20,6 +21,15 @@ export const renderField = (document, field) => {
   }
 };
 
+const renderMetaDataFields = (desarialized, field) => {
+  const content = desarialized[field];
+  if (Array.isArray(content)) {
+    if (content.length === 0) {
+      return '';
+    }
+  }
+  return content;
+};
 const renderAuthors = authors => {
   let authorsString = '';
   authors.map(author => {
