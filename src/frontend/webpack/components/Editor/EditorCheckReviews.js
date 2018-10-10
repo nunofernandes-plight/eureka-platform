@@ -170,6 +170,13 @@ class EditorCheckReviews extends React.Component {
                           review.reviewerAddress
                         );
                       }}
+                      button2Text={'Decline Review'}
+                      action2={(_, review) => {
+                        this.declineReview(
+                          review.articleHash,
+                          review.reviewerAddress
+                        );
+                      }}
                     />
                   );
                 })
