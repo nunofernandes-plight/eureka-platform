@@ -151,9 +151,7 @@ class DashboardRouter extends Component {
 
           <Route
             path={`${this.props.base}/preview/:id`}
-            render={() => (
-              <PreviewRouter base={`${this.props.base}/preview`} />
-            )}
+            render={() => <PreviewRouter base={`${this.props.base}/preview`} />}
           />
 
           {/*Redirect to dashboard. Leave it at the bottom!*/}

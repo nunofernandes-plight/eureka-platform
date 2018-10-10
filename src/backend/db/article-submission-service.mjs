@@ -6,8 +6,6 @@ import articleVersionService from './article-version-service.mjs';
 import ArticleSubmissionState from '../schema/article-submission-state-enum.mjs';
 import User from '../schema/user.mjs';
 import Roles from '../schema/roles-enum.mjs';
-import {sleepSync} from '../../helpers/sleepSync.mjs';
-import Review from '../schema/review.mjs';
 
 export default {
   getAllSubmissions: () => {
@@ -26,10 +24,11 @@ export default {
   },
 
   //TODO: Assignable are only submissions where user is not equal submission owner or author
-  getUnassignedSubmissions: async (pageNumber, nPerPage) => {
+  getUnassignedSubmissions: async (ethereumAddress, pageNumber, nPerPage) => {
     return await ArticleSubmission.find({
       editor: null,
-      articleSubmissionState: 'OPEN'
+      articleSubmissionState: 'OPEN',
+      ownerAddress: {$ne: ethereumAddress}
     })
       .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
       .limit(nPerPage)

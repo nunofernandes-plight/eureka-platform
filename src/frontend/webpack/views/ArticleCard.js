@@ -134,7 +134,7 @@ const ReadButton = styled.button`
 `;
 
 const Button = styled.button`
-  margin: 0;
+  margin: 5px 0;
 `;
 const ArticleCard = ({article, ...otherProps}) => {
   return (
@@ -154,6 +154,17 @@ const ArticleCard = ({article, ...otherProps}) => {
         >
           {otherProps.buttonText}
         </Button>
+        {otherProps.button2Text ? (
+          <Button
+            onClick={() => {
+              otherProps.action2(article.scSubmissionID, article);
+            }}
+          >
+            {otherProps.button2Text}
+          </Button>
+        ) : (
+          <div />
+        )}
         <ReadButton
           onClick={() => {
             otherProps.history.push(`/app/preview/${article._id}`);

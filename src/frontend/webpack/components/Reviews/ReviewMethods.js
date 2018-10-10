@@ -1,5 +1,4 @@
 import {getDomain} from '../../../../helpers/getDomain.mjs';
-import {serializeSavePatch} from '../../../../helpers/documentSerializer.mjs';
 
 export const getArticlesInvitedForReviewing = () => {
   return fetch(`${getDomain()}/api/reviews/invited`, {

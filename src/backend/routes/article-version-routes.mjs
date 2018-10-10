@@ -34,7 +34,7 @@ router.get(
   asyncHandler(async req => {
     let articles = await articleVersionService.getArticlesAssignedTo(
       req.session.passport.user.ethereumAddress,
-      ARTICLE_VERSION_STATE.SUBMITTED
+      [ARTICLE_VERSION_STATE.SUBMITTED]
     );
     return getArticlesResponse(articles);
   })
@@ -45,7 +45,7 @@ router.get(
   asyncHandler(async req => {
     let articles = await articleVersionService.getArticlesAssignedTo(
       req.session.passport.user.ethereumAddress,
-      ARTICLE_VERSION_STATE.EDITOR_CHECKED
+      [ARTICLE_VERSION_STATE.EDITOR_CHECKED, ARTICLE_VERSION_STATE.REVIEWERS_INVITED]
     );
     return getArticlesResponse(articles);
   })
@@ -56,7 +56,7 @@ router.get(
   asyncHandler(async req => {
     let articles = await articleVersionService.getArticlesAssignedTo(
       req.session.passport.user.ethereumAddress,
-      ARTICLE_VERSION_STATE.REVIEWERS_INVITED
+      [ARTICLE_VERSION_STATE.REVIEWERS_INVITED]
     );
     return getArticlesResponse(articles);
   })
@@ -66,8 +66,7 @@ router.get(
   '/assigned/finalize',
   asyncHandler(async req => {
     let articles = await articleVersionService.getArticlesToFinalize(
-      req.session.passport.user.ethereumAddress,
-      ARTICLE_VERSION_STATE.REVIEWERS_INVITED
+      req.session.passport.user.ethereumAddress
     );
     return getArticlesResponse(articles);
   })

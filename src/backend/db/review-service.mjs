@@ -2,6 +2,8 @@ import Review from '../schema/review.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import ReviewState from '../schema/review-state-enum.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
+import articleVersionService from './article-version-service.mjs';
+import ARTICLE_VERSION_STATE from '../schema/article-version-state-enum.mjs';
 
 export default {
   getAllReviews: () => {
@@ -33,6 +35,39 @@ export default {
     return Review.find({
       reviewerAddress: address,
       reviewState: {$in: ['HANDED_IN_DB', 'HANDED_IN_SC', 'DECLINED','ACCEPTED']}
+    })
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}]
+      });
+  },
+
+  getHandedInReviews: async () => {
+    return await Review.find({
+      reviewState: {$in: ['HANDED_IN_SC']}
+    })
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}]
+      });
+  },
+
+  getHandedInReviewsAssignedTo: async (ethereumAddress) => {
+    let articles = await articleVersionService.getArticlesAssignedTo(
+      ethereumAddress,
+      [ARTICLE_VERSION_STATE.REVIEWERS_INVITED, ARTICLE_VERSION_STATE.EDITOR_CHECKED]
+    );
+    const articleIds = articleVersionService.getIds(articles);
+
+    return await Review.find({
+      reviewState: {$in: ['HANDED_IN_SC']},
+      articleVersion: {$in: articleIds}
     })
       .populate({
         path: 'articleVersion',
@@ -90,20 +125,29 @@ export default {
     review.reviewText = reviewText;
     review.reviewScore1 = score1;
     review.reviewScore2 = score2;
-    review.hasMajorIssues = articleHasMajorIssues;
-    review.hasMinorIssues = articleHasMinorIssues;
+    review.articleHasMajorIssues = articleHasMajorIssues;
+    review.articleHasMinorIssues = articleHasMinorIssues;
     review.reviewState = ReviewState.HANDED_IN_DB;
     await review.save();
     return 'Added editor-approved review into DB.';
   },
 
-  updateEditorApprovedReviewFromSC: async (reviewHash, stateTimestamp, articleHasMajorIssues, articleHasMinorIssues, score1, score2) => {
-    let review = await Review.findOne({reviewHash: reviewHash});
+  updateEditorApprovedReviewFromSC: async (articleHash, reviewHash, reviewerAddress, stateTimestamp, articleHasMajorIssues, articleHasMinorIssues, score1, score2) => {
+    let articleVersion = await ArticleVersion.findOne({
+      articleHash: articleHash
+    });
+
+    let review = await Review.findOne({
+      articleVersion: articleVersion._id,
+      reviewHash: reviewHash,
+      reviewerAddress: reviewerAddress
+    });
     if (!review) errorThrower.noEntryFoundById(reviewHash);
     review.reviewState = ReviewState.HANDED_IN_SC;
     review.stateTimestamp = stateTimestamp;
-    review.hasMajorIssues = articleHasMajorIssues;
-    review.hasMinorIssues = articleHasMinorIssues;
+    // web3 event listener returns false as null
+    review.articleHasMajorIssues = !!articleHasMajorIssues;
+    review.articleHasMinorIssues = !!articleHasMinorIssues;
     review.reviewScore1 = score1;
     review.reviewScore2 = score2;
     await review.save();
@@ -135,8 +179,8 @@ export default {
       reviewHash: reviewHash,
       reviewScore1: score1,
       reviewScore2: score2,
-      hasMajorIssues: articleHasMajorIssues,
-      hasMinorIssues: articleHasMinorIssues,
+      articleHasMajorIssues: articleHasMajorIssues,
+      articleHasMinorIssues: articleHasMinorIssues,
       reviewState: ReviewState.HANDED_IN_DB,
       stateTimestamp: new Date().getTime(),
       articleVersion: articleVersion._id,
@@ -146,14 +190,23 @@ export default {
     await articleVersion.save();
     return review;
   },
-  updateCommunityReviewFromSC: async (reviewHash, stateTimestamp, articleHasMajorIssues, articleHasMinorIssues, score1, score2) => {
-    let review = await Review.findOne({reviewHash: reviewHash});
+  updateCommunityReviewFromSC: async (articleHash, reviewHash, reviewerAddress, stateTimestamp, articleHasMajorIssues, articleHasMinorIssues, score1, score2) => {
+    let articleVersion = await ArticleVersion.findOne({
+      articleHash: articleHash
+    });
+
+    let review = await Review.findOne({
+      articleVersion: articleVersion._id,
+      reviewHash: reviewHash,
+      reviewerAddress: reviewerAddress
+    });
 
     if (!review) errorThrower.noEntryFoundById(reviewHash);
     review.reviewState = ReviewState.HANDED_IN_SC;
     review.stateTimestamp = stateTimestamp;
-    review.hasMajorIssues = articleHasMajorIssues;
-    review.hasMinorIssues = articleHasMinorIssues;
+    // web3 event listener returns false as null
+    review.articleHasMajorIssues = !!articleHasMajorIssues;
+    review.articleHasMinorIssues = !!articleHasMinorIssues;
     review.reviewScore1 = score1;
     review.reviewScore2 = score2;
     await review.save();

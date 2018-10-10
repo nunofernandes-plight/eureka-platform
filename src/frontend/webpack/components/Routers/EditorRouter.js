@@ -7,6 +7,7 @@ import {EditorNavPillRoutes} from './EditorNavPillRoutes.js';
 import EditorArticles from '../Editor/EditorArticles.js';
 import EditorSignOff from '../Editor/EditorSignOff.js';
 import EditorInvite from '../Editor/EditorInvite.js';
+import EditorCheckReviews from '../Editor/EditorCheckReviews.js';
 
 const Parent = styled.div`
   display: flex;
@@ -113,6 +114,22 @@ class EditorRouter extends Component {
                     selectedAccount={this.props.selectedAccount}
                     platformContract={this.props.platformContract}
                     base={`${this.props.base}/invite`}
+                    network={this.props.network}
+                    web3={this.props.web3}
+                  />
+                )}
+              />
+            </MarginTop>
+
+            <MarginTop>
+              <Route
+                exact
+                path={`${this.props.base}/reviews`}
+                render={() => (
+                  <EditorCheckReviews
+                    selectedAccount={this.props.selectedAccount}
+                    platformContract={this.props.platformContract}
+                    base={`${this.props.base}/reviews`}
                     network={this.props.network}
                     web3={this.props.web3}
                   />

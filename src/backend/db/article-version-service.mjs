@@ -30,7 +30,7 @@ const areReviewsOK = (minAmount, reviews) => {
   let count = 0;
   reviews.forEach(review => {
     if (review.reviewState !== REVIEW_STATE.ACCEPTED) return false;
-    if (review.hasMajorIssues) return false;
+    if (review.articleHasMajorIssues) return false;
 
     count++;
   });
@@ -42,12 +42,18 @@ export default {
     return ArticleVersion.find({});
   },
 
-  getArticlesAssignedTo: async (ethereumAddress, articleVersionState) => {
+  getIds: articles => {
+    return articles.map(i => {
+      return i._id;
+    });
+  },
+
+  getArticlesAssignedTo: async (ethereumAddress, articleVersionStates) => {
     const submissions = await ArticleSubmissionService.getAssignedSubmissions(ethereumAddress);
     const submissionIds = ArticleSubmissionService.getSubmissionIds(submissions);
 
     return await ArticleVersion.find({
-      articleVersionState: articleVersionState,
+      articleVersionState: {$in: articleVersionStates},
       articleSubmission: {$in: submissionIds}
     }).populate([
       {path: 'articleSubmission'},
