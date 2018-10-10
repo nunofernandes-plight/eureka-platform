@@ -4,6 +4,11 @@ import {deserializeDocument} from '../../../../helpers/documentSerializer.mjs';
 const EditorState = draftJs.EditorState;
 const convertToRaw = draftJs.convertToRaw;
 
+export const makeFieldReadable = field => {
+  const noSymbols = field.replace(/[^a-zA-Z ]/g, ' ').toString();
+  return noSymbols.charAt(0).toUpperCase() + noSymbols.slice(1);
+};
+
 export const renderField = (document, field) => {
   const deserialized = deserializeDocument(new Document(document));
 

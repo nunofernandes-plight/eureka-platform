@@ -2,7 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import Document from '../../../../models/Document.mjs';
 import {__ALERT_ERROR, __GRAY_800} from '../../../helpers/colors.js';
-import {renderField} from '../TextEditor/DocumentRenderer.mjs';
+import {
+  makeFieldReadable,
+  renderField
+} from '../TextEditor/DocumentRenderer.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -34,7 +37,7 @@ const Field = ({doc, field, ...otherProps}) => {
   if (!content) content = '-';
   return (
     <FieldContainer>
-      <Title>{field}</Title>
+      <Title>{makeFieldReadable(field)}</Title>
       <Content>{content}</Content>
     </FieldContainer>
   );
