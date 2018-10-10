@@ -9,6 +9,7 @@ import {Link, withRouter} from 'react-router-dom';
 import {
   acceptReview,
   assignForSubmissionProcess,
+  declineReview,
   inviteReviewersForArticle,
   setSanityToOk
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
@@ -96,7 +97,46 @@ class EditorCheckReviews extends React.Component {
         });
       })
       .on('receipt', async receipt => {
-        console.log('Sanity check:  ' + receipt.status);
+        console.log('Accept Review:  ' + receipt.status);
+        await this.getReviewsToCheck();
+        return receipt;
+      })
+      .catch(err => {
+        console.error(err);
+        this.setState({
+          errorMessage:
+            'Ouh. Something went wrong with the Smart Contract call: ' +
+            err.toString()
+        });
+      });
+  }
+
+  async declineReview(articleHash, reviewerAddress) {
+    let gasAmount;
+    // gas estimation on ganache doesn't work properly
+    if (!isGanache(this.props.web3))
+      gasAmount = await acceptReview(
+        this.props.platformContract,
+        this.state.article.articleHash,
+        reviewerAddress
+      ).estimateGas({
+        from: this.props.selectedAccount.address
+      });
+    else gasAmount = 80000000;
+
+    declineReview(this.props.platformContract, articleHash, reviewerAddress)
+      .send({
+        from: this.props.selectedAccount.address,
+        gas: gasAmount
+      })
+      .on('transactionHash', tx => {
+        this.setState({
+          tx,
+          showTxModal: true
+        });
+      })
+      .on('receipt', async receipt => {
+        console.log('Decline Review:  ' + receipt.status);
         await this.getReviewsToCheck();
         return receipt;
       })
