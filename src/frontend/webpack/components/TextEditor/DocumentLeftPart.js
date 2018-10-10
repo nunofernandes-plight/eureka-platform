@@ -19,7 +19,6 @@ const DocumentLeftPart = ({document, ...otherProps}) => {
   return (
     <LeftTopContainer>
       <Toolbar document={document} documentId={otherProps.documentId}/>
-
     </LeftTopContainer>
   );
 };

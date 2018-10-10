@@ -120,11 +120,13 @@ class PreviewRouter extends Component {
   constructor() {
     super();
     this.state = {
-      document: null
+      document: null,
+      from: null
     };
   }
 
   componentDidMount() {
+    this.setFromLocation();
     const draftId = this.props.match.params.id;
     fetchArticle(draftId)
       .then(response => response.json())
@@ -152,6 +154,14 @@ class PreviewRouter extends Component {
       });
   }
 
+  setFromLocation() {
+    const state = this.props.location.state;
+    if (state) {
+      const from = state.from;
+      this.setState({from});
+    }
+  }
+
   renderModal() {
     return (
       <div>
@@ -175,7 +185,7 @@ class PreviewRouter extends Component {
         {this.renderModal()}
 
         <Card width={1000} title={'Preview '}>
-          <Go back {...this.props} />
+          <Go back {...this.props} from={this.state.from} />
           <MySeparator />
           {!this.state.document ? (
             <GridSpinner />
