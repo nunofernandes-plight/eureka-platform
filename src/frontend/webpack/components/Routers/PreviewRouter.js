@@ -18,6 +18,7 @@ import {getDomain} from '../../../../helpers/getDomain.mjs';
 import Modal from '../../design-components/Modal.js';
 import PreviewAuthors from '../Preview/PreviewAuthors.js';
 import PreviewMetaData from '../Preview/PreviewMetaData.js';
+import PreviewArticle from '../Preview/PreviewArticle.js';
 
 const Container = styled.div`
   display: flex;
@@ -219,7 +220,9 @@ class PreviewRouter extends Component {
                   path={`${this.props.base}/${
                     this.props.match.params.id
                   }/article`}
-                  render={() => <div>QUI RENDERI L'ARTICOLO</div>}
+                  render={() => (
+                    <PreviewArticle document={this.state.document} />
+                  )}
                 />
 
                 <Route
