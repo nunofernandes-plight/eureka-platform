@@ -39,7 +39,7 @@ router.get(
 );
 
 router.get(
-  '/handedin/checkable',
+  '/checkable',
   asyncHandler(async req => {
     let reviews = await reviewService.getHandedInReviewsAssignedTo(req.session.passport.user.ethereumAddress);
     return getRelevantReviewData(reviews);
