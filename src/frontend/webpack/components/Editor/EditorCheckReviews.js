@@ -7,11 +7,14 @@ import {Card} from '../../views/Card.js';
 import {__THIRD} from '../../../helpers/colors.js';
 import {Link, withRouter} from 'react-router-dom';
 import {
+  acceptReview,
   assignForSubmissionProcess,
+  inviteReviewersForArticle,
   setSanityToOk
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
+import {isGanache} from '../../../../helpers/isGanache.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -68,6 +71,45 @@ class EditorCheckReviews extends React.Component {
       });
   }
 
+  async acceptReview(articleHash, reviewerAddress) {
+    let gasAmount;
+    // gas estimation on ganache doesn't work properly
+    if (!isGanache(this.props.web3))
+      gasAmount = await acceptReview(
+        this.props.platformContract,
+        this.state.article.articleHash,
+        reviewerAddress
+      ).estimateGas({
+        from: this.props.selectedAccount.address
+      });
+    else gasAmount = 80000000;
+
+    acceptReview(this.props.platformContract, articleHash, reviewerAddress)
+      .send({
+        from: this.props.selectedAccount.address,
+        gas: gasAmount
+      })
+      .on('transactionHash', tx => {
+        this.setState({
+          tx,
+          showTxModal: true
+        });
+      })
+      .on('receipt', async receipt => {
+        console.log('Sanity check:  ' + receipt.status);
+        await this.getReviewsToCheck();
+        return receipt;
+      })
+      .catch(err => {
+        console.error(err);
+        this.setState({
+          errorMessage:
+            'Ouh. Something went wrong with the Smart Contract call: ' +
+            err.toString()
+        });
+      });
+  }
+
   renderModals() {
     return (
       <div>
@@ -87,9 +129,7 @@ class EditorCheckReviews extends React.Component {
             this.setState({tx: null});
           }}
           action={'GOT IT'}
-          callback={() => {
-            this.props.history.push('/app/editor/invite');
-          }}
+          callback={() => {}}
           show={this.state.tx}
           title={'We got your request!'}
         >
@@ -114,7 +154,7 @@ class EditorCheckReviews extends React.Component {
                 this.state.reviews.map(review => {
                   return (
                     <Article
-                      buttonText={'Accept Article'}
+                      buttonText={'Accept Review'}
                       key={review.reviewId}
                       article={review}
                       onHover={this.state.articleOnHover === review._id}
@@ -124,8 +164,11 @@ class EditorCheckReviews extends React.Component {
                       onMouseLeave={id => {
                         this.setState({articleOnHover: null});
                       }}
-                      action={(_, article) => {
-                        console.log('here');
+                      action={(_, review) => {
+                        this.acceptReview(
+                          review.articleHash,
+                          review.reviewerAddress
+                        );
                       }}
                     />
                   );
