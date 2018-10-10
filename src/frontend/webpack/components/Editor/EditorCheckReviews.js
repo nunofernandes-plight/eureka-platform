@@ -169,7 +169,9 @@ class EditorCheckReviews extends React.Component {
             this.setState({tx: null});
           }}
           action={'GOT IT'}
-          callback={() => {}}
+          callback={() => {
+            this.props.history.push('/app/editor/reviews');
+          }}
           show={this.state.tx}
           title={'We got your request!'}
         >
