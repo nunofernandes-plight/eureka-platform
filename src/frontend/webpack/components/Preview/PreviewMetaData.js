@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Document from '../../../../models/Document.mjs';
 import {__ALERT_ERROR, __GRAY_800} from '../../../helpers/colors.js';
+import {renderField} from '../TextEditor/DocumentRenderer.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -29,13 +30,12 @@ const Content = styled.div`
 `;
 
 const Field = ({doc, field, ...otherProps}) => {
-  let content = doc[field];
-  console.log(content);
-  if (!content || content === '') content = '-';
+  let content = renderField(doc, field);
+  if (!content) content = '-';
   return (
     <FieldContainer>
       <Title>{field}</Title>
-{/*      <Content>{content}</Content>*/}
+      <Content>{content}</Content>
     </FieldContainer>
   );
 };
