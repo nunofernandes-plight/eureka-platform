@@ -25,12 +25,12 @@ const NoArtDiv = styled.div`
   color: ${__THIRD};
   font-size: 16px;
 `;
-const NoArticles = () => {
+const NoReviews = () => {
   return (
     <NoArtDiv>
-      You don't have any articles to sign off. If you want to assign yourself to
-      an article{' '}
-      <Link to={'/app/editor/articles'} style={{marginLeft: 2.5}}>
+      There are currently no reviews to check. If you want to invite reviewers
+      to review an article{' '}
+      <Link to={'/app/editor/invite'} style={{marginLeft: 2.5}}>
         {' '}
         <strong>click here.</strong>
       </Link>
@@ -41,7 +41,7 @@ class EditorCheckReviews extends React.Component {
   constructor() {
     super();
     this.state = {
-      articles: null,
+      reviews: null,
       loading: false,
       articleOnHover: null
     };
@@ -58,7 +58,7 @@ class EditorCheckReviews extends React.Component {
       .then(response => {
         if (response.success) {
           console.log(response);
-          this.setState({articles: response.data});
+          this.setState({reviews: response.data});
         }
         this.setState({loading: false});
       })
@@ -93,9 +93,9 @@ class EditorCheckReviews extends React.Component {
           show={this.state.tx}
           title={'We got your request!'}
         >
-          This article successfully passed the sanity check! You can find its tx
-          hash here: <TxHash txHash={this.state.tx}>Transaction Hash</TxHash>.{' '}
-          <br />
+          The request has successfully trigered our smart contract. You can find
+          its tx hash here:{' '}
+          <TxHash txHash={this.state.tx}>Transaction Hash</TxHash>. <br />
         </Modal>
       </div>
     );
@@ -109,15 +109,15 @@ class EditorCheckReviews extends React.Component {
           <GridSpinner />
         ) : (
           <Card title={'Check the handed in Reviews'} width={1000}>
-            {this.state.articles ? (
-              this.state.articles.length > 0 ? (
-                this.state.articles.map(article => {
+            {this.state.reviews ? (
+              this.state.reviews.length > 0 ? (
+                this.state.reviews.map(review => {
                   return (
                     <Article
                       buttonText={'Accept Article'}
-                      key={article._id}
-                      article={article}
-                      onHover={this.state.articleOnHover === article._id}
+                      key={review.reviewId}
+                      article={review}
+                      onHover={this.state.articleOnHover === review._id}
                       onMouseEnter={id => {
                         this.setState({articleOnHover: id});
                       }}
@@ -131,10 +131,10 @@ class EditorCheckReviews extends React.Component {
                   );
                 })
               ) : (
-                <NoArticles />
+                <NoReviews />
               )
             ) : (
-              <NoArticles />
+              <NoReviews />
             )}
           </Card>
         )}
