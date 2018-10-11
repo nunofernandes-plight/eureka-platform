@@ -15,6 +15,7 @@ import Reviewers from '../Reviewers.js';
 import UserExploration from '../UserExploration.js';
 import ReviewsRouter from './ReviewsRouter.js';
 import PreviewRouter from './PreviewRouter.js';
+import ReviewsWriter from '../Reviews/ReviewsWriter.js';
 
 class DashboardRouter extends Component {
   render() {
@@ -157,6 +158,12 @@ class DashboardRouter extends Component {
                 cardTitle={'Article Preview'}
               />
             )}
+          />
+
+          {/*ReviewsWriter route. Intentionally not kept as a subroute of /reviews*/}
+          <Route
+            path={`${this.props.base}/write/reviews/:id`}
+            render={() => <ReviewsWriter />}
           />
 
           {/*Redirect to dashboard. Leave it at the bottom!*/}
