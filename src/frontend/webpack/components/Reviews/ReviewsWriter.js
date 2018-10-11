@@ -45,7 +45,7 @@ const MyPreview = styled.div`
 `;
 
 const ArticlePreview = styled.div`
-  flex: 6.5 1 0;
+  max-width: 80%;
 `;
 
 class ReviewsWriter extends React.Component {
@@ -116,7 +116,10 @@ class ReviewsWriter extends React.Component {
               <ArticlePreview>
                 <Title>{renderField(this.state.document, 'title')}</Title>
                 <PreviewStatus status={this.state.document.state} />
-                <PreviewArticle base={this.props.base} document={this.state.document} />
+                <PreviewArticle
+                  base={this.props.base}
+                  document={this.state.document}
+                />
               </ArticlePreview>
             </MyPreview>
           )}

@@ -12,14 +12,14 @@ const FigureContainer = styled.div`
 const PreviewArticleFigure = ({document}) => {
   const figures = renderField(document, 'figure');
   return (
-    <FigureContainer>
+    <FigureContainer id={'figure'}>
       <PreviewArticleTitleByField field={'figure'} />
       {figures.length === 0 ? (
         <i>No figure.</i>
       ) : (
         <Fragment>
           {figures.map(src => {
-            return <Figure src={src} maxWidth={500} />;
+            return <Figure key={src} src={src} maxWidth={500} />;
           })}
         </Fragment>
       )}
