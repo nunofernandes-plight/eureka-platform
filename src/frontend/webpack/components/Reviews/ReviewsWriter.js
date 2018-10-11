@@ -11,6 +11,7 @@ import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {renderField} from '../TextEditor/DocumentRenderer.mjs';
 import PreviewStatus from '../../views/PreviewStatus.js';
 import {__GRAY_100} from '../../../helpers/colors.js';
+import PreviewArticle from '../Preview/PreviewArticle.js';
 
 const Container = styled.div`
   display: flex;
@@ -115,6 +116,7 @@ class ReviewsWriter extends React.Component {
               <ArticlePreview>
                 <Title>{renderField(this.state.document, 'title')}</Title>
                 <PreviewStatus status={this.state.document.state} />
+                <PreviewArticle base={this.props.base} document={this.state.document} />
               </ArticlePreview>
             </MyPreview>
           )}

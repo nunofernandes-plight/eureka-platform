@@ -162,8 +162,10 @@ class DashboardRouter extends Component {
 
           {/*ReviewsWriter route. Intentionally not kept as a subroute of /reviews*/}
           <Route
-            path={`${this.props.base}/write/reviews/:id`}
-            render={() => <ReviewsWriter />}
+            path={`${this.props.base}/write/review/:id`}
+            render={() => (
+              <ReviewsWriter base={`${this.props.base}/write/review/`} />
+            )}
           />
 
           {/*Redirect to dashboard. Leave it at the bottom!*/}
