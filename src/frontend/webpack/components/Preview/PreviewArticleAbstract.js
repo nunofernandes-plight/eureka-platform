@@ -5,7 +5,9 @@ import {PreviewArticleTitleByField} from './PreviewArticleTitleByField.js';
 
 const Container = styled.div``;
 
-const Abstract = styled.div``;
+const Abstract = styled.div`
+  line-height: 1.5;
+`;
 
 const PreviewArticleAbstract = ({document}) => {
   let abstract = renderField(document, 'abstract');

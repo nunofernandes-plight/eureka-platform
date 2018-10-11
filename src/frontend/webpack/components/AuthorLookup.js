@@ -1,9 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
 import queryString from 'query-string';
 import {getDomain} from '../../../helpers/getDomain.mjs';
 import Author from '../views/Author.js';
-import GridSpinner from '../views/spinners/GridSpinner.js';
+import UploadSpinner from '../views/spinners/UploadSpinner.js';
 
 class AuthorLookup extends React.Component {
   constructor() {
@@ -48,7 +47,7 @@ class AuthorLookup extends React.Component {
             })}
           </div>
         ) : (
-          <GridSpinner />
+          <UploadSpinner />
         )}
       </div>
     );
