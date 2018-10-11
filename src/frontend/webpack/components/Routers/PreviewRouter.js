@@ -7,7 +7,13 @@ import {Go} from './Go.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {renderField} from '../TextEditor/DocumentRenderer.mjs';
 import PreviewStatus from '../../views/PreviewStatus.js';
-import {__GRAY_100, __GRAY_200, __THIRD} from '../../../helpers/colors.js';
+import {
+  __ALERT_ERROR,
+  __FIFTH,
+  __GRAY_100,
+  __GRAY_200,
+  __THIRD
+} from '../../../helpers/colors.js';
 import {fetchArticle} from '../TextEditor/DocumentMainMethods.js';
 import Document from '../../../../models/Document.mjs';
 import {deserializeDocument} from '../../../../helpers/documentSerializer.mjs';
@@ -75,12 +81,12 @@ const MyLink = styled(NavLink)`
   text-decoration: none;
   flex: 1;
   font-size: 16px;
-  color: ${__THIRD};
+  color: ${__FIFTH};
   margin-bottom: 10px;
   cursor: pointer;
   &.${props => props.activeClassName} {
     ${Bar} {
-      background: ${__THIRD};
+      background: ${__FIFTH};
     }
   }
 `;
@@ -156,8 +162,7 @@ class PreviewRouter extends Component {
     return (
       <Container>
         {this.renderModal()}
-
-        <Card title={'Preview '}>
+        <Card title={this.props.cardTitle}>
           <Go back {...this.props} from={this.state.from} />
           <MySeparator />
           {!this.state.document ? (
