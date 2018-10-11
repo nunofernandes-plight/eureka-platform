@@ -21,9 +21,17 @@ export const renderField = (document, field) => {
       return renderTitle(deserialized, field);
     case 'authors':
       return renderAuthors(deserialized['authors']);
+    case 'figure':
+      return renderFigures(deserialized['figure']);
     default:
       return document[field];
   }
+};
+
+const renderFigures = figures => {
+  return figures.map(figure => {
+    return figure.cdn;
+  });
 };
 
 const renderMetaDataFields = (desarialized, field) => {
