@@ -7,6 +7,7 @@ import {
   MEDIUM_DEVICES
 } from '../../helpers/mobile.js';
 import {Go} from '../components/Routers/Go.js';
+import {CARD_WIDTH_IN_PERCENTAGE} from '../../helpers/layout.js';
 
 export const CardTitle = styled.h2`
   font-size: 1.5rem;
@@ -29,7 +30,8 @@ const CardContainer = styled.div`
   align-items: center;
   padding: 1.5em;
   min-height: 200px;
-  width: ${props => (props.width ? props.width + 'px' : null)};
+  width: ${props =>
+    props.width ? props.width + 'px' : CARD_WIDTH_IN_PERCENTAGE};
 
   ${EXTRA_LARGE_DEVICES`
     width: 768px; 

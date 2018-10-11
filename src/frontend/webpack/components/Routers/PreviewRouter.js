@@ -42,8 +42,7 @@ const MyPreview = styled.div`
 `;
 
 const ArticlePreview = styled.div`
-  flex: 3.5 1 0;
-  max-width: 820px;
+  flex: 6.5 1 0;
 `;
 
 const Title = styled.h3`
@@ -184,7 +183,7 @@ class PreviewRouter extends Component {
       <Container>
         {this.renderModal()}
 
-        <Card width={1000} title={'Preview '}>
+        <Card title={'Preview '}>
           <Go back {...this.props} from={this.state.from} />
           <MySeparator />
           {!this.state.document ? (
