@@ -1,21 +1,62 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__GRAY_200} from '../../../helpers/colors.js';
+import {__GRAY_600} from '../../../helpers/colors.js';
+import {ReviewsWriterCommentIcon} from './ReviewsWriterCommentIcon.js';
 
-export const Container = styled.div`
+const Container = styled.div`
   flex: 1;
-  margin-left: 15px;
-  padding-left: 15px;
-  border-left: 1px solid ${__GRAY_200};
+  display: flex;
+  position: relative;
+  margin-left: 3.5em;
+`;
+
+const Review = styled.div`
+  display: flex;
+`;
+
+const CommentIcon = styled.div`
+  z-index: 100;
+  margin-left: -20px;
+  margin-top: 10px;
+  background: ${props => (props.show ? 'white' : 'transparent')};
+  transition: 0.3s ease-in-out;
+  align-self: flex-start;
+`;
+const MySeparator = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 1px;
+  background: ${__GRAY_600};
+  height: 100%;
+  position: absolute;
 `;
 
 class ReviewsWriterContainer extends React.Component {
   constructor() {
     super();
+    this.state = {
+      showCommentIcon: false
+    };
   }
 
   render() {
-    return <Container>aijsfjoasfjoasfjoasjofjo</Container>;
+    return (
+      <Container
+        onMouseEnter={() => {
+          this.setState({showCommentIcon: true});
+        }}
+        onMouseLeave={() => {
+          this.setState({showCommentIcon: false});
+        }}
+      >
+        <MySeparator />
+        <Review>
+          <CommentIcon show={this.state.showCommentIcon}>
+            <ReviewsWriterCommentIcon show={this.state.showCommentIcon} />
+          </CommentIcon>
+        </Review>
+      </Container>
+    );
   }
 }
 
