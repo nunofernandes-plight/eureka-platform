@@ -2,19 +2,15 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Route} from 'react-router';
 import {NavLink, Redirect, withRouter} from 'react-router-dom';
-import Preview from '../Preview.js';
 import {Card} from '../../views/Card.js';
 import {Go} from './Go.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {renderField} from '../TextEditor/DocumentRenderer.mjs';
-import Avatar from '../../views/Avatar.js';
 import PreviewStatus from '../../views/PreviewStatus.js';
-import {__FIFTH, __GRAY_100, __GRAY_200} from '../../../helpers/colors.js';
+import {__GRAY_100, __GRAY_200, __THIRD} from '../../../helpers/colors.js';
 import {fetchArticle} from '../TextEditor/DocumentMainMethods.js';
 import Document from '../../../../models/Document.mjs';
 import {deserializeDocument} from '../../../../helpers/documentSerializer.mjs';
-import queryString from 'query-string';
-import {getDomain} from '../../../../helpers/getDomain.mjs';
 import Modal from '../../design-components/Modal.js';
 import PreviewAuthors from '../Preview/PreviewAuthors.js';
 import PreviewMetaData from '../Preview/PreviewMetaData.js';
@@ -61,23 +57,7 @@ const ArticlePreviewNavBar = styled.div`
   letter-spacing: 0.5px;
 `;
 
-const MyInfo = styled.div`
-  background: ${__FIFTH};
-  flex: 1;
-`;
-
-const MyAuthors = styled.div`
-  flex: 1;
-  background: ${__GRAY_200};
-`;
-
-const Navs = styled.div`
-  display: flex;
-  height: 4px;
-`;
-
 const MyLabels = styled.div`
-  font-weight: bold;
   display: flex;
 `;
 const Bar = styled.div`
@@ -95,25 +75,19 @@ const MyLink = styled(NavLink)`
   text-decoration: none;
   flex: 1;
   font-size: 16px;
-  color: ${__FIFTH};
+  color: ${__THIRD};
   margin-bottom: 10px;
   cursor: pointer;
   &.${props => props.activeClassName} {
     ${Bar} {
-      background: ${__FIFTH};
+      background: ${__THIRD};
     }
-    font-weight: bold;
   }
 `;
 
 MyLink.defaultProps = {
   activeClassName: 'active'
 };
-
-const Avatars = styled.div`
-  display: flex;
-  margin-bottom: 12px;
-`;
 
 class PreviewRouter extends Component {
   constructor() {
