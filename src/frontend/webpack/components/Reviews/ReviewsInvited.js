@@ -184,20 +184,20 @@ class ReviewsInvited extends React.Component {
                       onMouseLeave={id => {
                         this.setState({articleOnHover: null});
                       }}
-                      action={(_, article) => {
+                      action={async (_, article) => {
                         if (article.reviewState === 'INVITED') {
                           this.setState({
                             showAcceptInvitationModal: true,
                             article
                           });
-                          this.acceptReviewInvitation(article);
+                          await this.acceptReviewInvitation(article);
                         } else {
-                          this.setState({
-                            article
-                          });
-                          //TODO Redirect to article preview and review editor
+                          this.props.history.push(
+                            `/app/write/review/${article._id}`
+                          );
+
                           // dummy
-                          saveEditorApprovedReviewToDB({
+                          /*                          saveEditorApprovedReviewToDB({
                             reviewId: article.reviewId,
                             reviewText: 'dummy text',
                             reviewHash:
@@ -207,7 +207,7 @@ class ReviewsInvited extends React.Component {
                             score2: 5,
                             articleHasMajorIssues: false,
                             articleHasMinorIssues: true
-                          });
+                          });*/
                         }
                       }}
                     />

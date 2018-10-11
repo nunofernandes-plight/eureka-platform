@@ -2,14 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 import {renderField} from '../TextEditor/DocumentRenderer.mjs';
 import {PreviewArticleTitleByField} from './PreviewArticleTitleByField.js';
+import {
+  FieldContainer,
+  ReviewContainer,
+  ReviewsWriterFieldContainer
+} from '../Reviews/ReviewsWriterField.js';
 
 const Container = styled.div``;
 
-const Abstract = styled.div`
-  line-height: 1.5;
-`;
+const Abstract = FieldContainer.extend``;
 
-const PreviewArticleAbstract = ({document}) => {
+const PreviewArticleAbstract = ({document, isReview, ...otherProps}) => {
   let abstract = renderField(document, 'abstract');
 
   // DUMMY DATA
@@ -18,7 +21,13 @@ const PreviewArticleAbstract = ({document}) => {
   return (
     <Container id={'abstract'}>
       <PreviewArticleTitleByField field={'abstract'} />
-      <Abstract>{abstract}</Abstract>
+
+      <ReviewsWriterFieldContainer>
+        <Abstract>{abstract}</Abstract>
+        {isReview ? (
+          <ReviewContainer>asijfjasfpjsafpasfasf</ReviewContainer>
+        ) : null}
+      </ReviewsWriterFieldContainer>
     </Container>
   );
 };

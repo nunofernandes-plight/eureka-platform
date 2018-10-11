@@ -45,7 +45,7 @@ const MyPreview = styled.div`
 `;
 
 const ArticlePreview = styled.div`
-  max-width: 80%;
+  flex: 1;
 `;
 
 class ReviewsWriter extends React.Component {
