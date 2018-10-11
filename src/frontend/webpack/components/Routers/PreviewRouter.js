@@ -56,7 +56,7 @@ const Title = styled.h3`
 `;
 
 const ArticlePreviewNavBar = styled.div`
-  width: 95%;
+  width: 100%;
   border-radius: 6px;
   margin: 22px 0;
   letter-spacing: 0.5px;
