@@ -79,7 +79,7 @@ const Bar = styled.div`
 
 const MyLink = styled(NavLink)`
   &:hover {
-    transform: translateY(0.5px);
+    transform: scaleX(1.03);
   }
   transition: 0.45s ease-in-out;
   text-decoration: none;
