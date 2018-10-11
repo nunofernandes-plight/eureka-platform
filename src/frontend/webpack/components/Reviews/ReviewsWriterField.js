@@ -11,13 +11,6 @@ export const FieldContainer = styled.div`
   flex: 4;
 `;
 
-export const ReviewContainer = styled.div`
-  flex: 1;
-  margin-left: 15px;
-  padding-left: 15px;
-  border-left: 1px solid ${__GRAY_200};
-`;
-
 export const ReviewsWriterFieldContainer = props => {
   return <Field>{props.children}</Field>;
 };
