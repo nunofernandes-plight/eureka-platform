@@ -609,10 +609,12 @@ contract EurekaPlatform {
         return count;
     }
 
+    event NewReviewRoundRequested(uint256 submissionId, uint256 stateTimestamp);
     function requestNewReviewRound(uint256 _submissionId) private {
 
         articleSubmissions[_submissionId].submissionState = SubmissionState.NEW_REVIEW_ROUND_REQUESTED;
         articleSubmissions[_submissionId].stateTimestamp = block.timestamp;
+        emit NewReviewRoundRequested(_submissionId, block.timestamp);
     }
 
     event NewReviewRoundOpened(uint256 submissionId, bytes32 articleHash, bytes32 articleUrl, uint256 stateTimestamp);
