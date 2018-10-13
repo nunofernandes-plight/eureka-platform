@@ -7,6 +7,14 @@ import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {withRouter} from 'react-router-dom';
 import {getArticlesOpenToReview, getMyReviews} from './ReviewMethods.js';
 import {__THIRD} from '../../../helpers/colors.js';
+import {isGanache} from '../../../../helpers/isGanache.mjs';
+import {
+  acceptReviewInvitation,
+  addCommunityReview,
+  addEditorApprovedReview
+} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
+import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -34,9 +42,10 @@ class ReviewsOpen extends React.Component {
       article: null,
       loading: false,
       articleOnHover: null,
-      showReviewersPickerModal: false,
-      reviewersToInvite: null,
-      errorMessage: false
+      errorMessage: false,
+
+      showTxModal: false,
+      tx: null
     };
   }
 
@@ -60,6 +69,108 @@ class ReviewsOpen extends React.Component {
       });
   }
 
+  async submitEditorApprovedReview(review) {
+    let gasAmount;
+    // gas estimation on ganache doesn't work properly
+    if (!isGanache(this.props.web3))
+      gasAmount = await addEditorApprovedReview(
+        this.props.platformContract,
+        review.articleHash,
+        review.reviewHash,
+        review.articleHasMajorIssues,
+        review.articleHasMinorIssues,
+        review.score1,
+        review.score2
+      ).estimateGas({
+        from: this.props.selectedAccount.address
+      });
+    else gasAmount = 80000000;
+
+    addEditorApprovedReview(
+      this.props.platformContract,
+      review.articleHash,
+      review.reviewHash,
+      review.articleHasMajorIssues,
+      review.articleHasMinorIssues,
+      review.score1,
+      review.score2
+    )
+      .send({
+        from: this.props.selectedAccount.address,
+        gas: gasAmount
+      })
+      .on('transactionHash', tx => {
+        this.setState({
+          showTxModal: true,
+          tx
+        });
+        //TODO Redirect to article preview and review editor
+      })
+      .on('receipt', async receipt => {
+        console.log('Submitting Editor Approved Review:  ' + receipt.status);
+        return receipt;
+      })
+      .catch(err => {
+        console.error(err);
+        this.setState({
+          errorMessage:
+            'Ouh. Something went wrong with the Smart Contract call: ' +
+            err.toString()
+        });
+      });
+  }
+
+  async submitCommunityReview(review) {
+    let gasAmount;
+    // gas estimation on ganache doesn't work properly
+    if (!isGanache(this.props.web3))
+      gasAmount = await addCommunityReview(
+        this.props.platformContract,
+        review.articleHash,
+        review.reviewHash,
+        review.articleHasMajorIssues,
+        review.articleHasMinorIssues,
+        review.score1,
+        review.score2
+      ).estimateGas({
+        from: this.props.selectedAccount.address
+      });
+    else gasAmount = 80000000;
+
+    addCommunityReview(
+      this.props.platformContract,
+      review.articleHash,
+      review.reviewHash,
+      review.articleHasMajorIssues,
+      review.articleHasMinorIssues,
+      review.score1,
+      review.score2
+    )
+      .send({
+        from: this.props.selectedAccount.address,
+        gas: gasAmount
+      })
+      .on('transactionHash', tx => {
+        this.setState({
+          showTxModal: true,
+          tx
+        });
+        //TODO Redirect to article preview and review editor
+      })
+      .on('receipt', async receipt => {
+        console.log('Submitting Community Review:  ' + receipt.status);
+        return receipt;
+      })
+      .catch(err => {
+        console.error(err);
+        this.setState({
+          errorMessage:
+            'Ouh. Something went wrong with the Smart Contract call: ' +
+            err.toString()
+        });
+      });
+  }
+
   renderModals() {
     return (
       <div>
@@ -72,6 +183,26 @@ class ReviewsOpen extends React.Component {
           title={'You got the following error'}
         >
           {this.state.errorMessage}
+        </Modal>
+
+        <Modal
+          action={'GOT IT'}
+          callback={() => {
+            this.setState({showTxModal: false});
+          }}
+          noClose
+          show={this.state.showTxModal}
+          title={'Your Review has been successfully sent!'}
+        >
+          Dear reviewer, your request for submitting a review has successfully
+          triggered our Smart Contract. If you are interested, you can track the
+          Blockchain approval process at the following link: <br />
+          <a
+            href={getEtherscanLink(this.props.network) + 'tx/' + this.state.tx}
+            target={'_blank'}
+          >
+            {this.state.tx}{' '}
+          </a>
         </Modal>
       </div>
     );
@@ -90,7 +221,9 @@ class ReviewsOpen extends React.Component {
                 this.state.articles.map(article => {
                   return (
                     <Article
-                      buttonText={'Change the review'}
+                      buttonText={
+                        'dummy: send review to SC / later: Edit review'
+                      }
                       key={article._id}
                       article={article}
                       onHover={this.state.articleOnHover === article._id}
@@ -102,10 +235,16 @@ class ReviewsOpen extends React.Component {
                       }}
                       action={(_, article) => {
                         this.setState({
-                          showReviewersPickerModal: true,
                           article
                         });
                         //TODO Redirect to article preview and review editor
+                        // dummy
+                        if (
+                          article.reviewType ===
+                          REVIEW_TYPE.EDITOR_APPROVED_REVIEW
+                        )
+                          this.submitEditorApprovedReview(article);
+                        else this.submitCommunityReview(article);
                       }}
                     />
                   );

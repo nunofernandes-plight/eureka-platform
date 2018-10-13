@@ -16,6 +16,10 @@ const Article = ({article, ...otherProps}) => {
         otherProps.onMouseLeave(id);
       }}
       article={article}
+      action2={(id, article) => {
+        otherProps.action2(id, article);
+      }}
+      button2Text={otherProps.button2Text}
     />
   );
 };

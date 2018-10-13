@@ -15,6 +15,7 @@ import User from '../schema/user.mjs';
 import {sendEmail} from '../email/index.mjs';
 import {getReviewersInvitationTemplate} from '../email/templates/EmailTemplates.mjs';
 
+
 export default {
   setup: EurekaPlatformContract => {
     /** Editor Sign up **/
@@ -214,7 +215,9 @@ export default {
       async (error, event) => {
         if (error) throw error;
         await reviewService.updateEditorApprovedReviewFromSC(
+          event.returnValues.articleHash,
           event.returnValues.reviewHash,
+          event.returnValues.reviewerAddress,
           event.returnValues.stateTimestamp,
           event.returnValues.articleHasMajorIssues,
           event.returnValues.articleHasMinorIssues,
@@ -229,7 +232,9 @@ export default {
       async (error, event) => {
         if (error) throw error;
         await reviewService.updateCommunityReviewFromSC(
+          event.returnValues.articleHash,
           event.returnValues.reviewHash,
+          event.returnValues.reviewerAddress,
           event.returnValues.stateTimestamp,
           event.returnValues.articleHasMajorIssues,
           event.returnValues.articleHasMinorIssues,
@@ -303,6 +308,14 @@ export default {
       async (error, event) => {
         if (error) throw error;
         await articleSubmissionService.closeArticleSubmission(event.returnValues.submissionId);
+      }
+    );
+
+    EurekaPlatformContract.events.NewReviewRoundRequested(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+        console.log("NEW REVIEW ROUND REQUESTED!!!");
       }
     );
   }

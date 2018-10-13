@@ -4,10 +4,16 @@ import {deserializeDocument} from '../../../../helpers/documentSerializer.mjs';
 const EditorState = draftJs.EditorState;
 const convertToRaw = draftJs.convertToRaw;
 
+export const makeFieldReadable = field => {
+  const noSymbols = field.replace(/[^a-zA-Z ]/g, ' ').toString();
+  return noSymbols.charAt(0).toUpperCase() + noSymbols.slice(1);
+};
+
 export const renderField = (document, field) => {
   const deserialized = deserializeDocument(new Document(document));
-  if (!document[field]) {
-    return 'cannot render';
+
+  if (Document.metaDataFields().includes(field)) {
+    return renderMetaDataFields(deserialized, field);
   }
 
   switch (field) {
@@ -15,11 +21,32 @@ export const renderField = (document, field) => {
       return renderTitle(deserialized, field);
     case 'authors':
       return renderAuthors(deserialized['authors']);
+    case 'figure':
+      return renderFigures(deserialized['figure']);
     default:
       return document[field];
   }
 };
 
+const renderFigures = figures => {
+  return figures.map(figure => {
+    return figure.cdn;
+  });
+};
+
+const renderMetaDataFields = (desarialized, field) => {
+  const content = desarialized[field];
+  if (Array.isArray(content)) {
+    if (content.length === 0) {
+      return '';
+    } else {
+      return content.map(c => {
+        return c.value;
+      });
+    }
+  }
+  return content;
+};
 const renderAuthors = authors => {
   let authorsString = '';
   authors.map(author => {

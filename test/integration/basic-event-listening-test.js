@@ -1,3 +1,7 @@
+/**
+ * Basic integration test for the interaction of the smart contract
+ * and the monitor of the DB.
+ */
 import test from 'ava';
 import app from '../../src/backend/api/api.mjs';
 import getAccounts from '../../src/smartcontracts/methods/get-accounts.mjs';
@@ -32,7 +36,6 @@ import TestFunctions from '../test-functions';
 let eurekaTokenContract;
 let eurekaPlatformContract;
 let accounts;
-let contractOwner;
 
 const PRETEXT = 'BASIC INTEGRATION: ';
 
@@ -41,7 +44,6 @@ const PRETEXT = 'BASIC INTEGRATION: ';
 test.before(async () => {
   accounts = await getAccounts(web3);
   setAccounts(accounts);
-  contractOwner = accounts[0];
   await dotenv.config();
 
   await app.setupApp();

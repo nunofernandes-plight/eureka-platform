@@ -36,8 +36,8 @@ export const getInviteReviewersArticles = () => {
   });
 };
 
-export const getCheckReviewersArticles = () => {
-  return fetch(`${getDomain()}/api/articles/assigned/checkReviews`, {
+export const getReviewsToCheck = () => {
+  return fetch(`${getDomain()}/api/reviews/checkable`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'

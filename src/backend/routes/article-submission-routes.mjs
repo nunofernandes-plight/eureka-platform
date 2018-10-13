@@ -29,6 +29,7 @@ router.get(
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     if (!ethereumAddress) errorThrower.notLoggedIn();
     let submissions = await articleSubmissionService.getUnassignedSubmissions(
+      ethereumAddress,
       parseInt(req.query.page),
       parseInt(req.query.limit)
     );

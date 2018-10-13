@@ -9,18 +9,11 @@ import ReviewsOpen from '../Reviews/ReviewsOpen.js';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
 import BecomeReviewer from '../Reviews/BecomeReviewer.js';
 import ReviewsMyReviews from '../Reviews/ReviewsMyReviews.js';
+import PreviewRouter from './PreviewRouter.js';
 
 const Parent = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const CardContainer = styled.div`
-  transition: all 0.5s;
-  display: flex;
-  max-width: 1200px;
-  justify-content: center;
-  margin: 0 auto;
 `;
 
 const NavPills = styled.div`
@@ -34,6 +27,14 @@ const MarginTop = styled.div`
 `;
 
 const Container = styled.div``;
+
+const CardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+`;
 
 class ReviewsRouter extends Component {
   constructor() {
@@ -65,53 +66,47 @@ class ReviewsRouter extends Component {
               })}
             </NavPills>
             <CardContainer>
-              <MarginTop>
-                <Route
-                  exact
-                  path={`${this.props.base}/invited`}
-                  render={() => (
-                    <ReviewsInvited
-                      selectedAccount={this.props.selectedAccount}
-                      platformContract={this.props.platformContract}
-                      base={`${this.props.base}/invited`}
-                      network={this.props.network}
-                      web3={this.props.web3}
-                    />
-                  )}
-                />
-              </MarginTop>
+              <Route
+                exact
+                path={`${this.props.base}/invited`}
+                render={() => (
+                  <ReviewsInvited
+                    selectedAccount={this.props.selectedAccount}
+                    platformContract={this.props.platformContract}
+                    base={`${this.props.base}/invited`}
+                    network={this.props.network}
+                    web3={this.props.web3}
+                  />
+                )}
+              />
 
-              <MarginTop>
-                <Route
-                  exact
-                  path={`${this.props.base}/open`}
-                  render={() => (
-                    <ReviewsOpen
-                      selectedAccount={this.props.selectedAccount}
-                      platformContract={this.props.platformContract}
-                      base={`${this.props.base}/open`}
-                      network={this.props.network}
-                      web3={this.props.web3}
-                    />
-                  )}
-                />
-              </MarginTop>
+              <Route
+                exact
+                path={`${this.props.base}/open`}
+                render={() => (
+                  <ReviewsOpen
+                    selectedAccount={this.props.selectedAccount}
+                    platformContract={this.props.platformContract}
+                    base={`${this.props.base}/open`}
+                    network={this.props.network}
+                    web3={this.props.web3}
+                  />
+                )}
+              />
 
-              <MarginTop>
-                <Route
-                  exact
-                  path={`${this.props.base}/myreviews`}
-                  render={() => (
-                    <ReviewsMyReviews
-                      selectedAccount={this.props.selectedAccount}
-                      platformContract={this.props.platformContract}
-                      base={`${this.props.base}/myreviews`}
-                      network={this.props.network}
-                      web3={this.props.web3}
-                    />
-                  )}
-                />
-              </MarginTop>
+              <Route
+                exact
+                path={`${this.props.base}/myreviews`}
+                render={() => (
+                  <ReviewsMyReviews
+                    selectedAccount={this.props.selectedAccount}
+                    platformContract={this.props.platformContract}
+                    base={`${this.props.base}/myreviews`}
+                    network={this.props.network}
+                    web3={this.props.web3}
+                  />
+                )}
+              />
 
               <Route
                 exact
