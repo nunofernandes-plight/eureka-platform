@@ -1,29 +1,27 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import {Figure} from '../../views/Figure.js';
 import {renderField} from '../TextEditor/DocumentRenderer.mjs';
 import {PreviewArticleTitleByField} from './PreviewArticleTitleByField.js';
 
-const FigureContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
+const Container = styled.div``;
+
+const Figures = ({figures}) => {
+  if (figures.length === 0) {
+    return <i>No figure.</i>;
+  }
+  return figures.map(src => {
+    return <Figure key={src} src={src} maxWidth={500} />;
+  });
+};
 
 const PreviewArticleFigure = ({document}) => {
   const figures = renderField(document, 'figure');
   return (
-    <FigureContainer id={'figure'}>
+    <Container id={'figure'}>
       <PreviewArticleTitleByField field={'figure'} />
-      {figures.length === 0 ? (
-        <i>No figure.</i>
-      ) : (
-        <Fragment>
-          {figures.map(src => {
-            return <Figure key={src} src={src} maxWidth={500} />;
-          })}
-        </Fragment>
-      )}
-    </FigureContainer>
+      <Figures figures={figures} />
+    </Container>
   );
 };
 export default PreviewArticleFigure;

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__GRAY_600} from '../../../helpers/colors.js';
+import {__GRAY_500, __GRAY_600} from '../../../helpers/colors.js';
 import {ReviewsWriterCommentIcon} from './ReviewsWriterCommentIcon.js';
 
 const Container = styled.div`
@@ -25,8 +25,7 @@ const CommentIcon = styled.div`
 const MySeparator = styled.div`
   display: flex;
   flex-direction: column;
-  width: 1px;
-  background: ${__GRAY_600};
+  border-left: 1px dashed ${__GRAY_500};
   height: 100%;
   position: absolute;
 `;
