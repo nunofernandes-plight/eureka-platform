@@ -55,7 +55,7 @@ class ReviewsWriterAnnotation extends React.Component {
           <Menu>
             <Icon
               icon={'material'}
-              material={'menu'}
+              material={'more_vert'}
               width={17}
               height={17}
               color={__GRAY_700}
