@@ -10,7 +10,7 @@ import {Go} from '../Routers/Go.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {renderField} from '../TextEditor/DocumentRenderer.mjs';
 import PreviewStatus from '../../views/PreviewStatus.js';
-import {__GRAY_100} from '../../../helpers/colors.js';
+import {__GRAY_100, __GRAY_200, __GRAY_300} from '../../../helpers/colors.js';
 import PreviewArticle from '../Preview/PreviewArticle.js';
 
 const Container = styled.div`
@@ -31,8 +31,10 @@ const MySeparator = styled.div`
 
 const MyPreview = styled.div`
   display: flex;
-  padding: 20px;
-  width: 100%;
+  width: 92%;
+  box-shadow: 0 0 0 0.75pt #d1d1d1, 0 0 3pt 0.75pt #ccc;
+  padding: 5%;
+  background: rgb(255, 255, 255);
 `;
 
 const ArticlePreview = styled.div`
@@ -96,7 +98,7 @@ class ReviewsWriter extends React.Component {
     return (
       <Container>
         {this.renderModal()}
-        <Card title={'Write Your Review'}>
+        <Card title={'Write Your Review'} background={__GRAY_200}>
           <Go back {...this.props} />
           <MySeparator />
           {!this.state.document ? (
