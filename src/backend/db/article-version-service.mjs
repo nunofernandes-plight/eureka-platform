@@ -10,6 +10,7 @@ import ReviewService from './review-service.mjs';
 import ArticleSubmissionService from './article-submission-service.mjs';
 import userService from './user-service.mjs';
 import Roles from '../schema/roles-enum.mjs';
+import REVIEW_TYPE from '../schema/review-type-enum.mjs';
 
 const getFinalizableArticles = articles => {
   let finalizableArticles = [];
@@ -76,9 +77,12 @@ export default {
       submissions
     );
 
+    const articlesWithEnoughEAReviews = await ReviewService.getArticlesWithEnoughAcceptedReviews(REVIEW_TYPE.EDITOR_APPROVED_REVIEW);
+
     const articles = await ArticleVersion.find({
       articleVersionState: 'REVIEWERS_INVITED',
-      articleSubmission: {$in: submissionIds}
+      articleSubmission: {$in: submissionIds},
+      _id: {$in: getIds(articlesWithEnoughEAReviews)}
     }).populate([
       {path: 'articleSubmission'},
       {path: 'editorApprovedReviews'},
