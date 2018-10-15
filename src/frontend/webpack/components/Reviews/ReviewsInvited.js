@@ -192,12 +192,8 @@ class ReviewsInvited extends React.Component {
                           });
                           await this.acceptReviewInvitation(article);
                         } else {
-                          this.props.history.push(
-                            `/app/write/review/${article._id}`
-                          );
-
                           // dummy
-                          /*                          saveEditorApprovedReviewToDB({
+                          saveEditorApprovedReviewToDB({
                             reviewId: article.reviewId,
                             reviewText: 'dummy text',
                             reviewHash:
@@ -207,7 +203,11 @@ class ReviewsInvited extends React.Component {
                             score2: 5,
                             articleHasMajorIssues: false,
                             articleHasMinorIssues: true
-                          });*/
+                          });
+
+                          this.props.history.push(
+                            `/app/write/review/${article._id}`
+                          );
                         }
                       }}
                     />
