@@ -147,7 +147,6 @@ const InsertTextButton = props => {
 };
 
 const Toolbar = ({document, ...otherProps}) => {
-  console.log(document);
   const props = otherProps;
   return (
     <ToolbarContainer>
@@ -179,7 +178,12 @@ const Toolbar = ({document, ...otherProps}) => {
         style={PREVIEW}
         tooltip="Preview"
         onClick={() => {
-          props.history.push(`/app/preview/${props.documentId}`);
+          props.history.push({
+            pathname: `/app/preview/${props.documentId}`,
+            state: {
+              from: `/app/articles/drafts/${props.documentId}`
+            }
+          });
         }}
       />
     </ToolbarContainer>

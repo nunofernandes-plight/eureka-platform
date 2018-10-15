@@ -4,6 +4,9 @@ import Author from '../../views/Author.js';
 import queryString from 'query-string';
 import {getDomain} from '../../../../helpers/getDomain.mjs';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
+import CircleSpinner from '../../views/spinners/CircleSpinner.js';
+import PulseSpinner from '../../views/spinners/PulseSpinner.js';
+import SaveSpinner from '../../views/spinners/SaveSpinner.js';
 
 const Container = styled.div`
   display: flex;
@@ -52,7 +55,9 @@ class PreviewAuthors extends React.Component {
     return (
       <Container>
         {!this.state.authorsData ? (
-          <GridSpinner />
+          <div style={{marginTop: -30}}>
+            <SaveSpinner />
+          </div>
         ) : (
           <Fragment>
             {this.state.authorsData.map((author, i) => {

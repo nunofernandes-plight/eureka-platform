@@ -310,5 +310,13 @@ export default {
         await articleSubmissionService.closeArticleSubmission(event.returnValues.submissionId);
       }
     );
+
+    EurekaPlatformContract.events.NewReviewRoundRequested(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+        console.log("NEW REVIEW ROUND REQUESTED!!!");
+      }
+    );
   }
 };

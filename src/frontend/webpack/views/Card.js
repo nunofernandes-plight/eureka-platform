@@ -7,6 +7,7 @@ import {
   MEDIUM_DEVICES
 } from '../../helpers/mobile.js';
 import {Go} from '../components/Routers/Go.js';
+import {CARD_WIDTH_IN_PERCENTAGE} from '../../helpers/layout.js';
 
 export const CardTitle = styled.h2`
   font-size: 1.5rem;
@@ -23,13 +24,15 @@ const CardContainer = styled.div`
   word-wrap: break-word;
   border: 0.0625rem solid rgba(0, 0, 0, 0.05);
   border-radius: 0.25rem;
-  background-color: #ffffff;
+  background-color: ${props =>
+    props.background ? props.background : '#ffffff'};
   background-clip: border-box;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
   align-items: center;
   padding: 1.5em;
   min-height: 200px;
-  width: ${props => (props.width ? props.width + 'px' : null)};
+  width: ${props =>
+    props.width ? props.width + 'px' : CARD_WIDTH_IN_PERCENTAGE};
 
   ${EXTRA_LARGE_DEVICES`
     width: 768px; 

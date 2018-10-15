@@ -8,6 +8,8 @@ import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import REVIEW_STATE from '../schema/review-state-enum.mjs';
 import ReviewService from './review-service.mjs';
 import ArticleSubmissionService from './article-submission-service.mjs';
+import userService from './user-service.mjs';
+import Roles from '../schema/roles-enum.mjs';
 
 const getFinalizableArticles = articles => {
   let finalizableArticles = [];
@@ -49,8 +51,12 @@ export default {
   },
 
   getArticlesAssignedTo: async (ethereumAddress, articleVersionStates) => {
-    const submissions = await ArticleSubmissionService.getAssignedSubmissions(ethereumAddress);
-    const submissionIds = ArticleSubmissionService.getSubmissionIds(submissions);
+    const submissions = await ArticleSubmissionService.getAssignedSubmissions(
+      ethereumAddress
+    );
+    const submissionIds = ArticleSubmissionService.getSubmissionIds(
+      submissions
+    );
 
     return await ArticleVersion.find({
       articleVersionState: {$in: articleVersionStates},
@@ -63,8 +69,12 @@ export default {
   },
 
   getArticlesToFinalize: async ethereumAddress => {
-    const submissions = await ArticleSubmissionService.getAssignedSubmissions(ethereumAddress);
-    const submissionIds = ArticleSubmissionService.getSubmissionIds(submissions);
+    const submissions = await ArticleSubmissionService.getAssignedSubmissions(
+      ethereumAddress
+    );
+    const submissionIds = ArticleSubmissionService.getSubmissionIds(
+      submissions
+    );
 
     const articles = await ArticleVersion.find({
       articleVersionState: 'REVIEWERS_INVITED',
@@ -87,7 +97,7 @@ export default {
 
     return await ArticleVersion.find({
       // show article if invited or if not reviewed yet
-      $or : [ { _id :{$nin: ids} }, { _id : {$in: invite_ids} } ],
+      $or: [{_id: {$nin: ids}}, {_id: {$in: invite_ids}}],
       // community reviews can be reviewed as soon as the editor has checked it
       articleVersionState: {$in: ['EDITOR_CHECKED', 'REVIEWERS_INVITED']},
       ownerAddress: {$ne: ethereumAddress},
@@ -112,12 +122,11 @@ export default {
     return await ArticleVersion.find({
       _id: {$in: ids},
       articleVersionState: 'REVIEWERS_INVITED'
-    })
-      .populate([
-        {path: 'articleSubmission'},
-        {path: 'editorApprovedReviews'},
-        {path: 'communityReviews'}
-      ]);
+    }).populate([
+      {path: 'articleSubmission'},
+      {path: 'editorApprovedReviews'},
+      {path: 'communityReviews'}
+    ]);
   },
 
   getArticlesOpenForCommunityReviews: async ethereumAddress => {
@@ -130,7 +139,7 @@ export default {
 
     return await ArticleVersion.find({
       // hide articles already reviewed or already invited
-      $and : [ { _id :{$nin: ids} }, { _id : {$nin: invite_ids} } ],
+      $and: [{_id: {$nin: ids}}, {_id: {$nin: invite_ids}}],
       // community reviews can be reviewed as soon as the editor has checked it
       articleVersionState: {$in: ['EDITOR_CHECKED', 'REVIEWERS_INVITED']},
       ownerAddress: {$ne: ethereumAddress},
@@ -265,10 +274,31 @@ export default {
    */
   getArticleVersionById: async (userAddress, articleVersionID) => {
     const articleVersion = await ArticleVersion.findById(articleVersionID);
+    const user = await userService.getUserByEthereumAddress(userAddress);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionID);
-    if (articleVersion.ownerAddress !== userAddress)
-      errorThrower.notCorrectEthereumAddress();
-    return articleVersion;
+
+    // Article owner can always have a look at its article
+    if (articleVersion.ownerAddress === userAddress) {
+      return articleVersion;
+    }
+    const state = articleVersion.articleVersionState;
+    // Editor can have a look at the article when it has been submitted
+    if (
+      state === ArticleVersionState.SUBMITTED &&
+      user.roles.includes(Roles.EDITOR)
+    ) {
+      return articleVersion;
+    }
+
+    // after EDITOR_CHECKED the article can be visualized by anyone (open access)
+    if (
+      state !== ArticleVersionState.SUBMITTED &&
+      state !== ArticleVersionState.FINISHED_DRAFT &&
+      state !== ArticleVersionState.DRAFT
+    ) {
+      return articleVersion;
+    }
+    return errorThrower.notCorrectEthereumAddress();
   },
 
   changeArticleVersionState: async (articleHash, versionState) => {

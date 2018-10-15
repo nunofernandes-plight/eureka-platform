@@ -6,9 +6,7 @@ import MyDrafts from '../MyDrafts.js';
 import DocumentEditor from '../DocumentEditor.js';
 import NavPill from '../../views/NavPill.js';
 import MySubmitted from '../MySubmitted.js';
-import Preview from '../Preview.js';
 import {ArticlesNavPillRoutes} from './ArticlesNavPillRoutes.js';
-import ReviewsRouter from './ReviewsRouter.js';
 
 const Parent = styled.div`
   display: flex;
