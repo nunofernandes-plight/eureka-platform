@@ -108,10 +108,16 @@ class ReviewsWriter extends React.Component {
             <MyPreview>
               {' '}
               <ArticlePreview>
-                <PreviewArticle
-                  base={this.props.base}
-                  document={this.state.document}
-                />
+                {this.props.selectedAccount.address ? (
+                  <PreviewArticle
+                    selectedAccount={this.props.selectedAccount}
+                    documentId={this.props.match.params.id}
+                    base={this.props.base}
+                    document={this.state.document}
+                  />
+                ) : (
+                  <GridSpinner />
+                )}
               </ArticlePreview>
             </MyPreview>
           )}

@@ -25,8 +25,12 @@ const Author = props => {
     <AuthorContainer padding={props.padding}>
       <Avatar avatar={author.avatar} {...props} />
       <AuthorCredentials>
-        <EthereumAddress ethereumAddress={author.ethereumAddress} />
-        <Email size={12} noDecoration email={author.email}>{author.email}</Email>
+        {props.noAddress ? null : (
+          <EthereumAddress ethereumAddress={author.ethereumAddress} />
+        )}
+        <Email size={12} noDecoration email={author.email}>
+          {author.email}
+        </Email>
       </AuthorCredentials>
     </AuthorContainer>
   );

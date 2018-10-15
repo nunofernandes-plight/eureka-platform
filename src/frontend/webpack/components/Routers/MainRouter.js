@@ -56,7 +56,6 @@ class MainRouter extends Component {
     })
       .then(response => response.json())
       .then(response => {
-        console.log('fetching works');
         if (response.success) {
           let user = response.data.user;
           user.roles.push(Roles.USER);

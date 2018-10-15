@@ -28,18 +28,22 @@ const Figures = ({figures}) => {
   );
 };
 
-const PreviewArticleFigure = ({document, isReview}) => {
-  const figures = renderField(document, 'figure');
+const PreviewArticleFigure = ({document, isReview, ...otherProps}) => {
+  const field = 'figure';
+  const figures = renderField(document, field);
   return (
-    <Container id={'figure'}>
-      <PreviewArticleTitleByField field={'figure'} />
+    <Container id={field}>
+      <PreviewArticleTitleByField field={field} />
 
       <ReviewsWriterFieldContainer>
         <Figures figures={figures} />
         {isReview ? (
           <ReviewsWriterContainer
-            onMouseEnter={() => {}}
-            onMouseLeave={() => {}}
+            field={field}
+            {...otherProps}
+            onClick={() => {
+              alert('sküüüü');
+            }}
           />
         ) : null}
       </ReviewsWriterFieldContainer>

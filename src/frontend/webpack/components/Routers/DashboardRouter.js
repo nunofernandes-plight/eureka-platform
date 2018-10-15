@@ -164,7 +164,11 @@ class DashboardRouter extends Component {
           <Route
             path={`${this.props.base}/write/review/:id`}
             render={() => (
-              <ReviewsWriter base={`${this.props.base}/write/review/`} />
+              <ReviewsWriter
+                base={`${this.props.base}/write/review/`}
+                selectedAccount={this.props.selectedAccount}
+                network={this.props.network}
+              />
             )}
           />
 

@@ -16,9 +16,21 @@ const PreviewArticle = ({document, ...otherProps}) => {
 
   return (
     <Container>
-      <PreviewArticleTitle isReview={isReview} document={document} />
-      <PreviewArticleAbstract isReview={isReview} document={document} />
-      <PreviewArticleFigure isReview={isReview} document={document} />
+      <PreviewArticleTitle
+        isReview={isReview}
+        document={document}
+        {...otherProps}
+      />
+      <PreviewArticleAbstract
+        isReview={isReview}
+        document={document}
+        {...otherProps}
+      />
+      <PreviewArticleFigure
+        isReview={isReview}
+        document={document}
+        {...otherProps}
+      />
     </Container>
   );
 };
