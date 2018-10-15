@@ -40,10 +40,10 @@ const PreviewArticleFigure = ({document, isReview, ...otherProps}) => {
         {isReview ? (
           <ReviewsWriterContainer
             field={field}
+            {...otherProps}
             onClick={() => {
               alert('sküüüü');
             }}
-            {...otherProps}
           />
         ) : null}
       </ReviewsWriterFieldContainer>

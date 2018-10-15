@@ -27,10 +27,10 @@ const PreviewArticleAbstract = ({document, isReview, ...otherProps}) => {
         {isReview ? (
           <ReviewsWriterContainer
             field={field}
+            {...otherProps}
             onClick={() => {
               alert('sküüüü');
             }}
-            {...otherProps}
           />
         ) : null}
       </ReviewsWriterFieldContainer>

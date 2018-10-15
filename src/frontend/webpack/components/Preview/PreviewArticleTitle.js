@@ -26,10 +26,10 @@ const PreviewArticleTitle = ({document, isReview, ...otherProps}) => {
             <Title>{renderField(document, field)}</Title>
             <ReviewsWriterContainer
               field={field}
+              {...otherProps}
               onClick={() => {
                 alert('sküüüü');
               }}
-              {...otherProps}
             />
           </Fragment>
         ) : null}

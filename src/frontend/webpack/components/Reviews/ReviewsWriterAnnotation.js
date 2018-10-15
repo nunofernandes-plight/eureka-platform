@@ -8,9 +8,7 @@ class ReviewsWriterAnnotation extends React.Component {
     super();
   }
 
-  componentDidMount() {
-    console.log(this.props);
-  }
+  componentDidMount() {}
 
   render() {
     return (

@@ -44,6 +44,7 @@ class ReviewsWriterContainer extends React.Component {
 
   async componentDidMount() {
     await this.getAllAnnotations();
+    console.log(this.props.selectedAccount);
   }
 
   // TODO: call back end and get information from there. At the moment: Dummy data
@@ -101,7 +102,7 @@ class ReviewsWriterContainer extends React.Component {
         owner: this.props.selectedAccount.address,
         reviewId: '1bc4408756120bd0b6fe7d23',
         annotationId: '2bc4408756120bd0b6fe7d55',
-        field: 'title',
+        field: 'figure',
         annotation: 'Missing source',
         issue: 'minor'
       }
