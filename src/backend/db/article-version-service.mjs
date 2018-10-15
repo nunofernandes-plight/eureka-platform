@@ -12,34 +12,6 @@ import userService from './user-service.mjs';
 import Roles from '../schema/roles-enum.mjs';
 import REVIEW_TYPE from '../schema/review-type-enum.mjs';
 
-const getFinalizableArticles = articles => {
-  let finalizableArticles = [];
-  articles.forEach(article => {
-    if (isFinalizable(article)) finalizableArticles.push(article);
-  });
-  return finalizableArticles;
-};
-
-const isFinalizable = article => {
-  const minEAReviews = 1; //minAmountOfEditorApprovedReviews
-  const minCReviews = 0; //minAmountOfCommunityReviews
-  return (
-    areReviewsOK(minEAReviews, article.editorApprovedReviews) &&
-    areReviewsOK(minCReviews, article.communityReviews)
-  );
-};
-
-const areReviewsOK = (minAmount, reviews) => {
-  let count = 0;
-  reviews.forEach(review => {
-    if (review.reviewState !== REVIEW_STATE.ACCEPTED) return false;
-    if (review.articleHasMajorIssues) return false;
-
-    count++;
-  });
-  return count >= minAmount;
-};
-
 export const getIds = articles => {
     return articles.map(i => {
       return i._id;
@@ -79,7 +51,7 @@ export default {
 
     const articlesWithEnoughEAReviews = await ReviewService.getArticlesWithEnoughAcceptedReviews(REVIEW_TYPE.EDITOR_APPROVED_REVIEW);
 
-    const articles = await ArticleVersion.find({
+    return await ArticleVersion.find({
       articleVersionState: 'REVIEWERS_INVITED',
       articleSubmission: {$in: submissionIds},
       _id: {$in: getIds(articlesWithEnoughEAReviews)}
@@ -88,7 +60,6 @@ export default {
       {path: 'editorApprovedReviews'},
       {path: 'communityReviews'}
     ]);
-    return getFinalizableArticles(articles);
   },
 
   getArticlesOpenForReviews: async ethereumAddress => {
