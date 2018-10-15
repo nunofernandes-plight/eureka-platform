@@ -12,7 +12,7 @@ const Title = styled.h3`
   line-height: 1.3;
   font-family: 'Roboto', sans-serif;
   margin-bottom: 10px;
-  flex: 4;
+  flex: 3;
   margin-top: 0;
 `;
 
