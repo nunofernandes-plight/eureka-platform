@@ -87,7 +87,7 @@ class ReviewsWriterAnnotation extends React.Component {
                 this.props.onCancel(id);
               }}
               onSave={id => {
-                this.props.onSubmit(id);
+                this.props.onSave(id);
               }}
             />
           ) : (
