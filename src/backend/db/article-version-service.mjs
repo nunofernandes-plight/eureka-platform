@@ -39,15 +39,15 @@ const areReviewsOK = (minAmount, reviews) => {
   return count >= minAmount;
 };
 
-export default {
-  getAllArticleVersions: () => {
-    return ArticleVersion.find({});
-  },
-
-  getIds: articles => {
+export const getIds = articles => {
     return articles.map(i => {
       return i._id;
     });
+  };
+
+export default {
+  getAllArticleVersions: () => {
+    return ArticleVersion.find({});
   },
 
   getArticlesAssignedTo: async (ethereumAddress, articleVersionStates) => {

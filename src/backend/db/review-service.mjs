@@ -2,7 +2,7 @@ import Review from '../schema/review.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import ReviewState from '../schema/review-state-enum.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
-import articleVersionService from './article-version-service.mjs';
+import articleVersionService, {getIds} from './article-version-service.mjs';
 import ARTICLE_VERSION_STATE from '../schema/article-version-state-enum.mjs';
 
 export default {
@@ -63,7 +63,7 @@ export default {
       ethereumAddress,
       [ARTICLE_VERSION_STATE.REVIEWERS_INVITED, ARTICLE_VERSION_STATE.EDITOR_CHECKED]
     );
-    const articleIds = articleVersionService.getIds(articles);
+    const articleIds = getIds(articles);
 
     return await Review.find({
       reviewState: {$in: ['HANDED_IN_SC']},
