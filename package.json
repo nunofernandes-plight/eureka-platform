@@ -29,6 +29,7 @@
     "js-sha256": "^0.9.0",
     "lodash": "^4.17.10",
     "material-design-icons": "^3.0.1",
+    "moment": "^2.22.2",
     "mongoose": "^5.2.2",
     "nodemailer": "^4.6.7",
     "nodemon": "^1.17.5",
@@ -38,8 +39,6 @@
     "query-string": "^6.1.0",
     "randomstring": "^1.1.5",
     "rc-tooltip": "^3.7.2",
-
-
     "react": "^16.4.1",
     "react-card-flip": "^0.2.1",
     "react-detect-offline": "^2.1.2",
@@ -48,6 +47,7 @@
     "react-ga": "^2.5.3",
     "react-lottie": "^1.2.3",
     "react-portal-tooltip": "^2.4.0",
+    "react-router": "latest",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
     "react-select": "^2.0.0",
@@ -61,8 +61,7 @@
     "truffle-contract": "3.0.5",
     "underscore": "^1.9.1",
     "validator": "^10.6.0",
-    "web3": "^1.0.0-beta.34",
-    "react-router": "latest"
+    "web3": "^1.0.0-beta.34"
   },
   "scripts": {
     "start": "react-scripts start",
