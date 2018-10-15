@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import Icon from '../../views/icons/Icon.js';
+import chroma from 'chroma-js';
+import {__GRAY_400, __GRAY_800, __THIRD} from '../../../helpers/colors.js';
 
 const Circle = styled.div`
   display: flex;
@@ -15,6 +17,11 @@ const Circle = styled.div`
 `;
 
 const IconContainer = styled.div`
+  &:hover {
+    color: ${__GRAY_800};
+  }
+  color: ${__GRAY_400};
+  cursor: pointer;
   width: 42px;
   padding: 5px;
   height: 42px;
@@ -32,6 +39,7 @@ export const ReviewsWriterCommentIcon = props => {
           material={'add_comment'}
           width={22}
           height={22}
+          noMove
         />
       </IconContainer>
     </Circle>
