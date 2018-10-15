@@ -170,13 +170,13 @@ class EditorCheckReviews extends React.Component {
           }}
           action={'GOT IT'}
           callback={() => {
-            this.props.history.push('/app/editor/reviews');
+            this.setState({showTxModal: false});
           }}
           show={this.state.tx}
           title={'We got your request!'}
         >
-          The request has successfully trigered our smart contract. You can find
-          its tx hash here:{' '}
+          The request has successfully triggered our smart contract. You can
+          find its tx hash here:{' '}
           <TxHash txHash={this.state.tx}>Transaction Hash</TxHash>. <br />
         </Modal>
       </div>
