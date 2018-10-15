@@ -20,15 +20,6 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const Title = styled.h3`
-  font-size: 26px;
-  font-weight: bold;
-  line-height: 1.3;
-  font-family: 'Roboto', sans-serif;
-  margin-bottom: 10px;
-  margin-top: 0;
-`;
-
 const MySeparator = styled.div`
   height: 2px;
   display: flex;
@@ -114,8 +105,6 @@ class ReviewsWriter extends React.Component {
             <MyPreview>
               {' '}
               <ArticlePreview>
-                <Title>{renderField(this.state.document, 'title')}</Title>
-                <PreviewStatus status={this.state.document.state} />
                 <PreviewArticle
                   base={this.props.base}
                   document={this.state.document}
