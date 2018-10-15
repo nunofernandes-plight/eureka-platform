@@ -109,6 +109,7 @@ class ReviewsWriter extends React.Component {
               {' '}
               <ArticlePreview>
                 <PreviewArticle
+                  documentId={this.props.match.params.id}
                   base={this.props.base}
                   document={this.state.document}
                 />

@@ -6,8 +6,8 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const ReviewsWriterTextAreaContainer = () => {
-  return <Container>asfasf</Container>;
+const ReviewsWriterAnnotations = props => {
+  return <Container>{props.children}</Container>;
 };
 
-export default ReviewsWriterTextAreaContainer;
+export default ReviewsWriterAnnotations;

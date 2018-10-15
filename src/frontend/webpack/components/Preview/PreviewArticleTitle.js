@@ -16,14 +16,17 @@ const Title = styled.h3`
   margin-top: 0;
 `;
 
-const PreviewArticleTitle = ({document, isReview}) => {
+const PreviewArticleTitle = ({document, isReview, ...otherProps}) => {
+  const field = 'title';
   return (
-    <Container id={'title'}>
+    <Container id={field}>
       <ReviewsWriterFieldContainer>
         {isReview ? (
           <Fragment>
-            <Title>{renderField(document, 'title')}</Title>
+            <Title>{renderField(document, field)}</Title>
             <ReviewsWriterContainer
+              documentId={otherProps.documentId}
+              field={field}
               onClick={() => {
                 alert('sküüüü');
               }}

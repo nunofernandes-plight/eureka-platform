@@ -6,7 +6,7 @@ const Container = styled.div`
   height: 200px;
 `;
 
-class ReviewsWriterTextArea extends React.Component {
+class ReviewsWriterAnnotation extends React.Component {
   constructor() {
     super();
   }
@@ -21,4 +21,4 @@ class ReviewsWriterTextArea extends React.Component {
     );
   }
 }
-export default ReviewsWriterTextArea;
+export default ReviewsWriterAnnotation;
