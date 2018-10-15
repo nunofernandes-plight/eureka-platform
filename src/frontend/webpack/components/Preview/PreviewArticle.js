@@ -19,17 +19,17 @@ const PreviewArticle = ({document, ...otherProps}) => {
       <PreviewArticleTitle
         isReview={isReview}
         document={document}
-        documentId={otherProps.documentId}
+        {...otherProps}
       />
       <PreviewArticleAbstract
         isReview={isReview}
         document={document}
-        documentId={otherProps.documentId}
+        {...otherProps}
       />
       <PreviewArticleFigure
         isReview={isReview}
         document={document}
-        documentId={otherProps.documentId}
+        {...otherProps}
       />
     </Container>
   );

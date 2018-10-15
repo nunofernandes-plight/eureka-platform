@@ -1,17 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Container = styled.div`
-  width: 300px;
-  height: 200px;
-`;
+const Container = styled.div``;
 
 class ReviewsWriterAnnotation extends React.Component {
   constructor() {
     super();
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    console.log(this.props);
+  }
 
   render() {
     return (

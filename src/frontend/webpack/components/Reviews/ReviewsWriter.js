@@ -109,6 +109,7 @@ class ReviewsWriter extends React.Component {
               {' '}
               <ArticlePreview>
                 <PreviewArticle
+                  selectedAccount={this.props.selectedAccount}
                   documentId={this.props.match.params.id}
                   base={this.props.base}
                   document={this.state.document}

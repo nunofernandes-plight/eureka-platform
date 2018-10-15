@@ -43,23 +43,70 @@ class ReviewsWriterContainer extends React.Component {
   }
 
   async componentDidMount() {
-    // TODO: get annotations from backend
-    const annotations = await this.getAllAnnotations();
+    await this.getAllAnnotations();
   }
 
   // TODO: call back end and get information from there. At the moment: Dummy data
   getAllAnnotations() {
-    const annotations =  [
+    const annotations = [
       {
         articleVersionId: this.props.documentId,
-        reviewId: '',
-        owner: '0xaosfoasfjo',
-        annotationId: '5bc4408756120bd0b6235235',
+        owner: this.props.selectedAccount.address,
+        reviewId: '1bc4408756120bd0b6fe7d64',
+        annotationId: '2bc4408756120bd0b6fe7d65',
         field: 'title',
         annotation: 'This title is not properly formatted',
+        issue: 'minor'
+      },
+      {
+        articleVersionId: this.props.documentId,
+        owner: this.props.selectedAccount.address,
+        reviewId: '1bc4408756120bd0b6fe7d89',
+        annotationId: '2bc4408756120bd0b6fe7d45',
+        field: 'abstract',
+        annotation:
+          'The abstract is too short. Consider to rewrite it using just 300 words.',
         issue: 'major'
+      },
+      {
+        articleVersionId: this.props.documentId,
+        owner: this.props.selectedAccount.address,
+        reviewId: '1bc4408756120bd0b6fe7d15',
+        annotationId: '2bc4408756120bd0b6fe7d63',
+        field: 'abstract',
+        annotation:
+          'Your abstract does not reflect the single observation described in your article. Please rewrite it',
+        issue: 'major'
+      },
+      {
+        articleVersionId: this.props.documentId,
+        owner: this.props.selectedAccount.address,
+        reviewId: '9bc4408756120bd0b6fe7d15',
+        annotationId: '8bc4408756120bd0b6fe7d63',
+        field: 'figure',
+        annotation: 'Missing caption and source',
+        issue: 'minor'
+      },
+      {
+        articleVersionId: this.props.documentId,
+        owner: this.props.selectedAccount.address,
+        reviewId: '1bc4408756120bd0b6fe7d33',
+        annotationId: '2bc4408756120bd0b6fe7d83',
+        field: 'figure',
+        annotation: 'Figure is not relevant for your study',
+        issue: 'minor'
+      },
+      {
+        articleVersionId: this.props.documentId,
+        owner: this.props.selectedAccount.address,
+        reviewId: '1bc4408756120bd0b6fe7d23',
+        annotationId: '2bc4408756120bd0b6fe7d55',
+        field: 'title',
+        annotation: 'Missing source',
+        issue: 'minor'
       }
     ];
+    return this.setState({annotations});
   }
 
   addAnnotation() {
@@ -87,7 +134,7 @@ class ReviewsWriterContainer extends React.Component {
             <ReviewsWriterCommentIcon show={this.state.showCommentIcon} />
           </CommentIcon>
 
-          {this.state.annotations ? (
+          {!this.state.annotations ? (
             <UploadSpinner />
           ) : (
             <ReviewsWriterAnnotations>
