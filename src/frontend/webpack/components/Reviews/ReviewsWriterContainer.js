@@ -15,6 +15,7 @@ const Container = styled.div`
 
 const Review = styled.div`
   display: flex;
+  width: 100%;
 `;
 
 const CommentIcon = styled.div`

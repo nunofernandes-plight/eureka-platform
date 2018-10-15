@@ -1,17 +1,29 @@
 import React from 'react';
 import styled from 'styled-components';
-import queryString from 'query-string';
-import {getDomain} from '../../../../helpers/getDomain.mjs';
 import AuthorLookup from '../AuthorLookup.js';
+import {__GRAY_600} from '../../../helpers/colors.js';
 
 const Container = styled.div`
   padding: 10px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   border: none;
+  border-radius: 4px;
+  margin-bottom: 20px;
 `;
 
 const AnnotationHeader = styled.div`
   display: flex;
+`;
+
+const AnnotationBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 7.5px;
+`;
+
+const Text = styled.div`
+  color: ${__GRAY_600};
+  font-size: 11px;
 `;
 
 class ReviewsWriterAnnotation extends React.Component {
@@ -36,7 +48,9 @@ class ReviewsWriterAnnotation extends React.Component {
             padding={'5px'}
           />
         </AnnotationHeader>
-        <AnnotationBody>{annotation.text}</AnnotationBody>
+        <AnnotationBody>
+          <Text>{annotation.text}</Text>
+        </AnnotationBody>
       </Container>
     );
   }
