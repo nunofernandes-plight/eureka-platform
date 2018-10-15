@@ -36,7 +36,7 @@ class ReviewsWriterAnnotation extends React.Component {
             padding={'5px'}
           />
         </AnnotationHeader>
-        <AnnotationBody>{annotation.}</AnnotationBody>
+        <AnnotationBody>{annotation.text}</AnnotationBody>
       </Container>
     );
   }
