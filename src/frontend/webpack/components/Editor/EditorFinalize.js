@@ -1,21 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import {getArticlesToSignOff, getReviewsToCheck} from './EditorMethods.js';
+import {getArticlesToFinalize, getArticlesToSignOff} from './EditorMethods.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Article from '../../views/Article.js';
 import {Card} from '../../views/Card.js';
 import {__THIRD} from '../../../helpers/colors.js';
 import {Link, withRouter} from 'react-router-dom';
 import {
-  acceptReview,
+  acceptArticleVersion,
   assignForSubmissionProcess,
-  declineReview,
-  inviteReviewersForArticle,
+  declineArticleVersion,
   setSanityToOk
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
-import {isGanache} from '../../../../helpers/isGanache.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -29,42 +27,41 @@ const NoArtDiv = styled.div`
   color: ${__THIRD};
   font-size: 16px;
 `;
-const NoReviews = () => {
+const NoArticles = () => {
   return (
     <NoArtDiv>
-      There are currently no reviews to check. If you want to invite reviewers
-      to review an article{' '}
-      <Link to={'/app/editor/invite'} style={{marginLeft: 2.5}}>
+      There are currently no articles to finalize. If you want to assign
+      yourself to an article{' '}
+      <Link to={'/app/editor/articles'} style={{marginLeft: 2.5}}>
         {' '}
         <strong>click here.</strong>
       </Link>
     </NoArtDiv>
   );
 };
-class EditorCheckReviews extends React.Component {
+class EditorFinalize extends React.Component {
   constructor() {
     super();
     this.state = {
-      reviews: null,
+      articles: null,
       loading: false,
       articleOnHover: null,
-
       tx: null
     };
   }
 
   async componentDidMount() {
-    await this.getReviewsToCheck();
+    await this.getArticlesToFinalize();
   }
 
-  async getReviewsToCheck() {
+  async getArticlesToFinalize() {
     this.setState({loading: true});
-    return getReviewsToCheck()
+    return getArticlesToFinalize()
       .then(response => response.json())
       .then(response => {
         if (response.success) {
           console.log(response);
-          this.setState({reviews: response.data});
+          this.setState({articles: response.data});
         }
         this.setState({loading: false});
       })
@@ -74,23 +71,10 @@ class EditorCheckReviews extends React.Component {
       });
   }
 
-  async acceptReview(articleHash, reviewerAddress) {
-    let gasAmount;
-    // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.web3))
-      gasAmount = await acceptReview(
-        this.props.platformContract,
-        this.state.article.articleHash,
-        reviewerAddress
-      ).estimateGas({
-        from: this.props.selectedAccount.address
-      });
-    else gasAmount = 80000000;
-
-    acceptReview(this.props.platformContract, articleHash, reviewerAddress)
+  acceptArticle(articleHash) {
+    acceptArticleVersion(this.props.platformContract, articleHash)
       .send({
-        from: this.props.selectedAccount.address,
-        gas: gasAmount
+        from: this.props.selectedAccount.address
       })
       .on('transactionHash', tx => {
         this.setState({
@@ -98,8 +82,13 @@ class EditorCheckReviews extends React.Component {
         });
       })
       .on('receipt', async receipt => {
-        console.log('Accept Review:  ' + receipt.status);
-        await this.getReviewsToCheck();
+        console.log(
+          'Accepting article version with article hash ' +
+            articleHash +
+            ' exits with status ' +
+            receipt.status
+        );
+        await this.getArticlesToFinalize();
         return receipt;
       })
       .catch(err => {
@@ -112,23 +101,10 @@ class EditorCheckReviews extends React.Component {
       });
   }
 
-  async declineReview(articleHash, reviewerAddress) {
-    let gasAmount;
-    // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.web3))
-      gasAmount = await acceptReview(
-        this.props.platformContract,
-        this.state.article.articleHash,
-        reviewerAddress
-      ).estimateGas({
-        from: this.props.selectedAccount.address
-      });
-    else gasAmount = 80000000;
-
-    declineReview(this.props.platformContract, articleHash, reviewerAddress)
+  declineArticle(articleHash) {
+    declineArticleVersion(this.props.platformContract, articleHash)
       .send({
-        from: this.props.selectedAccount.address,
-        gas: gasAmount
+        from: this.props.selectedAccount.address
       })
       .on('transactionHash', tx => {
         this.setState({
@@ -136,8 +112,13 @@ class EditorCheckReviews extends React.Component {
         });
       })
       .on('receipt', async receipt => {
-        console.log('Decline Review:  ' + receipt.status);
-        await this.getReviewsToCheck();
+        console.log(
+          'Declining article version with article hash ' +
+            articleHash +
+            ' exits with status ' +
+            receipt.status
+        );
+        await this.getArticlesToFinalize();
         return receipt;
       })
       .catch(err => {
@@ -190,43 +171,37 @@ class EditorCheckReviews extends React.Component {
         {this.state.loading ? (
           <GridSpinner />
         ) : (
-          <Card title={'Check the handed in Reviews'} width={1000}>
-            {this.state.reviews ? (
-              this.state.reviews.length > 0 ? (
-                this.state.reviews.map(review => {
+          <Card title={'Finalize these articles:'} width={1000}>
+            {this.state.articles ? (
+              this.state.articles.length > 0 ? (
+                this.state.articles.map(article => {
                   return (
                     <Article
-                      buttonText={'Accept Review'}
-                      key={review.reviewId}
-                      article={review}
-                      onHover={this.state.articleOnHover === review._id}
+                      buttonText={'Accept this article'}
+                      key={article._id}
+                      article={article}
+                      onHover={this.state.articleOnHover === article._id}
                       onMouseEnter={id => {
                         this.setState({articleOnHover: id});
                       }}
                       onMouseLeave={id => {
                         this.setState({articleOnHover: null});
                       }}
-                      action={(_, review) => {
-                        this.acceptReview(
-                          review.articleHash,
-                          review.reviewerAddress
-                        );
+                      action={(_, article) => {
+                        this.acceptArticle(article.articleHash);
                       }}
-                      button2Text={'Decline Review'}
+                      button2Text={'Decline Article'}
                       action2={(_, review) => {
-                        this.declineReview(
-                          review.articleHash,
-                          review.reviewerAddress
-                        );
+                        this.declineArticle(article.articleHash);
                       }}
                     />
                   );
                 })
               ) : (
-                <NoReviews />
+                <NoArticles />
               )
             ) : (
-              <NoReviews />
+              <NoArticles />
             )}
           </Card>
         )}
@@ -234,4 +209,4 @@ class EditorCheckReviews extends React.Component {
     );
   }
 }
-export default withRouter(EditorCheckReviews);
+export default withRouter(EditorFinalize);

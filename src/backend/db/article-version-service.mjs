@@ -10,44 +10,17 @@ import ReviewService from './review-service.mjs';
 import ArticleSubmissionService from './article-submission-service.mjs';
 import userService from './user-service.mjs';
 import Roles from '../schema/roles-enum.mjs';
+import REVIEW_TYPE from '../schema/review-type-enum.mjs';
 
-const getFinalizableArticles = articles => {
-  let finalizableArticles = [];
-  articles.forEach(article => {
-    if (isFinalizable(article)) finalizableArticles.push(article);
-  });
-  return finalizableArticles;
-};
-
-const isFinalizable = article => {
-  const minEAReviews = 1; //minAmountOfEditorApprovedReviews
-  const minCReviews = 0; //minAmountOfCommunityReviews
-  return (
-    areReviewsOK(minEAReviews, article.editorApprovedReviews) &&
-    areReviewsOK(minCReviews, article.communityReviews)
-  );
-};
-
-const areReviewsOK = (minAmount, reviews) => {
-  let count = 0;
-  reviews.forEach(review => {
-    if (review.reviewState !== REVIEW_STATE.ACCEPTED) return false;
-    if (review.articleHasMajorIssues) return false;
-
-    count++;
-  });
-  return count >= minAmount;
-};
+export const getIds = articles => {
+    return articles.map(i => {
+      return i._id;
+    });
+  };
 
 export default {
   getAllArticleVersions: () => {
     return ArticleVersion.find({});
-  },
-
-  getIds: articles => {
-    return articles.map(i => {
-      return i._id;
-    });
   },
 
   getArticlesAssignedTo: async (ethereumAddress, articleVersionStates) => {
@@ -76,15 +49,17 @@ export default {
       submissions
     );
 
-    const articles = await ArticleVersion.find({
+    const articlesWithEnoughEAReviews = await ReviewService.getArticlesWithEnoughAcceptedReviews(REVIEW_TYPE.EDITOR_APPROVED_REVIEW);
+
+    return await ArticleVersion.find({
       articleVersionState: 'REVIEWERS_INVITED',
-      articleSubmission: {$in: submissionIds}
+      articleSubmission: {$in: submissionIds},
+      _id: {$in: getIds(articlesWithEnoughEAReviews)}
     }).populate([
       {path: 'articleSubmission'},
       {path: 'editorApprovedReviews'},
       {path: 'communityReviews'}
     ]);
-    return getFinalizableArticles(articles);
   },
 
   getArticlesOpenForReviews: async ethereumAddress => {
