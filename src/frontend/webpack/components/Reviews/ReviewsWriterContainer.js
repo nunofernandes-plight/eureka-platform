@@ -56,7 +56,8 @@ class ReviewsWriterContainer extends React.Component {
         reviewId: '1bc4408756120bd0b6fe7d64',
         annotationId: '2bc4408756120bd0b6fe7d65',
         field: 'title',
-        annotation: 'This title is not properly formatted',
+        text: 'This title is not properly formatted',
+        date: new Date(),
         issue: 'minor'
       },
       {
@@ -65,8 +66,9 @@ class ReviewsWriterContainer extends React.Component {
         reviewId: '1bc4408756120bd0b6fe7d89',
         annotationId: '2bc4408756120bd0b6fe7d45',
         field: 'abstract',
-        annotation:
+        text:
           'The abstract is too short. Consider to rewrite it using just 300 words.',
+        date: new Date(),
         issue: 'major'
       },
       {
@@ -75,8 +77,9 @@ class ReviewsWriterContainer extends React.Component {
         reviewId: '1bc4408756120bd0b6fe7d15',
         annotationId: '2bc4408756120bd0b6fe7d63',
         field: 'abstract',
-        annotation:
+        text:
           'Your abstract does not reflect the single observation described in your article. Please rewrite it',
+        date: new Date(),
         issue: 'major'
       },
       {
@@ -85,7 +88,8 @@ class ReviewsWriterContainer extends React.Component {
         reviewId: '9bc4408756120bd0b6fe7d15',
         annotationId: '8bc4408756120bd0b6fe7d63',
         field: 'figure',
-        annotation: 'Missing caption and source',
+        text: 'Missing caption and source',
+        date: new Date(),
         issue: 'minor'
       },
       {
@@ -94,7 +98,8 @@ class ReviewsWriterContainer extends React.Component {
         reviewId: '1bc4408756120bd0b6fe7d33',
         annotationId: '2bc4408756120bd0b6fe7d83',
         field: 'figure',
-        annotation: 'Figure is not relevant for your study',
+        text: 'Figure is not relevant for your study',
+        date: new Date(),
         issue: 'minor'
       },
       {
@@ -103,7 +108,8 @@ class ReviewsWriterContainer extends React.Component {
         reviewId: '1bc4408756120bd0b6fe7d23',
         annotationId: '2bc4408756120bd0b6fe7d55',
         field: 'figure',
-        annotation: 'Missing source',
+        text: 'Missing source',
+        date: new Date(),
         issue: 'minor'
       }
     ];
