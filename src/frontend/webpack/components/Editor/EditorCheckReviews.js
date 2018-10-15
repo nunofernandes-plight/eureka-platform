@@ -47,7 +47,9 @@ class EditorCheckReviews extends React.Component {
     this.state = {
       reviews: null,
       loading: false,
-      articleOnHover: null
+      articleOnHover: null,
+
+      tx: null
     };
   }
 
@@ -92,8 +94,7 @@ class EditorCheckReviews extends React.Component {
       })
       .on('transactionHash', tx => {
         this.setState({
-          tx,
-          showTxModal: true
+          tx
         });
       })
       .on('receipt', async receipt => {
@@ -131,8 +132,7 @@ class EditorCheckReviews extends React.Component {
       })
       .on('transactionHash', tx => {
         this.setState({
-          tx,
-          showTxModal: true
+          tx
         });
       })
       .on('receipt', async receipt => {
@@ -170,7 +170,7 @@ class EditorCheckReviews extends React.Component {
           }}
           action={'GOT IT'}
           callback={() => {
-            this.setState({showTxModal: false});
+            this.setState({tx: null});
           }}
           show={this.state.tx}
           title={'We got your request!'}
