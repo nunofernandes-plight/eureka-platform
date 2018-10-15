@@ -9,12 +9,14 @@ const Container = styled.div`
 `;
 
 const PreviewArticle = ({document, ...otherProps}) => {
-  const isReview = otherProps.base.toString().includes('write/review');
+  const isReview = otherProps.base
+    ? otherProps.base.toString().includes('write/review')
+    : false;
 
   return (
     <Container>
       <PreviewArticleAbstract isReview={isReview} document={document} />
-      <PreviewArticleFigure document={document} isReview={isReview} />
+      <PreviewArticleFigure isReview={isReview} document={document} />
     </Container>
   );
 };
