@@ -19,8 +19,11 @@ const Review = styled.div`
 `;
 
 const CommentIcon = styled.div`
+  &:hover {
+    margin-left: -20px;
+  }
   z-index: 100;
-  margin-left: -20px;
+  margin-left: -28px;
   margin-top: 10px;
   background: ${props => (props.show ? 'white' : 'transparent')};
   transition: 0.3s ease-in-out;
