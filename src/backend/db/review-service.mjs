@@ -78,6 +78,17 @@ export default {
       });
   },
 
+  getArticlesWithEnoughAcceptedReviews: async reviewType => {
+    return await Review.aggregate([
+      {$match: {
+          reviewState: 'ACCEPTED',
+          reviewType: reviewType
+        }},
+      {$group : {_id: "$articleVersion", count:{$sum:1}}},
+      {$match: {count: {$gte: 2.0}}}
+    ])
+  },
+
   createReview: async (submissionId, articleHash, stateTimestamp) => {
     const review = new Review({submissionId, articleHash, stateTimestamp});
     return review.save(err => {
