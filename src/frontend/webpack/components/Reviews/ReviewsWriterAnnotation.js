@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import AuthorLookup from '../AuthorLookup.js';
-import {__GRAY_600} from '../../../helpers/colors.js';
+import {__GRAY_600, __GRAY_700} from '../../../helpers/colors.js';
+import Icon from '../../views/icons/Icon.js';
 
 const Container = styled.div`
   padding: 10px;
@@ -13,6 +14,7 @@ const Container = styled.div`
 
 const AnnotationHeader = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const AnnotationBody = styled.div`
@@ -22,10 +24,13 @@ const AnnotationBody = styled.div`
 `;
 
 const Text = styled.div`
-  color: ${__GRAY_600};
+  color: ${__GRAY_700};
   font-size: 11px;
 `;
 
+const Menu = styled.div`
+  margin-left: auto;
+`;
 class ReviewsWriterAnnotation extends React.Component {
   constructor() {
     super();
@@ -47,6 +52,15 @@ class ReviewsWriterAnnotation extends React.Component {
             noAddress
             padding={'5px'}
           />
+          <Menu>
+            <Icon
+              icon={'material'}
+              material={'menu'}
+              width={17}
+              height={17}
+              color={__GRAY_700}
+            />
+          </Menu>
         </AnnotationHeader>
         <AnnotationBody>
           <Text>{annotation.text}</Text>
