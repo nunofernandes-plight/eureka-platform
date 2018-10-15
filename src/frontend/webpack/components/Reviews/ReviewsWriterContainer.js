@@ -5,6 +5,7 @@ import {ReviewsWriterCommentIcon} from './ReviewsWriterCommentIcon.js';
 import ReviewsWriterAnnotations from './ReviewsWriterAnnotations.js';
 import ReviewsWriterAnnotation from './ReviewsWriterAnnotation.js';
 import UploadSpinner from '../../views/spinners/UploadSpinner.js';
+import ReviewsWriterAnnotationEditor from './ReviewsWriterAnnotationEditor.js';
 
 const Container = styled.div`
   flex: 1;
@@ -128,17 +129,39 @@ class ReviewsWriterContainer extends React.Component {
     // getAllAnnotations: GET (given articleVersionId)
 
     const annotations = [...this.state.annotations];
+
+    // TODO: CALL FOR BACKEND WHERE A NEW ID IS CREATED --> FRONTEND uses it for navigating between components
     const annotation = {
       articleVersionId: this.props.documentId,
       owner: this.props.selectedAccount.address,
       reviewId: '1bc4408756120bd0b6fe7d86',
+      id: '123456789',
       field: this.props.field,
       onChange: true,
       date: new Date()
     };
+
     annotations.unshift(annotation);
     this.setState({annotations});
   }
+
+  deleteAnnotation = id => {
+    const annotations = [...this.state.annotations];
+    const index = annotations
+      .map(a => {
+        return a.id;
+      })
+      .indexOf(id);
+
+    if (id > -1) {
+      annotations.splice(index, 1);
+    }
+    this.setState({annotations});
+  };
+
+  saveAnnotation = id => {
+    // TODO: call backend and save annotation
+  };
 
   render() {
     return (
@@ -173,6 +196,12 @@ class ReviewsWriterContainer extends React.Component {
                     <ReviewsWriterAnnotation
                       annotation={annotation}
                       key={index}
+                      onCancel={id => {
+                        this.deleteAnnotation(id);
+                      }}
+                      onSave={id => {
+                        this.saveAnnotation(id);
+                      }}
                     />
                   );
                 })}

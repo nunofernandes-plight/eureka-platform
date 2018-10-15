@@ -66,7 +66,15 @@ class ReviewsWriterAnnotation extends React.Component {
         </AnnotationHeader>
         <AnnotationBody>
           {annotation.onChange ? (
-            <ReviewsWriterAnnotationEditor />
+            <ReviewsWriterAnnotationEditor
+              id={annotation.id}
+              onCancel={id => {
+                this.props.onCancel(id);
+              }}
+              onSave={id => {
+                this.props.onSubmit(id);
+              }}
+            />
           ) : (
             <Text>{annotation.text}</Text>
           )}

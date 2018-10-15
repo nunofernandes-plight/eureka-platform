@@ -46,16 +46,47 @@ const Buttons = styled.div`
   margin-top: 7.5px;
   font-size: 10.5px;
 `;
-const ReviewsWriterAnnotationEditor = props => {
-  return (
-    <Container>
-      <TextArea placeholder={'Enter your annotation here..'} cols={'10'} />
-      <Buttons>
-        <Cancel>Cancel</Cancel>
-        <Comment>Comment</Comment>
-      </Buttons>
-    </Container>
-  );
-};
+class ReviewsWriterAnnotationEditor extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      text: null
+    };
+  }
+
+  onChange(value) {
+    this.setState({text: value});
+  }
+
+  render() {
+    return (
+      <Container>
+        <TextArea
+          placeholder={'Enter your annotation here..'}
+          cols={'10'}
+          onChange={e => {
+            this.onChange(e.target.value);
+          }}
+        />
+        <Buttons>
+          <Cancel
+            onClick={() => {
+              this.props.onCancel(this.props.id);
+            }}
+          >
+            Cancel
+          </Cancel>
+          <Comment
+            onClick={() => {
+              this.props.onSave(this.props.id);
+            }}
+          >
+            Comment
+          </Comment>
+        </Buttons>
+      </Container>
+    );
+  }
+}
 
 export default ReviewsWriterAnnotationEditor;
