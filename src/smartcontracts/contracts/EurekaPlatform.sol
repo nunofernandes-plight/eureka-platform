@@ -482,7 +482,7 @@ contract EurekaPlatform {
         if (review.isEditorApprovedReview)
             require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. for accepting an editor approved review the article version state must be REVIEWERS_INVITED.");
         else
-            require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. for accepting a community review the article version state must be EDITOR_CHECKED.");
+            require(article.versionState >= ArticleVersionState.SUBMITTED, "this method can't be called. for accepting a community review the article version state must be at least SUBMITTED.");
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.ACCEPTED;
@@ -503,7 +503,7 @@ contract EurekaPlatform {
         if (review.isEditorApprovedReview)
             require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. for declining an editor approved review the article version state must be REVIEWERS_INVITED.");
         else
-            require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. for declining a community review the article version state must be EDITOR_CHECKED.");
+            require(article.versionState >= ArticleVersionState.SUBMITTED, "this method can't be called. for declining a community review the article version state must be at least SUBMITTED.");
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.DECLINED;
