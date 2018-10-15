@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import AuthorLookup from '../AuthorLookup.js';
 import {__GRAY_600, __GRAY_700} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
+import ReviewsWriterAnnotationEditor from './ReviewsWriterAnnotationEditor.js';
 
 const Container = styled.div`
   padding: 10px;
@@ -21,7 +22,7 @@ const AnnotationHeader = styled.div`
 const AnnotationBody = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 7.5px;
+  padding: 10px 4px;
 `;
 
 const Text = styled.div`
@@ -64,7 +65,11 @@ class ReviewsWriterAnnotation extends React.Component {
           </Menu>
         </AnnotationHeader>
         <AnnotationBody>
-          <Text>{annotation.text}</Text>
+          {annotation.onChange ? (
+            <ReviewsWriterAnnotationEditor />
+          ) : (
+            <Text>{annotation.text}</Text>
+          )}
         </AnnotationBody>
       </Container>
     );

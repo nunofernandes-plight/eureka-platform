@@ -122,10 +122,22 @@ class ReviewsWriterContainer extends React.Component {
 
   addAnnotation() {
     // getAnnotations: GET (given ethereumAddress and articleVersionId)
-    // addAnnotation /POST
+    // createAnnotation /POST
     // editAnnotation /PUT/:annotationId
     // removeAnnotation DEL/:annotationId
     // getAllAnnotations: GET (given articleVersionId)
+
+    const annotations = [...this.state.annotations];
+    const annotation = {
+      articleVersionId: this.props.documentId,
+      owner: this.props.selectedAccount.address,
+      reviewId: '1bc4408756120bd0b6fe7d86',
+      field: this.props.field,
+      onChange: true,
+      date: new Date()
+    };
+    annotations.unshift(annotation);
+    this.setState({annotations});
   }
 
   render() {
@@ -142,7 +154,7 @@ class ReviewsWriterContainer extends React.Component {
         <Review>
           <CommentIcon
             show={this.state.showCommentIcon}
-            onClick={() => this.props.onClick()}
+            onClick={() => this.addAnnotation()}
           >
             <ReviewsWriterCommentIcon show={this.state.showCommentIcon} />
           </CommentIcon>
