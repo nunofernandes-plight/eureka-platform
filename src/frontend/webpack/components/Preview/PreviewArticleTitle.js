@@ -20,12 +20,15 @@ const PreviewArticleTitle = ({document, isReview}) => {
   return (
     <Container id={'title'}>
       <ReviewsWriterFieldContainer>
-        <Title>{renderField(document, 'title')}</Title>
         {isReview ? (
-          <ReviewsWriterContainer
-            onMouseEnter={() => {}}
-            onMouseLeave={() => {}}
-          />
+          <Fragment>
+            <Title>{renderField(document, 'title')}</Title>
+            <ReviewsWriterContainer
+              onClick={() => {
+                alert('sküüüü');
+              }}
+            />
+          </Fragment>
         ) : null}
       </ReviewsWriterFieldContainer>
     </Container>
