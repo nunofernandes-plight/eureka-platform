@@ -134,11 +134,13 @@ class ReviewsWriterContainer extends React.Component {
         onMouseLeave={() => {
           this.setState({showCommentIcon: false});
         }}
-        onClick={() => this.props.onClick()}
       >
         <MySeparator />
         <Review>
-          <CommentIcon show={this.state.showCommentIcon}>
+          <CommentIcon
+            show={this.state.showCommentIcon}
+            onClick={() => this.props.onClick()}
+          >
             <ReviewsWriterCommentIcon show={this.state.showCommentIcon} />
           </CommentIcon>
 

@@ -10,6 +10,7 @@ const Container = styled.div`
   border: none;
   border-radius: 4px;
   margin-bottom: 20px;
+  margin-left: 20px;
 `;
 
 const AnnotationHeader = styled.div`
