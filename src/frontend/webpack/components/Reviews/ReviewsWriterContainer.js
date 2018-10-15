@@ -62,7 +62,7 @@ class ReviewsWriterContainer extends React.Component {
         id: '2bc4408756120bd0b6fe7d65',
         field: 'title',
         text: 'This title is not properly formatted',
-        date: new Date(),
+        date: new Date().getTime(),
         issue: 'minor'
       },
       {
@@ -73,7 +73,7 @@ class ReviewsWriterContainer extends React.Component {
         field: 'abstract',
         text:
           'The abstract is too short. Consider to rewrite it using just 300 words.',
-        date: new Date(),
+        date: new Date().getTime(),
         issue: 'major'
       },
       {
@@ -84,7 +84,7 @@ class ReviewsWriterContainer extends React.Component {
         field: 'abstract',
         text:
           'Your abstract does not reflect the single observation described in your article. Please rewrite it',
-        date: new Date(),
+        date: new Date().getTime(),
         issue: 'major'
       },
       {
@@ -94,7 +94,7 @@ class ReviewsWriterContainer extends React.Component {
         id: '8bc4408756120bd0b6fe7d63',
         field: 'figure',
         text: 'Missing caption and source',
-        date: new Date(),
+        date: new Date().getTime(),
         issue: 'minor'
       },
       {
@@ -104,7 +104,7 @@ class ReviewsWriterContainer extends React.Component {
         id: '2bc4408756120bd0b6fe7d83',
         field: 'figure',
         text: 'Figure is not relevant for your study',
-        date: new Date(),
+        date: new Date().getTime(),
         issue: 'minor'
       },
       {
@@ -114,7 +114,7 @@ class ReviewsWriterContainer extends React.Component {
         id: '2bc4408756120bd0b6fe7d55',
         field: 'figure',
         text: 'Missing source',
-        date: new Date(),
+        date: new Date().getTime(),
         issue: 'minor'
       }
     ];
@@ -138,7 +138,7 @@ class ReviewsWriterContainer extends React.Component {
       id: '123456789',
       field: this.props.field,
       onChange: true,
-      date: new Date()
+      date: new Date().getTime()
     };
 
     annotations.unshift(annotation);

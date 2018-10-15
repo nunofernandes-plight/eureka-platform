@@ -1,9 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 import AuthorLookup from '../AuthorLookup.js';
-import {__GRAY_600, __GRAY_700} from '../../../helpers/colors.js';
+import {
+  __GRAY_300,
+  __GRAY_400,
+  __GRAY_500,
+  __GRAY_600,
+  __GRAY_700
+} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import ReviewsWriterAnnotationEditor from './ReviewsWriterAnnotationEditor.js';
+import {renderTimestamp} from '../../../helpers/timestampRenderer.js';
+import moment from 'moment';
 
 const Container = styled.div`
   padding: 10px;
@@ -28,6 +36,12 @@ const AnnotationBody = styled.div`
 const Text = styled.div`
   color: ${__GRAY_700};
   font-size: 11px;
+`;
+
+const Date = styled.div`
+  font-size: 10px;
+  padding: 0 4px;
+  color: ${__GRAY_500};
 `;
 
 const Menu = styled.div`
@@ -64,6 +78,7 @@ class ReviewsWriterAnnotation extends React.Component {
             />
           </Menu>
         </AnnotationHeader>
+        <Date> {moment(annotation.date).calendar()}</Date>
         <AnnotationBody>
           {annotation.onChange ? (
             <ReviewsWriterAnnotationEditor
