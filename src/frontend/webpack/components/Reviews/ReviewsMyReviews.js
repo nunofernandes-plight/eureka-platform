@@ -232,8 +232,7 @@ class ReviewsOpen extends React.Component {
                       }}
                       action={(_, article) => {
                         this.props.history.push(
-                          `/app/write/review/${article.reviewId}
-                            `
+                          `/app/write/review/${article.reviewId}`
                         );
                       }}
                       button2Text={'dummy: send review to SC'}

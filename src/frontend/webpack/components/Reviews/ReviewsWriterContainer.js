@@ -5,6 +5,8 @@ import {ReviewsWriterCommentIcon} from './ReviewsWriterCommentIcon.js';
 import ReviewsWriterAnnotations from './ReviewsWriterAnnotations.js';
 import ReviewsWriterAnnotation from './ReviewsWriterAnnotation.js';
 import UploadSpinner from '../../views/spinners/UploadSpinner.js';
+import {addAnnotation, addCommunityReviewToDB} from './ReviewMethods.js';
+import {withRouter} from 'react-router';
 const Container = styled.div`
   flex: 1;
   display: flex;
@@ -125,6 +127,27 @@ class ReviewsWriterContainer extends React.Component {
     const annotations = [...this.state.annotations];
 
     // TODO: CALL FOR BACKEND WHERE A NEW ID IS CREATED --> FRONTEND uses it for navigating between components
+    const reviewId = this.props.match.params.reviewId;
+    const articleVersionId = this.props.documentId;
+    addAnnotation({
+      articleVersionId,
+      reviewId,
+      field: this.props.field
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          annotations.unshift(annotation);
+          this.setState({annotations});
+        }
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          errorMessage: err
+        });
+      });
+
     const annotation = {
       articleVersionId: this.props.documentId,
       owner: this.props.selectedAccount.address,
@@ -134,9 +157,6 @@ class ReviewsWriterContainer extends React.Component {
       onChange: true,
       date: new Date().getTime()
     };
-
-    annotations.unshift(annotation);
-    this.setState({annotations});
   }
 
   deleteAnnotation = id => {
@@ -207,4 +227,4 @@ class ReviewsWriterContainer extends React.Component {
   }
 }
 
-export default ReviewsWriterContainer;
+export default withRouter(ReviewsWriterContainer);
