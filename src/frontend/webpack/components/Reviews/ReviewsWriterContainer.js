@@ -8,6 +8,8 @@ import UploadSpinner from '../../views/spinners/UploadSpinner.js';
 import {
   addAnnotation,
   addCommunityReviewToDB,
+  getAnnotations,
+  getMyReviews,
   saveAnnotation
 } from './ReviewMethods.js';
 import {withRouter} from 'react-router';
@@ -49,76 +51,24 @@ class ReviewsWriterContainer extends React.Component {
   }
 
   async componentDidMount() {
-    await this.getAllAnnotations();
+    await this.getAnnotations(this.props.match.params.reviewId);
   }
 
   // TODO: call back end and get information from there. At the moment: Dummy data
-  getAllAnnotations() {
-    const annotations = [
-      {
-        articleVersionId: this.props.documentId,
-        owner: this.props.selectedAccount.address,
-        reviewId: '1bc4408756120bd0b6fe7d64',
-        id: '2bc4408756120bd0b6fe7d65',
-        field: 'title',
-        text: 'This title is not properly formatted',
-        date: new Date().getTime(),
-        isMajorIssue: false
-      },
-      {
-        articleVersionId: this.props.documentId,
-        owner: this.props.selectedAccount.address,
-        reviewId: '1bc4408756120bd0b6fe7d89',
-        id: '2bc4408756120bd0b6fe7d45',
-        field: 'abstract',
-        text:
-          'The abstract is too short. Consider to rewrite it using just 300 words.',
-        date: new Date().getTime(),
-        issue: 'major'
-      },
-      {
-        articleVersionId: this.props.documentId,
-        owner: this.props.selectedAccount.address,
-        reviewId: '1bc4408756120bd0b6fe7d15',
-        id: '2bc4408756120bd0b6fe7d63',
-        field: 'abstract',
-        text:
-          'Your abstract does not reflect the single observation described in your article. Please rewrite it',
-        date: new Date().getTime(),
-        issue: 'major'
-      },
-      {
-        articleVersionId: this.props.documentId,
-        owner: this.props.selectedAccount.address,
-        reviewId: '9bc4408756120bd0b6fe7d15',
-        id: '8bc4408756120bd0b6fe7d63',
-        field: 'figure',
-        text: 'Missing caption and source',
-        date: new Date().getTime(),
-        isMajorIssue: false
-      },
-      {
-        articleVersionId: this.props.documentId,
-        owner: this.props.selectedAccount.address,
-        reviewId: '1bc4408756120bd0b6fe7d33',
-        id: '2bc4408756120bd0b6fe7d83',
-        field: 'figure',
-        text: 'Figure is not relevant for your study',
-        date: new Date().getTime(),
-        isMajorIssue: false
-      },
-      {
-        articleVersionId: this.props.documentId,
-        owner: this.props.selectedAccount.address,
-        reviewId: '1bc4408756120bd0b6fe7d23',
-        id: '2bc4408756120bd0b6fe7d55',
-        field: 'figure',
-        text: 'Missing source',
-        date: new Date().getTime(),
-        isMajorIssue: false
-      }
-    ];
-    return this.setState({annotations});
+  getAnnotations(reviewId) {
+    this.setState({loading: true});
+    return getAnnotations(reviewId)
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.setState({annotations: response.data});
+        }
+        this.setState({loading: false});
+      })
+      .catch(err => {
+        this.setState({loading: false});
+        console.error(err);
+      });
   }
 
   addAnnotation() {
@@ -153,16 +103,6 @@ class ReviewsWriterContainer extends React.Component {
           errorMessage: err
         });
       });
-
-    const annotation = {
-      articleVersionId: this.props.documentId,
-      owner: this.props.selectedAccount.address,
-      reviewId: '1bc4408756120bd0b6fe7d86',
-      id: '123456789',
-      field: this.props.field,
-      onChange: true,
-      date: new Date().getTime()
-    };
   }
 
   deleteAnnotation = id => {
@@ -179,14 +119,14 @@ class ReviewsWriterContainer extends React.Component {
     this.setState({annotations});
   };
 
-  saveAnnotation = id => {
+  saveAnnotation = (id, text) => {
     const annotations = [...this.state.annotations];
     const index = annotations
       .map(a => {
         return a.id;
       })
       .indexOf(id);
-
+    annotations[index].text = text;
     saveAnnotation(annotations[index])
       .then(response => response.json())
       .then(response => {
@@ -239,8 +179,8 @@ class ReviewsWriterContainer extends React.Component {
                       onCancel={id => {
                         this.deleteAnnotation(id);
                       }}
-                      onSave={id => {
-                        this.saveAnnotation(id);
+                      onSave={(id, text) => {
+                        this.saveAnnotation(id, text);
                       }}
                     />
                   );

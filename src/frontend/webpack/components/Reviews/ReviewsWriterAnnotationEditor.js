@@ -78,7 +78,7 @@ class ReviewsWriterAnnotationEditor extends React.Component {
           </Cancel>
           <Comment
             onClick={() => {
-              this.props.onSave(this.props.id);
+              this.props.onSave(this.props.id, this.state.text);
             }}
           >
             Comment
