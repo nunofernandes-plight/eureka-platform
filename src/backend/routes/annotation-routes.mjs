@@ -2,6 +2,7 @@ import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
 import accesController from '../controller/acess-controller.mjs';
 import annotationService from '../db/annotation-service.mjs';
+
 const router = express.Router();
 
 router.use(accesController.loggedInOnly);
@@ -37,9 +38,8 @@ router.post(
       req.body.reviewId,
       req.body.articleVersionId,
       req.session.passport.user.ethereumAddress,
-      req.body.field,
-      req.body.text,
-      req.body.isMajorIssue);
+      req.body.field
+    );
     return annotation;
   })
 );
