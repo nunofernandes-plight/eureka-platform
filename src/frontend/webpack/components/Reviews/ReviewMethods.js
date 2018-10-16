@@ -52,6 +52,16 @@ export const addCommunityReviewToDB = review => {
   });
 };
 
+export const getAnnotations = reviewId => {
+  return fetch(`${getDomain()}/api/annotations/${reviewId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include'
+  });
+};
+
 export const addAnnotation = review => {
   return fetch(`${getDomain()}/api/annotations`, {
     method: 'POST',
