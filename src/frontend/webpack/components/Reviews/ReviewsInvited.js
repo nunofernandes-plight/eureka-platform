@@ -11,9 +11,7 @@ import {
 } from './ReviewMethods.js';
 import {__THIRD} from '../../../helpers/colors.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
-import {
-  acceptReviewInvitation,
-} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {acceptReviewInvitation} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 
 const Container = styled.div`
@@ -204,7 +202,8 @@ class ReviewsInvited extends React.Component {
                           });
 
                           this.props.history.push(
-                            `/app/write/review/${article._id}`
+                            `/app/write/review/${article.reviewId}
+                            `
                           );
                         }
                       }}
