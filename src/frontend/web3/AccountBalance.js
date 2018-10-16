@@ -4,6 +4,7 @@ import {__GRAY_100, __GRAY_200, __THIRD} from '../helpers/colors.js';
 import Icon from '../webpack/views/icons/Icon.js';
 import Web3Providers from './Web3Providers.js';
 import Select from 'react-select';
+import {Balance} from '../webpack/views/Balance.js';
 
 const Parent = styled.div`
   display: flex;
@@ -35,8 +36,6 @@ const ColumnRight = styled.div`
 `;
 
 const Address = styled.div``;
-
-const Balance = styled.div``;
 
 const Title = styled.h4`
   margin: 0;
@@ -83,8 +82,7 @@ class AccountBalance extends React.Component {
 
             <ColumnRight>
               <Title>Balance</Title>
-              <Balance>
-                {balance}
+              <Balance balance={balance}>
                 <Icon
                   icon={'ethereum'}
                   width={15}
@@ -113,8 +111,7 @@ class AccountBalance extends React.Component {
 
               <ColumnRight>
                 <Title>Balance</Title>
-                <Balance>
-                  {this.props.accounts.get(address)}{' '}
+                <Balance balance={this.props.accounts.get(address)}>
                   <Icon
                     icon={'ethereum'}
                     width={15}

@@ -1,16 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import AuthorLookup from '../AuthorLookup.js';
-import {
-  __GRAY_300,
-  __GRAY_400,
-  __GRAY_500,
-  __GRAY_600,
-  __GRAY_700
-} from '../../../helpers/colors.js';
+import {__GRAY_500, __GRAY_700} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import ReviewsWriterAnnotationEditor from './ReviewsWriterAnnotationEditor.js';
-import {renderTimestamp} from '../../../helpers/timestampRenderer.js';
 import moment from 'moment';
 
 const Container = styled.div`
@@ -18,8 +11,7 @@ const Container = styled.div`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   border: none;
   border-radius: 4px;
-  margin-bottom: 20px;
-  margin-left: 20px;
+  margin-bottom: 12px;
 `;
 
 const AnnotationHeader = styled.div`
@@ -66,6 +58,7 @@ class ReviewsWriterAnnotation extends React.Component {
             width={23}
             height={23}
             noAddress
+            fontSize={10}
             padding={'5px'}
           />
           <Menu>

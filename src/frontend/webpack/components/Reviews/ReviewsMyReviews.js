@@ -5,11 +5,10 @@ import Modal from '../../design-components/Modal.js';
 import Article from '../../views/Article.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {withRouter} from 'react-router-dom';
-import {getArticlesOpenToReview, getMyReviews} from './ReviewMethods.js';
+import {getMyReviews} from './ReviewMethods.js';
 import {__THIRD} from '../../../helpers/colors.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import {
-  acceptReviewInvitation,
   addCommunityReview,
   addEditorApprovedReview
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';

@@ -5,7 +5,6 @@ const ApiCall = (url, options = {}) => {
 	return new Promise((resolve, reject) => {
 		fetch(url, options)
 			.then(response => {
-				console.log(response.body);
 				if (response.status === 500) {
 					throw new Error('Server is offline');
 				}

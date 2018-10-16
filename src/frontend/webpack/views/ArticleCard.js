@@ -1,11 +1,9 @@
 import React from 'react';
-import styled, {keyframes} from 'styled-components';
+import styled from 'styled-components';
 import {
   __ALERT_DANGER,
   __FIFTH,
   __GRAY_100,
-  __GRAY_900,
-  __THIRD,
   getScale
 } from '../../helpers/colors.js';
 import chroma from 'chroma-js';

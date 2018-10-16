@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import styled, {keyframes} from 'styled-components';
+import styled from 'styled-components';
 import {getInviteReviewersArticles} from './EditorMethods.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Article from '../../views/Article.js';
@@ -8,7 +8,6 @@ import {__THIRD} from '../../../helpers/colors.js';
 import {Link, withRouter} from 'react-router-dom';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
-import {getGasEstimation} from '../../../../smartcontracts/methods/web3-utils-methods.mjs';
 import EdiorReviewersPicker from './EdiorReviewersPicker.js';
 import EmailPreview from '../Email/EmailPreview.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';

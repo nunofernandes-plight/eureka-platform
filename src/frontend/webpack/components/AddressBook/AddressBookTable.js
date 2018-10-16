@@ -38,7 +38,7 @@ const getData = props => {
   let data = [];
 
   props.contacts.map(c => {
-    data.push({
+    return data.push({
       address: c.contactAddress,
       preName: getAddressBookField('preName', c, props),
       lastName: getAddressBookField('lastName', c, props),

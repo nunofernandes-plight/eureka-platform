@@ -1,12 +1,10 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import {__GRAY_500, __GRAY_600} from '../../../helpers/colors.js';
+import {__GRAY_500} from '../../../helpers/colors.js';
 import {ReviewsWriterCommentIcon} from './ReviewsWriterCommentIcon.js';
 import ReviewsWriterAnnotations from './ReviewsWriterAnnotations.js';
 import ReviewsWriterAnnotation from './ReviewsWriterAnnotation.js';
 import UploadSpinner from '../../views/spinners/UploadSpinner.js';
-import ReviewsWriterAnnotationEditor from './ReviewsWriterAnnotationEditor.js';
-
 const Container = styled.div`
   flex: 1;
   display: flex;
@@ -16,15 +14,12 @@ const Container = styled.div`
 
 const Review = styled.div`
   display: flex;
-  width: 100%;
+  flex: 1;
 `;
 
 const CommentIcon = styled.div`
-  &:hover {
-    margin-left: -20px;
-  }
   z-index: 100;
-  margin-left: -28px;
+  margin-left: -20px;
   margin-top: 10px;
   background: ${props => (props.show ? 'white' : 'transparent')};
   transition: 0.3s ease-in-out;
@@ -49,7 +44,6 @@ class ReviewsWriterContainer extends React.Component {
 
   async componentDidMount() {
     await this.getAllAnnotations();
-    console.log(this.props.selectedAccount);
   }
 
   // TODO: call back end and get information from there. At the moment: Dummy data
@@ -185,7 +179,7 @@ class ReviewsWriterContainer extends React.Component {
           {!this.state.annotations ? (
             <UploadSpinner />
           ) : (
-            <ReviewsWriterAnnotations>
+            <ReviewsWriterAnnotations show={this.state.showCommentIcon}>
               {' '}
               {this.state.annotations
                 .filter(a => {

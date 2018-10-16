@@ -56,6 +56,8 @@ const getStyle = (position, height, width) => {
         marginLeft: `${-(width / 2)}px`,
         marginBottom: '10px'
       };
+    default:
+      return null;
   }
 };
 

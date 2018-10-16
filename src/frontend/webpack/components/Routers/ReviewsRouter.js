@@ -9,7 +9,6 @@ import ReviewsOpen from '../Reviews/ReviewsOpen.js';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
 import BecomeReviewer from '../Reviews/BecomeReviewer.js';
 import ReviewsMyReviews from '../Reviews/ReviewsMyReviews.js';
-import PreviewRouter from './PreviewRouter.js';
 
 const Parent = styled.div`
   display: flex;
@@ -20,10 +19,6 @@ const NavPills = styled.div`
   display: flex;
   margin-bottom: 10px;
   justify-content: center;
-`;
-
-const MarginTop = styled.div`
-  margin-top: 15px;
 `;
 
 const Container = styled.div``;
@@ -45,7 +40,6 @@ class ReviewsRouter extends Component {
   componentDidMount() {}
 
   render() {
-    console.log(this.props);
     return (
       <Parent>
         {this.props.user.roles.includes(Roles.REVIEWER) ? (

@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import {Card} from '../views/Card.js';
 import {getDomain} from '../../../helpers/getDomain.mjs';
@@ -45,7 +45,7 @@ class Reviewers extends React.Component {
   getData = () => {
     let data = [];
     this.state.reviewers.map(reviewer => {
-      data.push({
+      return data.push({
         avatar: <Avatar avatar={reviewer.avatar} width={40} height={40} />,
         email: (
           <Email

@@ -8,9 +8,7 @@ import Modal from '../../design-components/Modal.js';
 import {Card} from '../../views/Card.js';
 import {Go} from '../Routers/Go.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
-import {renderField} from '../TextEditor/DocumentRenderer.mjs';
-import PreviewStatus from '../../views/PreviewStatus.js';
-import {__GRAY_100, __GRAY_200, __GRAY_300} from '../../../helpers/colors.js';
+import {__GRAY_100, __GRAY_200} from '../../../helpers/colors.js';
 import PreviewArticle from '../Preview/PreviewArticle.js';
 
 const Container = styled.div`
@@ -31,10 +29,9 @@ const MySeparator = styled.div`
 
 const MyPreview = styled.div`
   display: flex;
-  width: 92%;
-  margin-bottom: 2em;
+  margin: 0 2em 3%;
   box-shadow: 0 0 0 0.75pt #d1d1d1, 0 0 3pt 0.75pt #ccc;
-  padding: 5%;
+  padding: 4em;
   background: rgb(255, 255, 255);
 `;
 

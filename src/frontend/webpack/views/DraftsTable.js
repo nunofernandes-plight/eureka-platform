@@ -53,7 +53,7 @@ const MyLink = styled(Link)`
 const getData = props => {
   const data = [];
   props.drafts.map(draft => {
-    data.push({
+    return data.push({
       icon: getIcon(draft),
       title: getTitle(props, draft),
       authors: getAuthors(props, draft),

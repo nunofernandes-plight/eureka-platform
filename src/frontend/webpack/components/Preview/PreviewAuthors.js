@@ -3,9 +3,6 @@ import styled from 'styled-components';
 import Author from '../../views/Author.js';
 import queryString from 'query-string';
 import {getDomain} from '../../../../helpers/getDomain.mjs';
-import GridSpinner from '../../views/spinners/GridSpinner.js';
-import CircleSpinner from '../../views/spinners/CircleSpinner.js';
-import PulseSpinner from '../../views/spinners/PulseSpinner.js';
 import SaveSpinner from '../../views/spinners/SaveSpinner.js';
 
 const Container = styled.div`

@@ -16,14 +16,6 @@ const AddAuthor = styled.div`
   cursor: pointer;
 `;
 
-const Address = styled.div`
-  font-weight: bold;
-`;
-
-const Email = styled.div`
-  font-size: 12px;
-  font-weight: inherit;
-`;
 const DocumentAuthors = props => {
   return (
     <div>

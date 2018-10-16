@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {InputField} from '../../design-components/Inputs.js';
-import {__ALERT_ERROR, __GRAY_100, __THIRD} from '../../../helpers/colors.js';
+import {__GRAY_100, __THIRD} from '../../../helpers/colors.js';
 import AddressBookLabelSelect from './AddressBookLabelSelect.js';
 
 const Container = styled.div`

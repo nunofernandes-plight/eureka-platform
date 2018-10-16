@@ -1,7 +1,6 @@
 import draftJs from 'draft-js';
 import Document from '../../../../models/Document.mjs';
 import {deserializeDocument} from '../../../../helpers/documentSerializer.mjs';
-const EditorState = draftJs.EditorState;
 const convertToRaw = draftJs.convertToRaw;
 
 export const makeFieldReadable = field => {
@@ -50,7 +49,7 @@ const renderMetaDataFields = (desarialized, field) => {
 const renderAuthors = authors => {
   let authorsString = '';
   authors.map(author => {
-    authorsString += author + ', ';
+    return (authorsString += author + ', ');
   });
 
   return authorsString;

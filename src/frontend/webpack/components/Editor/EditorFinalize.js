@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {getArticlesToFinalize, getArticlesToSignOff} from './EditorMethods.js';
+import {getArticlesToFinalize} from './EditorMethods.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Article from '../../views/Article.js';
 import {Card} from '../../views/Card.js';
@@ -8,9 +8,7 @@ import {__THIRD} from '../../../helpers/colors.js';
 import {Link, withRouter} from 'react-router-dom';
 import {
   acceptArticleVersion,
-  assignForSubmissionProcess,
-  declineArticleVersion,
-  setSanityToOk
+  declineArticleVersion
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
@@ -60,7 +58,6 @@ class EditorFinalize extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          console.log(response);
           this.setState({articles: response.data});
         }
         this.setState({loading: false});

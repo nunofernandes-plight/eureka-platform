@@ -13,10 +13,8 @@ import {__THIRD} from '../../../helpers/colors.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import {
   acceptReviewInvitation,
-  inviteReviewersForArticle
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
-import {getRelevantArticleData} from '../../../../backend/helpers/relevant-article-data.mjs';
 
 const Container = styled.div`
   display: flex;
