@@ -6,7 +6,7 @@ import Article from '../../views/Article.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {Link, withRouter} from 'react-router-dom';
 import {
-  saveEditorApprovedReviewToDB,
+  saveReviewDraftToDB,
   getArticlesInvitedForReviewing
 } from './ReviewMethods.js';
 import {__THIRD} from '../../../helpers/colors.js';

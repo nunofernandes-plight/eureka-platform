@@ -30,7 +30,7 @@ export const getMyReviews = () => {
   });
 };
 
-export const saveEditorApprovedReviewToDB = review => {
+export const saveReviewDraftToDB = review => {
   return fetch(`${getDomain()}/api/reviews/editorApproved`, {
     method: 'PUT',
     headers: {
