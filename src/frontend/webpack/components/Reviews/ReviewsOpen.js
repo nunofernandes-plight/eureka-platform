@@ -37,8 +37,6 @@ class ReviewsOpen extends React.Component {
       article: null,
       loading: false,
       articleOnHover: null,
-      showReviewersPickerModal: false,
-      reviewersToInvite: null,
       errorMessage: false
     };
   }
@@ -104,10 +102,6 @@ class ReviewsOpen extends React.Component {
                         this.setState({articleOnHover: null});
                       }}
                       action={(_, article) => {
-                        this.setState({
-                          showReviewersPickerModal: true,
-                          article
-                        });
                         // TODO Redirect to article preview and review editor
                         // dummy
                         addCommunityReviewToDB({

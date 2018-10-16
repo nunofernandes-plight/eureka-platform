@@ -52,8 +52,7 @@ class ReviewsInvited extends React.Component {
       errorMessage: false,
 
       showTxModal: false,
-      tx: null,
-      showAcceptInvitationModal: false
+      tx: null
     };
   }
 
@@ -182,10 +181,6 @@ class ReviewsInvited extends React.Component {
                       }}
                       action={async (_, article) => {
                         if (article.reviewState === 'INVITED') {
-                          this.setState({
-                            showAcceptInvitationModal: true,
-                            article
-                          });
                           await this.acceptReviewInvitation(article);
                         } else {
                           await saveReviewDraftToDB({
