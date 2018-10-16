@@ -11,6 +11,7 @@ import articleDraftRoutes from './article-draft-routes.mjs';
 import articleVersionRoutes from './article-version-routes.mjs';
 import articleSubmissionRoutes from './article-submission-routes.mjs';
 import addressBook from './address-book-routes.mjs';
+import annotationRoutes from './annotation-routes.mjs'
 
 const router = express.Router();
 
@@ -27,6 +28,7 @@ router.use('/submissions', articleSubmissionRoutes);
 router.use('/articles/drafts', articleDraftRoutes);
 router.use('/articles', articleVersionRoutes);
 router.use('/book', addressBook);
+router.use('/annotations', annotationRoutes);
 
 
 export default router;

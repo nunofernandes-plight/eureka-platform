@@ -3,6 +3,7 @@ import {asyncHandler} from '../api/requestHandler.mjs';
 import reviewService from '../db/review-service.mjs';
 import accesController from '../controller/acess-controller.mjs';
 import {getRelevantArticleData} from '../helpers/relevant-article-data.mjs';
+import errorThrower from '../helpers/error-thrower.mjs';
 const router = express.Router();
 
 router.use(accesController.loggedInOnly);
@@ -18,7 +19,7 @@ router.get(
   '/invited',
   asyncHandler(async req => {
     let reviews = await reviewService.getReviewInvitations(req.session.passport.user.ethereumAddress);
-    return getRelevantReviewData(reviews);
+    return getReviewsResponseArray(reviews);
   })
 );
 
@@ -26,7 +27,7 @@ router.get(
   '/myreviews',
   asyncHandler(async req => {
     let reviews = await reviewService.getMyReviews(req.session.passport.user.ethereumAddress);
-    return getRelevantReviewData(reviews);
+    return getReviewsResponseArray(reviews);
   })
 );
 
@@ -34,7 +35,7 @@ router.get(
   '/handedin',
   asyncHandler(async req => {
     let reviews = await reviewService.getHandedInReviews();
-    return getRelevantReviewData(reviews);
+    return getReviewsResponseArray(reviews);
   })
 );
 
@@ -42,7 +43,21 @@ router.get(
   '/checkable',
   asyncHandler(async req => {
     let reviews = await reviewService.getHandedInReviewsAssignedTo(req.session.passport.user.ethereumAddress);
-    return getRelevantReviewData(reviews);
+    return getReviewsResponseArray(reviews);
+  })
+);
+
+router.get(
+  '/:reviewId',
+  asyncHandler(async req => {
+    if (!req.params.reviewId) {
+      errorThrower.missingParameter('reviewId');
+    }
+    const review = await reviewService.getReviewById(
+      req.session.passport.user.ethereumAddress,
+      req.params.reviewId
+    );
+    return getRelevantReviewData(review);
   })
 );
 
@@ -91,23 +106,27 @@ router.put(
 
 export default router;
 
-const getRelevantReviewData = (reviews) => {
+const getReviewsResponseArray = (reviews) => {
   let reviewObjs = [];
   reviews.map(review => {
-    let obj = getRelevantArticleData(review.articleVersion.articleSubmission, review.articleVersion);
-    obj.reviewId = review._id;
-    obj.reviewHash = review.reviewHash;
-    obj.reviewState = review.reviewState;
-    obj.reviewType = review.reviewType;
-    obj.articleHasMajorIssues = review.articleHasMajorIssues;
-    obj.articleHasMinorIssues = review.articleHasMinorIssues;
-    obj.stateTimestamp = review.stateTimestamp;
-    obj.reviewerAddress = review.reviewerAddress;
-    obj.score1 = review.reviewScore1;
-    obj.score2 = review.reviewScore2;
-    obj.reviewText = review.reviewText;
-
-    reviewObjs.push(obj);
+    reviewObjs.push(getRelevantReviewData(review));
   });
   return reviewObjs;
+};
+
+const getRelevantReviewData = review => {
+  let obj = getRelevantArticleData(review.articleVersion.articleSubmission, review.articleVersion);
+  obj.reviewId = review._id;
+  obj.reviewHash = review.reviewHash;
+  obj.reviewState = review.reviewState;
+  obj.reviewType = review.reviewType;
+  obj.articleHasMajorIssues = review.articleHasMajorIssues;
+  obj.articleHasMinorIssues = review.articleHasMinorIssues;
+  obj.stateTimestamp = review.stateTimestamp;
+  obj.reviewerAddress = review.reviewerAddress;
+  obj.score1 = review.reviewScore1;
+  obj.score2 = review.reviewScore2;
+  obj.reviewText = review.reviewText;
+
+  return obj;
 };

@@ -96,8 +96,16 @@ export default {
       console.log('Created new review on DB done');
     });
   },
+
   getReviewById: async (userAddress, reviewId) => {
-    const review = await Review.findById(reviewId);
+    const review = await Review.findById(reviewId)
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}]
+      });
     if (!review) errorThrower.noEntryFoundById(reviewId);
     if (review.reviewerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
     return review;
