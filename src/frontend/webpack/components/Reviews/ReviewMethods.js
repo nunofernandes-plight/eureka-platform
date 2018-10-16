@@ -51,3 +51,14 @@ export const addCommunityReviewToDB = review => {
     body: JSON.stringify(review)
   });
 };
+
+export const addAnnotation = review => {
+  return fetch(`${getDomain()}/api/annotations`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+    body: JSON.stringify(review)
+  });
+};
