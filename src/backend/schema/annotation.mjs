@@ -23,8 +23,7 @@ export const annotationSchema = mongoose.Schema(
       type: String
     },
     isMajorIssue: {
-      type: Boolean,
-      default: false
+      type: Boolean
     }
   },
   {collection: 'annotations'}
