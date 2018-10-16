@@ -54,3 +54,5 @@ router.delete(
     return annotation;
   })
 );
+
+export default router;
