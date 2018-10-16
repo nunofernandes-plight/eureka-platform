@@ -2,7 +2,14 @@ import Annotation from '../schema/annotation.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 
 export default {
-  getAnnotations: async (owner, articleVersionId) => {
+  getAnnotations: async (articleVersionId, reviewId) => {
+    return await Annotation.find({
+      articleVersionId,
+      reviewId
+    });
+  },
+
+  getMyAnnotations: async (owner, articleVersionId) => {
     return await Annotation.find({
       owner,
       articleVersionId
