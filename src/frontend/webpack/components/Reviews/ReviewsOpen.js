@@ -101,20 +101,27 @@ class ReviewsOpen extends React.Component {
                       onMouseLeave={id => {
                         this.setState({articleOnHover: null});
                       }}
-                      action={(_, article) => {
-                        // TODO Redirect to article preview and review editor
-                        // dummy
+                      action={async (_, article) => {
+                        this.setState({loading: true});
                         addCommunityReviewToDB({
-                          articleHash: article.articleHash,
-                          reviewText: 'dummy text community review',
-                          reviewHash:
-                            '0x' +
-                            '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
-                          score1: 10,
-                          score2: 5,
-                          articleHasMajorIssues: false,
-                          articleHasMinorIssues: true
-                        });
+                          articleHash: article.articleHash
+                        })
+                          .then(response => response.json())
+                          .then(response => {
+                            if (response.success) {
+                              this.setState({loading: false});
+                              this.props.history.push(
+                                `/app/write/review/${response.data._id}
+                            `
+                              );
+                            }
+                          })
+                          .catch(err => {
+                            this.setState({
+                              loading: false,
+                              errorMessage: err
+                            });
+                          });
                       }}
                     />
                   );
