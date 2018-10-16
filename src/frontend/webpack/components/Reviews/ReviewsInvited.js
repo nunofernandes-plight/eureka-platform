@@ -136,7 +136,7 @@ class ReviewsInvited extends React.Component {
           }}
           noClose
           show={this.state.showTxModal}
-          title={'Your invitationi has been successfully accepted!'}
+          title={'Your invitation has been successfully accepted!'}
         >
           Dear reviewer, your request for accepting the review invitation has
           successfully triggered our Smart Contract. If you are interested, you
@@ -188,19 +188,9 @@ class ReviewsInvited extends React.Component {
                           });
                           await this.acceptReviewInvitation(article);
                         } else {
-                          // dummy
-                          saveEditorApprovedReviewToDB({
-                            reviewId: article.reviewId,
-                            reviewText: 'dummy text',
-                            reviewHash:
-                              '0x' +
-                              '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
-                            score1: 10,
-                            score2: 5,
-                            articleHasMajorIssues: false,
-                            articleHasMinorIssues: true
+                          await saveReviewDraftToDB({
+                            reviewId: article.reviewId
                           });
-
                           this.props.history.push(
                             `/app/write/review/${article.reviewId}
                             `
