@@ -2,9 +2,8 @@ import Annotation from '../schema/annotation.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 
 export default {
-  getAnnotations: async (articleVersionId, reviewId) => {
+  getAnnotations: async (reviewId) => {
     return await Annotation.find({
-      articleVersionId,
       reviewId
     });
   },

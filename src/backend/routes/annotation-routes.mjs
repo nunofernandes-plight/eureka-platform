@@ -16,9 +16,9 @@ router.get(
 );
 
 router.get(
-  '/:articleVersionId/:reviewId',
+  '/:reviewId',
   asyncHandler(async req => {
-    let annotations = await annotationService.getAnnotations(req.params.articleVersionId, req.params.reviewId);
+    let annotations = await annotationService.getAnnotations(req.params.reviewId);
     return annotations;
   })
 );
