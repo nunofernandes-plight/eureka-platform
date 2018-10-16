@@ -38,7 +38,7 @@ export const fetchArticle = draftId => {
 };
 
 export const fetchArticleByReviewId = reviewId => {
-  return fetch(`${getDomain()}/api/articles/drafts/${reviewId}`, {
+  return fetch(`${getDomain()}/api/reviews/${reviewId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
