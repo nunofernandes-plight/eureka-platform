@@ -40,8 +40,11 @@ router.put(
   '/:annotationId',
   asyncHandler(async req => {
     let annotation = await annotationService.editAnnotation(
+      req.params.annotationId,
       req.session.passport.user.ethereumAddress,
-      req.body);
+      req.body.field,
+      req.body.text,
+      req.body.isMajorIssue);
     return annotation;
   })
 );
