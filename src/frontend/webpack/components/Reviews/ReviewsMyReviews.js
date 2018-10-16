@@ -220,9 +220,7 @@ class ReviewsOpen extends React.Component {
                 this.state.articles.map(article => {
                   return (
                     <Article
-                      buttonText={
-                        'dummy: send review to SC / later: Edit review'
-                      }
+                      buttonText={'Edit Review'}
                       key={article._id}
                       article={article}
                       onHover={this.state.articleOnHover === article._id}
@@ -233,11 +231,13 @@ class ReviewsOpen extends React.Component {
                         this.setState({articleOnHover: null});
                       }}
                       action={(_, article) => {
-                        this.setState({
-                          article
-                        });
-                        //TODO Redirect to article preview and review editor
-                        // dummy
+                        this.props.history.push(
+                          `/app/write/review/${article.reviewId}
+                            `
+                        );
+                      }}
+                      button2Text={'dummy: send review to SC'}
+                      action2={(_, article) => {
                         if (
                           article.reviewType ===
                           REVIEW_TYPE.EDITOR_APPROVED_REVIEW
