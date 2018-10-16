@@ -5,7 +5,11 @@ import {ReviewsWriterCommentIcon} from './ReviewsWriterCommentIcon.js';
 import ReviewsWriterAnnotations from './ReviewsWriterAnnotations.js';
 import ReviewsWriterAnnotation from './ReviewsWriterAnnotation.js';
 import UploadSpinner from '../../views/spinners/UploadSpinner.js';
-import {addAnnotation, addCommunityReviewToDB} from './ReviewMethods.js';
+import {
+  addAnnotation,
+  addCommunityReviewToDB,
+  saveAnnotation
+} from './ReviewMethods.js';
 import {withRouter} from 'react-router';
 const Container = styled.div`
   flex: 1;
@@ -126,8 +130,8 @@ class ReviewsWriterContainer extends React.Component {
 
     const annotations = [...this.state.annotations];
 
-    // TODO: CALL FOR BACKEND WHERE A NEW ID IS CREATED --> FRONTEND uses it for navigating between components
     const reviewId = this.props.match.params.reviewId;
+    // TODO: documentId is null and doesn't reflect article Version
     const articleVersionId = this.props.documentId;
     addAnnotation({
       articleVersionId,
@@ -137,6 +141,8 @@ class ReviewsWriterContainer extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
+          let annotation = response.data;
+          annotation.onChange = true;
           annotations.unshift(annotation);
           this.setState({annotations});
         }
@@ -174,7 +180,27 @@ class ReviewsWriterContainer extends React.Component {
   };
 
   saveAnnotation = id => {
-    // TODO: call backend and save annotation
+    const annotations = [...this.state.annotations];
+    const index = annotations
+      .map(a => {
+        return a.id;
+      })
+      .indexOf(id);
+
+    saveAnnotation(annotations[index])
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          annotations[index].onChange = false;
+          this.setState({annotations});
+        }
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          errorMessage: err
+        });
+      });
   };
 
   render() {

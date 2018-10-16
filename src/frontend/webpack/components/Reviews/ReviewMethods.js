@@ -62,3 +62,14 @@ export const addAnnotation = review => {
     body: JSON.stringify(review)
   });
 };
+
+export const saveAnnotation = annotation => {
+  return fetch(`${getDomain()}/api/annotations/${annotation._id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+    body: JSON.stringify(annotation)
+  });
+};
