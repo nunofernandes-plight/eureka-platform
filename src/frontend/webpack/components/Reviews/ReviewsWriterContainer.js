@@ -63,7 +63,7 @@ class ReviewsWriterContainer extends React.Component {
         field: 'title',
         text: 'This title is not properly formatted',
         date: new Date().getTime(),
-        issue: 'minor'
+        isMajorIssue: false
       },
       {
         articleVersionId: this.props.documentId,
@@ -95,7 +95,7 @@ class ReviewsWriterContainer extends React.Component {
         field: 'figure',
         text: 'Missing caption and source',
         date: new Date().getTime(),
-        issue: 'minor'
+        isMajorIssue: false
       },
       {
         articleVersionId: this.props.documentId,
@@ -105,7 +105,7 @@ class ReviewsWriterContainer extends React.Component {
         field: 'figure',
         text: 'Figure is not relevant for your study',
         date: new Date().getTime(),
-        issue: 'minor'
+        isMajorIssue: false
       },
       {
         articleVersionId: this.props.documentId,
@@ -115,7 +115,7 @@ class ReviewsWriterContainer extends React.Component {
         field: 'figure',
         text: 'Missing source',
         date: new Date().getTime(),
-        issue: 'minor'
+        isMajorIssue: false
       }
     ];
     return this.setState({annotations});
