@@ -20,7 +20,7 @@ export const annotationSchema = mongoose.Schema(
       type: String
     },
     date: {
-      type: String
+      type: Date
     },
     isMajorIssue: {
       type: Boolean
