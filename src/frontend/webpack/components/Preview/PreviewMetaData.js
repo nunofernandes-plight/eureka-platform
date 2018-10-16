@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import chroma from 'chroma-js';
 import Document from '../../../../models/Document.mjs';
-import {__ALERT_ERROR, __THIRD, getScale} from '../../../helpers/colors.js';
+import {__ALERT_ERROR, __THIRD} from '../../../helpers/colors.js';
 import {
   makeFieldReadable,
   renderField

@@ -3,10 +3,8 @@ import styled from 'styled-components';
 import TxType from './TxType.js';
 import {Link} from 'react-router-dom';
 import {Table} from '../../design-components/Table/Table.js';
-import TxHash from '../../views/TxHash.js';
 import {renderTimestamp} from '../../../helpers/timestampRenderer';
 import EurekaLogo from '../../views/icons/EurekaLogo';
-import UserExploration from '../UserExploration.js';
 import {EthereumAddress} from '../../views/Address.js';
 
 const ContactsContainer = styled.div`
@@ -25,7 +23,7 @@ const NoTxs = styled.div`
 const getData = props => {
   let data = [];
   props.txs.map(tx => {
-    data.push({
+    return data.push({
       logo: getLogo(),
       transactionType: getTxType(tx),
       timestamp: getTimestamp(tx),
@@ -54,11 +52,7 @@ const getTimestamp = tx => {
   const date = new Date(tx.updatedAt);
   return <div>{renderTimestamp(date.getTime())}</div>;
 };
-const getTxHash = tx => {
-  return (
-    <TxHash txHash={tx.txHash}>{tx.txHash.toString().substr(0, 20)}...</TxHash>
-  );
-};
+
 const getTxType = tx => {
   return <TxType type={tx.transactionType} />;
 };
@@ -76,13 +70,7 @@ const MyHistoryTable = props => {
         </NoTxs>
       ) : (
         <Table
-          header={[
-            '',
-            'Transaction Type',
-            'Transaction date',
-            'From',
-            'To'
-          ]}
+          header={['', 'Transaction Type', 'Transaction date', 'From', 'To']}
           textCenter={'Transaction Type'}
           data={getData(props)}
           columnWidth={['6', '25', '17', '37', '15']}

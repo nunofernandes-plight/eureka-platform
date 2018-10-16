@@ -2,8 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import {InputField} from '../../design-components/Inputs.js';
 import ToggleButton from '../../design-components/ToggleButton.js';
-import Icon from '../../views/icons/Icon.js';
-
 const QuerySection = styled.div`
   display: flex;
   justify-content: center;

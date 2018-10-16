@@ -1,12 +1,10 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import {__GRAY_500, __GRAY_600} from '../../../helpers/colors.js';
+import {__GRAY_500} from '../../../helpers/colors.js';
 import {ReviewsWriterCommentIcon} from './ReviewsWriterCommentIcon.js';
 import ReviewsWriterAnnotations from './ReviewsWriterAnnotations.js';
 import ReviewsWriterAnnotation from './ReviewsWriterAnnotation.js';
 import UploadSpinner from '../../views/spinners/UploadSpinner.js';
-import ReviewsWriterAnnotationEditor from './ReviewsWriterAnnotationEditor.js';
-
 const Container = styled.div`
   flex: 1;
   display: flex;

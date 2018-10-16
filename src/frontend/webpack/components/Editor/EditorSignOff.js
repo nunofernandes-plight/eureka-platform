@@ -7,7 +7,6 @@ import {Card} from '../../views/Card.js';
 import {__THIRD} from '../../../helpers/colors.js';
 import {Link, withRouter} from 'react-router-dom';
 import {
-  assignForSubmissionProcess,
   setSanityToOk
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';

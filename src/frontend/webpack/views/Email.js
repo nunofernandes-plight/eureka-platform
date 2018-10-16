@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__ALERT_DANGER, __ALERT_WARNING} from '../../helpers/colors.js';
+import {__ALERT_DANGER} from '../../helpers/colors.js';
 
 const ExternalLink = styled.a`
   color: ${__ALERT_DANGER};

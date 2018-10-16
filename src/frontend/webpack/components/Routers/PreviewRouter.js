@@ -8,14 +8,10 @@ import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {renderField} from '../TextEditor/DocumentRenderer.mjs';
 import PreviewStatus from '../../views/PreviewStatus.js';
 import {
-  __ALERT_ERROR,
   __FIFTH,
   __GRAY_100,
   __GRAY_200,
-  __GRAY_400,
-  __GRAY_500,
-  __GRAY_700,
-  __THIRD
+  __GRAY_500
 } from '../../../helpers/colors.js';
 import {fetchArticle} from '../TextEditor/DocumentMainMethods.js';
 import Document from '../../../../models/Document.mjs';
@@ -24,7 +20,6 @@ import Modal from '../../design-components/Modal.js';
 import PreviewAuthors from '../Preview/PreviewAuthors.js';
 import PreviewMetaData from '../Preview/PreviewMetaData.js';
 import PreviewArticle from '../Preview/PreviewArticle.js';
-import AuthorLookup from '../AuthorLookup.js';
 
 const Container = styled.div`
   display: flex;
@@ -100,10 +95,6 @@ const MyLink = styled(NavLink)`
 MyLink.defaultProps = {
   activeClassName: 'active'
 };
-
-const Authors = styled.div`
-  display: flex;
-`;
 
 class PreviewRouter extends Component {
   constructor() {

@@ -2,15 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import AuthorLookup from '../AuthorLookup.js';
 import {
-  __GRAY_300,
-  __GRAY_400,
   __GRAY_500,
-  __GRAY_600,
   __GRAY_700
 } from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import ReviewsWriterAnnotationEditor from './ReviewsWriterAnnotationEditor.js';
-import {renderTimestamp} from '../../../helpers/timestampRenderer.js';
 import moment from 'moment';
 
 const Container = styled.div`

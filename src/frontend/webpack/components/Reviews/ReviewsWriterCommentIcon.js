@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Icon from '../../views/icons/Icon.js';
-import chroma from 'chroma-js';
-import {__GRAY_400, __GRAY_800, __THIRD} from '../../../helpers/colors.js';
+import {__GRAY_400, __GRAY_800} from '../../../helpers/colors.js';
 
 const Circle = styled.div`
   display: flex;

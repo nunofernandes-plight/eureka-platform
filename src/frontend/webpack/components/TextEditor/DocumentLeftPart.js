@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import Toolbar from './Toolbar.js';
-import {__GRAY_200, __GRAY_900} from '../../../helpers/colors.js';
-import Icon from '../../views/icons/Icon.js';
 
 const LeftTopContainer = styled.div`
   padding: 15px;
@@ -14,11 +12,11 @@ const LeftTopContainer = styled.div`
   height: 100%;
   margin-top: 21px;
 `;
-const PreviewIcon = styled.div``;
+
 const DocumentLeftPart = ({document, ...otherProps}) => {
   return (
     <LeftTopContainer>
-      <Toolbar document={document} documentId={otherProps.documentId}/>
+      <Toolbar document={document} documentId={otherProps.documentId} />
     </LeftTopContainer>
   );
 };

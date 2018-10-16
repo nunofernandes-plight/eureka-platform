@@ -15,7 +15,6 @@ import {
   PLATFORM_KOVAN_ADDRESS,
   TOKEN_KOVAN_ADDRESS
 } from '../smartcontracts/constants/KovanContractAddresses.mjs';
-import {isProduction} from '../helpers/isProduction.mjs';
 
 class App extends Component {
   constructor() {

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import {renderField} from '../TextEditor/DocumentRenderer.mjs';
 import ReviewsWriterContainer from '../Reviews/ReviewsWriterContainer.js';
 import {ReviewsWriterFieldContainer} from '../Reviews/ReviewsWriterField.js';
-import PreviewStatus from '../../views/PreviewStatus.js';
 
 const Container = styled.div``;
 const Title = styled.h3`

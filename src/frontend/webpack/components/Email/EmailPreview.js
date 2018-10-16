@@ -1,11 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  __GRAY_200,
-  __GRAY_700,
-  __GRAY_800,
-  __GRAY_900
-} from '../../../helpers/colors.js';
+import {__GRAY_200, __GRAY_700, __GRAY_900} from '../../../helpers/colors.js';
 import {renderField} from '../TextEditor/DocumentRenderer.mjs';
 
 const Container = styled.div`
@@ -48,7 +43,6 @@ const MyButton = styled.button`
   pointer-events: none;
 `;
 
-const To = styled.div``;
 const EmailPreview = props => {
   const title = renderField(props.article, 'title');
   return (

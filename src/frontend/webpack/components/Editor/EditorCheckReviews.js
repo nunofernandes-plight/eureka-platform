@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {getArticlesToSignOff, getReviewsToCheck} from './EditorMethods.js';
+import {getReviewsToCheck} from './EditorMethods.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Article from '../../views/Article.js';
 import {Card} from '../../views/Card.js';
@@ -8,10 +8,7 @@ import {__THIRD} from '../../../helpers/colors.js';
 import {Link, withRouter} from 'react-router-dom';
 import {
   acceptReview,
-  assignForSubmissionProcess,
-  declineReview,
-  inviteReviewersForArticle,
-  setSanityToOk
+  declineReview
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';

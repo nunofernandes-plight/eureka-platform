@@ -10,7 +10,7 @@ import {signUpEditor} from '../../../smartcontracts/methods/web3-platform-contra
 import Modal from '../design-components/Modal.js';
 import 'react-toastify/dist/ReactToastify.css';
 import '../design-components/Notification.css';
-import {ToastContainer, toast} from 'react-toastify';
+import {ToastContainer} from 'react-toastify';
 import {isGanache} from '../../../helpers/isGanache.mjs';
 
 const Container = styled.div`
@@ -105,10 +105,7 @@ class ContractOwnerDashboard extends React.Component {
       });
     else gasAmount = 80000000;
 
-    const receipt = await signUpEditor(
-      this.props.platformContract,
-      this.state.editorAddress
-    )
+    await signUpEditor(this.props.platformContract, this.state.editorAddress)
       .send({
         from: this.props.selectedAccount.address,
         gas: gasAmount

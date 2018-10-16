@@ -6,7 +6,6 @@ import {
   LARGE_DEVICES,
   MEDIUM_DEVICES
 } from '../../helpers/mobile.js';
-import {Go} from '../components/Routers/Go.js';
 import {CARD_WIDTH_IN_PERCENTAGE} from '../../helpers/layout.js';
 
 export const CardTitle = styled.h2`

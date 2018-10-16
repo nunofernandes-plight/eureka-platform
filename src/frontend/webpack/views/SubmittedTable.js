@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import {
   __GRAY_600,
-  __GRAY_200,
   __THIRD,
   __FIFTH,
   __ALERT_SUCCESS
@@ -23,26 +22,6 @@ const SubmittedContainer = styled.div`
   padding: 10px 25px;
   max-height: 400px;
   overflow: scroll;
-`;
-
-const Submitted = styled.table`
-  width: 100%;
-  text-align: left;
-  position: relative;
-  border-collapse: collapse;
-  white-space: nowrap;
-`;
-
-const TableTitle = styled.p`
-  font-size: 16px;
-  font-weight: bold;
-`;
-
-const Tr = styled.tr`
-  &:hover {
-    background: ${__GRAY_200};
-  }
-  transition: 0.5s all;
 `;
 
 const NoSubmitted = styled.div`
@@ -113,7 +92,7 @@ const renderStatus = status => {
 const getData = props => {
   let data = [];
   props.submitted.map(sub => {
-    data.push({
+    return data.push({
       icon: getIcon(sub),
       name: getName(props, sub),
       hash: getHash(sub),
