@@ -15,20 +15,25 @@ const AuthorContainer = styled.div`
   display: flex;
   align-items: center;
   padding: ${props => (props.padding !== undefined ? props.padding : '12px')};
+  font-size: ${props => props.fontSize};
   border-bottom: 1px solid ${__GRAY_100};
   width: 100%;
 `;
 
 const Author = props => {
   const author = props.author;
+  const fontSize = props.fontSize ? props.fontSize + 'px' : 'inherit';
   return (
-    <AuthorContainer padding={props.padding}>
+    <AuthorContainer padding={props.padding} fontSize={fontSize}>
       <Avatar avatar={author.avatar} {...props} />
       <AuthorCredentials>
         {props.noAddress ? null : (
-          <EthereumAddress ethereumAddress={author.ethereumAddress} />
+          <EthereumAddress
+            ethereumAddress={author.ethereumAddress}
+            fontSize={fontSize}
+          />
         )}
-        <Email size={12} noDecoration email={author.email}>
+        <Email noDecoration email={author.email} fontSize={fontSize}>
           {author.email}
         </Email>
       </AuthorCredentials>

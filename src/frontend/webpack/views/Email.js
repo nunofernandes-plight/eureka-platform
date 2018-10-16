@@ -5,8 +5,9 @@ import {__ALERT_DANGER} from '../../helpers/colors.js';
 const ExternalLink = styled.a`
   color: ${__ALERT_DANGER};
   font-weight: bold;
-  font-size: ${props => (props.size ? props.size : '14')}px;
+  font-size: ${props => props.fontSize};
   text-decoration: ${props => (props.noDecoration ? 'none' : null)};
+  word-break: break-all;
 `;
 
 export const Email = ({email, subject, body, ...otherProps}) => {

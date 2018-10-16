@@ -58,6 +58,7 @@ class ReviewsWriterAnnotation extends React.Component {
             width={23}
             height={23}
             noAddress
+            fontSize={10}
             padding={'5px'}
           />
           <Menu>
