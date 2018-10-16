@@ -57,7 +57,7 @@ router.get(
       req.session.passport.user.ethereumAddress,
       req.params.reviewId
     );
-    return getRelevantReviewData(review);
+    return getDetailedArticleAndReviewData(review);
   })
 );
 
@@ -127,6 +127,27 @@ const getRelevantReviewData = review => {
   obj.score1 = review.reviewScore1;
   obj.score2 = review.reviewScore2;
   obj.reviewText = review.reviewText;
+
+  return obj;
+};
+
+const getDetailedArticleAndReviewData = review => {
+  let obj = review.articleVersion;
+
+  let reviewObj = {};
+  reviewObj.reviewId = review._id;
+  reviewObj.reviewHash = review.reviewHash;
+  reviewObj.reviewState = review.reviewState;
+  reviewObj.reviewType = review.reviewType;
+  reviewObj.articleHasMajorIssues = review.articleHasMajorIssues;
+  reviewObj.articleHasMinorIssues = review.articleHasMinorIssues;
+  reviewObj.stateTimestamp = review.stateTimestamp;
+  reviewObj.reviewerAddress = review.reviewerAddress;
+  reviewObj.score1 = review.reviewScore1;
+  reviewObj.score2 = review.reviewScore2;
+  reviewObj.reviewText = review.reviewText;
+
+  obj.review = reviewObj;
 
   return obj;
 };
