@@ -127,7 +127,6 @@ class ContractOwnerDashboard extends React.Component {
         //     progressClassName: '__BAR'
         //   }
         // );
-        console.log(res);
       })
       .catch(err => {
         console.error('submitArticle error: ', err);

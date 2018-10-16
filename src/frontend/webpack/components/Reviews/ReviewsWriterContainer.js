@@ -47,7 +47,6 @@ class ReviewsWriterContainer extends React.Component {
 
   async componentDidMount() {
     await this.getAllAnnotations();
-    console.log(this.props.selectedAccount);
   }
 
   // TODO: call back end and get information from there. At the moment: Dummy data

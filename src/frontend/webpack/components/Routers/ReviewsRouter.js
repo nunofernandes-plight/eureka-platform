@@ -40,7 +40,6 @@ class ReviewsRouter extends Component {
   componentDidMount() {}
 
   render() {
-    console.log(this.props);
     return (
       <Parent>
         {this.props.user.roles.includes(Roles.REVIEWER) ? (

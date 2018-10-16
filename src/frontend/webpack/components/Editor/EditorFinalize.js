@@ -58,7 +58,6 @@ class EditorFinalize extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          console.log(response);
           this.setState({articles: response.data});
         }
         this.setState({loading: false});

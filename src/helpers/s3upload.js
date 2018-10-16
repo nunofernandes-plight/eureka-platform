@@ -1,6 +1,5 @@
 
 function S3Upload(options) {
-	console.log(options);
 	if (!options) {
 		options = {};
 	}

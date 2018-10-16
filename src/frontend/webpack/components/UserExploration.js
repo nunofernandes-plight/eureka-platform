@@ -38,8 +38,7 @@ class UserExploration extends React.Component {
         if (response.success) {
           this.setState({user: response.data});
         } else {
-          // handle USER NOT FOUND
-          console.log(response);
+          // TODO: handle USER NOT FOUND
         }
       })
       .catch(err => {

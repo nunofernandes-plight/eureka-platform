@@ -27,7 +27,6 @@ class MyHistory extends React.Component {
       .then(response => {
         if (response.success) {
           this.setState({txs: response.data.reverse()});
-          console.log(response.data);
         } else {
           this.setState({
             errorMessage: response.error,
