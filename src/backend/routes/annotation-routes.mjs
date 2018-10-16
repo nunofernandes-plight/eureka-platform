@@ -26,8 +26,12 @@ router.post(
   '/',
   asyncHandler(async req => {
     let annotation = await annotationService.createAnnotation(
+      req.body.reviewId,
+      req.body.articleVersionId,
       req.session.passport.user.ethereumAddress,
-      req.body);
+      req.body.field,
+      req.body.text,
+      req.body.isMajorIssue);
     return annotation;
   })
 );
