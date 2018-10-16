@@ -9,7 +9,15 @@ router.use(accesController.loggedInOnly);
 router.get(
   '/:articleVersionId/:reviewId',
   asyncHandler(async req => {
-    let annotations = await annotationService.getAnnotations(req.session.passport.user.ethereumAddress, req.params.articleVersionId);
+    let annotations = await annotationService.getAnnotations(req.params.articleVersionId, req.params.reviewId);
+    return annotations;
+  })
+);
+
+router.get(
+  '/:articleVersionId/myAnnotations',
+  asyncHandler(async req => {
+    let annotations = await annotationService.getMyAnnotations(req.session.passport.user.ethereumAddress, req.params.articleVersionId);
     return annotations;
   })
 );
