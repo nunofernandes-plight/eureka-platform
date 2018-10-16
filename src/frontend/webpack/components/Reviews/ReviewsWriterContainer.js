@@ -14,15 +14,12 @@ const Container = styled.div`
 
 const Review = styled.div`
   display: flex;
-  width: 100%;
+  flex: 1;
 `;
 
 const CommentIcon = styled.div`
-  &:hover {
-    margin-left: -20px;
-  }
   z-index: 100;
-  margin-left: -28px;
+  margin-left: -20px;
   margin-top: 10px;
   background: ${props => (props.show ? 'white' : 'transparent')};
   transition: 0.3s ease-in-out;
@@ -182,7 +179,7 @@ class ReviewsWriterContainer extends React.Component {
           {!this.state.annotations ? (
             <UploadSpinner />
           ) : (
-            <ReviewsWriterAnnotations>
+            <ReviewsWriterAnnotations show={this.state.showCommentIcon}>
               {' '}
               {this.state.annotations
                 .filter(a => {

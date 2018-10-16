@@ -29,10 +29,9 @@ const MySeparator = styled.div`
 
 const MyPreview = styled.div`
   display: flex;
-  width: 92%;
-  margin-bottom: 2em;
+  margin: 0 2em 3%;
   box-shadow: 0 0 0 0.75pt #d1d1d1, 0 0 3pt 0.75pt #ccc;
-  padding: 5%;
+  padding: 4em;
   background: rgb(255, 255, 255);
 `;
 

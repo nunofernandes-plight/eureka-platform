@@ -1,10 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import AuthorLookup from '../AuthorLookup.js';
-import {
-  __GRAY_500,
-  __GRAY_700
-} from '../../../helpers/colors.js';
+import {__GRAY_500, __GRAY_700} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import ReviewsWriterAnnotationEditor from './ReviewsWriterAnnotationEditor.js';
 import moment from 'moment';
@@ -14,8 +11,7 @@ const Container = styled.div`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   border: none;
   border-radius: 4px;
-  margin-bottom: 20px;
-  margin-left: 20px;
+  margin-bottom: 12px;
 `;
 
 const AnnotationHeader = styled.div`
