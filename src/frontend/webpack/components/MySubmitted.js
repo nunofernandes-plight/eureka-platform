@@ -7,7 +7,12 @@ import Modal from '../design-components/Modal.js';
 import SubmittedTable from '../views/SubmittedTable.js';
 import {getEtherscanLink} from '../../../helpers/getEtherscanLink.js';
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 
 class MySubmitted extends React.Component {
   constructor() {
@@ -127,7 +132,7 @@ class MySubmitted extends React.Component {
     return (
       <Container>
         {this.renderModals()}
-        <Card width={1000} title={'My Submitted Documents'}>
+        <Card title={'My Submitted Documents'}>
           <SubmittedTable
             base={this.props.base}
             submitted={this.state.submitted}

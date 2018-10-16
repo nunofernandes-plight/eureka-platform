@@ -9,7 +9,12 @@ import Modal from '../design-components/Modal.js';
 import CircleSpinner from '../views/spinners/CircleSpinner.js';
 import Icon from '../views/icons/Icon.js';
 import queryString from 'query-string';
-
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;My
+`;
 const TitleContainer = styled.div`
   &::before {
     content: '';
@@ -211,9 +216,9 @@ class MyDrafts extends React.Component {
 
   render() {
     return (
-      <div>
+      <Container>
         {this.renderModal()}
-        <Card width={1000}>
+        <Card>
           <TitleContainer>
             <CardTitle style={{margin: 0}}>My Drafts</CardTitle>
             <Circle onClick={() => this.createNewArticle()}>
@@ -241,7 +246,7 @@ class MyDrafts extends React.Component {
             </div>
           )}
         </Card>
-      </div>
+      </Container>
     );
   }
 }

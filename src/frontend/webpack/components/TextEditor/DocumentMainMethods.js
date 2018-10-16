@@ -37,6 +37,16 @@ export const fetchArticle = draftId => {
   });
 };
 
+export const fetchArticleByReviewId = reviewId => {
+  return fetch(`${getDomain()}/api/articles/drafts/${reviewId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include'
+  });
+};
+
 export const revertArticleToDraft = draftId => {
   return fetch(`${getDomain()}/api/articles/drafts/${draftId}/revert`, {
     method: 'PUT',

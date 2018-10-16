@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {fetchArticle} from '../TextEditor/DocumentMainMethods.js';
+import {fetchArticleByReviewId} from '../TextEditor/DocumentMainMethods.js';
 import Document from '../../../../models/Document.mjs';
 import {deserializeDocument} from '../../../../helpers/documentSerializer.mjs';
 import withRouter from 'react-router/es/withRouter.js';
@@ -48,8 +48,8 @@ class ReviewsWriter extends React.Component {
   }
 
   componentDidMount() {
-    const draftId = this.props.match.params.id;
-    fetchArticle(draftId)
+    const reviewId = this.props.match.params.reviewId;
+    fetchArticleByReviewId(reviewId)
       .then(response => response.json())
       .then(response => {
         if (response.success) {

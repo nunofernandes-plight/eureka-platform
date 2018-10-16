@@ -23,12 +23,8 @@ const CardContainer = styled.div`
 
 const NavPills = styled.div`
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 2em;
   justify-content: center;
-`;
-
-const MarginTop = styled.div`
-  margin-top: 15px;
 `;
 
 const Container = styled.div``;
@@ -71,57 +67,51 @@ class ArticlesRouter extends Component {
               );
             })}
           </NavPills>
-          <CardContainer>
-            <MarginTop>
-              <Route
-                exact
-                path={`${this.props.base}/drafts`}
-                render={() => (
-                  <MyDrafts
-                    base={`${this.props.base}/drafts`}
-                    updateUser={() => {
-                      this.props.updateUser();
-                    }}
-                  />
-                )}
+          <Route
+            exact
+            path={`${this.props.base}/drafts`}
+            render={() => (
+              <MyDrafts
+                base={`${this.props.base}/drafts`}
+                updateUser={() => {
+                  this.props.updateUser();
+                }}
               />
-            </MarginTop>
+            )}
+          />
 
-            <MarginTop>
-              <Route
-                exact
-                path={`${this.props.base}/submitted`}
-                render={() => (
-                  <MySubmitted
-                    base={`${this.props.base}/submitted`}
-                    network={this.props.network}
-                  />
-                )}
+          <Route
+            exact
+            path={`${this.props.base}/submitted`}
+            render={() => (
+              <MySubmitted
+                base={`${this.props.base}/submitted`}
+                network={this.props.network}
               />
-            </MarginTop>
+            )}
+          />
 
-            <Route
-              exact
-              path={`${this.props.base}/drafts/:id`}
-              render={props => (
-                <DocumentEditor
-                  web3={this.props.web3}
-                  tokenContract={this.props.tokenContract}
-                  platformContract={this.props.platformContract}
-                  base={this.props.base}
-                  user={this.props.user}
-                  selectedAccount={this.props.selectedAccount}
-                  {...props}
-                />
-              )}
-            />
+          <Route
+            exact
+            path={`${this.props.base}/drafts/:id`}
+            render={props => (
+              <DocumentEditor
+                web3={this.props.web3}
+                tokenContract={this.props.tokenContract}
+                platformContract={this.props.platformContract}
+                base={this.props.base}
+                user={this.props.user}
+                selectedAccount={this.props.selectedAccount}
+                {...props}
+              />
+            )}
+          />
 
-            <Route
-              exact
-              path={`${this.props.base}`}
-              render={() => <Redirect to={`${this.props.base}/drafts`} />}
-            />
-          </CardContainer>
+          <Route
+            exact
+            path={`${this.props.base}`}
+            render={() => <Redirect to={`${this.props.base}/drafts`} />}
+          />
         </Container>
       </Parent>
     );
