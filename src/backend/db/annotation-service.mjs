@@ -4,14 +4,14 @@ import reviewService from './review-service.mjs';
 import {getIds} from '../helpers/get-array-of-ids.mjs';
 
 export default {
-  getAnnotations: async (reviewId) => {
+  getAnnotations: async (reviewId, user) => {
     return await Annotation.find({
       reviewId
     })
       .sort({date: -1});
   },
 
-  getAllAnnotations: async (owner, articleVersionId) => {
+  getAllAnnotations: async (articleVersionId, user) => {
     const reviews = await reviewService.getReviewsFromArticle(articleVersionId);
     const ids = getIds(reviews);
     return await Annotation.find({
