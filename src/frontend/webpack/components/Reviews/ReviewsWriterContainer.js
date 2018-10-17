@@ -172,7 +172,25 @@ class ReviewsWriterContainer extends React.Component {
   };
 
   editAnnotation = id => {
-    console.log(id);
+    const annotations = [...this.state.annotations];
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    if (annotation) {
+      annotation.onChange = true;
+    }
+    this.setState({annotations});
+  };
+
+  changeAnnotation = (id, text) => {
+    const annotations = [...this.state.annotations];
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    if (annotation) {
+      annotation.text = text;
+    }
+    this.setState({annotations});
   };
 
   render() {
@@ -219,6 +237,9 @@ class ReviewsWriterContainer extends React.Component {
                       }}
                       onEdit={id => {
                         this.editAnnotation(id);
+                      }}
+                      onChange={(id, text) => {
+                        this.changeAnnotation(id, text);
                       }}
                     />
                   );

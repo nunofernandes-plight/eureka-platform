@@ -47,25 +47,19 @@ const Buttons = styled.div`
   font-size: 10.5px;
 `;
 class ReviewsWriterAnnotationEditor extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      text: null
-    };
-  }
-
-  onChange(value) {
-    this.setState({text: value});
-  }
-
   render() {
     return (
       <Container>
         <TextArea
+          value={
+            this.props.annotation.text
+              ? this.props.annotation.text
+              : 'Enter your annotation here..'
+          }
           placeholder={'Enter your annotation here..'}
           cols={'10'}
           onChange={e => {
-            this.onChange(e.target.value);
+            this.props.onChange(this.props.id, e.target.value);
           }}
         />
         <Buttons>
