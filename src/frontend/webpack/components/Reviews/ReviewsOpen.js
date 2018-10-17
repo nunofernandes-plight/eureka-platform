@@ -111,8 +111,7 @@ class ReviewsOpen extends React.Component {
                             if (response.success) {
                               this.setState({loading: false});
                               this.props.history.push(
-                                `/app/write/review/${response.data._id}
-                            `
+                                `/app/write/review/${response.data._id}`
                               );
                             }
                           })

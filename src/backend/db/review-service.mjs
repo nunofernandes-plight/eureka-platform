@@ -2,12 +2,24 @@ import Review from '../schema/review.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import ReviewState from '../schema/review-state-enum.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
-import articleVersionService, {getIds} from './article-version-service.mjs';
+import articleVersionService from './article-version-service.mjs';
 import ARTICLE_VERSION_STATE from '../schema/article-version-state-enum.mjs';
+import {getIds} from '../helpers/get-array-of-ids.mjs';
 
 export default {
   getAllReviews: () => {
     return Review.find({})
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}]
+      });
+  },
+
+  getReviewsFromArticle: (articleVersion) => {
+    return Review.find({articleVersion})
       .populate({
         path: 'articleVersion',
         populate: [
@@ -98,7 +110,7 @@ export default {
   },
 
   getReviewById: async (userAddress, reviewId) => {
-    const review = await Review.findById(reviewId)
+    return await Review.findById(reviewId)
       .populate({
         path: 'articleVersion',
         populate: [
@@ -106,9 +118,6 @@ export default {
           {path: 'editorApprovedReviews'},
           {path: 'communityReviews'}]
       });
-    if (!review) errorThrower.noEntryFoundById(reviewId);
-    if (review.reviewerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
-    return review;
   },
 
   getArticleVersionIds: idObjects => {

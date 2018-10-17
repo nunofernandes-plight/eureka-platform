@@ -10,6 +10,13 @@ export default {
     error.status = 403;
     throw error;
   },
+
+  notAuthorizedToDoThisAction: () => {
+    let error = new Error('Access denied, the user is not allowed to take this action');
+    error.status = 403;
+    throw error;
+  },
+
   noEntryFoundById: (id) => {
     let error;
 
