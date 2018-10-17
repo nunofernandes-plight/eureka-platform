@@ -9,7 +9,7 @@ export default {
     return await Annotation.find({
       reviewId
     })
-      .sort({date: -1});
+      .sort({updated: -1});
   },
 
   getAllAnnotations: async (articleVersionId, user) => {
@@ -18,7 +18,7 @@ export default {
     return await Annotation.find({
       reviewId: {$in: ids}
     })
-      .sort({date: -1});
+      .sort({updated: -1});
   },
 
   createAnnotation: async (reviewId, articleVersionId, owner, field, text, isMajorIssue) => {
@@ -28,14 +28,14 @@ export default {
     if(review.reviewerAddress !== owner) errorThrower.notAuthorizedToDoThisAction();
     if(review.reviewState !== REVIEW_STATE.HANDED_IN_DB) errorThrower.notAuthorizedToDoThisAction();
 
-    const date = new Date().getTime();
+    const created = new Date().getTime();
     const annotation = new Annotation({
       reviewId,
       articleVersionId,
       owner,
       field,
       text,
-      date,
+      created,
       isMajorIssue
     });
 
@@ -59,7 +59,7 @@ export default {
     annotation.field = field;
     annotation.text = text;
     annotation.isMajorIssue = isMajorIssue;
-    annotation.date = new Date().getTime();
+    annotation.updated = new Date().getTime();
 
     return await Annotation.findByIdAndUpdate(annotation._id, annotation);
   },

@@ -110,7 +110,7 @@ class ReviewsWriterAnnotation extends React.Component {
             }}
           />
         </AnnotationHeader>
-        <Date> {moment(annotation.date).calendar()}</Date>
+        <Date> {moment(annotation.updated).calendar()}</Date>
         <AnnotationBody>
           {annotation.onChange ? (
             <ReviewsWriterAnnotationEditor

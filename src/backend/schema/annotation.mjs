@@ -19,7 +19,10 @@ export const annotationSchema = mongoose.Schema(
     text: {
       type: String
     },
-    date: {
+    created: {
+      type: Date
+    },
+    updated: {
       type: Date
     },
     isMajorIssue: {
