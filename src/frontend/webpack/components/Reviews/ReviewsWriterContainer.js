@@ -136,8 +136,13 @@ class ReviewsWriterContainer extends React.Component {
         return a.id;
       })
       .indexOf(id);
-    annotations[index].onChange = false;
-    this.setState({annotations});
+
+    if (annotations[index].text) {
+      annotations[index].onChange = false;
+      this.setState({annotations});
+    } else {
+      this.deleteAnnotation(id);
+    }
   };
 
   saveAnnotation = (id, text) => {
