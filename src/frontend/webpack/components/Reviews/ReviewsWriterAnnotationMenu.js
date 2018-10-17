@@ -13,7 +13,7 @@ const ReviewsWriterAnnotationMenu = ({visible}) => {
     <Container>
         <UserDropDownMenu
           visible={visible}
-          top={2}
+          top={14}
           right={-75}
           iconSize={10}
           noMinWidth
