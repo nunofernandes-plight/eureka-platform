@@ -6,6 +6,7 @@ import Icon from '../../views/icons/Icon.js';
 import ReviewsWriterAnnotationEditor from './ReviewsWriterAnnotationEditor.js';
 import moment from 'moment';
 import ReviewsWriterAnnotationMenu from './ReviewsWriterAnnotationMenu.js';
+import OutsideAlerter from './OutsideAlerter.js';
 
 const Container = styled.div`
   padding: 10px;
@@ -70,19 +71,27 @@ class ReviewsWriterAnnotation extends React.Component {
             fontSize={10}
             padding={'5px'}
           />
+
           <Menu>
-            <Icon
-              icon={'material'}
-              material={'more_vert'}
-              width={17}
-              height={17}
-              color={__GRAY_700}
-              onClick={() => {
-                this.toggle();
+            <OutsideAlerter
+              onClickOutside={() => {
+                this.setState({showMenu: false});
               }}
-            />
-            <ReviewsWriterAnnotationMenu visible={this.state.showMenu}/>
+              onClickInside={() => {
+                this.setState({showMenu: true});
+              }}
+            >
+              <Icon
+                icon={'material'}
+                material={'more_vert'}
+                width={17}
+                height={17}
+                color={__GRAY_700}
+              />
+            </OutsideAlerter>
           </Menu>
+
+          <ReviewsWriterAnnotationMenu visible={this.state.showMenu} />
         </AnnotationHeader>
         <Date> {moment(annotation.date).calendar()}</Date>
         <AnnotationBody>

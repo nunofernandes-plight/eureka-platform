@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {__GRAY_200} from '../../helpers/colors.js';
 import Icon from './icons/Icon.js';
 import EurekaLogo from './icons/EurekaLogo.js';
+import OutsideAlerter from '../components/Reviews/OutsideAlerter.js';
 
 const Parent = styled.div`
   position: absolute;
@@ -140,14 +141,14 @@ class UserDropDownMenu extends React.Component {
     return (
       <Parent visible={this.props.visible} {...this.props}>
         {this.props.noSquare ? null : <SmallSquare {...this.props} />}
-        <DropDown
-          items={this.props.items}
-          iconSize={iconSize}
-          onClick={item => {
-            this.props.action(item);
-          }}
-          {...this.props}
-        />
+          <DropDown
+            items={this.props.items}
+            iconSize={iconSize}
+            onClick={item => {
+              this.props.action(item);
+            }}
+            {...this.props}
+          />
       </Parent>
     );
   }

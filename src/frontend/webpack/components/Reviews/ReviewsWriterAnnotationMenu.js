@@ -11,18 +11,18 @@ const Container = styled.div`
 const ReviewsWriterAnnotationMenu = ({visible}) => {
   return (
     <Container>
-      <UserDropDownMenu
-        visible={visible}
-        top={2}
-        right={-75}
-        iconSize={10}
-        noMinWidth
-        noSquare
-        tabPadding={'10px'}
-        noPadding
-        border={__GRAY_200}
-        items={MenuItems}
-      />
+        <UserDropDownMenu
+          visible={visible}
+          top={2}
+          right={-75}
+          iconSize={10}
+          noMinWidth
+          noSquare
+          tabPadding={'10px'}
+          noPadding
+          border={__GRAY_200}
+          items={MenuItems}
+        />
     </Container>
   );
 };
