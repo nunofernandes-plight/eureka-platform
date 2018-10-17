@@ -5,6 +5,7 @@ import {__GRAY_500, __GRAY_700} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import ReviewsWriterAnnotationEditor from './ReviewsWriterAnnotationEditor.js';
 import moment from 'moment';
+import ReviewsWriterAnnotationMenu from './ReviewsWriterAnnotationMenu.js';
 
 const Container = styled.div`
   padding: 10px;
@@ -43,10 +44,17 @@ const Menu = styled.div`
 class ReviewsWriterAnnotation extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      showMenu: false
+    };
   }
 
   async componentDidMount() {}
+
+  toggle() {
+    const showMenu = !this.state.showMenu;
+    this.setState({showMenu});
+  }
 
   render() {
     const annotation = this.props.annotation;
@@ -69,7 +77,11 @@ class ReviewsWriterAnnotation extends React.Component {
               width={17}
               height={17}
               color={__GRAY_700}
+              onClick={() => {
+                this.toggle();
+              }}
             />
+            <ReviewsWriterAnnotationMenu visible={this.state.showMenu}/>
           </Menu>
         </AnnotationHeader>
         <Date> {moment(annotation.date).calendar()}</Date>

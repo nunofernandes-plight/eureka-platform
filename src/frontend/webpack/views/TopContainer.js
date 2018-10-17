@@ -6,6 +6,7 @@ import Avatar from './Avatar.js';
 import MetaMaskLabel from './MetaMaskLabel.js';
 import Ball from './Ball.js';
 import UserDropDownMenu from './UserDropDownMenu.js';
+import {Items} from './UserDropDownItems.js';
 
 export const Container = styled.div`
   min-height: 353px;
@@ -68,6 +69,9 @@ class TopContainer extends React.Component {
                 cursor={'pointer'}
               />
               <UserDropDownMenu
+                items={Items}
+                top={40}
+                right={20}
                 visible={this.state.dropMenuVisible}
                 action={item => this.props.action(item)}
               />

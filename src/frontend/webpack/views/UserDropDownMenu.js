@@ -1,28 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-	__GRAY_200,
-} from '../../helpers/colors.js';
+import {__GRAY_200} from '../../helpers/colors.js';
 import Icon from './icons/Icon.js';
-import {Items} from './UserDropDownItems.js';
 import EurekaLogo from './icons/EurekaLogo.js';
 
 const Parent = styled.div`
   position: absolute;
-  top: 40px;
-  right: 20px;
-  padding-top: 10px;
+  top: ${props => props.top}px;
+  right: ${props => props.right}px;
+  padding-top: ${props => (props.noPadding ? 0 : 10)}px;
   transition: 0.5s ease-in-out;
   z-index: 1000;
   pointer-events: ${props => (props.visible ? 'auto' : 'none')};
   opacity: ${props => (props.visible ? 1 : 0)};
 `;
 const Navigation = styled.div`
-  background: rgb(255, 255, 255);
+  background: ${props =>
+    props.background ? props.background : 'rgb(255, 255, 255)'};
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
-  min-width: 180px;
-  padding: 5px 0;
+  min-width: ${props => (props.noMinWidth ? null : 180 + 'px')};
+  padding: ${props => (props.noPadding ? 0 : '5px 0')};
+  border: ${props => (props.border ? '1px solid ' + props.border : null)};
 `;
 
 const Tabs = styled.div`
@@ -37,7 +36,7 @@ const TabContainer = styled.div`
   transition: 0.3s all;
   display: flex;
   align-items: center;
-  padding: 5px 25px;
+  padding: ${props => (props.tabPadding ? props.tabPadding : '5px 25px')};
   cursor: pointer;
 `;
 
@@ -45,7 +44,8 @@ const SmallSquare = styled.div`
   width: 20px;
   height: 20px;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-  background: rgb(255, 255, 255);
+  background: ${props =>
+    props.background ? props.background : 'rgb(255, 255, 255)'};
   position: absolute;
   right: 6px;
   top: 15px;
@@ -59,8 +59,8 @@ const IconContainer = styled.div`
   border-radius: 50%;
   padding: 0.5rem;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-  width: 35px;
-  height: 35px;
+  width: ${props => props.iconSize * 2.33}px;
+  height: ${props => props.iconSize * 2.33}px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -82,67 +82,75 @@ const Separator = styled.div`
 `;
 
 const Tab = props => {
-	return (
-		<TabContainer
-			onClick={() => {
-				props.onClick(props);
-			}}
-		>
-			<IconContainer color={props.color}>
-				{props.icon === 'eureka' ? (
-					<EurekaLogo width={props.width + 2} height={props.height + 2} />
-				) : (
-					<Icon
-						icon={props.icon}
-						material={props.material}
-						width={props.width}
-						height={props.height}
-						noMove
-					/>
-				)}
-			</IconContainer>
-			<Text color={props.color}>{props.text}</Text>
-		</TabContainer>
-	);
+  return (
+    <TabContainer
+      {...props}
+      onClick={() => {
+        props.onClick(props);
+      }}
+    >
+      <IconContainer color={props.color} iconSize={props.iconSize}>
+        {props.icon === 'eureka' ? (
+          <EurekaLogo width={props.width + 2} height={props.height + 2} />
+        ) : (
+          <Icon
+            icon={props.icon}
+            material={props.material}
+            width={props.width}
+            height={props.height}
+            noMove
+          />
+        )}
+      </IconContainer>
+      <Text color={props.color}>{props.text}</Text>
+    </TabContainer>
+  );
 };
 
-const DropDown = props => {
-	return (
-		<Navigation>
-			<Tabs>
-				{Items.map((item, index) => {
-					return (
-						<div key={index}>
-							<Tab
-								width={15}
-								height={15}
-								{...item}
-								onClick={item => {
-									props.onClick(item);
-								}}
-							/>
-							{index !== Items.length ? null : <Separator />}
-						</div>
-					);
-				})}
-			</Tabs>
-		</Navigation>
-	);
+const DropDown = ({items, iconSize, ...otherProps}) => {
+  const props = otherProps;
+  return (
+    <Navigation {...props}>
+      <Tabs>
+        {items.map((item, index) => {
+          return (
+            <div key={index}>
+              <Tab
+                iconSize={iconSize}
+                width={iconSize}
+                height={iconSize}
+                {...props}
+                {...item}
+                onClick={item => {
+                  props.onClick(item);
+                }}
+              />
+              {index !== items.length ? null : <Separator />}
+            </div>
+          );
+        })}
+      </Tabs>
+    </Navigation>
+  );
 };
 
 class UserDropDownMenu extends React.Component {
-	render() {
-		return (
-			<Parent visible={this.props.visible}>
-				<SmallSquare />
-				<DropDown
-					onClick={item => {
-						this.props.action(item);
-					}}
-				/>
-			</Parent>
-		);
-	}
+  render() {
+    const iconSize = this.props.iconSize ? this.props.iconSize : 15;
+    return (
+      <Parent visible={this.props.visible} {...this.props}>
+        {this.props.noSquare ? null : <SmallSquare {...this.props} />}
+        <DropDown
+          items={this.props.items}
+          iconSize={iconSize}
+          onClick={item => {
+            this.props.action(item);
+          }}
+          {...this.props}
+        />
+      </Parent>
+    );
+  }
 }
 
 export default UserDropDownMenu;
