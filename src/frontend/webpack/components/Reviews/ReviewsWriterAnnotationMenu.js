@@ -31,6 +31,9 @@ const ReviewsWriterAnnotationMenu = ({visible, ...otherProps}) => {
           noPadding
           border={__GRAY_200}
           items={MenuItems}
+          action={actionType => {
+            otherProps.action(actionType);
+          }}
         />
       </OutsideAlerter>
     </Container>

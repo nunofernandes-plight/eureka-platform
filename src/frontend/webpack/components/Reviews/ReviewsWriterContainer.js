@@ -171,6 +171,10 @@ class ReviewsWriterContainer extends React.Component {
       });
   };
 
+  editAnnotation = id => {
+    console.log(id);
+  };
+
   render() {
     return (
       <Container
@@ -193,9 +197,7 @@ class ReviewsWriterContainer extends React.Component {
           {!this.state.annotations ? (
             <UploadSpinner />
           ) : (
-            <ReviewsWriterAnnotations
-              show={this.state.showCommentIcon}
-            >
+            <ReviewsWriterAnnotations show={this.state.showCommentIcon}>
               {' '}
               {this.state.annotations
                 .filter(a => {
@@ -213,7 +215,10 @@ class ReviewsWriterContainer extends React.Component {
                         this.saveAnnotation(id, text);
                       }}
                       onDelete={id => {
-                        this.deleteAnnotation(id);
+                        // this.deleteAnnotation(id);
+                      }}
+                      onEdit={id => {
+                        this.editAnnotation(id);
                       }}
                     />
                   );

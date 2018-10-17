@@ -58,8 +58,19 @@ class ReviewsWriterAnnotation extends React.Component {
     this.setState({showMenu});
   }
 
+  performMenuAction(actionType, annotationId) {
+    if (actionType === 'edit') {
+      this.props.onEdit(annotationId);
+    } else if (actionType === 'delete') {
+      this.props.onDelete(annotationId);
+    } else {
+      alert('Action is not a valid action');
+    }
+  }
+
   render() {
     const annotation = this.props.annotation;
+
     return (
       <Container>
         <AnnotationHeader>
@@ -94,13 +105,16 @@ class ReviewsWriterAnnotation extends React.Component {
             onClickOutside={() => {
               this.setState({showMenu: false});
             }}
+            action={actionType => {
+              this.performMenuAction(actionType, annotation._id);
+            }}
           />
         </AnnotationHeader>
         <Date> {moment(annotation.date).calendar()}</Date>
         <AnnotationBody>
           {annotation.onChange ? (
             <ReviewsWriterAnnotationEditor
-              id={annotation.id}
+              id={annotation._id}
               onCancel={id => {
                 this.props.onCancel(id);
               }}

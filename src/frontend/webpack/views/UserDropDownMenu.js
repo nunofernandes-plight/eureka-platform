@@ -145,7 +145,7 @@ class UserDropDownMenu extends React.Component {
           items={this.props.items}
           iconSize={iconSize}
           action={item => {
-            console.log(item);
+            this.props.action(item);
           }}
           {...this.props}
         />
