@@ -116,6 +116,14 @@ class ReviewsWriterContainer extends React.Component {
     if (id > -1) {
       annotations.splice(index, 1);
     }
+  cancelAnnotation = id => {
+    const annotations = [...this.state.annotations];
+    const index = annotations
+      .map(a => {
+        return a.id;
+      })
+      .indexOf(id);
+    annotations[index].onChange = false;
     this.setState({annotations});
   };
 
@@ -178,7 +186,7 @@ class ReviewsWriterContainer extends React.Component {
                       annotation={annotation}
                       key={index}
                       onCancel={id => {
-                        this.deleteAnnotation(id);
+                        this.cancelAnnotation(id);
                       }}
                       onSave={(id, text) => {
                         this.saveAnnotation(id, text);
