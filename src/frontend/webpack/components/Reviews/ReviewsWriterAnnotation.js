@@ -6,8 +6,6 @@ import Icon from '../../views/icons/Icon.js';
 import ReviewsWriterAnnotationEditor from './ReviewsWriterAnnotationEditor.js';
 import moment from 'moment';
 import ReviewsWriterAnnotationMenu from './ReviewsWriterAnnotationMenu.js';
-import OutsideAlerter from './OutsideAlerter.js';
-import ReviewsWriterAnnotations from './ReviewsWriterAnnotations.js';
 
 const Container = styled.div`
   padding: 10px;
