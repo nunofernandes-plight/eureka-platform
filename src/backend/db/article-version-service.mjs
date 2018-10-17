@@ -5,18 +5,12 @@ import createNewEmpty from '../../helpers/createEditorDocument.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
-import REVIEW_STATE from '../schema/review-state-enum.mjs';
 import ReviewService from './review-service.mjs';
 import ArticleSubmissionService from './article-submission-service.mjs';
 import userService from './user-service.mjs';
 import Roles from '../schema/roles-enum.mjs';
 import REVIEW_TYPE from '../schema/review-type-enum.mjs';
-
-export const getIds = articles => {
-    return articles.map(i => {
-      return i._id;
-    });
-  };
+import {getIds} from '../helpers/get-array-of-ids.mjs';
 
 export default {
   getAllArticleVersions: () => {
