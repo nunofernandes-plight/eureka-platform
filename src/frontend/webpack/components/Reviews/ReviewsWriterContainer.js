@@ -135,7 +135,8 @@ class ReviewsWriterContainer extends React.Component {
     const annotation = annotations.find(a => {
       return a._id === id;
     });
-    if (annotation.updatedDate) {
+    if (annotation.updated) {
+      this.getAnnotations();
     } else {
       this.deleteAnnotation(id);
     }
