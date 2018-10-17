@@ -28,6 +28,7 @@ const AnnotationBody = styled.div`
 const Text = styled.div`
   color: ${__GRAY_700};
   font-size: 11px;
+  word-break: break-all;
 `;
 
 const Date = styled.div`
