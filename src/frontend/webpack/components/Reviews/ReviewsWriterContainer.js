@@ -111,7 +111,7 @@ class ReviewsWriterContainer extends React.Component {
     const annotations = [...this.state.annotations];
     const index = annotations
       .map(a => {
-        return a.id;
+        return a._id;
       })
       .indexOf(id);
 
@@ -134,7 +134,7 @@ class ReviewsWriterContainer extends React.Component {
     const annotations = [...this.state.annotations];
     const index = annotations
       .map(a => {
-        return a.id;
+        return a._id;
       })
       .indexOf(id);
 
