@@ -3,14 +3,23 @@ import styled from 'styled-components';
 import UserDropDownMenu from '../../views/UserDropDownMenu.js';
 import {__GRAY_100, __GRAY_200} from '../../../helpers/colors.js';
 import {MenuItems} from './ReviewsWriterAnnotationMenuItems.js';
+import OutsideAlerter from './OutsideAlerter.js';
 
 const Container = styled.div`
   position: relative;
 `;
 
-const ReviewsWriterAnnotationMenu = ({visible}) => {
+const ReviewsWriterAnnotationMenu = ({visible, ...otherProps}) => {
   return (
     <Container>
+      <OutsideAlerter
+        onClickInside={() => {
+          otherProps.onClickInside();
+        }}
+        onClickOutside={() => {
+          otherProps.onClickOutside();
+        }}
+      >
         <UserDropDownMenu
           visible={visible}
           top={14}
@@ -23,6 +32,7 @@ const ReviewsWriterAnnotationMenu = ({visible}) => {
           border={__GRAY_200}
           items={MenuItems}
         />
+      </OutsideAlerter>
     </Container>
   );
 };

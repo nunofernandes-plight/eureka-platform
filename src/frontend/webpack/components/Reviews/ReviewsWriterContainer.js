@@ -14,6 +14,7 @@ import {
   saveAnnotation
 } from './ReviewMethods.js';
 import {withRouter} from 'react-router';
+import OutsideAlerter from './OutsideAlerter.js';
 const Container = styled.div`
   flex: 1;
   display: flex;
@@ -192,7 +193,9 @@ class ReviewsWriterContainer extends React.Component {
           {!this.state.annotations ? (
             <UploadSpinner />
           ) : (
-            <ReviewsWriterAnnotations show={this.state.showCommentIcon}>
+            <ReviewsWriterAnnotations
+              show={this.state.showCommentIcon}
+            >
               {' '}
               {this.state.annotations
                 .filter(a => {

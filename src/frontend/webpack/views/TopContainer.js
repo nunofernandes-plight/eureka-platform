@@ -74,6 +74,8 @@ class TopContainer extends React.Component {
                 right={20}
                 visible={this.state.dropMenuVisible}
                 action={item => this.props.action(item)}
+                onClickInside={() => {}}
+                onClickOutside={() => {}}
               />
             </DropDownMenuParent>
           </div>

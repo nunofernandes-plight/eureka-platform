@@ -87,7 +87,7 @@ const Tab = props => {
     <TabContainer
       {...props}
       onClick={() => {
-        props.onClick(props);
+        props.action(props.material);
       }}
     >
       <IconContainer color={props.color} iconSize={props.iconSize}>
@@ -122,8 +122,8 @@ const DropDown = ({items, iconSize, ...otherProps}) => {
                 height={iconSize}
                 {...props}
                 {...item}
-                onClick={item => {
-                  props.onClick(item);
+                action={item => {
+                  otherProps.action(item);
                 }}
               />
               {index !== items.length ? null : <Separator />}
@@ -141,14 +141,14 @@ class UserDropDownMenu extends React.Component {
     return (
       <Parent visible={this.props.visible} {...this.props}>
         {this.props.noSquare ? null : <SmallSquare {...this.props} />}
-          <DropDown
-            items={this.props.items}
-            iconSize={iconSize}
-            onClick={item => {
-              this.props.action(item);
-            }}
-            {...this.props}
-          />
+        <DropDown
+          items={this.props.items}
+          iconSize={iconSize}
+          action={item => {
+            console.log(item);
+          }}
+          {...this.props}
+        />
       </Parent>
     );
   }
