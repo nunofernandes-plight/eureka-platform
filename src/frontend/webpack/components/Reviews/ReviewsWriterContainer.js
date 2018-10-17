@@ -55,9 +55,9 @@ class ReviewsWriterContainer extends React.Component {
   }
 
   // TODO: call back end and get information from there. At the moment: Dummy data
-  getAnnotations(reviewId) {
+  getAnnotations() {
     this.setState({loading: true});
-    return getAnnotations(reviewId)
+    return getAnnotations(this.props.match.params.reviewId)
       .then(response => response.json())
       .then(response => {
         if (response.success) {
@@ -133,6 +133,7 @@ class ReviewsWriterContainer extends React.Component {
         if (response.success) {
           annotations[index].onChange = false;
           this.setState({annotations});
+          this.getAnnotations();
         }
       })
       .catch(err => {
@@ -181,6 +182,9 @@ class ReviewsWriterContainer extends React.Component {
                       }}
                       onSave={(id, text) => {
                         this.saveAnnotation(id, text);
+                      }}
+                      onDelete={id => {
+                        this.deleteAnnotation(id);
                       }}
                     />
                   );
