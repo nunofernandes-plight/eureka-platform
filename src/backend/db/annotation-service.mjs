@@ -1,5 +1,7 @@
 import Annotation from '../schema/annotation.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
+import reviewService from './review-service.mjs';
+import {getIds} from '../helpers/get-array-of-ids.mjs';
 
 export default {
   getAnnotations: async (reviewId) => {
@@ -8,16 +10,11 @@ export default {
     });
   },
 
-  getMyAnnotations: async (owner, articleVersionId) => {
-    return await Annotation.find({
-      owner,
-      articleVersionId
-    });
-  },
-
   getAllAnnotations: async (owner, articleVersionId) => {
+    const reviews = await reviewService.getReviewsFromArticle(articleVersionId);
+    const ids = getIds(reviews);
     return await Annotation.find({
-      articleVersionId
+      reviewId: {$in: ids}
     });
   },
 
