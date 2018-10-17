@@ -110,7 +110,7 @@ export default {
   },
 
   getReviewById: async (userAddress, reviewId) => {
-    const review = await Review.findById(reviewId)
+    return await Review.findById(reviewId)
       .populate({
         path: 'articleVersion',
         populate: [
@@ -118,9 +118,6 @@ export default {
           {path: 'editorApprovedReviews'},
           {path: 'communityReviews'}]
       });
-    if (!review) errorThrower.noEntryFoundById(reviewId);
-    if (review.reviewerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
-    return review;
   },
 
   getArticleVersionIds: idObjects => {
