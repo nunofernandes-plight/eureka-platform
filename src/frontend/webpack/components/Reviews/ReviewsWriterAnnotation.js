@@ -119,11 +119,10 @@ class ReviewsWriterAnnotation extends React.Component {
               onCancel={id => {
                 this.props.onCancel(id);
               }}
-              onSave={(id, text) => {
-                this.props.onSave(id, text);
+              onSave={(id) => {
+                this.props.onSave(id);
               }}
               onChange={(id, text) => {
-                console.log(id, text);
                 this.props.onChange(id, text);
               }}
             />

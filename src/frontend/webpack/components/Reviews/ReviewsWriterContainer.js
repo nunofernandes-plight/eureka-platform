@@ -146,19 +146,15 @@ class ReviewsWriterContainer extends React.Component {
     }
   };
 
-  saveAnnotation = (id, text) => {
+  saveAnnotation = id => {
     const annotations = [...this.state.annotations];
-    const index = annotations
-      .map(a => {
-        return a._id;
-      })
-      .indexOf(id);
-    annotations[index].text = text;
-    saveAnnotation(annotations[index])
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    saveAnnotation(annotation)
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          annotations[index].onChange = false;
           this.setState({annotations});
           this.getAnnotations();
         }
@@ -229,8 +225,8 @@ class ReviewsWriterContainer extends React.Component {
                       onCancel={id => {
                         this.cancelAnnotation(id);
                       }}
-                      onSave={(id, text) => {
-                        this.saveAnnotation(id, text);
+                      onSave={id => {
+                        this.saveAnnotation(id);
                       }}
                       onDelete={id => {
                         // this.deleteAnnotation(id);

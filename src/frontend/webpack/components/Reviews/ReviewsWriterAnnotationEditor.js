@@ -51,11 +51,7 @@ class ReviewsWriterAnnotationEditor extends React.Component {
     return (
       <Container>
         <TextArea
-          value={
-            this.props.annotation.text
-              ? this.props.annotation.text
-              : 'Enter your annotation here..'
-          }
+          value={this.props.annotation.text ? this.props.annotation.text : null}
           placeholder={'Enter your annotation here..'}
           cols={'10'}
           onChange={e => {
@@ -72,7 +68,7 @@ class ReviewsWriterAnnotationEditor extends React.Component {
           </Cancel>
           <Comment
             onClick={() => {
-              this.props.onSave(this.props.id, this.state.text);
+              this.props.onSave(this.props.id);
             }}
           >
             Comment
