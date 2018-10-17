@@ -8,9 +8,9 @@ const router = express.Router();
 router.use(accesController.loggedInOnly);
 
 router.get(
-  '/:articleVersionId/myAnnotations',
+  '/:articleVersionId/all',
   asyncHandler(async req => {
-    let annotations = await annotationService.getMyAnnotations(req.session.passport.user.ethereumAddress, req.params.articleVersionId);
+    let annotations = await annotationService.getAllAnnotations(req.session.passport.user.ethereumAddress, req.params.articleVersionId);
     return annotations;
   })
 );
@@ -18,15 +18,7 @@ router.get(
 router.get(
   '/:reviewId',
   asyncHandler(async req => {
-    let annotations = await annotationService.getAnnotations(req.params.reviewId);
-    return annotations;
-  })
-);
-
-router.get(
-  '/:articleVersionId',
-  asyncHandler(async req => {
-    let annotations = await annotationService.getAllAnnotations(req.session.passport.user.ethereumAddress, req.params.articleVersionId);
+    let annotations = await annotationService.getAnnotations(req.params.reviewId, req.session.passport.user.ethereumAddress);
     return annotations;
   })
 );
