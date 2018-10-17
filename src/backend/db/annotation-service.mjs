@@ -52,5 +52,16 @@ export default {
     annotation.date = new Date().getTime();
 
     return await Annotation.findByIdAndUpdate(annotation._id, annotation);
+  },
+
+  deleteAnnotation: async (annotationId, owner) => {
+    const annotation = await Annotation.findOne({
+      _id: annotationId
+    });
+    if (!annotation) errorThrower.noEntryFoundById(annotationId);
+    if (annotation.owner !== owner)
+      errorThrower.notCorrectEthereumAddress();
+
+    return await annotation.remove();
   }
 };

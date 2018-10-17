@@ -61,6 +61,7 @@ router.delete(
   '/:annotationId',
   asyncHandler(async req => {
     let annotation = await annotationService.deleteAnnotation(
+      req.params.annotationId,
       req.session.passport.user.ethereumAddress);
     return annotation;
   })
