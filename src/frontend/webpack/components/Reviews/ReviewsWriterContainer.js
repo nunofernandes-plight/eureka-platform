@@ -8,6 +8,7 @@ import UploadSpinner from '../../views/spinners/UploadSpinner.js';
 import {
   addAnnotation,
   addCommunityReviewToDB,
+  deleteAnnotation,
   getAnnotations,
   getMyReviews,
   saveAnnotation
@@ -113,9 +114,21 @@ class ReviewsWriterContainer extends React.Component {
       })
       .indexOf(id);
 
-    if (id > -1) {
-      annotations.splice(index, 1);
-    }
+    deleteAnnotation(annotations[index])
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.getAnnotations();
+        }
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          errorMessage: err
+        });
+      });
+  };
+
   cancelAnnotation = id => {
     const annotations = [...this.state.annotations];
     const index = annotations
