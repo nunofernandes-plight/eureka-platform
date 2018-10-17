@@ -7,7 +7,8 @@ export default {
   getAnnotations: async (reviewId) => {
     return await Annotation.find({
       reviewId
-    });
+    })
+      .sort({date: -1});
   },
 
   getAllAnnotations: async (owner, articleVersionId) => {
@@ -15,7 +16,8 @@ export default {
     const ids = getIds(reviews);
     return await Annotation.find({
       reviewId: {$in: ids}
-    });
+    })
+      .sort({date: -1});
   },
 
   createAnnotation: async (reviewId, articleVersionId, owner, field, text, isMajorIssue) => {
