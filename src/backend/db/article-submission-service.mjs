@@ -213,11 +213,27 @@ export default {
       (err, submission) => {
         if (err) throw err;
         else {
-          console.log(
-            'Submission ' + submission._id + ' has got the editor ' + _editor
-          );
           return submission;
         }
+      }
+    );
+  },
+
+  /**
+   * Updates the ArticleSubmissionState
+   * @param _submissionId
+   * @param _articleState, must be of type ArticleSubmissionState
+   * @returns {Promise<void>}
+   */
+  updateAritcleSubmissionState: async (_submissionId, _articleState) => {
+    ArticleSubmission.findOneAndUpdate(
+      {scSubmissionID: _submissionId},
+      {
+        articleSubmissionState: _articleState
+      },
+      (err, submission) => {
+        if(err) throw err;
+        return submission;
       }
     );
   },

@@ -5,6 +5,7 @@ import scTransactionService from '../db/sc-transaction-service.mjs';
 import reviewService from '../db/review-service.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
+import ArticleSubmissionState from '../schema/article-submission-state-enum.mjs';
 import ScTransactionType from '../schema/sc-transaction-state-enum.mjs';
 import ReviewState from '../schema/review-state-enum.mjs';
 import ReviewType from '../schema/review-type-enum.mjs';
@@ -315,7 +316,8 @@ export default {
       undefined,
       async (error, event) => {
         if (error) throw error;
-        console.log("NEW REVIEW ROUND REQUESTED!!!");
+
+        await articleSubmissionService.updateAritcleSubmissionState(event,returnValues.submissionId, ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED);
       }
     );
   }

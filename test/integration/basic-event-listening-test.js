@@ -136,7 +136,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   await TestFunctions.acceptSanityCheckAndTest(t, editor, author, articleVersion1);
 
   // Decline sanity-check for article 2
-  await TestFunctions.declineSanityCheckAndTest(t, editor, author, articleVersion2);
+  await TestFunctions.declineSanityCheckAndTest(t, editor, author, articleSubmission2, articleVersion2);
 });
 
 /**************** Article acception ******************/

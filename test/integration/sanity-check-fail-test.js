@@ -86,8 +86,7 @@ test.only(
     await TestFunctions.assignEditorForSubmissionProcess(t, editor, articleSubmission);
 
     // Decline sanity-check for article 2
-    await TestFunctions.declineSanityCheckAndTest(t, editor, author, articleVersion);
+    await TestFunctions.declineSanityCheckAndTest(t, editor, author,articleSubmission, articleVersion);
 
-    t.is(true, true);
   }
 );
