@@ -18,7 +18,8 @@ import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 1em;
+  align-items: center;
+  justify-content: center;
 `;
 
 const NoArtDiv = styled.div`
@@ -214,7 +215,7 @@ class ReviewsOpen extends React.Component {
         {this.state.loading ? (
           <GridSpinner />
         ) : (
-          <Card title={'My Reviews'} width={1000}>
+          <Card title={'My Reviews'}>
             {this.state.articles ? (
               this.state.articles.length > 0 ? (
                 this.state.articles.map(article => {

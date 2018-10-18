@@ -16,8 +16,9 @@ import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 
 const Container = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
-  margin-top: 1em;
 `;
 
 const NoArtDiv = styled.div`
@@ -159,7 +160,7 @@ class ReviewsInvited extends React.Component {
         {this.state.loading ? (
           <GridSpinner />
         ) : (
-          <Card title={'Articles you are invited to review'} width={1000}>
+          <Card title={'Articles you are invited to review'}>
             {this.state.articles ? (
               this.state.articles.length > 0 ? (
                 this.state.articles.map(article => {
