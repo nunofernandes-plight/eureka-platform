@@ -17,6 +17,8 @@ import {isGanache} from '../../../../helpers/isGanache.mjs';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const NoArtDiv = styled.div`
@@ -186,7 +188,7 @@ class EditorCheckReviews extends React.Component {
         {this.state.loading ? (
           <GridSpinner />
         ) : (
-          <Card title={'Check the handed in Reviews'} width={1000}>
+          <Card title={'Check the handed in Reviews'}>
             {this.state.reviews ? (
               this.state.reviews.length > 0 ? (
                 this.state.reviews.map(review => {

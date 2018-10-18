@@ -17,6 +17,8 @@ import SendEmailAnimation from './SendEmailAnimation.js';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const NoArtDiv = styled.div`
@@ -229,7 +231,7 @@ class EditorInvite extends React.Component {
           {this.state.loading ? (
             <GridSpinner />
           ) : (
-            <Card title={'Invite to Review an Article'} width={1000}>
+            <Card title={'Invite to Review an Article'}>
               <Link to={'/app/reviewers'}>
                 <button>See all reviewers in the community</button>
               </Link>
