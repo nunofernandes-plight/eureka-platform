@@ -13,14 +13,6 @@ const Parent = styled.div`
   flex-direction: column;
 `;
 
-const CardContainer = styled.div`
-  transition: all 0.5s;
-  display: flex;
-  max-width: 1200px;
-  justify-content: center;
-  margin: 0 auto;
-`;
-
 const NavPills = styled.div`
   display: flex;
   margin-bottom: 2em;

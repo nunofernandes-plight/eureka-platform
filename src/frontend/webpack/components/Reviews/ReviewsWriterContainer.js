@@ -7,14 +7,12 @@ import ReviewsWriterAnnotation from './ReviewsWriterAnnotation.js';
 import UploadSpinner from '../../views/spinners/UploadSpinner.js';
 import {
   addAnnotation,
-  addCommunityReviewToDB,
   deleteAnnotation,
   getAnnotations,
-  getMyReviews,
   saveAnnotation
 } from './ReviewMethods.js';
 import {withRouter} from 'react-router';
-import OutsideAlerter from './OutsideAlerter.js';
+
 const Container = styled.div`
   flex: 1;
   display: flex;

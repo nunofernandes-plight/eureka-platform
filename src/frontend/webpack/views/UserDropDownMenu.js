@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import {__GRAY_200} from '../../helpers/colors.js';
 import Icon from './icons/Icon.js';
 import EurekaLogo from './icons/EurekaLogo.js';
-import OutsideAlerter from '../components/Reviews/OutsideAlerter.js';
 
 const Parent = styled.div`
   position: absolute;

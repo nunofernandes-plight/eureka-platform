@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import UserDropDownMenu from '../../views/UserDropDownMenu.js';
-import {__GRAY_100, __GRAY_200} from '../../../helpers/colors.js';
+import {__GRAY_200} from '../../../helpers/colors.js';
 import {MenuItems} from './ReviewsWriterAnnotationMenuItems.js';
 import OutsideAlerter from './OutsideAlerter.js';
 
