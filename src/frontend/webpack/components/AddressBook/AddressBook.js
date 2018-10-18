@@ -18,6 +18,8 @@ import AddressBookAddContact from './AddressBookAddContact';
 const Container = styled.div`
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const AddContact = styled.div`
@@ -289,7 +291,7 @@ class AddressBook extends React.Component {
     return (
       <Container>
         {this.renderModals()}
-        <Card width={1000} title={'My Ethereum Address Book'}>
+        <Card title={'My Ethereum Address Book'}>
           <AddContact>
             <Circle onClick={() => this.setState({showAddContactModal: true})}>
               <div>Add a new contact</div>

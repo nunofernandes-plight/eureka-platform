@@ -19,7 +19,7 @@ const NoAddresses = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  padding: 50px 0;
+  padding: 10px 0;
 `;
 
 const MyLabel = styled.div`
