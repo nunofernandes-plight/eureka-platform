@@ -301,6 +301,8 @@ export default {
         if (error) throw error;
         await articleSubmissionService.submitArticleVersion(event.returnValues.submissionId,
           event.returnValues.articleHash, event.returnValues.articleUrl);
+
+        await articleSubmissionService.updateAritcleSubmissionState(event.returnValues.submissionId, ArticleSubmissionState.OPEN);
       }
     );
 

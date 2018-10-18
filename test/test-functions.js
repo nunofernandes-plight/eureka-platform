@@ -31,6 +31,7 @@ let eurekaPlatformContract;
 let eurekaTokenContract;
 let contractOwner;
 
+
 export default {
   setContractsForTestingFunctions: function(_eurekaPlatformContract, _eurekaTokenContract, _contractOwnerAddress) {
     eurekaPlatformContract = _eurekaPlatformContract;
@@ -565,6 +566,8 @@ export default {
   },
 
   openNewReviewRoundAndTest: async function(t, submissionOwner, scSubmissionId, articleVersion, articleVersionData, articleHash, urlHash) {
+    const oldArticleVersionLength = (await articleSubmissionService.getSubmissionBySCsubmissionId(scSubmissionId)).articleVersions.length;
+
     await openNewReviewRound(
       eurekaPlatformContract, scSubmissionId, articleHash, urlHash,
       articleVersionData.authors, articleVersionData.contributorRatios, articleVersionData.linkedArticles, articleVersionData.linkedArticlesSplitRatios
@@ -573,16 +576,20 @@ export default {
     });
 
     let dbArticleSubmission = await articleSubmissionService.getSubmissionBySCsubmissionId(scSubmissionId);
-    let dbArticleVersion = await articleVersionService.getArticleVersionById(submissionOwner.ethereumAddress,
-      dbArticleSubmission.articleVersions[dbArticleSubmission.articleVersions.length - 1]);
+
 
     let counter = 0;
-    while (dbArticleVersion.articleVersionState !== ArticleVersionState.SUBMITTED && counter < 5) {
+    while (
+      (dbArticleSubmission.articleVersions.length !==  (oldArticleVersionLength + 1) ||
+      dbArticleSubmission.articleSubmissionState !== ArticleSubmissionState.OPEN)
+      &&
+      counter < 20) {
       sleepSync(5000);
-      dbArticleVersion = await articleVersionService.getArticleVersionById(submissionOwner.ethereumAddress, dbArticleVersion._id);
+      dbArticleSubmission = await articleSubmissionService.getSubmissionBySCsubmissionId(scSubmissionId);
       counter++;
     }
-    t.is(dbArticleVersion.articleVersionState, ArticleVersionState.SUBMITTED);
+    t.is(dbArticleSubmission.articleVersions.length, oldArticleVersionLength + 1);
+    t.is(dbArticleSubmission.articleSubmissionState, ArticleSubmissionState.OPEN);
   },
 
   declineNewReviewRoundAndTest: async function(t, scSubmissionId, submissionOwner) {

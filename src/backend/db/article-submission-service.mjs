@@ -218,18 +218,17 @@ export default {
       }
     );
   },
-
   /**
    * Updates the ArticleSubmissionState
    * @param _submissionId
-   * @param _articleState, must be of type ArticleSubmissionState
+   * @param _articleSubmissionState, must be of type ArticleSubmissionState
    * @returns {Promise<void>}
    */
-  updateAritcleSubmissionState: async (_submissionId, _articleState) => {
+  updateAritcleSubmissionState: async (_submissionId, _articleSubmissionState) => {
     ArticleSubmission.findOneAndUpdate(
       {scSubmissionID: _submissionId},
       {
-        articleSubmissionState: _articleState
+        articleSubmissionState: _articleSubmissionState
       },
       (err, submission) => {
         if(err) throw err;

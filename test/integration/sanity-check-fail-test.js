@@ -30,7 +30,15 @@ import {
   REVIEW_4_HASH_HEX,
   createUserContractOwner,
   setAccounts,
-  createUser1, createEditor1, createEditor2, createReviewer1, createReviewer2, createReviewer3, createReviewer4
+  createUser1,
+  createEditor1,
+  createEditor2,
+  createReviewer1,
+  createReviewer2,
+  createReviewer3,
+  createReviewer4,
+  TEST_ARTICLE_2,
+  TEST_ARTICLE_1_SECOND_VERSION
 } from '../test-data';
 import TestFunctions from '../test-functions';
 
@@ -88,5 +96,16 @@ test.only(
     // Decline sanity-check for article 2
     await TestFunctions.declineSanityCheckAndTest(t, editor, author, articleSubmission, articleVersion);
 
+    // Update test-data
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    articleVersion = articleSubmission.articleVersions[0];
+
+    // Open new review round
+
+    await TestFunctions.openNewReviewRoundAndTest(t, author, articleSubmission.scSubmissionID, articleVersion, TEST_ARTICLE_1_SECOND_VERSION, TEST_ARTICLE_2_HASH_HEX, TEST_ARTICLE_2_HASH_HEX);
+
+    // TODO accept second round and test if is submitted afterwards
   }
 );
+
+// TODO same as above, but decline second sanityCheck again --> test if it gets rejected and repaid
