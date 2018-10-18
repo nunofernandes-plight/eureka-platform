@@ -317,7 +317,7 @@ export default {
       async (error, event) => {
         if (error) throw error;
 
-        await articleSubmissionService.updateAritcleSubmissionState(event,returnValues.submissionId, ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED);
+        await articleSubmissionService.updateAritcleSubmissionState(event.returnValues.submissionId, ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED);
       }
     );
   }

@@ -26,7 +26,6 @@ import articleVersionService from '../src/backend/db/article-version-service.mjs
 import {submitArticle} from '../src/smartcontracts/methods/web3-token-contract-methods.mjs';
 import reviewService from '../src/backend/db/review-service.mjs';
 import ReviewState from '../src/backend/schema/review-state-enum.mjs';
-import Article from '../src/frontend/webpack/views/Article';
 
 let eurekaPlatformContract;
 let eurekaTokenContract;
@@ -278,17 +277,17 @@ export default {
     }
     t.is(dbArticleVersion.articleVersionState, ArticleVersionState.DECLINED_SANITY_NOTOK);
 
-    articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmission.submissionId);
+    articleSubmission = await articleSubmissionService.getSubmissionBySCsubmissionId(articleSubmission.scSubmissionID);
     while (
       (articleSubmission.articleSubmissionState !== ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED ||
         articleSubmission.articleSubmissionState !== ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED) &&
       counter < 5) {
       sleepSync(5000);
-      articleSubmission = await articleSubmissionService.getSubmissionById(articleSubmission.submissionId);
+      articleSubmission = await articleSubmissionService.getSubmissionBySCsubmissionId(articleSubmission.submissionId);
       counter++;
     }
 
-    //t.is(articleSubmission.articleSubmissionState, (ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED || ArticleSubmissionState.CLOSED));
+    t.is(articleSubmission.articleSubmissionState, (ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED || ArticleSubmissionState.CLOSED));
   },
 
   /**
