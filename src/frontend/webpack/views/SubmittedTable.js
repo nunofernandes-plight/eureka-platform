@@ -20,8 +20,6 @@ const SubmittedContainer = styled.div`
   font-size: 14px;
   width: 100%;
   padding: 10px 25px;
-  max-height: 400px;
-  overflow: scroll;
 `;
 
 const NoSubmitted = styled.div`
@@ -95,7 +93,6 @@ const getData = props => {
     return data.push({
       icon: getIcon(sub),
       name: getName(props, sub),
-      hash: getHash(sub),
       date: getLastChanged(sub),
       status: getStatus(sub)
     });
@@ -110,9 +107,7 @@ const getStatus = sub => {
 const getLastChanged = sub => {
   return renderTimestamp(sub.timestamp);
 };
-const getHash = sub => {
-  return <Hash>{sub.articleHash.substr(0, 48)}...</Hash>;
-};
+
 const getName = (props, sub) => {
   return (
     <MyLink to={`/app/preview/${sub._id}`}>
@@ -154,8 +149,8 @@ const SubmittedTable = props => {
         </NoSubmitted>
       ) : (
         <Table
-          header={['', 'Name', 'Article Hash', 'Last Changed', 'Status']}
-          columnWidth={['8', '20', '42', '18', '17']}
+          header={['', 'Name', 'Last Changed', 'Status']}
+          columnWidth={['8', '57', '18', '17']}
           textCenter={'Status'}
           data={getData(props)}
         />
