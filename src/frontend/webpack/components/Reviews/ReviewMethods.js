@@ -83,3 +83,14 @@ export const saveAnnotation = annotation => {
     body: JSON.stringify(annotation)
   });
 };
+
+export const deleteAnnotation = annotation => {
+  return fetch(`${getDomain()}/api/annotations/${annotation._id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+    body: JSON.stringify(annotation)
+  });
+};

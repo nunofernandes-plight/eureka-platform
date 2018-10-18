@@ -18,7 +18,8 @@ import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 1em;
+  align-items: center;
+  justify-content: center;
 `;
 
 const NoArtDiv = styled.div`
@@ -214,7 +215,7 @@ class ReviewsOpen extends React.Component {
         {this.state.loading ? (
           <GridSpinner />
         ) : (
-          <Card title={'My Reviews'} width={1000}>
+          <Card title={'My Reviews'}>
             {this.state.articles ? (
               this.state.articles.length > 0 ? (
                 this.state.articles.map(article => {
@@ -236,13 +237,13 @@ class ReviewsOpen extends React.Component {
                         );
                       }}
                       button2Text={'dummy: send review to SC'}
-                      action2={(_, article) => {
+                      action2={async (_, article) => {
                         if (
                           article.reviewType ===
                           REVIEW_TYPE.EDITOR_APPROVED_REVIEW
                         )
-                          this.submitEditorApprovedReview(article);
-                        else this.submitCommunityReview(article);
+                          await this.submitEditorApprovedReview(article);
+                        else await this.submitCommunityReview(article);
                       }}
                     />
                   );

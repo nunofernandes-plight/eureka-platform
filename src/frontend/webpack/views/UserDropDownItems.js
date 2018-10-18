@@ -8,8 +8,6 @@ import {
 export const Items = [
   {
     text: 'Start writing',
-    action: 'articles/drafts/new',
-    method: 'GET',
     icon: 'material',
     material: 'gesture',
     color: __ALERT_DANGER
@@ -27,8 +25,6 @@ export const Items = [
   },
   {
     text: 'Log Out',
-    action: 'logout',
-    method: 'POST',
     icon: 'material',
     material: 'power_settings_new',
     color: __FIFTH

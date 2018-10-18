@@ -5,6 +5,7 @@ import {__GRAY_500, __GRAY_700} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import ReviewsWriterAnnotationEditor from './ReviewsWriterAnnotationEditor.js';
 import moment from 'moment';
+import ReviewsWriterAnnotationMenu from './ReviewsWriterAnnotationMenu.js';
 
 const Container = styled.div`
   padding: 10px;
@@ -28,6 +29,7 @@ const AnnotationBody = styled.div`
 const Text = styled.div`
   color: ${__GRAY_700};
   font-size: 11px;
+  word-break: break-all;
 `;
 
 const Date = styled.div`
@@ -42,13 +44,31 @@ const Menu = styled.div`
 class ReviewsWriterAnnotation extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      showMenu: false
+    };
   }
 
   async componentDidMount() {}
 
+  toggle() {
+    const showMenu = !this.state.showMenu;
+    this.setState({showMenu});
+  }
+
+  performMenuAction(actionType, annotationId) {
+    if (actionType === 'edit') {
+      this.props.onEdit(annotationId);
+    } else if (actionType === 'delete') {
+      this.props.onDelete(annotationId);
+    } else {
+      alert('Action is not a valid action');
+    }
+  }
+
   render() {
     const annotation = this.props.annotation;
+
     return (
       <Container>
         <AnnotationHeader>
@@ -61,6 +81,7 @@ class ReviewsWriterAnnotation extends React.Component {
             fontSize={10}
             padding={'5px'}
           />
+
           <Menu>
             <Icon
               icon={'material'}
@@ -68,19 +89,39 @@ class ReviewsWriterAnnotation extends React.Component {
               width={17}
               height={17}
               color={__GRAY_700}
+              onClick={() => {
+                this.toggle();
+              }}
             />
           </Menu>
+
+          <ReviewsWriterAnnotationMenu
+            visible={this.state.showMenu}
+            onClickInside={() => {
+              this.setState({showMenu: true});
+            }}
+            onClickOutside={() => {
+              this.setState({showMenu: false});
+            }}
+            action={actionType => {
+              this.performMenuAction(actionType, annotation._id);
+            }}
+          />
         </AnnotationHeader>
-        <Date> {moment(annotation.date).calendar()}</Date>
+        <Date> {moment(annotation.updated).calendar()}</Date>
         <AnnotationBody>
           {annotation.onChange ? (
             <ReviewsWriterAnnotationEditor
-              id={annotation.id}
+              id={annotation._id}
+              annotation={annotation}
               onCancel={id => {
                 this.props.onCancel(id);
               }}
-              onSave={(id, text) => {
-                this.props.onSave(id, text);
+              onSave={(id) => {
+                this.props.onSave(id);
+              }}
+              onChange={(id, text) => {
+                this.props.onChange(id, text);
               }}
             />
           ) : (

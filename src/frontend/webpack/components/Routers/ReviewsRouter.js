@@ -27,8 +27,7 @@ const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  margin-top: 15px;
+  margin-top: 2em;
 `;
 
 class ReviewsRouter extends Component {
@@ -90,12 +89,12 @@ class ReviewsRouter extends Component {
 
               <Route
                 exact
-                path={`${this.props.base}/myreviews`}
+                path={`${this.props.base}/me`}
                 render={() => (
                   <ReviewsMyReviews
                     selectedAccount={this.props.selectedAccount}
                     platformContract={this.props.platformContract}
-                    base={`${this.props.base}/myreviews`}
+                    base={`${this.props.base}/me`}
                     network={this.props.network}
                     web3={this.props.web3}
                   />

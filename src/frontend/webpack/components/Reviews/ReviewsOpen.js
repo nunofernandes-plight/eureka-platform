@@ -14,7 +14,8 @@ import {__THIRD} from '../../../helpers/colors.js';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 1em;
+  justify-content: center;
+  align-items: center;
 `;
 
 const NoArtDiv = styled.div`
@@ -85,7 +86,7 @@ class ReviewsOpen extends React.Component {
         {this.state.loading ? (
           <GridSpinner />
         ) : (
-          <Card title={'Articles open to review'} width={1000}>
+          <Card title={'Articles open to review'}>
             {this.state.articles ? (
               this.state.articles.length > 0 ? (
                 this.state.articles.map(article => {
@@ -111,8 +112,7 @@ class ReviewsOpen extends React.Component {
                             if (response.success) {
                               this.setState({loading: false});
                               this.props.history.push(
-                                `/app/write/review/${response.data._id}
-                            `
+                                `/app/write/review/${response.data._id}`
                               );
                             }
                           })

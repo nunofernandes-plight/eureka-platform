@@ -12,7 +12,7 @@ export const articleVersionSchema = mongoose.Schema(
     },
     document: {},
     timestamp: {
-      type: Number
+      type: Date
     },
     articleHash: {
       type: String

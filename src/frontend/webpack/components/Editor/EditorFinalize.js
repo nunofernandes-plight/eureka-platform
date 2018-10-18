@@ -16,6 +16,8 @@ import TxHash from '../../views/TxHash.js';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const NoArtDiv = styled.div`
@@ -168,7 +170,7 @@ class EditorFinalize extends React.Component {
         {this.state.loading ? (
           <GridSpinner />
         ) : (
-          <Card title={'Finalize these articles:'} width={1000}>
+          <Card title={'Finalize these articles:'}>
             {this.state.articles ? (
               this.state.articles.length > 0 ? (
                 this.state.articles.map(article => {

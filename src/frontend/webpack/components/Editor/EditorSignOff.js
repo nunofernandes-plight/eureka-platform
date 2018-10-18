@@ -6,15 +6,15 @@ import Article from '../../views/Article.js';
 import {Card} from '../../views/Card.js';
 import {__THIRD} from '../../../helpers/colors.js';
 import {Link, withRouter} from 'react-router-dom';
-import {
-  setSanityToOk
-} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {setSanityToOk} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const NoArtDiv = styled.div`
@@ -132,7 +132,7 @@ class EditorSignOff extends React.Component {
         {this.state.loading ? (
           <GridSpinner />
         ) : (
-          <Card title={'Sign Off Articles'} width={1000}>
+          <Card title={'Sign Off Articles'}>
             {this.state.articles ? (
               this.state.articles.length > 0 ? (
                 this.state.articles.map(article => {

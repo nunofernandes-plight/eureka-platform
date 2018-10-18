@@ -7,12 +7,12 @@ import ReviewsWriterAnnotation from './ReviewsWriterAnnotation.js';
 import UploadSpinner from '../../views/spinners/UploadSpinner.js';
 import {
   addAnnotation,
-  addCommunityReviewToDB,
+  deleteAnnotation,
   getAnnotations,
-  getMyReviews,
   saveAnnotation
 } from './ReviewMethods.js';
 import {withRouter} from 'react-router';
+
 const Container = styled.div`
   flex: 1;
   display: flex;
@@ -55,9 +55,9 @@ class ReviewsWriterContainer extends React.Component {
   }
 
   // TODO: call back end and get information from there. At the moment: Dummy data
-  getAnnotations(reviewId) {
+  getAnnotations() {
     this.setState({loading: true});
-    return getAnnotations(reviewId)
+    return getAnnotations(this.props.match.params.reviewId)
       .then(response => response.json())
       .then(response => {
         if (response.success) {
@@ -109,30 +109,15 @@ class ReviewsWriterContainer extends React.Component {
     const annotations = [...this.state.annotations];
     const index = annotations
       .map(a => {
-        return a.id;
+        return a._id;
       })
       .indexOf(id);
 
-    if (id > -1) {
-      annotations.splice(index, 1);
-    }
-    this.setState({annotations});
-  };
-
-  saveAnnotation = (id, text) => {
-    const annotations = [...this.state.annotations];
-    const index = annotations
-      .map(a => {
-        return a.id;
-      })
-      .indexOf(id);
-    annotations[index].text = text;
-    saveAnnotation(annotations[index])
+    deleteAnnotation(annotations[index])
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          annotations[index].onChange = false;
-          this.setState({annotations});
+          this.getAnnotations();
         }
       })
       .catch(err => {
@@ -141,6 +126,61 @@ class ReviewsWriterContainer extends React.Component {
           errorMessage: err
         });
       });
+  };
+
+  cancelAnnotation = id => {
+    const annotations = [...this.state.annotations];
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    if (annotation.updated) {
+      this.getAnnotations();
+    } else {
+      this.deleteAnnotation(id);
+    }
+  };
+
+  saveAnnotation = id => {
+    const annotations = [...this.state.annotations];
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    saveAnnotation(annotation)
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.setState({annotations});
+          this.getAnnotations();
+        }
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          errorMessage: err
+        });
+      });
+  };
+
+  editAnnotation = id => {
+    const annotations = [...this.state.annotations];
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    if (annotation) {
+      annotation.onChange = true;
+    }
+    this.setState({annotations});
+  };
+
+  changeAnnotation = (id, text) => {
+    const annotations = [...this.state.annotations];
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    if (annotation) {
+      annotation.text = text;
+    }
+    this.setState({annotations});
   };
 
   render() {
@@ -177,10 +217,19 @@ class ReviewsWriterContainer extends React.Component {
                       annotation={annotation}
                       key={index}
                       onCancel={id => {
+                        this.cancelAnnotation(id);
+                      }}
+                      onSave={id => {
+                        this.saveAnnotation(id);
+                      }}
+                      onDelete={id => {
                         this.deleteAnnotation(id);
                       }}
-                      onSave={(id, text) => {
-                        this.saveAnnotation(id, text);
+                      onEdit={id => {
+                        this.editAnnotation(id);
+                      }}
+                      onChange={(id, text) => {
+                        this.changeAnnotation(id, text);
                       }}
                     />
                   );

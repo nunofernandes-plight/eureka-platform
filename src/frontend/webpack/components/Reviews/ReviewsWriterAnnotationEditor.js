@@ -33,6 +33,9 @@ const Comment = Button.extend`
   margin-left: auto;
   color: white;
   background: ${__ALERT_SUCCESS};
+  transition: 0.35s ease-in-out;
+  opacity: ${props => (props.text ? 1 : 0.35)};
+  pointer-events: ${props => (props.text ? 'auto' : 'none')};
 `;
 
 const Cancel = Button.extend`
@@ -47,25 +50,15 @@ const Buttons = styled.div`
   font-size: 10.5px;
 `;
 class ReviewsWriterAnnotationEditor extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      text: null
-    };
-  }
-
-  onChange(value) {
-    this.setState({text: value});
-  }
-
   render() {
     return (
       <Container>
         <TextArea
+          value={this.props.annotation.text ? this.props.annotation.text : ''}
           placeholder={'Enter your annotation here..'}
           cols={'10'}
           onChange={e => {
-            this.onChange(e.target.value);
+            this.props.onChange(this.props.id, e.target.value);
           }}
         />
         <Buttons>
@@ -77,8 +70,9 @@ class ReviewsWriterAnnotationEditor extends React.Component {
             Cancel
           </Cancel>
           <Comment
+            text={this.props.annotation.text}
             onClick={() => {
-              this.props.onSave(this.props.id, this.state.text);
+              this.props.onSave(this.props.id);
             }}
           >
             Comment

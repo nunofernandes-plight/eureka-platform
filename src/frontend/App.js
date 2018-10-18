@@ -1,5 +1,10 @@
 import React, {Component} from 'react';
 import Web3 from 'web3';
+import {applyMiddleware, createStore} from 'redux';
+import {Provider as ReduxProvider} from 'react-redux';
+import thunk from 'redux-thunk';
+import reducer from './webpack/reducers';
+import {composeWithDevTools} from 'redux-devtools-extension';
 import {Detector} from 'react-detect-offline';
 import {getBalanceOf} from '../smartcontracts/methods/web3-token-contract-methods.mjs';
 import MainRouter from './webpack/components/Routers/MainRouter.js';
@@ -15,6 +20,14 @@ import {
   PLATFORM_KOVAN_ADDRESS,
   TOKEN_KOVAN_ADDRESS
 } from '../smartcontracts/constants/KovanContractAddresses.mjs';
+
+const store = createStore(
+  reducer,
+  composeWithDevTools(
+    applyMiddleware(thunk)
+    // other store enhancers if any
+  )
+);
 
 class App extends Component {
   constructor() {
@@ -123,19 +136,21 @@ class App extends Component {
         <Detector
           render={({online}) =>
             online || this.state.provider === Web3Providers.LOCALHOST ? (
-              <MainRouter
-                platformContract={this.state.platformContract}
-                tokenContract={this.state.tokenContract}
-                web3={this.state.web3}
-                provider={this.state.provider}
-                network={this.state.network}
-                metaMaskStatus={this.state.metaMaskStatus}
-                accounts={this.state.accounts}
-                selectedAccount={this.state.selectedAccount}
-                changeAccount={account => {
-                  this.changeAccount(account);
-                }}
-              />
+              <ReduxProvider store={store}>
+                <MainRouter
+                  platformContract={this.state.platformContract}
+                  tokenContract={this.state.tokenContract}
+                  web3={this.state.web3}
+                  provider={this.state.provider}
+                  network={this.state.network}
+                  metaMaskStatus={this.state.metaMaskStatus}
+                  accounts={this.state.accounts}
+                  selectedAccount={this.state.selectedAccount}
+                  changeAccount={account => {
+                    this.changeAccount(account);
+                  }}
+                />
+              </ReduxProvider>
             ) : (
               <NoConnection />
             )

@@ -14,7 +14,8 @@ import {isGanache} from '../../../../helpers/isGanache.mjs';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 1em;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Articles = styled.div`
@@ -150,7 +151,7 @@ class EditorArticles extends React.Component {
     return (
       <Container>
         {this.renderModals()}
-        <Card width={1000} title={'Assign articles'}>
+        <Card title={'Assign articles'}>
           <EditorQuerySection
             checked={this.state.filtersActive}
             handleFilters={filtersActive => {

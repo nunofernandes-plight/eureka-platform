@@ -12,7 +12,7 @@ export const ReviewsNavPillRoutes = [
     material: 'search'
   },
   {
-    path: 'myreviews',
+    path: 'me',
     name: 'My Reviews',
     icon: 'material',
     material: 'rate_review'

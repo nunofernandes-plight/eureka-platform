@@ -77,10 +77,16 @@ class MainRouter extends Component {
       });
   }
 
-  action(item) {
+  action(actionType) {
+    if (actionType === 'power_settings_new') {
+      this.logout();
+    }
+  }
+
+  logout() {
     this.setState({isLoading: true});
-    fetch(`${getDomain()}/api/${item.action}`, {
-      method: item.method,
+    fetch(`${getDomain()}/api/logout`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },

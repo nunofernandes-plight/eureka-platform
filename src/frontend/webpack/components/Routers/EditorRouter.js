@@ -16,21 +16,15 @@ const Parent = styled.div`
 `;
 
 const CardContainer = styled.div`
-  transition: all 0.5s;
   display: flex;
-  max-width: 1200px;
+  flex-direction: column;
   justify-content: center;
-  margin: 0 auto;
+  margin-top: 2em;
 `;
 
 const NavPills = styled.div`
   display: flex;
-  margin-bottom: 10px;
   justify-content: center;
-`;
-
-const MarginTop = styled.div`
-  margin-top: 15px;
 `;
 
 const Container = styled.div``;
@@ -74,86 +68,71 @@ class EditorRouter extends Component {
             })}
           </NavPills>
           <CardContainer>
-            <MarginTop>
-              <Route
-                exact
-                path={`${this.props.base}/articles`}
-                render={() => (
-                  <EditorArticles
-                    selectedAccount={this.props.selectedAccount}
-                    platformContract={this.props.platformContract}
-                    base={`${this.props.base}/articles`}
-                    network={this.props.network}
-                    web3={this.props.web3}
-                  />
-                )}
-              />
-            </MarginTop>
-
-            <MarginTop>
-              <Route
-                exact
-                path={`${this.props.base}/signoff`}
-                render={() => (
-                  <EditorSignOff
-                    selectedAccount={this.props.selectedAccount}
-                    platformContract={this.props.platformContract}
-                    base={`${this.props.base}/signoff`}
-                    network={this.props.network}
-                    web3={this.props.web3}
-                  />
-                )}
-              />
-            </MarginTop>
-
-            <MarginTop>
-              <Route
-                exact
-                path={`${this.props.base}/invite`}
-                render={() => (
-                  <EditorInvite
-                    selectedAccount={this.props.selectedAccount}
-                    platformContract={this.props.platformContract}
-                    base={`${this.props.base}/invite`}
-                    network={this.props.network}
-                    web3={this.props.web3}
-                  />
-                )}
-              />
-            </MarginTop>
-
-            <MarginTop>
-              <Route
-                exact
-                path={`${this.props.base}/reviews`}
-                render={() => (
-                  <EditorCheckReviews
-                    selectedAccount={this.props.selectedAccount}
-                    platformContract={this.props.platformContract}
-                    base={`${this.props.base}/reviews`}
-                    network={this.props.network}
-                    web3={this.props.web3}
-                  />
-                )}
-              />
-            </MarginTop>
-
-            <MarginTop>
-              <Route
-                exact
-                path={`${this.props.base}/finalize`}
-                render={() => (
-                  <EditorFinalize
-                    selectedAccount={this.props.selectedAccount}
-                    platformContract={this.props.platformContract}
-                    base={`${this.props.base}/finalize`}
-                    network={this.props.network}
-                    web3={this.props.web3}
-                  />
-                )}
-              />
-            </MarginTop>
-
+            <Route
+              exact
+              path={`${this.props.base}/articles`}
+              render={() => (
+                <EditorArticles
+                  selectedAccount={this.props.selectedAccount}
+                  platformContract={this.props.platformContract}
+                  base={`${this.props.base}/articles`}
+                  network={this.props.network}
+                  web3={this.props.web3}
+                />
+              )}
+            />
+            <Route
+              exact
+              path={`${this.props.base}/signoff`}
+              render={() => (
+                <EditorSignOff
+                  selectedAccount={this.props.selectedAccount}
+                  platformContract={this.props.platformContract}
+                  base={`${this.props.base}/signoff`}
+                  network={this.props.network}
+                  web3={this.props.web3}
+                />
+              )}
+            />
+            <Route
+              exact
+              path={`${this.props.base}/invite`}
+              render={() => (
+                <EditorInvite
+                  selectedAccount={this.props.selectedAccount}
+                  platformContract={this.props.platformContract}
+                  base={`${this.props.base}/invite`}
+                  network={this.props.network}
+                  web3={this.props.web3}
+                />
+              )}
+            />
+            <Route
+              exact
+              path={`${this.props.base}/reviews`}
+              render={() => (
+                <EditorCheckReviews
+                  selectedAccount={this.props.selectedAccount}
+                  platformContract={this.props.platformContract}
+                  base={`${this.props.base}/reviews`}
+                  network={this.props.network}
+                  web3={this.props.web3}
+                />
+              )}
+            />
+            <Route
+              exact
+              path={`${this.props.base}/finalize`}
+              render={() => (
+                <EditorFinalize
+                  selectedAccount={this.props.selectedAccount}
+                  platformContract={this.props.platformContract}
+                  base={`${this.props.base}/finalize`}
+                  network={this.props.network}
+                  web3={this.props.web3}
+                />
+              )}
+            />
             <Route
               exact
               path={`${this.props.base}`}
