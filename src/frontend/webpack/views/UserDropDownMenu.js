@@ -84,7 +84,7 @@ const Separator = styled.div`
 const Tab = props => {
   return (
     <TabContainer
-      {...props}
+      tabPadding={props.tabPadding}
       onClick={() => {
         props.action(props.material);
       }}
@@ -110,7 +110,12 @@ const Tab = props => {
 const DropDown = ({items, iconSize, ...otherProps}) => {
   const props = otherProps;
   return (
-    <Navigation {...props}>
+    <Navigation
+      noMinWidth={props.noMinWidth}
+      background={props.background}
+      noPadding={props.noPadding}
+      border={props.border}
+    >
       <Tabs>
         {items.map((item, index) => {
           return (
@@ -134,23 +139,26 @@ const DropDown = ({items, iconSize, ...otherProps}) => {
   );
 };
 
-class UserDropDownMenu extends React.Component {
-  render() {
-    const iconSize = this.props.iconSize ? this.props.iconSize : 15;
-    return (
-      <Parent visible={this.props.visible} {...this.props}>
-        {this.props.noSquare ? null : <SmallSquare {...this.props} />}
-        <DropDown
-          items={this.props.items}
-          iconSize={iconSize}
-          action={item => {
-            this.props.action(item);
-          }}
-          {...this.props}
-        />
-      </Parent>
-    );
-  }
-}
+const UserDropDownMenu = props => {
+  const iconSize = props.iconSize ? props.iconSize : 15;
+  return (
+    <Parent
+      visible={props.visible}
+      noPadding={props.noPadding}
+      right={props.right}
+      top={props.top}
+    >
+      {props.noSquare ? null : <SmallSquare background={props.background} />}
+      <DropDown
+        items={props.items}
+        iconSize={iconSize}
+        action={item => {
+          props.action(item);
+        }}
+        {...props}
+      />
+    </Parent>
+  );
+};
 
 export default UserDropDownMenu;
