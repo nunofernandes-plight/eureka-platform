@@ -237,13 +237,13 @@ class ReviewsOpen extends React.Component {
                         );
                       }}
                       button2Text={'dummy: send review to SC'}
-                      action2={(_, article) => {
+                      action2={async (_, article) => {
                         if (
                           article.reviewType ===
                           REVIEW_TYPE.EDITOR_APPROVED_REVIEW
                         )
-                          this.submitEditorApprovedReview(article);
-                        else this.submitCommunityReview(article);
+                          await this.submitEditorApprovedReview(article);
+                        else await this.submitCommunityReview(article);
                       }}
                     />
                   );
