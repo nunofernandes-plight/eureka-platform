@@ -41,6 +41,7 @@ import {
   TEST_ARTICLE_1_SECOND_VERSION
 } from '../test-data';
 import TestFunctions from '../test-functions';
+import ArticleSubmissionState from '../../src/backend/schema/article-submission-state-enum.mjs';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
@@ -74,7 +75,7 @@ test.after(async () => {
 
 /************************ Decline SanityCheck v1, Accept SanityCheck v2 ************************/
 
-test.only(
+test(
   PRETEXT +
   'Decline SanityCheck v1, Accept SanityCheck v2',
   async t => {
@@ -93,7 +94,7 @@ test.only(
     // Assign first editor for submission process
     await TestFunctions.assignEditorForSubmissionProcess(t, editor, articleSubmission);
 
-    // Decline sanity-check for article 2
+    // Decline sanity-check for article
     await TestFunctions.declineSanityCheckAndTest(t, editor, author, articleSubmission, articleVersion);
 
     // Update test-data
@@ -101,7 +102,6 @@ test.only(
     articleVersion = articleSubmission.articleVersions[0];
 
     // Open new review round
-
     await TestFunctions.openNewReviewRoundAndTest(t, author, articleSubmission.scSubmissionID, articleVersion, TEST_ARTICLE_1_SECOND_VERSION, TEST_ARTICLE_2_HASH_HEX, TEST_ARTICLE_2_HASH_HEX);
 
     // Get the new article-version
@@ -114,3 +114,43 @@ test.only(
 );
 
 // TODO same as above, but decline second sanityCheck again --> test if it gets rejected and repaid
+test.only(
+  PRETEXT +
+  'Decline SanityCheck v1, Decline SanityCheck v2, Check for repaying & reverting ',
+  async t => {
+    // Setup environment
+    const author = await createUserContractOwner();
+    const editor = await createEditor1();
+    await TestFunctions.signUpEditorAndTest(t, editor);
+
+    await TestFunctions.createArticleDraftAndSubmitIt(t, author, TEST_ARTICLE_1_HASH_HEX, TEST_ARTICLE_1_DATA_IN_HEX);
+    let articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    let articleVersion = articleSubmission.articleVersions[0];
+    await TestFunctions.assignEditorForSubmissionProcess(t, editor, articleSubmission);
+
+    // Decline sanity first time
+    await TestFunctions.declineSanityCheckAndTest(t, editor, author, articleSubmission, articleVersion, ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED);
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    articleVersion = articleSubmission.articleVersions[0];
+
+    // Open new review round and get data
+    await TestFunctions.openNewReviewRoundAndTest(t, author, articleSubmission.scSubmissionID, articleVersion, TEST_ARTICLE_1_SECOND_VERSION, TEST_ARTICLE_2_HASH_HEX, TEST_ARTICLE_2_HASH_HEX);
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    articleVersion = articleSubmission.articleVersions[1];
+
+    // Decline sanity second time
+    await TestFunctions.declineSanityCheckAndTest(t, editor, author, articleSubmission, articleVersion, ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED);
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    articleVersion = articleSubmission.articleVersions[1];
+
+    // Open new review round and get data
+    await TestFunctions.openNewReviewRoundAndTest(t, author, articleSubmission.scSubmissionID, articleVersion, TEST_ARTICLE_1_SECOND_VERSION, TEST_ARTICLE_2_HASH_HEX, TEST_ARTICLE_2_HASH_HEX);
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    articleVersion = articleSubmission.articleVersions[2];
+
+    // Decline sanity third time
+    await TestFunctions.declineSanityCheckAndTest(t, editor, author, articleSubmission, articleVersion, ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED);
+
+    //TODO @Severin: Soll hier ewigs geloopet werden? Ich bin mir gar nicht sicher, was hier passieren soll, ob überhaupt etwas passieren soll?
+  }
+);

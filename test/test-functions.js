@@ -251,7 +251,17 @@ export default {
     t.is(dbArticleVersion.articleVersionState, ArticleVersionState.EDITOR_CHECKED);
   },
 
-  declineSanityCheckAndTest: async function(t, editor, author, articleSubmission, articleVersion) {
+  /**
+   *
+   * @param t
+   * @param editor
+   * @param author
+   * @param articleSubmission
+   * @param articleVersion
+   * @param endSubmissionState must be either 'ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED' or  'ArticleSubmissionState.CLOSED'
+   * @returns {Promise<void>}
+   */
+  declineSanityCheckAndTest: async function(t, editor, author, articleSubmission, articleVersion, endSubmissionState) {
     await setSanityIsNotOk(
       eurekaPlatformContract,
       articleVersion.articleHash
@@ -279,15 +289,14 @@ export default {
 
     articleSubmission = await articleSubmissionService.getSubmissionBySCsubmissionId(articleSubmission.scSubmissionID);
     while (
-      (articleSubmission.articleSubmissionState !== ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED ||
-        articleSubmission.articleSubmissionState !== ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED) &&
+      articleSubmission.articleSubmissionState !== endSubmissionState &&
       counter < 5) {
       sleepSync(5000);
       articleSubmission = await articleSubmissionService.getSubmissionBySCsubmissionId(articleSubmission.submissionId);
       counter++;
     }
 
-    t.is(articleSubmission.articleSubmissionState, (ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED || ArticleSubmissionState.CLOSED));
+    t.is(articleSubmission.articleSubmissionState, endSubmissionState);
   },
 
   /**

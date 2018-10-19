@@ -618,7 +618,6 @@ contract EurekaPlatform {
     }
 
     event NewReviewRoundOpened(uint256 submissionId, bytes32 articleHash, bytes32 articleUrl, uint256 stateTimestamp);
-
     function openNewReviewRound(uint256 _submissionId, bytes32 _articleHash, bytes32 _articleURL, address[] _authors,
         uint16[] _authorContributionRatios, bytes32[] _linkedArticles, uint16[] _linkedArticlesSplitRatios) public {
 
@@ -671,7 +670,6 @@ contract EurekaPlatform {
             //TODO: reward linkedArticles authors and invalidation work
             // check also if time is already up
         }
-
         submission.submissionState = SubmissionState.CLOSED;
         submission.stateTimestamp = block.timestamp;
     }
