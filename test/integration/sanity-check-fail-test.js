@@ -104,7 +104,12 @@ test.only(
 
     await TestFunctions.openNewReviewRoundAndTest(t, author, articleSubmission.scSubmissionID, articleVersion, TEST_ARTICLE_1_SECOND_VERSION, TEST_ARTICLE_2_HASH_HEX, TEST_ARTICLE_2_HASH_HEX);
 
+    // Get the new article-version
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    articleVersion = articleSubmission.articleVersions[1];
+
     // TODO accept second round and test if is submitted afterwards
+    await TestFunctions.acceptSanityCheckAndTest(t, editor, author, articleVersion);
   }
 );
 

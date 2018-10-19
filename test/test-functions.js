@@ -31,7 +31,6 @@ let eurekaPlatformContract;
 let eurekaTokenContract;
 let contractOwner;
 
-
 export default {
   setContractsForTestingFunctions: function(_eurekaPlatformContract, _eurekaTokenContract, _contractOwnerAddress) {
     eurekaPlatformContract = _eurekaPlatformContract;
