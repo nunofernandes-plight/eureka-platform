@@ -6,7 +6,7 @@ import {MAKE_MOBILE} from '../../helpers/mobile.js';
 import {PANEL_LEFT_BREAK_POINT} from '../../helpers/layout.js';
 import Icon from './icons/Icon.js';
 
-const MyLink = styled(NavLink)`
+export const MyNavPill = styled(NavLink)`
   &:hover {
     transform: translateY(2px);
   }
@@ -28,7 +28,7 @@ const MyLink = styled(NavLink)`
   }
 `;
 
-MyLink.defaultProps = {
+MyNavPill.defaultProps = {
   activeClassName: 'active'
 };
 const IconContainer = styled.div`
@@ -50,7 +50,7 @@ const Name = styled.div`
 
 const NavPill = props => {
   return (
-    <MyLink to={`${props.base}/${props.path}`}>
+    <MyNavPill to={`${props.base}/${props.path}`}>
       <IconContainer {...props}>
         <Name>{props.name}</Name>
         <Icon
@@ -62,7 +62,7 @@ const NavPill = props => {
           height={props.height}
         />
       </IconContainer>
-    </MyLink>
+    </MyNavPill>
   );
 };
 
