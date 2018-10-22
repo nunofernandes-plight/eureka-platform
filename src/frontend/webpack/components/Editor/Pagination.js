@@ -61,15 +61,15 @@ const Element = ({number, currentPage, ...otherProps}) => {
   );
 };
 
-const Pagination = ({currentPage, totalPages, limit, ...otherProps}) => {
-  return (
-    <Container>
+const PrevButton = props => {
+  if (props.currentPage !== 1) {
+    return (
       <Element
-        number={currentPage}
+        number={props.currentPage}
         goToPage={number => {
           const prev = number - 1;
           if (prev >= 1) {
-            otherProps.goToPage(prev);
+            props.goToPage(prev);
           }
         }}
       >
@@ -81,28 +81,20 @@ const Pagination = ({currentPage, totalPages, limit, ...otherProps}) => {
           noMove
         />
       </Element>
-      {Array(totalPages)
-        .fill(true)
-        .map((_, i) => {
-          return (
-            <Element
-              currentPage={currentPage}
-              key={i + 1}
-              number={i + 1}
-              goToPage={number => {
-                otherProps.goToPage(number);
-              }}
-            >
-              {i + 1}
-            </Element>
-          );
-        })}
+    );
+  }
+  return null;
+};
+
+const NextButton = props => {
+  if (props.currentPage !== props.totalPages) {
+    return (
       <Element
-        number={currentPage}
+        number={props.currentPage}
         goToPage={number => {
           const next = number + 1;
-          if (number < totalPages) {
-            otherProps.goToPage(next);
+          if (next <= props.totalPages) {
+            props.goToPage(next);
           }
         }}
       >
@@ -114,6 +106,46 @@ const Pagination = ({currentPage, totalPages, limit, ...otherProps}) => {
           noMove
         />
       </Element>
+    );
+  }
+  return null;
+};
+
+const Pagination = ({currentPage, totalPages, limit, ...otherProps}) => {
+  return (
+    <Container>
+      <PrevButton
+        currentPage={currentPage}
+        {...otherProps}
+        goToPage={page => {
+          otherProps.goToPage(page);
+        }}
+      />
+      {Array(totalPages)
+        .fill(true)
+        .map((_, i) => {
+          const index = i + 1;
+          return (
+            <Element
+              currentPage={currentPage}
+              key={index}
+              number={index}
+              goToPage={number => {
+                otherProps.goToPage(number);
+              }}
+            >
+              {index}
+            </Element>
+          );
+        })}
+      <NextButton
+        totalPages={totalPages}
+        currentPage={currentPage}
+        {...otherProps}
+        goToPage={page => {
+          otherProps.goToPage(page);
+        }}
+      />
     </Container>
   );
 };
