@@ -322,5 +322,15 @@ export default {
         await articleSubmissionService.updateAritcleSubmissionState(event.returnValues.submissionId, ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED);
       }
     );
+
+    EurekaPlatformContract.events.SubmissionProcessClosed(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+        console.log('SUBMISSION PROCESS CLOSED!!!');
+
+        await articleSubmissionService.updateAritcleSubmissionState(event.returnValues.submissionId, ArticleSubmissionState.CLOSED);
+      }
+    );
   }
 };
