@@ -45,7 +45,7 @@ contract EurekaPlatform {
 
     uint constant maxReviewRounds = 3;
 
-    function getJournalParameters() public returns (
+    function getJournalParameters() view public returns (
         address _contractOwner,
         uint _minAmountOfEditorApprovedReviews,
         uint _maxAmountOfRewardedEditorApprovedReviews,
