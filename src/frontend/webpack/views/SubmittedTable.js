@@ -51,11 +51,6 @@ const MyLink = styled(Link)`
   text-decoration: none;
 `;
 
-const Hash = styled.div`
-  ${MEDIUM_DEVICES`
-    display: none; 
-  `};
-`;
 const IconContainer = styled.div`
   border-radius: 50%;
   padding: 0.25rem;

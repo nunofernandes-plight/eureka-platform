@@ -188,8 +188,7 @@ class ReviewsInvited extends React.Component {
                             reviewId: article.reviewId
                           });
                           this.props.history.push(
-                            `/app/write/review/${article.reviewId}
-                            `
+                            `/app/write/review/${article.reviewId}`
                           );
                         }
                       }}
