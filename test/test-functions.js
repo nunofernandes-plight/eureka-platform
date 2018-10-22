@@ -418,7 +418,7 @@ export default {
       review._id
     );
     let counter = 0;
-    while (review.reviewState !== ReviewState.HANDED_IN_SC && counter < 5) {
+    while (review.reviewState !== ReviewState.HANDED_IN_SC && counter < 10) {
       sleepSync(5000);
       dbReview = await reviewService.getReviewById(
         reviewer.ethereumAddress,
@@ -615,6 +615,5 @@ export default {
       counter++;
     }
     t.is(dbArticleSubmission.articleSubmissionState, ArticleSubmissionState.CLOSED);
-
   }
 };

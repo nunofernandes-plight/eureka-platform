@@ -20,14 +20,14 @@ import {
   TEST_ARTICLE_1_HASH_HEX,
   TEST_ARTICLE_2_DATA_IN_HEX,
   TEST_ARTICLE_2_HASH_HEX,
-  REVIEW_1,
-  REVIEW_1_HASH_HEX,
-  REVIEW_2,
-  REVIEW_2_HASH_HEX,
-  REVIEW_3,
-  REVIEW_3_HASH_HEX,
-  REVIEW_4,
-  REVIEW_4_HASH_HEX,
+  NO_ISSUES_REVIEW_1,
+  NO_ISSUES_REVIEW_1_HASH_HEX,
+  NO_ISSUES_REVIEW_2,
+  NO_ISSUES_REVIEW_2_HASH_HEX,
+  MINOR_ISSUES_REVIEW_1,
+  MINOR_ISSUES_REVIEW_1_HASH_HEX,
+  MINOR_ISSUES_REVIEW_2,
+  MINOR_ISSUES_REVIEW_2_HASH_HEX,
   createUserContractOwner,
   setAccounts,
   createUser1,
@@ -150,6 +150,7 @@ test.only(
 
     // Decline sanity third time
     await TestFunctions.declineSanityCheckAndTest(t, editor, author, articleSubmission, articleVersion, ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED);
+
 
     //TODO @Severin: Soll hier ewigs geloopet werden? Ich bin mir gar nicht sicher, was hier passieren soll, ob überhaupt etwas passieren soll?
   }

@@ -642,11 +642,11 @@ contract EurekaPlatform {
         require(submission.submissionState == SubmissionState.NEW_REVIEW_ROUND_REQUESTED,
             "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
 
-        //closeSubmissionProcess(_submissionId);
+        //closeSubmissionProcess(_submissionId); // TODO bugfixing as it reverts always
         emit NewReviewRoundDeclined(_submissionId, block.timestamp);
     }
 
-    // TODO: should it be possible to close a submission process before reaching maxReviewRounds ??
+    event SubmissionProcessClosed(uint256 stateTimestamp, uint256 submissionId);
     function closeSubmissionProcess(uint256 _submissionId) private {
 
         ArticleSubmission submission = articleSubmissions[_submissionId];
@@ -672,6 +672,7 @@ contract EurekaPlatform {
         }
         submission.submissionState = SubmissionState.CLOSED;
         submission.stateTimestamp = block.timestamp;
+        emit SubmissionProcessClosed(block.timestamp, _submissionId);
     }
 
     function rewardEditorApprovedReviews(ArticleVersion _articleVersion, uint _reviewRounds) private {

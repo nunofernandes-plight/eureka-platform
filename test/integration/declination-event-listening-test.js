@@ -18,14 +18,14 @@ import {
   TEST_ARTICLE1_SECOND_VERSION_HASH_URL,
   TEST_ARTICLE_2_DATA_IN_HEX,
   TEST_ARTICLE_2_HASH_HEX,
-  REVIEW_1,
-  REVIEW_1_HASH_HEX,
-  REVIEW_2,
-  REVIEW_2_HASH_HEX,
-  REVIEW_3,
-  REVIEW_3_HASH_HEX,
-  REVIEW_4,
-  REVIEW_4_HASH_HEX,
+  NO_ISSUES_REVIEW_1,
+  NO_ISSUES_REVIEW_1_HASH_HEX,
+  NO_ISSUES_REVIEW_2,
+  NO_ISSUES_REVIEW_2_HASH_HEX,
+  MINOR_ISSUES_REVIEW_1,
+  MINOR_ISSUES_REVIEW_1_HASH_HEX,
+  MINOR_ISSUES_REVIEW_2,
+  MINOR_ISSUES_REVIEW_2_HASH_HEX,
   createUserContractOwner,
   setAccounts,
   createUser1,
@@ -113,16 +113,16 @@ test.only(
     let review3 = await reviewService.getReviewById(reviewer3.ethereumAddress, articleVersion.editorApprovedReviews[2]);
 
     // Add editor-approved review into DB
-    await TestFunctions.addEditorApprovedReviewAndTest(t, reviewer1, review1, REVIEW_1, REVIEW_1_HASH_HEX, articleVersion);
-    await TestFunctions.addEditorApprovedReviewAndTest(t, reviewer2, review2, REVIEW_2, REVIEW_2_HASH_HEX, articleVersion);
-    await TestFunctions.addEditorApprovedReviewAndTest(t, reviewer3, review3, REVIEW_3, REVIEW_3_HASH_HEX, articleVersion);
+    await TestFunctions.addEditorApprovedReviewAndTest(t, reviewer1, review1, NO_ISSUES_REVIEW_1, NO_ISSUES_REVIEW_1_HASH_HEX, articleVersion);
+    await TestFunctions.addEditorApprovedReviewAndTest(t, reviewer2, review2, NO_ISSUES_REVIEW_2, NO_ISSUES_REVIEW_2_HASH_HEX, articleVersion);
+    await TestFunctions.addEditorApprovedReviewAndTest(t, reviewer3, review3, MINOR_ISSUES_REVIEW_1, MINOR_ISSUES_REVIEW_1_HASH_HEX, articleVersion);
 
     //update from DB
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
     articleVersion = articleSubmission.articleVersions[0];
 
     // Add a community review as reviewer4
-    await TestFunctions.addNewCommunitydReviewAndTest(t, reviewer4, REVIEW_4, REVIEW_4_HASH_HEX, author, articleVersion);
+    await TestFunctions.addNewCommunitydReviewAndTest(t, reviewer4, MINOR_ISSUES_REVIEW_2, MINOR_ISSUES_REVIEW_2_HASH_HEX, author, articleVersion);
 
     // Accept review1 & review2, decline review3
     await TestFunctions.acceptReviewAndTest(t, editor, review1, articleVersion);
