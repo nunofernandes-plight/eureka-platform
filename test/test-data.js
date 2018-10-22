@@ -100,13 +100,16 @@ export async function createReviewer4() {
     Roles.REVIEWER
   );
 }
+
+
+
 export const TEST_ARTICLE_1 = {
   articleHash:
     '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
   url: 'article1.url',
   authors: [
-    '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88',
-    '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba77'
+    '0x0Ae55019E00Df4359735D9F5f11C54f6fC1b84Ee',
+    '0xBaa8A96aD1b53c5412D5d89cF85d45e579f17F58'
   ],
   contributorRatios: [4000, 6000],
   linkedArticles: [
@@ -119,9 +122,10 @@ export const TEST_ARTICLE_1 = {
 export const TEST_ARTICLE_1_DATA_IN_HEX = getArticleHex(web3, TEST_ARTICLE_1);
 export const TEST_ARTICLE_1_HASH_HEX = '0x' + TEST_ARTICLE_1.articleHash;
 
+// TODO works!!!!
 export const TEST_ARTICLE_1_SECOND_VERSION = {
   articleHash:
-    '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+    '111ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
   url: 'article1.url',
   authors: [
     '0x32B90146858A1D119AB56202b84A330AaA7639D6',
@@ -139,7 +143,6 @@ export const TEST_ARTICLE_1_SECOND_VERSION_DATA_IN_HEX = getArticleHex(web3, TES
 export const TEST_ARTICLE_1_SECOND_VERSION_HASH_HEX = '0x' + TEST_ARTICLE_1_SECOND_VERSION.articleHash;
 export const TEST_ARTICLE1_SECOND_VERSION_HASH_URL = '0x' + TEST_ARTICLE_1_SECOND_VERSION.url;
 
-
 export const TEST_ARTICLE_2 = {
   articleHash:
     '551aa99a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
@@ -153,68 +156,141 @@ export const TEST_ARTICLE_2 = {
     [2000, 8000],
   linkedArticles:
     [
-      '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
-      '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
-      'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
+      '0x5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
+      '0x45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
+      '0xd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
     ],
   linkedArticlesSplitRatios:
     [2000, 2000, 6000]
 };
-
-
 export const TEST_ARTICLE_2_DATA_IN_HEX = getArticleHex(web3, TEST_ARTICLE_2);
+// TODO works!!!
 export const TEST_ARTICLE_2_HASH_HEX = '0x' + TEST_ARTICLE_2.articleHash;
 
 
-export const REVIEW_1 = {
+export const TEST_ARTICLE_3 = {
+  articleHash:
+    '333ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+  url: 'article3.url',
+  authors: [
+    '0xbB44e39bF87016b167997922597591Bdff68Fd44',
+    '0xA8Dd80d44959490bcAAdc41d916A9D8a5d0038CC'
+  ],
+  contributorRatios: [4000, 6000],
+  linkedArticles: [
+    '0x5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30333',
+    '0x45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba099333',
+    '0xd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bc333'
+  ],
+  linkedArticlesSplitRatios: [3334, 3333, 3333]
+};
+export const TEST_ARTICLE_3_DATA_IN_HEX = getArticleHex(web3, TEST_ARTICLE_3);
+export const TEST_ARTICLE_3_HASH_HEX = '0x' + TEST_ARTICLE_3.articleHash;
+
+
+export const TEST_ARTICLE_4 = {
+  articleHash:
+    '444ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+  url: 'article4.url',
+  authors: [
+    '0x655aA73E526cdf45c2E8906Aafbf37d838c2Ba88',
+    '0xA99c235D93A2a2dd1eA775F50e7bAf7332d7A053'
+  ],
+  contributorRatios: [4000, 6000],
+  linkedArticles: [
+    '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30444',
+    '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba099444',
+    'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bc444'
+  ],
+  linkedArticlesSplitRatios: [3334, 3333, 3333]
+};
+export const TEST_ARTICLE_4_DATA_IN_HEX = getArticleHex(web3, TEST_ARTICLE_4);
+export const TEST_ARTICLE_4_HASH_HEX = '0x' + TEST_ARTICLE_4.articleHash;
+/******************* TEST REVIEWS *******************/
+
+export const NO_ISSUES_REVIEW_1 = {
   reviewHash:
     '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
   reviewText: 'This is the test-text for the review or reviewer 1',
   score1: 3,
   score2: 5,
   articleHasMajorIssues: false,
-  articleHasMinorIssues: true
+  articleHasMinorIssues: false
 };
-export const REVIEW_1_HASH_HEX = '0x' + REVIEW_1.reviewHash;
-export const REVIEW_1_CORRECTED = {
+
+export const NO_ISSUES_REVIEW_1_HASH_HEX = '0x' + NO_ISSUES_REVIEW_1.reviewHash;
+export const NO_ISSUES_REVIEW_1_CORRECTED = {
   reviewHash:
     '111aa57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
-  reviewText: 'Corrected version of review2',
+  reviewText: 'This is the correction review of NO ISSUES 1',
   score1: 3,
   score2: 3,
   articleHasMajorIssues: false,
   articleHasMinorIssues: false
 };
 
-export const REVIEW_2 = {
+export const NO_ISSUES_REVIEW_2 = {
   reviewHash:
     '222ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
-  reviewText: 'That one is the second review. So it comes from reviewer2',
-  score1: 1,
-  score2: 1,
-  articleHasMajorIssues: false,
-  articleHasMinorIssues: true
-};
-export const REVIEW_2_HASH_HEX = '0x' + REVIEW_2.reviewHash;
-
-export const REVIEW_3 = {
-  reviewHash:
-    '333cc57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
-  reviewText: 'Third review. So it comes from reviewer3',
+  reviewText: 'This is article has NO ISSUES 2',
   score1: 4,
   score2: 4,
   articleHasMajorIssues: false,
+  articleHasMinorIssues: false
+};
+export const NO_ISSUES_REVIEW_2_HASH_HEX = '0x' + NO_ISSUES_REVIEW_2.reviewHash;
+
+export const MINOR_ISSUES_REVIEW_1 = {
+  reviewHash:
+    '333cc57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+  reviewText: 'This is article has MINOR ISSUES 1',
+  score1: 2,
+  score2: 2,
+  articleHasMajorIssues: false,
   articleHasMinorIssues: true
 };
-export const REVIEW_3_HASH_HEX = '0x' + REVIEW_3.reviewHash;
+export const MINOR_ISSUES_REVIEW_1_HASH_HEX = '0x' + MINOR_ISSUES_REVIEW_1.reviewHash;
 
-export const REVIEW_4 = {
+export const MINOR_ISSUES_REVIEW_2 = {
   reviewHash:
     '444cc57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
-  reviewText: 'Fourth review which will get accepted',
-  score1: 2,
+  reviewText: 'This is article has MINOR ISSUES 2',
+  score1: 1,
+  score2: 2,
+  articleHasMajorIssues: false,
+  articleHasMinorIssues: true
+};
+export const MINOR_ISSUES_REVIEW_2_HASH_HEX = '0x' + MINOR_ISSUES_REVIEW_2.reviewHash;
+
+export const MAJOR_ISSUE_REVIEW_1= {
+  reviewHash:
+    '555cc57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+  reviewText: 'This is article has MAJOR ISSUES 1',
+  score1: 1,
+  score2: 1,
+  articleHasMajorIssues: false,
+  articleHasMinorIssues: false
+};
+export const MAJOR_ISSUE_REVIEW_1_HASH_HEX = '0x' + MAJOR_ISSUE_REVIEW_1.reviewHash;
+
+export const MAJOR_ISSUE_REVIEW_2= {
+  reviewHash:
+    '666cc57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+  reviewText: 'This is article has MAJOR ISSUES 2',
+  score1: 1,
   score2: 2,
   articleHasMajorIssues: false,
   articleHasMinorIssues: false
 };
-export const REVIEW_4_HASH_HEX = '0x' + REVIEW_4.reviewHash;
+export const MAJOR_ISSUE_REVIEW_2_HASH_HEX = '0x' + MAJOR_ISSUE_REVIEW_2.reviewHash;
+
+export const MAJOR_ISSUE_REVIEW_3= {
+  reviewHash:
+    '777cc57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+  reviewText: 'This is article has MAJOR ISSUES 3',
+  score1: 2,
+  score2: 1,
+  articleHasMajorIssues: false,
+  articleHasMinorIssues: false
+};
+export const MAJOR_ISSUE_REVIEW_3_HASH_HEX = '0x' + MAJOR_ISSUE_REVIEW_3.reviewHash;

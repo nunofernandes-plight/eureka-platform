@@ -45,7 +45,7 @@ contract EurekaPlatform {
 
     uint constant maxReviewRounds = 3;
 
-    function getJournalParameters() public returns (
+    function getJournalParameters() view public returns (
         address _contractOwner,
         uint _minAmountOfEditorApprovedReviews,
         uint _maxAmountOfRewardedEditorApprovedReviews,
@@ -114,7 +114,7 @@ contract EurekaPlatform {
         SubmissionState submissionState;
         uint256 stateTimestamp;
         address submissionOwner;
-        ArticleVersion[] versions;
+        bytes32[] versions;
         address editor;
     }
 
@@ -258,7 +258,7 @@ contract EurekaPlatform {
         article.linkedArticles = _linkedArticles;
         article.linkedArticlesSplitRatios = _linkedArticlesSplitRatios;
 
-        articleSubmissions[_submissionId].versions.push(article);
+        articleSubmissions[_submissionId].versions.push(article.articleHash);
         article.versionState = ArticleVersionState.SUBMITTED;
         article.stateTimestamp = block.timestamp;
     }
@@ -601,9 +601,9 @@ contract EurekaPlatform {
     // only counts the articles which went through a review process and therefore have the state DECLINED
     // does not consider the versions with state DECLINED_SANITY_NOTOK
     function countDeclinedReviewRounds(uint256 _submissionId) view private returns (uint count) {
-        ArticleVersion[] storage versions = articleSubmissions[_submissionId].versions;
+        bytes32[] memory versions = articleSubmissions[_submissionId].versions;
         for (uint i = 0; i < versions.length; i++) {
-            if (versions[i].versionState == ArticleVersionState.DECLINED)
+            if (articleVersions[versions[i]].versionState == ArticleVersionState.DECLINED)
                 count++;
         }
         return count;
@@ -642,14 +642,14 @@ contract EurekaPlatform {
         require(submission.submissionState == SubmissionState.NEW_REVIEW_ROUND_REQUESTED,
             "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
 
-        //closeSubmissionProcess(_submissionId);
+        //closeSubmissionProcess(_submissionId); // TODO bugfixing as it reverts always
         emit NewReviewRoundDeclined(_submissionId, block.timestamp);
     }
 
-    // TODO: should it be possible to close a submission process before reaching maxReviewRounds ??
+    event SubmissionProcessClosed(uint256 stateTimestamp, uint256 submissionId);
     function closeSubmissionProcess(uint256 _submissionId) private {
 
-        ArticleSubmission submission = articleSubmissions[_submissionId];
+        ArticleSubmission storage submission = articleSubmissions[_submissionId];
 
         // transfer all rewards
         require(eurekaTokenContract.transfer(contractOwner, sciencemattersFoundationReward));
@@ -658,20 +658,22 @@ contract EurekaPlatform {
         // counts how many reviewRounds happened to devide the reward later
         uint reviewRounds = countDeclinedReviewRounds(_submissionId) + 1;
         for (uint i = 0; i < submission.versions.length; i++) {
-            if (submission.versions[i].versionState == ArticleVersionState.DECLINED
-            || submission.versions[i].versionState == ArticleVersionState.ACCEPTED) {
+            ArticleVersion memory articleVersion = articleVersions[submission.versions[i]];
+            if (articleVersion.versionState == ArticleVersionState.DECLINED
+            || articleVersion.versionState == ArticleVersionState.ACCEPTED) {
 
-                rewardEditorApprovedReviews(submission.versions[i], reviewRounds);
-                rewardCommunityReviews(submission.versions[i], reviewRounds);
+                rewardEditorApprovedReviews(articleVersion, reviewRounds);
+                rewardCommunityReviews(articleVersion, reviewRounds);
             }
         }
 
-        if (submission.versions[submission.versions.length - 1].versionState == ArticleVersionState.ACCEPTED) {
+        if (articleVersions[submission.versions[submission.versions.length - 1]].versionState == ArticleVersionState.ACCEPTED) {
             //TODO: reward linkedArticles authors and invalidation work
             // check also if time is already up
         }
         submission.submissionState = SubmissionState.CLOSED;
         submission.stateTimestamp = block.timestamp;
+        emit SubmissionProcessClosed(block.timestamp, _submissionId);
     }
 
     function rewardEditorApprovedReviews(ArticleVersion _articleVersion, uint _reviewRounds) private {
