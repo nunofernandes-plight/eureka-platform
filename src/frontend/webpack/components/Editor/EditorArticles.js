@@ -57,7 +57,7 @@ class EditorArticles extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          this.setState({articles: response.data});
+          this.setState({articles: response.data.array});
         } else {
           this.setState({
             errorMessage: response.error,
