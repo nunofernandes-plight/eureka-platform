@@ -62,10 +62,17 @@ const Element = ({number, currentPage, ...otherProps}) => {
 };
 
 const Pagination = ({currentPage, totalPages, limit, ...otherProps}) => {
-  console.log(currentPage);
   return (
     <Container>
-      <Element currentPage={currentPage}>
+      <Element
+        number={currentPage}
+        goToPage={number => {
+          const prev = number - 1;
+          if (prev >= 1) {
+            otherProps.goToPage(prev);
+          }
+        }}
+      >
         <Icon
           icon={'material'}
           material={'keyboard_arrow_left'}
@@ -80,17 +87,25 @@ const Pagination = ({currentPage, totalPages, limit, ...otherProps}) => {
           return (
             <Element
               currentPage={currentPage}
-              key={i}
-              number={i}
+              key={i + 1}
+              number={i + 1}
               goToPage={number => {
                 otherProps.goToPage(number);
               }}
             >
-              {i}
+              {i + 1}
             </Element>
           );
         })}
-      <Element currentPage={currentPage}>
+      <Element
+        number={currentPage}
+        goToPage={number => {
+          const next = number + 1;
+          if (number < totalPages) {
+            otherProps.goToPage(next);
+          }
+        }}
+      >
         <Icon
           icon={'material'}
           material={'keyboard_arrow_right'}

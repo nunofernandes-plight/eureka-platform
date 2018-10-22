@@ -52,6 +52,7 @@ class EditorArticles extends React.Component {
   }
 
   getSubmissions(page) {
+    this.setState({page});
     getUnassignedSubmissions(page, this.state.limit)
       .then(response => response.json())
       .then(response => {
@@ -172,7 +173,6 @@ class EditorArticles extends React.Component {
             totalPages={10}
             limit={this.state.limit}
             goToPage={page => {
-              this.setState({page});
               this.getSubmissions(page);
             }}
           />
