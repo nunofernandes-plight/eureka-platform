@@ -5,6 +5,7 @@ import articleSubmissionService from '../db/article-submission-service.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import Roles from '../schema/roles-enum.mjs';
 import {getRelevantArticleData} from '../helpers/relevant-article-data.mjs';
+import {getLimitedObjects, getNumberOfObjects} from '../helpers/pagination-helpers.mjs';
 
 const router = express.Router();
 router.use(accesController.loggedInOnly);
@@ -28,13 +29,17 @@ router.get(
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     if (!ethereumAddress) errorThrower.notLoggedIn();
-    let submissions = await articleSubmissionService.getUnassignedSubmissions(
-      ethereumAddress,
+    let submissions = await getLimitedObjects(
+      articleSubmissionService.getUnassignedSubmissions(ethereumAddress),
       parseInt(req.query.page),
       parseInt(req.query.limit)
     );
     const array = getSubmissionResponse(submissions);
-    return {array, pages: 10};
+    const nrOfObjects = await getNumberOfObjects(
+      articleSubmissionService.getUnassignedSubmissions(ethereumAddress)
+    );
+    const nrOfPages = Math.ceil(nrOfObjects / req.query.limit);
+    return {array, nrOfPages};
   })
 );
 
