@@ -117,7 +117,6 @@ const Page = ({index, currentPage, totalPages, ...otherProps}) => {
 };
 
 const Dots = ({index, currentPage, ...otherProps}) => {
-  console.log('index ', index, ' current page', currentPage);
   return (
     <Element
       index={index}
