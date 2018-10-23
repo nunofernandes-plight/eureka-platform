@@ -25,12 +25,6 @@ export default {
       ]);
   },
 
-  getSubmissionIds: objects => {
-    return objects.map(i => {
-      return i._id;
-    });
-  },
-
   //TODO: Assignable are only submissions where user is not equal submission owner or author
   getUnassignedSubmissions: (ethereumAddress) => {
     return populate(
