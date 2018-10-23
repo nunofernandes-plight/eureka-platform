@@ -46,8 +46,6 @@ const Animation = styled.div`
   animation: flipTails 3s ease-out forwards;
 `;
 
-const Logo = styled.img``;
-
 const EurekaRotateSpinner = () => {
   return (
     <Parent>
