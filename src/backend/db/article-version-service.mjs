@@ -21,9 +21,7 @@ export default {
     const submissions = await ArticleSubmissionService.getAssignedSubmissions(
       ethereumAddress
     );
-    const submissionIds = ArticleSubmissionService.getSubmissionIds(
-      submissions
-    );
+    const submissionIds = getIds(submissions);
 
     return await ArticleVersion.find({
       articleVersionState: {$in: articleVersionStates},
@@ -39,9 +37,7 @@ export default {
     const submissions = await ArticleSubmissionService.getAssignedSubmissions(
       ethereumAddress
     );
-    const submissionIds = ArticleSubmissionService.getSubmissionIds(
-      submissions
-    );
+    const submissionIds = getIds(submissions);
 
     const articlesWithEnoughEAReviews = await ReviewService.getArticlesWithEnoughAcceptedReviews(REVIEW_TYPE.EDITOR_APPROVED_REVIEW);
 
