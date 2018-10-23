@@ -10,6 +10,7 @@ import {assignForSubmissionProcess} from '../../../../smartcontracts/methods/web
 import {withRouter} from 'react-router-dom';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
+import Pagination from './Pagination.js';
 
 const Container = styled.div`
   display: flex;
@@ -21,7 +22,7 @@ const Container = styled.div`
 const Articles = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 95%;
   margin-top: 1em;
 `;
 
@@ -47,11 +48,16 @@ class EditorArticles extends React.Component {
 
   componentDidMount() {
     this.setState({loading: true});
-    getUnassignedSubmissions(this.state.page, this.state.limit)
+    this.getSubmissions(1);
+  }
+
+  getSubmissions(page) {
+    this.setState({page});
+    getUnassignedSubmissions(page, this.state.limit)
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          this.setState({articles: response.data});
+          this.setState({articles: response.data.array});
         } else {
           this.setState({
             errorMessage: response.error,
@@ -159,6 +165,15 @@ class EditorArticles extends React.Component {
             }}
             handleQuery={(field, value) => {
               this.handleQuery(field, value);
+            }}
+          />
+
+          <Pagination
+            currentPage={this.state.page}
+            totalPages={10}
+            limit={this.state.limit}
+            goToPage={page => {
+              this.getSubmissions(page);
             }}
           />
 

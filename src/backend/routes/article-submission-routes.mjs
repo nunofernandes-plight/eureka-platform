@@ -33,7 +33,8 @@ router.get(
       parseInt(req.query.page),
       parseInt(req.query.limit)
     );
-    return getSubmissionResponse(submissions);
+    const array = getSubmissionResponse(submissions);
+    return {array, pages: 10};
   })
 );
 
