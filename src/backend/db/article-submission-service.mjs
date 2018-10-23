@@ -43,6 +43,43 @@ export default {
     );
   },
 
+  /**
+   * Get all the article-submissions of an user
+   * @param userAddress
+   * @returns {Promise<*>}
+   */
+  getSubmissionsOfUser: async userAddress => {
+    const submissions = await populate(
+      ArticleSubmission.find({
+        ownerAddress: userAddress
+      })
+    );
+    if (!submissions) errorThrower.noEntryFoundById('EthereumAddress');
+    return submissions;
+  },
+
+  /**
+   * Get one submission by DB-ID
+   * @param _submissionId
+   * @returns {Promise<Query|void|*|ThenPromise<Object>|Promise<TSchema | null>|Promise>}
+   */
+  getSubmissionById: _submissionId => {
+    return populate(
+      ArticleSubmission.findById(_submissionId)
+    );
+  },
+
+  getSubmissionBySCsubmissionId: async _scSubmissionId => {
+    const articleSubmission = await populate(
+      ArticleSubmission.findOne(
+        {scSubmissionID: _scSubmissionId}
+      )
+    );
+    if (!articleSubmission) errorThrower.noEntryFoundById('scSUbmissionId');
+    return articleSubmission;
+  },
+
+
   createSubmission: async ownerAddress => {
     // set user's role to AUTHOR once he creates the first draft
     const user = await User.findOne({ethereumAddress: ownerAddress});
@@ -73,37 +110,6 @@ export default {
       articleSubmissionId: submission._id
     };
     return response;
-  },
-
-  /**
-   * Get all the article-submissions of an user
-   * @param userAddress
-   * @returns {Promise<*>}
-   */
-  getSubmissionsOfUser: async userAddress => {
-    const submissions = await ArticleSubmission.find({
-      ownerAddress: userAddress
-    }).populate('articleVersions');
-    if (!submissions) errorThrower.noEntryFoundById('EthereumAddress');
-    return submissions;
-  },
-
-  /**
-   * Get one submission by DB-ID
-   * @param _submissionId
-   * @returns {Promise<Query|void|*|ThenPromise<Object>|Promise<TSchema | null>|Promise>}
-   */
-  getSubmissionById: async _submissionId => {
-    return ArticleSubmission.findById(_submissionId);
-  },
-
-  getSubmissionBySCsubmissionId: async _scSubmissionId => {
-    const articleSubmission = await ArticleSubmission.findOne(
-      {scSubmissionID: _scSubmissionId}
-    );
-
-    if (!articleSubmission) errorThrower.noEntryFoundById('scSUbmissionId');
-    return articleSubmission;
   },
 
   /**
