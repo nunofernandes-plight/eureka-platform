@@ -17,12 +17,9 @@ const populate = fn => {
 
 export default {
   getAllSubmissions: () => {
-    return ArticleSubmission.find({})
-      .populate('articleVersions')
-      .populate([
-        {path: 'articleVersions.editorApprovedReviews'},
-        {path: 'articleVersions.communityReviews'}
-      ]);
+    return populate(
+      ArticleSubmission.find({})
+    );
   },
 
   //TODO: Assignable are only submissions where user is not equal submission owner or author
@@ -36,15 +33,14 @@ export default {
     );
   },
 
-  getAssignedSubmissions: async ethereumAddress => {
+  getAssignedSubmissions: ethereumAddress => {
     // const submissions = await ArticleSubmission.find({editor: ethereumAddress, articleSubmissionState: {$ne: 'CLOSED'}}).populate('articleVersions');
-    return await ArticleSubmission.find({
-      editor: ethereumAddress,
-      articleSubmissionState: {$ne: 'CLOSED'}
-    }).populate({
-      path: 'articleVersions',
-      populate: [{path: 'editorApprovedReviews'}, {path: 'communityReviews'}]
-    });
+    return populate(
+      ArticleSubmission.find({
+        editor: ethereumAddress,
+        articleSubmissionState: {$ne: 'CLOSED'}
+      })
+    );
   },
 
   createSubmission: async ownerAddress => {
