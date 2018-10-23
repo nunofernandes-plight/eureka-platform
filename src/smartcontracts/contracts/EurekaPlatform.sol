@@ -445,8 +445,7 @@ contract EurekaPlatform {
         emit CommunityReviewIsAdded(_articleHash, block.timestamp, _reviewHash, review.reviewer, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2);
     }
 
-    event ReviewIsCorrected(bytes32 articleHash, uint256 stateTimestamp, bytes32 reviewHash, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
-
+    event ReviewIsCorrected(bytes32 oldReviewHash, bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp, bytes32 reviewHash, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
     function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
@@ -458,6 +457,7 @@ contract EurekaPlatform {
         require(review.reviewState == ReviewState.DECLINED
         || review.reviewState == ReviewState.HANDED_IN, "only declined reviews can be corrected.");
 
+        bytes32 oldReviewHash = review.reviewHash;
         review.reviewHash = _reviewHash;
         review.reviewedTimestamp = block.timestamp;
         review.articleHasMajorIssues = _articleHasMajorIssues;
@@ -467,7 +467,7 @@ contract EurekaPlatform {
 
         review.reviewState = ReviewState.HANDED_IN;
         review.stateTimestamp = block.timestamp;
-        emit ReviewIsCorrected(_articleHash, block.timestamp, _reviewHash, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2);
+        emit ReviewIsCorrected(oldReviewHash, _articleHash, msg.sender, block.timestamp, _reviewHash, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2);
     }
 
     event ReviewIsAccepted(bytes32 articleHash, uint256 stateTimestamp, address reviewer);

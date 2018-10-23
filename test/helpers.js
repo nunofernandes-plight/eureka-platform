@@ -34,6 +34,13 @@ export function sleepSync(milliseconds) {
   }
 }
 
+/**
+ * extends a hashed value into a hexadecimal,
+ * which also represents the hash
+ */
+export function transformHashToHex(hash) {
+  return '0x' + hash;
+}
 
 
 test('foo', t => {

@@ -265,7 +265,7 @@ export const MINOR_ISSUES_REVIEW_1 = {
   reviewHash:
     '333cc57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
   reviewText: 'This is article has MINOR ISSUES 1',
-  score1: 2,
+  score1: 1,
   score2: 2,
   articleHasMajorIssues: false,
   articleHasMinorIssues: true

@@ -46,7 +46,7 @@ export default {
   getMyReviews: (address) => {
     return Review.find({
       reviewerAddress: address,
-      reviewState: {$in: ['HANDED_IN_DB', 'HANDED_IN_SC', 'DECLINED','ACCEPTED']}
+      reviewState: {$in: ['HANDED_IN_DB', 'HANDED_IN_SC', 'DECLINED', 'ACCEPTED']}
     })
       .populate({
         path: 'articleVersion',
@@ -92,13 +92,15 @@ export default {
 
   getArticlesWithEnoughAcceptedReviews: async reviewType => {
     return await Review.aggregate([
-      {$match: {
+      {
+        $match: {
           reviewState: 'ACCEPTED',
           reviewType: reviewType
-        }},
-      {$group : {_id: "$articleVersion", count:{$sum:1}}},
+        }
+      },
+      {$group: {_id: '$articleVersion', count: {$sum: 1}}},
       {$match: {count: {$gte: 2.0}}}
-    ])
+    ]);
   },
 
   createReview: async (submissionId, articleHash, stateTimestamp) => {
@@ -119,6 +121,13 @@ export default {
           {path: 'communityReviews'}]
       });
   },
+
+  getReviewByReviewHash: async (reviewHash) => {
+    const review = await Review.findOne({reviewHash: reviewHash});
+    if(!review) errorThrower.noEntryFoundByParameters('reviewHash');
+    return review;
+  },
+
 
   getArticleVersionIds: idObjects => {
     return idObjects.map(i => {
@@ -182,6 +191,22 @@ export default {
     return 'Updated editor-approved review according to SC: ' + reviewHash;
   },
 
+  updateReviewByReviewHash: async (oldReviewHash, newReviewHash, stateTimestamp, articleHasMajorIssues, articleHasMinorIssues, score1, score2) => {
+    let review = await Review.findOne({
+      reviewHash: oldReviewHash
+    });
+    if(!review) errorThrower.noEntryFoundByParameters('oldReviewHash');
+
+    review.reviewHash = newReviewHash;
+    review.stateTimestamp = stateTimestamp;
+    review.articleHasMajorIssues = articleHasMajorIssues;
+    review.articleHasMinorIssues = articleHasMinorIssues;
+    review.reviewScore1 = score1;
+    review.reviewScore2 = score2;
+    await review.save();
+    return 'Updated review with ID: ' + review._id;
+  },
+
   /**
    * Frontend sends the data of an review right
    * before he submits the communityReviews hash into the SC
@@ -211,7 +236,7 @@ export default {
       articleHasMinorIssues: articleHasMinorIssues,
       reviewState: ReviewState.HANDED_IN_DB,
       stateTimestamp: new Date().getTime(),
-      articleVersion: articleVersion._id,
+      articleVersion: articleVersion._id
     });
     await review.save();
     articleVersion.communityReviews.push(review._id);

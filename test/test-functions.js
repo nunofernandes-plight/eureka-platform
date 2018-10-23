@@ -14,7 +14,8 @@ import {
   acceptArticleVersion,
   declineArticleVersion,
   openNewReviewRound,
-  declineNewReviewRound
+  declineNewReviewRound,
+  correctReview
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -26,6 +27,7 @@ import articleVersionService from '../src/backend/db/article-version-service.mjs
 import {submitArticle} from '../src/smartcontracts/methods/web3-token-contract-methods.mjs';
 import reviewService from '../src/backend/db/review-service.mjs';
 import ReviewState from '../src/backend/schema/review-state-enum.mjs';
+import {transformHashToHex} from './helpers.js';
 
 let eurekaPlatformContract;
 let eurekaTokenContract;
@@ -588,8 +590,8 @@ export default {
 
     let counter = 0;
     while (
-      (dbArticleSubmission.articleVersions.length !==  (oldArticleVersionLength + 1) ||
-      dbArticleSubmission.articleSubmissionState !== ArticleSubmissionState.OPEN)
+      (dbArticleSubmission.articleVersions.length !== (oldArticleVersionLength + 1) ||
+        dbArticleSubmission.articleSubmissionState !== ArticleSubmissionState.OPEN)
       &&
       counter < 20) {
       sleepSync(5000);
@@ -615,5 +617,43 @@ export default {
       counter++;
     }
     t.is(dbArticleSubmission.articleSubmissionState, ArticleSubmissionState.CLOSED);
+  },
+
+  correctReviewAndTest: async function(t, articleVersion, correctedReview, reviewer) {
+    const reviewHashHex = transformHashToHex(correctedReview.reviewHash);
+    await correctReview(
+      eurekaPlatformContract,
+      articleVersion.articleHash,
+      reviewHashHex,
+      correctedReview.articleHasMajorIssues,
+      correctedReview.articleHasMinorIssues,
+      correctedReview.score1,
+      correctedReview.score2
+    ).send({
+      from: reviewer.ethereumAddress
+    });
+
+    let review = await reviewService.getReviewByReviewHash(reviewHashHex);
+
+    let counter = 0;
+    while (
+      (
+        review.reviewHash !== reviewHashHex &&
+        review.articleHasMajorIssues !== correctedReview.articleHasMajorIssues ||
+        review.articleHasMinorIssues !== correctedReview.articleHasMinorIssues ||
+        review.score1 !== correctedReview.score1 ||
+        review.score2 !== correctedReview.score2
+      )
+      && counter < 20) {
+      sleepSync(5000);
+      review = await reviewService.getReviewByReviewHash(reviewHashHex);
+      counter++;
+    }
+    t.is(review.reviewHash, reviewHashHex);
+    t.is(review.articleHasMajorIssues, correctedReview.articleHasMajorIssues);
+    t.is(review.articleHasMinorIssues, correctedReview.articleHasMinorIssues);
+    t.is(review.reviewScore1, correctedReview.score1);
+    t.is(review.reviewScore2, correctedReview.score2);
   }
+
 };

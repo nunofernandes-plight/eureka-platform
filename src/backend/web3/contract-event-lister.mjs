@@ -269,6 +269,23 @@ export default {
       }
     );
 
+    EurekaPlatformContract.events.ReviewIsCorrected(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+
+        console.log(await reviewService.updateReviewByReviewHash(
+          event.returnValues.oldReviewHash,
+          event.returnValues.reviewHash,
+          event.returnValues.stateTimestamp,
+          event.returnValues.articleHasMajorIssues,
+          event.returnValues.articleHasMinorIssues,
+          event.returnValues.score1,
+          event.returnValues.score2,
+        ));
+      }
+    );
+
     EurekaPlatformContract.events.ArticleVersionIsAccepted(
       undefined,
       async (error, event) => {
@@ -329,4 +346,5 @@ export default {
       }
     );
   }
-};
+}
+;

@@ -121,7 +121,6 @@ test.only(
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
     articleVersion = articleSubmission.articleVersions[0];
 
-
     await TestFunctions.declineReviewAndTest(t, editor, review1, articleVersion);
     await TestFunctions.declineReviewAndTest(t, editor, review2, articleVersion);
     await TestFunctions.declineReviewAndTest(t, editor, review3, articleVersion);
@@ -129,5 +128,12 @@ test.only(
 
     // Test the error-throw of an articleVersion acception
     await t.throws(TestFunctions.acceptArticleVersionAndTest(t, editor, articleVersion));
+
+    //update from DB
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    articleVersion = articleSubmission.articleVersions[0];
+
+    // Correct the reviews
+    await TestFunctions.correctReviewAndTest(t, articleVersion, MINOR_ISSUES_REVIEW_1, reviewer1);
   }
 );
