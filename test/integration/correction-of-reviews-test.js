@@ -1,16 +1,10 @@
-/**
- *
- * Process: Article submission v1, SanitiyCheck v1 fails --> new ReviewRound
- *
- */
+
 import test from 'ava';
 import app from '../../src/backend/api/api.mjs';
 import getAccounts from '../../src/smartcontracts/methods/get-accounts.mjs';
-import userService from '../../src/backend/db/user-service.mjs';
 import articleSubmissionService from '../../src/backend/db/article-submission-service.mjs';
 import reviewService from '../../src/backend/db/review-service.mjs';
 import {cleanDB} from '../helpers.js';
-import Roles from '../../src/backend/schema/roles-enum.mjs';
 import web3 from '../../src/helpers/web3Instance.mjs';
 import dotenv from 'dotenv';
 import {setupWeb3Interface} from '../../src/backend/web3/web3InterfaceSetup.mjs';
@@ -18,31 +12,21 @@ import {deployAndMint} from '../../src/smartcontracts/deployment/deployer-and-mi
 import {
   TEST_ARTICLE_1_DATA_IN_HEX,
   TEST_ARTICLE_1_HASH_HEX,
-  TEST_ARTICLE_2_DATA_IN_HEX,
-  TEST_ARTICLE_2_HASH_HEX,
-  NO_ISSUES_REVIEW_1,
-  NO_ISSUES_REVIEW_1_HASH_HEX,
-  NO_ISSUES_REVIEW_2,
-  NO_ISSUES_REVIEW_2_HASH_HEX,
-  MINOR_ISSUES_REVIEW_1,
-  MINOR_ISSUES_REVIEW_1_HASH_HEX,
-  MINOR_ISSUES_REVIEW_2,
-  MINOR_ISSUES_REVIEW_2_HASH_HEX,
   createUserContractOwner,
   setAccounts,
-  createUser1,
   createEditor1,
-  createEditor2,
   createReviewer1,
   createReviewer2,
   createReviewer3,
-  createReviewer4,
-  TEST_ARTICLE_2,
-  TEST_ARTICLE_1_SECOND_VERSION,
   MAJOR_ISSUE_REVIEW_1,
   MAJOR_ISSUE_REVIEW_1_HASH_HEX,
   MAJOR_ISSUE_REVIEW_2,
-  MAJOR_ISSUE_REVIEW_2_HASH_HEX, MAJOR_ISSUE_REVIEW_3, MAJOR_ISSUE_REVIEW_3_HASH_HEX
+  MAJOR_ISSUE_REVIEW_2_HASH_HEX,
+  MAJOR_ISSUE_REVIEW_3,
+  MAJOR_ISSUE_REVIEW_3_HASH_HEX,
+  MINOR_ISSUES_REVIEW_1,
+  MINOR_ISSUES_REVIEW_2,
+  NO_ISSUES_REVIEW_1
 } from '../test-data';
 import TestFunctions from '../test-functions';
 import ArticleSubmissionState from '../../src/backend/schema/article-submission-state-enum.mjs';
@@ -51,7 +35,7 @@ let eurekaTokenContract;
 let eurekaPlatformContract;
 let accounts;
 
-const PRETEXT = 'Sanity-Check Fail: ';
+const PRETEXT = 'Correction of Reviews: ';
 
 /** ****************************************** TESTING ********************************************/
 
@@ -135,5 +119,18 @@ test.only(
 
     // Correct the reviews
     await TestFunctions.correctReviewAndTest(t, articleVersion, MINOR_ISSUES_REVIEW_1, reviewer1);
+    await TestFunctions.correctReviewAndTest(t, articleVersion, MINOR_ISSUES_REVIEW_2, reviewer2);
+    await TestFunctions.correctReviewAndTest(t, articleVersion, NO_ISSUES_REVIEW_1, reviewer3);
+
+    // Accept the corrected reviews
+    await TestFunctions.acceptReviewAndTest(t, editor, review1, articleVersion);
+    await TestFunctions.acceptReviewAndTest(t, editor, review2, articleVersion);
+    await TestFunctions.acceptReviewAndTest(t, editor, review3, articleVersion);
+
+    await TestFunctions.acceptArticleVersionAndTest(t, editor, articleVersion);
+
+    //update from DB
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    t.is(articleSubmission.articleSubmissionState, ArticleSubmissionState.CLOSED);
   }
 );

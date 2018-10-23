@@ -546,7 +546,7 @@ contract EurekaPlatform {
         article.versionState = ArticleVersionState.ACCEPTED;
         article.stateTimestamp = block.timestamp;
 
-        //closeSubmissionProcess(article.submissionId);
+        closeSubmissionProcess(article.submissionId);
         emit ArticleVersionIsAccepted(_articleHash, block.timestamp, msg.sender);
     }
 
