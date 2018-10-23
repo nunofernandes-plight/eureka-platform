@@ -9,7 +9,7 @@ import Roles from '../../src/backend/schema/roles-enum.mjs';
 import web3 from '../../src/helpers/web3Instance.mjs';
 import dotenv from 'dotenv';
 import {setupWeb3Interface} from '../../src/backend/web3/web3InterfaceSetup.mjs';
-import {deploy} from '../../src/smartcontracts/deployment/deployer-and-mint.mjs';
+import {deployAndMint} from '../../src/smartcontracts/deployment/deployer-and-mint.mjs';
 import {
   TEST_ARTICLE_1_DATA_IN_HEX,
   TEST_ARTICLE_1_HASH_HEX,
@@ -58,7 +58,7 @@ test.before(async () => {
 
 test.beforeEach(async () => {
   await cleanDB();
-  let [tokenContract, platformContract] = await deploy();
+  let [tokenContract, platformContract] = await deployAndMint();
   await setupWeb3Interface(platformContract, tokenContract);
   eurekaPlatformContract = platformContract;
   eurekaTokenContract = tokenContract;
