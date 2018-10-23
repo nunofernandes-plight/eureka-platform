@@ -117,12 +117,23 @@ const Page = ({index, currentPage, totalPages, ...otherProps}) => {
 };
 
 const Dots = ({index, currentPage, ...otherProps}) => {
+  console.log('index ', index, ' current page', currentPage);
   return (
     <Element
       index={index}
       currentPage={currentPage}
       {...otherProps}
-      goToPage={number => {}}
+      goToPage={number => {
+        if (currentPage > index) {
+          // move to the left
+          const prev = currentPage - 2;
+          otherProps.goToPage(prev);
+        } else {
+          // move to the right
+          const next = currentPage + 2;
+          otherProps.goToPage(next);
+        }
+      }}
     >
       ...
     </Element>
@@ -177,6 +188,7 @@ const renderRangeWithDots = ({
       return (
         <Dots
           key={i + 1}
+          index={i}
           currentPage={currentPage}
           totalPages={totalPages}
           {...otherProps}
