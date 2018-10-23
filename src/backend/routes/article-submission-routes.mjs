@@ -10,8 +10,6 @@ import {getLimitedObjects, getNumberOfObjects, getNumberOfPages} from '../helper
 const router = express.Router();
 router.use(accesController.loggedInOnly);
 
-router.use(accesController.loggedInOnly);
-
 router.get(
   '/',
   asyncHandler(async req => {
