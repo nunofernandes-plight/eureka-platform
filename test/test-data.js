@@ -156,9 +156,9 @@ export const TEST_ARTICLE_2 = {
     [2000, 8000],
   linkedArticles:
     [
-      '0x5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
-      '0x45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
-      '0xd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
+      '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
+      '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
+      'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
     ],
   linkedArticlesSplitRatios:
     [2000, 2000, 6000]
@@ -199,9 +199,9 @@ export const TEST_ARTICLE_3 = {
   ],
   contributorRatios: [4000, 6000],
   linkedArticles: [
-    '0x5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30333',
-    '0x45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba099333',
-    '0xd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bc333'
+    '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30333',
+    '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba099333',
+    'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bc333'
   ],
   linkedArticlesSplitRatios: [3334, 3333, 3333]
 };

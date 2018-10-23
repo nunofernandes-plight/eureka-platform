@@ -71,7 +71,7 @@ test.after(async () => {
 });
 
 
-test(
+test.only(
   PRETEXT +
   '3x decline ArticleVersion --> SubmissionState.CLOSED',
   async t => {
@@ -129,7 +129,7 @@ test(
     articleVersion = articleSubmission.articleVersions[0];
 
     // Open new review round
-    await TestFunctions.openNewReviewRoundAndTest(t, author, articleSubmission.scSubmissionID, articleVersion, TEST_ARTICLE_2, TEST_ARTICLE_2_HASH_HEX, TEST_ARTICLE_2_HASH_HEX);
+    await TestFunctions.openNewReviewRoundAndTest(t, author, articleSubmission.scSubmissionID, articleVersion, TEST_ARTICLE_2);
 
     // Update test-data
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
@@ -178,7 +178,7 @@ test(
     articleVersion2 = articleSubmission.articleVersions[1];
 
     // Open new review round
-    await TestFunctions.openNewReviewRoundAndTest(t, author, articleSubmission.scSubmissionID, articleVersion2, TEST_ARTICLE_3, TEST_ARTICLE_3_HASH_HEX, TEST_ARTICLE_3_HASH_HEX);
+    await TestFunctions.openNewReviewRoundAndTest(t, author, articleSubmission.scSubmissionID, articleVersion2, TEST_ARTICLE_3);
 
     // Update test-data
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];

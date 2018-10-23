@@ -28,6 +28,7 @@ import {submitArticle} from '../src/smartcontracts/methods/web3-token-contract-m
 import reviewService from '../src/backend/db/review-service.mjs';
 import ReviewState from '../src/backend/schema/review-state-enum.mjs';
 import {transformHashToHex} from './helpers.js';
+import * as web3 from 'web3';
 
 let eurekaPlatformContract;
 let eurekaTokenContract;
@@ -575,12 +576,15 @@ export default {
     t.is(dbArticleVersion.articleVersionState, ArticleVersionState.DECLINED);
   },
 
-  openNewReviewRoundAndTest: async function(t, submissionOwner, scSubmissionId, articleVersion, articleVersionData, articleHash, urlHash) {
+  openNewReviewRoundAndTest: async function(t, submissionOwner, scSubmissionId, articleVersion, articleVersionData) {
     const oldArticleVersionLength = (await articleSubmissionService.getSubmissionBySCsubmissionId(scSubmissionId)).articleVersions.length;
+    const linkedArticlesHashHex = articleVersionData.linkedArticles.map(linkedArticle => transformHashToHex(linkedArticle));
+    const urlHashHexh = web3.utils.asciiToHex(articleVersionData.url);
+    const articleHashHex = transformHashToHex(articleVersionData.articleHash);
 
     await openNewReviewRound(
-      eurekaPlatformContract, scSubmissionId, articleHash, urlHash,
-      articleVersionData.authors, articleVersionData.contributorRatios, articleVersionData.linkedArticles, articleVersionData.linkedArticlesSplitRatios
+      eurekaPlatformContract, scSubmissionId, articleHashHex, urlHashHexh,
+      articleVersionData.authors, articleVersionData.contributorRatios, linkedArticlesHashHex, articleVersionData.linkedArticlesSplitRatios
     ).send({
       from: submissionOwner.ethereumAddress
     });
