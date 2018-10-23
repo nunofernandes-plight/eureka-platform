@@ -7,6 +7,14 @@ import ArticleSubmissionState from '../schema/article-submission-state-enum.mjs'
 import User from '../schema/user.mjs';
 import Roles from '../schema/roles-enum.mjs';
 
+const populate = fn => {
+  return fn
+    .populate({
+      path: 'articleVersions',
+      populate: [{path: 'editorApprovedReviews'}, {path: 'communityReviews'}]
+    });
+};
+
 export default {
   getAllSubmissions: () => {
     return ArticleSubmission.find({})
@@ -24,18 +32,14 @@ export default {
   },
 
   //TODO: Assignable are only submissions where user is not equal submission owner or author
-  getUnassignedSubmissions: async (ethereumAddress, pageNumber, nPerPage) => {
-    return await ArticleSubmission.find({
-      editor: null,
-      articleSubmissionState: 'OPEN',
-      ownerAddress: {$ne: ethereumAddress}
-    })
-      .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
-      .limit(nPerPage)
-      .populate({
-        path: 'articleVersions',
-        populate: [{path: 'editorApprovedReviews'}, {path: 'communityReviews'}]
-      });
+  getUnassignedSubmissions: (ethereumAddress) => {
+    return populate(
+      ArticleSubmission.find({
+        editor: null,
+        articleSubmissionState: 'OPEN',
+        ownerAddress: {$ne: ethereumAddress}
+      })
+    );
   },
 
   getAssignedSubmissions: async ethereumAddress => {
@@ -104,11 +108,11 @@ export default {
   },
 
   getSubmissionBySCsubmissionId: async _scSubmissionId => {
-    const articleSubmission =  await ArticleSubmission.findOne(
+    const articleSubmission = await ArticleSubmission.findOne(
       {scSubmissionID: _scSubmissionId}
     );
 
-    if(!articleSubmission) errorThrower.noEntryFoundById('scSUbmissionId');
+    if (!articleSubmission) errorThrower.noEntryFoundById('scSUbmissionId');
     return articleSubmission;
   },
 
@@ -231,7 +235,7 @@ export default {
         articleSubmissionState: _articleSubmissionState
       },
       (err, submission) => {
-        if(err) throw err;
+        if (err) throw err;
         return submission;
       }
     );
@@ -297,13 +301,13 @@ export default {
 
     submission.articleVersions[
       articleVersionPosition
-    ].editorApprovedReviews.push(review);
+      ].editorApprovedReviews.push(review);
 
     return await submission.save();
   },
   closeArticleSubmission: async (_scSubmissionId) => {
     let submission = await ArticleSubmission.findOne({scSubmissionID: _scSubmissionId});
-    if(!submission) {
+    if (!submission) {
       errorThrower.noEntryFoundById('_scSubmissionId');
     }
 
