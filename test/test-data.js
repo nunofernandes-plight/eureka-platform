@@ -163,7 +163,28 @@ export const TEST_ARTICLE_2 = {
   linkedArticlesSplitRatios:
     [2000, 2000, 6000]
 };
-export const TEST_ARTICLE_2_DATA_IN_HEX = getArticleHex(web3, TEST_ARTICLE_2);
+export const TEST_ARTICLE_2_NO_HEX = {
+  articleHash:
+    '551aa99a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7',
+  url: 'article2.url',
+  authors:
+    [
+      '0x8a19ee7f2f65da61e288455d33baeea283b9ea97',
+      '0xc81c582875967d6d134ebe513c2a79b4490f6ecb'
+    ],
+  contributorRatios:
+    [2000, 8000],
+  linkedArticles:
+    [
+      '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015',
+      '45bc397f0d43806675ab72cc08ba6399d679c90b4baed1cbe36908cdba09986a',
+      'd0d1d5e3e1d46e87e736eb85e79c905986ec77285cd415bbb213f0c24d8bcffb'
+    ],
+  linkedArticlesSplitRatios:
+    [2000, 2000, 6000]
+};
+export const TEST_ARTICLE_2_DATA_IN_HEX = getArticleHex(web3, TEST_ARTICLE_2_NO_HEX);
+
 // TODO works!!!
 export const TEST_ARTICLE_2_HASH_HEX = '0x' + TEST_ARTICLE_2.articleHash;
 

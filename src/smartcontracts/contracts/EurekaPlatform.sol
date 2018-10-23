@@ -540,7 +540,7 @@ contract EurekaPlatform {
         article.versionState = ArticleVersionState.ACCEPTED;
         article.stateTimestamp = block.timestamp;
 
-        //closeSubmissionProcess(article.submissionId);
+        closeSubmissionProcess(article.submissionId);
         emit ArticleVersionIsAccepted(_articleHash, block.timestamp, msg.sender);
     }
 
@@ -652,8 +652,8 @@ contract EurekaPlatform {
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
 
         // transfer all rewards
-        require(eurekaTokenContract.transfer(contractOwner, sciencemattersFoundationReward));
-        require(eurekaTokenContract.transfer(submission.editor, editorReward));
+//        require(eurekaTokenContract.transfer(contractOwner, sciencemattersFoundationReward));
+//        require(eurekaTokenContract.transfer(submission.editor, editorReward));
 
         // counts how many reviewRounds happened to devide the reward later
         uint reviewRounds = countDeclinedReviewRounds(_submissionId) + 1;
@@ -666,11 +666,11 @@ contract EurekaPlatform {
                 rewardCommunityReviews(articleVersion, reviewRounds);
             }
         }
-
-        if (articleVersions[submission.versions[submission.versions.length - 1]].versionState == ArticleVersionState.ACCEPTED) {
-            //TODO: reward linkedArticles authors and invalidation work
-            // check also if time is already up
-        }
+//
+//        if (articleVersions[submission.versions[submission.versions.length - 1]].versionState == ArticleVersionState.ACCEPTED) {
+//            //TODO: reward linkedArticles authors and invalidation work
+//            // check also if time is already up
+//        }
         submission.submissionState = SubmissionState.CLOSED;
         submission.stateTimestamp = block.timestamp;
         emit SubmissionProcessClosed(block.timestamp, _submissionId);
@@ -681,11 +681,11 @@ contract EurekaPlatform {
         for (uint i = 0; i < _articleVersion.editorApprovedReviews.length; i++) {
             if (rewardedReviewers < maxAmountOfRewardedEditorApprovedReviews) {
                 if (reviews[_articleVersion.articleHash][_articleVersion.editorApprovedReviews[i]].reviewState == ReviewState.ACCEPTED) {
-                    require(
-                        eurekaTokenContract.transfer(
-                            _articleVersion.editorApprovedReviews[i],
-                            editorApprovedReviewerRewardPerReviewer.div(_reviewRounds)
-                        ));
+//                    require(
+//                        eurekaTokenContract.transfer(
+//                            _articleVersion.editorApprovedReviews[i],
+//                            editorApprovedReviewerRewardPerReviewer.div(_reviewRounds)
+//                        ));
                     rewardedReviewers++;
                 }
             }

@@ -71,7 +71,7 @@ test.after(async () => {
 });
 
 
-test.only(
+test(
   PRETEXT +
   '3x decline ArticleVersion --> SubmissionState.CLOSED',
   async t => {

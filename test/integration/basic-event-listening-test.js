@@ -32,6 +32,7 @@ import {
   createUser1, createEditor1, createEditor2, createReviewer1, createReviewer2, createReviewer3, createReviewer4
 } from '../test-data';
 import TestFunctions from '../test-functions';
+import ArticleSubmissionState from '../../src/backend/schema/article-submission-state-enum.mjs';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
@@ -135,12 +136,12 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
   // Accept sanity-check for article 1
   await TestFunctions.acceptSanityCheckAndTest(t, editor, author, articleVersion1);
 
-  // Decline sanity-check for article 2
-  await TestFunctions.declineSanityCheckAndTest(t, editor, author, articleSubmission2, articleVersion2);
+  //Decline sanity-check for article 2
+  await TestFunctions.declineSanityCheckAndTest(t, editor, author, articleSubmission2, articleVersion2, ArticleSubmissionState.NEW_REVIEW_ROUND_REQUESTED);
 });
 
 /**************** Article acception ******************/
-test(
+test.only(
   PRETEXT +
   'Article acception',
   async t => {
@@ -200,5 +201,10 @@ test(
 
     // Accept ArticleVersion
     await TestFunctions.acceptArticleVersionAndTest(t, editor, articleVersion);
+
+    // Test if articleSubmission is closed
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    t.is(articleSubmission.articleSubmissionState, ArticleSubmissionState.CLOSED);
+
   }
 );
