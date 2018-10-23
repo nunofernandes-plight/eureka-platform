@@ -7,12 +7,13 @@ import getAccounts from '../methods/get-accounts.mjs';
 import web3 from '../../helpers/web3Instance.mjs';
 import {deployContracts} from './deploy-contracts.mjs';
 
-export const deploy = async () => {
-  // deployContracts will deploy all libraries specified in the input file and once they
+export const deployAndMint = async () => {
+  // deployContracts will deployAndMint all libraries specified in the input file and once they
   // get a valid Ethereum address, all the smart contracts gets also deployed.
   // the method returns a web3 instance of the smart contract itself.
   const [eurekaTokenContract, eurekaPlatformContract] = await deployContracts();
   await mintEKATokens(eurekaTokenContract);
+  await setEurekaTokenAddress(eurekaPlatformContract, eurekaTokenContract.options.address);
 
   // for front-end
   const fileNames = {
@@ -75,4 +76,20 @@ const mintEKATokens = async (eurekaTokenContract) => {
   );
   await finishMinting(eurekaTokenContract, contractOwner);
   console.log('The EKA token minting has been finished.');
+};
+
+const setEurekaTokenAddress = async (eurekaTokenContract, address) => {
+  const accounts = await getAccounts(web3);
+  const contractOwner = accounts[0];
+
+  await eurekaTokenContract.methods.setEurekaTokenContract(address)
+    .send({
+      from: contractOwner
+    })
+    .then(() => {
+      console.log('EKA token contract address set to : ' + address);
+    })
+  .catch((err) => {
+    console.error(err);
+  })
 };

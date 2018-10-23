@@ -1,17 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  __FIFTH,
-  __GRAY_200,
-  __GRAY_300,
-  __GRAY_400,
-  __GRAY_500,
-  __GRAY_600,
-  __GRAY_700,
-  __GRAY_800
-} from '../../../helpers/colors.js';
+import {__FIFTH, __GRAY_300, __GRAY_600} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
-import {NavLink} from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
@@ -111,6 +101,111 @@ const NextButton = props => {
   return null;
 };
 
+const Page = ({index, currentPage, totalPages, ...otherProps}) => {
+  return (
+    <Element
+      currentPage={currentPage}
+      key={index}
+      number={index}
+      goToPage={number => {
+        otherProps.goToPage(number);
+      }}
+    >
+      {index}
+    </Element>
+  );
+};
+
+const Dots = ({index, currentPage, ...otherProps}) => {
+  return (
+    <Element
+      index={index}
+      currentPage={currentPage}
+      {...otherProps}
+      goToPage={number => {
+        if (currentPage > index) {
+          // move to the left
+          const prev = currentPage - 2;
+          otherProps.goToPage(prev);
+        } else {
+          // move to the right
+          const next = currentPage + 2;
+          otherProps.goToPage(next);
+        }
+      }}
+    >
+      ...
+    </Element>
+  );
+};
+
+const computePagination = ({currentPage, totalPages, ...otherProps}) => {
+  let current = currentPage,
+    last = totalPages,
+    delta = 1,
+    left = current - delta,
+    right = current + delta + 1,
+    range = [],
+    rangeWithDots = [],
+    l;
+
+  for (let i = 1; i <= last; i++) {
+    if (i === 1 || i === last || (i >= left && i < right)) {
+      range.push(i);
+    }
+  }
+
+  for (let i of range) {
+    if (l) {
+      if (i - l === 2) {
+        rangeWithDots.push(l + 1);
+      } else if (i - l !== 1) {
+        rangeWithDots.push('...');
+      }
+    }
+    rangeWithDots.push(i);
+
+    l = i;
+  }
+
+  return renderRangeWithDots({
+    currentPage,
+    totalPages,
+    rangeWithDots,
+    ...otherProps
+  });
+};
+
+const renderRangeWithDots = ({
+  currentPage,
+  totalPages,
+  rangeWithDots,
+  ...otherProps
+}) => {
+  return rangeWithDots.map((item, i) => {
+    if (item === '...') {
+      return (
+        <Dots
+          key={i + 1}
+          index={i}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          {...otherProps}
+        />
+      );
+    }
+    return (
+      <Page
+        key={i + 1}
+        index={item}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        {...otherProps}
+      />
+    );
+  });
+};
+
 const Pagination = ({currentPage, totalPages, limit, ...otherProps}) => {
   return (
     <Container>
@@ -121,23 +216,7 @@ const Pagination = ({currentPage, totalPages, limit, ...otherProps}) => {
           otherProps.goToPage(page);
         }}
       />
-      {Array(totalPages)
-        .fill(true)
-        .map((_, i) => {
-          const index = i + 1;
-          return (
-            <Element
-              currentPage={currentPage}
-              key={index}
-              number={index}
-              goToPage={number => {
-                otherProps.goToPage(number);
-              }}
-            >
-              {index}
-            </Element>
-          );
-        })}
+      {computePagination({currentPage, totalPages, ...otherProps})}
       <NextButton
         totalPages={totalPages}
         currentPage={currentPage}

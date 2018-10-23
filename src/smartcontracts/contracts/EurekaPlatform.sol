@@ -86,6 +86,12 @@ contract EurekaPlatform {
         contractOwner = msg.sender;
     }
 
+    //TODO: this method is not needed if constructor is configured properly
+    function setEurekaTokenContract(address _eurekaTokenContractAddress) public {
+        require(msg.sender == contractOwner, "only the contract owner can call this function");
+        eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
+    }
+
 
     mapping(address => bool) public isEditor;
 
@@ -651,12 +657,14 @@ contract EurekaPlatform {
 
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
 
-        // transfer all rewards
-//        require(eurekaTokenContract.transfer(contractOwner, sciencemattersFoundationReward));
-//        require(eurekaTokenContract.transfer(submission.editor, editorReward));
+        // transfer rewards to science matters foundation and editor
+        require(eurekaTokenContract.transfer(contractOwner, sciencemattersFoundationReward));
+        require(eurekaTokenContract.transfer(submission.editor, editorReward));
 
         // counts how many reviewRounds happened to devide the reward later
         uint reviewRounds = countDeclinedReviewRounds(_submissionId) + 1;
+
+        //distributes the rewards to all reviewers, for every round a seperate transfer
         for (uint i = 0; i < submission.versions.length; i++) {
             ArticleVersion memory articleVersion = articleVersions[submission.versions[i]];
             if (articleVersion.versionState == ArticleVersionState.DECLINED
@@ -666,11 +674,12 @@ contract EurekaPlatform {
                 rewardCommunityReviews(articleVersion, reviewRounds);
             }
         }
-//
-//        if (articleVersions[submission.versions[submission.versions.length - 1]].versionState == ArticleVersionState.ACCEPTED) {
-//            //TODO: reward linkedArticles authors and invalidation work
-//            // check also if time is already up
-//        }
+
+        //reward linked articles if article is accepted
+        if (articleVersions[submission.versions[submission.versions.length - 1]].versionState == ArticleVersionState.ACCEPTED) {
+            //TODO: reward linkedArticles authors and invalidation work
+            // check also if time is already up
+        }
         submission.submissionState = SubmissionState.CLOSED;
         submission.stateTimestamp = block.timestamp;
         emit SubmissionProcessClosed(block.timestamp, _submissionId);
@@ -681,11 +690,12 @@ contract EurekaPlatform {
         for (uint i = 0; i < _articleVersion.editorApprovedReviews.length; i++) {
             if (rewardedReviewers < maxAmountOfRewardedEditorApprovedReviews) {
                 if (reviews[_articleVersion.articleHash][_articleVersion.editorApprovedReviews[i]].reviewState == ReviewState.ACCEPTED) {
-//                    require(
-//                        eurekaTokenContract.transfer(
-//                            _articleVersion.editorApprovedReviews[i],
-//                            editorApprovedReviewerRewardPerReviewer.div(_reviewRounds)
-//                        ));
+                    // transfer reward to editor approved reviewer
+                    require(
+                        eurekaTokenContract.transfer(
+                            _articleVersion.editorApprovedReviews[i],
+                            editorApprovedReviewerRewardPerReviewer.div(_reviewRounds)
+                        ));
                     rewardedReviewers++;
                 }
             }
@@ -699,11 +709,13 @@ contract EurekaPlatform {
         for (uint i = 0; i < _articleVersion.communityReviews.length; i++) {
             if (rewardedReviewers < maxAmountOfRewardedCommunityReviews) {
                 if (reviews[_articleVersion.articleHash][_articleVersion.communityReviews[i]].reviewState == ReviewState.ACCEPTED) {
+                    // reward community reviewer
                     require(
                         eurekaTokenContract.transfer(
                             _articleVersion.communityReviews[i],
                             communityReviewerRewardPerReviewer.div(_reviewRounds)
                         ));
+                    // reward the reviewer of the community review
                     require(
                         eurekaTokenContract.transfer(
                             reviews[_articleVersion.articleHash][_articleVersion.communityReviews[i]].reviewedBy,
