@@ -1,17 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  __FIFTH,
-  __GRAY_200,
-  __GRAY_300,
-  __GRAY_400,
-  __GRAY_500,
-  __GRAY_600,
-  __GRAY_700,
-  __GRAY_800
-} from '../../../helpers/colors.js';
+import {__FIFTH, __GRAY_300, __GRAY_600} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
-import {NavLink} from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
@@ -139,7 +129,7 @@ const Dots = ({index, currentPage, ...otherProps}) => {
   );
 };
 
-const computePagination = (currentPage, totalPages) => {
+const computePagination = ({currentPage, totalPages, ...otherProps}) => {
   let current = currentPage,
     last = totalPages,
     delta = 1,
@@ -164,10 +154,45 @@ const computePagination = (currentPage, totalPages) => {
       }
     }
     rangeWithDots.push(i);
+
     l = i;
   }
 
-  return rangeWithDots;
+  return renderRangeWithDots({
+    currentPage,
+    totalPages,
+    rangeWithDots,
+    ...otherProps
+  });
+};
+
+const renderRangeWithDots = ({
+  currentPage,
+  totalPages,
+  rangeWithDots,
+  ...otherProps
+}) => {
+  return rangeWithDots.map((item, i) => {
+    if (item === '...') {
+      return (
+        <Dots
+          key={i + 1}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          {...otherProps}
+        />
+      );
+    }
+    return (
+      <Page
+        key={i + 1}
+        index={item}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        {...otherProps}
+      />
+    );
+  });
 };
 
 const Pagination = ({currentPage, totalPages, limit, ...otherProps}) => {
@@ -180,26 +205,7 @@ const Pagination = ({currentPage, totalPages, limit, ...otherProps}) => {
           otherProps.goToPage(page);
         }}
       />
-      {Array(totalPages)
-        .fill(true)
-        .map((_, i) => {
-          const index = i + 1;
-          const split = computePagination(currentPage, totalPages);
-
-          return split.map(number => {
-            if (number === index) {
-              return (
-                <Page
-                  key={index}
-                  index={index}
-                  currentPage={currentPage}
-                  {...otherProps}
-                  totalPages={totalPages}
-                />
-              );
-            }
-          });
-        })}
+      {computePagination({currentPage, totalPages, ...otherProps})}
       <NextButton
         totalPages={totalPages}
         currentPage={currentPage}
