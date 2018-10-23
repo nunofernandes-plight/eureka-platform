@@ -86,6 +86,12 @@ contract EurekaPlatform {
         contractOwner = msg.sender;
     }
 
+    //TODO: this method is not needed if constructor is configured properly
+    function setEurekaTokenContract(address _eurekaTokenContractAddress) public {
+        require(msg.sender == contractOwner, "only the contract owner can call this function");
+        eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
+    }
+
 
     mapping(address => bool) public isEditor;
 
