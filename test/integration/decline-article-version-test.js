@@ -216,7 +216,7 @@ test(
     await TestFunctions.acceptReviewAndTest(t, editor, review32, articleVersion3);
     await TestFunctions.acceptReviewAndTest(t, editor, review33, articleVersion3);
 
-    // Decline the article version
+    // Decline the article version & Test if the articleSubmission gets closed because the max amount of articleVersions is reached
     await TestFunctions.declineArticleVersionAndTest(t, editor, articleVersion3);
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
     t.is(articleSubmission.articleSubmissionState, ArticleSubmissionState.CLOSED);

@@ -11,8 +11,6 @@ import ReviewState from '../schema/review-state-enum.mjs';
 import ReviewType from '../schema/review-type-enum.mjs';
 import Review from '../schema/review.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
-import queryString from 'query-string';
-import User from '../schema/user.mjs';
 import {sendEmail} from '../email/index.mjs';
 import {getReviewersInvitationTemplate} from '../email/templates/EmailTemplates.mjs';
 
@@ -327,8 +325,6 @@ export default {
       undefined,
       async (error, event) => {
         if (error) throw error;
-        console.log('SUBMISSION PROCESS CLOSED!!!');
-
         await articleSubmissionService.updateAritcleSubmissionState(event.returnValues.submissionId, ArticleSubmissionState.CLOSED);
       }
     );

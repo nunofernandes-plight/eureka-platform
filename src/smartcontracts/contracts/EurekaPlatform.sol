@@ -540,7 +540,7 @@ contract EurekaPlatform {
         article.versionState = ArticleVersionState.ACCEPTED;
         article.stateTimestamp = block.timestamp;
 
-        closeSubmissionProcess(article.submissionId);
+        //closeSubmissionProcess(article.submissionId);
         emit ArticleVersionIsAccepted(_articleHash, block.timestamp, msg.sender);
     }
 
@@ -642,7 +642,7 @@ contract EurekaPlatform {
         require(submission.submissionState == SubmissionState.NEW_REVIEW_ROUND_REQUESTED,
             "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
 
-        //closeSubmissionProcess(_submissionId); // TODO bugfixing as it reverts always
+        closeSubmissionProcess(_submissionId);
         emit NewReviewRoundDeclined(_submissionId, block.timestamp);
     }
 

@@ -126,8 +126,8 @@ test.only(
     await TestFunctions.declineReviewAndTest(t, editor, review2, articleVersion);
     await TestFunctions.declineReviewAndTest(t, editor, review3, articleVersion);
 
-    // await t.throws(await TestFunctions.acceptArticleVersionAndTest(t, editor, articleVersion));
 
-    t.throws(async () => {await TestFunctions.acceptArticleVersionAndTest(t, editor, articleVersion);}, TypeError);
+    // Test the error-throw of an articleVersion acception
+    await t.throws(TestFunctions.acceptArticleVersionAndTest(t, editor, articleVersion));
   }
 );
