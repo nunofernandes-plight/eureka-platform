@@ -13,6 +13,7 @@ export const deployAndMint = async () => {
   // the method returns a web3 instance of the smart contract itself.
   const [eurekaTokenContract, eurekaPlatformContract] = await deployContracts();
   await mintEKATokens(eurekaTokenContract);
+  await setEurekaTokenAddress(eurekaPlatformContract, eurekaTokenContract.options.address);
 
   // for front-end
   const fileNames = {
@@ -75,4 +76,20 @@ const mintEKATokens = async (eurekaTokenContract) => {
   );
   await finishMinting(eurekaTokenContract, contractOwner);
   console.log('The EKA token minting has been finished.');
+};
+
+const setEurekaTokenAddress = async (eurekaTokenContract, address) => {
+  const accounts = await getAccounts(web3);
+  const contractOwner = accounts[0];
+
+  await eurekaTokenContract.methods.setEurekaTokenContract(address)
+    .send({
+      from: contractOwner
+    })
+    .then(() => {
+      console.log('EKA token contract address set to : ' + address);
+    })
+  .catch((err) => {
+    console.error(err);
+  })
 };
