@@ -38,7 +38,8 @@ class EditorArticles extends React.Component {
       tx: null,
       showTxModal: false,
       page: 1,
-      limit: 10
+      limit: 10,
+      nrOfPages: 1
     };
   }
 
@@ -57,7 +58,10 @@ class EditorArticles extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          this.setState({articles: response.data.array});
+          this.setState({
+            articles: response.data.array,
+            nrOfPages: response.data.nrOfPages
+          });
         } else {
           this.setState({
             errorMessage: response.error,
@@ -170,7 +174,7 @@ class EditorArticles extends React.Component {
 
           <Pagination
             currentPage={this.state.page}
-            totalPages={10}
+            totalPages={this.state.nrOfPages}
             limit={this.state.limit}
             goToPage={page => {
               this.getSubmissions(page);

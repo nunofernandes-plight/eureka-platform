@@ -7,47 +7,78 @@ import ArticleSubmissionState from '../schema/article-submission-state-enum.mjs'
 import User from '../schema/user.mjs';
 import Roles from '../schema/roles-enum.mjs';
 
-export default {
-  getAllSubmissions: () => {
-    return ArticleSubmission.find({})
-      .populate('articleVersions')
-      .populate([
-        {path: 'articleVersions.editorApprovedReviews'},
-        {path: 'articleVersions.communityReviews'}
-      ]);
-  },
-
-  getSubmissionIds: objects => {
-    return objects.map(i => {
-      return i._id;
-    });
-  },
-
-  //TODO: Assignable are only submissions where user is not equal submission owner or author
-  getUnassignedSubmissions: async (ethereumAddress, pageNumber, nPerPage) => {
-    return await ArticleSubmission.find({
-      editor: null,
-      articleSubmissionState: 'OPEN',
-      ownerAddress: {$ne: ethereumAddress}
-    })
-      .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
-      .limit(nPerPage)
-      .populate({
-        path: 'articleVersions',
-        populate: [{path: 'editorApprovedReviews'}, {path: 'communityReviews'}]
-      });
-  },
-
-  getAssignedSubmissions: async ethereumAddress => {
-    // const submissions = await ArticleSubmission.find({editor: ethereumAddress, articleSubmissionState: {$ne: 'CLOSED'}}).populate('articleVersions');
-    return await ArticleSubmission.find({
-      editor: ethereumAddress,
-      articleSubmissionState: {$ne: 'CLOSED'}
-    }).populate({
+const populate = fn => {
+  return fn
+    .populate({
       path: 'articleVersions',
       populate: [{path: 'editorApprovedReviews'}, {path: 'communityReviews'}]
     });
+};
+
+export default {
+  getAllSubmissions: () => {
+    return populate(
+      ArticleSubmission.find({})
+    );
   },
+
+  //TODO: Assignable are only submissions where user is not equal submission owner or author
+  getUnassignedSubmissions: (ethereumAddress) => {
+    return populate(
+      ArticleSubmission.find({
+        editor: null,
+        articleSubmissionState: 'OPEN',
+        ownerAddress: {$ne: ethereumAddress}
+      })
+    );
+  },
+
+  getAssignedSubmissions: ethereumAddress => {
+    // const submissions = await ArticleSubmission.find({editor: ethereumAddress, articleSubmissionState: {$ne: 'CLOSED'}}).populate('articleVersions');
+    return populate(
+      ArticleSubmission.find({
+        editor: ethereumAddress,
+        articleSubmissionState: {$ne: 'CLOSED'}
+      })
+    );
+  },
+
+  /**
+   * Get all the article-submissions of an user
+   * @param userAddress
+   * @returns {Promise<*>}
+   */
+  getSubmissionsOfUser: async userAddress => {
+    const submissions = await populate(
+      ArticleSubmission.find({
+        ownerAddress: userAddress
+      })
+    );
+    if (!submissions) errorThrower.noEntryFoundById('EthereumAddress');
+    return submissions;
+  },
+
+  /**
+   * Get one submission by DB-ID
+   * @param _submissionId
+   * @returns {Promise<Query|void|*|ThenPromise<Object>|Promise<TSchema | null>|Promise>}
+   */
+  getSubmissionById: _submissionId => {
+    return populate(
+      ArticleSubmission.findById(_submissionId)
+    );
+  },
+
+  getSubmissionBySCsubmissionId: async _scSubmissionId => {
+    const articleSubmission = await populate(
+      ArticleSubmission.findOne(
+        {scSubmissionID: _scSubmissionId}
+      )
+    );
+    if (!articleSubmission) errorThrower.noEntryFoundById('scSUbmissionId');
+    return articleSubmission;
+  },
+
 
   createSubmission: async ownerAddress => {
     // set user's role to AUTHOR once he creates the first draft
@@ -79,37 +110,6 @@ export default {
       articleSubmissionId: submission._id
     };
     return response;
-  },
-
-  /**
-   * Get all the article-submissions of an user
-   * @param userAddress
-   * @returns {Promise<*>}
-   */
-  getSubmissionsOfUser: async userAddress => {
-    const submissions = await ArticleSubmission.find({
-      ownerAddress: userAddress
-    }).populate('articleVersions');
-    if (!submissions) errorThrower.noEntryFoundById('EthereumAddress');
-    return submissions;
-  },
-
-  /**
-   * Get one submission by DB-ID
-   * @param _submissionId
-   * @returns {Promise<Query|void|*|ThenPromise<Object>|Promise<TSchema | null>|Promise>}
-   */
-  getSubmissionById: async _submissionId => {
-    return ArticleSubmission.findById(_submissionId);
-  },
-
-  getSubmissionBySCsubmissionId: async _scSubmissionId => {
-    const articleSubmission =  await ArticleSubmission.findOne(
-      {scSubmissionID: _scSubmissionId}
-    );
-
-    if(!articleSubmission) errorThrower.noEntryFoundById('scSUbmissionId');
-    return articleSubmission;
   },
 
   /**
@@ -231,7 +231,7 @@ export default {
         articleSubmissionState: _articleSubmissionState
       },
       (err, submission) => {
-        if(err) throw err;
+        if (err) throw err;
         return submission;
       }
     );
@@ -297,13 +297,13 @@ export default {
 
     submission.articleVersions[
       articleVersionPosition
-    ].editorApprovedReviews.push(review);
+      ].editorApprovedReviews.push(review);
 
     return await submission.save();
   },
   closeArticleSubmission: async (_scSubmissionId) => {
     let submission = await ArticleSubmission.findOne({scSubmissionID: _scSubmissionId});
-    if(!submission) {
+    if (!submission) {
       errorThrower.noEntryFoundById('_scSubmissionId');
     }
 
