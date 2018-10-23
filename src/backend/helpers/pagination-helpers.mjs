@@ -7,3 +7,8 @@ export const getLimitedObjects = (fn, pageNumber, nPerPage) => {
 export const getNumberOfObjects = (fn) => {
   return fn.count();
 };
+
+export const getNumberOfPages = async (fn, limit) => {
+  const nrOfObjects = await getNumberOfObjects(fn);
+  return Math.ceil(nrOfObjects / limit);
+};
