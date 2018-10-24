@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import {renderField} from '../TextEditor/DocumentRenderer.mjs';
 import {PreviewArticleTitleByField} from './PreviewArticleTitleByField.js';
@@ -40,9 +40,9 @@ class PreviewArticleAbstract extends React.Component {
       sentencesHeights
     });
 
-    if (this.abstractContainer) {
+    if (this.refs.abstractContainer) {
       this.setState({
-        containerHeight: this.abstractContainer.offsetHeight
+        containerHeight: this.refs.abstractContainer.offsetHeight
       });
     }
   }
@@ -50,17 +50,11 @@ class PreviewArticleAbstract extends React.Component {
   render() {
     const field = 'abstract';
     const containerId = field + 'Container';
-    console.log(this.state);
     return (
       <Container id={field}>
         <PreviewArticleTitleByField field={field} />
         <ReviewsWriterFieldContainer>
-          <Abstract
-            id={containerId}
-            innerRef={abstractContainer => {
-              this.abstractContainer = abstractContainer;
-            }}
-          >
+          <div style={{flex: 3}} id={containerId} ref={containerId}>
             {this.state.sentences.map((sentence, i) => {
               const id = field + i;
               return (
@@ -69,9 +63,18 @@ class PreviewArticleAbstract extends React.Component {
                 </span>
               );
             })}
-          </Abstract>
+          </div>
           {this.props.isReview ? (
-            <ReviewsWriterContainer field={field} {...this.props} />
+            <Fragment>
+              {this.state.containerHeight ? (
+                <ReviewsWriterContainer
+                  field={field}
+                  {...this.props}
+                  containerHeight={this.state.containerHeight}
+                  sentencesHeights={this.state.sentencesHeights}
+                />
+              ) : null}
+            </Fragment>
           ) : null}
         </ReviewsWriterFieldContainer>
       </Container>
