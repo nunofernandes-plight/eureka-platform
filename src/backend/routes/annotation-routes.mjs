@@ -30,7 +30,8 @@ router.post(
       req.body.reviewId,
       req.body.articleVersionId,
       req.session.passport.user.ethereumAddress,
-      req.body.field
+      req.body.field,
+      req.body.sentenceId
     );
     return annotation;
   })
@@ -42,7 +43,6 @@ router.put(
     let annotation = await annotationService.editAnnotation(
       req.params.annotationId,
       req.session.passport.user.ethereumAddress,
-      req.body.field,
       req.body.text,
       req.body.isMajorIssue);
     return annotation;
