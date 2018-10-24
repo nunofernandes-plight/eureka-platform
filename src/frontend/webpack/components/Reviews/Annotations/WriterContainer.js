@@ -25,6 +25,7 @@ const Review = styled.div`
   flex: 1;
 `;
 
+// TODO: this should be dynamic --> margin top based on sentence id
 const MyCommentIcon = styled.div`
   z-index: 100;
   margin-left: -20px;
@@ -54,7 +55,6 @@ class WriterContainer extends React.Component {
     await this.getAnnotations(this.props.match.params.reviewId);
   }
 
-  // TODO: call back end and get information from there. At the moment: Dummy data
   getAnnotations() {
     this.setState({loading: true});
     return getAnnotations(this.props.match.params.reviewId)
@@ -72,14 +72,7 @@ class WriterContainer extends React.Component {
   }
 
   addAnnotation() {
-    // getAnnotations: GET (given ethereumAddress and articleVersionId)
-    // createAnnotation /POST
-    // editAnnotation /PUT/:annotationId
-    // removeAnnotation DEL/:annotationId
-    // getAllAnnotations: GET (given articleVersionId)
-
     const annotations = [...this.state.annotations];
-
     const reviewId = this.props.match.params.reviewId;
     // TODO: documentId is null and doesn't reflect article Version
     const articleVersionId = this.props.documentId;
