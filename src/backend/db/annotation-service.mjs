@@ -21,7 +21,7 @@ export default {
       .sort({updated: -1});
   },
 
-  createAnnotation: async (reviewId, articleVersionId, owner, field, text, isMajorIssue) => {
+  createAnnotation: async (reviewId, articleVersionId, owner, field, sentenceId, text, isMajorIssue) => {
 
     const review = await reviewService.getReviewById(owner, reviewId);
     if (!review) errorThrower.noEntryFoundById(reviewId);
@@ -34,6 +34,7 @@ export default {
       articleVersionId,
       owner,
       field,
+      sentenceId,
       text,
       created,
       isMajorIssue

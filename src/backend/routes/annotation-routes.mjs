@@ -30,7 +30,8 @@ router.post(
       req.body.reviewId,
       req.body.articleVersionId,
       req.session.passport.user.ethereumAddress,
-      req.body.field
+      req.body.field,
+      req.body.sentenceId
     );
     return annotation;
   })
