@@ -34,7 +34,7 @@ const NoArticles = () => {
   return <NoArtDiv>There are no reviews to display.</NoArtDiv>;
 };
 
-class ReviewsOpen extends React.Component {
+class ReviewsMyReviews extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -261,4 +261,4 @@ class ReviewsOpen extends React.Component {
   }
 }
 
-export default withRouter(ReviewsOpen);
+export default withRouter(ReviewsMyReviews);
