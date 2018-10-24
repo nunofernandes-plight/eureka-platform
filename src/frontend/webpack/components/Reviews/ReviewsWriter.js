@@ -10,6 +10,11 @@ import {Go} from '../Routers/Go.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {__GRAY_100, __GRAY_200} from '../../../helpers/colors.js';
 import PreviewArticle from '../Preview/PreviewArticle.js';
+import {Link} from 'react-router-dom';
+import SmartContractInputData from '../../views/SmartContractInputData.js';
+import {isGanache} from '../../../../helpers/isGanache.mjs';
+import {addEditorApprovedReview} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 
 const Container = styled.div`
   display: flex;
@@ -43,7 +48,13 @@ class ReviewsWriter extends React.Component {
   constructor() {
     super();
     this.state = {
-      errorMessage: null
+      document: null,
+      article: null,
+      review: null,
+
+      errorMessage: null,
+      submitModal: false,
+      tx: null
     };
   }
 
@@ -56,7 +67,9 @@ class ReviewsWriter extends React.Component {
           let document = new Document(response.data.document);
           let deserialized = deserializeDocument(document);
           this.setState({
-            document: deserialized
+            document: deserialized,
+            article: response.data,
+            review: response.review
           });
         } else {
           this.setState({
@@ -88,8 +101,98 @@ class ReviewsWriter extends React.Component {
         >
           {this.state.errorMessage}
         </Modal>
+
+        <Modal
+          action={'Submit'}
+          type={'notification'}
+          toggle={toogle => {
+            this.setState({submitModal: false});
+          }}
+          callback={() => {
+            this.setState({submitModal: false});
+            this.submitReview();
+          }}
+          show={this.state.submitModal}
+          title={'Submit this Review'}
+        >
+          Are you sure you want to submit this review?
+        </Modal>
+
+        <Modal
+          action={'GOT IT'}
+          callback={() => {
+            this.setState({tx: null});
+          }}
+          noClose
+          show={this.state.tx}
+          title={'Your Review has been successfully sent!'}
+        >
+          Dear reviewer, your request for submitting a review has successfully
+          triggered our Smart Contract. If you are interested, you can track the
+          Blockchain approval process at the following link: <br />
+          <a
+            href={getEtherscanLink(this.props.network) + 'tx/' + this.state.tx}
+            target={'_blank'}
+          >
+            {this.state.tx}{' '}
+          </a>
+        </Modal>
       </div>
     );
+  }
+
+  async submitReview() {
+    const reviewHash = '0x' +
+      '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7'; //computeReviewHash();
+
+    let gasAmount;
+    // gas estimation on ganache doesn't work properly
+    if (!isGanache(this.props.web3))
+      gasAmount = await addEditorApprovedReview(
+        this.props.platformContract,
+        this.state.article.articleHash,
+        reviewHash,
+        false, //this.state.review.articleHasMajorIssues,
+        false, //this.state.review.articleHasMinorIssues,
+        5, //this.state.review.score1,
+        10 //this.state.review.score2
+      ).estimateGas({
+        from: this.props.selectedAccount.address
+      });
+    else gasAmount = 80000000;
+
+    addEditorApprovedReview(
+      this.props.platformContract,
+      this.state.article.articleHash,
+      reviewHash,
+      false, //this.state.review.articleHasMajorIssues,
+      false, //this.state.review.articleHasMinorIssues,
+      5, //this.state.review.score1,
+      10 //this.state.review.score2
+    )
+      .send({
+        from: this.props.selectedAccount.address,
+        gas: gasAmount
+      })
+      .on('transactionHash', tx => {
+        this.setState({
+          showTxModal: true,
+          tx
+        });
+        //TODO Redirect to article preview and review editor
+      })
+      .on('receipt', async receipt => {
+        console.log('Submitting Editor Approved Review:  ' + receipt.status);
+        return receipt;
+      })
+      .catch(err => {
+        console.error(err);
+        this.setState({
+          errorMessage:
+            'Ouh. Something went wrong with the Smart Contract call: ' +
+            err.toString()
+        });
+      });
   }
 
   render() {
@@ -98,9 +201,9 @@ class ReviewsWriter extends React.Component {
         {this.renderModal()}
         <Card title={'Write Your Review'} background={__GRAY_200}>
           <Go back {...this.props} />
-          <MySeparator />
+          <MySeparator/>
           {!this.state.document ? (
-            <GridSpinner />
+            <GridSpinner/>
           ) : (
             <MyPreview>
               {' '}
@@ -113,11 +216,16 @@ class ReviewsWriter extends React.Component {
                     document={this.state.document}
                   />
                 ) : (
-                  <GridSpinner />
+                  <GridSpinner/>
                 )}
               </ArticlePreview>
             </MyPreview>
           )}
+          <button onClick={() => {
+            this.setState({submitModal: true});
+          }}>
+            Submit this Review
+          </button>
         </Card>
       </Container>
     );
