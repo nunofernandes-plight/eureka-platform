@@ -47,12 +47,19 @@ class WriterContainer extends React.Component {
     super();
     this.state = {
       showCommentIcon: false,
-      annotations: null
+      annotations: null,
+      mouseX: null,
+      mouseY: null
     };
   }
 
   async componentDidMount() {
     await this.getAnnotations(this.props.match.params.reviewId);
+  }
+
+  _onMouseMove(e) {
+    this.setState({x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY});
+    console.log(e.nativeEvent.offsetY);
   }
 
   getAnnotations() {
@@ -187,7 +194,7 @@ class WriterContainer extends React.Component {
         }}
       >
         <MySeparator />
-        <Review>
+        <Review onMouseMove={this._onMouseMove.bind(this)}>
           <MyCommentIcon
             show={this.state.showCommentIcon}
             onClick={() => this.addAnnotation()}
