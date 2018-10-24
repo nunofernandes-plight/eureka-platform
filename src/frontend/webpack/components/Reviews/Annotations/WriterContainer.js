@@ -58,9 +58,21 @@ class WriterContainer extends React.Component {
   }
 
   _onMouseMove(e) {
-    this.setState({x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY});
-    console.log(e.nativeEvent.offsetY);
+    this.setState({
+      mouseX: e.nativeEvent.offsetX,
+      mouseY: e.nativeEvent.offsetY
+    });
+    this.getCorrespondingSentence(e.nativeEvent.offsetY);
   }
+
+  getCorrespondingSentence = mouseY => {
+    const sentencesHeights = this.props.sentencesHeights;
+    sentencesHeights.forEach(elem => {
+      const height = elem.height;
+
+    })
+
+  };
 
   getAnnotations() {
     this.setState({loading: true});
