@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Icon from '../../views/icons/Icon.js';
-import {__GRAY_400, __GRAY_800} from '../../../helpers/colors.js';
+import Icon from '../../../views/icons/Icon.js';
+import {__GRAY_400, __GRAY_800} from '../../../../helpers/colors.js';
 
 const Circle = styled.div`
   display: flex;
@@ -29,7 +29,7 @@ const IconContainer = styled.div`
   align-items: center;
 `;
 
-export const ReviewsWriterCommentIcon = props => {
+export const CommentIcon = props => {
   return (
     <Circle {...props}>
       <IconContainer>

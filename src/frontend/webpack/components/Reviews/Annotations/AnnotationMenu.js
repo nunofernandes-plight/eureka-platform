@@ -1,15 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
-import UserDropDownMenu from '../../views/UserDropDownMenu.js';
-import {__GRAY_200} from '../../../helpers/colors.js';
-import {MenuItems} from './ReviewsWriterAnnotationMenuItems.js';
-import OutsideAlerter from './OutsideAlerter.js';
+import UserDropDownMenu from '../../../views/UserDropDownMenu.js';
+import {__GRAY_200} from '../../../../helpers/colors.js';
+import {MenuItems} from './AnnotationMenuItems.js';
+import OutsideAlerter from '../OutsideAlerter.js';
 
 const Container = styled.div`
   position: relative;
 `;
 
-const ReviewsWriterAnnotationMenu = ({visible, ...otherProps}) => {
+const AnnotationMenu = ({visible, ...otherProps}) => {
   return (
     <Container>
       <OutsideAlerter
@@ -40,4 +40,4 @@ const ReviewsWriterAnnotationMenu = ({visible, ...otherProps}) => {
   );
 };
 
-export default ReviewsWriterAnnotationMenu;
+export default AnnotationMenu;

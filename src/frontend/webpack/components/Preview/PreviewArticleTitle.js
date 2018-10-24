@@ -1,8 +1,8 @@
 import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import {renderField} from '../TextEditor/DocumentRenderer.mjs';
-import ReviewsWriterContainer from '../Reviews/ReviewsWriterContainer.js';
-import {ReviewsWriterFieldContainer} from '../Reviews/ReviewsWriterField.js';
+import ReviewsWriterContainer from '../Reviews/Annotations/WriterContainer.js';
+import {ReviewsWriterFieldContainer} from '../Reviews/Annotations/ReviewsWriterField.js';
 
 const Container = styled.div``;
 const Title = styled.h3`

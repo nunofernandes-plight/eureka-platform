@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import AuthorLookup from '../AuthorLookup.js';
-import {__GRAY_500, __GRAY_700} from '../../../helpers/colors.js';
-import Icon from '../../views/icons/Icon.js';
-import ReviewsWriterAnnotationEditor from './ReviewsWriterAnnotationEditor.js';
+import AuthorLookup from '../../AuthorLookup.js';
+import {__GRAY_500, __GRAY_700} from '../../../../helpers/colors.js';
+import Icon from '../../../views/icons/Icon.js';
+import AnnotationEditor from './AnnotationEditor.js';
 import moment from 'moment';
-import ReviewsWriterAnnotationMenu from './ReviewsWriterAnnotationMenu.js';
+import AnnotationMenu from './AnnotationMenu.js';
 
 const Container = styled.div`
   padding: 10px;
@@ -41,7 +41,7 @@ const Date = styled.div`
 const Menu = styled.div`
   margin-left: auto;
 `;
-class ReviewsWriterAnnotation extends React.Component {
+class Annotation extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -95,7 +95,7 @@ class ReviewsWriterAnnotation extends React.Component {
             />
           </Menu>
 
-          <ReviewsWriterAnnotationMenu
+          <AnnotationMenu
             visible={this.state.showMenu}
             onClickInside={() => {
               this.setState({showMenu: true});
@@ -111,7 +111,7 @@ class ReviewsWriterAnnotation extends React.Component {
         <Date> {moment(annotation.updated).calendar()}</Date>
         <AnnotationBody>
           {annotation.onChange ? (
-            <ReviewsWriterAnnotationEditor
+            <AnnotationEditor
               id={annotation._id}
               annotation={annotation}
               onCancel={id => {
@@ -132,4 +132,4 @@ class ReviewsWriterAnnotation extends React.Component {
     );
   }
 }
-export default ReviewsWriterAnnotation;
+export default Annotation;

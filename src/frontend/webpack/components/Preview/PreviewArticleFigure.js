@@ -6,8 +6,8 @@ import {PreviewArticleTitleByField} from './PreviewArticleTitleByField.js';
 import {
   FieldContainer,
   ReviewsWriterFieldContainer
-} from '../Reviews/ReviewsWriterField.js';
-import ReviewsWriterContainer from '../Reviews/ReviewsWriterContainer.js';
+} from '../Reviews/Annotations/ReviewsWriterField.js';
+import ReviewsWriterContainer from '../Reviews/Annotations/WriterContainer.js';
 
 const Container = styled.div``;
 

@@ -9,8 +9,8 @@ const Container = styled.div`
   margin-left: ${props => (props.show ? 15 : 0)}px;
 `;
 
-const ReviewsWriterAnnotations = props => {
+const Annotations = props => {
   return <Container {...props}>{props.children}</Container>;
 };
 
-export default ReviewsWriterAnnotations;
+export default Annotations;

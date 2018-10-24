@@ -5,7 +5,7 @@ import {
   __GRAY_200,
   __GRAY_600,
   __GRAY_700
-} from '../../../helpers/colors.js';
+} from '../../../../helpers/colors.js';
 
 const Container = styled.div`
   display: flex;
@@ -49,7 +49,7 @@ const Buttons = styled.div`
   margin-top: 7.5px;
   font-size: 10.5px;
 `;
-class ReviewsWriterAnnotationEditor extends React.Component {
+class AnnotationEditor extends React.Component {
   render() {
     return (
       <Container>
@@ -83,4 +83,4 @@ class ReviewsWriterAnnotationEditor extends React.Component {
   }
 }
 
-export default ReviewsWriterAnnotationEditor;
+export default AnnotationEditor;

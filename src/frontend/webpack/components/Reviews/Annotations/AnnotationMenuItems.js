@@ -1,4 +1,4 @@
-import {__ALERT_ERROR, __ALERT_INFO} from '../../../helpers/colors.js';
+import {__ALERT_ERROR, __ALERT_INFO} from '../../../../helpers/colors.js';
 
 export const MenuItems = [
   {

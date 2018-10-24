@@ -1,16 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__GRAY_500} from '../../../helpers/colors.js';
-import {ReviewsWriterCommentIcon} from './ReviewsWriterCommentIcon.js';
-import ReviewsWriterAnnotations from './ReviewsWriterAnnotations.js';
-import ReviewsWriterAnnotation from './ReviewsWriterAnnotation.js';
-import UploadSpinner from '../../views/spinners/UploadSpinner.js';
+import {__GRAY_500} from '../../../../helpers/colors.js';
+import {CommentIcon} from './CommentIcon.js';
+import Annotations from './Annotations.js';
+import Annotation from './Annotation.js';
+import UploadSpinner from '../../../views/spinners/UploadSpinner.js';
 import {
   addAnnotation,
   deleteAnnotation,
   getAnnotations,
   saveAnnotation
-} from './ReviewMethods.js';
+} from '../ReviewMethods.js';
 import {withRouter} from 'react-router';
 
 const Container = styled.div`
@@ -25,7 +25,7 @@ const Review = styled.div`
   flex: 1;
 `;
 
-const CommentIcon = styled.div`
+const MyCommentIcon = styled.div`
   z-index: 100;
   margin-left: -20px;
   margin-top: 10px;
@@ -41,7 +41,7 @@ const MySeparator = styled.div`
   position: absolute;
 `;
 
-class ReviewsWriterContainer extends React.Component {
+class WriterContainer extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -195,17 +195,17 @@ class ReviewsWriterContainer extends React.Component {
       >
         <MySeparator />
         <Review>
-          <CommentIcon
+          <MyCommentIcon
             show={this.state.showCommentIcon}
             onClick={() => this.addAnnotation()}
           >
-            <ReviewsWriterCommentIcon show={this.state.showCommentIcon} />
-          </CommentIcon>
+            <CommentIcon show={this.state.showCommentIcon} />
+          </MyCommentIcon>
 
           {!this.state.annotations ? (
             <UploadSpinner />
           ) : (
-            <ReviewsWriterAnnotations show={this.state.showCommentIcon}>
+            <Annotations show={this.state.showCommentIcon}>
               {' '}
               {this.state.annotations
                 .filter(a => {
@@ -213,7 +213,7 @@ class ReviewsWriterContainer extends React.Component {
                 })
                 .map((annotation, index) => {
                   return (
-                    <ReviewsWriterAnnotation
+                    <Annotation
                       annotation={annotation}
                       key={index}
                       onCancel={id => {
@@ -234,7 +234,7 @@ class ReviewsWriterContainer extends React.Component {
                     />
                   );
                 })}
-            </ReviewsWriterAnnotations>
+            </Annotations>
           )}
         </Review>
       </Container>
@@ -242,4 +242,4 @@ class ReviewsWriterContainer extends React.Component {
   }
 }
 
-export default withRouter(ReviewsWriterContainer);
+export default withRouter(WriterContainer);
