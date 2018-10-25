@@ -5,6 +5,7 @@ import ArticleSubmission from '../../src/backend/schema/article-submission.mjs';
 import Review from '../../src/backend/schema/review.mjs';
 import ArticleVersion from '../../src/backend/schema/article-version.mjs';
 import ScTransactions from '../../src/backend/schema/sc-transaction.mjs';
+import Annotation from '../../src/backend/schema/annotation.mjs';
 import {
   createDifferentDrafts,
   submitDifferentArticles
@@ -27,6 +28,7 @@ const cleanCollections = async () => {
   await Review.remove({});
   await ArticleVersion.remove({});
   await ScTransactions.remove({});
+  await Annotation.remove({});
   console.log('Collections have been cleaned');
 };
 
