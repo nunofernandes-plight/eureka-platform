@@ -29,14 +29,14 @@ const Review = styled.div`
 const MyCommentIcon = styled.div`
   z-index: 100;
   margin-left: -20px;
-  margin-top: -10px;
-  background: ${props => (props.show ? 'white' : 'transparent')};
-  transition: 0.3s ease-in-out;
+  margin-top: -15px;
+  // background: ${props => (props.show ? 'white' : 'transparent')};
+  // transition: 0.3s ease-in-out;
   align-self: flex-start;
 `;
 
 const InvisibleDiv = styled.div`
-  height: ${props => props.mouseY}px;
+  height: ${props => (props.mouseY === 0 ? null : props.mouseY)}px;
 `;
 
 const MySeparator = styled.div`
@@ -46,7 +46,11 @@ const MySeparator = styled.div`
   height: 100%;
   position: absolute;
 `;
-
+const Square = styled.div`
+  width: 30px;
+  height: 30px;
+  border: 1px solid red;
+`;
 class WriterContainer extends React.Component {
   constructor() {
     super();
@@ -63,10 +67,12 @@ class WriterContainer extends React.Component {
   }
 
   _onMouseMove(e) {
+    console.log('Current Mouse Move ' + e.nativeEvent.offsetY);
     this.setState({
       mouseX: e.nativeEvent.offsetX,
       mouseY: e.nativeEvent.offsetY
     });
+
     this.getCorrespondingSentence(e.nativeEvent.offsetY);
   }
 
@@ -207,13 +213,30 @@ class WriterContainer extends React.Component {
       >
         {/*        <MySeparator />*/}
         <Review onMouseMove={this._onMouseMove.bind(this)}>
-          <MyCommentIcon
+          <div
+            onMouseEnter={() => {
+              console.log('Parent ' + this.state.mouseY);
+            }}
+          >
+            <InvisibleDiv
+              mouseY={this.state.mouseY}
+              onMouseEnter={() => {
+                console.log('InvisibleDiv ' + this.state.mouseY);
+              }}
+            />
+            <Square
+              onMouseEnter={() => {
+                console.log('Square ' + this.state.mouseY);
+              }}
+            />
+          </div>
+          {/*          <MyCommentIcon
             show={this.state.showCommentIcon}
             onClick={() => this.addAnnotation()}
           >
-            <InvisibleDiv mouseY={this.state.mouseY} />
+            
             <CommentIcon show={this.state.showCommentIcon} />
-          </MyCommentIcon>
+          </MyCommentIcon>*/}
 
           {!this.state.annotations ? (
             <UploadSpinner />
