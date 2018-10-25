@@ -34,7 +34,6 @@ export default {
   },
 
   getAssignedSubmissions: ethereumAddress => {
-    // const submissions = await ArticleSubmission.find({editor: ethereumAddress, articleSubmissionState: {$ne: 'CLOSED'}}).populate('articleVersions');
     return populate(
       ArticleSubmission.find({
         editor: ethereumAddress,
@@ -77,6 +76,13 @@ export default {
     );
     if (!articleSubmission) errorThrower.noEntryFoundById('scSUbmissionId');
     return articleSubmission;
+  },
+
+  getReviewableSubmissions: async ethereumAddress => {
+    return await ArticleSubmission.find({
+      ownerAddress: {$ne: ethereumAddress},
+      editor: {$ne: ethereumAddress}
+    })
   },
 
 
