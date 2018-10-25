@@ -275,7 +275,7 @@ const submitDraft = async (tokenContract, platformContract, draft, account) => {
     draft._id
   );
 
-  const articleHex = getArticleHexFromDocument(submittedArticle);
+  const articleHex = getArticleHexFromDocument(web3, submittedArticle);
 
   const receipt = await submitArticle(
     tokenContract,

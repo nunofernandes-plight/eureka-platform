@@ -3,7 +3,6 @@ import CANON from 'canon';
 import Document from '../models/Document.mjs';
 import {getDomain} from './getDomain.mjs';
 import getArticleHex from '../smartcontracts/methods/get-articleHex.mjs';
-import web3 from './web3Instance.mjs';
 import {renderField} from '../frontend/webpack/components/TextEditor/DocumentRenderer.mjs';
 
 export const getArticleHashFromDocument = document => {
@@ -36,7 +35,7 @@ const getInputData = article => {
   };
 };
 
-export const getArticleHexFromDocument = article => {
+export const getArticleHexFromDocument = (web3, article) => {
   const input = getInputData(article);
   return getArticleHex(web3, input);
 };
