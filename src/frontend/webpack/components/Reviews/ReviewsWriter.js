@@ -53,6 +53,7 @@ class ReviewsWriter extends React.Component {
       document: null,
       article: null,
       review: null,
+      annotations: null,
 
       errorMessage: null,
       submitModal: false,
@@ -66,14 +67,13 @@ class ReviewsWriter extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          let document = new Document(response.data.document);
+          let document = new Document(response.data.article.document);
           let deserialized = deserializeDocument(document);
           this.setState({
             document: deserialized,
-            article: response.data,
-            review: response.review
+            article: response.data.article,
+            review: response.data.review
           });
-          console.log(response.review);
         } else {
           this.setState({
             errorMessage: response.error
@@ -87,25 +87,6 @@ class ReviewsWriter extends React.Component {
           errorMessage: 'Ouh. Something went wrong.',
           loading: false
         });
-      });
-  }
-
-  getAnnotations() {
-    this.setState({loading: true});
-    return getAnnotations(this.props.match.params.reviewId)
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          this.setState({annotations: response.data});
-        }
-        this.setState({loading: false});
-      })
-      .catch(err => {
-        this.setState({
-          errorMessage: 'Ouh. Something went wrong.',
-          loading: false
-        });
-        console.error(err);
       });
   }
 
@@ -165,10 +146,24 @@ class ReviewsWriter extends React.Component {
 
   async submitReview() {
 
-    const annotations = await this.getAnnotations(this.state.review.reviewId);
+    await getAnnotations(this.state.review._id)
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.setState({annotations: response.data});
+        }
+        this.setState({loading: false});
+      })
+      .catch(err => {
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.',
+          loading: false
+        });
+        console.error(err);
+      });
 
     const reviewHash = '0x' +
-      getReviewHash(this.state.review, annotations);
+      getReviewHash(this.state.review, this.state.annotations);
 
     let gasAmount;
     // gas estimation on ganache doesn't work properly
@@ -177,6 +172,7 @@ class ReviewsWriter extends React.Component {
         this.props.platformContract,
         this.state.article.articleHash,
         reviewHash,
+        //TODO: update
         false, //this.state.review.articleHasMajorIssues,
         false, //this.state.review.articleHasMinorIssues,
         5, //this.state.review.score1,
