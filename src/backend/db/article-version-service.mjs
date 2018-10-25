@@ -31,14 +31,12 @@ export default {
     );
     const submissionIds = getIds(submissions);
 
-    return await ArticleVersion.find({
-      articleVersionState: {$in: articleVersionStates},
-      articleSubmission: {$in: submissionIds}
-    }).populate([
-      {path: 'articleSubmission'},
-      {path: 'editorApprovedReviews'},
-      {path: 'communityReviews'}
-    ]);
+    return populate(
+      ArticleVersion.find({
+        articleVersionState: {$in: articleVersionStates},
+        articleSubmission: {$in: submissionIds}
+      })
+    );
   },
 
   getArticlesToFinalize: async ethereumAddress => {
@@ -49,15 +47,13 @@ export default {
 
     const articlesWithEnoughEAReviews = await ReviewService.getArticlesWithEnoughAcceptedReviews(REVIEW_TYPE.EDITOR_APPROVED_REVIEW);
 
-    return await ArticleVersion.find({
-      articleVersionState: 'REVIEWERS_INVITED',
-      articleSubmission: {$in: submissionIds},
-      _id: {$in: getIds(articlesWithEnoughEAReviews)}
-    }).populate([
-      {path: 'articleSubmission'},
-      {path: 'editorApprovedReviews'},
-      {path: 'communityReviews'}
-    ]);
+    return populate(
+      ArticleVersion.find({
+        articleVersionState: 'REVIEWERS_INVITED',
+        articleSubmission: {$in: submissionIds},
+        _id: {$in: getIds(articlesWithEnoughEAReviews)}
+      })
+    );
   },
 
   getArticlesOpenForReviews: async ethereumAddress => {
@@ -71,21 +67,19 @@ export default {
     const submissions = await ArticleSubmissionService.getReviewableSubmissions(ethereumAddress);
     const reviewableSubmissionIds = getIds(submissions);
 
-    return await ArticleVersion.find({
-      // show article if invited or if not reviewed yet
-      $or: [{_id: {$nin: alreadyReviewedIds}}, {_id: {$in: invitedIds}}],
-      // community reviews can be reviewed as soon as the article is submitted
-      articleVersionState: {$in: ['SUBMITTED', 'EDITOR_CHECKED', 'REVIEWERS_INVITED']},
-      // article can't be reviewed by the author or submission owner itself
-      ownerAddress: {$ne: ethereumAddress},
-      'document.authors': {$ne: ethereumAddress},
-      // article can't be reviewed by the editor of the submission process
-      articleSubmission: {$in: reviewableSubmissionIds}
-    }).populate([
-      {path: 'articleSubmission'},
-      {path: 'editorApprovedReviews'},
-      {path: 'communityReviews'}
-    ]);
+    return populate(
+      ArticleVersion.find({
+        // show article if invited or if not reviewed yet
+        $or: [{_id: {$nin: alreadyReviewedIds}}, {_id: {$in: invitedIds}}],
+        // community reviews can be reviewed as soon as the article is submitted
+        articleVersionState: {$in: ['SUBMITTED', 'EDITOR_CHECKED', 'REVIEWERS_INVITED']},
+        // article can't be reviewed by the author or submission owner itself
+        ownerAddress: {$ne: ethereumAddress},
+        'document.authors': {$ne: ethereumAddress},
+        // article can't be reviewed by the editor of the submission process
+        articleSubmission: {$in: reviewableSubmissionIds}
+      })
+    );
   },
 
   /* tipp not used anymore
@@ -98,14 +92,12 @@ export default {
     const reviews = await ReviewService.getReviewInvitations(ethereumAddress);
     const ids = ReviewService.getArticleVersionIds(reviews);
 
-    return await ArticleVersion.find({
-      _id: {$in: ids},
-      articleVersionState: 'REVIEWERS_INVITED'
-    }).populate([
-      {path: 'articleSubmission'},
-      {path: 'editorApprovedReviews'},
-      {path: 'communityReviews'}
-    ]);
+    return populate(
+      ArticleVersion.find({
+        _id: {$in: ids},
+        articleVersionState: 'REVIEWERS_INVITED'
+      })
+    );
   },
 
   getArticlesOpenForCommunityReviews: async ethereumAddress => {
