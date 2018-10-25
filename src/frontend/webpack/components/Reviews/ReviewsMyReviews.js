@@ -236,15 +236,6 @@ class ReviewsMyReviews extends React.Component {
                           `/app/write/review/${article.reviewId}`
                         );
                       }}
-                      button2Text={'dummy: send review to SC'}
-                      action2={async (_, article) => {
-                        if (
-                          article.reviewType ===
-                          REVIEW_TYPE.EDITOR_APPROVED_REVIEW
-                        )
-                          await this.submitEditorApprovedReview(article);
-                        else await this.submitCommunityReview(article);
-                      }}
                     />
                   );
                 })
