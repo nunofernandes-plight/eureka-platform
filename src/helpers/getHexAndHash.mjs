@@ -35,7 +35,22 @@ const getInputData = article => {
     linkedArticlesSplitRatios: [3334, 3333, 3333]
   };
 };
+
 export const getArticleHexFromDocument = article => {
   const input = getInputData(article);
   return getArticleHex(web3, input);
+};
+
+export const getReviewHash = (review, annotations) => {
+  let reviewHash = hashField(review.reviewText);
+
+  annotations.map(annotation => {
+    reviewHash += hashField(annotation.field);
+    reviewHash += hashField(annotation.sentenceId);
+    reviewHash += hashField(annotation.text);
+    reviewHash += hashField(annotation.isMajorIssue);
+    reviewHash += hashField(annotation.created);
+    reviewHash += hashField(annotation.updated);
+  });
+  return sha256(CANON.stringify(reviewHash));
 };

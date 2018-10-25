@@ -15,6 +15,8 @@ import SmartContractInputData from '../../views/SmartContractInputData.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import {addEditorApprovedReview} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
+import {getAnnotations} from './ReviewMethods.js';
+import {getReviewHash} from '../../../../helpers/getHexAndHash.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -71,6 +73,7 @@ class ReviewsWriter extends React.Component {
             article: response.data,
             review: response.review
           });
+          console.log(response.review);
         } else {
           this.setState({
             errorMessage: response.error
@@ -84,6 +87,25 @@ class ReviewsWriter extends React.Component {
           errorMessage: 'Ouh. Something went wrong.',
           loading: false
         });
+      });
+  }
+
+  getAnnotations() {
+    this.setState({loading: true});
+    return getAnnotations(this.props.match.params.reviewId)
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.setState({annotations: response.data});
+        }
+        this.setState({loading: false});
+      })
+      .catch(err => {
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.',
+          loading: false
+        });
+        console.error(err);
       });
   }
 
@@ -142,8 +164,11 @@ class ReviewsWriter extends React.Component {
   }
 
   async submitReview() {
+
+    const annotations = await this.getAnnotations(this.state.review.reviewId);
+
     const reviewHash = '0x' +
-      '449ee57a8c6519e1592af5f292212c620bbf25df787d25b55e47348a54d0f9c7'; //computeReviewHash();
+      getReviewHash(this.state.review, annotations);
 
     let gasAmount;
     // gas estimation on ganache doesn't work properly
@@ -179,7 +204,6 @@ class ReviewsWriter extends React.Component {
           showTxModal: true,
           tx
         });
-        //TODO Redirect to article preview and review editor
       })
       .on('receipt', async receipt => {
         console.log('Submitting Editor Approved Review:  ' + receipt.status);
