@@ -29,11 +29,16 @@ const Review = styled.div`
 const MyCommentIcon = styled.div`
   z-index: 100;
   margin-left: -20px;
-  margin-top: 10px;
+  margin-top: -10px;
   background: ${props => (props.show ? 'white' : 'transparent')};
   transition: 0.3s ease-in-out;
   align-self: flex-start;
 `;
+
+const InvisibleDiv = styled.div`
+  height: ${props => props.mouseY}px;
+`;
+
 const MySeparator = styled.div`
   display: flex;
   flex-direction: column;
@@ -67,11 +72,6 @@ class WriterContainer extends React.Component {
 
   getCorrespondingSentence = mouseY => {
     const sentencesHeights = this.props.sentencesHeights;
-    sentencesHeights.forEach(elem => {
-      const height = elem.height;
-
-    })
-
   };
 
   getAnnotations() {
@@ -205,12 +205,13 @@ class WriterContainer extends React.Component {
           this.setState({showCommentIcon: false});
         }}
       >
-        <MySeparator />
+        {/*        <MySeparator />*/}
         <Review onMouseMove={this._onMouseMove.bind(this)}>
           <MyCommentIcon
             show={this.state.showCommentIcon}
             onClick={() => this.addAnnotation()}
           >
+            <InvisibleDiv mouseY={this.state.mouseY} />
             <CommentIcon show={this.state.showCommentIcon} />
           </MyCommentIcon>
 
