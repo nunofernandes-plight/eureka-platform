@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__GRAY_500} from '../../../../helpers/colors.js';
+import {
+  __GRAY_200,
+  __GRAY_400,
+  __GRAY_500
+} from '../../../../helpers/colors.js';
 import {CommentIcon} from './CommentIcon.js';
 import Annotations from './Annotations.js';
 import Annotation from './Annotation.js';
@@ -23,23 +27,7 @@ const Container = styled.div`
 const Review = styled.div`
   display: flex;
   flex: 1;
-`;
-
-// TODO: this should be dynamic --> margin top based on sentence id
-const MyCommentIcon = styled.div`
-  z-index: 100;
-  margin-left: -20px;
-  margin-top: 10px;
-  background: ${props => (props.show ? 'white' : 'transparent')};
-  transition: 0.3s ease-in-out;
-  align-self: flex-start;
-`;
-const MySeparator = styled.div`
-  display: flex;
-  flex-direction: column;
-  border-left: 1px dashed ${__GRAY_500};
-  height: 100%;
-  position: absolute;
+  border-left: 1px dashed ${__GRAY_400};
 `;
 
 class WriterContainer extends React.Component {
@@ -185,23 +173,8 @@ class WriterContainer extends React.Component {
 
   render() {
     return (
-      <Container
-        onMouseEnter={() => {
-          this.setState({showCommentIcon: true});
-        }}
-        onMouseLeave={() => {
-          this.setState({showCommentIcon: false});
-        }}
-      >
-{/*        <MySeparator />*/}
+      <Container>
         <Review onMouseMove={this._onMouseMove.bind(this)}>
-          <MyCommentIcon
-            show={this.state.showCommentIcon}
-            onClick={() => this.addAnnotation()}
-          >
-            <CommentIcon show={this.state.showCommentIcon} />
-          </MyCommentIcon>
-
           {!this.state.annotations ? (
             <UploadSpinner />
           ) : (

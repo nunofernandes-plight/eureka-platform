@@ -101,6 +101,7 @@ class PreviewArticleAbstract extends React.Component {
             <Fragment>
               {this.state.containerHeight ? (
                 <ReviewsWriterContainer
+                  onShow={this.state.onShow}
                   field={field}
                   {...this.props}
                   containerHeight={this.state.containerHeight}
