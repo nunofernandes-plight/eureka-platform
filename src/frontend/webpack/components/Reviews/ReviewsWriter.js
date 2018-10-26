@@ -42,7 +42,7 @@ const MyPreview = styled.div`
   background: rgb(255, 255, 255);
 `;
 
-const ArticlePreview = styled.div`
+const Container = styled.div`
   flex: 1;
 `;
 
@@ -231,7 +231,7 @@ class ReviewsWriter extends React.Component {
           ) : (
             <MyPreview>
               {' '}
-              <ArticlePreview>
+              <Container>
                 {this.props.selectedAccount.address ? (
                   <PreviewArticle
                     selectedAccount={this.props.selectedAccount}
@@ -242,7 +242,7 @@ class ReviewsWriter extends React.Component {
                 ) : (
                   <GridSpinner/>
                 )}
-              </ArticlePreview>
+              </Container>
             </MyPreview>
           )}
           <button onClick={() => {
