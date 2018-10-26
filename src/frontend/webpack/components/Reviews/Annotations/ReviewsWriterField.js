@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Field = styled.div`
   display: flex;
-  line-height: 1.8;
+  line-height: 2;
 `;
 
 export const FieldContainer = styled.div`

@@ -9,10 +9,20 @@ import {
 import ReviewsWriterContainer from '../Reviews/Annotations/WriterContainer.js';
 import {tokenizeSentence} from '../Reviews/Annotations/SentenceTokenizer.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
+import {CommentIcon} from '../Reviews/Annotations/CommentIcon.js';
+import Icon from '../../views/icons/Icon.js';
 
 const Container = styled.div``;
 
 const Abstract = FieldContainer.extend``;
+
+const Circle = styled.div`
+  position: absolute;
+  margin-top: -10px;
+  right: -70px;
+  z-index: 100000000;
+  background: white;
+`;
 
 class PreviewArticleAbstract extends React.Component {
   constructor() {
@@ -54,13 +64,22 @@ class PreviewArticleAbstract extends React.Component {
       <Container id={field}>
         <PreviewArticleTitleByField field={field} />
         <ReviewsWriterFieldContainer>
-          <div style={{flex: 3}} id={containerId} ref={containerId}>
+          <div
+            style={{flex: 3, position: 'relative'}}
+            id={containerId}
+            ref={containerId}
+          >
             {this.state.sentences.map((sentence, i) => {
               const id = field + i;
               return (
-                <span id={id} key={i} ref={id}>
-                  {sentence + ' '}
-                </span>
+                <Fragment key={i}>
+                  <Circle id={id}>
+                    <CommentIcon show={true} />
+                  </Circle>
+                  <span id={id} key={i} ref={id}>
+                    {sentence + ' '}
+                  </span>
+                </Fragment>
               );
             })}
           </div>
