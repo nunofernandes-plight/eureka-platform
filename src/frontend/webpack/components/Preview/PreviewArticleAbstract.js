@@ -85,7 +85,12 @@ class PreviewArticleAbstract extends React.Component {
                       <CommentIcon show={true} />
                     ) : null}
                   </Circle>
-                  <span id={id} key={i} ref={id}>
+                  <span
+                    id={id}
+                    key={i}
+                    ref={id}
+                    className={this.state.onShow === i ? 'highlightSpan' : null}
+                  >
                     {sentence + ' '}
                   </span>
                 </Fragment>

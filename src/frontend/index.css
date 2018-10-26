@@ -137,4 +137,6 @@ input:focus {
   outline: none;
 }
 
-
+.highlightSpan {
+  background: yellow;
+}
