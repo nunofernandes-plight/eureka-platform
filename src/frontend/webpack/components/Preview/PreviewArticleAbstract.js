@@ -18,10 +18,11 @@ const Abstract = FieldContainer.extend``;
 
 const Circle = styled.div`
   position: absolute;
-  margin-top: -10px;
+  margin-top: -13px;
   right: -70px;
   z-index: 100000000;
-  background: white;
+  width: 42px;
+  height: 42px;
 `;
 
 class PreviewArticleAbstract extends React.Component {
@@ -32,7 +33,8 @@ class PreviewArticleAbstract extends React.Component {
     this.state = {
       sentences: tokenizeSentence(abstract),
       sentencesHeights: null,
-      containerHeight: null
+      containerHeight: null,
+      onShow: null
     };
   }
   componentDidMount() {
@@ -73,8 +75,15 @@ class PreviewArticleAbstract extends React.Component {
               const id = field + i;
               return (
                 <Fragment key={i}>
-                  <Circle id={id}>
-                    <CommentIcon show={true} />
+                  <Circle
+                    id={id}
+                    onMouseEnter={() => {
+                      this.setState({onShow: i});
+                    }}
+                  >
+                    {this.state.onShow === i ? (
+                      <CommentIcon show={true} />
+                    ) : null}
                   </Circle>
                   <span id={id} key={i} ref={id}>
                     {sentence + ' '}

@@ -59,7 +59,7 @@ class WriterContainer extends React.Component {
 
   _onMouseMove(e) {
     this.setState({x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY});
-    console.log(e.nativeEvent.offsetY);
+    // console.log(e.nativeEvent.offsetY);
   }
 
   getAnnotations() {
@@ -193,7 +193,7 @@ class WriterContainer extends React.Component {
           this.setState({showCommentIcon: false});
         }}
       >
-        <MySeparator />
+{/*        <MySeparator />*/}
         <Review onMouseMove={this._onMouseMove.bind(this)}>
           <MyCommentIcon
             show={this.state.showCommentIcon}
