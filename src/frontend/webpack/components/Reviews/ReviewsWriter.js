@@ -13,10 +13,14 @@ import PreviewArticle from '../Preview/PreviewArticle.js';
 import {Link} from 'react-router-dom';
 import SmartContractInputData from '../../views/SmartContractInputData.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
-import {addEditorApprovedReview} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {
+  addCommunityReview,
+  addEditorApprovedReview
+} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 import {getAnnotations} from './ReviewMethods.js';
 import {getReviewHash} from '../../../../helpers/getHexAndHash.mjs';
+import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -53,6 +57,7 @@ class ReviewsWriter extends React.Component {
       document: null,
       article: null,
       review: null,
+      annotations: null,
 
       errorMessage: null,
       submitModal: false,
@@ -66,14 +71,13 @@ class ReviewsWriter extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          let document = new Document(response.data.document);
+          let document = new Document(response.data.article.document);
           let deserialized = deserializeDocument(document);
           this.setState({
             document: deserialized,
-            article: response.data,
-            review: response.review
+            article: response.data.article,
+            review: response.data.review
           });
-          console.log(response.review);
         } else {
           this.setState({
             errorMessage: response.error
@@ -87,25 +91,6 @@ class ReviewsWriter extends React.Component {
           errorMessage: 'Ouh. Something went wrong.',
           loading: false
         });
-      });
-  }
-
-  getAnnotations() {
-    this.setState({loading: true});
-    return getAnnotations(this.props.match.params.reviewId)
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          this.setState({annotations: response.data});
-        }
-        this.setState({loading: false});
-      })
-      .catch(err => {
-        this.setState({
-          errorMessage: 'Ouh. Something went wrong.',
-          loading: false
-        });
-        console.error(err);
       });
   }
 
@@ -151,7 +136,7 @@ class ReviewsWriter extends React.Component {
         >
           Dear reviewer, your request for submitting a review has successfully
           triggered our Smart Contract. If you are interested, you can track the
-          Blockchain approval process at the following link: <br />
+          Blockchain approval process at the following link: <br/>
           <a
             href={getEtherscanLink(this.props.network) + 'tx/' + this.state.tx}
             target={'_blank'}
@@ -164,37 +149,34 @@ class ReviewsWriter extends React.Component {
   }
 
   async submitReview() {
-
-    const annotations = await this.getAnnotations(this.state.review.reviewId);
+    await getAnnotations(this.state.review._id)
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.setState({annotations: response.data});
+        }
+        this.setState({loading: false});
+      })
+      .catch(err => {
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.',
+          loading: false
+        });
+        console.error(err);
+      });
 
     const reviewHash = '0x' +
-      getReviewHash(this.state.review, annotations);
+      getReviewHash(this.state.review, this.state.annotations);
 
     let gasAmount;
     // gas estimation on ganache doesn't work properly
     if (!isGanache(this.props.web3))
-      gasAmount = await addEditorApprovedReview(
-        this.props.platformContract,
-        this.state.article.articleHash,
-        reviewHash,
-        false, //this.state.review.articleHasMajorIssues,
-        false, //this.state.review.articleHasMinorIssues,
-        5, //this.state.review.score1,
-        10 //this.state.review.score2
-      ).estimateGas({
-        from: this.props.selectedAccount.address
-      });
+        gasAmount = await this.getAddReviewFn(reviewHash).estimateGas({
+          from: this.props.selectedAccount.address
+        });
     else gasAmount = 80000000;
 
-    addEditorApprovedReview(
-      this.props.platformContract,
-      this.state.article.articleHash,
-      reviewHash,
-      false, //this.state.review.articleHasMajorIssues,
-      false, //this.state.review.articleHasMinorIssues,
-      5, //this.state.review.score1,
-      10 //this.state.review.score2
-    )
+    this.getAddReviewFn(reviewHash)
       .send({
         from: this.props.selectedAccount.address,
         gas: gasAmount
@@ -206,7 +188,7 @@ class ReviewsWriter extends React.Component {
         });
       })
       .on('receipt', async receipt => {
-        console.log('Submitting Editor Approved Review:  ' + receipt.status);
+        console.log('Submitting Review:  ' + receipt.status);
         return receipt;
       })
       .catch(err => {
@@ -217,6 +199,31 @@ class ReviewsWriter extends React.Component {
             err.toString()
         });
       });
+  }
+
+  getAddReviewFn(reviewHash) {
+    if (this.state.review.reviewType === REVIEW_TYPE.EDITOR_APPROVED_REVIEW)
+      return addEditorApprovedReview(
+        this.props.platformContract,
+        this.state.article.articleHash,
+        reviewHash,
+        //TODO: update
+        false, //this.state.review.articleHasMajorIssues,
+        false, //this.state.review.articleHasMinorIssues,
+        5, //this.state.review.score1,
+        10 //this.state.review.score2
+      );
+    else
+      return addCommunityReview(
+        this.props.platformContract,
+        this.state.article.articleHash,
+        reviewHash,
+        //TODO: update
+        false, //this.state.review.articleHasMajorIssues,
+        false, //this.state.review.articleHasMinorIssues,
+        5, //this.state.review.score1,
+        10 //this.state.review.score2
+      );
   }
 
   render() {

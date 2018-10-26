@@ -132,22 +132,22 @@ const getRelevantReviewData = review => {
 };
 
 const getDetailedArticleAndReviewData = review => {
-  let obj = review.articleVersion;
+  // const reviewObj = {
+  //   reviewId: review._id,
+  //   reviewHash: review.reviewHash,
+  //   reviewState: review.reviewState,
+  //   reviewType: review.reviewType,
+  //   articleHasMajorIssues: review.articleHasMajorIssues,
+  //   articleHasMinorIssues: review.articleHasMinorIssues,
+  //   stateTimestamp: review.stateTimestamp,
+  //   reviewerAddress: review.reviewerAddress,
+  //   score1: review.reviewScore1,
+  //   score2: review.reviewScore2,
+  //   reviewText: review.reviewText
+  // };
 
-  let reviewObj = {};
-  reviewObj.reviewId = review._id;
-  reviewObj.reviewHash = review.reviewHash;
-  reviewObj.reviewState = review.reviewState;
-  reviewObj.reviewType = review.reviewType;
-  reviewObj.articleHasMajorIssues = review.articleHasMajorIssues;
-  reviewObj.articleHasMinorIssues = review.articleHasMinorIssues;
-  reviewObj.stateTimestamp = review.stateTimestamp;
-  reviewObj.reviewerAddress = review.reviewerAddress;
-  reviewObj.score1 = review.reviewScore1;
-  reviewObj.score2 = review.reviewScore2;
-  reviewObj.reviewText = review.reviewText;
-
-  obj.review = reviewObj;
-
-  return obj;
+  return {
+    article: review.articleVersion,
+    review: review
+  };
 };
