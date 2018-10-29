@@ -18,7 +18,7 @@ import {
   addEditorApprovedReview
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
-import {getAnnotations} from './ReviewMethods.js';
+import {getAnnotations, saveEditorApprovedReviewToDB} from './ReviewMethods.js';
 import {getReviewHash} from '../../../../helpers/getHexAndHash.mjs';
 import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
 
