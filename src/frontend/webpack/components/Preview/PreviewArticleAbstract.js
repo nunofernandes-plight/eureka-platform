@@ -45,11 +45,26 @@ class PreviewArticleAbstract extends React.Component {
     this.setState({
       sentences: sentences.map((s, i) => {
         const offsetTop = this.refs[`${FIELD}${i}`].offsetTop;
+
         return {
           text: s.text,
           offsetTop
         };
       })
+    });
+
+    let groups = new Map();
+    sentences.map((s, i) => {
+      const ref = this.refs[`${FIELD}${i}`];
+      const offsetTop = ref.offsetTop;
+      const array = groups.get(offsetTop);
+
+      if (!array) {
+        groups.set(offsetTop, [{ref, text: s.text}]);
+      } else {
+        array.push({ref, text: s.text});
+        groups.set(offsetTop, array);
+      }
     });
   }
 
