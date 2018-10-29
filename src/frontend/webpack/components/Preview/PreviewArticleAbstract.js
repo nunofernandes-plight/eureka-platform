@@ -59,7 +59,7 @@ class PreviewArticleAbstract extends React.Component {
     const field = 'abstract';
     const containerId = field + 'Container';
     return (
-      <Container>
+      <Container id={field}>
         <PreviewArticleTitleByField field={field} />
         <ReviewsWriterFieldContainer>
           <div
@@ -97,15 +97,13 @@ class PreviewArticleAbstract extends React.Component {
           </div>
           {this.props.isReview ? (
             <Fragment>
-              {this.state.containerHeight ? (
-                <ReviewsWriterContainer
-                  onShow={this.state.onShow}
-                  field={field}
-                  {...this.props}
-                  containerHeight={this.state.containerHeight}
-                  sentencesHeights={this.state.sentencesHeights}
-                />
-              ) : null}
+              <ReviewsWriterContainer
+                onShow={this.state.onShow}
+                field={field}
+                {...this.props}
+                containerHeight={this.state.containerHeight}
+                sentencesHeights={this.state.sentencesHeights}
+              />
             </Fragment>
           ) : null}
         </ReviewsWriterFieldContainer>
