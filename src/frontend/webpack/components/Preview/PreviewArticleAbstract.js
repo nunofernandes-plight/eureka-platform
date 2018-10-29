@@ -52,18 +52,14 @@ class PreviewArticleAbstract extends React.Component {
       sentencesHeights
     });
 
-    if (this.refs.abstractContainer) {
-      this.setState({
-        containerHeight: this.refs.abstractContainer.offsetHeight
-      });
-    }
+    console.log(this.refs);
   }
 
   render() {
     const field = 'abstract';
     const containerId = field + 'Container';
     return (
-      <Container id={field}>
+      <Container>
         <PreviewArticleTitleByField field={field} />
         <ReviewsWriterFieldContainer>
           <div
@@ -77,9 +73,11 @@ class PreviewArticleAbstract extends React.Component {
                 <Fragment key={i}>
                   <Circle
                     id={id}
+                    index={i}
                     onMouseEnter={() => {
                       this.setState({onShow: i});
                     }}
+                    innerRef={ref => (this[`abstract${i}`] = ref)}
                   >
                     {this.state.onShow === i ? (
                       <CommentIcon show={true} />
