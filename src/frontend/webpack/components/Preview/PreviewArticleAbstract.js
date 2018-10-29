@@ -42,9 +42,20 @@ class PreviewArticleAbstract extends React.Component {
   }
   componentDidMount() {
     const sentences = [...this.state.sentences];
+    let groups = new Map();
     this.setState({
       sentences: sentences.map((s, i) => {
-        const offsetTop = this.refs[`${FIELD}${i}`].offsetTop;
+        const ref = this.refs[`${FIELD}${i}`];
+        const offsetTop = ref.offsetTop;
+
+        const array = groups.get(offsetTop);
+
+        if (!array) {
+          groups.set(offsetTop, [{ref, text: s.text}]);
+        } else {
+          array.push({ref, text: s.text});
+          groups.set(offsetTop, array);
+        }
 
         return {
           text: s.text,
@@ -53,19 +64,7 @@ class PreviewArticleAbstract extends React.Component {
       })
     });
 
-    let groups = new Map();
-    sentences.map((s, i) => {
-      const ref = this.refs[`${FIELD}${i}`];
-      const offsetTop = ref.offsetTop;
-      const array = groups.get(offsetTop);
-
-      if (!array) {
-        groups.set(offsetTop, [{ref, text: s.text}]);
-      } else {
-        array.push({ref, text: s.text});
-        groups.set(offsetTop, array);
-      }
-    });
+    console.log(groups);
   }
 
   render() {
