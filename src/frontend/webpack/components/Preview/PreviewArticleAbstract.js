@@ -37,7 +37,8 @@ class PreviewArticleAbstract extends React.Component {
           offsetTop: null
         };
       }),
-      onShow: null
+      onShow: null,
+      groups: null
     };
   }
   componentDidMount() {
@@ -47,7 +48,6 @@ class PreviewArticleAbstract extends React.Component {
       sentences: sentences.map((s, i) => {
         const ref = this.refs[`${FIELD}${i}`];
         const offsetTop = ref.offsetTop;
-
         const array = groups.get(offsetTop);
 
         if (!array) {
@@ -61,10 +61,17 @@ class PreviewArticleAbstract extends React.Component {
           text: s.text,
           offsetTop
         };
-      })
+      }),
+      groups
     });
 
-    console.log(groups);
+    console.log(
+      Array.from(groups).map(group => {
+        return group[1].map(sentence => {
+          return sentence.text;
+        });
+      })
+    );
   }
 
   render() {
@@ -105,6 +112,16 @@ class PreviewArticleAbstract extends React.Component {
                 </Fragment>
               );
             })}
+            {this.state.groups ? (
+              <div>
+                {' '}
+                {Array.from(this.state.groups).map(group => {
+                  return group[1].map(sentence => {
+                    return sentence.text;
+                  });
+                })}
+              </div>
+            ) : null}
           </div>
           {this.props.isReview ? (
             <Fragment>
