@@ -19,7 +19,7 @@ const Abstract = FieldContainer.extend``;
 const Circle = styled.div`
   position: absolute;
   margin-top: -13px;
-  right: -70px;
+  right: ${props => props.right}px;
   z-index: 100000000;
   width: 42px;
   height: 42px;
@@ -42,7 +42,6 @@ class PreviewArticleAbstract extends React.Component {
   }
   componentDidMount() {
     const sentences = [...this.state.sentences];
-    let groups = new Map();
     this.setState({
       sentences: sentences.map((s, i) => {
         const ref = this.refs[`${FIELD}${i}`];
@@ -53,8 +52,6 @@ class PreviewArticleAbstract extends React.Component {
         };
       })
     });
-
-    console.log(groups);
   }
 
   render() {
@@ -70,17 +67,28 @@ class PreviewArticleAbstract extends React.Component {
           >
             {this.state.sentences.map((sentence, i) => {
               const id = FIELD + i;
+              let right;
+              if (i !== 0) {
+                right =
+                  sentence.offsetTop === this.state.sentences[i - 1].offsetTop
+                    ? -100
+                    : -70;
+              } else {
+                right = -70;
+              }
+
               return (
                 <Fragment key={i}>
                   <Circle
                     id={id}
                     index={i}
+                    right={right}
                     onMouseEnter={() => {
                       this.setState({onShow: i});
                     }}
                     innerRef={ref => (this[`${FIELD}${i}`] = ref)}
                   >
-                    {this.state.onShow === i ? (
+                    {this.state.onShow === i || this.state.onShow === i - 1 ? (
                       <CommentIcon show={true} />
                     ) : null}
                   </Circle>
