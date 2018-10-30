@@ -26,6 +26,7 @@ const Circle = styled.div`
   height: 30px;
 `;
 const FIELD = 'abstract';
+
 class PreviewArticleAbstract extends React.Component {
   constructor() {
     super();
