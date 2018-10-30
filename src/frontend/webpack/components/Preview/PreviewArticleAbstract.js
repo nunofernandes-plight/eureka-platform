@@ -18,11 +18,12 @@ const Abstract = FieldContainer.extend``;
 
 const Circle = styled.div`
   position: absolute;
-  margin-top: -13px;
-  right: ${props => props.right}px;
+  top: ${props => props.top}px;
+  margin-top: ${props => props.marginTop}px;
+  right: -65px;
   z-index: 100000000;
-  width: 42px;
-  height: 42px;
+  width: 30px;
+  height: 30px;
 `;
 const FIELD = 'abstract';
 class PreviewArticleAbstract extends React.Component {
@@ -67,14 +68,15 @@ class PreviewArticleAbstract extends React.Component {
           >
             {this.state.sentences.map((sentence, i) => {
               const id = FIELD + i;
-              let right;
-              if (i !== 0) {
-                right =
-                  sentence.offsetTop === this.state.sentences[i - 1].offsetTop
-                    ? -100
-                    : -70;
-              } else {
-                right = -70;
+              let marginTop = 0;
+
+              if (i !== this.state.sentences.length - 1) {
+                if (
+                  sentence.offsetTop === this.state.sentences[i + 1].offsetTop
+                )
+                  marginTop = -12;
+                {
+                }
               }
 
               return (
@@ -82,15 +84,18 @@ class PreviewArticleAbstract extends React.Component {
                   <Circle
                     id={id}
                     index={i}
-                    right={right}
+                    marginTop={marginTop}
+                    top={sentence.offsetTop}
                     onMouseEnter={() => {
                       this.setState({onShow: i});
                     }}
                     innerRef={ref => (this[`${FIELD}${i}`] = ref)}
                   >
-                    {this.state.onShow === i || this.state.onShow === i - 1 ? (
+                    {this.state.onShow === i ? (
                       <CommentIcon show={true} />
-                    ) : null}
+                    ) : (
+                      <CommentIcon show={true} />
+                    )}
                   </Circle>
                   <span
                     id={id}

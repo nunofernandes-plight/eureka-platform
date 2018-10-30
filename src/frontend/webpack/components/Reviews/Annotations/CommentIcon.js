@@ -21,9 +21,9 @@ const IconContainer = styled.div`
   }
   color: ${__GRAY_400};
   cursor: pointer;
-  width: 42px;
-  padding: 5px;
-  height: 42px;
+  width: 30px;
+  padding: 2px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,8 +38,8 @@ export const CommentIcon = props => {
         <Icon
           icon={'material'}
           material={'add_comment'}
-          width={22}
-          height={22}
+          width={15}
+          height={15}
           noMove
         />
       </IconContainer>
