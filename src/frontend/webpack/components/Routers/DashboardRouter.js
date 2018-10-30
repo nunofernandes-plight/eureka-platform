@@ -68,6 +68,9 @@ class DashboardRouter extends Component {
               <MyAccount
                 user={this.props.user}
                 selectedAccount={this.props.selectedAccount}
+                updateAccount={()=>{
+                  this.props.updateAccount();
+                }}
               />
             )}
           />

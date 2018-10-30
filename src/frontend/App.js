@@ -126,6 +126,20 @@ class App extends Component {
     localStorage.setItem('ganache', JSON.stringify(account.address.toString()));
   }
 
+  async updateAccount() {
+    const accounts = await getAllAccounts(this.state.web3);
+    const selectedAccount = {...this.state.selectedAccount};
+
+    selectedAccount.balance = accounts.get(selectedAccount.address);
+
+    selectedAccount.EKABalance = await getBalanceOf(
+      this.state.tokenContract,
+      selectedAccount.address
+    );
+
+    this.setState({selectedAccount});
+  }
+
   componentWillUnmount() {
     clearInterval(this.interval);
   }
@@ -148,6 +162,9 @@ class App extends Component {
                   selectedAccount={this.state.selectedAccount}
                   changeAccount={account => {
                     this.changeAccount(account);
+                  }}
+                  updateAccount={() => {
+                    this.updateAccount();
                   }}
                 />
               </ReduxProvider>
