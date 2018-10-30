@@ -93,9 +93,7 @@ class PreviewArticleAbstract extends React.Component {
                   >
                     {this.state.onShow === i ? (
                       <CommentIcon show={true} />
-                    ) : (
-                      <CommentIcon show={true} />
-                    )}
+                    ) : null}
                   </Circle>
                   <span
                     id={id}
