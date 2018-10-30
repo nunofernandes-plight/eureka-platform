@@ -52,6 +52,17 @@ export const addCommunityReviewToDB = review => {
   });
 };
 
+export const updateReview = review => {
+  return fetch(`${getDomain()}/api/reviews/update`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+    body: JSON.stringify(review)
+  });
+};
+
 /*
   Annotation methods
  */
