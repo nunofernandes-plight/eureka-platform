@@ -12,6 +12,7 @@ import {
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
+import {isGanache} from '../../../../helpers/isGanache.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -70,10 +71,20 @@ class EditorFinalize extends React.Component {
       });
   }
 
-  acceptArticle(articleHash) {
+  async acceptArticle(articleHash) {
+    let gasAmount;
+    // gas estimation on ganache doesn't work properly
+    if (!isGanache(this.props.web3))
+      gasAmount = await this.acceptArticleVersion(this.props.platformContract, articleHash)
+        .estimateGas({
+          from: this.props.selectedAccount.address
+        });
+    else gasAmount = 80000000;
+
     acceptArticleVersion(this.props.platformContract, articleHash)
       .send({
-        from: this.props.selectedAccount.address
+        from: this.props.selectedAccount.address,
+        gas: gasAmount
       })
       .on('transactionHash', tx => {
         this.setState({
@@ -100,10 +111,20 @@ class EditorFinalize extends React.Component {
       });
   }
 
-  declineArticle(articleHash) {
+  async declineArticle(articleHash) {
+    let gasAmount;
+    // gas estimation on ganache doesn't work properly
+    if (!isGanache(this.props.web3))
+      gasAmount = await this.declineArticleVersion(this.props.platformContract, articleHash)
+        .estimateGas({
+          from: this.props.selectedAccount.address
+        });
+    else gasAmount = 80000000;
+
     declineArticleVersion(this.props.platformContract, articleHash)
       .send({
-        from: this.props.selectedAccount.address
+        from: this.props.selectedAccount.address,
+        gas: gasAmount
       })
       .on('transactionHash', tx => {
         this.setState({
