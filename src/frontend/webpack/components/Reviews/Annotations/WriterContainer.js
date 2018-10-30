@@ -77,7 +77,7 @@ class WriterContainer extends React.Component {
       articleVersionId,
       reviewId,
       field: this.props.field,
-      sentenceId: annotationRef
+      sentenceId: annotationRef.id
     })
       .then(response => response.json())
       .then(response => {
