@@ -89,6 +89,22 @@ router.put(
 );
 
 router.put(
+  '/update',
+  asyncHandler(async req => {
+    const ethereumAddress = req.session.passport.user.ethereumAddress;
+    return await reviewService.updateReview(
+      ethereumAddress,
+      req.body.reviewId,
+      req.body.reviewText,
+      req.body.reviewHash,
+      req.body.score1,
+      req.body.score2,
+      req.body.articleHasMajorIssues,
+      req.body.articleHasMinorIssues);
+  })
+);
+
+router.put(
   '/community',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
