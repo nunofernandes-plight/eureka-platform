@@ -21,7 +21,7 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   position: relative;
-  margin-left: 3.5em;
+  margin-left: 1.5em;
 `;
 
 const Review = styled.div`
@@ -45,9 +45,11 @@ class WriterContainer extends React.Component {
     await this.getAnnotations(this.props.match.params.reviewId);
   }
 
-  _onMouseMove(e) {
-    this.setState({x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY});
-    // console.log(e.nativeEvent.offsetY);
+  componentDidUpdate() {
+    if (this.props.annotationRef) {
+      this.addAnnotation(this.props.annotationRef);
+      this.props.annotationAdded();
+    }
   }
 
   getAnnotations() {
@@ -66,7 +68,7 @@ class WriterContainer extends React.Component {
       });
   }
 
-  addAnnotation() {
+  addAnnotation(annotationRef) {
     const annotations = [...this.state.annotations];
     const reviewId = this.props.match.params.reviewId;
     // TODO: documentId is null and doesn't reflect article Version
@@ -74,7 +76,8 @@ class WriterContainer extends React.Component {
     addAnnotation({
       articleVersionId,
       reviewId,
-      field: this.props.field
+      field: this.props.field,
+      sentenceId: annotationRef
     })
       .then(response => response.json())
       .then(response => {
@@ -174,7 +177,7 @@ class WriterContainer extends React.Component {
   render() {
     return (
       <Container>
-        <Review onMouseMove={this._onMouseMove.bind(this)}>
+        <Review>
           {!this.state.annotations ? (
             <UploadSpinner />
           ) : (
@@ -187,6 +190,7 @@ class WriterContainer extends React.Component {
                 .map((annotation, index) => {
                   return (
                     <Annotation
+                      top={this.props.offsetTopAnnotation}
                       annotation={annotation}
                       key={index}
                       onCancel={id => {
