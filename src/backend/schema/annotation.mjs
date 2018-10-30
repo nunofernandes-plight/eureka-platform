@@ -17,7 +17,7 @@ export const annotationSchema = mongoose.Schema(
       type: String
     },
     sentenceId: {
-      type: Number
+      type: String
     },
     text: {
       type: String
