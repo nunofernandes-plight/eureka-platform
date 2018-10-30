@@ -8,6 +8,7 @@ const Field = styled.div`
 
 export const FieldContainer = styled.div`
   flex: 3;
+  position: relative;
 `;
 
 export const ReviewsWriterFieldContainer = props => {
