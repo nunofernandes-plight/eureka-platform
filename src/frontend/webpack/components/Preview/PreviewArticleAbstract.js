@@ -19,52 +19,46 @@ const Abstract = FieldContainer.extend``;
 const Circle = styled.div`
   position: absolute;
   margin-top: -13px;
-  right: -70px;
+  right: ${props => props.right}px;
   z-index: 100000000;
   width: 42px;
   height: 42px;
 `;
-
+const FIELD = 'abstract';
 class PreviewArticleAbstract extends React.Component {
   constructor() {
     super();
     const abstract =
       'African sleeping sickness is a tropical disease caused by Trypanosoma brucei gambiense or T. b. rhodesiense. Both subspecies are transmitted by the tsetse fly. In general, an infection is lethal without an effective treatment. We used a rodent efficacy model to test 4 compounds that had been previously identified in a novel in vitro screen as activators of parasite differentiation from bloodstream towards procyclic forms. The 4 compounds were trypanocidal in vitro. However, none of the compounds showed trypanocidal activity in vivo. Snapshot pharmacokinetic (PK) profiles indicated that the compound exposure was too low after intraperitoneal administration, which explains the lack of efficacy. Garden eels live in burrows from which they protrude their bodies to feed on planktonic organisms, show courtship behavior and reproduce, and in which they seek refuge from predators. Despite universal acceptance that garden eels retract into their burrows for predator avoidance, a surprising lack of published accounts of this behaviour exists. Here, opportunist observations made during shark abundance video surveys, show reactions of garden eels during encounters with potential predators and other large-bodied organisms. Brown garden eels (Heteroconger longissimus) were observed during ten encounters with larger fish, and showed variable responses to five different large-bodied species. Varied responses suggested an ability to discriminate between organisms and react according to relative predation risk and proximity. The largest reactions were in response to encounters with piscivorous teleosts, the most likely predators of garden eels. Multiple encounters with two species of sharks, both improbable predators, resulted in a less pronounced reaction, consistent across encounters but variable with proximity. An encounter with a non-predator teleost resulted in the mildest response, despite very close proximity. These observations suggest that garden eels have the ability to discriminate between large-bodied organisms, and react according to relative predation risk.';
     this.state = {
-      sentences: tokenizeSentence(abstract),
-      sentencesHeights: null,
-      containerHeight: null,
+      sentences: tokenizeSentence(abstract).map(sentence => {
+        return {
+          text: sentence,
+          offsetTop: null
+        };
+      }),
       onShow: null
     };
   }
   componentDidMount() {
-    const sentencesHeights = [];
-    this.state.sentences.map((sentence, i) => {
-      const ref = this.refs['abstract' + i.toString()];
-      if (ref) {
-        sentencesHeights.push({
-          id: 'abstract' + i,
-          height: ref.offsetHeight
-        });
-      }
-    });
+    const sentences = [...this.state.sentences];
     this.setState({
-      sentencesHeights
+      sentences: sentences.map((s, i) => {
+        const ref = this.refs[`${FIELD}${i}`];
+        const offsetTop = ref.offsetTop;
+        return {
+          text: s.text,
+          offsetTop
+        };
+      })
     });
-
-    if (this.refs.abstractContainer) {
-      this.setState({
-        containerHeight: this.refs.abstractContainer.offsetHeight
-      });
-    }
   }
 
   render() {
-    const field = 'abstract';
-    const containerId = field + 'Container';
+    const containerId = FIELD + 'Container';
     return (
-      <Container id={field}>
-        <PreviewArticleTitleByField field={field} />
+      <Container id={FIELD}>
+        <PreviewArticleTitleByField field={FIELD} />
         <ReviewsWriterFieldContainer>
           <div
             style={{flex: 3, position: 'relative'}}
@@ -72,16 +66,29 @@ class PreviewArticleAbstract extends React.Component {
             ref={containerId}
           >
             {this.state.sentences.map((sentence, i) => {
-              const id = field + i;
+              const id = FIELD + i;
+              let right;
+              if (i !== 0) {
+                right =
+                  sentence.offsetTop === this.state.sentences[i - 1].offsetTop
+                    ? -100
+                    : -70;
+              } else {
+                right = -70;
+              }
+
               return (
                 <Fragment key={i}>
                   <Circle
                     id={id}
+                    index={i}
+                    right={right}
                     onMouseEnter={() => {
                       this.setState({onShow: i});
                     }}
+                    innerRef={ref => (this[`${FIELD}${i}`] = ref)}
                   >
-                    {this.state.onShow === i ? (
+                    {this.state.onShow === i || this.state.onShow === i - 1 ? (
                       <CommentIcon show={true} />
                     ) : null}
                   </Circle>
@@ -91,7 +98,7 @@ class PreviewArticleAbstract extends React.Component {
                     ref={id}
                     className={this.state.onShow === i ? 'highlightSpan' : null}
                   >
-                    {sentence + ' '}
+                    {sentence.text + ' '}
                   </span>
                 </Fragment>
               );
@@ -99,15 +106,11 @@ class PreviewArticleAbstract extends React.Component {
           </div>
           {this.props.isReview ? (
             <Fragment>
-              {this.state.containerHeight ? (
-                <ReviewsWriterContainer
-                  onShow={this.state.onShow}
-                  field={field}
-                  {...this.props}
-                  containerHeight={this.state.containerHeight}
-                  sentencesHeights={this.state.sentencesHeights}
-                />
-              ) : null}
+              <ReviewsWriterContainer
+                onShow={this.state.onShow}
+                field={FIELD}
+                {...this.props}
+              />
             </Fragment>
           ) : null}
         </ReviewsWriterFieldContainer>
