@@ -94,7 +94,7 @@ router.put(
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     return await reviewService.updateReview(
       ethereumAddress,
-      req.body.reviewId,
+      req.body._id,
       req.body.reviewText,
       req.body.reviewHash,
       req.body.score1,
