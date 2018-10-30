@@ -9,7 +9,7 @@ const Circle = styled.div`
   top: ${props => props.top}px;
   margin-top: ${props => props.marginTop}px;
   right: -65px;
-  z-index: 100000000;
+  z-index: 100;
   width: 30px;
   height: 30px;
 `;
@@ -43,7 +43,7 @@ class Sentences extends React.Component {
 
   render() {
     return this.state.sentences.map((sentence, i) => {
-      const id = this.props.field + i;
+      const refId = this.props.field + i;
       let marginTop = 0;
 
       if (i !== this.state.sentences.length - 1) {
@@ -56,22 +56,25 @@ class Sentences extends React.Component {
         <Fragment key={i}>
           {this.props.isReview ? (
             <Circle
-              id={id}
+              id={refId}
               index={i}
               marginTop={marginTop}
               top={sentence.offsetTop}
               onMouseEnter={() => {
                 this.props.onShow(i);
               }}
-              innerRef={ref => (this[`${this.props.field}${i}`] = ref)}
+              onClick={() => {
+                this.props.onClick(this[`${this.props.field}${i}`]);
+              }}
+              innerRef={ref => (this[refId] = ref)}
             >
               {this.props.show === i ? <CommentIcon show={true} /> : null}
             </Circle>
           ) : null}
           <span
-            id={id}
+            id={refId}
             key={i}
-            ref={id}
+            ref={refId}
             className={this.props.show === i ? 'highlightSpan' : null}
           >
             {sentence.text + ' '}
