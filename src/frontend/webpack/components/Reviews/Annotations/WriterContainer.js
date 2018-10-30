@@ -21,7 +21,7 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   position: relative;
-  margin-left: 3.5em;
+  margin-left: 1.5em;
 `;
 
 const Review = styled.div`
@@ -46,9 +46,8 @@ class WriterContainer extends React.Component {
   }
 
   componentDidUpdate() {
-    const offsetTopAnnotation = this.props.offsetTopAnnotation;
-    if (offsetTopAnnotation) {
-      console.log('Added annotation ' + offsetTopAnnotation);
+    if (this.props.annotationRef) {
+      this.addAnnotation(this.props.annotationRef);
       this.props.annotationAdded();
     }
   }
@@ -69,7 +68,7 @@ class WriterContainer extends React.Component {
       });
   }
 
-  addAnnotation() {
+  addAnnotation(annotationRef) {
     const annotations = [...this.state.annotations];
     const reviewId = this.props.match.params.reviewId;
     // TODO: documentId is null and doesn't reflect article Version
@@ -77,7 +76,8 @@ class WriterContainer extends React.Component {
     addAnnotation({
       articleVersionId,
       reviewId,
-      field: this.props.field
+      field: this.props.field,
+      sentenceId: annotationRef
     })
       .then(response => response.json())
       .then(response => {
@@ -190,6 +190,7 @@ class WriterContainer extends React.Component {
                 .map((annotation, index) => {
                   return (
                     <Annotation
+                      top={this.props.offsetTopAnnotation}
                       annotation={annotation}
                       key={index}
                       onCancel={id => {

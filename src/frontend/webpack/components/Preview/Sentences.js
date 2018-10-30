@@ -8,7 +8,7 @@ const Circle = styled.div`
   position: absolute;
   top: ${props => props.top}px;
   margin-top: ${props => props.marginTop}px;
-  right: -65px;
+  right: -37px;
   z-index: 100;
   width: 30px;
   height: 30px;

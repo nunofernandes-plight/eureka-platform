@@ -13,6 +13,9 @@ const Container = styled.div`
   border: none;
   border-radius: 4px;
   margin-bottom: 12px;
+  top: ${props => props.top}px;
+  width: 100%;
+  position: absolute;
 `;
 
 const AnnotationHeader = styled.div`
@@ -68,9 +71,8 @@ class Annotation extends React.Component {
 
   render() {
     const annotation = this.props.annotation;
-
     return (
-      <Container>
+      <Container top={this.props.top}>
         <AnnotationHeader>
           <AuthorLookup
             addresses={annotation.owner}
@@ -117,7 +119,7 @@ class Annotation extends React.Component {
               onCancel={id => {
                 this.props.onCancel(id);
               }}
-              onSave={(id) => {
+              onSave={id => {
                 this.props.onSave(id);
               }}
               onChange={(id, text) => {

@@ -47,7 +47,8 @@ const Cancel = Button.extend`
 const Buttons = styled.div`
   display: flex;
   margin-top: 7.5px;
-  font-size: 10.5px;
+  line-height: 1.5;
+  font-size: 8px;
 `;
 class AnnotationEditor extends React.Component {
   render() {
