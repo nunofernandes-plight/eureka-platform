@@ -6,7 +6,7 @@ import Article from '../../views/Article.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {Link, withRouter} from 'react-router-dom';
 import {
-  saveReviewDraftToDB,
+  saveEditorApprovedReviewToDB,
   getArticlesInvitedForReviewing
 } from './ReviewMethods.js';
 import {__THIRD} from '../../../helpers/colors.js';
@@ -184,7 +184,7 @@ class ReviewsInvited extends React.Component {
                         if (article.reviewState === 'INVITED') {
                           await this.acceptReviewInvitation(article);
                         } else {
-                          await saveReviewDraftToDB({
+                          await saveEditorApprovedReviewToDB({
                             reviewId: article.reviewId
                           });
                           this.props.history.push(

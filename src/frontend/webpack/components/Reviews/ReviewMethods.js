@@ -30,7 +30,7 @@ export const getMyReviews = () => {
   });
 };
 
-export const saveReviewDraftToDB = review => {
+export const saveEditorApprovedReviewToDB = review => {
   return fetch(`${getDomain()}/api/reviews/editorApproved`, {
     method: 'PUT',
     headers: {
@@ -43,6 +43,17 @@ export const saveReviewDraftToDB = review => {
 
 export const addCommunityReviewToDB = review => {
   return fetch(`${getDomain()}/api/reviews/community`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+    body: JSON.stringify(review)
+  });
+};
+
+export const updateReview = review => {
+  return fetch(`${getDomain()}/api/reviews/update`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'

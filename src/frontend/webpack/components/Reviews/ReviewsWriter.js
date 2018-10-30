@@ -18,7 +18,7 @@ import {
   addEditorApprovedReview
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
-import {getAnnotations} from './ReviewMethods.js';
+import {getAnnotations, saveEditorApprovedReviewToDB, updateReview} from './ReviewMethods.js';
 import {getReviewHash} from '../../../../helpers/getHexAndHash.mjs';
 import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
 
@@ -165,15 +165,19 @@ class ReviewsWriter extends React.Component {
         console.error(err);
       });
 
-    const reviewHash = '0x' +
-      getReviewHash(this.state.review, this.state.annotations);
+    const reviewHash = '0x' + getReviewHash(this.state.review, this.state.annotations);
+
+    // save the review to the DB first
+    let review = this.state.review;
+    review.reviewHash = reviewHash;
+    await updateReview(review);
 
     let gasAmount;
     // gas estimation on ganache doesn't work properly
     if (!isGanache(this.props.web3))
-        gasAmount = await this.getAddReviewFn(reviewHash).estimateGas({
-          from: this.props.selectedAccount.address
-        });
+      gasAmount = await this.getAddReviewFn(reviewHash).estimateGas({
+        from: this.props.selectedAccount.address
+      });
     else gasAmount = 80000000;
 
     this.getAddReviewFn(reviewHash)

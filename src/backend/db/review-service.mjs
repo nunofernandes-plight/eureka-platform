@@ -135,6 +135,9 @@ export default {
     });
   },
 
+  // TODO: addReviewInvitation
+  // TODO: acceptedReviewInvitation
+
   /**
    * Frontend sends the data of an review right
    * before he submits the editorApprovedReviews hash into the SC
@@ -167,6 +170,26 @@ export default {
     review.reviewState = ReviewState.HANDED_IN_DB;
     await review.save();
     return 'Added editor-approved review into DB.';
+  },
+
+  updateReview: async (userAddress, reviewId, reviewText, reviewHash, score1, score2, articleHasMajorIssues, articleHasMinorIssues) => {
+      const review = await Review.findById(reviewId);
+      if (!review) errorThrower.noEntryFoundById(reviewId);
+      if (review.reviewerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+      if (review.reviewState !== ReviewState.HANDED_IN_DB) {
+        errorThrower.notCorrectStatus(
+          [ReviewState.HANDED_IN_DB], review.reviewState);
+      }
+
+      review.reviewHash = reviewHash;
+      review.reviewText = reviewText;
+      review.reviewScore1 = score1;
+      review.reviewScore2 = score2;
+      review.articleHasMajorIssues = articleHasMajorIssues;
+      review.articleHasMinorIssues = articleHasMinorIssues;
+      review.reviewState = ReviewState.HANDED_IN_DB;
+      await review.save();
+      return 'saved editor-approved review to DB.';
   },
 
   updateEditorApprovedReviewFromSC: async (articleHash, reviewHash, reviewerAddress, stateTimestamp, articleHasMajorIssues, articleHasMinorIssues, score1, score2) => {
