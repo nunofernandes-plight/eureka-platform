@@ -40,6 +40,7 @@ const NoArticles = () => {
     </NoArtDiv>
   );
 };
+
 class EditorFinalize extends React.Component {
   constructor() {
     super();
@@ -94,9 +95,9 @@ class EditorFinalize extends React.Component {
       .on('receipt', async receipt => {
         console.log(
           'Accepting article version with article hash ' +
-            articleHash +
-            ' exits with status ' +
-            receipt.status
+          articleHash +
+          ' exits with status ' +
+          receipt.status
         );
         await this.getArticlesToFinalize();
         return receipt;
@@ -134,9 +135,9 @@ class EditorFinalize extends React.Component {
       .on('receipt', async receipt => {
         console.log(
           'Declining article version with article hash ' +
-            articleHash +
-            ' exits with status ' +
-            receipt.status
+          articleHash +
+          ' exits with status ' +
+          receipt.status
         );
         await this.getArticlesToFinalize();
         return receipt;
@@ -178,7 +179,7 @@ class EditorFinalize extends React.Component {
         >
           The request has successfully triggered our smart contract. You can
           find its tx hash here:{' '}
-          <TxHash txHash={this.state.tx}>Transaction Hash</TxHash>. <br />
+          <TxHash txHash={this.state.tx}>Transaction Hash</TxHash>. <br/>
         </Modal>
       </div>
     );
@@ -189,7 +190,7 @@ class EditorFinalize extends React.Component {
       <Container>
         {this.renderModals()}
         {this.state.loading ? (
-          <GridSpinner />
+          <GridSpinner/>
         ) : (
           <Card title={'Finalize these articles:'}>
             {this.state.articles ? (
@@ -208,6 +209,7 @@ class EditorFinalize extends React.Component {
                         this.setState({articleOnHover: null});
                       }}
                       action={(_, article) => {
+                        console.log(article);
                         this.acceptArticle(article.articleHash);
                       }}
                       button2Text={'Decline Article'}
@@ -218,10 +220,10 @@ class EditorFinalize extends React.Component {
                   );
                 })
               ) : (
-                <NoArticles />
+                <NoArticles/>
               )
             ) : (
-              <NoArticles />
+              <NoArticles/>
             )}
           </Card>
         )}
@@ -229,4 +231,5 @@ class EditorFinalize extends React.Component {
     );
   }
 }
+
 export default withRouter(EditorFinalize);
