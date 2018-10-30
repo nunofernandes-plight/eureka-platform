@@ -45,9 +45,12 @@ class WriterContainer extends React.Component {
     await this.getAnnotations(this.props.match.params.reviewId);
   }
 
-  _onMouseMove(e) {
-    this.setState({x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY});
-    // console.log(e.nativeEvent.offsetY);
+  componentDidUpdate() {
+    const offsetTopAnnotation = this.props.offsetTopAnnotation;
+    if (offsetTopAnnotation) {
+      console.log('Added annotation ' + offsetTopAnnotation);
+      this.props.annotationAdded();
+    }
   }
 
   getAnnotations() {
@@ -174,7 +177,7 @@ class WriterContainer extends React.Component {
   render() {
     return (
       <Container>
-        <Review onMouseMove={this._onMouseMove.bind(this)}>
+        <Review>
           {!this.state.annotations ? (
             <UploadSpinner />
           ) : (
