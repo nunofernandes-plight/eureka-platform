@@ -18,9 +18,14 @@ import {
   addEditorApprovedReview
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
-import {getAnnotations, saveEditorApprovedReviewToDB, updateReview} from './ReviewMethods.js';
+import {
+  getAnnotations,
+  saveEditorApprovedReviewToDB,
+  updateReview
+} from './ReviewMethods.js';
 import {getReviewHash} from '../../../../helpers/getHexAndHash.mjs';
 import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
+import EurekaRotateSpinner from '../../views/spinners/EurekaRotateSpinner.js';
 
 const Container = styled.div`
   display: flex;
@@ -108,7 +113,6 @@ class ReviewsWriter extends React.Component {
         >
           {this.state.errorMessage}
         </Modal>
-
         <Modal
           action={'Submit'}
           type={'notification'}
@@ -124,7 +128,6 @@ class ReviewsWriter extends React.Component {
         >
           Are you sure you want to submit this review?
         </Modal>
-
         <Modal
           action={'GOT IT'}
           callback={() => {
@@ -136,7 +139,7 @@ class ReviewsWriter extends React.Component {
         >
           Dear reviewer, your request for submitting a review has successfully
           triggered our Smart Contract. If you are interested, you can track the
-          Blockchain approval process at the following link: <br/>
+          Blockchain approval process at the following link: <br />
           <a
             href={getEtherscanLink(this.props.network) + 'tx/' + this.state.tx}
             target={'_blank'}
@@ -165,7 +168,8 @@ class ReviewsWriter extends React.Component {
         console.error(err);
       });
 
-    const reviewHash = '0x' + getReviewHash(this.state.review, this.state.annotations);
+    const reviewHash =
+      '0x' + getReviewHash(this.state.review, this.state.annotations);
 
     // save the review to the DB first
     let review = this.state.review;
@@ -236,29 +240,34 @@ class ReviewsWriter extends React.Component {
         {this.renderModal()}
         <Card title={'Write Your Review'} background={__GRAY_200}>
           <Go back {...this.props} />
-          <MySeparator/>
+          <MySeparator />
           {!this.state.document ? (
-            <GridSpinner/>
+            <div style={{margin: 30}}>
+              <EurekaRotateSpinner
+                background={'white'}
+                border={'white'}
+                width={80}
+                height={80}
+              />
+            </div>
           ) : (
             <MyPreview>
               {' '}
               <MyContainer>
-                {this.props.selectedAccount.address ? (
-                  <PreviewArticle
-                    selectedAccount={this.props.selectedAccount}
-                    documentId={this.props.match.params.id}
-                    base={this.props.base}
-                    document={this.state.document}
-                  />
-                ) : (
-                  <GridSpinner/>
-                )}
+                <PreviewArticle
+                  selectedAccount={this.props.selectedAccount}
+                  documentId={this.props.match.params.id}
+                  base={this.props.base}
+                  document={this.state.document}
+                />
               </MyContainer>
             </MyPreview>
           )}
-          <button onClick={() => {
-            this.setState({submitModal: true});
-          }}>
+          <button
+            onClick={() => {
+              this.setState({submitModal: true});
+            }}
+          >
             Submit this Review
           </button>
         </Card>

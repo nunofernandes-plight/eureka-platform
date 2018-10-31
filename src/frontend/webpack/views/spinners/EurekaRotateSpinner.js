@@ -30,28 +30,32 @@ const Parent = styled.div`
 `;
 
 const Container = styled.div`
-  border: 1px solid rgba(128, 128, 128, 0.18);
+  border: 1px solid
+    ${props => (props.border ? props.border : 'rgba(128, 128, 128, 0.18)')};
+  background: ${props => (props.background ? props.background : 'transparent')};
   border-radius: 50%;
   padding: 2em;
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: ${flipHeads} 3s infinite;
+  animation: ${flipHeads} 2.5s infinite;
 `;
 
 const Animation = styled.div`
-  -webkit-animation: flipTails 3s ease-out forwards;
-  -moz-animation: flipTails 3s ease-out forwards;
-  -o-animation: flipTails 3s ease-out forwards;
-  animation: flipTails 3s ease-out forwards;
+  -webkit-animation: flipTails 2.5s ease-out forwards;
+  -moz-animation: flipTails 2.5s ease-out forwards;
+  -o-animation: flipTails 2.5s ease-out forwards;
+  animation: flipTails 2.5s ease-out forwards;
 `;
 
-const EurekaRotateSpinner = () => {
+const EurekaRotateSpinner = ({width, height, ...otherProps}) => {
+  if (!width) width = 65;
+  if (!height) height = 65;
   return (
     <Parent>
-      <Container>
+      <Container background={otherProps.background} border={otherProps.border}>
         <Animation>
-          <EurekaLogo width={65} height={65} />
+          <EurekaLogo width={width} height={height} />
         </Animation>
       </Container>
     </Parent>
