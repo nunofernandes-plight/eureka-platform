@@ -2,16 +2,16 @@ import Journal from '../schema/journal.mjs';
 import {getJournalParameters} from '../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 
 export const getContractOwnerFromDB = async () => {
-  const journal = await Journal.findOne({
-    _id: 1
-  });
+  const journal = await Journal.findById(1);
   return journal.contractOwner;
 };
 
+export const getJournal = () => {
+  return Journal.findById(1);
+};
+
 export const saveJournalInformation = async contract => {
-  let journal = await Journal.findOne({
-    _id: 1
-  });
+  let journal = await Journal.findById(1);
   const journalInformationFromSC = await getJournalParameters(contract);
 
   if (!journal) {

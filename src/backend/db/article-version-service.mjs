@@ -11,6 +11,7 @@ import userService from './user-service.mjs';
 import Roles from '../schema/roles-enum.mjs';
 import REVIEW_TYPE from '../schema/review-type-enum.mjs';
 import {getIds} from '../helpers/get-array-of-ids.mjs';
+import {getJournal} from './journal-service.mjs';
 
 const populate = fn => {
   return fn.populate([
@@ -45,15 +46,48 @@ export default {
     );
     const submissionIds = getIds(submissions);
 
-    const articlesWithEnoughEAReviews = await ReviewService.getArticlesWithEnoughAcceptedReviews(REVIEW_TYPE.EDITOR_APPROVED_REVIEW);
+    const journal = await getJournal();
+    const articlesWithEnoughEAReviews = await ReviewService.getArticlesWithEnoughAcceptedReviews(REVIEW_TYPE.EDITOR_APPROVED_REVIEW, journal.minAmountOfEditorApprovedReviews);
+    const articlesWithEnoughCommunityReviews = await ReviewService.getArticlesWithEnoughAcceptedReviews(REVIEW_TYPE.COMMUNITY_REVIEW, journal.minAmountOfCommunityReviews);
 
-    return populate(
-      ArticleVersion.find({
-        articleVersionState: 'REVIEWERS_INVITED',
-        articleSubmission: {$in: submissionIds},
-        _id: {$in: getIds(articlesWithEnoughEAReviews)}
-      })
-    );
+    if (journal.minAmountOfEditorApprovedReviews === 0 && journal.minAmountOfCommunityReviews === 0)
+      return populate(
+        ArticleVersion.find({
+          articleVersionState: 'REVIEWERS_INVITED',
+          articleSubmission: {$in: submissionIds}
+        })
+      );
+    else if (journal.minAmountOfCommunityReviews === 0)
+      return populate(
+        ArticleVersion.find({
+          articleVersionState: 'REVIEWERS_INVITED',
+          articleSubmission: {$in: submissionIds},
+          $and: [
+            {_id: {$in: getIds(articlesWithEnoughEAReviews)}}
+          ]
+        })
+      );
+    else if (journal.minAmountOfEditorApprovedReviews === 0)
+      return populate(
+        ArticleVersion.find({
+          articleVersionState: 'REVIEWERS_INVITED',
+          articleSubmission: {$in: submissionIds},
+          $and: [
+            {_id: {$in: getIds(articlesWithEnoughCommunityReviews)}}
+          ]
+        })
+      );
+    else
+      return populate(
+        ArticleVersion.find({
+          articleVersionState: 'REVIEWERS_INVITED',
+          articleSubmission: {$in: submissionIds},
+          $and: [
+            {_id: {$in: getIds(articlesWithEnoughEAReviews)}},
+            {_id: {$in: getIds(articlesWithEnoughCommunityReviews)}}
+          ]
+        })
+      );
   },
 
   getArticlesOpenForReviews: async ethereumAddress => {
