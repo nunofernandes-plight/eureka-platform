@@ -6,7 +6,7 @@ import {isValidAddress} from '../../helpers/isValidEthereumAddress.mjs';
 import userService from '../db/user-service.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import addressBookService from './address-book-service.mjs';
-import {getContractOwnerFromDB} from './contract-owner-service.mjs';
+import {getContractOwnerFromDB} from './journal-service.mjs';
 
 export default {
   /**

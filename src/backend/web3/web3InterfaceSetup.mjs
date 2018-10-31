@@ -14,7 +14,7 @@ import {TOKEN_MAIN_ABI} from '../../smartcontracts/constants/MainNetworkTokenCon
 import {PLATFORM_KOVAN_ADDRESS, TOKEN_KOVAN_ADDRESS} from '../../smartcontracts/constants/KovanContractAddresses.mjs';
 import {PLATFORM_KOVAN_ABI} from '../../smartcontracts/constants/KovanPlatformContractABIs.mjs';
 import {TOKEN_KOVAN_ABI} from '../../smartcontracts/constants/KovanTokenContractABIs.mjs';
-import {saveJournalInformation} from '../db/contract-owner-service.mjs';
+import {saveJournalInformation} from '../db/journal-service.mjs';
 
 export let platformContract;
 export let tokenContract;
