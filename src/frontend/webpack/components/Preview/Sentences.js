@@ -39,7 +39,6 @@ class Sentences extends React.Component {
         };
       })
     });
-    this.props.refs(this.refs);
   }
 
   render() {

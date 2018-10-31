@@ -23,8 +23,7 @@ class PreviewArticleAbstract extends React.Component {
     super();
     this.state = {
       onShow: null,
-      annotationRef: null,
-      refs: null
+      annotationRef: null
     };
   }
 
@@ -44,18 +43,14 @@ class PreviewArticleAbstract extends React.Component {
               onClick={ref => {
                 this.props.onAdd(ref, FIELD);
               }}
-              refs={refs => {
-                this.setState({refs});
-              }}
               onShow={i => {
                 this.setState({onShow: i});
               }}
             />
           </FieldContainer>
-          {this.props.isReview && this.state.refs ? (
+          {this.props.isReview ? (
             <Fragment>
               <ReviewsWriterContainer
-                refs={this.state.refs}
                 annotations={this.props.annotations}
                 onShow={this.state.onShow}
                 field={FIELD}
