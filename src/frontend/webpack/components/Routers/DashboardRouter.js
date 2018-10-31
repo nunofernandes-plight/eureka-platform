@@ -32,7 +32,7 @@ class DashboardRouter extends Component {
           <Route
             exact
             path={`${this.props.base}/dashboard`}
-            render={() => <Dashboard />}
+            render={() => <Dashboard/>}
           />
 
           <Route
@@ -68,6 +68,9 @@ class DashboardRouter extends Component {
               <MyAccount
                 user={this.props.user}
                 selectedAccount={this.props.selectedAccount}
+                updateAccount={()=>{
+                  this.props.updateAccount();
+                }}
               />
             )}
           />
@@ -141,13 +144,13 @@ class DashboardRouter extends Component {
           <Route
             exact
             path={`${this.props.base}/reviewers`}
-            render={() => <Reviewers />}
+            render={() => <Reviewers/>}
           />
 
           <Route
             exact
             path={`${this.props.base}/users/:ethereumAddress`}
-            render={() => <UserExploration />}
+            render={() => <UserExploration/>}
           />
 
           <Route
@@ -180,7 +183,7 @@ class DashboardRouter extends Component {
           <Route
             exact
             path={`${this.props.base}`}
-            render={() => <Redirect to={`${this.props.base}/dashboard`} />}
+            render={() => <Redirect to={`${this.props.base}/dashboard`}/>}
           />
         </BottomContainer>
       </div>

@@ -188,6 +188,9 @@ class MainRouter extends Component {
                         metaMaskStatus={this.props.metaMaskStatus}
                         network={this.props.network}
                         action={item => this.action(item)}
+                        updateAccount={()=>{
+                          this.props.updateAccount();
+                        }}
                       />
                     </DashBoardGuard>
                   </PaddingLeft>
