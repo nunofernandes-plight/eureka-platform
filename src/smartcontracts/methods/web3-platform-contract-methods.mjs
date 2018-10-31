@@ -173,6 +173,13 @@ export const getContractOwner = contract => {
   });
 };
 
+export const getJournalParameters = contract => {
+  return contract.methods.getJournalParameters().call((err, res) => {
+    if (err) throw err;
+    return res;
+  });
+};
+
 export const getSubmissionProcess = async (
   contract,
   articleHashHex,
