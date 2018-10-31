@@ -108,7 +108,7 @@ const SeeHistory = styled.div`
 `;
 
 const numberWithCommas = x => {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\'');
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
 };
 
 class MyAccount extends Component {
@@ -122,16 +122,18 @@ class MyAccount extends Component {
         <CardContainer>
           <Card>
             <PhotoContainer>
-              <Photo src={'/' + this.props.user.avatar}/>
+              <Photo src={'/' + this.props.user.avatar} />
             </PhotoContainer>
             <EmailContainer>
               <Email>{this.props.user.email}</Email>
             </EmailContainer>
             <ProfileRow style={{margin: 0}}>
-              <EthereumAddress>{this.props.user.ethereumAddress}</EthereumAddress>
+              <EthereumAddress>
+                {this.props.user.ethereumAddress}
+              </EthereumAddress>
             </ProfileRow>
             <ProfileRow>
-              <Separator/>
+              <Separator />
             </ProfileRow>
             <ProfileRow>
               {this.props.selectedAccount.EKABalance &&
@@ -139,9 +141,10 @@ class MyAccount extends Component {
                 <Balances>
                   <SubTitle>Your Balances</SubTitle>
                   <Balance>
-                    <EurekaLogo width={30} height={30}/>
+                    <EurekaLogo width={30} height={30} />
                     <Number>
-                      {numberWithCommas(this.props.selectedAccount.EKABalance)} EKA
+                      {numberWithCommas(this.props.selectedAccount.EKABalance)}{' '}
+                      EKA
                     </Number>
                     <SeeHistory>
                       <Icon
@@ -164,14 +167,16 @@ class MyAccount extends Component {
                     />
                     <Number>
                       {numberWithCommas(
-                        this.props.selectedAccount.balance.toString().substr(0, 6)
+                        this.props.selectedAccount.balance
+                          .toString()
+                          .substr(0, 6)
                       )}{' '}
                       ETH
                     </Number>
                   </Balance>
                 </Balances>
               ) : (
-                <CircleSpinner/>
+                <CircleSpinner />
               )}
             </ProfileRow>
           </Card>

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import PreviewArticleFigure from './PreviewArticleFigure.js';
 import PreviewArticleAbstract from './PreviewArticleAbstract.js';
 import PreviewArticleTitle from './PreviewArticleTitle.js';
+import ReviewsWriterContainer from '../Reviews/Annotations/WriterContainer.js';
 
 const Container = styled.div`
   display: flex;
@@ -24,6 +25,25 @@ const PreviewArticle = ({document, ...otherProps}) => {
       <PreviewArticleAbstract
         isReview={isReview}
         document={document}
+        annotations={otherProps.annotations}
+        onAdd={(ref, field) => {
+          otherProps.onAdd(ref, field);
+        }}
+        onCancel={id => {
+          otherProps.onCancel(id);
+        }}
+        onSave={id => {
+          otherProps.onSave(id);
+        }}
+        onDelete={id => {
+          otherProps.onDelete(id);
+        }}
+        onEdit={id => {
+          otherProps.onEdit(id);
+        }}
+        onChange={(id, text) => {
+          otherProps.onChange(id, text);
+        }}
         {...otherProps}
       />
       <PreviewArticleFigure

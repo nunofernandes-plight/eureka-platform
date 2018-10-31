@@ -18,9 +18,18 @@ import {
   addEditorApprovedReview
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
-import {getAnnotations, saveEditorApprovedReviewToDB, updateReview} from './ReviewMethods.js';
+import {
+  addAnnotation,
+  deleteAnnotation,
+  getAnnotations,
+  saveAnnotation,
+  saveEditorApprovedReviewToDB,
+  updateReview
+} from './ReviewMethods.js';
 import {getReviewHash} from '../../../../helpers/getHexAndHash.mjs';
 import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
+import EurekaRotateSpinner from '../../views/spinners/EurekaRotateSpinner.js';
+import PreviewArticleAbstract from '../Preview/PreviewArticleAbstract.js';
 
 const Container = styled.div`
   display: flex;
@@ -65,8 +74,65 @@ class ReviewsWriter extends React.Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const reviewId = this.props.match.params.reviewId;
+    await this.fetchArticle(reviewId);
+    await this.getAnnotations(reviewId);
+  }
+
+  renderModal() {
+    return (
+      <div>
+        {' '}
+        <Modal
+          type={'notification'}
+          toggle={isErrorMessage => {
+            this.setState({errorMessage: null});
+          }}
+          show={this.state.errorMessage}
+          title={'You got the following error'}
+        >
+          {this.state.errorMessage}
+        </Modal>
+        <Modal
+          action={'Submit'}
+          type={'notification'}
+          toggle={toogle => {
+            this.setState({submitModal: false});
+          }}
+          callback={() => {
+            this.setState({submitModal: false});
+            this.submitReview();
+          }}
+          show={this.state.submitModal}
+          title={'Submit this Review'}
+        >
+          Are you sure you want to submit this review?
+        </Modal>
+        <Modal
+          action={'GOT IT'}
+          callback={() => {
+            this.setState({tx: null});
+          }}
+          noClose
+          show={this.state.tx}
+          title={'Your Review has been successfully sent!'}
+        >
+          Dear reviewer, your request for submitting a review has successfully
+          triggered our Smart Contract. If you are interested, you can track the
+          Blockchain approval process at the following link: <br />
+          <a
+            href={getEtherscanLink(this.props.network) + 'tx/' + this.state.tx}
+            target={'_blank'}
+          >
+            {this.state.tx}{' '}
+          </a>
+        </Modal>
+      </div>
+    );
+  }
+
+  async fetchArticle(reviewId) {
     fetchArticleByReviewId(reviewId)
       .then(response => response.json())
       .then(response => {
@@ -93,61 +159,6 @@ class ReviewsWriter extends React.Component {
         });
       });
   }
-
-  renderModal() {
-    return (
-      <div>
-        {' '}
-        <Modal
-          type={'notification'}
-          toggle={isErrorMessage => {
-            this.setState({errorMessage: null});
-          }}
-          show={this.state.errorMessage}
-          title={'You got the following error'}
-        >
-          {this.state.errorMessage}
-        </Modal>
-
-        <Modal
-          action={'Submit'}
-          type={'notification'}
-          toggle={toogle => {
-            this.setState({submitModal: false});
-          }}
-          callback={() => {
-            this.setState({submitModal: false});
-            this.submitReview();
-          }}
-          show={this.state.submitModal}
-          title={'Submit this Review'}
-        >
-          Are you sure you want to submit this review?
-        </Modal>
-
-        <Modal
-          action={'GOT IT'}
-          callback={() => {
-            this.setState({tx: null});
-          }}
-          noClose
-          show={this.state.tx}
-          title={'Your Review has been successfully sent!'}
-        >
-          Dear reviewer, your request for submitting a review has successfully
-          triggered our Smart Contract. If you are interested, you can track the
-          Blockchain approval process at the following link: <br/>
-          <a
-            href={getEtherscanLink(this.props.network) + 'tx/' + this.state.tx}
-            target={'_blank'}
-          >
-            {this.state.tx}{' '}
-          </a>
-        </Modal>
-      </div>
-    );
-  }
-
   async submitReview() {
     await getAnnotations(this.state.review._id)
       .then(response => response.json())
@@ -165,7 +176,8 @@ class ReviewsWriter extends React.Component {
         console.error(err);
       });
 
-    const reviewHash = '0x' + getReviewHash(this.state.review, this.state.annotations);
+    const reviewHash =
+      '0x' + getReviewHash(this.state.review, this.state.annotations);
 
     // save the review to the DB first
     let review = this.state.review;
@@ -230,35 +242,180 @@ class ReviewsWriter extends React.Component {
       );
   }
 
+  async getAnnotations() {
+    this.setState({loading: true});
+    return getAnnotations(this.props.match.params.reviewId)
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.setState({annotations: response.data});
+        }
+        this.setState({loading: false});
+      })
+      .catch(err => {
+        this.setState({loading: false});
+        console.error(err);
+      });
+  }
+
+  addAnnotation(annotationRef, field) {
+    const annotations = [...this.state.annotations];
+    const reviewId = this.props.match.params.reviewId;
+    const articleVersionId = this.state.article._id;
+    addAnnotation({
+      articleVersionId,
+      reviewId,
+      field,
+      sentenceId: annotationRef.id
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          let annotation = response.data;
+          annotation.onChange = true;
+          annotations.unshift(annotation);
+          this.setState({annotations});
+        }
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          errorMessage: err
+        });
+      });
+  }
+
+  deleteAnnotation = id => {
+    const annotations = [...this.state.annotations];
+    const index = annotations
+      .map(a => {
+        return a._id;
+      })
+      .indexOf(id);
+
+    deleteAnnotation(annotations[index])
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.getAnnotations();
+        }
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          errorMessage: err
+        });
+      });
+  };
+
+  cancelAnnotation = id => {
+    const annotations = [...this.state.annotations];
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    if (annotation.updated) {
+      this.getAnnotations();
+    } else {
+      this.deleteAnnotation(id);
+    }
+  };
+
+  saveAnnotation = id => {
+    const annotations = [...this.state.annotations];
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    saveAnnotation(annotation)
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.setState({annotations});
+          this.getAnnotations();
+        }
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          errorMessage: err
+        });
+      });
+  };
+
+  editAnnotation = id => {
+    const annotations = [...this.state.annotations];
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    if (annotation) {
+      annotation.onChange = true;
+    }
+    this.setState({annotations});
+  };
+
+  changeAnnotation = (id, text) => {
+    const annotations = [...this.state.annotations];
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    if (annotation) {
+      annotation.text = text;
+    }
+    this.setState({annotations});
+  };
+
   render() {
     return (
       <Container>
         {this.renderModal()}
         <Card title={'Write Your Review'} background={__GRAY_200}>
           <Go back {...this.props} />
-          <MySeparator/>
-          {!this.state.document ? (
-            <GridSpinner/>
+          <MySeparator />
+          {!this.state.document || !this.state.annotations ? (
+            <div style={{margin: 30}}>
+              <EurekaRotateSpinner
+                background={'white'}
+                border={'white'}
+                width={80}
+                height={80}
+              />
+            </div>
           ) : (
             <MyPreview>
               {' '}
               <MyContainer>
-                {this.props.selectedAccount.address ? (
-                  <PreviewArticle
-                    selectedAccount={this.props.selectedAccount}
-                    documentId={this.props.match.params.id}
-                    base={this.props.base}
-                    document={this.state.document}
-                  />
-                ) : (
-                  <GridSpinner/>
-                )}
+                <PreviewArticle
+                  annotations={this.state.annotations}
+                  selectedAccount={this.props.selectedAccount}
+                  documentId={this.props.match.params.id}
+                  base={this.props.base}
+                  document={this.state.document}
+                  onAdd={(ref, field) => {
+                    this.addAnnotation(ref, field);
+                  }}
+                  onCancel={id => {
+                    this.cancelAnnotation(id);
+                  }}
+                  onSave={id => {
+                    this.saveAnnotation(id);
+                  }}
+                  onDelete={id => {
+                    this.deleteAnnotation(id);
+                  }}
+                  onEdit={id => {
+                    this.editAnnotation(id);
+                  }}
+                  onChange={(id, text) => {
+                    this.changeAnnotation(id, text);
+                  }}
+                />
               </MyContainer>
             </MyPreview>
           )}
-          <button onClick={() => {
-            this.setState({submitModal: true});
-          }}>
+          <button
+            onClick={() => {
+              this.setState({submitModal: true});
+            }}
+          >
             Submit this Review
           </button>
         </Card>
