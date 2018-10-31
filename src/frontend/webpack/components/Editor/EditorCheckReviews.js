@@ -192,7 +192,6 @@ class EditorCheckReviews extends React.Component {
             {this.state.reviews ? (
               this.state.reviews.length > 0 ? (
                 this.state.reviews.map(review => {
-                  console.log(review);
                   return (
                     <Article
                       buttonText={'Accept Review'}
