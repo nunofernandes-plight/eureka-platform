@@ -50,6 +50,7 @@ class PreviewArticleAbstract extends React.Component {
           {this.props.isReview ? (
             <Fragment>
               <ReviewsWriterContainer
+                annotations={this.props.annotations}
                 annotationRef={this.state.annotationRef}
                 annotationAdded={() => {
                   this.setState({annotationRef: null});

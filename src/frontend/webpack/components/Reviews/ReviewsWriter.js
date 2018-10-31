@@ -70,33 +70,10 @@ class ReviewsWriter extends React.Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const reviewId = this.props.match.params.reviewId;
-    fetchArticleByReviewId(reviewId)
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          let document = new Document(response.data.article.document);
-          let deserialized = deserializeDocument(document);
-          this.setState({
-            document: deserialized,
-            article: response.data.article,
-            review: response.data.review
-          });
-        } else {
-          this.setState({
-            errorMessage: response.error
-          });
-        }
-        this.setState({loading: false});
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({
-          errorMessage: 'Ouh. Something went wrong.',
-          loading: false
-        });
-      });
+    await this.fetchArticle(reviewId);
+    await this.getAnnotations(reviewId);
   }
 
   renderModal() {
@@ -151,6 +128,33 @@ class ReviewsWriter extends React.Component {
     );
   }
 
+  async fetchArticle(reviewId) {
+    fetchArticleByReviewId(reviewId)
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          let document = new Document(response.data.article.document);
+          let deserialized = deserializeDocument(document);
+          this.setState({
+            document: deserialized,
+            article: response.data.article,
+            review: response.data.review
+          });
+        } else {
+          this.setState({
+            errorMessage: response.error
+          });
+        }
+        this.setState({loading: false});
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({
+          errorMessage: 'Ouh. Something went wrong.',
+          loading: false
+        });
+      });
+  }
   async submitReview() {
     await getAnnotations(this.state.review._id)
       .then(response => response.json())
@@ -234,6 +238,22 @@ class ReviewsWriter extends React.Component {
       );
   }
 
+  async getAnnotations() {
+    this.setState({loading: true});
+    return getAnnotations(this.props.match.params.reviewId)
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.setState({annotations: response.data});
+        }
+        this.setState({loading: false});
+      })
+      .catch(err => {
+        this.setState({loading: false});
+        console.error(err);
+      });
+  }
+
   render() {
     return (
       <Container>
@@ -241,7 +261,7 @@ class ReviewsWriter extends React.Component {
         <Card title={'Write Your Review'} background={__GRAY_200}>
           <Go back {...this.props} />
           <MySeparator />
-          {!this.state.document ? (
+          {!this.state.document || !this.state.annotations ? (
             <div style={{margin: 30}}>
               <EurekaRotateSpinner
                 background={'white'}
@@ -255,6 +275,7 @@ class ReviewsWriter extends React.Component {
               {' '}
               <MyContainer>
                 <PreviewArticle
+                  annotations={this.state.annotations}
                   selectedAccount={this.props.selectedAccount}
                   documentId={this.props.match.params.id}
                   base={this.props.base}

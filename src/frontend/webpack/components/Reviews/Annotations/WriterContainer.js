@@ -178,12 +178,12 @@ class WriterContainer extends React.Component {
     return (
       <Container>
         <Review>
-          {!this.state.annotations ? (
+          {!this.props.annotations ? (
             <UploadSpinner />
           ) : (
             <Annotations show={this.state.showCommentIcon}>
               {' '}
-              {this.state.annotations
+              {this.props.annotations
                 .filter(a => {
                   return a.field === this.props.field;
                 })
