@@ -12,6 +12,7 @@ import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {CommentIcon} from '../Reviews/Annotations/CommentIcon.js';
 import Icon from '../../views/icons/Icon.js';
 import Sentences from './Sentences.js';
+import Annotation from '../Reviews/Annotations/Annotation.js';
 
 const Container = styled.div``;
 
@@ -40,7 +41,7 @@ class PreviewArticleAbstract extends React.Component {
               isReview={this.props.isReview}
               show={this.state.onShow}
               onClick={ref => {
-                this.setState({annotationRef: ref});
+                this.props.onAdd(ref, FIELD);
               }}
               onShow={i => {
                 this.setState({onShow: i});
@@ -51,12 +52,23 @@ class PreviewArticleAbstract extends React.Component {
             <Fragment>
               <ReviewsWriterContainer
                 annotations={this.props.annotations}
-                annotationRef={this.state.annotationRef}
-                annotationAdded={() => {
-                  this.setState({annotationRef: null});
-                }}
                 onShow={this.state.onShow}
                 field={FIELD}
+                onCancel={id => {
+                  this.props.cancelAnnotation(id);
+                }}
+                onSave={id => {
+                  this.props.saveAnnotation(id);
+                }}
+                onDelete={id => {
+                  this.props.deleteAnnotation(id);
+                }}
+                onEdit={id => {
+                  this.props.editAnnotation(id);
+                }}
+                onChange={(id, text) => {
+                  this.props.changeAnnotation(id, text);
+                }}
                 {...this.props}
               />
             </Fragment>

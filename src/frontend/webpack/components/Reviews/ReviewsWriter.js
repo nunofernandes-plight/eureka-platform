@@ -19,13 +19,17 @@ import {
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 import {
+  addAnnotation,
+  deleteAnnotation,
   getAnnotations,
+  saveAnnotation,
   saveEditorApprovedReviewToDB,
   updateReview
 } from './ReviewMethods.js';
 import {getReviewHash} from '../../../../helpers/getHexAndHash.mjs';
 import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
 import EurekaRotateSpinner from '../../views/spinners/EurekaRotateSpinner.js';
+import PreviewArticleAbstract from '../Preview/PreviewArticleAbstract.js';
 
 const Container = styled.div`
   display: flex;
@@ -254,6 +258,111 @@ class ReviewsWriter extends React.Component {
       });
   }
 
+  addAnnotation(annotationRef, field) {
+    const annotations = [...this.state.annotations];
+    const reviewId = this.props.match.params.reviewId;
+    const articleVersionId = this.state.article._id;
+    addAnnotation({
+      articleVersionId,
+      reviewId,
+      field,
+      sentenceId: annotationRef.id
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          let annotation = response.data;
+          annotation.onChange = true;
+          annotations.unshift(annotation);
+          this.setState({annotations});
+        }
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          errorMessage: err
+        });
+      });
+  }
+
+  deleteAnnotation = id => {
+    const annotations = [...this.state.annotations];
+    const index = annotations
+      .map(a => {
+        return a._id;
+      })
+      .indexOf(id);
+
+    deleteAnnotation(annotations[index])
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.getAnnotations();
+        }
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          errorMessage: err
+        });
+      });
+  };
+
+  cancelAnnotation = id => {
+    const annotations = [...this.state.annotations];
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    if (annotation.updated) {
+      this.getAnnotations();
+    } else {
+      this.deleteAnnotation(id);
+    }
+  };
+
+  saveAnnotation = id => {
+    const annotations = [...this.state.annotations];
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    saveAnnotation(annotation)
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          this.setState({annotations});
+          this.getAnnotations();
+        }
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          errorMessage: err
+        });
+      });
+  };
+
+  editAnnotation = id => {
+    const annotations = [...this.state.annotations];
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    if (annotation) {
+      annotation.onChange = true;
+    }
+    this.setState({annotations});
+  };
+
+  changeAnnotation = (id, text) => {
+    const annotations = [...this.state.annotations];
+    const annotation = annotations.find(a => {
+      return a._id === id;
+    });
+    if (annotation) {
+      annotation.text = text;
+    }
+    this.setState({annotations});
+  };
+
   render() {
     return (
       <Container>
@@ -280,6 +389,24 @@ class ReviewsWriter extends React.Component {
                   documentId={this.props.match.params.id}
                   base={this.props.base}
                   document={this.state.document}
+                  onAdd={(ref, field) => {
+                    this.addAnnotation(ref, field);
+                  }}
+                  onCancel={id => {
+                    this.cancelAnnotation(id);
+                  }}
+                  onSave={id => {
+                    this.saveAnnotation(id);
+                  }}
+                  onDelete={id => {
+                    this.deleteAnnotation(id);
+                  }}
+                  onEdit={id => {
+                    this.editAnnotation(id);
+                  }}
+                  onChange={(id, text) => {
+                    this.changeAnnotation(id, text);
+                  }}
                 />
               </MyContainer>
             </MyPreview>

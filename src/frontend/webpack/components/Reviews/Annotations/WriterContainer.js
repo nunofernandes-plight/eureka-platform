@@ -34,185 +34,44 @@ class WriterContainer extends React.Component {
   constructor() {
     super();
     this.state = {
-      showCommentIcon: false,
-      annotations: null,
-      mouseX: null,
-      mouseY: null
+      showCommentIcon: false
     };
   }
-
-  async componentDidMount() {
-    await this.getAnnotations(this.props.match.params.reviewId);
-  }
-
-  componentDidUpdate() {
-    if (this.props.annotationRef) {
-      this.addAnnotation(this.props.annotationRef);
-      this.props.annotationAdded();
-    }
-  }
-
-  getAnnotations() {
-    this.setState({loading: true});
-    return getAnnotations(this.props.match.params.reviewId)
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          this.setState({annotations: response.data});
-        }
-        this.setState({loading: false});
-      })
-      .catch(err => {
-        this.setState({loading: false});
-        console.error(err);
-      });
-  }
-
-  addAnnotation(annotationRef) {
-    const annotations = [...this.state.annotations];
-    const reviewId = this.props.match.params.reviewId;
-    // TODO: documentId is null and doesn't reflect article Version
-    const articleVersionId = this.props.documentId;
-    addAnnotation({
-      articleVersionId,
-      reviewId,
-      field: this.props.field,
-      sentenceId: annotationRef.id
-    })
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          let annotation = response.data;
-          annotation.onChange = true;
-          annotations.unshift(annotation);
-          this.setState({annotations});
-        }
-      })
-      .catch(err => {
-        this.setState({
-          loading: false,
-          errorMessage: err
-        });
-      });
-  }
-
-  deleteAnnotation = id => {
-    const annotations = [...this.state.annotations];
-    const index = annotations
-      .map(a => {
-        return a._id;
-      })
-      .indexOf(id);
-
-    deleteAnnotation(annotations[index])
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          this.getAnnotations();
-        }
-      })
-      .catch(err => {
-        this.setState({
-          loading: false,
-          errorMessage: err
-        });
-      });
-  };
-
-  cancelAnnotation = id => {
-    const annotations = [...this.state.annotations];
-    const annotation = annotations.find(a => {
-      return a._id === id;
-    });
-    if (annotation.updated) {
-      this.getAnnotations();
-    } else {
-      this.deleteAnnotation(id);
-    }
-  };
-
-  saveAnnotation = id => {
-    const annotations = [...this.state.annotations];
-    const annotation = annotations.find(a => {
-      return a._id === id;
-    });
-    saveAnnotation(annotation)
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          this.setState({annotations});
-          this.getAnnotations();
-        }
-      })
-      .catch(err => {
-        this.setState({
-          loading: false,
-          errorMessage: err
-        });
-      });
-  };
-
-  editAnnotation = id => {
-    const annotations = [...this.state.annotations];
-    const annotation = annotations.find(a => {
-      return a._id === id;
-    });
-    if (annotation) {
-      annotation.onChange = true;
-    }
-    this.setState({annotations});
-  };
-
-  changeAnnotation = (id, text) => {
-    const annotations = [...this.state.annotations];
-    const annotation = annotations.find(a => {
-      return a._id === id;
-    });
-    if (annotation) {
-      annotation.text = text;
-    }
-    this.setState({annotations});
-  };
 
   render() {
     return (
       <Container>
         <Review>
-          {!this.props.annotations ? (
-            <UploadSpinner />
-          ) : (
-            <Annotations show={this.state.showCommentIcon}>
-              {' '}
-              {this.props.annotations
-                .filter(a => {
-                  return a.field === this.props.field;
-                })
-                .map((annotation, index) => {
-                  return (
-                    <Annotation
-                      top={this.props.offsetTopAnnotation}
-                      annotation={annotation}
-                      key={index}
-                      onCancel={id => {
-                        this.cancelAnnotation(id);
-                      }}
-                      onSave={id => {
-                        this.saveAnnotation(id);
-                      }}
-                      onDelete={id => {
-                        this.deleteAnnotation(id);
-                      }}
-                      onEdit={id => {
-                        this.editAnnotation(id);
-                      }}
-                      onChange={(id, text) => {
-                        this.changeAnnotation(id, text);
-                      }}
-                    />
-                  );
-                })}
-            </Annotations>
-          )}
+          <Annotations show={this.state.showCommentIcon}>
+            {' '}
+            {this.props.annotations
+              .filter(a => {
+                return a.field === this.props.field;
+              })
+              .map((annotation, index) => {
+                return (
+                  <Annotation
+                    annotation={annotation}
+                    key={index}
+                    onCancel={id => {
+                      this.props.onCancel(id);
+                    }}
+                    onSave={id => {
+                      this.props.onSave(id);
+                    }}
+                    onDelete={id => {
+                      this.props.onDelete(id);
+                    }}
+                    onEdit={id => {
+                      this.props.onEdit(id);
+                    }}
+                    onChange={(id, text) => {
+                      this.props.onChange(id, text);
+                    }}
+                  />
+                );
+              })}
+          </Annotations>
         </Review>
       </Container>
     );
