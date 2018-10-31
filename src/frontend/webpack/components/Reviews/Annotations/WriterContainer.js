@@ -40,9 +40,10 @@ class WriterContainer extends React.Component {
     };
   }
 
-  componentDidUpdate() {
-    if (this.props.refs) {
-      this.setState({refs: this.props.refs});
+  componentDidUpdate(nextProps) {
+    if (nextProps.refs) {
+      this.setState({refs: nextProps.refs});
+      console.log(nextProps.refs);
       this.props.updateRefs();
     }
   }
