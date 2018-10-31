@@ -202,10 +202,10 @@ class EditorFinalize extends React.Component {
                       key={article._id}
                       article={article}
                       onHover={this.state.articleOnHover === article._id}
-                      onMouseEnter={id => {
-                        this.setState({articleOnHover: id});
+                      onMouseEnter={obj => {
+                        this.setState({articleOnHover: obj._id});
                       }}
-                      onMouseLeave={id => {
+                      onMouseLeave={obj => {
                         this.setState({articleOnHover: null});
                       }}
                       action={(_, article) => {

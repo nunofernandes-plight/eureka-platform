@@ -192,10 +192,10 @@ class EditorArticles extends React.Component {
                     key={article._id}
                     onHover={this.state.articleOnHover === article._id}
                     article={article}
-                    onMouseEnter={id => {
-                      this.setState({articleOnHover: id});
+                    onMouseEnter={obj => {
+                      this.setState({articleOnHover: obj._id});
                     }}
-                    onMouseLeave={() => {
+                    onMouseLeave={obj => {
                       this.setState({articleOnHover: null});
                     }}
                     action={id => {

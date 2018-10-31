@@ -138,10 +138,10 @@ const ArticleCard = ({article, ...otherProps}) => {
   return (
     <Parent
       onMouseEnter={() => {
-        otherProps.onMouseEnter(article._id);
+        otherProps.onMouseEnter(article);
       }}
       onMouseLeave={() => {
-        otherProps.onMouseLeave(article._id);
+        otherProps.onMouseLeave(article);
       }}
     >
       <ButtonContainer onHover={otherProps.onHover}>

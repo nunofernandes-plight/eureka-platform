@@ -46,7 +46,7 @@ class EditorCheckReviews extends React.Component {
     this.state = {
       reviews: null,
       loading: false,
-      articleOnHover: null,
+      reviewOnHover: null,
 
       tx: null
     };
@@ -192,17 +192,18 @@ class EditorCheckReviews extends React.Component {
             {this.state.reviews ? (
               this.state.reviews.length > 0 ? (
                 this.state.reviews.map(review => {
+                  console.log(review);
                   return (
                     <Article
                       buttonText={'Accept Review'}
                       key={review.reviewId}
                       article={review}
-                      onHover={this.state.articleOnHover === review._id}
-                      onMouseEnter={id => {
-                        this.setState({articleOnHover: id});
+                      onHover={this.state.reviewOnHover === review._id}
+                      onMouseEnter={obj => {
+                        this.setState({reviewOnHover: obj._id});
                       }}
-                      onMouseLeave={id => {
-                        this.setState({articleOnHover: null});
+                      onMouseLeave={obj => {
+                        this.setState({reviewOnHover: null});
                       }}
                       action={(_, review) => {
                         this.acceptReview(
