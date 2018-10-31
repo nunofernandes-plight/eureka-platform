@@ -16,6 +16,7 @@ import {
   saveAnnotation
 } from '../ReviewMethods.js';
 import {withRouter} from 'react-router';
+import EurekaRotateSpinner from '../../../views/spinners/EurekaRotateSpinner.js';
 
 const Container = styled.div`
   flex: 1;
@@ -34,46 +35,58 @@ class WriterContainer extends React.Component {
   constructor() {
     super();
     this.state = {
-      showCommentIcon: false
+      showCommentIcon: false,
+      refs: null
     };
   }
 
+  componentDidUpdate() {
+    if (this.props.refs) {
+      this.setState({refs: this.props.refs});
+      this.props.updateRefs();
+    }
+  }
+
   render() {
-    console.log(this.props.refs);
+    console.log(this.state.refs);
     return (
       <Container>
-        <Review>
-          <Annotations show={this.state.showCommentIcon}>
-            {' '}
-            {this.props.annotations
-              .filter(a => {
-                return a.field === this.props.field;
-              })
-              .map((annotation, index) => {
-                return (
-                  <Annotation
-                    annotation={annotation}
-                    key={index}
-                    onCancel={id => {
-                      this.props.onCancel(id);
-                    }}
-                    onSave={id => {
-                      this.props.onSave(id);
-                    }}
-                    onDelete={id => {
-                      this.props.onDelete(id);
-                    }}
-                    onEdit={id => {
-                      this.props.onEdit(id);
-                    }}
-                    onChange={(id, text) => {
-                      this.props.onChange(id, text);
-                    }}
-                  />
-                );
-              })}
-          </Annotations>
-        </Review>
+        {!this.state.refs ? (
+          <h4>Handle the case that field HAS NO SENTENCES!!!</h4>
+        ) : (
+          <Review>
+            <Annotations show={this.state.showCommentIcon}>
+              {' '}
+              {this.props.annotations
+                .filter(a => {
+                  return a.field === this.props.field;
+                })
+                .map((annotation, index) => {
+                  return (
+                    <Annotation
+                      annotation={annotation}
+                      key={index}
+                      onCancel={id => {
+                        this.props.onCancel(id);
+                      }}
+                      onSave={id => {
+                        this.props.onSave(id);
+                      }}
+                      onDelete={id => {
+                        this.props.onDelete(id);
+                      }}
+                      onEdit={id => {
+                        this.props.onEdit(id);
+                      }}
+                      onChange={(id, text) => {
+                        this.props.onChange(id, text);
+                      }}
+                    />
+                  );
+                })}
+            </Annotations>
+          </Review>
+        )}
       </Container>
     );
   }

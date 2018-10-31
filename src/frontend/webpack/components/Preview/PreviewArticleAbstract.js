@@ -55,6 +55,9 @@ class PreviewArticleAbstract extends React.Component {
           {this.props.isReview ? (
             <Fragment>
               <ReviewsWriterContainer
+                updateRefs={() => {
+                  this.setState({refs: null});
+                }}
                 refs={this.state.refs}
                 annotations={this.props.annotations}
                 onShow={this.state.onShow}
