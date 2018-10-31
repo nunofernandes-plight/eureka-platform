@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 
 export const journalSchema = mongoose.Schema(
   {
+    _id: {
+      type: Number,
+      required: true
+    },
     contractAddress: {
       type: String
     },
