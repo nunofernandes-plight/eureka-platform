@@ -45,7 +45,7 @@ class PreviewArticleAbstract extends React.Component {
                 this.props.onAdd(ref, FIELD);
               }}
               updateRefs={refs => {
-                console.log(refs);
+                this.setState({refs});
               }}
               onShow={i => {
                 this.setState({onShow: i});
