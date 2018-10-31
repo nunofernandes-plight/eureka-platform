@@ -39,6 +39,7 @@ class WriterContainer extends React.Component {
   }
 
   render() {
+    console.log(this.props.refs);
     return (
       <Container>
         <Review>

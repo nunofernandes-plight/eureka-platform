@@ -39,6 +39,7 @@ class Sentences extends React.Component {
         };
       })
     });
+    this.props.updateRefs(this.refs);
   }
 
   render() {
@@ -66,7 +67,7 @@ class Sentences extends React.Component {
               onClick={() => {
                 this.props.onClick(this[`${this.props.field}${i}`]);
               }}
-              innerRef={ref => (this[refId] = ref)}
+              innerRef={ref => (this[refId + '_'] = ref)}
             >
               {this.props.show === i ? <CommentIcon show={true} /> : null}
             </Circle>
