@@ -48,7 +48,6 @@ class WriterContainer extends React.Component {
   }
 
   render() {
-    console.log(this.state.refs);
     return (
       <Container>
         {!this.state.refs ? (
@@ -62,6 +61,8 @@ class WriterContainer extends React.Component {
                   return a.field === this.props.field;
                 })
                 .map((annotation, index) => {
+                  const ref = this.state.refs[annotation.sentenceId];
+                  console.log(ref);
                   return (
                     <Annotation
                       annotation={annotation}
