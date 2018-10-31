@@ -1,5 +1,8 @@
 import {getContractOwner} from '../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import ContractOwner from '../schema/contract-owner.mjs';
+export const getContractOwnerFromDB = () => {
+  return ContractOwner.findById(1);
+};
 
 export const writeContractOwnerInDB = async contract => {
   const id = 1;
