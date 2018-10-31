@@ -90,7 +90,7 @@ export default {
       });
   },
 
-  getArticlesWithEnoughAcceptedReviews: async reviewType => {
+  getArticlesWithEnoughAcceptedReviews: async (reviewType, minNumberOfReviews) => {
     return await Review.aggregate([
       {
         $match: {
@@ -99,7 +99,7 @@ export default {
         }
       },
       {$group: {_id: '$articleVersion', count: {$sum: 1}}},
-      {$match: {count: {$gte: 2.0}}}
+      {$match: {count: {$gte: minNumberOfReviews}}}
     ]);
   },
 

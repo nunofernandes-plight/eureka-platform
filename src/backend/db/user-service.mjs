@@ -5,8 +5,8 @@ import ArticleSubmission from '../schema/article-submission.mjs';
 import {isValidAddress} from '../../helpers/isValidEthereumAddress.mjs';
 import userService from '../db/user-service.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
-import ContractOwner from '../schema/contract-owner.mjs';
 import addressBookService from './address-book-service.mjs';
+import {getContractOwnerFromDB} from './journal-service.mjs';
 
 export default {
   /**
@@ -89,7 +89,7 @@ export default {
       avatar
     });
 
-    const contractOwner = await ContractOwner.findById(1);
+    const contractOwner = await getContractOwnerFromDB();
 
     // add default roles
     if (roles) newUser.roles.push(roles);
