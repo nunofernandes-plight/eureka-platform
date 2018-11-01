@@ -9,11 +9,11 @@ const Article = ({article, ...otherProps}) => {
       }}
       buttonText={otherProps.buttonText}
       onHover={otherProps.onHover}
-      onMouseEnter={id => {
-        otherProps.onMouseEnter(id);
+      onMouseEnter={obj => {
+        otherProps.onMouseEnter(obj);
       }}
-      onMouseLeave={id => {
-        otherProps.onMouseLeave(id);
+      onMouseLeave={obj => {
+        otherProps.onMouseLeave(obj);
       }}
       article={article}
       action2={(id, article) => {

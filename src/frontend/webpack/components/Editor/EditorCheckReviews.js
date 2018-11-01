@@ -46,7 +46,7 @@ class EditorCheckReviews extends React.Component {
     this.state = {
       reviews: null,
       loading: false,
-      articleOnHover: null,
+      reviewOnHover: null,
 
       tx: null
     };
@@ -114,7 +114,7 @@ class EditorCheckReviews extends React.Component {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
     if (!isGanache(this.props.web3))
-      gasAmount = await acceptReview(
+      gasAmount = await declineReview(
         this.props.platformContract,
         this.state.article.articleHash,
         reviewerAddress
@@ -197,12 +197,12 @@ class EditorCheckReviews extends React.Component {
                       buttonText={'Accept Review'}
                       key={review.reviewId}
                       article={review}
-                      onHover={this.state.articleOnHover === review._id}
-                      onMouseEnter={id => {
-                        this.setState({articleOnHover: id});
+                      onHover={this.state.reviewOnHover === review.reviewId}
+                      onMouseEnter={obj => {
+                        this.setState({reviewOnHover: obj.reviewId});
                       }}
-                      onMouseLeave={id => {
-                        this.setState({articleOnHover: null});
+                      onMouseLeave={obj => {
+                        this.setState({reviewOnHover: null});
                       }}
                       action={(_, review) => {
                         this.acceptReview(
