@@ -1,23 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  __GRAY_200,
-  __GRAY_400,
-  __GRAY_500
-} from '../../../../helpers/colors.js';
-import {CommentIcon} from './CommentIcon.js';
+import {__GRAY_400} from '../../../../helpers/colors.js';
 import Annotations from './Annotations.js';
 import Annotation from './Annotation.js';
-import UploadSpinner from '../../../views/spinners/UploadSpinner.js';
-import {
-  addAnnotation,
-  deleteAnnotation,
-  getAnnotations,
-  saveAnnotation
-} from '../ReviewMethods.js';
 import {withRouter} from 'react-router';
-import EurekaRotateSpinner from '../../../views/spinners/EurekaRotateSpinner.js';
-import EurekaSpinner from '../../../views/spinners/EurekaSpinner.js';
 
 const Container = styled.div`
   flex: 1;
@@ -36,7 +22,8 @@ const AnnotationGroup = styled.div`
   position: absolute;
   top: ${props => props.top}px;
   display: flex;
-  width: 100%;
+  flex: 1;
+  flex-wrap: wrap;
 `;
 
 class WriterContainer extends React.Component {
@@ -67,7 +54,6 @@ class WriterContainer extends React.Component {
 
   render() {
     const map = this.getMap();
-    console.log(map);
     return (
       <Container>
         <Review>
@@ -75,7 +61,7 @@ class WriterContainer extends React.Component {
             {Object.keys(map).map(key => {
               const group = map[key];
               return (
-                <AnnotationGroup top={key}>
+                <AnnotationGroup top={key} key={key}>
                   {group.map(annotation => {
                     return (
                       <Annotation
