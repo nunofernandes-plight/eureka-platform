@@ -114,7 +114,7 @@ class EditorCheckReviews extends React.Component {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
     if (!isGanache(this.props.web3))
-      gasAmount = await acceptReview(
+      gasAmount = await declineReview(
         this.props.platformContract,
         this.state.article.articleHash,
         reviewerAddress
