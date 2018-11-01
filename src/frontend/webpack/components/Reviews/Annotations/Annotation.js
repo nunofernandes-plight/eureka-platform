@@ -13,9 +13,6 @@ const Container = styled.div`
   border: none;
   border-radius: 4px;
   margin-bottom: 12px;
-  top: ${props => props.top}px;
-  position: absolute;
-  width: 100%;
 `;
 
 const AnnotationHeader = styled.div`
