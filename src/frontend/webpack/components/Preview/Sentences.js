@@ -21,25 +21,27 @@ class Sentences extends React.Component {
       sentences: tokenizeSentence(props.text).map(sentence => {
         return {
           text: sentence,
-          offsetTop: null
+          offsetTop: null,
+          id: null
         };
       })
     };
   }
 
   componentDidMount() {
-    const sentences = [...this.state.sentences];
-    this.setState({
-      sentences: sentences.map((s, i) => {
-        const ref = this.refs[`${this.props.field}${i}`];
-        const offsetTop = ref.offsetTop;
-        return {
-          text: s.text,
-          offsetTop
-        };
-      })
+    let sentences = [...this.state.sentences];
+    sentences = sentences.map((s, i) => {
+      const ref = this.refs[`${this.props.field}${i}`];
+      const offsetTop = ref.offsetTop;
+      const id = ref.id;
+      return {
+        text: s.text,
+        offsetTop,
+        id
+      };
     });
-    this.props.updateRefs(this.refs);
+    this.setState({sentences});
+    this.props.updateOffsets(sentences);
   }
 
   render() {

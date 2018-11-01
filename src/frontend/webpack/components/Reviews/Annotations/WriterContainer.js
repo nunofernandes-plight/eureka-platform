@@ -17,6 +17,7 @@ import {
 } from '../ReviewMethods.js';
 import {withRouter} from 'react-router';
 import EurekaRotateSpinner from '../../../views/spinners/EurekaRotateSpinner.js';
+import EurekaSpinner from '../../../views/spinners/EurekaSpinner.js';
 
 const Container = styled.div`
   flex: 1;
@@ -35,58 +36,18 @@ class WriterContainer extends React.Component {
   constructor() {
     super();
     this.state = {
-      showCommentIcon: false,
-      refs: null
+      showCommentIcon: false
     };
-  }
-
-  componentDidUpdate(nextProps) {
-    if (nextProps.refs) {
-      this.setState({refs: nextProps.refs});
-      console.log(nextProps.refs);
-      this.props.updateRefs();
-    }
   }
 
   render() {
     return (
       <Container>
-        {!this.state.refs ? (
-          <h4>Handle the case that field HAS NO SENTENCES!!!</h4>
+        {!this.props.sentences ? (
+          <EurekaRotateSpinner />
         ) : (
           <Review>
-            <Annotations show={this.state.showCommentIcon}>
-              {' '}
-              {this.props.annotations
-                .filter(a => {
-                  return a.field === this.props.field;
-                })
-                .map((annotation, index) => {
-                  const ref = this.state.refs[annotation.sentenceId];
-                  console.log(ref);
-                  return (
-                    <Annotation
-                      annotation={annotation}
-                      key={index}
-                      onCancel={id => {
-                        this.props.onCancel(id);
-                      }}
-                      onSave={id => {
-                        this.props.onSave(id);
-                      }}
-                      onDelete={id => {
-                        this.props.onDelete(id);
-                      }}
-                      onEdit={id => {
-                        this.props.onEdit(id);
-                      }}
-                      onChange={(id, text) => {
-                        this.props.onChange(id, text);
-                      }}
-                    />
-                  );
-                })}
-            </Annotations>
+            <Annotations show={this.state.showCommentIcon} />
           </Review>
         )}
       </Container>
