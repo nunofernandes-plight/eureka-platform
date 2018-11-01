@@ -29,20 +29,11 @@ const Card = styled.div`
 `;
 
 const PhotoContainer = styled.div`
-  &:hover {
-    opacity: 0.4;
-  }
   position: relative;
-  transition: all 0.15s ease;
 `;
 
 const Photo = styled.img`
-  position: absolute;
-  left: 50%;
-  max-width: 180px;
-  transition: all 0.15s ease;
-  transform: translate(-50%, -30%);
-  border-radius: 0.25rem;
+  width: 100%;
 `;
 
 const Email = styled.div`
@@ -108,10 +99,45 @@ const SeeHistory = styled.div`
 `;
 
 const numberWithCommas = x => {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\'');
 };
 
+const Parent = styled.div`
+  position: absolute;
+  left: 50%;
+  max-width: 180px;
+  transition: all 0.15s ease;
+  transform: translate(-50%, -30%);
+  border-radius: 0.25rem;
+`;
+
+const Upload = styled.div`
+  color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  max-width: 180px;
+  align-items: center; 
+  text-align: center;
+  display: flex;
+  background: rgba(0,0,0,0.3);
+  visibility: ${props => props.show ? 'visible' : 'hidden'};
+  transition: all 0.3s ease-in-out;
+
+`;
+
 class MyAccount extends Component {
+
+  constructor() {
+    super();
+    this.state = {
+      show: false
+    };
+  }
+
   componentDidMount() {
     this.props.updateAccount();
   }
@@ -122,7 +148,16 @@ class MyAccount extends Component {
         <CardContainer>
           <Card>
             <PhotoContainer>
-              <Photo src={'/' + this.props.user.avatar} />
+              <Parent onMouseEnter={() => {
+                this.setState({show: true});
+              }} onMouseLeave={() => {
+                this.setState({show: false});
+              }}>
+                <Photo src={'/' + this.props.user.avatar}/>
+                <Upload show={this.state.show}>
+                  Upload your profile picture
+                </Upload>
+              </Parent>
             </PhotoContainer>
             <EmailContainer>
               <Email>{this.props.user.email}</Email>
@@ -133,7 +168,7 @@ class MyAccount extends Component {
               </EthereumAddress>
             </ProfileRow>
             <ProfileRow>
-              <Separator />
+              <Separator/>
             </ProfileRow>
             <ProfileRow>
               {this.props.selectedAccount.EKABalance &&
@@ -141,7 +176,7 @@ class MyAccount extends Component {
                 <Balances>
                   <SubTitle>Your Balances</SubTitle>
                   <Balance>
-                    <EurekaLogo width={30} height={30} />
+                    <EurekaLogo width={30} height={30}/>
                     <Number>
                       {numberWithCommas(this.props.selectedAccount.EKABalance)}{' '}
                       EKA
@@ -176,7 +211,7 @@ class MyAccount extends Component {
                   </Balance>
                 </Balances>
               ) : (
-                <CircleSpinner />
+                <CircleSpinner/>
               )}
             </ProfileRow>
           </Card>

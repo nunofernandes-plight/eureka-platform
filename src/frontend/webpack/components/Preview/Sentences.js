@@ -49,6 +49,11 @@ class Sentences extends React.Component {
       const refId = this.props.field + i;
       let marginTop = 0;
 
+      const annotation = this.props.annotations.find(a => {
+        return a.sentenceId === sentence.id;
+      });
+      console.log(annotation);
+
       if (i !== this.state.sentences.length - 1) {
         if (sentence.offsetTop === this.state.sentences[i + 1].offsetTop)
           marginTop = -12;
@@ -74,17 +79,28 @@ class Sentences extends React.Component {
               {this.props.show === i ? <CommentIcon show={true} /> : null}
             </Circle>
           ) : null}
-          <span
-            id={refId}
-            key={i}
-            ref={refId}
-            className={this.props.show === i ? 'highlightSpan' : null}
-          >
+          <span id={refId} key={i} ref={refId} className={this.getClass(i)}>
             {sentence.text + ' '}
           </span>
         </Fragment>
       );
     });
+  }
+
+  getClass(index) {
+    if (this.props.show === index) {
+      return 'highlightSpan';
+    }
+
+    if (this.props.annotations) {
+      const id = this.props.field + index;
+      const ann = this.props.annotations.find(a => {
+        return a.sentenceId === id;
+      });
+      if (ann) {
+        return 'highlightedSpan';
+      }
+    }
   }
 }
 
