@@ -99,11 +99,11 @@ class ReviewsInvited extends React.Component {
         //   showTxModal: true,
         //   tx
         // });
-        this.getArticlesInvitedForReviewing();
         //TODO Redirect to article preview and review editor
       })
       .on('receipt', async receipt => {
         console.log('Accepted Review Invitation:  ' + receipt.status);
+        this.getArticlesInvitedForReviewing();
         return receipt;
       })
       .catch(err => {

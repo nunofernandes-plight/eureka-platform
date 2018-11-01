@@ -205,6 +205,7 @@ class ReviewsWriter extends React.Component {
       })
       .on('receipt', async receipt => {
         console.log('Submitting Review:  ' + receipt.status);
+        this.props.history.push(`/app/reviews/me`);
         return receipt;
       })
       .catch(err => {
