@@ -45,7 +45,7 @@ class PreviewArticleAbstract extends React.Component {
                 this.props.onAdd(ref, FIELD);
               }}
               updateRefs={refs => {
-                console.log(refs);
+                this.setState({refs});
               }}
               onShow={i => {
                 this.setState({onShow: i});
@@ -55,6 +55,9 @@ class PreviewArticleAbstract extends React.Component {
           {this.props.isReview ? (
             <Fragment>
               <ReviewsWriterContainer
+                updateRefs={() => {
+                  this.setState({refs: null});
+                }}
                 refs={this.state.refs}
                 annotations={this.props.annotations}
                 onShow={this.state.onShow}
