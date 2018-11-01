@@ -20,6 +20,7 @@ const Container = styled.div`
   border-radius: 4px;
   margin-bottom: 12px;
   flex: 1;
+  z-index: 100000;
 `;
 
 const AnnotationHeader = styled.div`

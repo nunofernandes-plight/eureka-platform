@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__GRAY_400} from '../../../../helpers/colors.js';
+import {__GRAY_400, __GRAY_600, __THIRD} from '../../../../helpers/colors.js';
 import Annotations from './Annotations.js';
 import Annotation from './Annotation.js';
 import {withRouter} from 'react-router';
+import Icon from '../../../views/icons/Icon.js';
+import AnnotationGroup from './AnnotationGroup.js';
 
 const Container = styled.div`
   flex: 1;
@@ -18,20 +20,11 @@ const Review = styled.div`
   border-left: 1px dashed ${__GRAY_400};
 `;
 
-const AnnotationGroup = styled.div`
-  position: absolute;
-  top: ${props => props.top}px;
-  width: 100%;
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-`;
-
 class WriterContainer extends React.Component {
   constructor() {
     super();
     this.state = {
-      showCommentIcon: false
+      show: false
     };
   }
 
@@ -58,35 +51,30 @@ class WriterContainer extends React.Component {
     return (
       <Container>
         <Review>
-          <Annotations show={this.state.showCommentIcon}>
+          <Annotations>
             {Object.keys(map).map(key => {
               const group = map[key];
               return (
-                <AnnotationGroup top={key} key={key}>
-                  {group.map(annotation => {
-                    return (
-                      <Annotation
-                        annotation={annotation}
-                        key={annotation._id}
-                        onCancel={id => {
-                          this.props.onCancel(id);
-                        }}
-                        onSave={id => {
-                          this.props.onSave(id);
-                        }}
-                        onDelete={id => {
-                          this.props.onDelete(id);
-                        }}
-                        onEdit={id => {
-                          this.props.onEdit(id);
-                        }}
-                        onChange={(id, text) => {
-                          this.props.onChange(id, text);
-                        }}
-                      />
-                    );
-                  })}
-                </AnnotationGroup>
+                <AnnotationGroup
+                  top={key}
+                  key={key}
+                  group={group}
+                  onCancel={id => {
+                    this.props.onCancel(id);
+                  }}
+                  onSave={id => {
+                    this.props.onSave(id);
+                  }}
+                  onDelete={id => {
+                    this.props.onDelete(id);
+                  }}
+                  onEdit={id => {
+                    this.props.onEdit(id);
+                  }}
+                  onChange={(id, text) => {
+                    this.props.onChange(id, text);
+                  }}
+                />
               );
             })}
           </Annotations>

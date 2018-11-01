@@ -543,21 +543,21 @@ const Icon = props => {
         </MyIcon>
       );
 
-    case 'folder-open':
+    case 'annotation':
       return (
         <MyIcon
           {...props}
           aria-hidden="true"
-          data-prefix="far"
-          data-icon="folder-open"
-          className="svg-inline--fa fa-folder-open fa-w-18"
+          data-prefix="fas"
+          data-icon="bookmark"
+          className="svg-inline--fa fa-bookmark fa-w-12"
           role="img"
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 576 512"
+          viewBox="0 0 384 512"
         >
           <path
             fill="currentColor"
-            d="M527.943 224H480v-48c0-26.51-21.49-48-48-48H272l-64-64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h400a48.001 48.001 0 0 0 40.704-22.56l79.942-128c19.948-31.917-3.038-73.44-40.703-73.44zM54 112h134.118l64 64H426a6 6 0 0 1 6 6v42H152a48 48 0 0 0-41.098 23.202L48 351.449V117.993A5.993 5.993 0 0 1 54 112zm394 288H72l77.234-128H528l-80 128z"
+            d="M0 512V48C0 21.49 21.49 0 48 0h288c26.51 0 48 21.49 48 48v464L192 400 0 512z"
           />
         </MyIcon>
       );
