@@ -33,9 +33,11 @@ const Author = props => {
             fontSize={fontSize}
           />
         )}
-        <Email noDecoration email={author.email} fontSize={fontSize}>
-          {author.email}
-        </Email>
+        {props.noEmail ? null : (
+          <Email noDecoration email={author.email} fontSize={fontSize}>
+            {author.email}
+          </Email>
+        )}
       </AuthorCredentials>
     </AuthorContainer>
   );

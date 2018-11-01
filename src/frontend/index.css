@@ -140,5 +140,5 @@ input:focus {
 .highlightSpan {
   border-radius: 5px;
   padding: 6px 0;
-  background: #ffff0087;
+  background: rgba(222, 226, 230, 0.53);
 }
