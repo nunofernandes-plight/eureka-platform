@@ -88,9 +88,9 @@ class EditorFinalize extends React.Component {
         gas: gasAmount
       })
       .on('transactionHash', tx => {
-        this.setState({
-          tx
-        });
+        // this.setState({
+        //   tx
+        // });
       })
       .on('receipt', async receipt => {
         console.log(
@@ -128,9 +128,9 @@ class EditorFinalize extends React.Component {
         gas: gasAmount
       })
       .on('transactionHash', tx => {
-        this.setState({
-          tx
-        });
+        // this.setState({
+        //   tx
+        // });
       })
       .on('receipt', async receipt => {
         console.log(

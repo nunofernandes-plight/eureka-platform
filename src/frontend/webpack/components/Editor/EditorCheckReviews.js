@@ -91,9 +91,9 @@ class EditorCheckReviews extends React.Component {
         gas: gasAmount
       })
       .on('transactionHash', tx => {
-        this.setState({
-          tx
-        });
+        // this.setState({
+        //   tx
+        // });
       })
       .on('receipt', async receipt => {
         console.log('Accept Review:  ' + receipt.status);

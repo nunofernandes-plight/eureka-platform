@@ -198,10 +198,10 @@ class ReviewsWriter extends React.Component {
         gas: gasAmount
       })
       .on('transactionHash', tx => {
-        this.setState({
-          showTxModal: true,
-          tx
-        });
+        // this.setState({
+        //   showTxModal: true,
+        //   tx
+        // });
       })
       .on('receipt', async receipt => {
         console.log('Submitting Review:  ' + receipt.status);

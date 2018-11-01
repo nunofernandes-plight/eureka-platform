@@ -72,14 +72,15 @@ class EditorSignOff extends React.Component {
         from: this.props.selectedAccount.address
       })
       .on('transactionHash', tx => {
-        this.setState({
-          tx,
-          showTxModal: true
-        });
+        // this.setState({
+        //   tx,
+        //   showTxModal: true
+        // });
       })
       .on('receipt', async receipt => {
         console.log('Sanity check:  ' + receipt.status);
         await this.getArticlesToSignOff();
+        this.props.history.push('/app/editor/invite');
         return receipt;
       })
       .catch(err => {

@@ -96,16 +96,17 @@ class EditorArticles extends React.Component {
         gas: gasAmount
       })
       .on('transactionHash', tx => {
-        this.setState({
-          tx,
-          showTxModal: true
-        });
+        // this.setState({
+        //   tx,
+        //   showTxModal: true
+        // });
       })
       .on('receipt', receipt => {
         console.log(
           'Assigning the editor to the submission exited with the TX status: ' +
             receipt.status
         );
+        this.props.history.push(`/app/editor/signoff`);
         return receipt;
       })
       .catch(err => {

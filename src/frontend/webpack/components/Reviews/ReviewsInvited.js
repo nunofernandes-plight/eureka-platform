@@ -95,10 +95,10 @@ class ReviewsInvited extends React.Component {
         gas: gasAmount
       })
       .on('transactionHash', tx => {
-        this.setState({
-          showTxModal: true,
-          tx
-        });
+        // this.setState({
+        //   showTxModal: true,
+        //   tx
+        // });
         this.getArticlesInvitedForReviewing();
         //TODO Redirect to article preview and review editor
       })
