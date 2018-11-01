@@ -142,16 +142,7 @@ class Annotation extends React.Component {
             </AnnotationBody>
           </Fragment>
         ) : (
-          <AuthorLookup
-            addresses={annotation.owner}
-            right={5}
-            width={23}
-            height={23}
-            noAddress
-            noEmail
-            fontSize={10}
-            padding={'5px'}
-          />
+          <div style={{width: 10, height: 10, background: 'black', margin: '2px 8px'}} />
         )}
       </Container>
     );
