@@ -146,5 +146,5 @@ input:focus {
 .highlightedSpan {
   border-radius: 5px;
   padding: 6px 0;
-  background: yellow;
+  background: #ffff56;
 }
