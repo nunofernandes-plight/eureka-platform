@@ -37,6 +37,7 @@ class PreviewArticleAbstract extends React.Component {
         <ReviewsWriterFieldContainer>
           <FieldContainer>
             <Sentences
+              annotations={this.props.annotations}
               text={abstract}
               field={FIELD}
               isReview={this.props.isReview}

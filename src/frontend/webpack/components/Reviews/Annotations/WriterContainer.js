@@ -21,6 +21,7 @@ const Review = styled.div`
 const AnnotationGroup = styled.div`
   position: absolute;
   top: ${props => props.top}px;
+  width: 100%;
   display: flex;
   flex: 1;
   flex-wrap: wrap;
