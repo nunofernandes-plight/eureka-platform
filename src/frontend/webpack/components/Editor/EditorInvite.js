@@ -106,9 +106,9 @@ class EditorInvite extends React.Component {
         gas: gasAmount
       })
       .on('transactionHash', tx => {
-        // this.setState({
-        //   showSendEmailAnimation: true
-        // });
+        this.setState({
+          showSendEmailAnimation: true
+        });
       })
       .on('receipt', async receipt => {
         console.log('Invite Reviewers:  ' + receipt.status);
