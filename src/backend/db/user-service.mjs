@@ -6,7 +6,7 @@ import {isValidAddress} from '../../helpers/isValidEthereumAddress.mjs';
 import userService from '../db/user-service.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import addressBookService from './address-book-service.mjs';
-import {getContractOwnerFromDB} from './journal-service.mjs';
+import {getContractOwnerAddressFromDB} from './journal-service.mjs';
 
 export default {
   /**
@@ -89,11 +89,11 @@ export default {
       avatar
     });
 
-    const contractOwner = await getContractOwnerFromDB();
+    const contractOwner = await getContractOwnerAddressFromDB();
 
     // add default roles
     if (roles) newUser.roles.push(roles);
-    if (contractOwner.address === ethereumAddress) {
+    if (contractOwner === ethereumAddress) {
       newUser.roles.push(Roles.CONTRACT_OWNER);
     }
 
