@@ -1,3 +1,3 @@
-export const TOKEN_KOVAN_ADDRESS = '0x40b724cf6c5922eea78905f953555f46b58b090f';
+export const TOKEN_KOVAN_ADDRESS = '0xad9a8e2f14820f9c2a8f39bb501fba891f9f990a';
 export const PLATFORM_KOVAN_ADDRESS =
-  '0x6d5bed2f9ce10b52cf3d7ec11a6fcde9304ab11e';
+  '0xad5d2e1a0a17be861dabcb3734c79bec688856ab';
