@@ -48,11 +48,6 @@ class Sentences extends React.Component {
     return this.state.sentences.map((sentence, i) => {
       const refId = this.props.field + i;
       let marginTop = 0;
-
-      const annotation = this.props.annotations.find(a => {
-        return a.sentenceId === sentence.id;
-      });
-
       if (i !== this.state.sentences.length - 1) {
         if (sentence.offsetTop === this.state.sentences[i + 1].offsetTop)
           marginTop = -12;
