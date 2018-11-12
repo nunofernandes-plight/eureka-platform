@@ -20,6 +20,7 @@ import {
   PLATFORM_KOVAN_ADDRESS,
   TOKEN_KOVAN_ADDRESS
 } from '../smartcontracts/constants/KovanContractAddresses.mjs';
+import withWeb3 from './webpack/contexts/WithWeb3.js';
 
 const store = createStore(
   reducer,
@@ -149,7 +150,7 @@ class App extends Component {
       <div>
         <Detector
           render={({online}) =>
-            online || this.state.provider === Web3Providers.LOCALHOST ? (
+            online || this.props.context.provider === Web3Providers.LOCALHOST ? (
               <ReduxProvider store={store}>
                 <MainRouter
                   platformContract={this.state.platformContract}
@@ -178,4 +179,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withWeb3(App);
