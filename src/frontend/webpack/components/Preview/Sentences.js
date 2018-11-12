@@ -52,7 +52,6 @@ class Sentences extends React.Component {
       const annotation = this.props.annotations.find(a => {
         return a.sentenceId === sentence.id;
       });
-      console.log(annotation);
 
       if (i !== this.state.sentences.length - 1) {
         if (sentence.offsetTop === this.state.sentences[i + 1].offsetTop)
@@ -88,6 +87,9 @@ class Sentences extends React.Component {
   }
 
   getClass(index) {
+    if (!this.props.isReview) {
+      return;
+    }
     if (this.props.show === index) {
       return 'highlightSpan';
     }
