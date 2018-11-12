@@ -9,17 +9,14 @@ contract EurekaPlatform {
     using SafeMath for uint256;
 
     Eureka eurekaTokenContract;
-
     address public contractOwner;
 
     /*
     *   journal parameters
     */
-
     // amount of rewarded reviewers
     uint minAmountOfEditorApprovedReviews = 2;
     uint maxAmountOfRewardedEditorApprovedReviews = 3;
-
     uint minAmountOfCommunityReviews = 0;
     uint maxAmountOfRewardedCommunityReviews = 10;
 
@@ -28,11 +25,10 @@ contract EurekaPlatform {
     uint editorReward = 500;
     uint linkedArticlesReward = 750;
     uint invalidationWorkReward = 1000;
-
     uint editorApprovedReviewerRewardPerReviewer = 250;
     uint communityReviewerRewardPerReviewer = 50;
     uint secondReviewerRewardPerReviewer = 25;
-
+    // resulting submissionFee
     uint public submissionFee =
     sciencemattersFoundationReward
     + editorReward
@@ -101,9 +97,10 @@ contract EurekaPlatform {
     mapping(bytes32 => mapping(address => Review)) public  reviews;
 
     // address mappings
-    //    mapping(address => ArticleVersion[]) articleVersionByAuthor;
-    //    mapping(address => ArticleSubmission[]) articleSubmissionsByEditor;
-    //    mapping(address => Review[]) reviewsByReviewer;
+    //    mapping(address => int256[]) articleSubmissionsBySubmissionOwner;
+    //    mapping(address => int256[]) articleSubmissionsByEditor;
+    //    mapping(address => bytes32[]) articleVersionsByAuthor;
+    //    mapping(address => bytes32[]) reviewsByReviewer;              // return an array of articleVersion hashes which can be used for looking up the reviews
 
 
     enum SubmissionState {
@@ -156,17 +153,11 @@ contract EurekaPlatform {
         // the submission owner can weight the impact of the linked articles [0;10000]
         uint16[] linkedArticlesSplitRatios;
 
-        // the reviewers which are allowed to review that article as an editor approved reviewer
-        //        address[] allowedEditorApprovedReviewers;
+        // the reviewers which are allowed to review that article as an editor approved reviewer, subject to change
         mapping(address => bool) allowedEditorApprovedReviewers;
         // the reviewers which are approved from the editor
-        // TODO how to check if Reviewer already saved a review -> with array for loop (expensive) maybe save additional mapping
-        //        mapping(address => Review) editorApprovedReviews;
         address[] editorApprovedReviews;
-
         // every community reviewer can add a community review without being approved
-        // TODO how to check if Reviewer already saved a review -> with array for loop (expensive) maybe save additional mapping
-        //        mapping(address => Review) communityReviews;
         address[] communityReviews;
     }
 
