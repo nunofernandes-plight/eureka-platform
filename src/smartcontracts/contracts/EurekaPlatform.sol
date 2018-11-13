@@ -415,11 +415,19 @@ contract EurekaPlatform {
 
     // TODO: set process to OPEN_FOR_EVERYONE
 
+    event SignedUpForReviewing(bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp);
+    function signUpForReviewing(bytes32 _articleHash) public {
+
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. version state must be REVIEWERS_INVITED.");
+
+        Review storage review = reviews[_articleHash][msg.sender];
+        review.reviewState = ReviewState.SIGNED_UP_FOR_REVIEWING;
         review.stateTimestamp = block.timestamp;
         review.reviewer = msg.sender;
 
         article.editorApprovedReviews.push(review.reviewer);
-        emit InvitationIsAccepted(_articleHash, msg.sender, block.timestamp);
+        emit SignedUpForReviewing(_articleHash, msg.sender, block.timestamp);
     }
 
 
