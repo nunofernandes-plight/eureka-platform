@@ -380,20 +380,20 @@ contract EurekaPlatform {
 
     event ReviewersAreInvited(uint256 submissionId, bytes32 articleHash, address[] editorApprovedReviewers, uint256 stateTimestamp);
 
-    function inviteReviewers(bytes32 _articleHash, address[] _allowedEditorApprovedReviewers) public {
+    function inviteReviewers(bytes32 _articleHash, address[] _invitedEditorApprovedReviewers) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
 
-        for (uint i = 0; i < _allowedEditorApprovedReviewers.length; i++) {
-            reviews[_articleHash][_allowedEditorApprovedReviewers[i]].reviewState = ReviewState.INVITED;
-            reviews[_articleHash][_allowedEditorApprovedReviewers[i]].stateTimestamp = block.timestamp;
+        for (uint i = 0; i < _invitedEditorApprovedReviewers.length; i++) {
+            reviews[_articleHash][_invitedEditorApprovedReviewers[i]].reviewState = ReviewState.INVITED;
+            reviews[_articleHash][_invitedEditorApprovedReviewers[i]].stateTimestamp = block.timestamp;
         }
         article.versionState = ArticleVersionState.REVIEWERS_INVITED;
         article.stateTimestamp = block.timestamp;
-        emit ReviewersAreInvited(articleVersions[_articleHash].submissionId, _articleHash, _allowedEditorApprovedReviewers, block.timestamp);
+        emit ReviewersAreInvited(articleVersions[_articleHash].submissionId, _articleHash, _invitedEditorApprovedReviewers, block.timestamp);
     }
 
     event InvitationIsAccepted(bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp);
