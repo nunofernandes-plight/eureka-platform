@@ -89,6 +89,7 @@ contract EurekaPlatform {
 
 
     mapping(address => bool) public isEditor;
+    mapping(address => bool) public isExpertReviewer;
 
     // primary key mappings
     uint256 submissionCounter;
@@ -221,6 +222,25 @@ contract EurekaPlatform {
         isEditor[editor] = false;
         emit EditorResigned(msg.sender, editor, block.timestamp);
     }
+
+    event ExpertReviewerSignUp(address contractOwner, address editorAddress, uint256 stateTimestamp);
+
+    function signUpExpertReviewer(address expertReviewer) public {
+
+        require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
+        isExpertReviewer[expertReviewer] = true;
+        emit ExpertReviewerSignUp(msg.sender, expertReviewer, block.timestamp);
+    }
+
+    event ExpertReviewerResigned(address contractOwner, address editorAddress, uint256 stateTimestamp);
+
+    function resignExpertReviewer(address expertReviewer) public {
+
+        require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
+        isExpertReviewer[expertReviewer] = false;
+        emit ExpertReviewerResigned(msg.sender, expertReviewer, block.timestamp);
+    }
+
     event SubmissionProcessStart(uint256 submissionId, address submissionOwner, bytes32 articleHash, bytes32 articleURL, uint256 stateTimestamp);
 
     function startSubmissionProcess(
