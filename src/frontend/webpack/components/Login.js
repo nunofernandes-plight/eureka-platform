@@ -34,6 +34,11 @@ class Login extends Component {
     };
   }
 
+
+  componentWillUnmount() {
+    this.setState({});
+  }
+
   async register() {
     this.setState({submitted: true});
 
