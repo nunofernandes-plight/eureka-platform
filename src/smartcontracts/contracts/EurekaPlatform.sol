@@ -413,7 +413,20 @@ contract EurekaPlatform {
         emit InvitationIsAccepted(_articleHash, msg.sender, block.timestamp);
     }
 
-    // TODO: set process to OPEN_FOR_EVERYONE
+    event ReviewingOpenedForAllExperts(uint256 submissionId, bytes32 articleHash);
+
+    function openReviewingForAllExperts(bytes32 _articleHash) public {
+
+        require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
+
+        ArticleVersion storage article = articleVersions[_articleHash];
+        require(article.versionState == ArticleVersionState.REVIEWERS_INVITED
+            || article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be REVIEWERS_INVITED or EDITOR_CHECKED.");
+
+        article.versionState = ArticleVersionState.OPEN_FOR_ALL_REVIEWERS;
+        article.stateTimestamp = block.timestamp;
+        emit ReviewingOpenedForAllExperts(articleVersions[_articleHash].submissionId, _articleHash);
+    }
 
     event SignedUpForReviewing(bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp);
     function signUpForReviewing(bytes32 _articleHash) public {
