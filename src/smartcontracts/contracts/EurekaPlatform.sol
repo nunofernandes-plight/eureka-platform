@@ -213,6 +213,14 @@ contract EurekaPlatform {
         emit EditorSignUp(msg.sender, editor, block.timestamp);
     }
 
+    event EditorResigned(address contractOwner, address editorAddress, uint256 stateTimestamp);
+
+    function resignEditor(address editor) public {
+
+        require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
+        isEditor[editor] = false;
+        emit EditorResigned(msg.sender, editor, block.timestamp);
+    }
     event SubmissionProcessStart(uint256 submissionId, address submissionOwner, bytes32 articleHash, bytes32 articleURL, uint256 stateTimestamp);
 
     function startSubmissionProcess(
