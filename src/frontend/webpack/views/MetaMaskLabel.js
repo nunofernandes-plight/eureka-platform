@@ -41,11 +41,11 @@ const MetaMaskDetectedLoggedIn = MetaMask.extend`
   color: white;
 `;
 
-const MetaMaskLabel = props => {
-  if (!props.metaMaskStatus) {
+const MetaMaskLabel = ({metaMaskStatus}) => {
+  if (!metaMaskStatus) {
     return <CircleHeaderSpinner />;
   }
-  const status = props.metaMaskStatus;
+  const status = metaMaskStatus;
   if (status === MetaMaskStatus.DETECTED_NO_LOGGED_IN) {
     return (
       <MetaMaskDetectedNoLoggedIn>
