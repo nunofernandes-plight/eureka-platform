@@ -485,10 +485,8 @@ contract EurekaPlatform {
     function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.SUBMITTED
-        || article.versionState == ArticleVersionState.EDITOR_CHECKED
-        || article.versionState == ArticleVersionState.REVIEWERS_INVITED
-        , "this method can't be called. the article version needs to be SUBMITTED, EDITOR_CHECKED or REVIEWERS_INVITED.");
+        require(article.versionState >= ArticleVersionState.SUBMITTED
+            , "this method can't be called. the article version needs to be SUBMITTED to add a community review.");
 
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState < ReviewState.HANDED_IN, "the review already exists.");
