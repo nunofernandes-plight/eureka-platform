@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Web3 from 'web3';
 import {applyMiddleware, createStore} from 'redux';
 import {Provider as ReduxProvider} from 'react-redux';
 import thunk from 'redux-thunk';
@@ -12,14 +11,6 @@ import Web3Providers from './web3/Web3Providers.js';
 import NoConnection from './webpack/views/NoConnection.js';
 import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
 import {getAllAccounts, getNetwork} from './web3/Helpers.js';
-import platformABI from '../smartcontracts/constants/GanachePlatformContractABI.json';
-import tokenABI from '../smartcontracts/constants/GanacheTokenContractABI.json';
-import platformAddress from '../smartcontracts/constants/GanachePlatformContractAddress.json';
-import tokenAddress from '../smartcontracts/constants/GanacheTokenContractAddress.json';
-import {
-  PLATFORM_KOVAN_ADDRESS,
-  TOKEN_KOVAN_ADDRESS
-} from '../smartcontracts/constants/KovanContractAddresses.mjs';
 import withWeb3 from './webpack/contexts/WithWeb3.js';
 
 const store = createStore(
@@ -115,7 +106,8 @@ class App extends Component {
       <div>
         <Detector
           render={({online}) =>
-            online || this.props.context.provider === Web3Providers.LOCALHOST ? (
+            online ||
+            this.props.context.provider === Web3Providers.LOCALHOST ? (
               <ReduxProvider store={store}>
                 <MainRouter
                   platformContract={this.props.context.platformContract}

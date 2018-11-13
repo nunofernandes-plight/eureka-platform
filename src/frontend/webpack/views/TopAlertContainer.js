@@ -8,11 +8,12 @@ import {
   AlertContainer
 } from './SharedForms.js';
 import EurekaLogo from './icons/EurekaLogo.js';
+import withWeb3 from '../contexts/WithWeb3.js';
 
-const TopAlertContainer = props => {
+const TopAlertContainer = ({provider}) => {
   return (
     <TitleRow>
-      {props.provider === Web3Providers.META_MASK ? (
+      {provider === Web3Providers.META_MASK ? (
         <AlertContainer>
           <Alert status={'info'}>
             We detected MetaMask in your Browser! We use it as our
@@ -21,7 +22,7 @@ const TopAlertContainer = props => {
           </Alert>
         </AlertContainer>
       ) : null}
-      {props.provider === Web3Providers.LOCALHOST ? (
+      {provider === Web3Providers.LOCALHOST ? (
         <AlertDevContainer>
           <Alert status={'warning'}>THIS IS A DEV ENVIRONMENT</Alert>
         </AlertDevContainer>

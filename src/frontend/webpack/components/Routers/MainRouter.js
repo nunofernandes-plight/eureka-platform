@@ -20,10 +20,11 @@ import {
 import Modal from '../../design-components/Modal.js';
 import DashboardRouter from './DashboardRouter.js';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
+import withWeb3 from '../../contexts/WithWeb3.js';
 
 const PaddingLeft = styled.div`
   padding-left: ${props =>
-    props.isMobileMode ? PANEL_LEFT_MOBILE_WIDTH : PANEL_LEFT_NORMAL_WIDTH}px;
+  props.isMobileMode ? PANEL_LEFT_MOBILE_WIDTH : PANEL_LEFT_NORMAL_WIDTH}px;
   ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
     padding-left: ${PANEL_LEFT_MOBILE_WIDTH}px; 
   `};
@@ -146,6 +147,7 @@ class MainRouter extends Component {
   }
 
   render() {
+
     return (
       <div>
         {this.renderModals()}
@@ -159,7 +161,7 @@ class MainRouter extends Component {
         <div style={{paddingTop: this.getPaddingTop()}}>
           <BrowserRouter>
             <Switch>
-              <Route path="/metamask" exact render={() => <MetaMaskGuide />} />
+              <Route path="/metamask" exact render={() => <MetaMaskGuide/>}/>
               <Route
                 path="/app"
                 render={() => (
@@ -188,7 +190,7 @@ class MainRouter extends Component {
                         metaMaskStatus={this.props.metaMaskStatus}
                         network={this.props.network}
                         action={item => this.action(item)}
-                        updateAccount={()=>{
+                        updateAccount={() => {
                           this.props.updateAccount();
                         }}
                       />
@@ -223,8 +225,6 @@ class MainRouter extends Component {
                   <div>
                     {!this.state.isAuthenticated ? (
                       <Login
-                        provider={this.props.provider}
-                        web3={this.props.web3}
                         metaMaskStatus={this.props.metaMaskStatus}
                         accounts={this.props.accounts}
                         selectedAccount={this.props.selectedAccount}
@@ -236,7 +236,7 @@ class MainRouter extends Component {
                         }}
                       />
                     ) : (
-                      <Redirect to={'/app'} />
+                      <Redirect to={'/app'}/>
                     )}
                   </div>
                 )}
@@ -245,7 +245,7 @@ class MainRouter extends Component {
             Startsite always needs to be at the bottom!
             It otherwise matches sub routes
           */}
-              <Route path="/" exact render={() => <WelcomePage />} />
+              <Route path="/" exact render={() => <WelcomePage/>}/>
               <Route
                 render={() => <div>TODO: IMPLEMENT 404 NOT FOUND PAGE </div>}
               />
