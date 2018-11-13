@@ -136,6 +136,7 @@ contract EurekaPlatform {
         SUBMITTED,
         EDITOR_CHECKED,
         REVIEWERS_INVITED,
+        OPEN_FOR_ALL_REVIEWERS,
         NOT_ENOUGH_REVIEWERS,
         DECLINED_SANITY_NOTOK,
         DECLINED,
@@ -372,7 +373,7 @@ contract EurekaPlatform {
 
         article.versionState = ArticleVersionState.DECLINED_SANITY_NOTOK;
         article.stateTimestamp = block.timestamp;
-        // TODO handle difference between review rounds and article versions, maybe not every new version is a review round, according to max Review rounds
+
         requestNewReviewRound(article.submissionId);
         emit SanityIsNotOk(articleVersions[_articleHash].submissionId, _articleHash);
     }
@@ -662,7 +663,7 @@ contract EurekaPlatform {
 
         submitArticleVersion(_submissionId, _articleHash, _articleURL, _authors, _authorContributionRatios, _linkedArticles, _linkedArticlesSplitRatios);
 
-        submission.submissionState = SubmissionState.OPEN;
+        submission.submissionState = SubmissionState.EDITOR_ASSIGNED;
         submission.stateTimestamp = block.timestamp;
         emit NewReviewRoundOpened(_submissionId, _articleHash, _articleURL, block.timestamp);
     }
