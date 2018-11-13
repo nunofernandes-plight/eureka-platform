@@ -33,44 +33,9 @@ const store = createStore(
 class App extends Component {
   constructor() {
     super();
-    const web3 = window.web3;
-    let web3Instance = null;
-    let platformContract = null;
-    let tokenContract = null;
-    let provider;
-    if (typeof web3 !== 'undefined' && web3.currentProvider.isMetaMask) {
-      // MetaMask as main provider
-      console.info('MetaMask detected in this browser');
-      web3Instance = new Web3(web3.currentProvider);
-      provider = Web3Providers.META_MASK;
-      platformContract = new web3Instance.eth.Contract(
-        platformABI,
-        PLATFORM_KOVAN_ADDRESS
-      );
-
-      tokenContract = new web3Instance.eth.Contract(
-        tokenABI,
-        TOKEN_KOVAN_ADDRESS
-      );
-    } else {
-      web3Instance = new Web3('http://localhost:7545');
-      platformContract = new web3Instance.eth.Contract(platformABI);
-      tokenContract = new web3Instance.eth.Contract(tokenABI);
-      platformContract.options.address = platformAddress;
-      tokenContract.options.address = tokenAddress;
-      provider = Web3Providers.LOCALHOST;
-    }
-
-    console.log('Token Contract ' + tokenContract.options.address);
-    console.log('Platform Contract ' + platformContract.options.address);
-
     this.state = {
-      web3: web3Instance,
-      provider,
       metaMaskStatus: null,
       accounts: null,
-      platformContract,
-      tokenContract,
       selectedAccount: {
         address: null,
         balance: null,
@@ -80,17 +45,17 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    const network = await getNetwork(this.state.web3);
-    const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
-    const accounts = await getAllAccounts(this.state.web3);
+    const network = await getNetwork(this.props.context.web3);
+    const metaMaskStatus = await getMetaMaskStatus(this.props.context.web3);
+    const accounts = await getAllAccounts(this.props.context.web3);
 
     const selectedAccount = {...this.state.selectedAccount};
     // Default account for MetaMask
-    if (this.state.provider === Web3Providers.META_MASK) {
+    if (this.props.context.provider === Web3Providers.META_MASK) {
       selectedAccount.address = [...accounts.keys()][0];
 
       // GANACHE case
-    } else if (this.state.provider === Web3Providers.LOCALHOST) {
+    } else if (this.props.context.provider === Web3Providers.LOCALHOST) {
       selectedAccount.address = localStorage.getItem('ganache')
         ? JSON.parse(localStorage.getItem('ganache'))
         : [...accounts.keys()][0];
@@ -99,7 +64,7 @@ class App extends Component {
     selectedAccount.balance = accounts.get(selectedAccount.address);
 
     selectedAccount.EKABalance = await getBalanceOf(
-      this.state.tokenContract,
+      this.props.context.tokenContract,
       selectedAccount.address
     );
 
@@ -107,7 +72,7 @@ class App extends Component {
 
     this.setState({network, metaMaskStatus, accounts});
     this.interval = setInterval(async () => {
-      const metaMaskStatus = await getMetaMaskStatus(this.state.web3);
+      const metaMaskStatus = await getMetaMaskStatus(this.props.context.web3);
       // Const accounts = await getAllAccounts(this.state.web3);
       this.setState({metaMaskStatus});
     }, 7500);
@@ -118,7 +83,7 @@ class App extends Component {
     const account = {...this.state.selectedAccount};
     account.address = selectedAccount.address;
 
-    const accounts = await getAllAccounts(this.state.web3);
+    const accounts = await getAllAccounts(this.props.context.web3);
     if (accounts.get(account.address)) {
       account.balance = accounts.get(account.address);
     }
@@ -128,13 +93,13 @@ class App extends Component {
   }
 
   async updateAccount() {
-    const accounts = await getAllAccounts(this.state.web3);
+    const accounts = await getAllAccounts(this.props.context.web3);
     const selectedAccount = {...this.state.selectedAccount};
 
     selectedAccount.balance = accounts.get(selectedAccount.address);
 
     selectedAccount.EKABalance = await getBalanceOf(
-      this.state.tokenContract,
+      this.props.context.tokenContract,
       selectedAccount.address
     );
 
