@@ -388,7 +388,6 @@ contract EurekaPlatform {
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
 
         for (uint i = 0; i < _allowedEditorApprovedReviewers.length; i++) {
-            article.allowedEditorApprovedReviewers[_allowedEditorApprovedReviewers[i]] = true;
             reviews[_articleHash][_allowedEditorApprovedReviewers[i]].reviewState = ReviewState.INVITED;
             reviews[_articleHash][_allowedEditorApprovedReviewers[i]].stateTimestamp = block.timestamp;
         }
@@ -403,11 +402,6 @@ contract EurekaPlatform {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
-
-        //TODO: maybe not necessary anymore
-        require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
-        //TODO: handle accepted but not responding reviewers
-        require(article.editorApprovedReviews.length < maxAmountOfRewardedEditorApprovedReviews, "the max amount of editor approved reviews is already reached.");
 
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState == ReviewState.INVITED, "this method can't be called, the review state needs to be in INVITED.");
