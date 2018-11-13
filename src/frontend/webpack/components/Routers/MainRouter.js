@@ -31,6 +31,8 @@ const PaddingLeft = styled.div`
   transition: 0.5s all;
 `;
 
+
+
 class MainRouter extends Component {
   constructor() {
     super();
@@ -204,8 +206,6 @@ class MainRouter extends Component {
                 exact
                 render={() => (
                   <SignUp
-                    provider={this.props.provider}
-                    web3={this.props.web3}
                     metaMaskStatus={this.props.metaMaskStatus}
                     accounts={this.props.accounts}
                     selectedAccount={this.props.selectedAccount}
