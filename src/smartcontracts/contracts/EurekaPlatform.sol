@@ -98,7 +98,6 @@ contract EurekaPlatform {
         eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
     }
 
-
     mapping(address => bool) public isEditor;
     mapping(address => bool) public isExpertReviewer;
 
@@ -108,11 +107,11 @@ contract EurekaPlatform {
     mapping(bytes32 => ArticleVersion) public articleVersions;
     mapping(bytes32 => mapping(address => Review)) public  reviews;
 
-    // address mappings
+    // address mappings TODO: are these mappings needed?
     //    mapping(address => int256[]) articleSubmissionsBySubmissionOwner;
     //    mapping(address => int256[]) articleSubmissionsByEditor;
     //    mapping(address => bytes32[]) articleVersionsByAuthor;
-    //    mapping(address => bytes32[]) reviewsByReviewer;              // return an array of articleVersion hashes which can be used for looking up the reviews
+    //    mapping(address => bytes32[]) reviewedArticlesByReviewer;         // return an array of articleVersion hashes which can be used for looking up the reviews
 
 
     enum SubmissionState {
