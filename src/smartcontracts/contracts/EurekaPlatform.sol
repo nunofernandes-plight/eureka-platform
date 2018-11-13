@@ -388,6 +388,7 @@ contract EurekaPlatform {
         require(article.versionState == ArticleVersionState.EDITOR_CHECKED, "this method can't be called. version state must be EDITOR_CHECKED.");
 
         for (uint i = 0; i < _invitedEditorApprovedReviewers.length; i++) {
+            require(isExpertReviewer[_invitedEditorApprovedReviewers[i]], "the invited reviewer must be an expert reviewer for beeing invtied.");
             reviews[_articleHash][_invitedEditorApprovedReviewers[i]].reviewState = ReviewState.INVITED;
             reviews[_articleHash][_invitedEditorApprovedReviewers[i]].stateTimestamp = block.timestamp;
         }
@@ -399,6 +400,8 @@ contract EurekaPlatform {
     event InvitationIsAccepted(bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp);
 
     function acceptReviewInvitation(bytes32 _articleHash) public {
+
+        require(isExpertReviewer[msg.sender], "msg.sender must be an expert reviewer to sign up for adding an expert review.");
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
@@ -431,6 +434,8 @@ contract EurekaPlatform {
     event SignedUpForReviewing(bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp);
     function signUpForReviewing(bytes32 _articleHash) public {
 
+        require(isExpertReviewer[msg.sender], "msg.sender must be an expert reviewer to sign up for adding an expert review.");
+
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. version state must be REVIEWERS_INVITED.");
 
@@ -448,11 +453,10 @@ contract EurekaPlatform {
 
     function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
+        require(isExpertReviewer[msg.sender], "msg.sender must be an expert reviewer to add an expert review.");
+
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
-
-        //TODO: maybe not necessary anymore
-        require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
 
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState == ReviewState.SIGNED_UP_FOR_REVIEWING
