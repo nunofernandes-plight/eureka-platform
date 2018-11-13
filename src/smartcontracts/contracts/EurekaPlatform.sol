@@ -74,10 +74,21 @@ contract EurekaPlatform {
         );
     }
 
-    //    constructor(address _eurekaTokenContractAddress) public {
+    /* in future this constructor:
+        constructor(
+            address _eurekaTokenContractAddress,
+            uint256 _minAmountOfEditorApprovedReviews,
+            uint256 _maxAmountOfRewardedEditorApprovedReviews,
+            ...
+            ) public {
+    */
     constructor() public {
 
-        //        eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
+        /*  eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
+            minAmountOfEditorApprovedReviews = _minAmountOfEditorApprovedReviews;
+            maxAmountOfRewardedEditorApprovedReviews = _maxAmountOfRewardedEditorApprovedReviews;
+            ...
+        */
         contractOwner = msg.sender;
     }
 
