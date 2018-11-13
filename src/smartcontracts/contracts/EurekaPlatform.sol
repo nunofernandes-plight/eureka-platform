@@ -456,13 +456,14 @@ contract EurekaPlatform {
         require(isExpertReviewer[msg.sender], "msg.sender must be an expert reviewer to add an expert review.");
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
+        require(article.versionState == ArticleVersionState.REVIEWERS_INVITED
+        || article.versionState == ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. version state must be REVIEWERS_INVITED.");
 
         Review storage review = reviews[_articleHash][msg.sender];
-        require(review.reviewState == ReviewState.SIGNED_UP_FOR_REVIEWING
-        || review.reviewState == ReviewState.INVITED, "msg.sender is not authorized to add a editor approved revie");
+        require(review.reviewState == ReviewState.INVITED
+        || review.reviewState == ReviewState.SIGNED_UP_FOR_REVIEWING, "msg.sender is not authorized to add a editor approved revie");
 
-        if (review.reviewState != ReviewState.SIGNED_UP_FOR_REVIEWING) {
+        if (review.reviewState == ReviewState.INVITED) {
             acceptReviewInvitation(_articleHash);
         }
 
