@@ -153,10 +153,10 @@ class App extends Component {
             online || this.props.context.provider === Web3Providers.LOCALHOST ? (
               <ReduxProvider store={store}>
                 <MainRouter
-                  platformContract={this.state.platformContract}
-                  tokenContract={this.state.tokenContract}
-                  web3={this.state.web3}
-                  provider={this.state.provider}
+                  platformContract={this.props.context.platformContract}
+                  tokenContract={this.props.context.tokenContract}
+                  web3={this.props.context.web3}
+                  provider={this.props.context.provider}
                   network={this.state.network}
                   metaMaskStatus={this.state.metaMaskStatus}
                   accounts={this.state.accounts}
