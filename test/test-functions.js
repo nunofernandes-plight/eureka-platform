@@ -370,7 +370,7 @@ export default {
 
     let counter = 0;
     while (
-      dbReview.reviewState !== ReviewState.INVITATION_ACCEPTED &&
+      dbReview.reviewState !== ReviewState.SIGNED_UP_FOR_REVIEWING &&
       counter < 5) {
       sleepSync(5000);
       dbReview = await reviewService.getReviewById(
@@ -379,7 +379,7 @@ export default {
       );
       counter++;
     }
-    t.is(dbReview.reviewState, ReviewState.INVITATION_ACCEPTED);
+    t.is(dbReview.reviewState, ReviewState.SIGNED_UP_FOR_REVIEWING);
   },
 
   addEditorApprovedReviewAndTest: async function(t, reviewer, review, reviewData, reviewDataInHex, articleVersion) {

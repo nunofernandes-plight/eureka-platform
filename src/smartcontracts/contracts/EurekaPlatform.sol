@@ -176,7 +176,7 @@ contract EurekaPlatform {
     enum ReviewState {
         NOT_EXISTING,
         INVITED,
-        INVITATION_ACCEPTED,
+        SIGNED_UP_FOR_REVIEWING,
         HANDED_IN,
         DECLINED,
         ACCEPTED
@@ -405,7 +405,16 @@ contract EurekaPlatform {
 
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState == ReviewState.INVITED, "this method can't be called, the review state needs to be in INVITED.");
-        review.reviewState = ReviewState.INVITATION_ACCEPTED;
+        review.reviewState = ReviewState.SIGNED_UP_FOR_REVIEWING;
+        review.stateTimestamp = block.timestamp;
+        review.reviewer = msg.sender;
+
+        article.editorApprovedReviews.push(review.reviewer);
+        emit InvitationIsAccepted(_articleHash, msg.sender, block.timestamp);
+    }
+
+    // TODO: set process to OPEN_FOR_EVERYONE
+
         review.stateTimestamp = block.timestamp;
         review.reviewer = msg.sender;
 
@@ -425,10 +434,10 @@ contract EurekaPlatform {
         require(article.allowedEditorApprovedReviewers[msg.sender], "msg.sender is not invited to review");
 
         Review storage review = reviews[_articleHash][msg.sender];
-        require(review.reviewState == ReviewState.INVITATION_ACCEPTED
+        require(review.reviewState == ReviewState.SIGNED_UP_FOR_REVIEWING
         || review.reviewState == ReviewState.INVITED, "msg.sender is not authorized to add a editor approved revie");
 
-        if (review.reviewState != ReviewState.INVITATION_ACCEPTED) {
+        if (review.reviewState != ReviewState.SIGNED_UP_FOR_REVIEWING) {
             acceptReviewInvitation(_articleHash);
         }
 
@@ -603,7 +612,7 @@ contract EurekaPlatform {
 
     function countAcceptedReviewInvitations(bytes32 _articleHash, address[] _reviewers) view private returns (uint count) {
         for (uint i = 0; i < _reviewers.length; i++) {
-            if (reviews[_articleHash][_reviewers[i]].reviewState == ReviewState.INVITATION_ACCEPTED)
+            if (reviews[_articleHash][_reviewers[i]].reviewState == ReviewState.SIGNED_UP_FOR_REVIEWING)
                 count++;
         }
         return count;

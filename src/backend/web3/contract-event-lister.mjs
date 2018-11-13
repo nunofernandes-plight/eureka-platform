@@ -194,7 +194,7 @@ export default {
           if (articleReviews[i].reviewerAddress == reviewerAddress) {
             articleReviews[i].stateTimestamp =
               event.returnValues.stateTimestamp;
-            articleReviews[i].reviewState = ReviewState.INVITATION_ACCEPTED;
+            articleReviews[i].reviewState = ReviewState.SIGNED_UP_FOR_REVIEWING;
             await articleReviews[i].save();
             break;
           }
