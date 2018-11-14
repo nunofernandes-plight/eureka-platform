@@ -77,10 +77,8 @@ class ReviewsRouter extends Component {
                 render={() => (
                   <ReviewsOpen
                     selectedAccount={this.props.selectedAccount}
-                    platformContract={this.props.platformContract}
                     base={`${this.props.base}/open`}
                     network={this.props.network}
-                    web3={this.props.web3}
                   />
                 )}
               />
