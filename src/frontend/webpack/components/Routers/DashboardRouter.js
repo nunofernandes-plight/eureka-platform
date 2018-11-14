@@ -88,9 +88,6 @@ class DashboardRouter extends Component {
             render={() => {
               return (
                 <ReviewsRouter
-                  web3={this.props.web3}
-                  tokenContract={this.props.tokenContract}
-                  platformContract={this.props.platformContract}
                   base={`${this.props.base}/reviews`}
                   user={this.props.user}
                   updateUser={() => {
