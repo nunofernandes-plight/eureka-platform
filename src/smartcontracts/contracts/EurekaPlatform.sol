@@ -403,8 +403,7 @@ contract EurekaPlatform {
 
         require(isExpertReviewer[msg.sender], "msg.sender must be an expert reviewer to sign up for adding an expert review.");
 
-        ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
+        require(articleVersions[_articleHash].versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
 
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState == ReviewState.INVITED, "this method can't be called, the review state needs to be in INVITED.");
@@ -412,7 +411,7 @@ contract EurekaPlatform {
         review.stateTimestamp = block.timestamp;
         review.reviewer = msg.sender;
 
-        article.editorApprovedReviews.push(review.reviewer);
+        articleVersions[_articleHash].editorApprovedReviews.push(review.reviewer);
         emit InvitationIsAccepted(_articleHash, msg.sender, block.timestamp);
     }
 
@@ -436,15 +435,14 @@ contract EurekaPlatform {
 
         require(isExpertReviewer[msg.sender], "msg.sender must be an expert reviewer to sign up for adding an expert review.");
 
-        ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. version state must be REVIEWERS_INVITED.");
+        require(articleVersions[_articleHash].versionState == ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. version state must be REVIEWERS_INVITED.");
 
         Review storage review = reviews[_articleHash][msg.sender];
         review.reviewState = ReviewState.SIGNED_UP_FOR_REVIEWING;
         review.stateTimestamp = block.timestamp;
         review.reviewer = msg.sender;
 
-        article.editorApprovedReviews.push(review.reviewer);
+        articleVersions[_articleHash].editorApprovedReviews.push(review.reviewer);
         emit SignedUpForReviewing(_articleHash, msg.sender, block.timestamp);
     }
 
