@@ -74,10 +74,8 @@ class EditorRouter extends Component {
               render={() => (
                 <EditorArticles
                   selectedAccount={this.props.selectedAccount}
-                  platformContract={this.props.platformContract}
                   base={`${this.props.base}/articles`}
                   network={this.props.network}
-                  web3={this.props.web3}
                 />
               )}
             />
@@ -87,10 +85,8 @@ class EditorRouter extends Component {
               render={() => (
                 <EditorSignOff
                   selectedAccount={this.props.selectedAccount}
-                  platformContract={this.props.platformContract}
                   base={`${this.props.base}/signoff`}
                   network={this.props.network}
-                  web3={this.props.web3}
                 />
               )}
             />
@@ -100,10 +96,8 @@ class EditorRouter extends Component {
               render={() => (
                 <EditorInvite
                   selectedAccount={this.props.selectedAccount}
-                  platformContract={this.props.platformContract}
                   base={`${this.props.base}/invite`}
                   network={this.props.network}
-                  web3={this.props.web3}
                 />
               )}
             />
@@ -113,10 +107,8 @@ class EditorRouter extends Component {
               render={() => (
                 <EditorCheckReviews
                   selectedAccount={this.props.selectedAccount}
-                  platformContract={this.props.platformContract}
                   base={`${this.props.base}/reviews`}
                   network={this.props.network}
-                  web3={this.props.web3}
                 />
               )}
             />
@@ -126,10 +118,8 @@ class EditorRouter extends Component {
               render={() => (
                 <EditorFinalize
                   selectedAccount={this.props.selectedAccount}
-                  platformContract={this.props.platformContract}
                   base={`${this.props.base}/finalize`}
                   network={this.props.network}
-                  web3={this.props.web3}
                 />
               )}
             />

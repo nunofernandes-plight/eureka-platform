@@ -13,6 +13,7 @@ import {
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
+import withWeb3 from '../../contexts/WithWeb3.js';
 
 const Container = styled.div`
   display: flex;
@@ -75,14 +76,14 @@ class EditorFinalize extends React.Component {
   async acceptArticle(articleHash) {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.web3))
-      gasAmount = await this.acceptArticleVersion(this.props.platformContract, articleHash)
+    if (!isGanache(this.props.context.web3))
+      gasAmount = await this.acceptArticleVersion(this.props.context.platformContract, articleHash)
         .estimateGas({
           from: this.props.selectedAccount.address
         });
     else gasAmount = 80000000;
 
-    acceptArticleVersion(this.props.platformContract, articleHash)
+    acceptArticleVersion(this.props.context.platformContract, articleHash)
       .send({
         from: this.props.selectedAccount.address,
         gas: gasAmount
@@ -115,14 +116,14 @@ class EditorFinalize extends React.Component {
   async declineArticle(articleHash) {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.web3))
-      gasAmount = await this.declineArticleVersion(this.props.platformContract, articleHash)
+    if (!isGanache(this.props.context.web3))
+      gasAmount = await this.declineArticleVersion(this.props.context.platformContract, articleHash)
         .estimateGas({
           from: this.props.selectedAccount.address
         });
     else gasAmount = 80000000;
 
-    declineArticleVersion(this.props.platformContract, articleHash)
+    declineArticleVersion(this.props.context.platformContract, articleHash)
       .send({
         from: this.props.selectedAccount.address,
         gas: gasAmount
@@ -232,4 +233,4 @@ class EditorFinalize extends React.Component {
   }
 }
 
-export default withRouter(EditorFinalize);
+export default withWeb3(withRouter(EditorFinalize));

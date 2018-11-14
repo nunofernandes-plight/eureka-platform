@@ -9,6 +9,7 @@ import {Link, withRouter} from 'react-router-dom';
 import {setSanityToOk} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
+import withWeb3 from '../../contexts/WithWeb3.js';
 
 const Container = styled.div`
   display: flex;
@@ -67,7 +68,7 @@ class EditorSignOff extends React.Component {
   }
 
   signOffArticle(articleHash) {
-    setSanityToOk(this.props.platformContract, articleHash)
+    setSanityToOk(this.props.context.platformContract, articleHash)
       .send({
         from: this.props.selectedAccount.address
       })
@@ -166,4 +167,4 @@ class EditorSignOff extends React.Component {
     );
   }
 }
-export default withRouter(EditorSignOff);
+export default withWeb3(withRouter(EditorSignOff));

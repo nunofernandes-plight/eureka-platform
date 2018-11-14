@@ -119,9 +119,6 @@ class DashboardRouter extends Component {
             path={`${this.props.base}/editor`}
             render={() => (
               <EditorRouter
-                web3={this.props.web3}
-                tokenContract={this.props.tokenContract}
-                platformContract={this.props.platformContract}
                 base={`${this.props.base}/editor`}
                 user={this.props.user}
                 selectedAccount={this.props.selectedAccount}

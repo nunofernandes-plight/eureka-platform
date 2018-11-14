@@ -5,6 +5,7 @@ import TxHash from '../../views/TxHash.js';
 import UsersSelection from '../UsersSelection.js';
 import {getDomain} from '../../../../helpers/getDomain.mjs';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
+import withWeb3 from '../../contexts/WithWeb3.js';
 
 const Container = styled.div``;
 class EdiorReviewersPicker extends React.Component {
