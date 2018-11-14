@@ -51,30 +51,7 @@ export const fetchUserData = () => {
   };
 };
 
-/*
-  .then(response => response.json())
-  .then(response => {
-    if (response.success) {
-      let user = response.data.user;
-      user.roles.push(Roles.USER);
-      this.setState({
-        user,
-        isAuthenticated: response.data.isAuthenticated
-      });
-    } else {
-      this.setState({
-        isAuthenticated: false
-      });
-    }
-  })
-  .catch(err => {
-    console.error(err);
-    this.setState({
-      isAuthenticated: false
-    });
-  });*/
-
-export default function(state = initialState, action) {
+export const userData = (state = initialState, action) => {
   switch (action.type) {
     case START_FETCHING_USER:
       return {

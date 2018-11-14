@@ -12,14 +12,9 @@ import NoConnection from './webpack/views/NoConnection.js';
 import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
 import {getAllAccounts, getNetwork} from './web3/Helpers.js';
 import withWeb3 from './webpack/contexts/WithWeb3.js';
+import {connect} from 'react-redux';
+import {fetchUserData} from './webpack/reducers/user.js';
 
-const store = createStore(
-  reducer,
-  composeWithDevTools(
-    applyMiddleware(thunk)
-    // other store enhancers if any
-  )
-);
 
 class App extends Component {
   constructor() {
@@ -108,7 +103,6 @@ class App extends Component {
           render={({online}) =>
             online ||
             this.props.context.provider === Web3Providers.LOCALHOST ? (
-              <ReduxProvider store={store}>
                 <MainRouter
                   network={this.state.network}
                   metaMaskStatus={this.state.metaMaskStatus}
@@ -121,7 +115,7 @@ class App extends Component {
                     this.updateAccount();
                   }}
                 />
-              </ReduxProvider>
+
             ) : (
               <NoConnection />
             )
@@ -132,4 +126,18 @@ class App extends Component {
   }
 }
 
-export default withWeb3(App);
+export default withWeb3(
+  connect(
+    state => {
+      return {
+        userData: null
+      };
+    },
+    dispatch => {
+      return {
+        fetchUserdata: query => {
+          dispatch(fetchUserData());
+        }
+      };
+    }
+  )(App));

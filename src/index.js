@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './frontend/index.css';
-import App from './frontend/App';
-
 import registerServiceWorker from './frontend/registerServiceWorker';
+import ReduxInit from './frontend/ReduxInit.js';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<ReduxInit />, document.getElementById('root'));
 registerServiceWorker();
