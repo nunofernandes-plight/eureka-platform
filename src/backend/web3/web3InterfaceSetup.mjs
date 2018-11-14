@@ -15,6 +15,7 @@ import {PLATFORM_KOVAN_ADDRESS, TOKEN_KOVAN_ADDRESS} from '../../smartcontracts/
 import {PLATFORM_KOVAN_ABI} from '../../smartcontracts/constants/KovanPlatformContractABIs.mjs';
 import {TOKEN_KOVAN_ABI} from '../../smartcontracts/constants/KovanTokenContractABIs.mjs';
 import {saveJournalInformation} from '../db/journal-service.mjs';
+import timeBasedContractService from '../web3/timebased-contract-service.mjs';
 
 export let platformContract;
 export let tokenContract;
@@ -55,6 +56,7 @@ export const setupWeb3Interface = async (platformContract, tokenContract) => {
 
   await contractEventListener.setup(platformContract);
   await saveJournalInformation(platformContract);
+  await timeBasedContractService.startTimeBasedSCWorker(platformContract);
 
 
 
