@@ -89,10 +89,8 @@ class ReviewsRouter extends Component {
                 render={() => (
                   <ReviewsMyReviews
                     selectedAccount={this.props.selectedAccount}
-                    platformContract={this.props.platformContract}
                     base={`${this.props.base}/me`}
                     network={this.props.network}
-                    web3={this.props.web3}
                   />
                 )}
               />
