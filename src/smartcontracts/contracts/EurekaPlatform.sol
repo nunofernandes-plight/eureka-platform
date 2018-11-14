@@ -474,14 +474,21 @@ contract EurekaPlatform {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState == ArticleVersionState.REVIEWERS_INVITED
-        || article.versionState == ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. version state must be REVIEWERS_INVITED.");
+            || article.versionState == ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. version state must be REVIEWERS_INVITED.");
 
         Review storage review = reviews[_articleHash][msg.sender];
-        require(review.reviewState == ReviewState.INVITED
-        || review.reviewState == ReviewState.SIGNED_UP_FOR_REVIEWING, "msg.sender is not authorized to add a editor approved revie");
 
-        if (review.reviewState == ReviewState.INVITED) {
-            acceptReviewInvitation(_articleHash);
+        if (article.versionState == ArticleVersionState.REVIEWERS_INVITED) {
+            require(review.reviewState == ReviewState.INVITED
+                || review.reviewState == ReviewState.SIGNED_UP_FOR_REVIEWING, "msg.sender is not authorized to add an editor approved revie");
+            if (review.reviewState == ReviewState.INVITED)
+                acceptReviewInvitation(_articleHash);
+        }
+        else {
+            require(review.reviewState == ReviewState.SIGNED_UP_FOR_REVIEWING
+                || review.reviewState == ReviewState.NOT_EXISTING, "msg.sender is not authorized to add an editor approved revie");
+            if (review.reviewState == ReviewState.NOT_EXISTING)
+                signUpForReviewing(_articleHash);
         }
 
         review.isEditorApprovedReview = true;
