@@ -52,7 +52,6 @@ class DashboardRouter extends Component {
             path={`${this.props.base}/book`}
             render={() => (
               <AddressBook
-                web3={this.props.web3}
                 selectedAccount={this.props.selectedAccount}
               />
             )}
