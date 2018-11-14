@@ -104,9 +104,6 @@ class DashboardRouter extends Component {
             path={`${this.props.base}/articles`}
             render={() => (
               <ArticlesRouter
-                web3={this.props.web3}
-                tokenContract={this.props.tokenContract}
-                platformContract={this.props.platformContract}
                 base={`${this.props.base}/articles`}
                 user={this.props.user}
                 updateUser={() => {

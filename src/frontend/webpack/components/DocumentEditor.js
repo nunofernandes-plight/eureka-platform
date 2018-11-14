@@ -33,6 +33,7 @@ import getArticleHex from '../../../smartcontracts/methods/get-articleHex.mjs';
 import UsersSelection from './UsersSelection.js';
 import Roles from '../../../backend/schema/roles-enum.mjs';
 import {isGanache} from '../../../helpers/isGanache.mjs';
+import withWeb3 from '../contexts/WithWeb3.js';
 
 const Parent = styled.div`
   display: flex;
@@ -270,22 +271,22 @@ class DocumentEditor extends Component {
 
     let gasAmount;
     // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.web3))
+    if (!isGanache(this.props.context.web3))
       gasAmount = await submitArticle(
-        this.props.tokenContract,
-        this.props.platformContract.options.address,
+        this.props.context.tokenContract,
+        this.props.context.platformContract.options.address,
         SUBMISSION_PRICE,
-        getArticleHex(this.props.web3, article)
+        getArticleHex(this.props.context.web3, article)
       ).estimateGas({
         from: this.props.selectedAccount.address
       });
     else gasAmount = 80000000;
 
     await submitArticle(
-      this.props.tokenContract,
-      this.props.platformContract.options.address,
+      this.props.context.tokenContract,
+      this.props.context.platformContract.options.address,
       SUBMISSION_PRICE,
-      getArticleHex(this.props.web3, article)
+      getArticleHex(this.props.context.web3, article)
     )
       .send({
         from: this.props.selectedAccount.address,
@@ -507,4 +508,4 @@ class DocumentEditor extends Component {
   }
 }
 
-export default withRouter(DocumentEditor);
+export default withWeb3(withRouter(DocumentEditor));
