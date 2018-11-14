@@ -192,7 +192,6 @@ class ContractOwnerDashboard extends React.Component {
         {this.renderModals()}
         <Card
           style={{padding: '50px'}}
-          width={1000}
           title={'Contract Owner Dashboard'}
         >
           {Methods.map((item, index) => {
