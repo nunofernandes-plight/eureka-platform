@@ -2,8 +2,22 @@ import React from 'react';
 import {Redirect} from 'react-router-dom';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
+import {connect} from 'react-redux';
+import {fetchUserData} from '../../reducers/user.js';
 
-export const DashBoardGuard = props => {
+const mapDispatchToProps = dispatch => ({
+  fetchUserData: () => {
+    dispatch(fetchUserData());
+  }
+});
+const mapStateToProps = state => ({
+  isAuthenticated: state.userData.isAuthenticated
+});
+
+export const DashBoardGuard = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(props => {
   if (props.isAuthenticated === null) {
     return <GridSpinner />;
   }
@@ -13,7 +27,7 @@ export const DashBoardGuard = props => {
     );
   }
   return props.children;
-};
+});
 
 export const ContractOwnerGuard = props => {
   if (props.roles.includes(Roles.CONTRACT_OWNER)) {
