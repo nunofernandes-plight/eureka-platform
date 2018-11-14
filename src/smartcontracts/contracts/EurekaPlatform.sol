@@ -472,13 +472,12 @@ contract EurekaPlatform {
 
         require(isExpertReviewer[msg.sender], "msg.sender must be an expert reviewer to add an expert review.");
 
-        ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.REVIEWERS_INVITED
-            || article.versionState == ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. version state must be REVIEWERS_INVITED.");
+        require(articleVersions[_articleHash].versionState == ArticleVersionState.REVIEWERS_INVITED
+            || articleVersions[_articleHash].versionState == ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. version state must be REVIEWERS_INVITED.");
 
         Review storage review = reviews[_articleHash][msg.sender];
 
-        if (article.versionState == ArticleVersionState.REVIEWERS_INVITED) {
+        if (articleVersions[_articleHash].versionState == ArticleVersionState.REVIEWERS_INVITED) {
             require(review.reviewState == ReviewState.INVITED
                 || review.reviewState == ReviewState.SIGNED_UP_FOR_REVIEWING, "msg.sender is not authorized to add an editor approved revie");
             if (review.reviewState == ReviewState.INVITED)
@@ -508,13 +507,11 @@ contract EurekaPlatform {
 
     function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
-        ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState >= ArticleVersionState.SUBMITTED
-            && article.versionState <= ArticleVersionState.OPEN_FOR_ALL_REVIEWERS
-            , "this method can't be called. the article version needs to be SUBMITTED to add a community review.");
+        require(articleVersions[_articleHash].versionState >= ArticleVersionState.SUBMITTED
+            , "this method can't be called. the article version does not exist.");
 
         Review storage review = reviews[_articleHash][msg.sender];
-        require(review.reviewState < ReviewState.HANDED_IN, "the review already exists.");
+        require(review.reviewState == ReviewState.NOT_EXISTING, "the review already exists.");
 
         review.reviewer = msg.sender;
 
@@ -526,7 +523,7 @@ contract EurekaPlatform {
         review.score1 = _score1;
         review.score2 = _score2;
 
-        article.communityReviews.push(review.reviewer);
+        articleVersions[_articleHash].communityReviews.push(review.reviewer);
         review.reviewState = ReviewState.HANDED_IN;
         review.stateTimestamp = block.timestamp;
         emit CommunityReviewIsAdded(_articleHash, block.timestamp, _reviewHash, review.reviewer, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2);
@@ -535,14 +532,12 @@ contract EurekaPlatform {
     event ReviewIsCorrected(bytes32 oldReviewHash, bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp, bytes32 reviewHash, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
     function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
-        ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState >= ArticleVersionState.SUBMITTED
-        && article.versionState <= ArticleVersionState.OPEN_FOR_ALL_REVIEWERS
-        , "this method can't be called. the article version needs to be SUBMITTED, EDITOR_CHECKED or REVIEWERS_INVITED.");
+        require(articleVersions[_articleHash].versionState >= ArticleVersionState.SUBMITTED
+        , "this method can't be called. the article version does not exist.");
 
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState == ReviewState.DECLINED
-        || review.reviewState == ReviewState.HANDED_IN, "only declined or not checked reviews can be corrected.");
+            || review.reviewState == ReviewState.HANDED_IN, "only declined or not checked reviews can be corrected.");
 
         bytes32 oldReviewHash = review.reviewHash;
         review.reviewHash = _reviewHash;
