@@ -13,6 +13,7 @@ import {__THIRD} from '../../../helpers/colors.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import {acceptReviewInvitation} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
+import withWeb3 from '../../contexts/WithWeb3.js';
 
 const Container = styled.div`
   display: flex;
@@ -80,16 +81,16 @@ class ReviewsInvited extends React.Component {
   async acceptReviewInvitation(article) {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.web3))
+    if (!isGanache(this.props.context.web3))
       gasAmount = await acceptReviewInvitation(
-        this.props.platformContract,
+        this.props.context.platformContract,
         article.articleHash
       ).estimateGas({
         from: this.props.selectedAccount.address
       });
     else gasAmount = 80000000;
 
-    acceptReviewInvitation(this.props.platformContract, article.articleHash)
+    acceptReviewInvitation(this.props.context.platformContract, article.articleHash)
       .send({
         from: this.props.selectedAccount.address,
         gas: gasAmount
@@ -208,4 +209,4 @@ class ReviewsInvited extends React.Component {
   }
 }
 
-export default withRouter(ReviewsInvited);
+export default withWeb3(withRouter(ReviewsInvited));
