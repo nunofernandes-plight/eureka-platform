@@ -124,7 +124,7 @@ class SignUp extends Component {
     }
     if (this.props.context.provider === Web3Providers.META_MASK) {
       return signPrivateKey(
-        this.props.web3,
+        this.props.context.web3,
         this.props.selectedAccount.address,
         message
       );

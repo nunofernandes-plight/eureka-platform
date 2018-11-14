@@ -5,8 +5,6 @@ import {Web3Context} from './Web3Context';
 export default function withWeb3(Component) {
   class ComponentWithWeb3 extends React.Component {
     render() {
-      /*      console.log(this.props);
-      const web3Prop = this.props.web3;*/
       return (
         <Web3Context.Consumer>
           {web3Context => {
@@ -25,3 +23,4 @@ export default function withWeb3(Component) {
   }
   return hoistStatics(ComponentWithWeb3, Component);
 }
+   
