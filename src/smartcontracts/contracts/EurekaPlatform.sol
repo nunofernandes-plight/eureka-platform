@@ -448,7 +448,6 @@ contract EurekaPlatform {
         emit SignedUpForReviewing(_articleHash, msg.sender, block.timestamp);
     }
 
-
     event EditorApprovedReviewIsAdded(bytes32 articleHash, uint256 stateTimestamp, bytes32 reviewHash, address reviewerAddress, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
 
     function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
@@ -539,7 +538,6 @@ contract EurekaPlatform {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
-        ArticleVersion storage article = articleVersions[_articleHash];
         Review storage review = reviews[_articleHash][_reviewerAddress];
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
@@ -555,7 +553,6 @@ contract EurekaPlatform {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
-        ArticleVersion storage article = articleVersions[_articleHash];
         Review storage review = reviews[_articleHash][_reviewerAddress];
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
@@ -565,8 +562,6 @@ contract EurekaPlatform {
         emit ReviewIsDeclined(_articleHash, block.timestamp, _reviewerAddress);
     }
 
-
-    // TODO     event EditorSignUp(address submissionOwner, address editorAddress, uint256 stateTimestamp);
     event ArticleVersionIsAccepted(bytes32 articleHash, uint256 stateTimestamp, address editor);
 
     function acceptArticleVersion(bytes32 _articleHash) public {
