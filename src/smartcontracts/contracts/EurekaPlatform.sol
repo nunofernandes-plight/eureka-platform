@@ -448,6 +448,24 @@ contract EurekaPlatform {
         emit SignedUpForReviewing(_articleHash, msg.sender, block.timestamp);
     }
 
+    event ResignedFromReviewing(bytes32 articleHash, address reviewerAddress);
+    function resignFromReviewing(bytes32 _articleHash, address reviewerAddress) public {
+
+        require(msg.sender == articleSubmissions[articleVersions[_articleHash].submissionId].editor
+            || msg.sender == reviewerAddress, "msg.sender must be the editor of the review process or the reviewer itself.");
+        require(articleVersions[_articleHash].versionState <= ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. the review proccess of this article version is not open.");
+
+        Review storage review = reviews[_articleHash][msg.sender];
+        require(review.reviewState == ReviewState.SIGNED_UP_FOR_REVIEWING
+            || review.reviewState == ReviewState.INVITED,
+            "this method can't be called. the review must be in the state INVITED or SIGNED_UP_FOR_REVIEWING.");
+        review.reviewState = ReviewState.NOT_EXISTING;
+        review.stateTimestamp = 0;
+        review.reviewer = address(0);
+
+        emit ResignedFromReviewing(_articleHash, reviewerAddress);
+    }
+
     event EditorApprovedReviewIsAdded(bytes32 articleHash, uint256 stateTimestamp, bytes32 reviewHash, address reviewerAddress, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
 
     function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
