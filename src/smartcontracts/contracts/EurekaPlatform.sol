@@ -74,10 +74,21 @@ contract EurekaPlatform {
         );
     }
 
-    //    constructor(address _eurekaTokenContractAddress) public {
+    /* in future this constructor:
+        constructor(
+            address _eurekaTokenContractAddress,
+            uint256 _minAmountOfEditorApprovedReviews,
+            uint256 _maxAmountOfRewardedEditorApprovedReviews,
+            ...
+            ) public {
+    */
     constructor() public {
 
-        //        eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
+        /*  eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
+            minAmountOfEditorApprovedReviews = _minAmountOfEditorApprovedReviews;
+            maxAmountOfRewardedEditorApprovedReviews = _maxAmountOfRewardedEditorApprovedReviews;
+            ...
+        */
         contractOwner = msg.sender;
     }
 
@@ -87,8 +98,8 @@ contract EurekaPlatform {
         eurekaTokenContract = Eureka(_eurekaTokenContractAddress);
     }
 
-
     mapping(address => bool) public isEditor;
+    mapping(address => bool) public isExpertReviewer;
 
     // primary key mappings
     uint256 submissionCounter;
@@ -96,11 +107,11 @@ contract EurekaPlatform {
     mapping(bytes32 => ArticleVersion) public articleVersions;
     mapping(bytes32 => mapping(address => Review)) public  reviews;
 
-    // address mappings
+    // address mappings TODO: are these mappings needed?
     //    mapping(address => int256[]) articleSubmissionsBySubmissionOwner;
     //    mapping(address => int256[]) articleSubmissionsByEditor;
     //    mapping(address => bytes32[]) articleVersionsByAuthor;
-    //    mapping(address => bytes32[]) reviewsByReviewer;              // return an array of articleVersion hashes which can be used for looking up the reviews
+    //    mapping(address => bytes32[]) reviewedArticlesByReviewer;         // return an array of articleVersion hashes which can be used for looking up the reviews
 
 
     enum SubmissionState {
@@ -211,6 +222,33 @@ contract EurekaPlatform {
         require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
         isEditor[editor] = true;
         emit EditorSignUp(msg.sender, editor, block.timestamp);
+    }
+
+    event EditorResigned(address contractOwner, address editorAddress, uint256 stateTimestamp);
+
+    function resignEditor(address editor) public {
+
+        require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
+        isEditor[editor] = false;
+        emit EditorResigned(msg.sender, editor, block.timestamp);
+    }
+
+    event ExpertReviewerSignUp(address contractOwner, address editorAddress, uint256 stateTimestamp);
+
+    function signUpExpertReviewer(address expertReviewer) public {
+
+        require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
+        isExpertReviewer[expertReviewer] = true;
+        emit ExpertReviewerSignUp(msg.sender, expertReviewer, block.timestamp);
+    }
+
+    event ExpertReviewerResigned(address contractOwner, address editorAddress, uint256 stateTimestamp);
+
+    function resignExpertReviewer(address expertReviewer) public {
+
+        require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
+        isExpertReviewer[expertReviewer] = false;
+        emit ExpertReviewerResigned(msg.sender, expertReviewer, block.timestamp);
     }
 
     event SubmissionProcessStart(uint256 submissionId, address submissionOwner, bytes32 articleHash, bytes32 articleURL, uint256 stateTimestamp);
