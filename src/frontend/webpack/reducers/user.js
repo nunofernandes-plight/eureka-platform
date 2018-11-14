@@ -9,6 +9,7 @@ import Roles from '../../../backend/schema/roles-enum.mjs';
 const initialState = {
   user: null,
   error: null,
+  isAuthenticated: null,
   loading: false
 };
 
