@@ -512,13 +512,13 @@ contract EurekaPlatform {
     function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.SUBMITTED
-        || article.versionState == ArticleVersionState.EDITOR_CHECKED
-        || article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. the article version needs to be SUBMITTED, EDITOR_CHECKED or REVIEWERS_INVITED.");
+        require(article.versionState >= ArticleVersionState.SUBMITTED
+        && article.versionState <= ArticleVersionState.OPEN_FOR_ALL_REVIEWERS
+        , "this method can't be called. the article version needs to be SUBMITTED, EDITOR_CHECKED or REVIEWERS_INVITED.");
 
         Review storage review = reviews[_articleHash][msg.sender];
         require(review.reviewState == ReviewState.DECLINED
-        || review.reviewState == ReviewState.HANDED_IN, "only declined reviews can be corrected.");
+        || review.reviewState == ReviewState.HANDED_IN, "only declined or not checked reviews can be corrected.");
 
         bytes32 oldReviewHash = review.reviewHash;
         review.reviewHash = _reviewHash;
