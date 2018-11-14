@@ -5,6 +5,7 @@ import {__ALERT_ERROR, __GRAY_200, __THIRD} from '../../helpers/colors.js';
 import EurekaLogo from '../views/icons/EurekaLogo.js';
 import Icon from '../views/icons/Icon.js';
 import CircleSpinner from '../views/spinners/CircleSpinner.js';
+import connect from 'react-redux/es/connect/connect.js';
 
 const Container = styled.div`
   display: flex;
@@ -99,7 +100,7 @@ const SeeHistory = styled.div`
 `;
 
 const numberWithCommas = x => {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\'');
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
 };
 
 const Parent = styled.div`
@@ -120,17 +121,15 @@ const Upload = styled.div`
   height: 100%;
   border-radius: 50%;
   max-width: 180px;
-  align-items: center; 
+  align-items: center;
   text-align: center;
   display: flex;
-  background: rgba(0,0,0,0.3);
-  visibility: ${props => props.show ? 'visible' : 'hidden'};
+  background: rgba(0, 0, 0, 0.3);
+  visibility: ${props => (props.show ? 'visible' : 'hidden')};
   transition: all 0.3s ease-in-out;
-
 `;
 
 class MyAccount extends Component {
-
   constructor() {
     super();
     this.state = {
@@ -148,12 +147,15 @@ class MyAccount extends Component {
         <CardContainer>
           <Card>
             <PhotoContainer>
-              <Parent onMouseEnter={() => {
-                this.setState({show: true});
-              }} onMouseLeave={() => {
-                this.setState({show: false});
-              }}>
-                <Photo src={'/' + this.props.user.avatar}/>
+              <Parent
+                onMouseEnter={() => {
+                  this.setState({show: true});
+                }}
+                onMouseLeave={() => {
+                  this.setState({show: false});
+                }}
+              >
+                <Photo src={'/' + this.props.user.avatar} />
                 <Upload show={this.state.show}>
                   Upload your profile picture
                 </Upload>
@@ -168,7 +170,7 @@ class MyAccount extends Component {
               </EthereumAddress>
             </ProfileRow>
             <ProfileRow>
-              <Separator/>
+              <Separator />
             </ProfileRow>
             <ProfileRow>
               {this.props.selectedAccount.EKABalance &&
@@ -176,7 +178,7 @@ class MyAccount extends Component {
                 <Balances>
                   <SubTitle>Your Balances</SubTitle>
                   <Balance>
-                    <EurekaLogo width={30} height={30}/>
+                    <EurekaLogo width={30} height={30} />
                     <Number>
                       {numberWithCommas(this.props.selectedAccount.EKABalance)}{' '}
                       EKA
@@ -211,7 +213,7 @@ class MyAccount extends Component {
                   </Balance>
                 </Balances>
               ) : (
-                <CircleSpinner/>
+                <CircleSpinner />
               )}
             </ProfileRow>
           </Card>
@@ -221,4 +223,4 @@ class MyAccount extends Component {
   }
 }
 
-export default MyAccount;
+export default connect(state => ({user: state.userData.data}))(MyAccount);
