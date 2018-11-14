@@ -21,17 +21,17 @@ import Modal from '../../design-components/Modal.js';
 import DashboardRouter from './DashboardRouter.js';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
 import withWeb3 from '../../contexts/WithWeb3.js';
+import {connect} from 'react-redux';
+import {fetchUserData} from '../../reducers/user.js';
 
 const PaddingLeft = styled.div`
   padding-left: ${props =>
-  props.isMobileMode ? PANEL_LEFT_MOBILE_WIDTH : PANEL_LEFT_NORMAL_WIDTH}px;
+    props.isMobileMode ? PANEL_LEFT_MOBILE_WIDTH : PANEL_LEFT_NORMAL_WIDTH}px;
   ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
     padding-left: ${PANEL_LEFT_MOBILE_WIDTH}px; 
   `};
   transition: 0.5s all;
 `;
-
-
 
 class MainRouter extends Component {
   constructor() {
@@ -47,6 +47,7 @@ class MainRouter extends Component {
 
   componentDidMount() {
     this.authenticate();
+    this.props.fetchUserData();
   }
 
   authenticate() {
@@ -149,7 +150,6 @@ class MainRouter extends Component {
   }
 
   render() {
-
     return (
       <div>
         {this.renderModals()}
@@ -163,14 +163,12 @@ class MainRouter extends Component {
         <div style={{paddingTop: this.getPaddingTop()}}>
           <BrowserRouter>
             <Switch>
-              <Route path="/metamask" exact render={() => <MetaMaskGuide/>}/>
+              <Route path="/metamask" exact render={() => <MetaMaskGuide />} />
               <Route
                 path="/app"
                 render={() => (
                   <PaddingLeft isMobileMode={this.state.isMobileMode}>
-                    <DashBoardGuard
-                      isAuthenticated={this.state.isAuthenticated}
-                    >
+                    <DashBoardGuard>
                       <PanelLeft
                         base={'/app'}
                         checked={this.state.isMobileMode}
@@ -233,7 +231,7 @@ class MainRouter extends Component {
                         }}
                       />
                     ) : (
-                      <Redirect to={'/app'}/>
+                      <Redirect to={'/app'} />
                     )}
                   </div>
                 )}
@@ -242,7 +240,7 @@ class MainRouter extends Component {
             Startsite always needs to be at the bottom!
             It otherwise matches sub routes
           */}
-              <Route path="/" exact render={() => <WelcomePage/>}/>
+              <Route path="/" exact render={() => <WelcomePage />} />
               <Route
                 render={() => <div>TODO: IMPLEMENT 404 NOT FOUND PAGE </div>}
               />
@@ -254,4 +252,15 @@ class MainRouter extends Component {
   }
 }
 
-export default withWeb3(MainRouter);
+export default withWeb3(
+  connect(
+    state => ({}),
+    dispatch => {
+      return {
+        fetchUserData: () => {
+          dispatch(fetchUserData());
+        }
+      };
+    }
+  )(MainRouter)
+);

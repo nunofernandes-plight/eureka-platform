@@ -1,9 +1,4 @@
 import React, {Component} from 'react';
-import {applyMiddleware, createStore} from 'redux';
-import {Provider as ReduxProvider} from 'react-redux';
-import thunk from 'redux-thunk';
-import reducer from './webpack/reducers';
-import {composeWithDevTools} from 'redux-devtools-extension';
 import {Detector} from 'react-detect-offline';
 import {getBalanceOf} from '../smartcontracts/methods/web3-token-contract-methods.mjs';
 import MainRouter from './webpack/components/Routers/MainRouter.js';
@@ -12,9 +7,6 @@ import NoConnection from './webpack/views/NoConnection.js';
 import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
 import {getAllAccounts, getNetwork} from './web3/Helpers.js';
 import withWeb3 from './webpack/contexts/WithWeb3.js';
-import {connect} from 'react-redux';
-import {fetchUserData} from './webpack/reducers/user.js';
-
 
 class App extends Component {
   constructor() {
@@ -126,18 +118,4 @@ class App extends Component {
   }
 }
 
-export default withWeb3(
-  connect(
-    state => {
-      return {
-        userData: null
-      };
-    },
-    dispatch => {
-      return {
-        fetchUserdata: query => {
-          dispatch(fetchUserData());
-        }
-      };
-    }
-  )(App));
+export default withWeb3(App);
