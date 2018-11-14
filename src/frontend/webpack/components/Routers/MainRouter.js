@@ -154,7 +154,7 @@ class MainRouter extends Component {
       <div>
         {this.renderModals()}
         <Header
-          provider={this.props.provider}
+          provider={this.props.context.provider}
           metaMaskStatus={this.props.metaMaskStatus}
           network={this.props.network}
           isAuthenticated={this.state.isAuthenticated}
@@ -254,4 +254,4 @@ class MainRouter extends Component {
   }
 }
 
-export default MainRouter;
+export default withWeb3(MainRouter);
