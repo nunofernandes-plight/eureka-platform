@@ -530,12 +530,8 @@ contract EurekaPlatform {
     event ReviewIsCorrected(bytes32 oldReviewHash, bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp, bytes32 reviewHash, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
     function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
-        require(articleVersions[_articleHash].versionState >= ArticleVersionState.SUBMITTED
-        , "this method can't be called. the article version does not exist.");
-
         Review storage review = reviews[_articleHash][msg.sender];
-        require(review.reviewState == ReviewState.DECLINED
-            || review.reviewState == ReviewState.HANDED_IN, "only declined or not checked reviews can be corrected.");
+        require(review.reviewState >= ReviewState.HANDED_IN, "this method can't be called. the review does not exist.");
 
         bytes32 oldReviewHash = review.reviewHash;
         review.reviewHash = _reviewHash;
@@ -557,7 +553,7 @@ contract EurekaPlatform {
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
         Review storage review = reviews[_articleHash][_reviewerAddress];
-        require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
+        require(review.reviewState == ReviewState.HANDED_IN, "to accept the review, the review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.ACCEPTED;
         review.stateTimestamp = block.timestamp;
@@ -572,7 +568,7 @@ contract EurekaPlatform {
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
         Review storage review = reviews[_articleHash][_reviewerAddress];
-        require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
+        require(review.reviewState == ReviewState.HANDED_IN, "to decline the review, the review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.DECLINED;
         review.stateTimestamp = block.timestamp;
