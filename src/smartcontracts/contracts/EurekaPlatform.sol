@@ -486,6 +486,7 @@ contract EurekaPlatform {
 
         ArticleVersion storage article = articleVersions[_articleHash];
         require(article.versionState >= ArticleVersionState.SUBMITTED
+            && article.versionState <= ArticleVersionState.OPEN_FOR_ALL_REVIEWERS
             , "this method can't be called. the article version needs to be SUBMITTED to add a community review.");
 
         Review storage review = reviews[_articleHash][msg.sender];
