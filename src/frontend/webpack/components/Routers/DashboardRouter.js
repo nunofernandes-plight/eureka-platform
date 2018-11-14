@@ -155,9 +155,6 @@ class DashboardRouter extends Component {
             path={`${this.props.base}/write/review/:reviewId`}
             render={() => (
               <ReviewsWriter
-                web3={this.props.web3}
-                tokenContract={this.props.tokenContract}
-                platformContract={this.props.platformContract}
                 base={`${this.props.base}/write/review`}
                 user={this.props.user}
                 selectedAccount={this.props.selectedAccount}
