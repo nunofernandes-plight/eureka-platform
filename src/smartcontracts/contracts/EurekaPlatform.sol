@@ -539,13 +539,8 @@ contract EurekaPlatform {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
-        //TODO: in which states of the articles the reviewers can hand in editorApprovedReviews and get accepted?
         ArticleVersion storage article = articleVersions[_articleHash];
         Review storage review = reviews[_articleHash][_reviewerAddress];
-        if (review.isEditorApprovedReview)
-            require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. for accepting an editor approved review the article version state must be REVIEWERS_INVITED.");
-        else
-            require(article.versionState >= ArticleVersionState.SUBMITTED, "this method can't be called. for accepting a community review the article version state must be at least SUBMITTED.");
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.ACCEPTED;
@@ -559,14 +554,9 @@ contract EurekaPlatform {
     function declineReview(bytes32 _articleHash, address _reviewerAddress) public {
 
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
-        
-        //TODO: in which states of the articles the reviewers can hand in editorApprovedReviews and get accepted?
+
         ArticleVersion storage article = articleVersions[_articleHash];
         Review storage review = reviews[_articleHash][_reviewerAddress];
-        if (review.isEditorApprovedReview)
-            require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. for declining an editor approved review the article version state must be REVIEWERS_INVITED.");
-        else
-            require(article.versionState >= ArticleVersionState.SUBMITTED, "this method can't be called. for declining a community review the article version state must be at least SUBMITTED.");
         require(review.reviewState == ReviewState.HANDED_IN, "review state must be HANDED_IN.");
 
         review.reviewState = ReviewState.DECLINED;
