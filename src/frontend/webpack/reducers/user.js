@@ -1,7 +1,6 @@
-import moment from 'moment';
 import {
   ERROR_FETCHING_USER,
-  RECEIVING_USER,
+  RECEIVED_USER,
   START_FETCHING_USER
 } from './types.js';
 import {getDomain} from '../../../helpers/getDomain.mjs';
@@ -29,7 +28,7 @@ export const fetchUserData = () => {
           let user = response.data.user;
           user.roles.push(Roles.USER);
           dispatch({
-            type: RECEIVING_USER,
+            type: RECEIVED_USER,
             user,
             isAuthenticated: response.data.isAuthenticated
           });
@@ -59,7 +58,7 @@ export const userData = (state = initialState, action) => {
         isAuthenticated: null,
         data: null
       };
-    case RECEIVING_USER:
+    case RECEIVED_USER:
       return {
         data: action.user,
         isAuthenticated: action.isAuthenticated,
@@ -76,4 +75,4 @@ export const userData = (state = initialState, action) => {
     default:
       return state;
   }
-}
+};

@@ -172,7 +172,6 @@ class MainRouter extends Component {
                       <PanelLeft
                         base={'/app'}
                         checked={this.state.isMobileMode}
-                        user={this.state.user}
                         isMobileMode={isMobileMode => {
                           this.setState({isMobileMode});
                         }}

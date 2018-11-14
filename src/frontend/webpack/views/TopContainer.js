@@ -7,6 +7,8 @@ import MetaMaskLabel from './MetaMaskLabel.js';
 import Ball from './Ball.js';
 import UserDropDownMenu from './UserDropDownMenu.js';
 import {Items} from './UserDropDownItems.js';
+import {withRouter} from 'react-router-dom';
+import connect from 'react-redux/es/connect/connect.js';
 
 export const Container = styled.div`
   min-height: 353px;
@@ -150,4 +152,4 @@ class TopContainer extends React.Component {
   }
 }
 
-export default TopContainer;
+export default connect(state => ({user: state.userData.data}))(TopContainer);

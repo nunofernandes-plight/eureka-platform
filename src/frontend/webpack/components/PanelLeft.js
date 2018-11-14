@@ -11,6 +11,9 @@ import {
 } from '../../helpers/layout.js';
 import ToggleButton from '../design-components/ToggleButton.js';
 import {Routes} from './Routers/Routes.js';
+import withWeb3 from '../contexts/WithWeb3.js';
+import connect from 'react-redux/es/connect/connect.js';
+import {fetchUserData} from '../reducers/user.js';
 
 const Container = styled.div`
   display: flex;
@@ -139,4 +142,6 @@ class PanelLeft extends Component {
   }
 }
 
-export default withRouter(PanelLeft);
+export default withRouter(
+  connect(state => ({user: state.userData.data}))(PanelLeft)
+);
