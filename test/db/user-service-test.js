@@ -4,7 +4,7 @@ import articleSubmissionService from '../../src/backend/db/article-submission-se
 import reviewService from '../../src/backend/db/review-service.mjs';
 import Roles from '../../src/backend/schema/roles-enum.mjs';
 import app from '../../src/backend/api/api.mjs';
-import {cleanDB} from '../helpers';
+import {cleanDB} from '../helpers.js';
 
 const PRETEXT = 'DB-USER: ';
 
@@ -53,27 +53,31 @@ test(PRETEXT + 'add roles to a user', async t => {
   // Test roles
   let dbUser = await userService.getUserByEthereumAddress(user.ethereumAddress);
   t.is(dbUser.roles.length, 0);
-
-  await userService.addRole(user._id, Roles.GUEST);
+  await userService.addRole(user.ethereumAddress, Roles.REVIEWER);
   dbUser = await userService.getUserById(user._id);
   t.is(dbUser.roles.length, 1);
 });
 
+// TODO move it to article-submission-test, as it is not stored anymore within the user object
 // Add submission to a user
-test(PRETEXT + 'create submission and add it to a user', async t => {
-  // Test user creation
-  t.is((await userService.getAllUsers()).length, 0);
-  let user = await userService.createUser('test', 'test@test@test.ch',
-    '0x123f681646d4a755815f9cb19e1acc8565a0c2ac', 'test-avatar');
-  t.is((await userService.getAllUsers()).length, 1);
+// test.only(PRETEXT + 'create submission and add it to a user', async t => {
+//   // Test user creation
+//   t.is((await userService.getAllUsers()).length, 0);
+//   let user = await userService.createUser('test', 'test@test@test.ch',
+//     '0x123f681646d4a755815f9cb19e1acc8565a0c2ac', 'test-avatar');
+//   t.is((await userService.getAllUsers()).length, 1);
+//
+//   // Test submission creation
+//   t.is((await articleSubmissionService.getAllSubmissions()).length, 0);
+//   const articleSubmission = await articleSubmissionService.createSubmission(user.ethereumAddress);
+//   t.is((await articleSubmissionService.getAllSubmissions()).length, 1);
+//
+//   // Test adding of submission to user
+//   user = await userService.getUserByEthereumAddress(user.ethereumAddress);
+//   console.log(user);
+//   console.log(articleSubmission);
+//   t.is(articleSubmission.submissionId, user.articleSubmissions[0].submissionId);
+// });
 
-  // Test submission creation
-  t.is((await articleSubmissionService.getAllSubmissions()).length, 0);
-  const articleSubmission = await articleSubmissionService.createSubmission(0, user.ethereumAddress);
-  t.is((await articleSubmissionService.getAllSubmissions()).length, 1);
 
-  // Test adding of submission to user
-  user = await userService.getUserByEthereumAddress(user.ethereumAddress);
-  t.is(articleSubmission.submissionId, user.articleSubmissions[0].submissionId);
-});
-// TODO removeRole
+

@@ -12,5 +12,4 @@ if (!isProduction()) {
 app.setupApp();
 app.listenTo(process.env.PORT || 8080);
 
-timeBasedContractService.startTimeBasedSCWorker();
 console.log('App started. Date: ' + new Date().toString());
