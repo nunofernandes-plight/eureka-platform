@@ -9,6 +9,9 @@ import ReviewsOpen from '../Reviews/ReviewsOpen.js';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
 import BecomeReviewer from '../Reviews/BecomeReviewer.js';
 import ReviewsMyReviews from '../Reviews/ReviewsMyReviews.js';
+import withWeb3 from '../../contexts/WithWeb3.js';
+import connect from 'react-redux/es/connect/connect.js';
+import {fetchUserData} from '../../reducers/user.js';
 
 const Parent = styled.div`
   display: flex;
@@ -117,4 +120,8 @@ class ReviewsRouter extends Component {
   }
 }
 
-export default withRouter(ReviewsRouter);
+export default withRouter(
+  connect(state => ({
+    user: state.userData.data
+  }))(ReviewsRouter)
+);
