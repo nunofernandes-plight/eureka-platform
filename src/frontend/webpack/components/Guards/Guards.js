@@ -18,12 +18,29 @@ export const DashBoardGuard = connect(
   mapStateToProps,
   mapDispatchToProps
 )(props => {
+
   if (props.isAuthenticated === null) {
     return <GridSpinner />;
   }
   if (!props.isAuthenticated) {
     return (
       <Redirect to={{pathname: '/login', state: {from: props.location}}} />
+    );
+  }
+  return props.children;
+});
+
+export const LoginGuard = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(props => {
+
+  if (props.isAuthenticated === null) {
+    return <GridSpinner />;
+  }
+  if (props.isAuthenticated) {
+    return (
+      <Redirect to={{pathname: '/app', state: {from: props.location}}} />
     );
   }
   return props.children;

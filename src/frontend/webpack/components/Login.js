@@ -20,6 +20,8 @@ import {
 } from '../views/SharedForms.js';
 import TopAlertContainer from '../views/TopAlertContainer.js';
 import withWeb3 from '../contexts/WithWeb3.js';
+import connect from 'react-redux/es/connect/connect.js';
+import {fetchUserData} from '../reducers/user.js';
 
 class Login extends Component {
   constructor() {
@@ -34,17 +36,16 @@ class Login extends Component {
     };
   }
 
-
   componentWillUnmount() {
     this.setState({});
   }
 
-  async register() {
+  async login() {
     this.setState({submitted: true});
 
     // DEV ENVIRONMENT
     if (this.props.context.provider === Web3Providers.LOCALHOST) {
-      this.apiCall();
+      await this.apiCall();
     } else if (this.props.context.provider === Web3Providers.META_MASK) {
       const status = this.props.metaMaskStatus;
       if (
@@ -57,7 +58,7 @@ class Login extends Component {
 
       if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
         // Already logged in
-        this.apiCall();
+        await this.apiCall();
       }
     }
   }
@@ -82,8 +83,9 @@ class Login extends Component {
         .then(response => response.json())
         .then(response => {
           if (response.success) {
+            this.props.fetchUserData();
             this.props.history.push('/app');
-            this.props.authenticate();
+
           } else {
             this.setState({
               errorMessage: response.error,
@@ -193,8 +195,8 @@ class Login extends Component {
                     ) : null}
                     <ButtonRow>
                       <Button
-                        onClick={() => {
-                          this.register();
+                        onClick={async () => {
+                          await this.login();
                         }}
                       >
                         Login with Metamask{' '}
@@ -218,4 +220,17 @@ class Login extends Component {
   }
 }
 
-export default withWeb3(withRouter(Login));
+export default withWeb3(
+  withWeb3(
+    connect(
+      state => ({}),
+      dispatch => {
+        return {
+          fetchUserData: () => {
+            dispatch(fetchUserData());
+          }
+        };
+      }
+    )(Login)
+  )
+);

@@ -8,6 +8,8 @@ import RenderNetwork from '../../web3/RenderNetwork.js';
 import Avatar from '../views/Avatar.js';
 import CircleSpinner from '../views/spinners/CircleSpinner.js';
 import MetaMaskLabel from '../views/MetaMaskLabel.js';
+import {connect} from 'react-redux';
+import {fetchUserData} from '../reducers/user.js';
 
 const Parent = styled.div`
   box-shadow: -21.213px 21.213px 30px 0px rgba(158, 158, 158, 0.3);
@@ -131,9 +133,20 @@ const renderRight = ({isAuthenticated, user}) => {
     </RightContainer>
   );
 };
+const mapDispatchToProps = dispatch => ({
+  fetchUserData: () => {
+    dispatch(fetchUserData());
+  }
+});
+const mapStateToProps = state => ({
+  isAuthenticated: state.userData.isAuthenticated,
+  user: state.userData.data
+});
 
-// Do not show the header when the user is authenticated (i.e. is in the main app)
-const Header = ({provider, metaMaskStatus, network, isAuthenticated, user}) => {
+export const Header = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(({provider, metaMaskStatus, network, isAuthenticated, user}) => {
   return (
     <div>
       {isAuthenticated ? null : (
@@ -147,6 +160,4 @@ const Header = ({provider, metaMaskStatus, network, isAuthenticated, user}) => {
       )}
     </div>
   );
-};
-
-export default Header;
+});
