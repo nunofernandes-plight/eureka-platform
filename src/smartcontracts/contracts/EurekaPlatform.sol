@@ -550,10 +550,15 @@ contract EurekaPlatform {
 
     function acceptReview(bytes32 _articleHash, address _reviewerAddress) public {
 
+        // in the future not only the editor will be able to accept reviews. for example expert reviewers or reviewers with a high reputation score will be able to do it
         require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
 
         Review storage review = reviews[_articleHash][_reviewerAddress];
         require(review.reviewState == ReviewState.HANDED_IN, "to accept the review, the review state must be HANDED_IN.");
+
+        // another solution would be to store the reviewer of the review in an array and devide the reward in the end by the number of reviewers
+        require(review.reviewedBy == address(0)
+            || review.reviewedBy == msg.sender, "a corrected review must be checked from the same user than before.");
 
         review.reviewState = ReviewState.ACCEPTED;
         review.stateTimestamp = block.timestamp;
@@ -569,6 +574,9 @@ contract EurekaPlatform {
 
         Review storage review = reviews[_articleHash][_reviewerAddress];
         require(review.reviewState == ReviewState.HANDED_IN, "to decline the review, the review state must be HANDED_IN.");
+
+        require(review.reviewedBy == address(0)
+        || review.reviewedBy == msg.sender, "a corrected review must be checked from the same user than before.");
 
         review.reviewState = ReviewState.DECLINED;
         review.stateTimestamp = block.timestamp;
