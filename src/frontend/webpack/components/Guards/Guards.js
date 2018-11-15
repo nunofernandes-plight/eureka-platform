@@ -11,14 +11,14 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 const mapStateToProps = state => ({
-  isAuthenticated: state.userData.isAuthenticated
+  isAuthenticated: state.userData.isAuthenticated,
+  user: state.userData.data
 });
 
 export const DashBoardGuard = connect(
   mapStateToProps,
   mapDispatchToProps
 )(props => {
-
   if (props.isAuthenticated === null) {
     return <GridSpinner />;
   }
@@ -34,22 +34,22 @@ export const LoginGuard = connect(
   mapStateToProps,
   mapDispatchToProps
 )(props => {
-
   if (props.isAuthenticated === null) {
     return <GridSpinner />;
   }
   if (props.isAuthenticated) {
-    return (
-      <Redirect to={{pathname: '/app', state: {from: props.location}}} />
-    );
+    return <Redirect to={{pathname: '/app', state: {from: props.location}}} />;
   }
   return props.children;
 });
 
-export const ContractOwnerGuard = props => {
-  if (props.roles.includes(Roles.CONTRACT_OWNER)) {
-    return props.children;
+export const ContractOwnerGuard = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(({user, ...otherProps}) => {
+  if (user.roles.includes(Roles.CONTRACT_OWNER)) {
+    return otherProps.children;
   } else {
-    return <Redirect to={{pathname: '/app', state: {from: props.location}}} />;
+    return <Redirect to={{pathname: '/app', state: {from: otherProps.location}}} />;
   }
-};
+});

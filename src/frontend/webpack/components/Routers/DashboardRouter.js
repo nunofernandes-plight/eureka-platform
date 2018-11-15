@@ -31,14 +31,14 @@ class DashboardRouter extends Component {
           <Route
             exact
             path={`${this.props.base}/dashboard`}
-            render={() => <Dashboard/>}
+            render={() => <Dashboard />}
           />
 
           <Route
             exact
             path={`${this.props.base}/owner`}
             render={() => (
-              <ContractOwnerGuard roles={this.props.user.roles}>
+              <ContractOwnerGuard>
                 <ContractOwnerDashboard
                   selectedAccount={this.props.selectedAccount}
                 />
@@ -50,9 +50,7 @@ class DashboardRouter extends Component {
             exact
             path={`${this.props.base}/book`}
             render={() => (
-              <AddressBook
-                selectedAccount={this.props.selectedAccount}
-              />
+              <AddressBook selectedAccount={this.props.selectedAccount} />
             )}
           />
 
@@ -61,9 +59,8 @@ class DashboardRouter extends Component {
             path={`${this.props.base}/account`}
             render={() => (
               <MyAccount
-                user={this.props.user}
                 selectedAccount={this.props.selectedAccount}
-                updateAccount={()=>{
+                updateAccount={() => {
                   this.props.updateAccount();
                 }}
               />
@@ -76,7 +73,6 @@ class DashboardRouter extends Component {
             render={() => (
               <MyHistory
                 base={`${this.props.base}/actions`}
-                user={this.props.user}
                 selectedAccount={this.props.selectedAccount}
               />
             )}
@@ -88,7 +84,6 @@ class DashboardRouter extends Component {
               return (
                 <ReviewsRouter
                   base={`${this.props.base}/reviews`}
-                  user={this.props.user}
                   updateUser={() => {
                     this.props.updateUser();
                   }}
@@ -104,7 +99,6 @@ class DashboardRouter extends Component {
             render={() => (
               <ArticlesRouter
                 base={`${this.props.base}/articles`}
-                user={this.props.user}
                 updateUser={() => {
                   this.props.updateUser();
                 }}
@@ -119,7 +113,6 @@ class DashboardRouter extends Component {
             render={() => (
               <EditorRouter
                 base={`${this.props.base}/editor`}
-                user={this.props.user}
                 selectedAccount={this.props.selectedAccount}
                 network={this.props.network}
               />
@@ -130,13 +123,13 @@ class DashboardRouter extends Component {
           <Route
             exact
             path={`${this.props.base}/reviewers`}
-            render={() => <Reviewers/>}
+            render={() => <Reviewers />}
           />
 
           <Route
             exact
             path={`${this.props.base}/users/:ethereumAddress`}
-            render={() => <UserExploration/>}
+            render={() => <UserExploration />}
           />
 
           <Route
@@ -166,7 +159,7 @@ class DashboardRouter extends Component {
           <Route
             exact
             path={`${this.props.base}`}
-            render={() => <Redirect to={`${this.props.base}/dashboard`}/>}
+            render={() => <Redirect to={`${this.props.base}/dashboard`} />}
           />
         </BottomContainer>
       </div>
