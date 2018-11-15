@@ -588,19 +588,20 @@ contract EurekaPlatform {
 
     function acceptArticleVersion(bytes32 _articleHash) public {
 
-        require(isEditor[msg.sender], "msg.sender needs to be an editor.");
-        // TODO  require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
-
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be REVIEWERS_INVITED.");
+
+        require(articleSubmissions[article.submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
+
+        require(article.versionState >= ArticleVersionState.EDITOR_CHECKED
+            && article.versionState <= ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. the article version must be sanity checked and must not be already closed.");
 
         require(countAcceptedReviews(article.articleHash, article.editorApprovedReviews) >= minAmountOfEditorApprovedReviews,
-            "the article doesn't have enough accepted editor approved reviews to get accepted.");
+            "the article doesn't have enough accepted editor approved reviews to be accepted.");
         require(countAcceptedReviews(article.articleHash, article.communityReviews) >= minAmountOfCommunityReviews,
-            "the article doesn't have enough community reviews to get accepted.");
+            "the article doesn't have enough accepted community reviews to be accepted.");
 
-        require(countAcceptedReviewInvitations(article.articleHash, article.editorApprovedReviews) == 0,
-            "there are still people working on reviews.");
+        require(countSignedUpForReviewing(article.articleHash, article.editorApprovedReviews) == 0,
+            "this method can't be called. there are users still working on reviews.");
 
         require(countReviewsWithMajorIssues(article.articleHash, article.editorApprovedReviews) == 0,
             "the article needs to be corrected.");
@@ -618,19 +619,21 @@ contract EurekaPlatform {
 
     function declineArticleVersion(bytes32 _articleHash) public {
 
-        require(isEditor[msg.sender], "msg.sender needs to be an editor.");
-
         ArticleVersion storage article = articleVersions[_articleHash];
-        require(article.versionState == ArticleVersionState.REVIEWERS_INVITED, "this method can't be called. version state must be EDITOR_CHECKED.");
+
+        require(articleSubmissions[article.submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
+
+        require(article.versionState >= ArticleVersionState.EDITOR_CHECKED
+            && article.versionState <= ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. the article version must be sanity checked and must not be already closed.");
 
 
         require(countAcceptedReviews(article.articleHash, article.editorApprovedReviews) >= minAmountOfEditorApprovedReviews,
-            "the article doesn't have enough accepted editor approved reviews to get accepted.");
+            "the article doesn't have enough accepted editor approved reviews to be declined.");
         require(countAcceptedReviews(article.articleHash, article.communityReviews) >= minAmountOfCommunityReviews,
-            "the article doesn't have enough community reviews to get accepted.");
+            "the article doesn't have enough accepted community reviews to be declined.");
 
-        require(countAcceptedReviewInvitations(article.articleHash, article.editorApprovedReviews) == 0,
-            "there are still people working on reviews.");
+        require(countSignedUpForReviewing(article.articleHash, article.editorApprovedReviews) == 0,
+            "this method can't be called. there are users still working on reviews.");
 
         article.versionState = ArticleVersionState.DECLINED;
 
@@ -642,7 +645,32 @@ contract EurekaPlatform {
         emit DeclineArticleVersion(_articleHash, block.timestamp, msg.sender);
     }
 
-    function countAcceptedReviewInvitations(bytes32 _articleHash, address[] _reviewers) view private returns (uint count) {
+    event DeclineArticleVersionAndClose(bytes32 articleHash, uint256 stateTimestamp, address editor);
+
+    function declineArticleVersionAndClose(bytes32 _articleHash) public {
+
+        ArticleVersion storage article = articleVersions[_articleHash];
+
+        require(articleSubmissions[article.submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
+
+        require(article.versionState >= ArticleVersionState.EDITOR_CHECKED
+        && article.versionState <= ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. the article version must be sanity checked and must not be already closed.");
+
+
+        require(countAcceptedReviews(article.articleHash, article.editorApprovedReviews) >= minAmountOfEditorApprovedReviews,
+            "the article doesn't have enough accepted editor approved reviews to be declined.");
+        require(countAcceptedReviews(article.articleHash, article.communityReviews) >= minAmountOfCommunityReviews,
+            "the article doesn't have enough accepted community reviews to be declined.");
+
+        require(countSignedUpForReviewing(article.articleHash, article.editorApprovedReviews) == 0,
+            "this method can't be called. there are users still working on reviews.");
+
+        article.versionState = ArticleVersionState.DECLINED;
+
+        closeSubmissionProcess(article.submissionId);
+    }
+
+    function countSignedUpForReviewing(bytes32 _articleHash, address[] _reviewers) view private returns (uint count) {
         for (uint i = 0; i < _reviewers.length; i++) {
             if (reviews[_articleHash][_reviewers[i]].reviewState == ReviewState.SIGNED_UP_FOR_REVIEWING)
                 count++;
@@ -707,9 +735,8 @@ contract EurekaPlatform {
 
     function declineNewReviewRound(uint256 _submissionId) public {
 
-        ArticleSubmission storage submission = articleSubmissions[_submissionId];
-        require(msg.sender == submission.submissionOwner, "only the submission process owner can call this method");
-        require(submission.submissionState == SubmissionState.NEW_REVIEW_ROUND_REQUESTED,
+        require(msg.sender == articleSubmissions[_submissionId].submissionOwner, "only the submission process owner can call this method");
+        require(articleSubmissions[_submissionId].submissionState == SubmissionState.NEW_REVIEW_ROUND_REQUESTED,
             "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
 
         closeSubmissionProcess(_submissionId);
