@@ -201,11 +201,11 @@ class MyAccount extends Component {
                       noMove
                     />
                     <Number>
-                      {numberWithCommas(
+                      {
                         this.props.selectedAccount.balance
                           .toString()
                           .substr(0, 6)
-                      )}{' '}
+                      }{' '}
                       ETH
                     </Number>
                   </Balance>

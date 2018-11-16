@@ -33,9 +33,9 @@ class MySubmitted extends React.Component {
     }, 3500);
 
     const tx = MySubmitted.getParameterByName('tx');
-    // if (tx) {
-    //   this.setState({showTxModal: true, tx});
-    // }
+    if (tx) {
+      this.setState({showTxModal: true, tx});
+    }
   }
 
   componentWillUnmount() {
