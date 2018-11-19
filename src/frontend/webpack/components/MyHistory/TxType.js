@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import chroma from 'chroma-js';
 import SC_TRANSACTIONS_TYPE from '../../../../backend/schema/sc-transaction-state-enum.mjs';
 import {
+  __SCALE_SEVEN,
   __SCALE_ONE,
   __SCALE_TEN,
   __SCALE_THREE,
@@ -19,6 +20,9 @@ const getTypeAttributes = type => {
 
     case SC_TRANSACTIONS_TYPE.MINTING:
       return {color: __SCALE_THREE, text: 'MINTING'};
+
+    case SC_TRANSACTIONS_TYPE.EXPERT_REVIEWER_SIGNEDUP:
+      return {color: __SCALE_SEVEN, text: 'EXPERT REVIEWER SIGNED UP'};
 
     default:
       return __SCALE_TEN;

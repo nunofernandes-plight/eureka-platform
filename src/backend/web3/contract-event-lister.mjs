@@ -49,7 +49,7 @@ export default {
         };
         await scTransactionService.createScTransaction(
           event.returnValues.contractOwner,
-          ScTransactionType.REVIEWER_SIGNEDUP,
+          ScTransactionType.EXPERT_REVIEWER_SIGNEDUP,
           event.returnValues.stateTimestamp,
           event.transactionHash,
           additionalInfo
