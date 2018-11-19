@@ -5,6 +5,7 @@ import Icon from '../webpack/views/icons/Icon.js';
 import Web3Providers from './Web3Providers.js';
 import Select from 'react-select';
 import {Balance} from '../webpack/views/Balance.js';
+import withWeb3 from '../webpack/contexts/WithWeb3.js';
 
 const Parent = styled.div`
   display: flex;
@@ -131,7 +132,7 @@ class AccountBalance extends React.Component {
     return (
       //  Either Metamask (no in-app addresses switch possible) or Ganache (react select for address selection)
       <Parent>
-        {this.props.accounts && this.props.provider === Web3Providers.META_MASK
+        {this.props.accounts && this.props.context.provider === Web3Providers.META_MASK
           ? this.renderMetaMaskAccount()
           : this.renderGanacheAccounts()}
       </Parent>
@@ -139,4 +140,4 @@ class AccountBalance extends React.Component {
   }
 }
 
-export default AccountBalance;
+export default withWeb3(AccountBalance);

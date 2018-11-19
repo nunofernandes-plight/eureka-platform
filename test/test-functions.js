@@ -15,7 +15,7 @@ import {
   declineArticleVersion,
   openNewReviewRound,
   declineNewReviewRound,
-  correctReview
+  correctReview, signUpExpertReviewer
 } from '../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import userService from '../src/backend/db/user-service.mjs';
 import Roles from '../src/backend/schema/roles-enum.mjs';
@@ -73,6 +73,42 @@ export default {
     }
     t.is(dbUser.roles.length, rolesLength + 1);
     t.is(dbUser.roles[rolesLength], Roles.EDITOR);
+    return t;
+  },
+
+  /**
+   *  Signs up the provided user as Expert Reviewer on the SC.
+   *  Afterwards checks if the user has become a Expert Reviewr on the DB as well
+   * @param t
+   * @param contractOwner
+   * @param reviewer
+   * @returns {Promise<*>}
+   */
+  signUpExpertReviewerAndTest: async function(t, contractOwner, reviewer) {
+    const rolesLength = reviewer.roles.length;
+    const scTransactionLength = reviewer.scTransactions.length;
+    let dbUser = await userService.getUserByEthereumAddress(reviewer.ethereumAddress);
+    t.is(true, true);
+
+    t.is(dbUser.roles.includes(Roles.EXPERT_REVIEWER), false);
+    await signUpExpertReviewer(eurekaPlatformContract, reviewer.ethereumAddress).send({
+      from: contractOwner.ethereumAddress
+    });
+
+    dbUser = await userService.getUserByEthereumAddressWithScTransactions(
+      reviewer.ethereumAddress
+    );
+
+    let counter = 0;
+    while (dbUser.scTransactions.length < scTransactionLength && counter < 5) {
+      sleepSync(5000);
+      dbUser = await userService.getUserByEthereumAddressWithScTransactions(
+        reviewer.ethereumAddress
+      );
+      counter++;
+    }
+    t.is(dbUser.roles.length, rolesLength + 1);
+    t.is(dbUser.roles[rolesLength], Roles.EXPERT_REVIEWER);
     return t;
   },
 
@@ -370,7 +406,7 @@ export default {
 
     let counter = 0;
     while (
-      dbReview.reviewState !== ReviewState.INVITATION_ACCEPTED &&
+      dbReview.reviewState !== ReviewState.SIGNED_UP_FOR_REVIEWING &&
       counter < 5) {
       sleepSync(5000);
       dbReview = await reviewService.getReviewById(
@@ -379,7 +415,7 @@ export default {
       );
       counter++;
     }
-    t.is(dbReview.reviewState, ReviewState.INVITATION_ACCEPTED);
+    t.is(dbReview.reviewState, ReviewState.SIGNED_UP_FOR_REVIEWING);
   },
 
   addEditorApprovedReviewAndTest: async function(t, reviewer, review, reviewData, reviewDataInHex, articleVersion) {

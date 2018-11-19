@@ -166,6 +166,11 @@ test.only(
     // Accept sanity check for article 1
     await TestFunctions.acceptSanityCheckAndTest(t, editor, author, articleVersion);
 
+    // define expert/editor approved reviewers that thex can be invited
+    await TestFunctions.signUpExpertReviewerAndTest(t, author, editorApprovedReviewers[0]);
+    await TestFunctions.signUpExpertReviewerAndTest(t, author, editorApprovedReviewers[1]);
+    await TestFunctions.signUpExpertReviewerAndTest(t, author, editorApprovedReviewers[2]);
+
     // Invite reviewers 1,2 & 3 to become editor-approved reviewers
     await TestFunctions.inviteReviewersAndTest(t, editor, author, editorApprovedReviewers, articleVersion);
 

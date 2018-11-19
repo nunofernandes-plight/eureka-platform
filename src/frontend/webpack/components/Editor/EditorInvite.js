@@ -13,6 +13,7 @@ import EmailPreview from '../Email/EmailPreview.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import {inviteReviewersForArticle} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import SendEmailAnimation from './SendEmailAnimation.js';
+import withWeb3 from '../../contexts/WithWeb3.js';
 
 const Container = styled.div`
   display: flex;
@@ -86,9 +87,9 @@ class EditorInvite extends React.Component {
     });
     let gasAmount;
     // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.web3))
+    if (!isGanache(this.props.context.web3))
       gasAmount = await inviteReviewersForArticle(
-        this.props.platformContract,
+        this.props.context.platformContract,
         this.state.article.articleHash,
         reviewers
       ).estimateGas({
@@ -97,7 +98,7 @@ class EditorInvite extends React.Component {
     else gasAmount = 80000000;
 
     inviteReviewersForArticle(
-      this.props.platformContract,
+      this.props.context.platformContract,
       this.state.article.articleHash,
       reviewers
     )
@@ -188,7 +189,6 @@ class EditorInvite extends React.Component {
                 selectedAccount={this.props.selectedAccount}
               />
               <EdiorReviewersPicker
-                platformContract={this.props.platformContract}
                 article={this.state.article}
                 selectedAccount={this.props.selectedAccount}
                 reviewersToInvite={this.state.reviewersToInvite}
@@ -273,4 +273,4 @@ class EditorInvite extends React.Component {
   }
 }
 
-export default withRouter(EditorInvite);
+export default withWeb3(withRouter(EditorInvite));

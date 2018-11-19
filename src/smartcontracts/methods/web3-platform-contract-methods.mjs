@@ -2,6 +2,14 @@ export const signUpEditor = (contract, editor) => {
   return contract.methods.signUpEditor(editor);
 };
 
+export const signUpExpertReviewer = (contract, reviewer) => {
+  return contract.methods.signUpExpertReviewer(reviewer);
+};
+
+export const signUpExpertReviewers = (contract, reviewers) => {
+  return contract.methods.signUpExpertReviewers(reviewers);
+};
+
 export const assignForSubmissionProcess = (contract, _submissionId) => {
   return contract.methods.assignForSubmissionProcess(_submissionId);
 };

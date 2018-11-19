@@ -41,9 +41,6 @@ class DashboardRouter extends Component {
             render={() => (
               <ContractOwnerGuard roles={this.props.user.roles}>
                 <ContractOwnerDashboard
-                  tokenContract={this.props.tokenContract}
-                  platformContract={this.props.platformContract}
-                  web3={this.props.web3}
                   selectedAccount={this.props.selectedAccount}
                 />
               </ContractOwnerGuard>
@@ -55,7 +52,6 @@ class DashboardRouter extends Component {
             path={`${this.props.base}/book`}
             render={() => (
               <AddressBook
-                web3={this.props.web3}
                 selectedAccount={this.props.selectedAccount}
               />
             )}
@@ -92,9 +88,6 @@ class DashboardRouter extends Component {
             render={() => {
               return (
                 <ReviewsRouter
-                  web3={this.props.web3}
-                  tokenContract={this.props.tokenContract}
-                  platformContract={this.props.platformContract}
                   base={`${this.props.base}/reviews`}
                   user={this.props.user}
                   updateUser={() => {
@@ -111,9 +104,6 @@ class DashboardRouter extends Component {
             path={`${this.props.base}/articles`}
             render={() => (
               <ArticlesRouter
-                web3={this.props.web3}
-                tokenContract={this.props.tokenContract}
-                platformContract={this.props.platformContract}
                 base={`${this.props.base}/articles`}
                 user={this.props.user}
                 updateUser={() => {
@@ -129,9 +119,6 @@ class DashboardRouter extends Component {
             path={`${this.props.base}/editor`}
             render={() => (
               <EditorRouter
-                web3={this.props.web3}
-                tokenContract={this.props.tokenContract}
-                platformContract={this.props.platformContract}
                 base={`${this.props.base}/editor`}
                 user={this.props.user}
                 selectedAccount={this.props.selectedAccount}
@@ -168,9 +155,6 @@ class DashboardRouter extends Component {
             path={`${this.props.base}/write/review/:reviewId`}
             render={() => (
               <ReviewsWriter
-                web3={this.props.web3}
-                tokenContract={this.props.tokenContract}
-                platformContract={this.props.platformContract}
                 base={`${this.props.base}/write/review`}
                 user={this.props.user}
                 selectedAccount={this.props.selectedAccount}

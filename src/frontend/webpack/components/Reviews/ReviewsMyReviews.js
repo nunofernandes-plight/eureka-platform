@@ -14,6 +14,7 @@ import {
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
+import withWeb3 from '../../contexts/WithWeb3.js';
 
 const Container = styled.div`
   display: flex;
@@ -72,9 +73,9 @@ class ReviewsMyReviews extends React.Component {
   async submitEditorApprovedReview(review) {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.web3))
+    if (!isGanache(this.props.context.web3))
       gasAmount = await addEditorApprovedReview(
-        this.props.platformContract,
+        this.props.context.platformContract,
         review.articleHash,
         review.reviewHash,
         review.articleHasMajorIssues,
@@ -87,7 +88,7 @@ class ReviewsMyReviews extends React.Component {
     else gasAmount = 80000000;
 
     addEditorApprovedReview(
-      this.props.platformContract,
+      this.props.context.platformContract,
       review.articleHash,
       review.reviewHash,
       review.articleHasMajorIssues,
@@ -123,9 +124,9 @@ class ReviewsMyReviews extends React.Component {
   async submitCommunityReview(review) {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.web3))
+    if (!isGanache(this.props.context.web3))
       gasAmount = await addCommunityReview(
-        this.props.platformContract,
+        this.props.context.platformContract,
         review.articleHash,
         review.reviewHash,
         review.articleHasMajorIssues,
@@ -138,7 +139,7 @@ class ReviewsMyReviews extends React.Component {
     else gasAmount = 80000000;
 
     addCommunityReview(
-      this.props.platformContract,
+      this.props.context.platformContract,
       review.articleHash,
       review.reviewHash,
       review.articleHasMajorIssues,
@@ -252,4 +253,4 @@ class ReviewsMyReviews extends React.Component {
   }
 }
 
-export default withRouter(ReviewsMyReviews);
+export default withWeb3(withRouter(ReviewsMyReviews));

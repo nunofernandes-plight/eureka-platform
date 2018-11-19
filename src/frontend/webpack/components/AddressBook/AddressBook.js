@@ -14,6 +14,7 @@ import {
 import CircleSpinner from '../../views/spinners/CircleSpinner.js';
 import AddressBookTable from './AddressBookTable.js';
 import AddressBookAddContact from './AddressBookAddContact';
+import withWeb3 from '../../contexts/WithWeb3.js';
 
 const Container = styled.div`
   display: flex;
@@ -78,7 +79,7 @@ class AddressBook extends React.Component {
 
   isInputValid() {
     return (
-      this.props.web3.utils.isAddress(this.state.address) &&
+      this.props.context.web3.utils.isAddress(this.state.address) &&
       this.state.firstName &&
       this.state.lastName
     );
@@ -134,7 +135,7 @@ class AddressBook extends React.Component {
           title={'Add a new contact'}
         >
           <AddressBookAddContact
-            web3={this.props.web3}
+            web3={this.props.context.web3}
             submitted={this.state.submitted}
             firstName={this.state.firstName}
             lastName={this.state.lastName}
@@ -165,7 +166,7 @@ class AddressBook extends React.Component {
           title={'Add a new contact'}
         >
           <AddressBookAddContact
-            web3={this.props.web3}
+            web3={this.props.context.web3}
             submitted={this.state.submitted}
             firstName={this.state.firstName}
             lastName={this.state.lastName}
@@ -338,4 +339,4 @@ class AddressBook extends React.Component {
     );
   }
 }
-export default AddressBook;
+export default withWeb3(AddressBook);

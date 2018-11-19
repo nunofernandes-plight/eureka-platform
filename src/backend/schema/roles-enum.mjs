@@ -6,6 +6,7 @@ const Roles = Object.freeze({
   ADMIN: 'ADMIN',
   AUTHOR: 'AUTHOR',
   REVIEWER: 'REVIEWER',
+  EXPERT_REVIEWER: 'EXPERT_REVIEWER',
   EDITOR: 'EDITOR',
   USER: 'USER',
   ALL: 'ALL'

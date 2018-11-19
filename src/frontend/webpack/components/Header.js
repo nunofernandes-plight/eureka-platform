@@ -69,8 +69,8 @@ const Flex = styled.div`
   align-items: center;
 `;
 
-const renderLeft = props => {
-  const isApp = props.user && props.isAuthenticated;
+const renderLeft = ({user, isAuthenticated}) => {
+  const isApp = user && isAuthenticated;
   return (
     <LeftContainer>
       {isApp ? (
@@ -82,37 +82,36 @@ const renderLeft = props => {
   );
 };
 
-const renderStatus = props => {
-  if (!props.metaMaskStatus || !props.network) {
+const renderStatus = ({metaMaskStatus, network}) => {
+  if (!metaMaskStatus || !network) {
     return <CircleSpinner />;
   }
   return (
     <Flex>
-      <MetaMaskLabel {...props} />
-      <RenderNetwork network={props.network} />
+      <MetaMaskLabel metaMaskStatus={metaMaskStatus} />
+      <RenderNetwork network={network} />
     </Flex>
   );
 };
 
-const renderMiddle = props => {
+const renderMiddle = ({metaMaskStatus, network}) => {
   return (
     <MiddleContainer>
       <Item>
         Products <Icon icon="chevron-down" width={15} height={15} />
       </Item>
-      {renderStatus(props)}
+      {renderStatus({metaMaskStatus, network})}
     </MiddleContainer>
   );
 };
 
-const renderRight = props => {
-  if (props.isAuthenticated && props.user) {
+const renderRight = ({isAuthenticated, user}) => {
+  if (isAuthenticated && user) {
     return (
       <ProfileContainer>
         <div>
-          <Avatar avatar={props.user.avatar} width={40} height={40} />
+          <Avatar avatar={user.avatar} width={40} height={40} />
         </div>
-        {/* <Email>{renderEmail(props)}</Email> */}
       </ProfileContainer>
     );
   }
@@ -134,22 +133,20 @@ const renderRight = props => {
 };
 
 // Do not show the header when the user is authenticated (i.e. is in the main app)
-class Header extends Component {
-  render() {
-    return (
-      <div>
-        {this.props.isAuthenticated ? null : (
-          <Parent>
-            <Container {...this.props}>
-              {renderLeft(this.props)}
-              {renderMiddle(this.props)}
-              {renderRight(this.props)}
-            </Container>
-          </Parent>
-        )}
-      </div>
-    );
-  }
-}
+const Header = ({provider, metaMaskStatus, network, isAuthenticated, user}) => {
+  return (
+    <div>
+      {isAuthenticated ? null : (
+        <Parent>
+          <Container>
+            {renderLeft({user, isAuthenticated})}
+            {renderMiddle({metaMaskStatus, network})}
+            {renderRight({isAuthenticated, user})}
+          </Container>
+        </Parent>
+      )}
+    </div>
+  );
+};
 
 export default Header;

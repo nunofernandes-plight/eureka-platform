@@ -11,6 +11,7 @@ import {withRouter} from 'react-router-dom';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import Pagination from './Pagination.js';
+import withWeb3 from '../../contexts/WithWeb3.js';
 
 const Container = styled.div`
   display: flex;
@@ -81,16 +82,16 @@ class EditorArticles extends React.Component {
   async assignArticle(scSubmissionID) {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.web3))
+    if (!isGanache(this.props.context.web3))
       gasAmount = await assignForSubmissionProcess(
-        this.props.platformContract,
+        this.props.context.platformContract,
         scSubmissionID
       ).estimateGas({
         from: this.props.selectedAccount.address
       });
     else gasAmount = 80000000;
 
-    assignForSubmissionProcess(this.props.platformContract, scSubmissionID)
+    assignForSubmissionProcess(this.props.context.platformContract, scSubmissionID)
       .send({
         from: this.props.selectedAccount.address,
         gas: gasAmount
@@ -213,4 +214,4 @@ class EditorArticles extends React.Component {
   }
 }
 
-export default withRouter(EditorArticles);
+export default withWeb3(withRouter(EditorArticles));

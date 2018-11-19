@@ -19,6 +19,7 @@ import {
   LoginRow
 } from '../views/SharedForms.js';
 import TopAlertContainer from '../views/TopAlertContainer.js';
+import withWeb3 from '../contexts/WithWeb3.js';
 
 class Login extends Component {
   constructor() {
@@ -33,14 +34,19 @@ class Login extends Component {
     };
   }
 
-  async register(props) {
+
+  componentWillUnmount() {
+    this.setState({});
+  }
+
+  async register() {
     this.setState({submitted: true});
 
     // DEV ENVIRONMENT
-    if (props.provider === Web3Providers.LOCALHOST) {
+    if (this.props.context.provider === Web3Providers.LOCALHOST) {
       this.apiCall();
-    } else if (props.provider === Web3Providers.META_MASK) {
-      const status = props.metaMaskStatus;
+    } else if (this.props.context.provider === Web3Providers.META_MASK) {
+      const status = this.props.metaMaskStatus;
       if (
         status === MetaMaskStatus.DETECTED_NO_LOGGED_IN ||
         status === MetaMaskStatus.NO_DETECTED
@@ -99,13 +105,13 @@ class Login extends Component {
     const message =
       'EUREKA Register Authentication - Please click to the Sign Button below.';
 
-    if (this.props.provider === Web3Providers.LOCALHOST) {
+    if (this.props.context.provider === Web3Providers.LOCALHOST) {
       // FAKE PASSWORD FOR DEV
       return '0xb91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a0291c';
     }
-    if (this.props.provider === Web3Providers.META_MASK) {
+    if (this.props.context.provider === Web3Providers.META_MASK) {
       return signPrivateKey(
-        this.props.web3,
+        this.props.context.web3,
         this.props.selectedAccount.address,
         message
       );
@@ -168,17 +174,16 @@ class Login extends Component {
             <div>
               {this.renderModals()}
               <Container>
-                <TopAlertContainer provider={this.props.provider} />
+                <TopAlertContainer provider={this.props.context.provider} />
 
                 <Row>
-                  <LoginContainer provider={this.props.provider}>
+                  <LoginContainer>
                     <SubTitle>Please Login</SubTitle>
 
                     {this.props.accounts ? (
                       <LoginRow>
                         <AccountBalance
                           accounts={this.props.accounts}
-                          provider={this.props.provider}
                           selectedAccount={this.props.selectedAccount}
                           changeAccount={selectedAccount => {
                             this.props.changeAccount(selectedAccount);
@@ -189,7 +194,7 @@ class Login extends Component {
                     <ButtonRow>
                       <Button
                         onClick={() => {
-                          this.register(this.props);
+                          this.register();
                         }}
                       >
                         Login with Metamask{' '}
@@ -213,4 +218,4 @@ class Login extends Component {
   }
 }
 
-export default withRouter(Login);
+export default withWeb3(withRouter(Login));

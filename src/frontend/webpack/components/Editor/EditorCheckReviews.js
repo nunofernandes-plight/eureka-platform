@@ -13,6 +13,7 @@ import {
 import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
+import withWeb3 from '../../contexts/WithWeb3.js';
 
 const Container = styled.div`
   display: flex;
@@ -75,9 +76,9 @@ class EditorCheckReviews extends React.Component {
   async acceptReview(articleHash, reviewerAddress) {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.web3))
+    if (!isGanache(this.props.context.web3))
       gasAmount = await acceptReview(
-        this.props.platformContract,
+        this.props.context.platformContract,
         this.state.article.articleHash,
         reviewerAddress
       ).estimateGas({
@@ -85,7 +86,7 @@ class EditorCheckReviews extends React.Component {
       });
     else gasAmount = 80000000;
 
-    acceptReview(this.props.platformContract, articleHash, reviewerAddress)
+    acceptReview(this.props.context.platformContract, articleHash, reviewerAddress)
       .send({
         from: this.props.selectedAccount.address,
         gas: gasAmount
@@ -113,9 +114,9 @@ class EditorCheckReviews extends React.Component {
   async declineReview(articleHash, reviewerAddress) {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.web3))
+    if (!isGanache(this.props.context.web3))
       gasAmount = await declineReview(
-        this.props.platformContract,
+        this.props.context.platformContract,
         this.state.article.articleHash,
         reviewerAddress
       ).estimateGas({
@@ -123,7 +124,7 @@ class EditorCheckReviews extends React.Component {
       });
     else gasAmount = 80000000;
 
-    declineReview(this.props.platformContract, articleHash, reviewerAddress)
+    declineReview(this.props.context.platformContract, articleHash, reviewerAddress)
       .send({
         from: this.props.selectedAccount.address,
         gas: gasAmount
@@ -232,4 +233,4 @@ class EditorCheckReviews extends React.Component {
     );
   }
 }
-export default withRouter(EditorCheckReviews);
+export default withWeb3(withRouter(EditorCheckReviews));

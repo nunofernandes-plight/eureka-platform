@@ -48,7 +48,6 @@ class Sentences extends React.Component {
     return this.state.sentences.map((sentence, i) => {
       const refId = this.props.field + i;
       let marginTop = 0;
-
       if (i !== this.state.sentences.length - 1) {
         if (sentence.offsetTop === this.state.sentences[i + 1].offsetTop)
           marginTop = -12;
@@ -84,7 +83,7 @@ class Sentences extends React.Component {
 
   getClass(index) {
     if (!this.props.isReview) {
-      return null;
+      return;
     }
     if (this.props.show === index) {
       return 'highlightSpan';
