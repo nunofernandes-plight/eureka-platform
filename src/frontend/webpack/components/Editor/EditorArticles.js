@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import {Card} from '../../views/Card.js';
 import EditorQuerySection from './EditorQuerySection.js';
-import {getUnassignedSubmissions} from './EditorMethods.js';
 import Modal from '../../design-components/Modal.js';
 import Article from '../../views/Article.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
@@ -13,10 +12,12 @@ import {isGanache} from '../../../../helpers/isGanache.mjs';
 import Pagination from './Pagination.js';
 import withWeb3 from '../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
-import {fetchUserData} from '../../reducers/user.js';
 import {fetchUnassignedSubmissions} from '../../reducers/editor-methods.js';
-import {unassignedArticlesData} from '../../reducers/editor-methods.js';
 import {TITLE_GENERAL_ERROR} from '../../constants/ModalErrors.js';
+import {ToastContainer, toast} from 'react-toastify';
+import '../../design-components/Notification.css';
+import 'react-toastify/dist/ReactToastify.css';
+import {ARTICLE_ASSIGNED_TX} from '../../constants/Messages.js';
 
 const Container = styled.div`
   display: flex;
@@ -86,10 +87,17 @@ class EditorArticles extends React.Component {
         gas: gasAmount
       })
       .on('transactionHash', tx => {
-        this.setState({
+        console.log(tx);
+        toast(ARTICLE_ASSIGNED_TX(tx), {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 20000,
+          className: '__ALERT_SUCCESS',
+          progressClassName: '__BAR'
+        });
+        /* this.setState({
           tx,
           showTxModal: true
-        });
+        });*/
       })
       .on('receipt', receipt => {
         console.log(
@@ -150,6 +158,7 @@ class EditorArticles extends React.Component {
   render() {
     return (
       <Container>
+        <ToastContainer />
         {this.renderModals()}
         <Card title={'Assign articles'}>
           <EditorQuerySection
