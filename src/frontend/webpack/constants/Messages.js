@@ -1,14 +1,20 @@
 import React from 'react';
+import {fetchUserData} from '../reducers/user.js';
+
+/*const mapDispatchToProps = dispatch => ({
+  fetchNetwork: () => {
+    dispatch(fetchNetwork());
+  }
+});
+const mapStateToProps = state => ({
+  network: state.networkData.network
+});*/
 
 
 /**
- * EDITOR
+ * EDITOR NOTIFICATIONS
  **/
-
 export const ARTICLE_ASSIGNED_TX = ({closeToast, tx}) => {
-  /* return `Dear Editor,\\n Your request will be processed in the next minutes⏳. If you may be interested in tracking the transaction you can click ${(
-    <a href={tx}>here</a>
-  )} `;*/
   return (
     <div>
       <strong>Dear editor</strong>,
