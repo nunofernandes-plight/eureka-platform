@@ -2,11 +2,8 @@ import test from 'ava';
 import {cleanDB} from '../helpers.js';
 import app from '../../src/backend/api/api.mjs';
 import reviewService from '../../src/backend/db/review-service.mjs';
-import {
-  TEST_INVITATION_ACCEPTED_REVIEW_1,
-  TEST_INVITIED_REVIEW_1,
-  TEST_INVITIED_REVIEW_2
-} from '../test-data/test-reviews.js';
+import testReviewCreator from '../test-data/test-reviews.js';
+import ReviewState from '../../src/backend/schema/review-state-enum.mjs';
 
 const PRETEXT = 'DB-REVIEW: ';
 
@@ -36,7 +33,19 @@ test(PRETEXT + 'Connection to reviews in DB', async t => {
 
 test(PRETEXT + 'Write a review on db, get all reviews', async t => {
   t.is((await reviewService.getAllReviews()).length, 0);
-  await TEST_INVITATION_ACCEPTED_REVIEW_1.save();
+  await testReviewCreator.createInvitedReview1();
   t.is((await reviewService.getAllReviews()).length, 1);
 });
 
+test(PRETEXT + 'Get all reviews by their state', async t => {
+  t.is((await reviewService.getAllReviews()).length, 0);
+
+  //await TEST_INVITIED_REVIEW_1.save();
+  await testReviewCreator.createInvitedReview1();
+  await testReviewCreator.createInvitedReview2();
+  await testReviewCreator.createAcceptedReview1();
+
+  t.is((await reviewService.getReviewsByState(ReviewState.INVITED)).length, 2);
+  t.is((await reviewService.getReviewsByState(ReviewState.ACCEPTED)).length, 1);
+
+});
