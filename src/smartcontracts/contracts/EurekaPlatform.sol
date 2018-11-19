@@ -668,6 +668,7 @@ contract EurekaPlatform {
         article.versionState = ArticleVersionState.DECLINED;
 
         closeSubmissionProcess(article.submissionId);
+        emit DeclineArticleVersionAndClose(_articleHash, block.timestamp, msg.sender);
     }
 
     function countSignedUpForReviewing(bytes32 _articleHash, address[] _reviewers) view private returns (uint count) {
