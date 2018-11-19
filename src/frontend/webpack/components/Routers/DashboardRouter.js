@@ -22,7 +22,6 @@ class DashboardRouter extends Component {
     return (
       <div>
         <TopContainer
-          metaMaskStatus={this.props.metaMaskStatus}
           action={item => this.props.action(item)}
           selectedAccount={this.props.selectedAccount}
         />

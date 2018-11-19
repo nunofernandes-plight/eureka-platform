@@ -84,8 +84,6 @@ class Login extends Component {
         .then(response => {
           if (response.success) {
             this.props.fetchUserData();
-            this.props.history.push('/app');
-
           } else {
             this.setState({
               errorMessage: response.error,
@@ -223,7 +221,7 @@ class Login extends Component {
 export default withWeb3(
   withWeb3(
     connect(
-      state => ({}),
+      state => ({metaMaskStatus: state.metamaskData.status}),
       dispatch => {
         return {
           fetchUserData: () => {

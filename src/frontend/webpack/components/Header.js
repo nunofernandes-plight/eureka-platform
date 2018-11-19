@@ -141,13 +141,14 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = state => ({
   isAuthenticated: state.userData.isAuthenticated,
   user: state.userData.data,
-  network: state.networkData.network
+  network: state.networkData.network,
+  metaMaskStatus: state.metamaskData.status
 });
 
 export const Header = connect(
   mapStateToProps,
   mapDispatchToProps
-)(({provider, metaMaskStatus, network, isAuthenticated, user, myNetwork}) => {
+)(({provider, metaMaskStatus, network, isAuthenticated, user}) => {
   return (
     <div>
       {isAuthenticated ? null : (

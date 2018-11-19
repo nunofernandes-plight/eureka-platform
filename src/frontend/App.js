@@ -9,12 +9,12 @@ import {getAllAccounts} from './web3/Helpers.js';
 import withWeb3 from './webpack/contexts/WithWeb3.js';
 import {connect} from 'react-redux';
 import {updateNetwork} from './webpack/reducers/network.js';
+import {updateMetaMask} from './webpack/reducers/metamask.js';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      metaMaskStatus: null,
       accounts: null,
       selectedAccount: {
         address: null,
@@ -26,7 +26,8 @@ class App extends Component {
 
   async componentDidMount() {
     this.props.updateNetwork(this.props.context.web3);
-    const metaMaskStatus = await getMetaMaskStatus(this.props.context.web3);
+    this.props.updateMetaMask(this.props.context.web3);
+
     const accounts = await getAllAccounts(this.props.context.web3);
 
     const selectedAccount = {...this.state.selectedAccount};
@@ -47,10 +48,10 @@ class App extends Component {
       this.props.context.tokenContract,
       selectedAccount.address
     );
-    this.setState({selectedAccount, metaMaskStatus, accounts});
+
+    this.setState({selectedAccount, accounts});
     this.interval = setInterval(async () => {
-      const metaMaskStatus = await getMetaMaskStatus(this.props.context.web3);
-      this.setState({metaMaskStatus});
+      this.props.updateMetaMask(this.props.context.web3);
     }, 7500);
   }
 
@@ -94,7 +95,6 @@ class App extends Component {
             online ||
             this.props.context.provider === Web3Providers.LOCALHOST ? (
               <MainRouter
-                metaMaskStatus={this.state.metaMaskStatus}
                 accounts={this.state.accounts}
                 selectedAccount={this.state.selectedAccount}
                 changeAccount={account => {
@@ -117,12 +117,16 @@ class App extends Component {
 export default withWeb3(
   connect(
     state => ({
-      network: state.networkData.network
+      network: state.networkData.network,
+      metaMaskStatus: state.metamaskData.status
     }),
     dispatch => {
       return {
         updateNetwork: web3 => {
           dispatch(updateNetwork(web3));
+        },
+        updateMetaMask: web3 => {
+          dispatch(updateMetaMask(web3));
         }
       };
     }

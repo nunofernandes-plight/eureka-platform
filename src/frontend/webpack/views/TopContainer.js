@@ -152,4 +152,7 @@ class TopContainer extends React.Component {
   }
 }
 
-export default connect(state => ({user: state.userData.data}))(TopContainer);
+export default connect(state => ({
+  user: state.userData.data,
+  metaMaskStatus: state.metamaskData.status
+}))(TopContainer);

@@ -121,7 +121,6 @@ class MainRouter extends Component {
           <Fragment>
             <Header
               provider={this.props.context.provider}
-              metaMaskStatus={this.props.metaMaskStatus}
             />
             <div style={{paddingTop: this.getPaddingTop()}}>
               <BrowserRouter>
@@ -149,7 +148,6 @@ class MainRouter extends Component {
                               this.authenticate();
                             }}
                             selectedAccount={this.props.selectedAccount}
-                            metaMaskStatus={this.props.metaMaskStatus}
                             action={item => this.action(item)}
                             updateAccount={() => {
                               this.props.updateAccount();
@@ -165,7 +163,6 @@ class MainRouter extends Component {
                     exact
                     render={() => (
                       <SignUp
-                        metaMaskStatus={this.props.metaMaskStatus}
                         accounts={this.props.accounts}
                         selectedAccount={this.props.selectedAccount}
                         changeAccount={selectedAccount => {
@@ -184,7 +181,6 @@ class MainRouter extends Component {
                       <div>
                         <LoginGuard>
                           <Login
-                            metaMaskStatus={this.props.metaMaskStatus}
                             accounts={this.props.accounts}
                             selectedAccount={this.props.selectedAccount}
                             changeAccount={selectedAccount => {

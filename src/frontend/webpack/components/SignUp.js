@@ -23,6 +23,8 @@ import {
 import TopAlertContainer from '../views/TopAlertContainer.js';
 import {getRandomAvatar} from '../../helpers/getRandomAvatar.mjs';
 import withWeb3 from '../contexts/WithWeb3.js';
+import {connect} from 'react-redux';
+import {fetchUnassignedSubmissions} from '../reducers/editor-methods.js';
 
 class SignUp extends Component {
   constructor() {
@@ -253,4 +255,10 @@ class SignUp extends Component {
   }
 }
 
-export default withWeb3(withRouter(SignUp));
+export default withWeb3(
+  withRouter(
+    connect(state => ({
+      metaMaskStatus: state.metamaskData.status
+    }))(SignUp)
+  )
+);
