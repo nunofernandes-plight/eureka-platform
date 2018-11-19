@@ -22,6 +22,7 @@ import {
 } from '../views/SharedForms.js';
 import TopAlertContainer from '../views/TopAlertContainer.js';
 import {getRandomAvatar} from '../../helpers/getRandomAvatar.mjs';
+import withWeb3 from '../contexts/WithWeb3.js';
 
 class SignUp extends Component {
   constructor() {
@@ -39,19 +40,22 @@ class SignUp extends Component {
     };
   }
 
-  async register(props) {
-    this.setState({submitted: true});
+  componentWillUnmount() {
+    this.setState({});
+  }
 
+  async register() {
+    this.setState({submitted: true});
     if (!isEmailValid(this.state.email)) {
       this.setState({isEmailValidModal: true});
       return;
     }
 
     // DEV ENVIRONMENT
-    if (props.provider === Web3Providers.LOCALHOST) {
+    if (this.props.context.provider === Web3Providers.LOCALHOST) {
       this.apiCall();
-    } else if (props.provider === Web3Providers.META_MASK) {
-      const status = props.metaMaskStatus;
+    } else if (this.props.context.provider === Web3Providers.META_MASK) {
+      const status = this.props.metaMaskStatus;
       if (
         status === MetaMaskStatus.DETECTED_NO_LOGGED_IN ||
         status === MetaMaskStatus.NO_DETECTED
@@ -114,13 +118,13 @@ class SignUp extends Component {
     const message =
       'EUREKA Register Authentication - Please click to the Sign Button below.';
 
-    if (this.props.provider === Web3Providers.LOCALHOST) {
+    if (this.props.context.provider === Web3Providers.LOCALHOST) {
       // FAKE PASSWORD FOR DEV
       return '0xb91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a0291c';
     }
-    if (this.props.provider === Web3Providers.META_MASK) {
+    if (this.props.context.provider === Web3Providers.META_MASK) {
       return signPrivateKey(
-        this.props.web3,
+        this.props.context.web3,
         this.props.selectedAccount.address,
         message
       );
@@ -191,10 +195,10 @@ class SignUp extends Component {
             <div>
               {this.renderModals()}
               <Container>
-                <TopAlertContainer provider={this.props.provider} />
+                <TopAlertContainer provider={this.props.context.provider} />
 
                 <Row>
-                  <LoginContainer provider={this.props.provider}>
+                  <LoginContainer>
                     <SubTitle>Please Register</SubTitle>
                     <LoginRow>
                       <InputField
@@ -205,7 +209,7 @@ class SignUp extends Component {
                         onChange={e => this.handleInput('email', e)}
                         onKeyPress={e => {
                           if (e.key === 'Enter') {
-                            this.register(this.props);
+                            this.register();
                           }
                         }}
                       />
@@ -215,7 +219,6 @@ class SignUp extends Component {
                       <LoginRow>
                         <AccountBalance
                           accounts={this.props.accounts}
-                          provider={this.props.provider}
                           selectedAccount={this.props.selectedAccount}
                           changeAccount={selectedAccount => {
                             this.props.changeAccount(selectedAccount);
@@ -250,4 +253,4 @@ class SignUp extends Component {
   }
 }
 
-export default withRouter(SignUp);
+export default withWeb3(withRouter(SignUp));

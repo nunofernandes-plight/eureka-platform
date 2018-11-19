@@ -10,8 +10,9 @@ import {signUpEditor} from '../../../smartcontracts/methods/web3-platform-contra
 import Modal from '../design-components/Modal.js';
 import 'react-toastify/dist/ReactToastify.css';
 import '../design-components/Notification.css';
-import {ToastContainer} from 'react-toastify';
+import {toast, ToastContainer} from 'react-toastify';
 import {isGanache} from '../../../helpers/isGanache.mjs';
+import withWeb3 from '../contexts/WithWeb3.js';
 
 const Container = styled.div`
   display: flex;
@@ -96,16 +97,19 @@ class ContractOwnerDashboard extends React.Component {
   async assignEditor() {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.web3))
+    if (!isGanache(this.props.context.web3))
       gasAmount = await signUpEditor(
-        this.props.platformContract,
+        this.props.context.platformContract,
         this.state.editorAddress
       ).estimateGas({
         from: this.props.selectedAccount.address
       });
     else gasAmount = 80000000;
 
-    await signUpEditor(this.props.platformContract, this.state.editorAddress)
+    await signUpEditor(
+      this.props.context.platformContract,
+      this.state.editorAddress
+    )
       .send({
         from: this.props.selectedAccount.address,
         gas: gasAmount
@@ -117,16 +121,12 @@ class ContractOwnerDashboard extends React.Component {
         return receipt;
       })
       .on('confirmationNr', res => {
-        // toast(
-        //   'We got your request in our Smart Contract. You can track the transaction at the following tx hash: ' +
-        //     tx,
-        //   {
-        //     position: toast.POSITION.TOP_CENTER,
-        //     autoClose: 20000,
-        //     className: '__ALERT_SUCCESS',
-        //     progressClassName: '__BAR'
-        //   }
-        // );
+        toast('Your requested has been successfully processed', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 20000,
+          className: '__ALERT_SUCCESS',
+          progressClassName: '__BAR'
+        });
       })
       .catch(err => {
         console.error('submitArticle error: ', err);
@@ -146,7 +146,7 @@ class ContractOwnerDashboard extends React.Component {
     if (!this.state[stateKey]) {
       return null;
     }
-    if (this.props.web3.utils.isAddress(this.state[stateKey])) {
+    if (this.props.context.web3.utils.isAddress(this.state[stateKey])) {
       return 'valid';
     } else {
       return 'error';
@@ -240,4 +240,4 @@ class ContractOwnerDashboard extends React.Component {
   }
 }
 
-export default ContractOwnerDashboard;
+export default withWeb3(ContractOwnerDashboard);

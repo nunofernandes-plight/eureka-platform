@@ -65,10 +65,8 @@ class ReviewsRouter extends Component {
                 render={() => (
                   <ReviewsInvited
                     selectedAccount={this.props.selectedAccount}
-                    platformContract={this.props.platformContract}
                     base={`${this.props.base}/invited`}
                     network={this.props.network}
-                    web3={this.props.web3}
                   />
                 )}
               />
@@ -79,10 +77,8 @@ class ReviewsRouter extends Component {
                 render={() => (
                   <ReviewsOpen
                     selectedAccount={this.props.selectedAccount}
-                    platformContract={this.props.platformContract}
                     base={`${this.props.base}/open`}
                     network={this.props.network}
-                    web3={this.props.web3}
                   />
                 )}
               />
@@ -93,10 +89,8 @@ class ReviewsRouter extends Component {
                 render={() => (
                   <ReviewsMyReviews
                     selectedAccount={this.props.selectedAccount}
-                    platformContract={this.props.platformContract}
                     base={`${this.props.base}/me`}
                     network={this.props.network}
-                    web3={this.props.web3}
                   />
                 )}
               />

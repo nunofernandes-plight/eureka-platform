@@ -7,11 +7,8 @@ import withRouter from 'react-router/es/withRouter.js';
 import Modal from '../../design-components/Modal.js';
 import {Card} from '../../views/Card.js';
 import {Go} from '../Routers/Go.js';
-import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {__GRAY_100, __GRAY_200} from '../../../helpers/colors.js';
 import PreviewArticle from '../Preview/PreviewArticle.js';
-import {Link} from 'react-router-dom';
-import SmartContractInputData from '../../views/SmartContractInputData.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import {
   addCommunityReview,
@@ -23,13 +20,12 @@ import {
   deleteAnnotation,
   getAnnotations,
   saveAnnotation,
-  saveEditorApprovedReviewToDB,
   updateReview
 } from './ReviewMethods.js';
 import {getReviewHash} from '../../../../helpers/getHexAndHash.mjs';
 import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
 import EurekaRotateSpinner from '../../views/spinners/EurekaRotateSpinner.js';
-import PreviewArticleAbstract from '../Preview/PreviewArticleAbstract.js';
+import withWeb3 from '../../contexts/WithWeb3.js';
 
 const Container = styled.div`
   display: flex;
@@ -186,7 +182,7 @@ class ReviewsWriter extends React.Component {
 
     let gasAmount;
     // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.web3))
+    if (!isGanache(this.props.context.web3))
       gasAmount = await this.getAddReviewFn(reviewHash).estimateGas({
         from: this.props.selectedAccount.address
       });
@@ -220,7 +216,7 @@ class ReviewsWriter extends React.Component {
   getAddReviewFn(reviewHash) {
     if (this.state.review.reviewType === REVIEW_TYPE.EDITOR_APPROVED_REVIEW)
       return addEditorApprovedReview(
-        this.props.platformContract,
+        this.props.context.platformContract,
         this.state.article.articleHash,
         reviewHash,
         //TODO: update
@@ -231,7 +227,7 @@ class ReviewsWriter extends React.Component {
       );
     else
       return addCommunityReview(
-        this.props.platformContract,
+        this.props.context.platformContract,
         this.state.article.articleHash,
         reviewHash,
         //TODO: update
@@ -424,4 +420,4 @@ class ReviewsWriter extends React.Component {
   }
 }
 
-export default withRouter(ReviewsWriter);
+export default withWeb3(withRouter(ReviewsWriter));
