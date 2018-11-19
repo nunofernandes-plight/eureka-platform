@@ -78,7 +78,6 @@ class ArticlesRouter extends Component {
             render={() => (
               <MySubmitted
                 base={`${this.props.base}/submitted`}
-                network={this.props.network}
               />
             )}
           />

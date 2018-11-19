@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {__ALERT_WARNING, __FIFTH, __MAIN, __THIRD} from '../helpers/colors.js';
 import Icon from '../webpack/views/icons/Icon.js';
 import Network from './Network.js';
+import {connect} from 'react-redux';
 
 const NetworkContainer = styled.div`
   box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.1);
@@ -44,9 +45,6 @@ const getColor = network => {
 };
 
 const RenderNetwork = props => {
-  if (!props.network) {
-    return null;
-  }
   return (
     <NetworkContainer network={props.network}>
       {props.network}{' '}
@@ -65,4 +63,6 @@ const RenderNetwork = props => {
   );
 };
 
-export default RenderNetwork;
+export default connect(state => {
+  return {network: state.networkData.network};
+})(RenderNetwork);

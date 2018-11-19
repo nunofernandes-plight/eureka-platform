@@ -7,6 +7,8 @@ import NoConnection from './webpack/views/NoConnection.js';
 import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
 import {getAllAccounts, getNetwork} from './web3/Helpers.js';
 import withWeb3 from './webpack/contexts/WithWeb3.js';
+import {connect} from 'react-redux';
+import {updateNetwork} from './webpack/reducers/network.js';
 
 class App extends Component {
   constructor() {
@@ -23,6 +25,7 @@ class App extends Component {
   }
 
   async componentDidMount() {
+    this.props.updateNetwork(this.props.context.web3);
     const network = await getNetwork(this.props.context.web3);
     const metaMaskStatus = await getMetaMaskStatus(this.props.context.web3);
     const accounts = await getAllAccounts(this.props.context.web3);
@@ -95,19 +98,18 @@ class App extends Component {
           render={({online}) =>
             online ||
             this.props.context.provider === Web3Providers.LOCALHOST ? (
-                <MainRouter
-                  network={this.state.network}
-                  metaMaskStatus={this.state.metaMaskStatus}
-                  accounts={this.state.accounts}
-                  selectedAccount={this.state.selectedAccount}
-                  changeAccount={account => {
-                    this.changeAccount(account);
-                  }}
-                  updateAccount={() => {
-                    this.updateAccount();
-                  }}
-                />
-
+              <MainRouter
+                network={this.state.network}
+                metaMaskStatus={this.state.metaMaskStatus}
+                accounts={this.state.accounts}
+                selectedAccount={this.state.selectedAccount}
+                changeAccount={account => {
+                  this.changeAccount(account);
+                }}
+                updateAccount={() => {
+                  this.updateAccount();
+                }}
+              />
             ) : (
               <NoConnection />
             )
@@ -118,4 +120,17 @@ class App extends Component {
   }
 }
 
-export default withWeb3(App);
+export default withWeb3(
+  connect(
+    state => ({
+      network: state.networkData.network
+    }),
+    dispatch => {
+      return {
+        updateNetwork: web3 => {
+          dispatch(updateNetwork(web3));
+        }
+      };
+    }
+  )(App)
+);

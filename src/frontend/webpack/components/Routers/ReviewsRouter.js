@@ -69,7 +69,6 @@ class ReviewsRouter extends Component {
                   <ReviewsInvited
                     selectedAccount={this.props.selectedAccount}
                     base={`${this.props.base}/invited`}
-                    network={this.props.network}
                   />
                 )}
               />
@@ -81,7 +80,6 @@ class ReviewsRouter extends Component {
                   <ReviewsOpen
                     selectedAccount={this.props.selectedAccount}
                     base={`${this.props.base}/open`}
-                    network={this.props.network}
                   />
                 )}
               />
@@ -93,7 +91,6 @@ class ReviewsRouter extends Component {
                   <ReviewsMyReviews
                     selectedAccount={this.props.selectedAccount}
                     base={`${this.props.base}/me`}
-                    network={this.props.network}
                   />
                 )}
               />

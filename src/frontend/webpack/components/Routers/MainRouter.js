@@ -122,7 +122,6 @@ class MainRouter extends Component {
             <Header
               provider={this.props.context.provider}
               metaMaskStatus={this.props.metaMaskStatus}
-              network={this.props.network}
             />
             <div style={{paddingTop: this.getPaddingTop()}}>
               <BrowserRouter>
