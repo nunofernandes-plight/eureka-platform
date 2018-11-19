@@ -16,7 +16,7 @@ import {
   setAccounts,
   createEditor1,
   TEST_ARTICLE_1_SECOND_VERSION, TEST_ARTICLE_2, TEST_ARTICLE_3
-} from '../test-data';
+} from '../test-data/test-data';
 import TestFunctions from '../test-functions';
 import ArticleSubmissionState from '../../src/backend/schema/article-submission-state-enum.mjs';
 
