@@ -199,10 +199,7 @@ class ReviewsMyReviews extends React.Component {
           Dear reviewer, your request for submitting a review has successfully
           triggered our Smart Contract. If you are interested, you can track the
           Blockchain approval process at the following link: <br />
-          <a
-            href={getEtherscanLink(this.props.network) + 'tx/' + this.state.tx}
-            target={'_blank'}
-          >
+          <a href={'tx/' + this.state.tx} target={'_blank'}>
             {this.state.tx}{' '}
           </a>
         </Modal>

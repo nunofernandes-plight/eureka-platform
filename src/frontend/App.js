@@ -94,7 +94,6 @@ class App extends Component {
             online ||
             this.props.context.provider === Web3Providers.LOCALHOST ? (
               <MainRouter
-                network={this.state.network}
                 metaMaskStatus={this.state.metaMaskStatus}
                 accounts={this.state.accounts}
                 selectedAccount={this.state.selectedAccount}
