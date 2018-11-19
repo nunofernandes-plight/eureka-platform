@@ -58,7 +58,7 @@ class TopContainer extends React.Component {
         <Profile>
           <div style={{display: 'flex', marginTop: '12px'}}>
             <RenderNetwork />
-            <MetaMaskLabel metaMaskStatus={this.props.metaMaskStatus} />
+            <MetaMaskLabel />
             <DropDownMenuParent
               onMouseEnter={() => this.toggle()}
               onMouseLeave={() => this.toggle()}

@@ -8,6 +8,7 @@ import {
 } from '../../helpers/colors.js';
 import MetaMaskLogo from './icons/MetaMaskLogo.js';
 import CircleHeaderSpinner from './spinners/CircleHeaderSpinner.js';
+import connect from 'react-redux/es/connect/connect.js';
 
 const Item = styled.div`
   margin: 0 10px;
@@ -73,4 +74,6 @@ const MetaMaskLabel = ({metaMaskStatus}) => {
   return null;
 };
 
-export default MetaMaskLabel;
+export default connect(state => ({
+  metaMaskStatus: state.metamaskData.status
+}))(MetaMaskLabel);
