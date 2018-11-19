@@ -15,6 +15,7 @@ import {
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
 import withWeb3 from '../../contexts/WithWeb3.js';
+import {connect} from 'react-redux';
 
 const Container = styled.div`
   display: flex;
@@ -253,4 +254,8 @@ class ReviewsMyReviews extends React.Component {
   }
 }
 
-export default withWeb3(withRouter(ReviewsMyReviews));
+export default withWeb3(
+  withRouter(
+    connect(state => ({network: state.networkData.network}))(ReviewsMyReviews)
+  )
+);
