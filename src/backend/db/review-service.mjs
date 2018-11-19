@@ -57,6 +57,14 @@ export default {
       });
   },
 
+  getReviewsByState: async (reviewState) => {
+    if(!(reviewState in ReviewState)) errorThrower.notCorrectStatus('any of Object ReviewState', reviewState);
+
+    return await Review.find({
+      reviewState: {$in: [reviewState]}
+    });
+  },
+
   getHandedInReviews: async () => {
     return await Review.find({
       reviewState: {$in: ['HANDED_IN_SC']}
