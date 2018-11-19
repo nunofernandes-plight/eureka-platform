@@ -66,7 +66,7 @@ class MyHistory extends React.Component {
       <Container>
         {this.renderModals()}
         <Card title={'Your Ethereum History'}>
-          {!this.state.tx ? <GridSpinner/> : <MyHistoryTable txs={this.state.txs} /> }
+          {this.state.txs ? <MyHistoryTable txs={this.state.txs} /> : <GridSpinner/> }
         </Card>
       </Container>
     );
