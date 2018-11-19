@@ -10,6 +10,7 @@ import withWeb3 from './webpack/contexts/WithWeb3.js';
 import {connect} from 'react-redux';
 import {updateNetwork} from './webpack/reducers/network.js';
 import {updateMetaMask} from './webpack/reducers/metamask.js';
+import {updateAccounts} from './webpack/reducers/account.js';
 
 class App extends Component {
   constructor() {
@@ -25,8 +26,12 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    this.props.updateNetwork(this.props.context.web3);
-    this.props.updateMetaMask(this.props.context.web3);
+    const web3 = this.props.context.web3;
+    const provider = this.props.context.provider;
+    const tokenContract = this.props.context.tokenContract;
+    this.props.updateNetwork(web3);
+    this.props.updateMetaMask(web3);
+    this.props.updateAccounts(web3, provider, tokenContract);
 
     const accounts = await getAllAccounts(this.props.context.web3);
 
@@ -69,6 +74,11 @@ class App extends Component {
 
     this.setState({selectedAccount: account});
     localStorage.setItem('ganache', JSON.stringify(account.address.toString()));
+    this.props.updateAccounts(
+      this.props.context.web3,
+      this.props.context.provider,
+      this.props.context.tokenContract
+    );
   }
 
   async updateAccount() {
@@ -97,8 +107,8 @@ class App extends Component {
             online ||
             this.props.context.provider === Web3Providers.LOCALHOST ? (
               <MainRouter
-                accounts={this.state.accounts}
-                selectedAccount={this.state.selectedAccount}
+                accounts={this.props.accounts}
+                selectedAccount={this.props.selectedAccount}
                 changeAccount={account => {
                   this.changeAccount(account);
                 }}
@@ -120,7 +130,9 @@ export default withWeb3(
   connect(
     state => ({
       network: state.networkData.network,
-      metaMaskStatus: state.metamaskData.status
+      metaMaskStatus: state.metamaskData.status,
+      accounts: state.accountsData.accounts,
+      selectedAccount: state.accountsData.selectedAccount
     }),
     dispatch => {
       return {
@@ -129,6 +141,9 @@ export default withWeb3(
         },
         updateMetaMask: web3 => {
           dispatch(updateMetaMask(web3));
+        },
+        updateAccounts: (web3, provider, tokenContract) => {
+          dispatch(updateAccounts(web3, provider, tokenContract));
         }
       };
     }
