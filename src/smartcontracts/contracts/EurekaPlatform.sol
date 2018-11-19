@@ -637,7 +637,7 @@ contract EurekaPlatform {
 
         article.versionState = ArticleVersionState.DECLINED;
 
-        if (countDeclinedReviewRounds(article.submissionId) >= maxReviewRounds)
+        if (countRewardedReviewRounds(article.submissionId) >= maxReviewRounds)
             closeSubmissionProcess(article.submissionId);
         else
             requestNewReviewRound(article.submissionId);
@@ -699,10 +699,11 @@ contract EurekaPlatform {
 
     // only counts the articles which went through a review process and therefore have the state DECLINED
     // does not consider the versions with state DECLINED_SANITY_NOTOK
-    function countDeclinedReviewRounds(uint256 _submissionId) view private returns (uint count) {
+    function countRewardedReviewRounds(uint256 _submissionId) view private returns (uint count) {
         bytes32[] memory versions = articleSubmissions[_submissionId].versions;
         for (uint i = 0; i < versions.length; i++) {
-            if (articleVersions[versions[i]].versionState == ArticleVersionState.DECLINED)
+            if (articleVersions[versions[i]].versionState == ArticleVersionState.DECLINED
+                || articleVersions[versions[i]].versionState == ArticleVersionState.ACCEPTED)
                 count++;
         }
         return count;
@@ -754,7 +755,7 @@ contract EurekaPlatform {
         require(eurekaTokenContract.transfer(submission.editor, editorReward));
 
         // counts how many reviewRounds happened to devide the reward later
-        uint reviewRounds = countDeclinedReviewRounds(_submissionId) + 1;
+        uint reviewRounds = countRewardedReviewRounds(_submissionId);
 
         //distributes the rewards to all reviewers, for every round a seperate transfer
         for (uint i = 0; i < submission.versions.length; i++) {
