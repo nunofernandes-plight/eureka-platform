@@ -37,6 +37,26 @@ export default {
       }
     );
 
+    /** Expert Reviewer Sign up **/
+    EurekaPlatformContract.events.ExpertReviewerSignUp(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+        await userService.makeExpertReviewer(event.returnValues.reviewerAddress);
+
+        const additionalInfo = {
+          affectedAddress: event.returnValues.reviewerAddress
+        };
+        await scTransactionService.createScTransaction(
+          event.returnValues.contractOwner,
+          ScTransactionType.REVIEWER_SIGNEDUP,
+          event.returnValues.stateTimestamp,
+          event.transactionHash,
+          additionalInfo
+        );
+      }
+    );
+
     /** Submission Process Start **/
     EurekaPlatformContract.events.SubmissionProcessStart(
       undefined,
