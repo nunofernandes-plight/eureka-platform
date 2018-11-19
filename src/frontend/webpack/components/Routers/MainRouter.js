@@ -46,16 +46,6 @@ class MainRouter extends Component {
   componentDidMount() {
     this.authenticate();
   }
-
-  componentDidUpdate(prevProps) {
-    if (
-      this.props.errorMessage &&
-      prevProps.errorMessage !== this.props.errorMessage
-    ) {
-      this.setState({showModal: true});
-    }
-  }
-
   authenticate() {
     this.props.fetchUserData();
   }
@@ -95,33 +85,14 @@ class MainRouter extends Component {
     return HEADER_PADDING_TOP;
   }
 
-  renderModals() {
-    return (
-      <Modal
-        type={'notification'}
-        noLeftPanel
-        toggle={() => {
-          this.setState({showModal: false});
-        }}
-        show={this.state.showModal}
-        title={TITLE_GENERAL_ERROR}
-      >
-        {this.props.errorMessage}
-      </Modal>
-    );
-  }
-
   render() {
     return (
       <div>
-        {this.renderModals()}
         {this.props.loading ? (
           <GridSpinner />
         ) : (
           <Fragment>
-            <Header
-              provider={this.props.context.provider}
-            />
+            <Header provider={this.props.context.provider} />
             <div style={{paddingTop: this.getPaddingTop()}}>
               <BrowserRouter>
                 <Switch>
