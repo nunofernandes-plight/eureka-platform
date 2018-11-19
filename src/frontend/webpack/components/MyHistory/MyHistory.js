@@ -4,6 +4,7 @@ import {getTransactions} from './MyHistoryMethods.js';
 import {Card} from '../../views/Card.js';
 import Modal from '../../design-components/Modal.js';
 import MyHistoryTable from './MyHistoryTable.js';
+import GridSpinner from '../../views/spinners/GridSpinner.js';
 
 const Container = styled.div`
   display: flex;
@@ -65,7 +66,7 @@ class MyHistory extends React.Component {
       <Container>
         {this.renderModals()}
         <Card title={'Your Ethereum History'}>
-          <MyHistoryTable txs={this.state.txs} />
+          {!this.state.tx ? <GridSpinner/> : <MyHistoryTable txs={this.state.txs} /> }
         </Card>
       </Container>
     );
