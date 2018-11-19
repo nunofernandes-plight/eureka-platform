@@ -1,7 +1,7 @@
-import getArticleHex from '../src/smartcontracts/methods/get-articleHex.mjs';
-import web3 from '../src/helpers/web3Instance.mjs';
-import userService from '../src/backend/db/user-service.mjs';
-import Roles from '../src/backend/schema/roles-enum.mjs';
+import getArticleHex from '../../src/smartcontracts/methods/get-articleHex.mjs';
+import web3 from '../../src/helpers/web3Instance.mjs';
+import userService from '../../src/backend/db/user-service.mjs';
+import Roles from '../../src/backend/schema/roles-enum.mjs';
 
 let accounts;
 let contractOwner;

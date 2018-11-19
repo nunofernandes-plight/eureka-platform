@@ -26,7 +26,7 @@ import {
   createUserContractOwner,
   setAccounts,
   createUser1, createEditor1, createEditor2, createReviewer1, createReviewer2, createReviewer3, createReviewer4
-} from '../test-data.js';
+} from '../test-data/test-data.js';
 import TestFunctions from '../test-functions.js';
 import ArticleSubmissionState from '../../src/backend/schema/article-submission-state-enum.mjs';
 import {
@@ -38,7 +38,7 @@ import {
   MAJOR_ISSUE_REVIEW_3_HASH_HEX,
   TEST_ARTICLE_1_SECOND_VERSION,
   TEST_ARTICLE_2, TEST_ARTICLE_3, TEST_ARTICLE_3_HASH_HEX
-} from '../test-data';
+} from '../test-data/test-data';
 
 let eurekaTokenContract;
 let eurekaPlatformContract;
