@@ -234,13 +234,23 @@ contract EurekaPlatform {
         emit EditorResigned(msg.sender, editor, block.timestamp);
     }
 
-    event ExpertReviewerSignUp(address contractOwner, address editorAddress, uint256 stateTimestamp);
+    event ExpertReviewerSignUp(address contractOwner, address reviewerAddress, uint256 stateTimestamp);
 
     function signUpExpertReviewer(address expertReviewer) public {
 
         require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
         isExpertReviewer[expertReviewer] = true;
         emit ExpertReviewerSignUp(msg.sender, expertReviewer, block.timestamp);
+    }
+
+    function signUpExpertReviewers(address[] expertReviewers) public {
+
+        require(msg.sender == contractOwner, "msg.sender must be the contract owner to call this function");
+
+        for(uint i=0; i < expertReviewers.length; i++) {
+            isExpertReviewer[expertReviewers[i]] = true;
+            emit ExpertReviewerSignUp(msg.sender, expertReviewers[i], block.timestamp);
+        }
     }
 
     event ExpertReviewerResigned(address contractOwner, address editorAddress, uint256 stateTimestamp);
