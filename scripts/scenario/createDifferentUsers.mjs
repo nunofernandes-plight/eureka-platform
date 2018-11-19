@@ -4,7 +4,7 @@ import web3 from '../../src/helpers/web3Instance.mjs';
 import getAccounts from '../../src/smartcontracts/methods/get-accounts.mjs';
 import {getRandomAvatar} from '../../src/frontend/helpers/getRandomAvatar.mjs';
 import Roles from '../../src/backend/schema/roles-enum.mjs';
-import {signUpEditor} from '../../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {signUpEditor, signUpExpertReviewer} from '../../src/smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {platformContract} from '../../src/backend/web3/web3InterfaceSetup.mjs';
 
 const getEmails = () => {
@@ -62,6 +62,17 @@ export const createDifferentUsers = async platformContract => {
             ', roles: ' +
             newUser.roles
         );
+        await signUpExpertReviewer(platformContract, accounts[i])
+          .send({
+            from: SC_OWNER,
+            gas: 80000000
+          })
+          .on('receipt', receipt => {
+            return receipt;
+          })
+          .catch(err => {
+            console.error('signUpExpertReviewer error: ', err);
+          });
       }
       return user;
     })

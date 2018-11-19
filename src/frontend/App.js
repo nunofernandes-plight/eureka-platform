@@ -42,12 +42,14 @@ class App extends Component {
         : [...accounts.keys()][0];
     }
 
-    selectedAccount.balance = accounts.get(selectedAccount.address);
-
-    selectedAccount.EKABalance = await getBalanceOf(
-      this.props.context.tokenContract,
-      selectedAccount.address
-    );
+    if (selectedAccount.address) {
+      selectedAccount.balance = accounts.get(selectedAccount.address);
+      if (this.props.context.tokenContract)
+        selectedAccount.EKABalance = await getBalanceOf(
+          this.props.context.tokenContract,
+          selectedAccount.address
+        );
+    }
 
     this.setState({selectedAccount, accounts});
     this.interval = setInterval(async () => {

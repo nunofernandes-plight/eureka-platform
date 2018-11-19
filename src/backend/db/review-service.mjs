@@ -32,7 +32,7 @@ export default {
   getReviewInvitations: async (address) => {
     return await Review.find({
       reviewerAddress: address,
-      reviewState: {$in: ['INVITED', 'INVITATION_ACCEPTED']}
+      reviewState: {$in: ['INVITED', 'SIGNED_UP_FOR_REVIEWING']}
     })
       .populate({
         path: 'articleVersion',
@@ -156,9 +156,9 @@ export default {
     if (!review) errorThrower.noEntryFoundById(reviewId);
     if (review.reviewerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
     if (review.reviewState !== ReviewState.INVITED &&
-      review.reviewState !== ReviewState.INVITATION_ACCEPTED) {
+      review.reviewState !== ReviewState.SIGNED_UP_FOR_REVIEWING) {
       errorThrower.notCorrectStatus(
-        [ReviewState.INVITED, ReviewState.INVITATION_ACCEPTED], review.reviewState);
+        [ReviewState.INVITED, ReviewState.SIGNED_UP_FOR_REVIEWING], review.reviewState);
     }
 
     review.reviewHash = reviewHash;

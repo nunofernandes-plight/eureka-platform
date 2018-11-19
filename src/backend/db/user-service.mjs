@@ -226,6 +226,19 @@ export default {
     await user.save();
   },
 
+  makeExpertReviewer: async ethereumAddress => {
+    let user = await User.findOne({ethereumAddress: ethereumAddress});
+    if (!user) {
+      errorThrower.noEntryFoundById(ethereumAddress);
+    }
+
+    if (!user.roles.includes(Roles.EXPERT_REVIEWER)) {
+      user.roles.push(Roles.EXPERT_REVIEWER);
+    }
+
+    await user.save();
+  },
+
   /**
    * Pushes an submission to the User's submissions. User is given by the etherumaddress
    * @param ethereumAddress
