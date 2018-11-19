@@ -23,7 +23,6 @@ class DashboardRouter extends Component {
       <div>
         <TopContainer
           metaMaskStatus={this.props.metaMaskStatus}
-          network={this.props.network}
           action={item => this.props.action(item)}
           selectedAccount={this.props.selectedAccount}
         />
@@ -88,7 +87,6 @@ class DashboardRouter extends Component {
                     this.props.updateUser();
                   }}
                   selectedAccount={this.props.selectedAccount}
-                  network={this.props.network}
                 />
               );
             }}
@@ -103,7 +101,6 @@ class DashboardRouter extends Component {
                   this.props.updateUser();
                 }}
                 selectedAccount={this.props.selectedAccount}
-                network={this.props.network}
               />
             )}
           />

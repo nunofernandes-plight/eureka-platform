@@ -114,10 +114,7 @@ class MySubmitted extends React.Component {
           Dear user, your article has successfully triggered our Smart Contract.
           If you are interested, you can track the Blockchain approval process
           at the following link:{' '}
-          <a
-            href={getEtherscanLink(this.props.network) + 'tx/' + this.state.tx}
-            target={'_blank'}
-          >
+          <a href={+'tx/' + this.state.tx} target={'_blank'}>
             {this.state.tx}{' '}
           </a>.
           <br />

@@ -144,7 +144,7 @@ class ReviewsInvited extends React.Component {
           can track the Blockchain approval process at the following link:{' '}
           <br />
           <a
-            href={getEtherscanLink(this.props.network) + 'tx/' + this.state.tx}
+            href={"" + 'tx/' + this.state.tx}
             target={'_blank'}
           >
             {this.state.tx}{' '}
