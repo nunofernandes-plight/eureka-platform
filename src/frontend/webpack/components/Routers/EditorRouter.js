@@ -75,7 +75,6 @@ class EditorRouter extends Component {
                 <EditorArticles
                   selectedAccount={this.props.selectedAccount}
                   base={`${this.props.base}/articles`}
-                  network={this.props.network}
                 />
               )}
             />
@@ -86,7 +85,6 @@ class EditorRouter extends Component {
                 <EditorSignOff
                   selectedAccount={this.props.selectedAccount}
                   base={`${this.props.base}/signoff`}
-                  network={this.props.network}
                 />
               )}
             />
@@ -97,7 +95,6 @@ class EditorRouter extends Component {
                 <EditorInvite
                   selectedAccount={this.props.selectedAccount}
                   base={`${this.props.base}/invite`}
-                  network={this.props.network}
                 />
               )}
             />
@@ -108,7 +105,6 @@ class EditorRouter extends Component {
                 <EditorCheckReviews
                   selectedAccount={this.props.selectedAccount}
                   base={`${this.props.base}/reviews`}
-                  network={this.props.network}
                 />
               )}
             />
@@ -119,7 +115,6 @@ class EditorRouter extends Component {
                 <EditorFinalize
                   selectedAccount={this.props.selectedAccount}
                   base={`${this.props.base}/finalize`}
-                  network={this.props.network}
                 />
               )}
             />

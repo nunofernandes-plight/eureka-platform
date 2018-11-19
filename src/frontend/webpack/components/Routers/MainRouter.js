@@ -150,7 +150,6 @@ class MainRouter extends Component {
                             }}
                             selectedAccount={this.props.selectedAccount}
                             metaMaskStatus={this.props.metaMaskStatus}
-                            network={this.props.network}
                             action={item => this.action(item)}
                             updateAccount={() => {
                               this.props.updateAccount();

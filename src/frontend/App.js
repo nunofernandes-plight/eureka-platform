@@ -5,7 +5,7 @@ import MainRouter from './webpack/components/Routers/MainRouter.js';
 import Web3Providers from './web3/Web3Providers.js';
 import NoConnection from './webpack/views/NoConnection.js';
 import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
-import {getAllAccounts, getNetwork} from './web3/Helpers.js';
+import {getAllAccounts} from './web3/Helpers.js';
 import withWeb3 from './webpack/contexts/WithWeb3.js';
 import {connect} from 'react-redux';
 import {updateNetwork} from './webpack/reducers/network.js';
@@ -26,7 +26,6 @@ class App extends Component {
 
   async componentDidMount() {
     this.props.updateNetwork(this.props.context.web3);
-    const network = await getNetwork(this.props.context.web3);
     const metaMaskStatus = await getMetaMaskStatus(this.props.context.web3);
     const accounts = await getAllAccounts(this.props.context.web3);
 
@@ -48,13 +47,9 @@ class App extends Component {
       this.props.context.tokenContract,
       selectedAccount.address
     );
-
-    this.setState({selectedAccount});
-
-    this.setState({network, metaMaskStatus, accounts});
+    this.setState({selectedAccount, metaMaskStatus, accounts});
     this.interval = setInterval(async () => {
       const metaMaskStatus = await getMetaMaskStatus(this.props.context.web3);
-      // Const accounts = await getAllAccounts(this.state.web3);
       this.setState({metaMaskStatus});
     }, 7500);
   }
