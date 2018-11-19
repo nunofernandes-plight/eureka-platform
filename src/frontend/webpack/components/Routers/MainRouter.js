@@ -23,6 +23,7 @@ import withWeb3 from '../../contexts/WithWeb3.js';
 import {connect} from 'react-redux';
 import {fetchUserData} from '../../reducers/user.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
+import {GENERAL_ERROR} from '../../constants/ModalErrors.js';
 
 const PaddingLeft = styled.div`
   padding-left: ${props =>
@@ -46,6 +47,15 @@ class MainRouter extends Component {
     this.authenticate();
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.errorMessage &&
+      prevProps.errorMessage !== this.props.errorMessage
+    ) {
+      this.setState({showModal: true});
+    }
+  }
+
   authenticate() {
     this.props.fetchUserData();
   }
@@ -67,12 +77,6 @@ class MainRouter extends Component {
     })
       .then(response => response.json())
       .then(response => {
-        /*        if (response.success) {
-          this.setState({isAuthenticated: response.data.isAuthenticated});
-        } else {
-          this.setState({errorMessage: response.error});
-        }
-        this.setState({isLoading: false});*/
         this.props.fetchUserData();
       })
       .catch(err => {
@@ -82,19 +86,6 @@ class MainRouter extends Component {
           isLoading: false
         });
       });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const selectedAddress = nextProps.selectedAccount.address;
-    if (this.state.user) {
-      const loadedAddress = this.state.user.ethereumAddress;
-      // Check if user changed address during the session
-      if (loadedAddress !== selectedAddress) {
-        this.setState({
-          isAuthenticated: false
-        });
-      }
-    }
   }
 
   getPaddingTop() {
@@ -108,11 +99,12 @@ class MainRouter extends Component {
     return (
       <Modal
         type={'notification'}
-        toggle={isErrorMessage => {
-          this.setState({errorMessage: null});
+        noLeftPanel
+        toggle={() => {
+          this.setState({showModal: false});
         }}
-        show={this.props.errorMessage}
-        title={'You got the following error'}
+        show={this.state.showModal}
+        title={GENERAL_ERROR}
       >
         {this.props.errorMessage}
       </Modal>
@@ -233,7 +225,7 @@ export default withWeb3(
     state => ({
       isAuthenticated: state.userData.isAuthenticated,
       loading: state.userData.loading,
-      errorMessage: state.userData.errorMessage
+      errorMessage: state.userData.error
     }),
     dispatch => {
       return {

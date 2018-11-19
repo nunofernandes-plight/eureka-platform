@@ -16,6 +16,12 @@ const getFontColor = props => {
     return `#fff`;
   }
 };
+
+const modalFade = keyframes`
+ from {transform: translateY(-50%);opacity: 0;}
+  to {transform: translateY(0);opacity: 1;}
+`;
+
 const ModalParent = styled.div`
   position: fixed;
   z-index: 1050;
@@ -24,18 +30,13 @@ const ModalParent = styled.div`
   bottom: 0;
   left: 0;
   outline: 0;
-  transition: opacity 0.15s linear;
   overflow-x: hidden;
   overflow-y: auto;
   display: flex;
   justify-content: center;
   align-items: center;
   background: rgba(0, 0, 0, 0.3);
-`;
-
-const modalFade = keyframes`
- from {transform: translateY(-50%);opacity: 0;}
-  to {transform: translateY(0);opacity: 1;}
+  visibility: ${props => (props.show ? 'visible' : 'hidden')};
 `;
 
 const MyModal = styled.div`
@@ -44,7 +45,7 @@ const MyModal = styled.div`
   min-width: 350px;
   margin-top: auto;
   margin-bottom: auto;
-  margin-left: ${PANEL_LEFT_NORMAL_WIDTH}px;
+  margin-left: ${props => (props.noLeftPanel ? 0 : PANEL_LEFT_NORMAL_WIDTH)}px;
   display: flex;
   flex-direction: column;
   border-radius: 0.3rem;
@@ -55,7 +56,7 @@ const MyModal = styled.div`
     rgba(0, 0, 0, 0.17) 0px 5px 15px 0px;
   animation-name: ${modalFade};
   transform: translate(0, 0);
-  transition: ${modalFade} 0.3s ease-out;
+  transition: ${modalFade} 0.5s ease-out;
   animation-duration: 0.5s;
   z-index: 1072;
   position: relative;
@@ -139,54 +140,50 @@ class Modal extends Component {
   render() {
     return (
       <div>
-        {this.props.show ? (
-          <ModalParent {...this.props}>
-            <MyModal {...this.props}>
-              {this.props.hideHeader ? null : (
-                <MyModalHeader {...this.props}>
-                  <ModalTitle>{this.props.title}</ModalTitle>
-                  {this.props.noClose ? null : (
-                    <Icon
-                      icon={'close'}
-                      width={10}
-                      height={18}
-                      onClick={() => this.toggle()}
-                    />
-                  )}
-                </MyModalHeader>
-              )}
+        <ModalParent {...this.props} show={this.props.show}>
+          <MyModal {...this.props}>
+            {this.props.hideHeader ? null : (
+              <MyModalHeader {...this.props}>
+                <ModalTitle>{this.props.title}</ModalTitle>
+                {this.props.noClose ? null : (
+                  <Icon
+                    icon={'close'}
+                    width={10}
+                    height={18}
+                    onClick={() => this.toggle()}
+                  />
+                )}
+              </MyModalHeader>
+            )}
 
-              <MyModalBody>
-                {this.props.type === 'notification' && !this.props.noBell ? (
-                  <div style={{display: 'flex', justifyContent: 'center'}}>
-                    <Icon
-                      icon={'bell'}
-                      width={40}
-                      height={40}
-                      top={10}
-                      bottom={20}
-                    />
-                  </div>
+            <MyModalBody>
+              {this.props.type === 'notification' && !this.props.noBell ? (
+                <div style={{display: 'flex', justifyContent: 'center'}}>
+                  <Icon
+                    icon={'bell'}
+                    width={40}
+                    height={40}
+                    top={10}
+                    bottom={20}
+                  />
+                </div>
+              ) : null}
+              <Content>{this.props.children}</Content>
+            </MyModalBody>
+            {this.props.hideFooter ? null : (
+              <MyModalFooter {...this.props}>
+                {this.props.noClose ? null : (
+                  <CloseButton onClick={() => this.toggle()}>CLOSE</CloseButton>
+                )}
+                {this.props.action ? (
+                  <ActionButton onClick={() => this.props.callback()}>
+                    {this.props.action}
+                  </ActionButton>
                 ) : null}
-                <Content>{this.props.children}</Content>
-              </MyModalBody>
-              {this.props.hideFooter ? null : (
-                <MyModalFooter {...this.props}>
-                  {this.props.noClose ? null : (
-                    <CloseButton onClick={() => this.toggle()}>
-                      CLOSE
-                    </CloseButton>
-                  )}
-                  {this.props.action ? (
-                    <ActionButton onClick={() => this.props.callback()}>
-                      {this.props.action}
-                    </ActionButton>
-                  ) : null}
-                </MyModalFooter>
-              )}
-            </MyModal>
-          </ModalParent>
-        ) : null}
+              </MyModalFooter>
+            )}
+          </MyModal>
+        </ModalParent>
       </div>
     );
   }
