@@ -206,7 +206,7 @@ const renderRangeWithDots = ({
   });
 };
 
-const Pagination = ({currentPage, totalPages, limit, ...otherProps}) => {
+const Pagination = ({currentPage, totalPages, ...otherProps}) => {
   return (
     <Container>
       <PrevButton

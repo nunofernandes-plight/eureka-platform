@@ -12,6 +12,11 @@ import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import Pagination from './Pagination.js';
 import withWeb3 from '../../contexts/WithWeb3.js';
+import connect from 'react-redux/es/connect/connect.js';
+import {fetchUserData} from '../../reducers/user.js';
+import {fetchUnassignedSubmissions} from '../../reducers/editor-methods.js';
+import {unassignedArticlesData} from '../../reducers/editor-methods.js';
+import {TITLE_GENERAL_ERROR} from '../../constants/ModalErrors.js';
 
 const Container = styled.div`
   display: flex;
@@ -31,16 +36,10 @@ class EditorArticles extends React.Component {
   constructor() {
     super();
     this.state = {
-      query: null,
-      articles: null,
       filtersActive: false,
-      loading: false,
       articleOnHover: null,
       tx: null,
-      showTxModal: false,
-      page: 1,
-      limit: 10,
-      nrOfPages: 1
+      showTxModal: false
     };
   }
 
@@ -49,34 +48,21 @@ class EditorArticles extends React.Component {
   };
 
   componentDidMount() {
-    this.setState({loading: true});
     this.getSubmissions(1);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.errorMessage &&
+      prevProps.errorMessage !== this.props.errorMessage
+    ) {
+      this.setState({showModal: true});
+    }
   }
 
   getSubmissions(page) {
     this.setState({page});
-    getUnassignedSubmissions(page, this.state.limit)
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          this.setState({
-            articles: response.data.array,
-            nrOfPages: response.data.nrOfPages
-          });
-        } else {
-          this.setState({
-            errorMessage: response.error,
-            loading: false
-          });
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({
-          errorMessage: 'Ouh. Something went wrong.',
-          loading: false
-        });
-      });
+    this.props.fetchUnassignedSubmissions(page);
   }
 
   async assignArticle(scSubmissionID) {
@@ -91,7 +77,10 @@ class EditorArticles extends React.Component {
       });
     else gasAmount = 80000000;
 
-    assignForSubmissionProcess(this.props.context.platformContract, scSubmissionID)
+    assignForSubmissionProcess(
+      this.props.context.platformContract,
+      scSubmissionID
+    )
       .send({
         from: this.props.selectedAccount.address,
         gas: gasAmount
@@ -124,13 +113,13 @@ class EditorArticles extends React.Component {
       <div>
         <Modal
           type={'notification'}
-          toggle={isErrorMessage => {
-            this.setState({errorMessage: null});
+          toggle={() => {
+            this.setState({showModal: false});
           }}
-          show={this.state.errorMessage}
-          title={'You got the following error'}
+          show={this.state.showModal}
+          title={TITLE_GENERAL_ERROR}
         >
-          {this.state.errorMessage}
+          {this.props.errorMessage}
         </Modal>
 
         <Modal
@@ -175,18 +164,17 @@ class EditorArticles extends React.Component {
 
           <Pagination
             currentPage={this.state.page}
-            totalPages={this.state.nrOfPages}
-            limit={this.state.limit}
+            totalPages={this.props.nrOfPages}
             goToPage={page => {
               this.getSubmissions(page);
             }}
           />
 
-          {!this.state.articles ? (
+          {!this.props.articles ? (
             <GridSpinner />
           ) : (
             <Articles>
-              {this.state.articles.map(article => {
+              {this.props.articles.map(article => {
                 return (
                   <Article
                     buttonText={'Assign article to me'}
@@ -199,8 +187,8 @@ class EditorArticles extends React.Component {
                     onMouseLeave={obj => {
                       this.setState({articleOnHover: null});
                     }}
-                    action={id => {
-                      this.assignArticle(id);
+                    action={async id => {
+                      await this.assignArticle(id);
                     }}
                   />
                 );
@@ -213,4 +201,22 @@ class EditorArticles extends React.Component {
   }
 }
 
-export default withWeb3(withRouter(EditorArticles));
+export default withWeb3(
+  withRouter(
+    connect(
+      state => ({
+        articles: state.unassignedArticlesData.articles,
+        nrOfPages: state.unassignedArticlesData.nrOfPages,
+        loading: state.unassignedArticlesData.loading,
+        errorMessage: state.unassignedArticlesData.error
+      }),
+      dispatch => {
+        return {
+          fetchUnassignedSubmissions: page => {
+            dispatch(fetchUnassignedSubmissions(page));
+          }
+        };
+      }
+    )(EditorArticles)
+  )
+);
