@@ -23,7 +23,7 @@ import withWeb3 from '../../contexts/WithWeb3.js';
 import {connect} from 'react-redux';
 import {fetchUserData} from '../../reducers/user.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
-import {GENERAL_ERROR} from '../../constants/ModalErrors.js';
+import {TITLE_GENERAL_ERROR} from '../../constants/ModalErrors.js';
 
 const PaddingLeft = styled.div`
   padding-left: ${props =>
@@ -104,7 +104,7 @@ class MainRouter extends Component {
           this.setState({showModal: false});
         }}
         show={this.state.showModal}
-        title={GENERAL_ERROR}
+        title={TITLE_GENERAL_ERROR}
       >
         {this.props.errorMessage}
       </Modal>
