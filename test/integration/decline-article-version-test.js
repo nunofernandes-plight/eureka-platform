@@ -92,6 +92,11 @@ test.only(
     await TestFunctions.assignEditorForSubmissionProcess(t, editor, articleSubmission);
     await TestFunctions.acceptSanityCheckAndTest(t, editor, author, articleVersion);
 
+    // define expert/editor approved reviewers that thex can be invited
+    await TestFunctions.signUpExpertReviewerAndTest(t, author, editorApprovedReviewers[0]);
+    await TestFunctions.signUpExpertReviewerAndTest(t, author, editorApprovedReviewers[1]);
+    await TestFunctions.signUpExpertReviewerAndTest(t, author, editorApprovedReviewers[2]);
+
     // setup reviewers
     await TestFunctions.inviteReviewersAndTest(t, editor, author, editorApprovedReviewers, articleVersion);
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
