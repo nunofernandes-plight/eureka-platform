@@ -25,7 +25,7 @@ class App extends Component {
     this.props.updateMetaMask(web3);
     this.props.updateAccounts(web3, provider, tokenContract);
     this.interval = setInterval(async () => {
-      this.props.updateMetaMask(this.props.context.web3);
+      this.props.updateMetaMask(web3);
     }, 7500);
   }
 

@@ -191,6 +191,7 @@ export default withWeb3(
   connect(
     state => ({
       isAuthenticated: state.userData.isAuthenticated,
+      selectedAccount: state.accountsData.selectedAccount,
       userDataLoading: state.userData.loading,
       accountsDataLoading: state.accountsData.loading,
       errorMessage: state.userData.error

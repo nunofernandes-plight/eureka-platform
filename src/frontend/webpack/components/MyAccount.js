@@ -144,88 +144,82 @@ class MyAccount extends Component {
   }
 
   render() {
-    //console.log(this.props.selectedAccount);
+    console.log(this.props.selectedAccount);
     return (
       <Container>
         <CardContainer>
-          {this.props.selectedAccount === undefined ? (
-            <GridSpinner />
-          ) : (
-            <Card>
-              <PhotoContainer>
-                <Parent
-                  onMouseEnter={() => {
-                    this.setState({show: true});
-                  }}
-                  onMouseLeave={() => {
-                    this.setState({show: false});
-                  }}
-                >
-                  <Photo src={'/' + this.props.user.avatar} />
-                  <Upload show={this.state.show}>
-                    Upload your profile picture
-                  </Upload>
-                </Parent>
-              </PhotoContainer>
-              <EmailContainer>
-                <Email>{this.props.user.email}</Email>
-              </EmailContainer>
-              <ProfileRow style={{margin: 0}}>
-                <EthereumAddress>
-                  {this.props.user.ethereumAddress}
-                </EthereumAddress>
-              </ProfileRow>
-              <ProfileRow>
-                <Separator />
-              </ProfileRow>
-              <ProfileRow>
-                {this.props.selectedAccount.EKABalance &&
-                this.props.selectedAccount.balance ? (
-                  <Balances>
-                    <SubTitle>Your Balances</SubTitle>
-                    <Balance>
-                      <EurekaLogo width={30} height={30} />
-                      <Number>
-                        {numberWithCommas(
-                          this.props.selectedAccount.EKABalance
-                        )}{' '}
-                        EKA
-                      </Number>
-                      <SeeHistory>
-                        <Icon
-                          width={22}
-                          height={22}
-                          material={'history'}
-                          icon={'material'}
-                          top={8}
-                        />
-                        <div style={{marginTop: '-5px'}}>See History</div>
-                      </SeeHistory>
-                    </Balance>
-                    <Balance>
+          <Card>
+            <PhotoContainer>
+              <Parent
+                onMouseEnter={() => {
+                  this.setState({show: true});
+                }}
+                onMouseLeave={() => {
+                  this.setState({show: false});
+                }}
+              >
+                <Photo src={'/' + this.props.user.avatar} />
+                <Upload show={this.state.show}>
+                  Upload your profile picture
+                </Upload>
+              </Parent>
+            </PhotoContainer>
+            <EmailContainer>
+              <Email>{this.props.user.email}</Email>
+            </EmailContainer>
+            <ProfileRow style={{margin: 0}}>
+              <EthereumAddress>
+                {this.props.user.ethereumAddress}
+              </EthereumAddress>
+            </ProfileRow>
+            <ProfileRow>
+              <Separator />
+            </ProfileRow>
+            <ProfileRow>
+              {this.props.selectedAccount.EKABalance &&
+              this.props.selectedAccount.balance ? (
+                <Balances>
+                  <SubTitle>Your Balances</SubTitle>
+                  <Balance>
+                    <EurekaLogo width={30} height={30} />
+                    <Number>
+                      {numberWithCommas(this.props.selectedAccount.EKABalance)}{' '}
+                      EKA
+                    </Number>
+                    <SeeHistory>
                       <Icon
-                        icon={'ethereum'}
-                        width={25}
-                        height={25}
-                        right={5}
-                        noMove
+                        width={22}
+                        height={22}
+                        material={'history'}
+                        icon={'material'}
+                        top={8}
                       />
-                      <Number>
-                        {numberWithCommas(
-                          this.props.selectedAccount.balance
-                            .toString()
-                            .substr(0, 6)
-                        )}{' '}
-                        ETH
-                      </Number>
-                    </Balance>
-                  </Balances>
-                ) : (
-                  <CircleSpinner />
-                )}
-              </ProfileRow>
-            </Card>
-          )}
+                      <div style={{marginTop: '-5px'}}>See History</div>
+                    </SeeHistory>
+                  </Balance>
+                  <Balance>
+                    <Icon
+                      icon={'ethereum'}
+                      width={25}
+                      height={25}
+                      right={5}
+                      noMove
+                    />
+                    <Number>
+                      {numberWithCommas(
+                        this.props.selectedAccount.balance
+                          .toString()
+                          .substr(0, 6)
+                      )}{' '}
+                      ETH
+                    </Number>
+                  </Balance>
+                </Balances>
+              ) : (
+                <CircleSpinner />
+              )}
+            </ProfileRow>
+          </Card>
         </CardContainer>
       </Container>
     );
