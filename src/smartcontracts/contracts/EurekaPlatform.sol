@@ -788,6 +788,8 @@ contract EurekaPlatform {
         emit SubmissionProcessClosed(block.timestamp, _submissionId);
     }
 
+    function updateTimeBasedReviewState(bytes32 reviewHash) public {}
+
     function rewardEditorApprovedReviews(ArticleVersion _articleVersion, uint _reviewRounds) private {
         uint rewardedReviewers = 0;
         for (uint i = 0; i < _articleVersion.editorApprovedReviews.length; i++) {

@@ -40,12 +40,10 @@ test(PRETEXT + 'Write a review on db, get all reviews', async t => {
 test(PRETEXT + 'Get all reviews by their state', async t => {
   t.is((await reviewService.getAllReviews()).length, 0);
 
-  //await TEST_INVITIED_REVIEW_1.save();
   await testReviewCreator.createInvitedReview1();
   await testReviewCreator.createInvitedReview2();
   await testReviewCreator.createAcceptedReview1();
 
   t.is((await reviewService.getReviewsByState(ReviewState.INVITED)).length, 2);
   t.is((await reviewService.getReviewsByState(ReviewState.ACCEPTED)).length, 1);
-
 });

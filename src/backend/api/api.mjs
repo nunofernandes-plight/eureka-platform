@@ -8,7 +8,7 @@ import passport from '../helpers/local-passport.mjs';
 import mongooseDB from '../db/mongoose-db.mjs';
 import {isProduction} from '../../helpers/isProduction.mjs';
 import router from '../routes/index.mjs';
-import contractEventListener from '../web3/contract-event-lister.mjs';
+import timebasedContractService from '../web3/timebased-contract-service.mjs';
 import uploadRouter from '../routes/file-upload.routes.mjs';
 import {
   platformContract,
@@ -67,6 +67,10 @@ export default {
      */
     configEmailProvider();
 
+    /** Timebased contract service**/
+    // TODO activate it again for checking
+    //timebasedContractService.start();
+
     //set global variable isAuthenticated -> call ir everywhere dynamically
     app.use(function(req, res, next) {
       res.locals.isAuthenticated = req.isAuthenticated();
@@ -75,7 +79,6 @@ export default {
 
     //Parses the text as JSON and exposes the resulting object on req.body.
     app.use(bodyParser.json());
-
     app.use('/api', router);
     app.get('/fileupload', uploadRouter);
   },
@@ -85,6 +88,7 @@ export default {
   },
 
   close: async () => {
+    await timebasedContractService.stop();
     return new Promise(resolve => {
       server.close(() => {
         resolve();
