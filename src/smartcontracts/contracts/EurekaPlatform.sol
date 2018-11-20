@@ -105,6 +105,7 @@ contract EurekaPlatform {
     uint256 submissionCounter;
     mapping(uint256 => ArticleSubmission) public articleSubmissions;
     mapping(bytes32 => ArticleVersion) public articleVersions;
+    // mapping by articleHash and reviewer address
     mapping(bytes32 => mapping(address => Review)) public  reviews;
 
     // address mappings TODO: are these mappings needed?

@@ -2,7 +2,7 @@ import test from 'ava';
 import {cleanDB} from '../helpers.js';
 import app from '../../src/backend/api/api.mjs';
 import reviewService from '../../src/backend/db/review-service.mjs';
-import testReviewCreator from '../test-data/test-reviews.js';
+import testReviewCreator from '../test-data/test-review-creator.js';
 import ReviewState from '../../src/backend/schema/review-state-enum.mjs';
 
 const PRETEXT = 'DB-REVIEW: ';

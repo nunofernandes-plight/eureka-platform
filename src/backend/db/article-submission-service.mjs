@@ -22,6 +22,15 @@ export default {
     );
   },
 
+  getArticleSubmissionsByState: async (articleSubmissionState) => {
+    if(!(articleSubmissionState in ArticleSubmissionState)) {
+      errorThrower.notCorrectStatus('any of Object ArticleSubmissionState', articleSubmissionState);
+    }
+    return await ArticleSubmission.find({
+      articleSubmissionState: {$in: [articleSubmissionState]}
+    });
+  },
+
   //TODO: Assignable are only submissions where user is not equal submission owner or author
   getUnassignedSubmissions: (ethereumAddress) => {
     return populate(
@@ -82,7 +91,7 @@ export default {
     return await ArticleSubmission.find({
       ownerAddress: {$ne: ethereumAddress},
       editor: {$ne: ethereumAddress}
-    })
+    });
   },
 
 
@@ -301,9 +310,7 @@ export default {
       }
     );
 
-    submission.articleVersions[
-      articleVersionPosition
-      ].editorApprovedReviews.push(review);
+    submission.articleVersions[articleVersionPosition].editorApprovedReviews.push(review);
 
     return await submission.save();
   },

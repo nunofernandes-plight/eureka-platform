@@ -77,7 +77,7 @@
     "test": "npm run lint && ava --serial",
     "test-sc": "ava --serial test/integration/smartcontracts",
     "test-ci": "if [ \"${CIRCLE_BRANCH}\" = \"dev\" ]; then ava --serial ./test/unit/NormalTests.js; elif [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then ava --serial ./test/unit/NormalTests.js; else ava --serial;fi",
-    "test-db": "cross-env BC_NETWORK=ganache NODE_ENV=development ava --serial test/db/db-review-service-test.js",
+    "test-db": "cross-env BC_NETWORK=ganache NODE_ENV=development ava --serial test/db/db-article-submission-service-test.js",
     "test-int": "cross-env BC_NETWORK=ganache ava --serial test/integration/decline-article-version-test.js",
     "lint": "eslint **/*.mjs --ignore-path .gitignore",
     "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
