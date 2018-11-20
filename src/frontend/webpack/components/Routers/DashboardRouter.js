@@ -21,10 +21,7 @@ class DashboardRouter extends Component {
   render() {
     return (
       <div>
-        <TopContainer
-          action={item => this.props.action(item)}
-          selectedAccount={this.props.selectedAccount}
-        />
+        <TopContainer action={item => this.props.action(item)} />
         <BottomContainer>
           <Route
             exact
@@ -37,9 +34,7 @@ class DashboardRouter extends Component {
             path={`${this.props.base}/owner`}
             render={() => (
               <ContractOwnerGuard>
-                <ContractOwnerDashboard
-                  selectedAccount={this.props.selectedAccount}
-                />
+                <ContractOwnerDashboard />
               </ContractOwnerGuard>
             )}
           />
@@ -47,9 +42,7 @@ class DashboardRouter extends Component {
           <Route
             exact
             path={`${this.props.base}/book`}
-            render={() => (
-              <AddressBook selectedAccount={this.props.selectedAccount} />
-            )}
+            render={() => <AddressBook />}
           />
 
           <Route

@@ -15,14 +15,6 @@ import {updateAccounts} from './webpack/reducers/account.js';
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      accounts: null,
-      selectedAccount: {
-        address: null,
-        balance: null,
-        EKABalance: null
-      }
-    };
   }
 
   async componentDidMount() {
@@ -32,31 +24,6 @@ class App extends Component {
     this.props.updateNetwork(web3);
     this.props.updateMetaMask(web3);
     this.props.updateAccounts(web3, provider, tokenContract);
-
-    const accounts = await getAllAccounts(this.props.context.web3);
-
-    const selectedAccount = {...this.state.selectedAccount};
-    // Default account for MetaMask
-    if (this.props.context.provider === Web3Providers.META_MASK) {
-      selectedAccount.address = [...accounts.keys()][0];
-
-      // GANACHE case
-    } else if (this.props.context.provider === Web3Providers.LOCALHOST) {
-      selectedAccount.address = localStorage.getItem('ganache')
-        ? JSON.parse(localStorage.getItem('ganache'))
-        : [...accounts.keys()][0];
-    }
-
-    if (selectedAccount.address) {
-      selectedAccount.balance = accounts.get(selectedAccount.address);
-      if (this.props.context.tokenContract)
-        selectedAccount.EKABalance = await getBalanceOf(
-          this.props.context.tokenContract,
-          selectedAccount.address
-        );
-    }
-
-    this.setState({selectedAccount, accounts});
     this.interval = setInterval(async () => {
       this.props.updateMetaMask(this.props.context.web3);
     }, 7500);
@@ -68,7 +35,6 @@ class App extends Component {
       'ganache',
       JSON.stringify(selectedAccount.address.toString())
     );
-
     this.props.updateAccounts(
       this.props.context.web3,
       this.props.context.provider,

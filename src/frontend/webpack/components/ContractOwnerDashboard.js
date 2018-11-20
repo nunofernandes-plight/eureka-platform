@@ -13,6 +13,9 @@ import '../design-components/Notification.css';
 import {toast, ToastContainer} from 'react-toastify';
 import {isGanache} from '../../../helpers/isGanache.mjs';
 import withWeb3 from '../contexts/WithWeb3.js';
+import {TITLE_GENERAL_ERROR} from '../constants/ModalErrors.js';
+import connect from 'react-redux/es/connect/connect.js';
+import {fetchUserData} from '../reducers/user.js';
 
 const Container = styled.div`
   display: flex;
@@ -162,7 +165,7 @@ class ContractOwnerDashboard extends React.Component {
             this.setState({errorMessage: null});
           }}
           show={this.state.errorMessage}
-          title={'You got the following error'}
+          title={TITLE_GENERAL_ERROR}
         >
           {this.state.errorMessage}
         </Modal>
@@ -190,10 +193,7 @@ class ContractOwnerDashboard extends React.Component {
         {' '}
         <ToastContainer />
         {this.renderModals()}
-        <Card
-          style={{padding: '50px'}}
-          title={'Contract Owner Dashboard'}
-        >
+        <Card style={{padding: '50px'}} title={'Contract Owner Dashboard'}>
           {Methods.map((item, index) => {
             return (
               <MyRow key={index}>
@@ -239,4 +239,8 @@ class ContractOwnerDashboard extends React.Component {
   }
 }
 
-export default withWeb3(ContractOwnerDashboard);
+export default withWeb3(
+  connect(state => ({
+    selectedAccount: state.accountsData.selectedAccount
+  }))(ContractOwnerDashboard)
+);

@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import styled from 'styled-components';
 import {Switch, Route} from 'react-router';
-import {BrowserRouter, Redirect} from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 import WelcomePage from '../../views/WelcomePage';
 import {Header} from '../Header';
 import Login from '../Login';
@@ -17,13 +17,11 @@ import {
   PANEL_LEFT_NORMAL_WIDTH,
   HEADER_PADDING_TOP
 } from '../../../helpers/layout.js';
-import Modal from '../../design-components/Modal.js';
 import DashboardRouter from './DashboardRouter.js';
 import withWeb3 from '../../contexts/WithWeb3.js';
 import {connect} from 'react-redux';
 import {fetchUserData} from '../../reducers/user.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
-import {TITLE_GENERAL_ERROR} from '../../constants/ModalErrors.js';
 
 const PaddingLeft = styled.div`
   padding-left: ${props =>
@@ -85,10 +83,14 @@ class MainRouter extends Component {
     return HEADER_PADDING_TOP;
   }
 
+  areEssentialsLoading() {
+    return this.props.userDataLoading;
+  }
+
   render() {
     return (
       <div>
-        {this.props.loading ? (
+        {this.areEssentialsLoading() ? (
           <GridSpinner />
         ) : (
           <Fragment>
@@ -189,7 +191,8 @@ export default withWeb3(
   connect(
     state => ({
       isAuthenticated: state.userData.isAuthenticated,
-      loading: state.userData.loading,
+      userDataLoading: state.userData.loading,
+      accountsDataLoading: state.accountsData.loading,
       errorMessage: state.userData.error
     }),
     dispatch => {

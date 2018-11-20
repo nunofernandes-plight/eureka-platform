@@ -10,7 +10,7 @@ const initialState = {
   user: null,
   error: null,
   isAuthenticated: null,
-  loading: false
+  loading: true
 };
 
 export const fetchUserData = () => {

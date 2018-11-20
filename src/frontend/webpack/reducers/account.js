@@ -5,7 +5,7 @@ import {getBalanceOf} from '../../../smartcontracts/methods/web3-token-contract-
 
 const initialState = {
   accounts: null,
-  loading: false,
+  loading: true,
   error: null,
   selectedAccount: null
 };
