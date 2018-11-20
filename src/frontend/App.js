@@ -64,16 +64,11 @@ class App extends Component {
 
   // Ganache switch addresses
   async changeAccount(selectedAccount) {
-    const account = {...this.state.selectedAccount};
-    account.address = selectedAccount.address;
+    localStorage.setItem(
+      'ganache',
+      JSON.stringify(selectedAccount.address.toString())
+    );
 
-    const accounts = await getAllAccounts(this.props.context.web3);
-    if (accounts.get(account.address)) {
-      account.balance = accounts.get(account.address);
-    }
-
-    this.setState({selectedAccount: account});
-    localStorage.setItem('ganache', JSON.stringify(account.address.toString()));
     this.props.updateAccounts(
       this.props.context.web3,
       this.props.context.provider,
@@ -82,17 +77,11 @@ class App extends Component {
   }
 
   async updateAccount() {
-    const accounts = await getAllAccounts(this.props.context.web3);
-    const selectedAccount = {...this.state.selectedAccount};
-
-    selectedAccount.balance = accounts.get(selectedAccount.address);
-
-    selectedAccount.EKABalance = await getBalanceOf(
-      this.props.context.tokenContract,
-      selectedAccount.address
+    this.props.updateAccounts(
+      this.props.context.web3,
+      this.props.context.provider,
+      this.props.context.tokenContract
     );
-
-    this.setState({selectedAccount});
   }
 
   componentWillUnmount() {

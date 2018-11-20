@@ -32,7 +32,6 @@ export const updateAccounts = (web3, provider, tokenContract) => {
           selectedAccount.address
         );
     }
-
     dispatch({type: ACCOUNTS_SET, accounts, selectedAccount});
   };
 };
