@@ -49,7 +49,7 @@ export default {
         };
         await scTransactionService.createScTransaction(
           event.returnValues.contractOwner,
-          ScTransactionType.REVIEWER_SIGNEDUP,
+          ScTransactionType.EXPERT_REVIEWER_SIGNEDUP,
           event.returnValues.stateTimestamp,
           event.transactionHash,
           additionalInfo
@@ -65,7 +65,8 @@ export default {
         await articleSubmissionService.updateSubmissionStartByArticleHash(
           event.returnValues.submissionId,
           event.returnValues.articleHash,
-          event.returnValues.articleURL
+          event.returnValues.articleURL,
+          event.returnValues.stateTimestamp,
         );
 
         const additionalInfo = {

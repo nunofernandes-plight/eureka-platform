@@ -30,7 +30,7 @@ import {
   createUserContractOwner,
   setAccounts,
   createUser1, createEditor1, createEditor2, createReviewer1, createReviewer2, createReviewer3, createReviewer4
-} from '../test-data';
+} from '../test-data/test-data';
 import TestFunctions from '../test-functions';
 import ArticleSubmissionState from '../../src/backend/schema/article-submission-state-enum.mjs';
 

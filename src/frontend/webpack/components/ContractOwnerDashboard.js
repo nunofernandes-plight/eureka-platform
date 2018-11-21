@@ -6,7 +6,7 @@ import {InputField} from '../design-components/Inputs.js';
 import Icon from '../views/icons/Icon.js';
 import {Methods} from './Routers/ContractOwnerMethods.js';
 import {__GRAY_200, __GRAY_700, __THIRD} from '../../helpers/colors.js';
-import {signUpEditor} from '../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {signUpEditor, signUpExpertReviewers} from '../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../design-components/Modal.js';
 import 'react-toastify/dist/ReactToastify.css';
 import '../design-components/Notification.css';
@@ -79,6 +79,7 @@ class ContractOwnerDashboard extends React.Component {
     this.state = {
       mintingAddress: null,
       editorAddress: null,
+      reviewerAddresses: null,
       errorMessage: null,
       tx: null
     };
@@ -92,6 +93,11 @@ class ContractOwnerDashboard extends React.Component {
       case 'editorAddress':
         this.assignEditor();
         break;
+
+      case 'reviewerAddresses':
+        this.signUpExpertReviewers();
+        break;
+
       default:
         break;
     }
@@ -141,6 +147,53 @@ class ContractOwnerDashboard extends React.Component {
       });
   }
 
+  async signUpExpertReviewers() {
+    const reviewerAddressesArray = this.state.reviewerAddresses.split(",").map(function(item) {
+      return item.trim();
+    });
+    let gasAmount;
+    // gas estimation on ganache doesn't work properly
+    if (!isGanache(this.props.context.web3))
+      gasAmount = await signUpExpertReviewers(
+        this.props.context.platformContract,
+        reviewerAddressesArray
+      ).estimateGas({
+        from: this.props.selectedAccount.address
+      });
+    else gasAmount = 80000000;
+
+    await signUpExpertReviewers(
+      this.props.context.platformContract,
+      reviewerAddressesArray
+    )
+      .send({
+        from: this.props.selectedAccount.address,
+        gas: gasAmount
+      })
+      .on('transactionHash', tx => {
+        this.setState({tx});
+      })
+      .on('receipt', receipt => {
+        return receipt;
+      })
+      .on('confirmationNr', res => {
+        toast('Your requested has been successfully processed', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 20000,
+          className: '__ALERT_SUCCESS',
+          progressClassName: '__BAR'
+        });
+      })
+      .catch(err => {
+        console.error('error: ', err);
+        this.setState({
+          errorMessage:
+            'Ouh. Something went wrong with the Smart Contract call: ' +
+            err.toString()
+        });
+      });
+  }
+
   handleInput(stateKey, e) {
     this.setState({[stateKey]: e.target.value});
   }
@@ -149,11 +202,14 @@ class ContractOwnerDashboard extends React.Component {
     if (!this.state[stateKey]) {
       return null;
     }
-    if (this.props.context.web3.utils.isAddress(this.state[stateKey])) {
-      return 'valid';
-    } else {
-      return 'error';
+    if (stateKey === "editorAddress" || stateKey === "mintingAddress") {
+      if (this.props.context.web3.utils.isAddress(this.state[stateKey])) {
+        return 'valid';
+      } else {
+        return 'error';
+      }
     }
+    else return null;
   }
 
   renderModals() {

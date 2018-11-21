@@ -12,6 +12,9 @@ export const articleSubmissionSchema = mongoose.Schema(
     scSubmissionID: {
       type: Number
     },
+    stateTimestamp: {
+      type: String,
+    },
     articleSubmissionState: {
       type: String,
       enum: Object.values(ArticleSubmissionState),

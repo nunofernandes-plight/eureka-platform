@@ -105,6 +105,7 @@ contract EurekaPlatform {
     uint256 submissionCounter;
     mapping(uint256 => ArticleSubmission) public articleSubmissions;
     mapping(bytes32 => ArticleVersion) public articleVersions;
+    // mapping by articleHash and reviewer address
     mapping(bytes32 => mapping(address => Review)) public  reviews;
 
     // address mappings TODO: are these mappings needed?
@@ -309,7 +310,7 @@ contract EurekaPlatform {
     }
 
 
-    event AssignmentForSubmissionProcess(address assignerAddress, uint256 submissionId);
+    event AssignmentForSubmissionProcess(address assignerAddress, uint256 submissionId, uint256 stateTimestamp);
     // a journal editor can assign him/herself to an article submission process
     // if the process is not already claimed by another editor
     function assignForSubmissionProcess(uint256 _submissionId) public {
@@ -324,10 +325,10 @@ contract EurekaPlatform {
         submission.editor = msg.sender;
         submission.submissionState = SubmissionState.EDITOR_ASSIGNED;
         submission.stateTimestamp = block.timestamp;
-        emit AssignmentForSubmissionProcess(msg.sender, _submissionId);
+        emit AssignmentForSubmissionProcess(msg.sender, _submissionId, block.timestamp);
     }
 
-    event RemovedEditorFromSubmission(uint submissionId);
+    event RemovedEditorFromSubmission(uint submissionId, uint256 stateTimestamp);
 
     function removeEditorFromSubmissionProcess(uint256 _submissionId) public {
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
@@ -339,11 +340,11 @@ contract EurekaPlatform {
         submission.editor = address(0);
         submission.submissionState = SubmissionState.OPEN;
         submission.stateTimestamp = block.timestamp;
-        emit RemovedEditorFromSubmission(_submissionId);
+        emit RemovedEditorFromSubmission(_submissionId, block.timestamp);
     }
 
     // is it a good idea that the current editor can assign another editor? or should only removing (method below) be possible?
-    event ChangedEditorFromSubmission(uint256 submissionId, address newEditor);
+    event ChangedEditorFromSubmission(uint256 submissionId, address newEditor, uint256 stateTimestamp);
 
     function changeEditorFromSubmissionProcess(uint256 _submissionId, address _newEditor) public {
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
@@ -358,7 +359,7 @@ contract EurekaPlatform {
         emit ChangedEditorFromSubmission(_submissionId, _newEditor);
     }
 
-    event SanityIsOk(uint256 submissionId, bytes32 articleHash);
+    event SanityIsOk(uint256 submissionId, bytes32 articleHash, uint256 stateTimestamp);
 
     function sanityIsOk(bytes32 _articleHash) public {
 
@@ -369,10 +370,10 @@ contract EurekaPlatform {
 
         article.versionState = ArticleVersionState.EDITOR_CHECKED;
         article.stateTimestamp = block.timestamp;
-        emit SanityIsOk(articleVersions[_articleHash].submissionId, _articleHash);
+        emit SanityIsOk(articleVersions[_articleHash].submissionId, _articleHash, block.timestamp);
     }
 
-    event SanityIsNotOk(uint256 submissionId, bytes32 articleHash);
+    event SanityIsNotOk(uint256 submissionId, bytes32 articleHash), uint256 stateTimestamp;
 
     function sanityIsNotOk(bytes32 _articleHash) public {
 
@@ -385,7 +386,7 @@ contract EurekaPlatform {
         article.stateTimestamp = block.timestamp;
 
         requestNewReviewRound(article.submissionId);
-        emit SanityIsNotOk(articleVersions[_articleHash].submissionId, _articleHash);
+        emit SanityIsNotOk(articleVersions[_articleHash].submissionId, _articleHash, block.timestamp);
     }
 
     event ReviewersAreInvited(uint256 submissionId, bytes32 articleHash, address[] editorApprovedReviewers, uint256 stateTimestamp);
@@ -425,7 +426,7 @@ contract EurekaPlatform {
         emit InvitationIsAccepted(_articleHash, msg.sender, block.timestamp);
     }
 
-    event ReviewingOpenedForAllExperts(uint256 submissionId, bytes32 articleHash);
+    event ReviewingOpenedForAllExperts(uint256 submissionId, bytes32 articleHash, uint256 stateTimestamp);
 
     function openReviewingForAllExperts(bytes32 _articleHash) public {
 
@@ -437,7 +438,7 @@ contract EurekaPlatform {
 
         article.versionState = ArticleVersionState.OPEN_FOR_ALL_REVIEWERS;
         article.stateTimestamp = block.timestamp;
-        emit ReviewingOpenedForAllExperts(articleVersions[_articleHash].submissionId, _articleHash);
+        emit ReviewingOpenedForAllExperts(articleVersions[_articleHash].submissionId, _articleHash, block.timestamp);
     }
 
     event SignedUpForReviewing(bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp);
@@ -456,7 +457,7 @@ contract EurekaPlatform {
         emit SignedUpForReviewing(_articleHash, msg.sender, block.timestamp);
     }
 
-    event ResignedFromReviewing(bytes32 articleHash, address reviewerAddress);
+    event ResignedFromReviewing(bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp);
     function resignFromReviewing(bytes32 _articleHash, address reviewerAddress) public {
 
         require(msg.sender == articleSubmissions[articleVersions[_articleHash].submissionId].editor
@@ -471,10 +472,10 @@ contract EurekaPlatform {
         review.stateTimestamp = 0;
         review.reviewer = address(0);
 
-        emit ResignedFromReviewing(_articleHash, reviewerAddress);
+        emit ResignedFromReviewing(_articleHash, reviewerAddress, block.timestamp);
     }
 
-    event EditorApprovedReviewIsAdded(bytes32 articleHash, uint256 stateTimestamp, bytes32 reviewHash, address reviewerAddress, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
+    event EditorApprovedReviewIsAdded(bytes32 articleHash, bytes32 reviewHash, address reviewerAddress, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2, uint256 stateTimestamp);
 
     function addEditorApprovedReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
@@ -508,10 +509,10 @@ contract EurekaPlatform {
 
         review.reviewState = ReviewState.HANDED_IN;
         review.stateTimestamp = block.timestamp;
-        emit EditorApprovedReviewIsAdded(_articleHash, block.timestamp, _reviewHash, review.reviewer, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2);
+        emit EditorApprovedReviewIsAdded(_articleHash, _reviewHash, review.reviewer, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2,  block.timestamp);
     }
 
-    event CommunityReviewIsAdded(bytes32 articleHash, uint256 stateTimestamp, bytes32 reviewHash, address reviewerAddress, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
+    event CommunityReviewIsAdded(bytes32 articleHash, bytes32 reviewHash, address reviewerAddress, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2, uint256 stateTimestamp);
 
     function addCommunityReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
@@ -534,10 +535,10 @@ contract EurekaPlatform {
         articleVersions[_articleHash].communityReviews.push(review.reviewer);
         review.reviewState = ReviewState.HANDED_IN;
         review.stateTimestamp = block.timestamp;
-        emit CommunityReviewIsAdded(_articleHash, block.timestamp, _reviewHash, review.reviewer, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2);
+        emit CommunityReviewIsAdded(_articleHash, block.timestamp, _reviewHash, review.reviewer, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2, block.timestamp);
     }
 
-    event ReviewIsCorrected(bytes32 oldReviewHash, bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp, bytes32 reviewHash, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2);
+    event ReviewIsCorrected(bytes32 oldReviewHash, bytes32 articleHash, address reviewerAddress, bytes32 reviewHash, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2,  uint256 stateTimestamp);
     function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         Review storage review = reviews[_articleHash][msg.sender];
@@ -553,10 +554,10 @@ contract EurekaPlatform {
 
         review.reviewState = ReviewState.HANDED_IN;
         review.stateTimestamp = block.timestamp;
-        emit ReviewIsCorrected(oldReviewHash, _articleHash, msg.sender, block.timestamp, _reviewHash, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2);
+        emit ReviewIsCorrected(oldReviewHash, _articleHash, msg.sender, _reviewHash, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2, block.timestamp);
     }
 
-    event ReviewIsAccepted(bytes32 articleHash, uint256 stateTimestamp, address reviewer);
+    event ReviewIsAccepted(bytes32 articleHash, address reviewer, uint256 stateTimestamp);
 
     function acceptReview(bytes32 _articleHash, address _reviewerAddress) public {
 
@@ -573,10 +574,10 @@ contract EurekaPlatform {
         review.reviewState = ReviewState.ACCEPTED;
         review.stateTimestamp = block.timestamp;
         review.reviewedBy = msg.sender;
-        emit ReviewIsAccepted(_articleHash, block.timestamp, _reviewerAddress);
+        emit ReviewIsAccepted(_articleHash, _reviewerAddress, block.timestamp);
     }
 
-    event ReviewIsDeclined(bytes32 articleHash, uint256 stateTimestamp, address reviewer);
+    event ReviewIsDeclined(bytes32 articleHash, address reviewer, uint256 stateTimestamp);
 
     function declineReview(bytes32 _articleHash, address _reviewerAddress) public {
 
@@ -591,10 +592,10 @@ contract EurekaPlatform {
         review.reviewState = ReviewState.DECLINED;
         review.stateTimestamp = block.timestamp;
         review.reviewedBy = msg.sender;
-        emit ReviewIsDeclined(_articleHash, block.timestamp, _reviewerAddress);
+        emit ReviewIsDeclined(_articleHash, _reviewerAddress, block.timestamp);
     }
 
-    event ArticleVersionIsAccepted(bytes32 articleHash, uint256 stateTimestamp, address editor);
+    event ArticleVersionIsAccepted(bytes32 articleHash, address editor, uint256 stateTimestamp);
 
     function acceptArticleVersion(bytes32 _articleHash) public {
 
@@ -622,10 +623,10 @@ contract EurekaPlatform {
         article.stateTimestamp = block.timestamp;
 
         closeSubmissionProcess(article.submissionId);
-        emit ArticleVersionIsAccepted(_articleHash, block.timestamp, msg.sender);
+        emit ArticleVersionIsAccepted(_articleHash, msg.sender, block.timestamp);
     }
 
-    event DeclineArticleVersion(bytes32 articleHash, uint256 stateTimestamp, address editor);
+    event DeclineArticleVersion(bytes32 articleHash, address editor, uint256 stateTimestamp);
 
     function declineArticleVersion(bytes32 _articleHash) public {
 
@@ -652,10 +653,10 @@ contract EurekaPlatform {
         else
             requestNewReviewRound(article.submissionId);
 
-        emit DeclineArticleVersion(_articleHash, block.timestamp, msg.sender);
+        emit DeclineArticleVersion(_articleHash, msg.sender, block.timestamp);
     }
 
-    event DeclineArticleVersionAndClose(bytes32 articleHash, uint256 stateTimestamp, address editor);
+    event DeclineArticleVersionAndClose(bytes32 articleHash, address editor, uint256 stateTimestamp);
 
     function declineArticleVersionAndClose(bytes32 _articleHash) public {
 
@@ -678,7 +679,7 @@ contract EurekaPlatform {
         article.versionState = ArticleVersionState.DECLINED;
 
         closeSubmissionProcess(article.submissionId);
-        emit DeclineArticleVersionAndClose(_articleHash, block.timestamp, msg.sender);
+        emit DeclineArticleVersionAndClose(_articleHash, msg.sender, block.timestamp);
     }
 
     function countSignedUpForReviewing(bytes32 _articleHash, address[] _reviewers) view private returns (uint count) {
@@ -755,7 +756,7 @@ contract EurekaPlatform {
         emit NewReviewRoundDeclined(_submissionId, block.timestamp);
     }
 
-    event SubmissionProcessClosed(uint256 stateTimestamp, uint256 submissionId);
+    event SubmissionProcessClosed(uint256 submissionId, uint256 stateTimestamp);
     function closeSubmissionProcess(uint256 _submissionId) private {
 
         ArticleSubmission storage submission = articleSubmissions[_submissionId];
@@ -787,6 +788,8 @@ contract EurekaPlatform {
         submission.stateTimestamp = block.timestamp;
         emit SubmissionProcessClosed(block.timestamp, _submissionId);
     }
+
+    function updateTimeBasedReviewState(bytes32 reviewHash) public {}
 
     function rewardEditorApprovedReviews(ArticleVersion _articleVersion, uint _reviewRounds) private {
         uint rewardedReviewers = 0;

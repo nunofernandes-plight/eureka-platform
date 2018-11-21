@@ -27,7 +27,7 @@ import {
   MINOR_ISSUES_REVIEW_1,
   MINOR_ISSUES_REVIEW_2,
   NO_ISSUES_REVIEW_1
-} from '../test-data';
+} from '../test-data/test-data';
 import TestFunctions from '../test-functions';
 import ArticleSubmissionState from '../../src/backend/schema/article-submission-state-enum.mjs';
 

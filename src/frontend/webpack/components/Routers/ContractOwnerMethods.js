@@ -21,5 +21,13 @@ export const Methods = [
       "With this function the Smart Contract owner can assign to a specific Ethereum Address a Editor's role within the EUREKA platform",
     stateKey: 'editorAddress',
     buttonText: 'Assign'
+  },
+  {
+    title: 'Assign Expert Reviewers',
+    placeholder: '0x5c59065f0486Af304B7E1A4243905527A35E0DB5, 0x5c59065f0486Af304B7E1A4243905527A35E0DB5, ...',
+    note:
+      "With this function the Smart Contract owner can assign to a specific Ethereum Address an Expert Reviewer's role within the EUREKA platform",
+    stateKey: 'reviewerAddresses',
+    buttonText: 'Assign'
   }
 ];
