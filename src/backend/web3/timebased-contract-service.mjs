@@ -1,8 +1,11 @@
 import cron from 'cron';
 import reviewService from '../db/review-service.mjs';
 import articleSubmissionService from '../db/article-submission-service.mjs';
+import articleVersionService from '../db/article-version-service.mjs';
 import ReviewState from '../schema/review-state-enum.mjs';
 import ArticleSubmissionState from '../schema/article-submission-state-enum.mjs';
+import ArticleVersionState from '../schema/article-version-state-enum.mjs';
+
 const CronJob = cron.CronJob;
 
 const TIME_INTERVAL = 2000;
@@ -11,15 +14,16 @@ let cronJob;
 export default {
   start: async () => {
     cronJob = await new CronJob('* * * * * *', async () => {
-      //TODO merge with reviews with state 'INVITATION_ACCEPTED'
-      let invitedStateReviews = await reviewService.getReviewsByState(ReviewState.INVITED);
+      const timedOutSubmissionIds = await getEditorTimeoutSubmissionIds();
 
-      for (let review in invitedStateReviews) {
-        console.log('Checking for review with hash: ' + review.reviewHash);
+      if(timedOutSubmissionIds.length > 0) {
+        // TODO call SC function for each
+        for(let timedOutSubmissionId of timedOutSubmissionIds) {
+          console.log(timedOutSubmissionId);
+        }
       }
-
       console.log('You will see this message every second');
-    }, null, true, 'America/Los_Angeles');
+    }, null, true, 'Europe/Zurich');
   },
 
   stop: async () => {
@@ -28,22 +32,22 @@ export default {
 };
 
 /**
- * get all the submission ids from the article-submission,
- * where the editor must get removed because he did
+ * get all the submission ids from the article-version,
+ * where the statetimestamp is too old.
  */
-// function getEditorTimeoutSubmissionId() {
-//   const editorAssignedSubmissions = articleSubmissionService.getArticleSubmissionsByState(ArticleSubmissionState.EDITOR_ASSIGNED);
-//
-//   let timeoutSubmissionIds = [];
-//
-//   for (let editorAssignedSubmission of editorAssignedSubmissions) {
-//     if (timeIsRunnedOut(editorAssignedSubmission.stateTimestamp)) {
-//       timeoutSubmissionIds.push(editorAssignedSubmission.scSubmissionID);
-//     }
-//   }
-//   return timeoutSubmissionIds;
-// }
-//
-// function timeIsRunnedOut(stateTimestamp) {
-//   return Date.now() > stateTimestamp + TIME_INTERVAL;
-// }
+async function getEditorTimeoutSubmissionIds() {
+  const submittedArticleVersions = await articleVersionService.getArticleVersionsByState(ArticleVersionState.SUBMITTED);
+
+  let timeoutSubmissionIds = [];
+
+  for (let submittedArticleVersion of submittedArticleVersions) {
+    if (timeIsRunnedOut(submittedArticleVersion.stateTimestamp)) {
+      timeoutSubmissionIds.push(submittedArticleVersion.articleSubmission);
+    }
+  }
+  return timeoutSubmissionIds;
+}
+
+function timeIsRunnedOut(stateTimestamp) {
+  return (new Date().getTime() > stateTimestamp + TIME_INTERVAL);
+}
