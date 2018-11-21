@@ -14,6 +14,7 @@ import {isGanache} from '../../../../helpers/isGanache.mjs';
 import {inviteReviewersForArticle} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import SendEmailAnimation from './SendEmailAnimation.js';
 import withWeb3 from '../../contexts/WithWeb3.js';
+import connect from 'react-redux/es/connect/connect.js';
 
 const Container = styled.div`
   display: flex;
@@ -273,4 +274,10 @@ class EditorInvite extends React.Component {
   }
 }
 
-export default withWeb3(withRouter(EditorInvite));
+export default withWeb3(
+  withRouter(
+    connect(state => ({
+      selectedAccount: state.accountsData.selectedAccount
+    }))(EditorInvite)
+  )
+);

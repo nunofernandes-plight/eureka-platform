@@ -214,7 +214,8 @@ export default withWeb3(
         articles: state.unassignedArticlesData.articles,
         nrOfPages: state.unassignedArticlesData.nrOfPages,
         loading: state.unassignedArticlesData.loading,
-        errorMessage: state.unassignedArticlesData.error
+        errorMessage: state.unassignedArticlesData.error,
+        selectedAccount: state.accountsData.selectedAccount
       }),
       dispatch => {
         return {

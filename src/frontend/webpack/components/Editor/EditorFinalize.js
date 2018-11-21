@@ -14,6 +14,7 @@ import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import withWeb3 from '../../contexts/WithWeb3.js';
+import connect from 'react-redux/es/connect/connect.js';
 
 const Container = styled.div`
   display: flex;
@@ -77,10 +78,12 @@ class EditorFinalize extends React.Component {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
     if (!isGanache(this.props.context.web3))
-      gasAmount = await this.acceptArticleVersion(this.props.context.platformContract, articleHash)
-        .estimateGas({
-          from: this.props.selectedAccount.address
-        });
+      gasAmount = await this.acceptArticleVersion(
+        this.props.context.platformContract,
+        articleHash
+      ).estimateGas({
+        from: this.props.selectedAccount.address
+      });
     else gasAmount = 80000000;
 
     acceptArticleVersion(this.props.context.platformContract, articleHash)
@@ -96,9 +99,9 @@ class EditorFinalize extends React.Component {
       .on('receipt', async receipt => {
         console.log(
           'Accepting article version with article hash ' +
-          articleHash +
-          ' exits with status ' +
-          receipt.status
+            articleHash +
+            ' exits with status ' +
+            receipt.status
         );
         await this.getArticlesToFinalize();
         return receipt;
@@ -117,10 +120,12 @@ class EditorFinalize extends React.Component {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
     if (!isGanache(this.props.context.web3))
-      gasAmount = await this.declineArticleVersion(this.props.context.platformContract, articleHash)
-        .estimateGas({
-          from: this.props.selectedAccount.address
-        });
+      gasAmount = await this.declineArticleVersion(
+        this.props.context.platformContract,
+        articleHash
+      ).estimateGas({
+        from: this.props.selectedAccount.address
+      });
     else gasAmount = 80000000;
 
     declineArticleVersion(this.props.context.platformContract, articleHash)
@@ -136,9 +141,9 @@ class EditorFinalize extends React.Component {
       .on('receipt', async receipt => {
         console.log(
           'Declining article version with article hash ' +
-          articleHash +
-          ' exits with status ' +
-          receipt.status
+            articleHash +
+            ' exits with status ' +
+            receipt.status
         );
         await this.getArticlesToFinalize();
         return receipt;
@@ -180,7 +185,7 @@ class EditorFinalize extends React.Component {
         >
           The request has successfully triggered our smart contract. You can
           find its tx hash here:{' '}
-          <TxHash txHash={this.state.tx}>Transaction Hash</TxHash>. <br/>
+          <TxHash txHash={this.state.tx}>Transaction Hash</TxHash>. <br />
         </Modal>
       </div>
     );
@@ -191,7 +196,7 @@ class EditorFinalize extends React.Component {
       <Container>
         {this.renderModals()}
         {this.state.loading ? (
-          <GridSpinner/>
+          <GridSpinner />
         ) : (
           <Card title={'Finalize these articles:'}>
             {this.state.articles ? (
@@ -221,10 +226,10 @@ class EditorFinalize extends React.Component {
                   );
                 })
               ) : (
-                <NoArticles/>
+                <NoArticles />
               )
             ) : (
-              <NoArticles/>
+              <NoArticles />
             )}
           </Card>
         )}
@@ -233,4 +238,10 @@ class EditorFinalize extends React.Component {
   }
 }
 
-export default withWeb3(withRouter(EditorFinalize));
+export default withWeb3(
+  withRouter(
+    connect(state => ({
+      selectedAccount: state.accountsData.selectedAccount
+    }))(EditorFinalize)
+  )
+);

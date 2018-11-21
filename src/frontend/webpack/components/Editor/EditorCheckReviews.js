@@ -14,6 +14,7 @@ import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import withWeb3 from '../../contexts/WithWeb3.js';
+import connect from 'react-redux/es/connect/connect.js';
 
 const Container = styled.div`
   display: flex;
@@ -86,7 +87,11 @@ class EditorCheckReviews extends React.Component {
       });
     else gasAmount = 80000000;
 
-    acceptReview(this.props.context.platformContract, articleHash, reviewerAddress)
+    acceptReview(
+      this.props.context.platformContract,
+      articleHash,
+      reviewerAddress
+    )
       .send({
         from: this.props.selectedAccount.address,
         gas: gasAmount
@@ -124,7 +129,11 @@ class EditorCheckReviews extends React.Component {
       });
     else gasAmount = 80000000;
 
-    declineReview(this.props.context.platformContract, articleHash, reviewerAddress)
+    declineReview(
+      this.props.context.platformContract,
+      articleHash,
+      reviewerAddress
+    )
       .send({
         from: this.props.selectedAccount.address,
         gas: gasAmount
@@ -233,4 +242,11 @@ class EditorCheckReviews extends React.Component {
     );
   }
 }
-export default withWeb3(withRouter(EditorCheckReviews));
+
+export default withWeb3(
+  withRouter(
+    connect(state => ({
+      selectedAccount: state.accountsData.selectedAccount
+    }))(EditorCheckReviews)
+  )
+);

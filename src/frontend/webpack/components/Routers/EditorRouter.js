@@ -28,26 +28,8 @@ const NavPills = styled.div`
 `;
 
 const Container = styled.div``;
+
 class EditorRouter extends Component {
-  constructor() {
-    super();
-    this.state = {
-      currentPath: null
-    };
-  }
-
-  componentDidMount() {
-    this.changeActiveRoute();
-  }
-
-  changeActiveRoute() {
-    const currentPath = this.props.location.pathname
-      .toString()
-      .replace(this.props.base.toString(), '')
-      .replace(/[^a-zA-Z ]/g, '');
-    this.setState({currentPath});
-  }
-
   render() {
     return (
       <Parent>
@@ -72,40 +54,26 @@ class EditorRouter extends Component {
               exact
               path={`${this.props.base}/articles`}
               render={() => (
-                <EditorArticles
-                  selectedAccount={this.props.selectedAccount}
-                  base={`${this.props.base}/articles`}
-                />
+                <EditorArticles base={`${this.props.base}/articles`} />
               )}
             />
             <Route
               exact
               path={`${this.props.base}/signoff`}
               render={() => (
-                <EditorSignOff
-                  selectedAccount={this.props.selectedAccount}
-                  base={`${this.props.base}/signoff`}
-                />
+                <EditorSignOff base={`${this.props.base}/signoff`} />
               )}
             />
             <Route
               exact
               path={`${this.props.base}/invite`}
-              render={() => (
-                <EditorInvite
-                  selectedAccount={this.props.selectedAccount}
-                  base={`${this.props.base}/invite`}
-                />
-              )}
+              render={() => <EditorInvite base={`${this.props.base}/invite`} />}
             />
             <Route
               exact
               path={`${this.props.base}/reviews`}
               render={() => (
-                <EditorCheckReviews
-                  selectedAccount={this.props.selectedAccount}
-                  base={`${this.props.base}/reviews`}
-                />
+                <EditorCheckReviews base={`${this.props.base}/reviews`} />
               )}
             />
             <Route
@@ -113,7 +81,6 @@ class EditorRouter extends Component {
               path={`${this.props.base}/finalize`}
               render={() => (
                 <EditorFinalize
-                  selectedAccount={this.props.selectedAccount}
                   base={`${this.props.base}/finalize`}
                 />
               )}
