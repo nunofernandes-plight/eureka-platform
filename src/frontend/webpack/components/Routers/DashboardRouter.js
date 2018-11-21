@@ -73,12 +73,7 @@ class DashboardRouter extends Component {
 
           <Route
             path={`${this.props.base}/editor`}
-            render={() => (
-              <EditorRouter
-                base={`${this.props.base}/editor`}
-                selectedAccount={this.props.selectedAccount}
-              />
-            )}
+            render={() => <EditorRouter base={`${this.props.base}/editor`} />}
           />
 
           {/*ROUTES IN DASHBOARD WHICH ARE NOT INCLUDED IN PANEL LEFT */}
@@ -108,11 +103,7 @@ class DashboardRouter extends Component {
           <Route
             path={`${this.props.base}/write/review/:reviewId`}
             render={() => (
-              <ReviewsWriter
-                base={`${this.props.base}/write/review`}
-                user={this.props.user}
-                selectedAccount={this.props.selectedAccount}
-              />
+              <ReviewsWriter base={`${this.props.base}/write/review`} />
             )}
           />
 
