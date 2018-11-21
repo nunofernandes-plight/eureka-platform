@@ -9,11 +9,14 @@ import Modal from '../design-components/Modal.js';
 import CircleSpinner from '../views/spinners/CircleSpinner.js';
 import Icon from '../views/icons/Icon.js';
 import queryString from 'query-string';
+import {connect} from 'react-redux';
+import {fetchUserData} from '../reducers/user.js';
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;My
+  align-items: center;
 `;
 const TitleContainer = styled.div`
   &::before {
@@ -76,7 +79,7 @@ class MyDrafts extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          this.props.updateUser();
+          this.props.fetchUserData();
           this.props.history.push(
             `${this.props.base}/${response.data.articleVersionId}`
           );
@@ -251,4 +254,15 @@ class MyDrafts extends React.Component {
   }
 }
 
-export default withRouter(MyDrafts);
+export default withRouter(
+  connect(
+    state => ({}),
+    dispatch => {
+      return {
+        fetchUserData: () => {
+          dispatch(fetchUserData());
+        }
+      };
+    }
+  )(MyDrafts)
+);

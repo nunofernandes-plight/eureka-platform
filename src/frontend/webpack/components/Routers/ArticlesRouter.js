@@ -62,37 +62,19 @@ class ArticlesRouter extends Component {
           <Route
             exact
             path={`${this.props.base}/drafts`}
-            render={() => (
-              <MyDrafts
-                base={`${this.props.base}/drafts`}
-                updateUser={() => {
-                  this.props.updateUser();
-                }}
-              />
-            )}
+            render={() => <MyDrafts base={`${this.props.base}/drafts`} />}
           />
 
           <Route
             exact
             path={`${this.props.base}/submitted`}
-            render={() => (
-              <MySubmitted
-                base={`${this.props.base}/submitted`}
-              />
-            )}
+            render={() => <MySubmitted base={`${this.props.base}/submitted`} />}
           />
 
           <Route
             exact
             path={`${this.props.base}/drafts/:id`}
-            render={props => (
-              <DocumentEditor
-                base={this.props.base}
-                user={this.props.user}
-                selectedAccount={this.props.selectedAccount}
-                {...props}
-              />
-            )}
+            render={() => <DocumentEditor base={this.props.base} />}
           />
 
           <Route

@@ -22,6 +22,7 @@ import withWeb3 from '../../contexts/WithWeb3.js';
 import {connect} from 'react-redux';
 import {fetchUserData} from '../../reducers/user.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
+import {__FOURTH, __THIRD} from '../../../helpers/colors.js';
 
 const PaddingLeft = styled.div`
   padding-left: ${props =>

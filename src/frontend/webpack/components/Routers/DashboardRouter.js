@@ -54,37 +54,20 @@ class DashboardRouter extends Component {
           <Route
             exact
             path={`${this.props.base}/actions`}
-            render={() => (
-              <MyHistory
-                base={`${this.props.base}/actions`}
-              />
-            )}
+            render={() => <MyHistory base={`${this.props.base}/actions`} />}
           />
 
           <Route
             path={`${this.props.base}/reviews`}
             render={() => {
-              return (
-                <ReviewsRouter
-                  base={`${this.props.base}/reviews`}
-                  updateUser={() => {
-                    this.props.updateUser();
-                  }}
-                />
-              );
+              return <ReviewsRouter base={`${this.props.base}/reviews`} />;
             }}
           />
 
           <Route
             path={`${this.props.base}/articles`}
             render={() => (
-              <ArticlesRouter
-                base={`${this.props.base}/articles`}
-                updateUser={() => {
-                  this.props.updateUser();
-                }}
-                selectedAccount={this.props.selectedAccount}
-              />
+              <ArticlesRouter base={`${this.props.base}/articles`} />
             )}
           />
 

@@ -22,10 +22,6 @@ const Box = styled.div`
 `;
 
 class BecomeReviewer extends React.Component {
-  constructor() {
-    super();
-  }
-
   componentDidMount() {}
 
   becomeReviewer() {
