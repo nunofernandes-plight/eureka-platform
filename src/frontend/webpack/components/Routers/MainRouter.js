@@ -84,7 +84,7 @@ class MainRouter extends Component {
   }
 
   areEssentialsLoading() {
-    return this.props.userDataLoading;
+    return this.props.userDataLoading || this.props.accountsLoading;
   }
 
   render() {
@@ -192,7 +192,9 @@ export default withWeb3(
     state => ({
       isAuthenticated: state.userData.isAuthenticated,
       userDataLoading: state.userData.loading,
-      errorMessage: state.userData.error
+      errorMessage: state.userData.error,
+      selectedAccount: state.accountsData.selectedAccount,
+      accountsLoading: state.accountsData.loading
     }),
     dispatch => {
       return {

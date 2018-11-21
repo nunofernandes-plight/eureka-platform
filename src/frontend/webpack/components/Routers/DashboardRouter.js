@@ -48,14 +48,7 @@ class DashboardRouter extends Component {
           <Route
             exact
             path={`${this.props.base}/account`}
-            render={() => (
-              <MyAccount
-                selectedAccount={this.props.selectedAccount}
-                updateAccount={() => {
-                  this.props.updateAccount();
-                }}
-              />
-            )}
+            render={() => <MyAccount />}
           />
 
           <Route

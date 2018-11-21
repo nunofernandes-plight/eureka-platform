@@ -8,6 +8,8 @@ import CircleSpinner from '../views/spinners/CircleSpinner.js';
 import connect from 'react-redux/es/connect/connect.js';
 import withWeb3 from '../contexts/WithWeb3.js';
 import GridSpinner from '../views/spinners/GridSpinner.js';
+import {fetchUserData} from '../reducers/user.js';
+import {updateAccounts} from '../reducers/account.js';
 
 const Container = styled.div`
   display: flex;
@@ -139,10 +141,6 @@ class MyAccount extends Component {
     };
   }
 
-  componentDidMount() {
-    this.props.updateAccount();
-  }
-
   render() {
     console.log(this.props.selectedAccount);
     return (
@@ -226,7 +224,9 @@ class MyAccount extends Component {
   }
 }
 
-export default connect(state => ({
-  user: state.userData.data,
-  selectedAccount: state.accountsData.selectedAccount
-}))(MyAccount);
+export default withWeb3(
+  connect(state => ({
+    user: state.userData.data,
+    selectedAccount: state.accountsData.selectedAccount
+  }))(MyAccount)
+);
