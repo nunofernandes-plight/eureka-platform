@@ -149,7 +149,6 @@ export default {
     if (
       articleVersion.articleVersionState !== ArticleVersionState.FINISHED_DRAFT
     ) {
-      console.log('THIS IS HAPPENING: ' + articleVersion.articleVersionState);
       errorThrower.notCorrectStatus(
         ArticleVersionState.FINISHED_DRAFT,
         articleVersion.articleVersionState

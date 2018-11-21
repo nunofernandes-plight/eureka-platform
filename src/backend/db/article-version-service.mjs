@@ -26,6 +26,16 @@ export default {
     return ArticleVersion.find({});
   },
 
+  getArticleVersionsByState: async (articleVersionState) => {
+    if(!(articleVersionState in ArticleVersionState))  {
+      errorThrower.notCorrectStatus('any of Object ArticleVersionState', articleVersionState);
+    }
+    return await ArticleVersion.find({
+      articleVersionState: {$in: [articleVersionState]}
+    });
+  },
+
+
   getArticlesAssignedTo: async (ethereumAddress, articleVersionStates) => {
     const submissions = await ArticleSubmissionService.getAssignedSubmissions(
       ethereumAddress
