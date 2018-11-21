@@ -10,6 +10,7 @@ import {updateMetaMask} from './webpack/reducers/metamask.js';
 import {updateAccounts} from './webpack/reducers/account.js';
 
 class App extends Component {
+
   componentDidMount() {
     const web3 = this.props.context.web3;
     const provider = this.props.context.provider;
@@ -20,19 +21,6 @@ class App extends Component {
     this.interval = setInterval(async () => {
       this.props.updateMetaMask(web3);
     }, 7500);
-  }
-
-  // Ganache switch addresses
-  async changeAccount(selectedAccount) {
-    localStorage.setItem(
-      'ganache',
-      JSON.stringify(selectedAccount.address.toString())
-    );
-    this.props.updateAccounts(
-      this.props.context.web3,
-      this.props.context.provider,
-      this.props.context.tokenContract
-    );
   }
 
   componentWillUnmount() {
@@ -46,13 +34,7 @@ class App extends Component {
           render={({online}) =>
             online ||
             this.props.context.provider === Web3Providers.LOCALHOST ? (
-              <MainRouter
-                accounts={this.props.accounts}
-                selectedAccount={this.props.selectedAccount}
-                changeAccount={account => {
-                  this.changeAccount(account);
-                }}
-              />
+              <MainRouter />
             ) : (
               <NoConnection />
             )

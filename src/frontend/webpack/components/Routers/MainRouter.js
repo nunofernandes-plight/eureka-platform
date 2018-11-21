@@ -117,9 +117,6 @@ class MainRouter extends Component {
                           />
                           <DashboardRouter
                             base={'/app'}
-                            updateUser={() => {
-                              this.authenticate();
-                            }}
                             action={item => this.action(item)}
                           />
                         </DashBoardGuard>
@@ -127,16 +124,22 @@ class MainRouter extends Component {
                     )}
                   />
 
-                  <Route path="/signup" exact render={() => <SignUp />} />
+                  <Route
+                    path="/signup"
+                    exact
+                    render={() => (
+                      <LoginGuard>
+                        <SignUp />
+                      </LoginGuard>
+                    )}
+                  />
                   <Route
                     path="/login"
                     exact
                     render={() => (
-                      <div>
-                        <LoginGuard>
-                          <Login />
-                        </LoginGuard>
-                      </div>
+                      <LoginGuard>
+                        <Login />
+                      </LoginGuard>
                     )}
                   />
                   {/*
