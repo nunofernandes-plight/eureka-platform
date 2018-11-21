@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {Switch, Route} from 'react-router';
 import {BrowserRouter} from 'react-router-dom';
 import WelcomePage from '../../views/WelcomePage';
-import {Header} from '../Header';
+import {Header} from '../../views/Header';
 import Login from '../Login';
 import MetaMaskGuide from '../../views/MetaMaskGuide';
 import {getDomain} from '../../../../helpers/getDomain.mjs';
