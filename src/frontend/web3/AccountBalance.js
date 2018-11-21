@@ -6,6 +6,10 @@ import Web3Providers from './Web3Providers.js';
 import Select from 'react-select';
 import {Balance} from '../webpack/views/Balance.js';
 import withWeb3 from '../webpack/contexts/WithWeb3.js';
+import {withRouter} from 'react-router-dom';
+import connect from 'react-redux/es/connect/connect.js';
+import {fetchUserData} from '../webpack/reducers/user.js';
+import {updateAccounts} from '../webpack/reducers/account.js';
 
 const Parent = styled.div`
   display: flex;
@@ -44,10 +48,15 @@ const Title = styled.h4`
 
 class AccountBalance extends React.Component {
   handleChange = selectedAccount => {
-    let account = {};
-    account.address = selectedAccount.label;
-    account.balance = selectedAccount.value;
-    this.props.changeAccount(account);
+    localStorage.setItem(
+      'ganache',
+      JSON.stringify(selectedAccount.label.toString())
+    );
+    this.props.updateAccounts(
+      this.props.context.web3,
+      this.props.context.provider,
+      this.props.context.tokenContract
+    );
   };
 
   renderGanacheAccounts() {
@@ -132,7 +141,8 @@ class AccountBalance extends React.Component {
     return (
       //  Either Metamask (no in-app addresses switch possible) or Ganache (react select for address selection)
       <Parent>
-        {this.props.accounts && this.props.context.provider === Web3Providers.META_MASK
+        {this.props.accounts &&
+        this.props.context.provider === Web3Providers.META_MASK
           ? this.renderMetaMaskAccount()
           : this.renderGanacheAccounts()}
       </Parent>
@@ -140,4 +150,18 @@ class AccountBalance extends React.Component {
   }
 }
 
-export default withWeb3(AccountBalance);
+export default withWeb3(
+  connect(
+    state => ({
+      selectedAccount: state.accountsData.selectedAccount,
+      accounts: state.accountsData.accounts
+    }),
+    dispatch => {
+      return {
+        updateAccounts: (web3, provider, tokenContract) => {
+          dispatch(updateAccounts(web3, provider, tokenContract));
+        }
+      };
+    }
+  )(AccountBalance)
+);
