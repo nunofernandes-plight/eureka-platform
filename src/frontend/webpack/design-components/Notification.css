@@ -32,11 +32,12 @@
 }
 
 .Toastify__toast-container--top-center {
-  left: 54.5%;
+  left: 50%;
 }
 
 .Toastify__toast-container {
   word-break: break-word;
+  width: 480px;
 }
 
 .Toastify__close-button,

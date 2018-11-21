@@ -86,17 +86,13 @@ class EditorArticles extends React.Component {
         gas: gasAmount
       })
       .on('transactionHash', tx => {
-        console.log(tx);
+        this.props.fetchUnassignedSubmissions(this.state.page);
         toast(ARTICLE_ASSIGNED_TX(tx), {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 20000,
           className: '__ALERT_SUCCESS',
           progressClassName: '__BAR'
         });
-        /* this.setState({
-          tx,
-          showTxModal: true
-        });*/
       })
       .on('receipt', receipt => {
         console.log(
@@ -117,37 +113,16 @@ class EditorArticles extends React.Component {
 
   renderModals() {
     return (
-      <div>
-        <Modal
-          type={'notification'}
-          toggle={() => {
-            this.setState({showModal: false});
-          }}
-          show={this.state.showModal}
-          title={TITLE_GENERAL_ERROR}
-        >
-          {this.props.errorMessage}
-        </Modal>
-
-        <Modal
-          action={'GOT IT'}
-          callback={() => {
-            this.setState({showTxModal: false});
-            this.props.history.push(`/app/editor/signoff`);
-          }}
-          noClose
-          show={this.state.showTxModal}
-          title={'Your article has been successfully submitted!'}
-        >
-          Dear editor, your request for assigning yourself to this article
-          submission process has successfully triggered our Smart Contract. If
-          you are interested, you can track the Blockchain approval process at
-          the following link: <br />
-          <a href={+'tx/' + this.state.tx} target={'_blank'}>
-            {this.state.tx}{' '}
-          </a>
-        </Modal>
-      </div>
+      <Modal
+        type={'notification'}
+        toggle={() => {
+          this.setState({showModal: false});
+        }}
+        show={this.state.showModal}
+        title={TITLE_GENERAL_ERROR}
+      >
+        {this.props.errorMessage}
+      </Modal>
     );
   }
 

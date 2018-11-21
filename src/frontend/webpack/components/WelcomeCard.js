@@ -152,7 +152,7 @@ class Cards extends Component {
             </CardDescription>
           </Card>
           <Card key="back" onMouseLeave={() => this.flipCard(4)}>
-            <CardTitle>Our Jorunal</CardTitle>
+            <CardTitle>Our Journal</CardTitle>
             <CardFigureBack>
               <Icon icon="read" width={30} height={30} />
             </CardFigureBack>
