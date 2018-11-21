@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {
   __ALERT_DANGER,
+  __ALERT_ERROR,
   __FIFTH,
   __GRAY_100,
   getScale
@@ -29,14 +30,13 @@ const Container = styled.div`
   width: 100%;
   min-height: 350px;
   background: ${__GRAY_100};
-  z-index: ${props => (props.onHover ? -1 : 1)};
-  opacity: ${props => (props.onHover ? 0.25 : 1)};
 `;
 
 const FigureSection = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
 `;
 
 const Figure = styled.img`
@@ -117,9 +117,6 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: ${props => (props.onHover ? 1 : -1)};
-  opacity: ${props => (props.onHover ? 1 : 0)};
-  visibility: ${props => (props.onHover ? 'visible' : 'hidden')};
   transition: 0.3s ease-in-out;
   flex-direction: column;
 `;
@@ -134,6 +131,44 @@ const ReadButton = styled.button`
 const Button = styled.button`
   margin: 5px 0;
 `;
+
+const FancyButtonContainer = styled.div`
+  position: absolute;
+  height: 100%;
+`;
+const FancyButton = styled.div`
+  &:hover {
+    font-size: 14.3px;
+  }
+  position: relative;
+  top: 10%;
+  background: #f75176;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-left: -2rem;
+  visibility: ${props => (props.onHover ? 'visible' : 'hidden')};
+  transform: ${props =>
+    props.onHover ? 'translateX(2rem)' : 'translateX(0rem)'};
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 0.625rem 1rem;
+`;
+
+const MoreButton = styled(FancyButton)`
+  &:hover {
+    font-size: 12.3px;
+  }
+  background: ${__FIFTH};
+  top: 51%;
+  font-size: 12px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0;
+`;
+
 const ArticleCard = ({article, ...otherProps}) => {
   return (
     <Parent
@@ -144,14 +179,7 @@ const ArticleCard = ({article, ...otherProps}) => {
         otherProps.onMouseLeave(article);
       }}
     >
-      <ButtonContainer onHover={otherProps.onHover}>
-        <Button
-          onClick={() => {
-            otherProps.action(article.scSubmissionID, article);
-          }}
-        >
-          {otherProps.buttonText}
-        </Button>
+      <ButtonContainer>
         {otherProps.button2Text ? (
           <Button
             onClick={() => {
@@ -163,16 +191,28 @@ const ArticleCard = ({article, ...otherProps}) => {
         ) : (
           <div />
         )}
-        <ReadButton
-          onClick={() => {
-            otherProps.history.push(`/app/preview/${article._id}`);
-          }}
-        >
-          More
-        </ReadButton>
       </ButtonContainer>
-      <Container onHover={otherProps.onHover}>
+      <Container>
         <FigureSection>
+          <FancyButtonContainer>
+            <FancyButton
+              onHover={otherProps.onHover}
+              onClick={() => {
+                otherProps.action(article.scSubmissionID, article);
+              }}
+            >
+              {otherProps.buttonText}
+            </FancyButton>
+
+            <MoreButton
+              onHover={otherProps.onHover}
+              onClick={() => {
+                otherProps.history.push(`/app/preview/${article._id}`);
+              }}
+            >
+              More{' '}
+            </MoreButton>
+          </FancyButtonContainer>
           {article.figure.length === 0 ? (
             <Figure
               src="/img/noPicture.png"
