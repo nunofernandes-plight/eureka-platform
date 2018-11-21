@@ -2,6 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import {Card} from '../../views/Card.js';
 import {getDomain} from '../../../../helpers/getDomain.mjs';
+import {withRouter} from 'react-router-dom';
+import connect from 'react-redux/es/connect/connect.js';
+import {fetchUserData} from '../../reducers/user.js';
 
 const Container = styled.div`
   display: flex;
@@ -21,15 +24,11 @@ const Box = styled.div`
 class BecomeReviewer extends React.Component {
   constructor() {
     super();
-    this.state = {
-      loading: false
-    };
   }
 
   componentDidMount() {}
 
   becomeReviewer() {
-    this.setState({loading: true});
     fetch(`${getDomain()}/api/users/becomeReviewer`, {
       method: 'POST',
       headers: {
@@ -41,7 +40,7 @@ class BecomeReviewer extends React.Component {
       .then(response => response.json())
       .then(response => {
         if (response.success) {
-          this.props.updateUser();
+          this.props.fetchUserData();
         } else {
           this.setState({
             errorMessage: response.error,
@@ -87,4 +86,13 @@ class BecomeReviewer extends React.Component {
   }
 }
 
-export default BecomeReviewer;
+export default connect(
+  state => ({
+    user: state.userData.data
+  }),
+  dispatch => ({
+    fetchUserData: () => {
+      dispatch(fetchUserData());
+    }
+  })
+)(BecomeReviewer);

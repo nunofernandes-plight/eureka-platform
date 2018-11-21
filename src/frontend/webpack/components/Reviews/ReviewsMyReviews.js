@@ -253,6 +253,9 @@ class ReviewsMyReviews extends React.Component {
 
 export default withWeb3(
   withRouter(
-    connect(state => ({network: state.networkData.network}))(ReviewsMyReviews)
+    connect(state => ({
+      network: state.networkData.network,
+      selectedAccount: state.accountsData.selectedAccount
+    }))(ReviewsMyReviews)
   )
 );

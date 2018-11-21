@@ -57,7 +57,6 @@ class DashboardRouter extends Component {
             render={() => (
               <MyHistory
                 base={`${this.props.base}/actions`}
-                selectedAccount={this.props.selectedAccount}
               />
             )}
           />
@@ -71,7 +70,6 @@ class DashboardRouter extends Component {
                   updateUser={() => {
                     this.props.updateUser();
                   }}
-                  selectedAccount={this.props.selectedAccount}
                 />
               );
             }}

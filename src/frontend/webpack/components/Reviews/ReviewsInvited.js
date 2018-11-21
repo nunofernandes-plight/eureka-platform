@@ -14,6 +14,11 @@ import {isGanache} from '../../../../helpers/isGanache.mjs';
 import {acceptReviewInvitation} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 import withWeb3 from '../../contexts/WithWeb3.js';
+import connect from 'react-redux/es/connect/connect.js';
+import {updateNetwork} from '../../reducers/network.js';
+import {updateMetaMask} from '../../reducers/metamask.js';
+import {updateAccounts} from '../../reducers/account.js';
+import {fetchUnassignedSubmissions} from '../../reducers/editor-methods.js';
 
 const Container = styled.div`
   display: flex;
@@ -52,7 +57,6 @@ class ReviewsInvited extends React.Component {
       loading: false,
       articleOnHover: null,
       errorMessage: false,
-
       showTxModal: false,
       tx: null
     };
@@ -90,7 +94,10 @@ class ReviewsInvited extends React.Component {
       });
     else gasAmount = 80000000;
 
-    acceptReviewInvitation(this.props.context.platformContract, article.articleHash)
+    acceptReviewInvitation(
+      this.props.context.platformContract,
+      article.articleHash
+    )
       .send({
         from: this.props.selectedAccount.address,
         gas: gasAmount
@@ -143,10 +150,7 @@ class ReviewsInvited extends React.Component {
           successfully triggered our Smart Contract. If you are interested, you
           can track the Blockchain approval process at the following link:{' '}
           <br />
-          <a
-            href={"" + 'tx/' + this.state.tx}
-            target={'_blank'}
-          >
+          <a href={'' + 'tx/' + this.state.tx} target={'_blank'}>
             {this.state.tx}{' '}
           </a>
         </Modal>
@@ -209,4 +213,10 @@ class ReviewsInvited extends React.Component {
   }
 }
 
-export default withWeb3(withRouter(ReviewsInvited));
+export default withWeb3(
+  withRouter(
+    connect(state => ({
+      selectedAccount: state.accountsData.selectedAccount
+    }))(ReviewsInvited)
+  )
+);

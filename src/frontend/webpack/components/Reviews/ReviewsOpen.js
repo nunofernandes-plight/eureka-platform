@@ -10,6 +10,8 @@ import {
   getArticlesOpenToReview
 } from './ReviewMethods.js';
 import {__THIRD} from '../../../helpers/colors.js';
+import withWeb3 from '../../contexts/WithWeb3.js';
+import connect from 'react-redux/es/connect/connect.js';
 
 const Container = styled.div`
   display: flex;
@@ -139,4 +141,10 @@ class ReviewsOpen extends React.Component {
   }
 }
 
-export default withRouter(ReviewsOpen);
+export default withWeb3(
+  withRouter(
+    connect(state => ({
+      selectedAccount: state.accountsData.selectedAccount
+    }))(ReviewsOpen)
+  )
+);

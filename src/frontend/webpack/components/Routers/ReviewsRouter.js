@@ -66,32 +66,21 @@ class ReviewsRouter extends Component {
                 exact
                 path={`${this.props.base}/invited`}
                 render={() => (
-                  <ReviewsInvited
-                    selectedAccount={this.props.selectedAccount}
-                    base={`${this.props.base}/invited`}
-                  />
+                  <ReviewsInvited base={`${this.props.base}/invited`} />
                 )}
               />
 
               <Route
                 exact
                 path={`${this.props.base}/open`}
-                render={() => (
-                  <ReviewsOpen
-                    selectedAccount={this.props.selectedAccount}
-                    base={`${this.props.base}/open`}
-                  />
-                )}
+                render={() => <ReviewsOpen base={`${this.props.base}/open`} />}
               />
 
               <Route
                 exact
                 path={`${this.props.base}/me`}
                 render={() => (
-                  <ReviewsMyReviews
-                    selectedAccount={this.props.selectedAccount}
-                    base={`${this.props.base}/me`}
-                  />
+                  <ReviewsMyReviews base={`${this.props.base}/me`} />
                 )}
               />
 
@@ -105,12 +94,7 @@ class ReviewsRouter extends Component {
             </CardContainer>
           </Container>
         ) : (
-          <BecomeReviewer
-            user={this.props.user}
-            updateUser={() => {
-              this.props.updateUser();
-            }}
-          />
+          <BecomeReviewer />
         )}
       </Parent>
     );
