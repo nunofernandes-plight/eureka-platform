@@ -26,6 +26,7 @@ import {getReviewHash} from '../../../../helpers/getHexAndHash.mjs';
 import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
 import EurekaRotateSpinner from '../../views/spinners/EurekaRotateSpinner.js';
 import withWeb3 from '../../contexts/WithWeb3.js';
+import connect from 'react-redux/es/connect/connect.js';
 
 const Container = styled.div`
   display: flex;
@@ -417,4 +418,10 @@ class ReviewsWriter extends React.Component {
   }
 }
 
-export default withWeb3(withRouter(ReviewsWriter));
+export default withWeb3(
+  withRouter(
+    connect(state => ({
+      selectedAccount: state.accountsData.selectedAccount
+    }))(ReviewsWriter)
+  )
+);
