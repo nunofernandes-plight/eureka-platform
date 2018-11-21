@@ -10,11 +10,7 @@ import {updateMetaMask} from './webpack/reducers/metamask.js';
 import {updateAccounts} from './webpack/reducers/account.js';
 
 class App extends Component {
-  constructor() {
-    super();
-  }
-
-  async componentDidMount() {
+  componentDidMount() {
     const web3 = this.props.context.web3;
     const provider = this.props.context.provider;
     const tokenContract = this.props.context.tokenContract;
@@ -39,20 +35,11 @@ class App extends Component {
     );
   }
 
-  async updateAccount() {
-    this.props.updateAccounts(
-      this.props.context.web3,
-      this.props.context.provider,
-      this.props.context.tokenContract
-    );
-  }
-
   componentWillUnmount() {
     clearInterval(this.interval);
   }
 
   render() {
-
     return (
       <div>
         <Detector
@@ -64,9 +51,6 @@ class App extends Component {
                 selectedAccount={this.props.selectedAccount}
                 changeAccount={account => {
                   this.changeAccount(account);
-                }}
-                updateAccount={() => {
-                  this.updateAccount();
                 }}
               />
             ) : (

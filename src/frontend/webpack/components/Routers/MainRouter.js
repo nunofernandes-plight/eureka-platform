@@ -22,7 +22,6 @@ import withWeb3 from '../../contexts/WithWeb3.js';
 import {connect} from 'react-redux';
 import {fetchUserData} from '../../reducers/user.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
-import {__FOURTH, __THIRD} from '../../../helpers/colors.js';
 
 const PaddingLeft = styled.div`
   padding-left: ${props =>
@@ -128,46 +127,22 @@ class MainRouter extends Component {
                     )}
                   />
 
-                  <Route
-                    path="/signup"
-                    exact
-                    render={() => (
-                      <SignUp
-                        accounts={this.props.accounts}
-                        selectedAccount={this.props.selectedAccount}
-                        changeAccount={selectedAccount => {
-                          this.props.changeAccount(selectedAccount);
-                        }}
-                        authenticate={() => {
-                          this.authenticate();
-                        }}
-                      />
-                    )}
-                  />
+                  <Route path="/signup" exact render={() => <SignUp />} />
                   <Route
                     path="/login"
                     exact
                     render={() => (
                       <div>
                         <LoginGuard>
-                          <Login
-                            accounts={this.props.accounts}
-                            selectedAccount={this.props.selectedAccount}
-                            changeAccount={selectedAccount => {
-                              this.props.changeAccount(selectedAccount);
-                            }}
-                            authenticate={() => {
-                              this.authenticate();
-                            }}
-                          />
+                          <Login />
                         </LoginGuard>
                       </div>
                     )}
                   />
                   {/*
-            Startsite always needs to be at the bottom!
-            It otherwise matches sub routes
-          */}
+                    Startsite always needs to be at the bottom!
+                    It otherwise matches sub routes
+                  */}
                   <Route path="/" exact render={() => <WelcomePage />} />
                   <Route
                     render={() => (

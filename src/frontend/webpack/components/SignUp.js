@@ -24,7 +24,8 @@ import TopAlertContainer from '../views/TopAlertContainer.js';
 import {getRandomAvatar} from '../../helpers/getRandomAvatar.mjs';
 import withWeb3 from '../contexts/WithWeb3.js';
 import {connect} from 'react-redux';
-import {fetchUnassignedSubmissions} from '../reducers/editor-methods.js';
+import {fetchUserData} from '../reducers/user.js';
+import {TITLE_GENERAL_ERROR} from '../constants/ModalErrors.js';
 
 class SignUp extends Component {
   constructor() {
@@ -95,8 +96,7 @@ class SignUp extends Component {
         .then(response => response.json())
         .then(response => {
           if (response.success) {
-            this.props.history.push('/app');
-            this.props.authenticate();
+            this.props.fetchUserData();
           } else {
             this.setState({
               errorMessage: response.error,
@@ -179,7 +179,7 @@ class SignUp extends Component {
             this.setState({errorMessage: null});
           }}
           show={this.state.errorMessage}
-          title={'You got the following error'}
+          title={TITLE_GENERAL_ERROR}
         >
           {this.state.errorMessage}
         </Modal>
@@ -219,19 +219,13 @@ class SignUp extends Component {
 
                     {this.props.accounts ? (
                       <LoginRow>
-                        <AccountBalance
-                          accounts={this.props.accounts}
-                          selectedAccount={this.props.selectedAccount}
-                          changeAccount={selectedAccount => {
-                            this.props.changeAccount(selectedAccount);
-                          }}
-                        />
+                        <AccountBalance />
                       </LoginRow>
                     ) : null}
                     <ButtonRow>
                       <Button
                         onClick={() => {
-                          this.register(this.props);
+                          this.register();
                         }}
                       >
                         Register with Metamask{' '}
@@ -257,8 +251,19 @@ class SignUp extends Component {
 
 export default withWeb3(
   withRouter(
-    connect(state => ({
-      metaMaskStatus: state.metamaskData.status
-    }))(SignUp)
+    connect(
+      state => ({
+        metaMaskStatus: state.metamaskData.status,
+        selectedAccount: state.accountsData.selectedAccount,
+        accounts: state.accountsData.accounts
+      }),
+      dispatch => {
+        return {
+          fetchUserData: () => {
+            dispatch(fetchUserData());
+          }
+        };
+      }
+    )(SignUp)
   )
 );

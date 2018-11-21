@@ -182,13 +182,7 @@ class Login extends Component {
 
                     {this.props.accounts ? (
                       <LoginRow>
-                        <AccountBalance
-                          accounts={this.props.accounts}
-                          selectedAccount={this.props.selectedAccount}
-                          changeAccount={selectedAccount => {
-                            this.props.changeAccount(selectedAccount);
-                          }}
-                        />
+                        <AccountBalance />
                       </LoginRow>
                     ) : null}
                     <ButtonRow>
@@ -221,7 +215,11 @@ class Login extends Component {
 export default withWeb3(
   withWeb3(
     connect(
-      state => ({metaMaskStatus: state.metamaskData.status}),
+      state => ({
+        metaMaskStatus: state.metamaskData.status,
+        selectedAccount: state.accountsData.selectedAccount,
+        accounts: state.accountsData.accounts
+      }),
       dispatch => {
         return {
           fetchUserData: () => {
