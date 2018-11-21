@@ -35,7 +35,6 @@ import Roles from '../../../backend/schema/roles-enum.mjs';
 import {isGanache} from '../../../helpers/isGanache.mjs';
 import withWeb3 from '../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
-import {fetchUnassignedSubmissions} from '../reducers/editor-methods.js';
 
 const Parent = styled.div`
   display: flex;

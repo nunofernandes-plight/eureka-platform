@@ -1,5 +1,4 @@
 import React from 'react';
-import {fetchUserData} from '../reducers/user.js';
 
 /*const mapDispatchToProps = dispatch => ({
   fetchNetwork: () => {
@@ -21,7 +20,7 @@ export const ARTICLE_ASSIGNED_TX = ({closeToast, tx}) => {
       <br />
       Your request will be processed in the next minutes⏳. If you may be
       interested in tracking the transaction you can click
-      <a href="#" onClick={closeToast} style={{marginLeft: 2}}>
+      <a href="tbd" onClick={closeToast} style={{marginLeft: 2}}>
         here.
       </a>
     </div>

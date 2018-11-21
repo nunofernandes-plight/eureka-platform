@@ -2,16 +2,13 @@ import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import AuthorLookup from '../../AuthorLookup.js';
 import {
-  __FIFTH,
   __GRAY_500,
-  __GRAY_600,
   __GRAY_700
 } from '../../../../helpers/colors.js';
 import Icon from '../../../views/icons/Icon.js';
 import AnnotationEditor from './AnnotationEditor.js';
 import moment from 'moment';
 import AnnotationMenu from './AnnotationMenu.js';
-import AnimatedTooltip from '../../../design-components/AnimatedTooltip.js';
 
 const Container = styled.div`
   padding: 10px;

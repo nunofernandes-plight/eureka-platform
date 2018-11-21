@@ -1,18 +1,12 @@
 import React, {Fragment} from 'react';
 import styled from 'styled-components';
-import {renderField} from '../TextEditor/DocumentRenderer.mjs';
 import {PreviewArticleTitleByField} from './PreviewArticleTitleByField.js';
 import {
   FieldContainer,
   ReviewsWriterFieldContainer
 } from '../Reviews/Annotations/ReviewsWriterField.js';
 import ReviewsWriterContainer from '../Reviews/Annotations/WriterContainer.js';
-import {tokenizeSentence} from '../Reviews/Annotations/SentenceTokenizer.js';
-import GridSpinner from '../../views/spinners/GridSpinner.js';
-import {CommentIcon} from '../Reviews/Annotations/CommentIcon.js';
-import Icon from '../../views/icons/Icon.js';
 import Sentences from './Sentences.js';
-import Annotation from '../Reviews/Annotations/Annotation.js';
 
 const Container = styled.div``;
 

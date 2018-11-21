@@ -11,8 +11,7 @@ import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 import withWeb3 from '../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
-import {fetchUserData} from '../../reducers/user.js';
-import {fetchUnassignedSubmissions} from '../../reducers/editor-methods.js';
+
 
 const Container = styled.div`
   display: flex;

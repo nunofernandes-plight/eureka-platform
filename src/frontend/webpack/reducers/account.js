@@ -1,5 +1,5 @@
-import {getAllAccounts, getNetwork} from '../../web3/Helpers.js';
-import {ACCOUNTS_SET, SET_NETWORK, SETTING_ACCOUNTS} from './types.js';
+import {getAllAccounts} from '../../web3/Helpers.js';
+import {ACCOUNTS_SET, SETTING_ACCOUNTS} from './types.js';
 import Web3Providers from '../../web3/Web3Providers.js';
 import {getBalanceOf} from '../../../smartcontracts/methods/web3-token-contract-methods.mjs';
 

@@ -1,8 +1,8 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Annotation from './Annotation.js';
 import Icon from '../../../views/icons/Icon.js';
-import {__GRAY_600, __GRAY_700} from '../../../../helpers/colors.js';
+import {__GRAY_700} from '../../../../helpers/colors.js';
 
 const Container = styled.div`
   position: absolute;

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import {Row} from '../../helpers/layout.js';
 import EurekaLogo from '../views/icons/EurekaLogo.js';

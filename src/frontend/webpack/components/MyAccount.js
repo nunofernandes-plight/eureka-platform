@@ -7,9 +7,6 @@ import Icon from '../views/icons/Icon.js';
 import CircleSpinner from '../views/spinners/CircleSpinner.js';
 import connect from 'react-redux/es/connect/connect.js';
 import withWeb3 from '../contexts/WithWeb3.js';
-import GridSpinner from '../views/spinners/GridSpinner.js';
-import {fetchUserData} from '../reducers/user.js';
-import {updateAccounts} from '../reducers/account.js';
 
 const Container = styled.div`
   display: flex;

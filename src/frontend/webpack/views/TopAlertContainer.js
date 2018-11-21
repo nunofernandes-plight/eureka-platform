@@ -8,7 +8,6 @@ import {
   AlertContainer
 } from './SharedForms.js';
 import EurekaLogo from './icons/EurekaLogo.js';
-import withWeb3 from '../contexts/WithWeb3.js';
 
 const TopAlertContainer = ({provider}) => {
   return (

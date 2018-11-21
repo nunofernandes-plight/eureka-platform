@@ -6,9 +6,7 @@ import Web3Providers from './Web3Providers.js';
 import Select from 'react-select';
 import {Balance} from '../webpack/views/Balance.js';
 import withWeb3 from '../webpack/contexts/WithWeb3.js';
-import {withRouter} from 'react-router-dom';
 import connect from 'react-redux/es/connect/connect.js';
-import {fetchUserData} from '../webpack/reducers/user.js';
 import {updateAccounts} from '../webpack/reducers/account.js';
 
 const Parent = styled.div`

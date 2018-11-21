@@ -8,7 +8,6 @@ import {
   __ALERT_SUCCESS
 } from '../../helpers/colors.js';
 import {renderTimestamp} from '../../helpers/timestampRenderer.js';
-import {MEDIUM_DEVICES} from '../../helpers/mobile.js';
 import {renderField} from '../components/TextEditor/DocumentRenderer.mjs';
 import ARTICLE_VERSION_STATE from '../../../backend/schema/article-version-state-enum.mjs';
 import Icon from './icons/Icon.js';

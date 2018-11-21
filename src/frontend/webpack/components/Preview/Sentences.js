@@ -1,6 +1,5 @@
 import React, {Fragment} from 'react';
 import styled from 'styled-components';
-import {FieldContainer} from '../Reviews/Annotations/ReviewsWriterField.js';
 import {CommentIcon} from '../Reviews/Annotations/CommentIcon.js';
 import {tokenizeSentence} from '../Reviews/Annotations/SentenceTokenizer.js';
 
@@ -51,8 +50,6 @@ class Sentences extends React.Component {
       if (i !== this.state.sentences.length - 1) {
         if (sentence.offsetTop === this.state.sentences[i + 1].offsetTop)
           marginTop = -12;
-        {
-        }
       }
       return (
         <Fragment key={i}>

@@ -14,7 +14,6 @@ import {
   addCommunityReview,
   addEditorApprovedReview
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
-import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 import {
   addAnnotation,
   deleteAnnotation,

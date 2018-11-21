@@ -1,10 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__GRAY_400, __GRAY_600, __THIRD} from '../../../../helpers/colors.js';
+import {__GRAY_400} from '../../../../helpers/colors.js';
 import Annotations from './Annotations.js';
-import Annotation from './Annotation.js';
 import {withRouter} from 'react-router';
-import Icon from '../../../views/icons/Icon.js';
 import AnnotationGroup from './AnnotationGroup.js';
 
 const Container = styled.div`

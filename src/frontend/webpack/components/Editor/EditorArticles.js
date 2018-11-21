@@ -7,7 +7,6 @@ import Article from '../../views/Article.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {assignForSubmissionProcess} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {withRouter} from 'react-router-dom';
-import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import Pagination from './Pagination.js';
 import withWeb3 from '../../contexts/WithWeb3.js';

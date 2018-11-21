@@ -5,7 +5,6 @@ import {Card} from '../views/Card.js';
 import {getDomain} from '../../../helpers/getDomain.mjs';
 import Modal from '../design-components/Modal.js';
 import SubmittedTable from '../views/SubmittedTable.js';
-import {getEtherscanLink} from '../../../helpers/getEtherscanLink.js';
 
 const Container = styled.div`
   display: flex;

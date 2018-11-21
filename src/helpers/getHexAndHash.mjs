@@ -9,7 +9,7 @@ export const getArticleHashFromDocument = document => {
   const doc = new Document(document);
   let articleHash = '';
 
-  doc.getAllFields().map(field => {
+  doc.getAllFields().forEach(field => {
     if (doc[field]) {
       const value = renderField(doc, field);
       articleHash += hashField(value);
@@ -43,7 +43,7 @@ export const getArticleHexFromDocument = (web3, article) => {
 export const getReviewHash = (review, annotations) => {
   let reviewHash = hashField(review.reviewText);
 
-  annotations.map(annotation => {
+  annotations.forEach(annotation => {
     reviewHash += hashField(annotation.field);
     reviewHash += hashField(annotation.sentenceId);
     reviewHash += hashField(annotation.text);

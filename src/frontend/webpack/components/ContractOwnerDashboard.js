@@ -15,7 +15,6 @@ import {isGanache} from '../../../helpers/isGanache.mjs';
 import withWeb3 from '../contexts/WithWeb3.js';
 import {TITLE_GENERAL_ERROR} from '../constants/ModalErrors.js';
 import connect from 'react-redux/es/connect/connect.js';
-import {fetchUserData} from '../reducers/user.js';
 
 const Container = styled.div`
   display: flex;

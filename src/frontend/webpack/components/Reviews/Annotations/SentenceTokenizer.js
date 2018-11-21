@@ -1,4 +1,3 @@
-import React from 'react';
 import tokenizer from 'sbd';
 
 export const tokenizeSentence = paragraph => {

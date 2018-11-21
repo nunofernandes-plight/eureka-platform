@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import PreviewArticleFigure from './PreviewArticleFigure.js';
 import PreviewArticleAbstract from './PreviewArticleAbstract.js';
 import PreviewArticleTitle from './PreviewArticleTitle.js';
-import ReviewsWriterContainer from '../Reviews/Annotations/WriterContainer.js';
 
 const Container = styled.div`
   display: flex;

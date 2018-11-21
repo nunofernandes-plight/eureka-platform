@@ -12,8 +12,6 @@ import {
   addCommunityReview,
   addEditorApprovedReview
 } from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
-import {getEtherscanLink} from '../../../../helpers/getEtherscanLink.js';
-import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
 import withWeb3 from '../../contexts/WithWeb3.js';
 import {connect} from 'react-redux';
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, Redirect, withRouter} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import {Row} from '../../helpers/layout.js';
 import MetaMaskLogo from '../views/icons/MetaMaskLogo.js';
 import {signPrivateKey} from '../../web3/Helpers.js';
