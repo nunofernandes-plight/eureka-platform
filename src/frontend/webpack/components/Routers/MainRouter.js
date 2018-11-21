@@ -121,11 +121,7 @@ class MainRouter extends Component {
                             updateUser={() => {
                               this.authenticate();
                             }}
-                            selectedAccount={this.props.selectedAccount}
                             action={item => this.action(item)}
-                            updateAccount={() => {
-                              this.props.updateAccount();
-                            }}
                           />
                         </DashBoardGuard>
                       </PaddingLeft>
