@@ -65,7 +65,8 @@ export default {
         await articleSubmissionService.updateSubmissionStartByArticleHash(
           event.returnValues.submissionId,
           event.returnValues.articleHash,
-          event.returnValues.articleURL
+          event.returnValues.articleURL,
+          event.returnValues.stateTimestamp,
         );
 
         const additionalInfo = {

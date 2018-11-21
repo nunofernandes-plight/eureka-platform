@@ -10,6 +10,9 @@ export const articleVersionSchema = mongoose.Schema(
       type: String,
       required: true
     },
+    stateTimestamp: {
+      type: String,
+    },
     document: {},
     timestamp: {
       type: Date

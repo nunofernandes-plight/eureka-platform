@@ -138,7 +138,8 @@ export default {
   updateSubmissionStartByArticleHash: async (
     scSubmissionId,
     articleHash,
-    articleUrl
+    articleUrl,
+    stateTimestamp
   ) => {
     let articleVersion = await ArticleVersion.findOne({
       articleHash: articleHash
@@ -156,6 +157,7 @@ export default {
     }
 
     articleVersion.articleVersionState = ArticleVersionState.SUBMITTED;
+    articleVersion.stateTimestamp = stateTimestamp;
     await articleVersion.save();
 
     let articleSubmission = await ArticleSubmission.findOne({
