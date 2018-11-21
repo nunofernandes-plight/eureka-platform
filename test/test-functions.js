@@ -132,33 +132,19 @@ export default {
     t.is(articleVersion.articleVersionState, ArticleVersionState.DRAFT);
 
     // Send articleHash to DB
-    await articleVersionService.finishDraftById(
-      user.ethereumAddress,
-      articleVersion._id,
-      articleHashHex
+    await articleVersionService.finishDraftById(user.ethereumAddress, articleVersion._id, articleHashHex
     );
 
-    articleVersion = await articleVersionService.getArticleVersionById(
-      user.ethereumAddress,
-      articleVersion._id
+    articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id
     );
-    t.is(
-      articleVersion.articleVersionState,
-      ArticleVersionState.FINISHED_DRAFT
+    t.is(articleVersion.articleVersionState, ArticleVersionState.FINISHED_DRAFT
     );
     t.is(articleVersion.articleHash, articleHashHex);
 
 
     // Submit articleHash on SC
-    await submitArticle(
-      eurekaTokenContract,
-      eurekaPlatformContract.options.address,
-      5000,
-      articleDataInHex
-    ).send({
-      from: user.ethereumAddress,
-      gas: 80000000
-    });
+    await submitArticle(eurekaTokenContract, eurekaPlatformContract.options.address, 5000, articleDataInHex
+    ).send({from: user.ethereumAddress, gas: 80000000});
 
     articleVersion = await articleVersionService.getArticleVersionById(
       user.ethereumAddress,
@@ -167,9 +153,7 @@ export default {
     let counter = 0;
     while (articleVersion.articleVersionState === ArticleVersionState.FINISHED_DRAFT && counter < 5) {
       sleepSync(5000);
-      articleVersion = await articleVersionService.getArticleVersionById(
-        user.ethereumAddress,
-        articleVersion._id
+      articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id
       );
       counter++;
     }
