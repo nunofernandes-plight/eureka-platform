@@ -1,11 +1,8 @@
 import React, {Component} from 'react';
 import {Detector} from 'react-detect-offline';
-import {getBalanceOf} from '../smartcontracts/methods/web3-token-contract-methods.mjs';
 import MainRouter from './webpack/components/Routers/MainRouter.js';
 import Web3Providers from './web3/Web3Providers.js';
 import NoConnection from './webpack/views/NoConnection.js';
-import {getMetaMaskStatus} from './web3/IsLoggedIn.js';
-import {getAllAccounts} from './web3/Helpers.js';
 import withWeb3 from './webpack/contexts/WithWeb3.js';
 import {connect} from 'react-redux';
 import {updateNetwork} from './webpack/reducers/network.js';
