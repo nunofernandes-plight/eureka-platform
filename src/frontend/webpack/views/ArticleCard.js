@@ -30,7 +30,6 @@ const FigureSection = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  position: relative;
 `;
 
 const Figure = styled.img`
@@ -108,19 +107,8 @@ const Keyword = styled.div`
   border-radius: 5px;
 `;
 
-const ButtonContainer = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 93%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: 0.3s ease-in-out;
-  flex-direction: column;
-`;
-
-const Button = styled.button`
-  margin: 5px 0;
+const FigureContainer = styled.div`
+  position: relative;
 `;
 
 const FancyButtonContainer = styled.div`
@@ -161,39 +149,41 @@ const ArticleCard = ({article, ...otherProps}) => {
     >
       <Container>
         <FigureSection>
-          <FancyButtonContainer>
-            <FancyButton
-              background={'#f75176'}
-              top={10}
-              onHover={otherProps.onHover}
-              onClick={() => {
-                otherProps.action(article.scSubmissionID, article);
-              }}
-            >
-              {otherProps.buttonText}
-            </FancyButton>
-            {otherProps.button2Text ? (
+          <FigureContainer>
+            <FancyButtonContainer>
               <FancyButton
-                background={'#ff884e'}
-                top={17.5}
+                background={'#f75176'}
+                top={10}
+                onHover={otherProps.onHover}
                 onClick={() => {
-                  otherProps.action2(article.scSubmissionID, article);
+                  otherProps.action(article.scSubmissionID, article);
                 }}
               >
-                {otherProps.button2Text}
+                {otherProps.buttonText}
               </FancyButton>
-            ) : null}
-          </FancyButtonContainer>
-          {article.figure.length === 0 ? (
-            <Figure
-              src="/img/noPicture.png"
-              width={170}
-              height={'auto'}
-              style={{alignSelf: 'center', marginTop: 15}}
-            />
-          ) : (
-            <Figure src={getFigureLink(article.figure[0].url, 375, 250)} />
-          )}
+              {otherProps.button2Text ? (
+                <FancyButton
+                  background={'#ff884e'}
+                  top={17.5}
+                  onClick={() => {
+                    otherProps.action2(article.scSubmissionID, article);
+                  }}
+                >
+                  {otherProps.button2Text}
+                </FancyButton>
+              ) : null}
+            </FancyButtonContainer>
+            {article.figure.length === 0 ? (
+              <Figure
+                src="/img/noPicture.png"
+                width={170}
+                height={'auto'}
+                style={{alignSelf: 'center', marginTop: 15}}
+              />
+            ) : (
+              <Figure src={getFigureLink(article.figure[0].url, 375, 250)} />
+            )}
+          </FigureContainer>
 
           <Authors>
             <AuthorLookup
