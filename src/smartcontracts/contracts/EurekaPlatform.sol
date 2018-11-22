@@ -356,7 +356,7 @@ contract EurekaPlatform {
 
         submission.editor = _newEditor;
         submission.stateTimestamp = block.timestamp;
-        emit ChangedEditorFromSubmission(_submissionId, _newEditor);
+        emit ChangedEditorFromSubmission(_submissionId, _newEditor, submission.stateTimestamp);
     }
 
     event SanityIsOk(uint256 submissionId, bytes32 articleHash, uint256 stateTimestamp);
@@ -373,7 +373,7 @@ contract EurekaPlatform {
         emit SanityIsOk(articleVersions[_articleHash].submissionId, _articleHash, block.timestamp);
     }
 
-    event SanityIsNotOk(uint256 submissionId, bytes32 articleHash), uint256 stateTimestamp;
+    event SanityIsNotOk(uint256 submissionId, bytes32 articleHash, uint256 stateTimestamp);
 
     function sanityIsNotOk(bytes32 _articleHash) public {
 
@@ -535,7 +535,7 @@ contract EurekaPlatform {
         articleVersions[_articleHash].communityReviews.push(review.reviewer);
         review.reviewState = ReviewState.HANDED_IN;
         review.stateTimestamp = block.timestamp;
-        emit CommunityReviewIsAdded(_articleHash, block.timestamp, _reviewHash, review.reviewer, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2, block.timestamp);
+        emit CommunityReviewIsAdded(_articleHash, _reviewHash, review.reviewer, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2, block.timestamp);
     }
 
     event ReviewIsCorrected(bytes32 oldReviewHash, bytes32 articleHash, address reviewerAddress, bytes32 reviewHash, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2,  uint256 stateTimestamp);
