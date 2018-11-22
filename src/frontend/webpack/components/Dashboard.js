@@ -11,7 +11,7 @@ class Dashboard extends Component {
   render() {
     return (
       <Container>
-        <Card width={1000} title={'Your Dashboard'} />
+        <Card title={'Your Dashboard'} />
       </Container>
     );
   }
