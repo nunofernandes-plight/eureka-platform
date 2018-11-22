@@ -1,6 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__ALERT_DANGER, __GRAY_100, getScale} from '../../helpers/colors.js';
+import {
+  __ALERT_DANGER,
+  __ALERT_ERROR,
+  __ALERT_WARNING,
+  __GRAY_100,
+  getScale
+} from '../../helpers/colors.js';
 import chroma from 'chroma-js';
 import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
 import {LARGE_DEVICES} from '../../helpers/mobile.js';
@@ -152,7 +158,7 @@ const ArticleCard = ({article, ...otherProps}) => {
           <FigureContainer>
             <FancyButtonContainer>
               <FancyButton
-                background={'#f75176'}
+                background={__ALERT_ERROR}
                 top={10}
                 onHover={otherProps.onHover}
                 onClick={() => {
@@ -163,7 +169,7 @@ const ArticleCard = ({article, ...otherProps}) => {
               </FancyButton>
               {otherProps.button2Text ? (
                 <FancyButton
-                  background={'#ff884e'}
+                  background={__ALERT_WARNING}
                   top={17.5}
                   onClick={() => {
                     otherProps.action2(article.scSubmissionID, article);

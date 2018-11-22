@@ -50,7 +50,7 @@ const MetaMaskLabel = ({metaMaskStatus}) => {
   if (status === MetaMaskStatus.DETECTED_NO_LOGGED_IN) {
     return (
       <MetaMaskDetectedNoLoggedIn>
-        MetaMask detected but locked
+        MetaMask locked
         <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
       </MetaMaskDetectedNoLoggedIn>
     );
@@ -58,7 +58,7 @@ const MetaMaskLabel = ({metaMaskStatus}) => {
   if (status === MetaMaskStatus.NO_DETECTED) {
     return (
       <NoMetaMask>
-        No MetaMask detected{' '}
+        No MetaMask
         <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
       </NoMetaMask>
     );
