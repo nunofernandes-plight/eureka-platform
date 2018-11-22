@@ -28,7 +28,7 @@ export const ARTICLE_ASSIGNED_TX = ({closeToast, tx}) => {
       <br />
       Your request will be processed in the next minutes⏳. If you may be
       interested in tracking the transaction you can click
-      <MyLink nClick={closeToast} style={{marginLeft: 2}} to={'tdb'}>
+      <MyLink onClick={closeToast} style={{marginLeft: 2}} to={'tdb'}>
         <strong>here.</strong>
       </MyLink>
       <br />
