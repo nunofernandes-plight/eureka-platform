@@ -38,7 +38,7 @@
     "numbro": "^2.1.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "polished": "^1.9.3",
+    "polished": "^2.3.0",
     "query-string": "^6.1.0",
     "randomstring": "^1.1.5",
     "rc-tooltip": "^3.7.2",
