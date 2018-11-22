@@ -7,7 +7,6 @@ export const __FIFTH = '#5e72e4';
 // ALERT COLORS (for notifications and alert messages)
 export const __ALERT_ERROR = '#f75176';
 export const __ALERT_INFO = '#11cdef';
-export const __ALERT_PRIMARY = '#5e72e4';
 export const __ALERT_WARNING = '#ffbc50';
 export const __ALERT_DANGER = '#fda08b';
 export const __ALERT_SUCCESS = '#2dce89';
