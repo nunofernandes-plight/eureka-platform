@@ -4,9 +4,6 @@ import ArticleCard from './ArticleCard.js';
 const Article = ({article, ...otherProps}) => {
   return (
     <ArticleCard
-      action={(id, article) => {
-        otherProps.action(id, article);
-      }}
       buttonText={otherProps.buttonText}
       onHover={otherProps.onHover}
       onMouseEnter={obj => {
@@ -16,6 +13,9 @@ const Article = ({article, ...otherProps}) => {
         otherProps.onMouseLeave(obj);
       }}
       article={article}
+      action={(id, article) => {
+        otherProps.action(id, article);
+      }}
       action2={(id, article) => {
         otherProps.action2(id, article);
       }}

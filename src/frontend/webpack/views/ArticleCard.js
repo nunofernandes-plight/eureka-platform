@@ -50,12 +50,14 @@ const Title = styled.h2`
   margin: 0;
   letter-spacing: 1px;
   line-height: 1.3;
+  cursor: pointer;
 `;
 
 const TitleSection = styled.div`
   display: flex;
   flex-direction: column;
   padding: 1em;
+  cursor: pointer;
   margin-left: 1em;
 `;
 const getFigureLink = (url, width, height) => {
@@ -77,11 +79,13 @@ const Abstract = styled.div`
   font-size: 15px;
   line-height: 1.6;
   word-break: break-word;
+  cursor: pointer;
 `;
 
 const MyLabel = styled.label`
   font-size: 12px;
   font-weight: bold;
+  cursor: pointer;
   margin-top: ${props => (props.top ? props.top + 'px' : null)};
 `;
 const ReadMore = styled.a`
@@ -121,13 +125,6 @@ const ButtonContainer = styled.div`
   flex-direction: column;
 `;
 
-const ReadButton = styled.button`
-  color: white;
-  background: ${__FIFTH};
-  cursor: pointer;
-  padding: 12px 15px;
-`;
-
 const Button = styled.button`
   margin: 5px 0;
 `;
@@ -156,17 +153,6 @@ const FancyButton = styled.div`
   border-bottom-right-radius: 5px;
   border-top-right-radius: 5px;
   padding: 0.625rem 1rem;
-`;
-
-const MoreButton = styled(FancyButton)`
-  &:hover {
-    font-size: 12.3px;
-  }
-  background: ${__FIFTH};
-  top: 51%;
-  font-size: 12px;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0;
 `;
 
 const ArticleCard = ({article, ...otherProps}) => {
@@ -203,15 +189,6 @@ const ArticleCard = ({article, ...otherProps}) => {
             >
               {otherProps.buttonText}
             </FancyButton>
-
-            <MoreButton
-              onHover={otherProps.onHover}
-              onClick={() => {
-                otherProps.history.push(`/app/preview/${article._id}`);
-              }}
-            >
-              More{' '}
-            </MoreButton>
           </FancyButtonContainer>
           {article.figure.length === 0 ? (
             <Figure
@@ -234,7 +211,11 @@ const ArticleCard = ({article, ...otherProps}) => {
             />
           </Authors>
         </FigureSection>
-        <TitleSection>
+        <TitleSection
+          onClick={() => {
+            otherProps.history.push(`/app/preview/${article._id}`);
+          }}
+        >
           <MyLabel>Title</MyLabel>
           <Title>{renderField(article, 'title')}</Title>
 
