@@ -8,6 +8,7 @@ import Ball from './Ball.js';
 import UserDropDownMenu from './UserDropDownMenu.js';
 import {Items} from './UserDropDownItems.js';
 import connect from 'react-redux/es/connect/connect.js';
+import TxPool from '../components/TxPool/TxPool.js';
 
 export const Container = styled.div`
   min-height: 353px;
@@ -41,6 +42,7 @@ const DropDownMenuParent = styled.div`
 const Elements = styled.div`
   display: flex;
   margin-top: 12px;
+  align-items: center;
 `;
 
 class TopContainer extends React.Component {
@@ -61,6 +63,7 @@ class TopContainer extends React.Component {
       <Container>
         <Profile>
           <Elements>
+            <TxPool />
             <RenderNetwork />
             <MetaMaskLabel />
             <DropDownMenuParent
