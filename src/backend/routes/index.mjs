@@ -12,6 +12,7 @@ import articleVersionRoutes from './article-version-routes.mjs';
 import articleSubmissionRoutes from './article-submission-routes.mjs';
 import addressBook from './address-book-routes.mjs';
 import annotationRoutes from './annotation-routes.mjs'
+import frontendTransactionRoutes from './frontend-transaction-routes.mjs';
 
 const router = express.Router();
 
@@ -24,6 +25,7 @@ router.use('/logout', logoutRoutes);
 router.use('/register', registerRoutes);
 router.use('/users', userRoutes);
 router.use('/sctransactions', scTransactionRoutes);
+router.use('/frontendtransactions', frontendTransactionRoutes);
 router.use('/submissions', articleSubmissionRoutes);
 router.use('/articles/drafts', articleDraftRoutes);
 router.use('/articles', articleVersionRoutes);
