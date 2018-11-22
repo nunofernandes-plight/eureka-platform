@@ -1,7 +1,7 @@
 import FrontendTransaction from '../schema/frontend-transaction.mjs';
 import userService from './user-service.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
-import ScTransaction from '../schema/sc-transaction.mjs';
+import web3 from '../../helpers/web3Instance.mjs';
 
 export default {
   addTransaction: async (userAddress, transactionType, timestamp, txHash) => {
@@ -18,11 +18,29 @@ export default {
     return tx._id;
   },
   getAllTxs: async address => {
-    const tx = await FrontendTransaction.find({
+    const txs = await FrontendTransaction.find({
       ownerAddress: address
     });
-    if (!tx) errorThrower.noEntryFoundById(address);
-    return tx;
+    if (!txs) errorThrower.noEntryFoundById(address);
+
+    const txHash = txs[0].txHash;
+    await web3.eth
+      .getTransactionReceipt(txHash)
+      .then(receipt => {
+        console.log(receipt );
+        if (receipt) {
+          txs[0].blockNumber = receipt.blockNumber;
+          // for private testnet || for metamask
+          txs[0].confirmed =
+            receipt.status.toString().includes('0x01') ||
+            receipt.status === '0x1';
+        }
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+
+    return txs;
   },
   deleteTransaction: async userAddress => {}
 };
