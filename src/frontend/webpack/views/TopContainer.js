@@ -38,6 +38,11 @@ const DropDownMenuParent = styled.div`
   flex-direction: column;
 `;
 
+const Elements = styled.div`
+  display: flex;
+  margin-top: 12px;
+`;
+
 class TopContainer extends React.Component {
   constructor() {
     super();
@@ -55,7 +60,7 @@ class TopContainer extends React.Component {
     return (
       <Container>
         <Profile>
-          <div style={{display: 'flex', marginTop: '12px'}}>
+          <Elements>
             <RenderNetwork />
             <MetaMaskLabel />
             <DropDownMenuParent
@@ -79,7 +84,7 @@ class TopContainer extends React.Component {
                 onClickOutside={() => {}}
               />
             </DropDownMenuParent>
-          </div>
+          </Elements>
         </Profile>
         <BallContainer>
           <Ball
