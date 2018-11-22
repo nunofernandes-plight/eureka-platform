@@ -1,12 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  __ALERT_DANGER,
-  __ALERT_ERROR,
-  __FIFTH,
-  __GRAY_100,
-  getScale
-} from '../../helpers/colors.js';
+import {__ALERT_DANGER, __GRAY_100, getScale} from '../../helpers/colors.js';
 import chroma from 'chroma-js';
 import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
 import {LARGE_DEVICES} from '../../helpers/mobile.js';
@@ -138,8 +132,8 @@ const FancyButton = styled.div`
     font-size: 14.3px;
   }
   position: relative;
-  top: 10%;
-  background: #f75176;
+  top: ${props => props.top}%;
+  background: ${props => props.background};
   font-weight: bold;
   cursor: pointer;
   color: white;
@@ -165,23 +159,12 @@ const ArticleCard = ({article, ...otherProps}) => {
         otherProps.onMouseLeave(article);
       }}
     >
-      <ButtonContainer>
-        {otherProps.button2Text ? (
-          <Button
-            onClick={() => {
-              otherProps.action2(article.scSubmissionID, article);
-            }}
-          >
-            {otherProps.button2Text}
-          </Button>
-        ) : (
-          <div />
-        )}
-      </ButtonContainer>
       <Container>
         <FigureSection>
           <FancyButtonContainer>
             <FancyButton
+              background={'#f75176'}
+              top={10}
               onHover={otherProps.onHover}
               onClick={() => {
                 otherProps.action(article.scSubmissionID, article);
@@ -189,6 +172,17 @@ const ArticleCard = ({article, ...otherProps}) => {
             >
               {otherProps.buttonText}
             </FancyButton>
+            {otherProps.button2Text ? (
+              <FancyButton
+                background={'#ff884e'}
+                top={17.5}
+                onClick={() => {
+                  otherProps.action2(article.scSubmissionID, article);
+                }}
+              >
+                {otherProps.button2Text}
+              </FancyButton>
+            ) : null}
           </FancyButtonContainer>
           {article.figure.length === 0 ? (
             <Figure
