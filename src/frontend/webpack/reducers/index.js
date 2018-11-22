@@ -4,6 +4,7 @@ import {unassignedArticlesData} from './editor-methods.js';
 import {networkData} from './network.js';
 import {metamaskData} from './metamask.js';
 import {accountsData} from './account.js';
+import {transactionsData} from './transactions.js';
 
 
 
@@ -12,7 +13,9 @@ const reducer = combineReducers({
   unassignedArticlesData,
   networkData,
   metamaskData,
-  accountsData
+  accountsData,
+  transactionsData
+
 });
 
 export default reducer;

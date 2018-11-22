@@ -18,6 +18,16 @@ export const ERROR_FETCHING_UNASSIGNED_SUBMISSIONS =
   'ERROR_FETCHING_UNASSIGNED_SUBMISSIONS';
 
 /**
+ * Transactions
+ */
+export const START_FETCHING_TXS = 'START_FETCHING_TXS';
+export const RECEIVED_TXS = 'RECEIVED_TXS';
+export const ERROR_FETCHING_TXS = 'ERROR_FETCHING_TXS';
+export const ADDING_TX = 'ADDING_TX';
+export const ADDED_TX = 'ADDED_TX';
+export const ERROR_ADDING_TX = 'ERROR_ADDING_TX';
+
+/**
  * OTHERS
  */
 export const SET_NETWORK = 'SET_NETWORK';
