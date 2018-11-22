@@ -17,6 +17,8 @@ import {ToastContainer, toast} from 'react-toastify';
 import '../../design-components/Notification.css';
 import 'react-toastify/dist/ReactToastify.css';
 import {ARTICLE_ASSIGNED_TX} from '../../constants/Messages.js';
+import {addTransaction} from '../../reducers/transactions.js';
+import SC_TRANSACTIONS_TYPE from '../../../../backend/schema/sc-transaction-state-enum.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -87,6 +89,10 @@ class EditorArticles extends React.Component {
       })
       .on('transactionHash', tx => {
         this.props.fetchUnassignedSubmissions(this.state.page);
+        this.props.addTransaction(
+          SC_TRANSACTIONS_TYPE.EDITOR_ARTICLE_ASSIGNMENT,
+          tx
+        );
         toast(ARTICLE_ASSIGNED_TX(tx), {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 20000,
@@ -195,6 +201,9 @@ export default withWeb3(
         return {
           fetchUnassignedSubmissions: page => {
             dispatch(fetchUnassignedSubmissions(page));
+          },
+          addTransaction: (txType, tx) => {
+            dispatch(addTransaction(txType, tx));
           }
         };
       }

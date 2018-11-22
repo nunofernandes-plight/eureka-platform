@@ -48,6 +48,7 @@ const Container = styled.div`
   margin: 0 15px;
   height: 35px;
   width: 35px;
+  cursor: pointer;
 `;
 
 class TxPool extends React.Component {
