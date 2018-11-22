@@ -1,7 +1,7 @@
 .spinner {
   width: 40px;
   height: 40px;
-  background-color: #fb6340;
+  background-color: #f75176;
   border-radius: 100%;
   -webkit-animation: sk-scaleout 1s infinite ease-in-out;
   animation: sk-scaleout 1s infinite ease-in-out;
