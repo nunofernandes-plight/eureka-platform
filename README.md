@@ -27,6 +27,8 @@ received in transactions on the Ethereum ecosystem.
 
 > EUREKA token (EKA) description: https://eurekatoken.io
 
+> Whitepaper: https://eurekatoken.io/whitepaper_3_1.pdf
+
 
 
 
