@@ -193,7 +193,7 @@ Jonathan Burger
 This project is licensed under the MIT License.
 
 ## Acknowledgments
-* EUREKA Blockchain Solutions GmbH
+* EKA Blockchain Solutions GmbH
 * ScienceMatters AG
 * University of Zurich
 * Creative Tim for open-source Argon design system (https://www.creative-tim.com/)
