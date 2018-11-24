@@ -1,4 +1,4 @@
-#![Eureka Token Logo](public/img/logos/eureka.svg)
+![Eureka Token Logo](public/img/logos/eureka.svg)
 
 Implementation of a blockchain-based rating-publishing system. The EUREKA
 ecosystem is a scientific rating-publishing platform with the Ethereum
