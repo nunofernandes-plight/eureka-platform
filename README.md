@@ -21,7 +21,7 @@ received in transactions on the Ethereum ecosystem.
 
 > Linkedin: https://www.linkedin.com/company/eurekatoken/
 
-
+![Eureka Token Logo](public/img/platform/1.png)
 
 ## Website
 
@@ -169,16 +169,21 @@ When new test-files are created the script in package.json needs to be updated.
 Pull requests welcome! Please include tests and follow the style conventions.
 Run `npm test`to verify.
 
-## Current Smart Contract:
+## Current Smart Contracts:
 
-Address: ``
+Token Contract Address (Kovan Testnet): `0xad9a8e2f14820f9c2a8f39bb501fba891f9f990a`
 
-### Authors
+Platform Contract Address (Kovan Testnet): `0xad5d2e1a0a17be861dabcb3734c79bec688856ab`
+
+
+### Contributors
 
 ```
 Lucas Pelloni
 Severin Wullschleger
 Andreas Schaufelbühl
+Thomas Bocek
+Jonathan Burger
 ```
 
 ## License
