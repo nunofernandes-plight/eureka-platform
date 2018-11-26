@@ -21,25 +21,31 @@ export default {
     const txs = await FrontendTransaction.find({
       ownerAddress: address
     });
-    if (!txs) errorThrower.noEntryFoundById(address);
+    if (txs.length === 0) {
+      return txs;
+    }
 
-    const txHash = txs[0].txHash;
-    await web3.eth
-      .getTransactionReceipt(txHash)
-      .then(receipt => {
-        console.log(receipt );
-        if (receipt) {
-          txs[0].blockNumber = receipt.blockNumber;
-          // for private testnet || for metamask
-          txs[0].confirmed =
-            receipt.status.toString().includes('0x01') ||
-            receipt.status === '0x1';
-        }
+    // TODO: ADJUST THIS FOR TRANSACTION RECEIPT COMING FROM METAMASK
+    const newTxs = await Promise.all(
+      txs.map(async tx => {
+        return await web3.eth
+          .getTransactionReceipt(tx.txHash)
+          .then(receipt => {
+            console.log(receipt);
+            if (receipt) {
+              txs[0].blockNumber = receipt.blockNumber;
+              // for private testnet || for metamask
+              txs[0].confirmed =
+                receipt.status.toString().includes('0x01') ||
+                receipt.status === '0x1';
+            }
+          })
+          .catch(reason => {
+            console.log(reason);
+          });
       })
-      .catch(reason => {
-        console.log(reason);
-      });
-
+    );
+    console.log('-----------------------------------');
     return txs;
   },
   deleteTransaction: async userAddress => {}

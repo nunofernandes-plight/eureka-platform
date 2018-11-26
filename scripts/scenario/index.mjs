@@ -21,6 +21,7 @@ import {
   SUBMIT_FEW_ARTICLES
 } from './scenariosNames.mjs';
 import {platformContract} from '../../src/backend/web3/web3InterfaceSetup.mjs';
+import FrontendTransaction from '../../src/backend/schema/frontend-transaction.mjs';
 
 const cleanCollections = async () => {
   await User.remove({});
@@ -29,6 +30,7 @@ const cleanCollections = async () => {
   await ArticleVersion.remove({});
   await ScTransactions.remove({});
   await Annotation.remove({});
+  await FrontendTransaction.remove({});
   console.log('Collections have been cleaned');
 };
 
