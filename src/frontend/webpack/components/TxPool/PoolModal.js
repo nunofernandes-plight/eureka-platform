@@ -1,6 +1,8 @@
 import React, {Fragment} from 'react';
 import styled, {keyframes} from 'styled-components';
 import {PANEL_LEFT_NORMAL_WIDTH} from '../../../helpers/layout.js';
+import {__GRAY_300, __GRAY_400} from '../../../helpers/colors.js';
+import Transactions from './Transactions.js';
 
 const Parent = styled.div`
   position: fixed;
@@ -23,9 +25,6 @@ const modalFade = keyframes`
 
 const MyModal = styled.div`
   margin-left: ${PANEL_LEFT_NORMAL_WIDTH / 2}px;
-  height: 300px;
-  display: flex;
-  -ms-flex-direction: column;
   position: fixed;
   animation: ${modalFade};
   animation-duration: 0.5s;
@@ -33,20 +32,27 @@ const MyModal = styled.div`
   max-width: 100%;
   max-height: 100%;
   z-index: 12;
-  background: #fff;
-  border-radius: 4px;
-  box-shadow: 0 0 0 1px rgba(99, 114, 130, 0.16),
-    0 8px 16px rgba(27, 39, 51, 0.08);
-  background-clip: padding-box;
-  width: 560px;
+  width: 50%;
 `;
 
+const FooterContainer = styled.div`
+  min-height: 50px;
+  background: ${__GRAY_300};
+  margin-top: auto;
+  border-top: 1px solid ${__GRAY_400};
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+`;
 const PoolModal = ({show, ...otherProps}) => {
   return (
     <Fragment>
       {show ? (
         <Parent>
-          <MyModal>{otherProps.children}</MyModal>
+          <MyModal>
+            <Transactions />
+            <FooterContainer>
+            </FooterContainer>
+          </MyModal>
         </Parent>
       ) : null}
     </Fragment>
