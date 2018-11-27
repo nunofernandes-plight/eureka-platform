@@ -542,7 +542,7 @@ contract EurekaPlatform {
     function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         Review storage review = reviews[_articleHash][msg.sender];
-        require(review.reviewState >= ReviewState.HANDED_IN, "this method can't be called. the review does not exist.");
+        require(review.reviewState > ReviewState.HANDED_IN, "this method can't be called. the review is not handed in or the editor is currently checking your review.");
 
         bytes32 oldReviewHash = review.reviewHash;
         review.reviewHash = _reviewHash;
