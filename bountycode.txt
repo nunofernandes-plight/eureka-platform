@@ -175,7 +175,8 @@ https://eurekatoken.io/[/center][/code]
 
 [img]https://cdn.sciencematters.io/TYUhEjuETns1vQkR2018-11-18-21_07_53-Post-reply.png?w=1000[/img]
 
-[code][center][table][tr][td][center][size=1pt][tt][url=https://eurekatoken.io][color=#10b4dc]
+[code]
+[center][table][tr][td][center][size=1pt][tt][url=https://eurekatoken.io][color=#10b4dc]
 ██████
 █████████
 ███████████
@@ -211,14 +212,16 @@ https://eurekatoken.io/[/center][/code]
 [td][center][size=3pt][color=transparent].[/color][/size]
 [size=10pt][url=https://github.com/eureka-blockchain-solutions/eureka-platform][color=#2e3292][b]PROTOTYPE[/url]
 [url=https://eurekatoken.io/whitepaper_v3_1.pdf][size=10pt][color=#2e3292][b]WHITEPAPER[/color][/td]
-[/tr][/table][/center][/code]
+[/tr][/table][/center]
+[/code]
 
 
 [b]Legendary/Hero Member[/b]
 
 [img]https://cdn.sciencematters.io/PmSMqriYlp29X1Je2018-11-18-21_03_11-Post-reply.png?w=1000[/img]
 
-[code][center][table][tr][td][center][size=1pt][tt][url=https://eurekatoken.io][color=#10b4dc]
+[code]
+[center][table][tr][td][center][size=1pt][tt][url=https://eurekatoken.io][color=#10b4dc]
 ██████
 █████████
 ███████████
@@ -254,7 +257,8 @@ https://eurekatoken.io/[/center][/code]
 [td][center][size=3pt][color=transparent].[/color][/size]
 [size=10pt][url=https://github.com/eureka-blockchain-solutions/eureka-platform][color=#fff][glow=#2e3292,1][color=transparent].[/color][b]PROTOTYPE[color=transparent].[/color][/url]
 [url=https://eurekatoken.io/whitepaper_v3_1.pdf][size=10pt][glow=#2e3292,1][color=transparent].[/color][b][color=#FFF]WHITEPAPER[/color][color=transparent].[/color][/td]
-[/tr][/table][/center][/code]
+[/tr][/table][/center]
+[/code]
 
 
 
