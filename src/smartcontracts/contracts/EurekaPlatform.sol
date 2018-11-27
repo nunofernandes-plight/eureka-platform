@@ -552,9 +552,10 @@ contract EurekaPlatform {
         review.score1 = _score1;
         review.score2 = _score2;
 
-        // if it is a correction of a declined review, the review is shifted to the end of the array that the order of the reviews which are rewarded are correct.
-        if (review.reviewState == ReviewState.DECLINED
-            || review.reviewState == ReviewState.HANDED_IN) {
+        // if a handed in or a declined review is corrected after the reviewing time is experied the review is shifted to the end of the array to assure that the right reviewers are rewarded.
+        if ( (review.reviewState == ReviewState.DECLINED)
+            // TODO: if the slot of correcting is over (24h window) the review is shifted to the end of the array && ( )
+            ) {
 
             if (review.isEditorApprovedReview) {
                 for (uint i=0; i < articleVersions[_articleHash].editorApprovedReviews.length; i++) {
