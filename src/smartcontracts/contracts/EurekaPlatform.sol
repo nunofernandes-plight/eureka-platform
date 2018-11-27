@@ -177,6 +177,7 @@ contract EurekaPlatform {
     enum ReviewState {
         NOT_EXISTING,
         INVITED,
+        REVIEWER_REJECTED,
         SIGNED_UP_FOR_REVIEWING,
         HANDED_IN,
         DECLINED,
@@ -594,6 +595,22 @@ contract EurekaPlatform {
         review.stateTimestamp = block.timestamp;
         review.reviewedBy = msg.sender;
         emit ReviewIsDeclined(_articleHash, _reviewerAddress, block.timestamp);
+    }
+
+    event ReviewerRejected(bytes32 articleHash, address reviewer, uint256 stateTimestamp);
+    function rejectReviewer(bytes32 _articleHash, address _reviewerAddress) public {
+
+        require(articleSubmissions[articleVersions[_articleHash].submissionId].editor == msg.sender, "msg.sender must be the editor of this submission process");
+
+        Review storage review = reviews[_articleHash][_reviewerAddress];
+        require(review.reviewState == ReviewState.SIGNED_UP_FOR_REVIEWING
+            || review.reviewState == ReviewState.HANDED_IN
+            || review.reviewState == ReviewState.DECLINED, "the reviewer can't be rejected.");
+
+        review.reviewState = ReviewState.REVIEWER_REJECTED;
+        review.stateTimestamp = block.timestamp;
+        review.reviewedBy = msg.sender;
+        emit ReviewerRejected(_articleHash, _reviewerAddress, block.timestamp);
     }
 
     event ArticleVersionIsAccepted(bytes32 articleHash, address editor, uint256 stateTimestamp);
