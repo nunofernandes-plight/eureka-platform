@@ -542,7 +542,8 @@ contract EurekaPlatform {
     function correctReview(bytes32 _articleHash, bytes32 _reviewHash, bool _articleHasMajorIssues, bool _articleHasMinorIssues, uint8 _score1, uint8 _score2) public {
 
         Review storage review = reviews[_articleHash][msg.sender];
-        require(review.reviewState > ReviewState.HANDED_IN, "this method can't be called. the review is not handed in or the editor is currently checking your review.");
+        require(review.reviewState == ReviewState.DECLINED
+            || review.reviewState == ReviewState.ACCEPTED, "this method can't be called. only declined or already accepted reviews can be corrected.");
 
         bytes32 oldReviewHash = review.reviewHash;
         review.reviewHash = _reviewHash;
@@ -551,31 +552,6 @@ contract EurekaPlatform {
         review.articleHasMinorIssues = _articleHasMinorIssues;
         review.score1 = _score1;
         review.score2 = _score2;
-
-        // if a handed in or a declined review is corrected after the reviewing time is experied the review is shifted to the end of the array to assure that the right reviewers are rewarded.
-        if ( (review.reviewState == ReviewState.DECLINED)
-            // TODO: if the slot of correcting is over (24h window) the review is shifted to the end of the array && ( )
-            ) {
-
-            if (review.isEditorApprovedReview) {
-                for (uint i=0; i < articleVersions[_articleHash].editorApprovedReviews.length; i++) {
-                    if (articleVersions[_articleHash].editorApprovedReviews[i] == review.reviewer) {
-                        articleVersions[_articleHash].editorApprovedReviews[i] = address(0);
-                        break;
-                    }
-                }
-                articleVersions[_articleHash].editorApprovedReviews.push(review.reviewer);
-            }
-            else {
-                for (i=0; i < articleVersions[_articleHash].communityReviews.length; i++) {
-                    if (articleVersions[_articleHash].communityReviews[i] == review.reviewer) {
-                        articleVersions[_articleHash].communityReviews[i] = address(0);
-                        break;
-                    }
-                }
-                articleVersions[_articleHash].communityReviews.push(review.reviewer);
-            }
-        }
 
         review.reviewState = ReviewState.HANDED_IN;
         review.stateTimestamp = block.timestamp;
