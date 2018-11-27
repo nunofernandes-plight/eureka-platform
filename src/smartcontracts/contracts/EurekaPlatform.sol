@@ -216,8 +216,10 @@ contract EurekaPlatform {
     function getAuthors(bytes32 hash) public view returns (address[] authors) {
         authors = articleVersions[hash].authors;
     }
-
-
+    
+    /*
+        journal administration methods
+    */
     event EditorSignUp(address submissionOwner, address editorAddress, uint256 stateTimestamp);
 
     function signUpEditor(address editor) public {
