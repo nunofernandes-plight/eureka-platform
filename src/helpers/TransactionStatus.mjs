@@ -1,4 +1,8 @@
-export const IN_PROGRESS = 'IN_PROGRESS';
-export const COMPLETED = 'COMPLETED';
-export const REVERTED = 'REVERTED';
-export const ERROR = 'ERROR';
+const TRANSACTION_STATUS = Object.freeze({
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  REVERTED: 'REVERTED',
+  ERROR: 'ERROR'
+});
+
+export default TRANSACTION_STATUS;
