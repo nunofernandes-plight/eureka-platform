@@ -552,6 +552,30 @@ contract EurekaPlatform {
         review.score1 = _score1;
         review.score2 = _score2;
 
+        // if it is a correction of a declined review, the review is shifted to the end of the array that the order of the reviews which are rewarded are correct.
+        if (review.reviewState == ReviewState.DECLINED
+            || review.reviewState == ReviewState.HANDED_IN) {
+
+            if (review.isEditorApprovedReview) {
+                for (uint i=0; i < articleVersions[_articleHash].editorApprovedReviews.length; i++) {
+                    if (articleVersions[_articleHash].editorApprovedReviews[i] == review.reviewer) {
+                        articleVersions[_articleHash].editorApprovedReviews[i] = address(0);
+                        break;
+                    }
+                }
+                articleVersions[_articleHash].editorApprovedReviews.push(review.reviewer);
+            }
+            else {
+                for (i=0; i < articleVersions[_articleHash].communityReviews.length; i++) {
+                    if (articleVersions[_articleHash].communityReviews[i] == review.reviewer) {
+                        articleVersions[_articleHash].communityReviews[i] = address(0);
+                        break;
+                    }
+                }
+                articleVersions[_articleHash].communityReviews.push(review.reviewer);
+            }
+        }
+
         review.reviewState = ReviewState.HANDED_IN;
         review.stateTimestamp = block.timestamp;
         emit ReviewIsCorrected(oldReviewHash, _articleHash, msg.sender, _reviewHash, _articleHasMajorIssues, _articleHasMinorIssues, _score1, _score2, block.timestamp);
