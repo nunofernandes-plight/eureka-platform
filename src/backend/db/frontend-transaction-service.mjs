@@ -50,7 +50,6 @@ export default {
         return data.push(nexTx);
       })
     );
-    console.log('-----------------------------------');
     return data;
   },
   deleteTransaction: async userAddress => {}

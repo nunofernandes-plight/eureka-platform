@@ -1,6 +1,12 @@
 import React from 'react';
 import styled, {keyframes} from 'styled-components';
 import {transparentize} from 'polished';
+import Modal from '../../design-components/Modal.js';
+import {
+  TITLE_GENERAL_ERROR,
+  TRANSACTION_POOL
+} from '../../constants/ModalErrors.js';
+import PoolModal from './PoolModal.js';
 
 const animation = keyframes`
 	from {
@@ -54,12 +60,31 @@ const Container = styled.div`
 class TxPool extends React.Component {
   constructor() {
     super();
+    this.state = {showPool: false};
+  }
+
+  renderPool() {
+    return (
+      <PoolModal
+        show={this.state.showPool}
+        toggle={showPool => {
+          this.setState({showPool});
+        }}
+      >
+        asfasf
+      </PoolModal>
+    );
   }
 
   render() {
     return (
       <Container>
-        <TxPoolContainer>
+        {this.renderPool()}
+        <TxPoolContainer
+          onClick={() => {
+            this.setState({showPool: true});
+          }}
+        >
           <TxPoolIcon src="/img/tx/transaction.svg" />
         </TxPoolContainer>{' '}
         <Pulsing />
