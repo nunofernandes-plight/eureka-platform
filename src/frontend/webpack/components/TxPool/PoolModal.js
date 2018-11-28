@@ -58,7 +58,8 @@ const Header = styled.div`
   align-items: center;
   position: fixed;
   z-index: 100000;
-  width: ${props => (props.loading ? '100%' : '50%')};
+  width: 50%;
+  visibility: ${props => (props.loading ? 'hidden' : 'visible')};
 `;
 
 const TxPoolIcon = styled.img`
