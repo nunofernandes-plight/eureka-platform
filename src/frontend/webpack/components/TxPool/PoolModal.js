@@ -3,6 +3,8 @@ import styled, {keyframes} from 'styled-components';
 import {PANEL_LEFT_NORMAL_WIDTH} from '../../../helpers/layout.js';
 import {__FIFTH, __GRAY_300, __GRAY_400} from '../../../helpers/colors.js';
 import Transactions from './Transactions.js';
+import connect from 'react-redux/es/connect/connect.js';
+import {fetchTransactions} from '../../reducers/transactions.js';
 
 const Parent = styled.div`
   position: fixed;
@@ -56,7 +58,7 @@ const Header = styled.div`
   align-items: center;
   position: fixed;
   z-index: 100000;
-  width: 50%;
+  width: ${props => (props.loading ? '100%' : '50%')};
 `;
 
 const TxPoolIcon = styled.img`
@@ -79,7 +81,7 @@ const PoolModal = ({show, ...otherProps}) => {
       {show ? (
         <Parent>
           <MyModal>
-            <Header>
+            <Header loading={otherProps.loading}>
               <HeaderTitle>
                 Transaction Pool <TxPoolIcon src="/img/tx/transaction.svg" />{' '}
               </HeaderTitle>
@@ -93,4 +95,6 @@ const PoolModal = ({show, ...otherProps}) => {
   );
 };
 
-export default PoolModal;
+export default connect(state => ({
+  loading: state.transactionsData.fetchingTxLoading
+}))(PoolModal);
