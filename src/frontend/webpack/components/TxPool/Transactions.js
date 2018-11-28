@@ -7,16 +7,17 @@ import Transaction, {TxLi} from './Transaction.js';
 
 const Container = styled.ol`
   list-style-type: none;
-  padding-left: 0;
   margin: 0;
+  background: white;
+  padding-left: 0;
 `;
 
 class Transactions extends React.Component {
   componentDidMount() {
     this.props.fetchTransactions();
-    this.interval = setInterval(async () => {
+/*    this.interval = setInterval(async () => {
       this.props.fetchTransactions();
-    }, 10000);
+    }, 10000);*/
   }
 
   componentWillUnmount() {
