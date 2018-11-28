@@ -262,7 +262,7 @@ export default {
     let counter = 0;
     while (
       articleVersion.articleVersionState !==
-      ArticleVersionState.EDITOR_CHECKED &&
+      ArticleVersionState.OPEN_FOR_ALL_REVIEWERS &&
       counter < 5) {
       sleepSync(5000);
       dbArticleVersion = await articleVersionService.getArticleVersionById(
@@ -271,7 +271,7 @@ export default {
       );
       counter++;
     }
-    t.is(dbArticleVersion.articleVersionState, ArticleVersionState.EDITOR_CHECKED);
+    t.is(dbArticleVersion.articleVersionState, ArticleVersionState.OPEN_FOR_ALL_REVIEWERS);
   },
 
   /**

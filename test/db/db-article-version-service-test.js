@@ -41,6 +41,6 @@ test(PRETEXT + 'Get all articleVersion by their state', async t => {
   t.is((await articleVersionService.getAllArticleVersions()).length, 3);
   t.is((await articleVersionService.getArticleVersionsByState(ArticleVersionState.SUBMITTED)).length, 2);
   t.is((await articleVersionService.getArticleVersionsByState(ArticleVersionState.DRAFT)).length, 1);
-  t.is((await articleVersionService.getArticleVersionsByState(ArticleVersionState.EDITOR_CHECKED)).length, 0);
+  t.is((await articleVersionService.getArticleVersionsByState(ArticleVersionState.OPEN_FOR_ALL_REVIEWERS)).length, 0);
 });
 

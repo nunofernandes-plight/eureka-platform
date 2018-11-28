@@ -128,7 +128,7 @@ export default {
         if (error) throw error;
         await articleVersionService.changeArticleVersionState(
           event.returnValues.articleHash,
-          ArticleVersionState.EDITOR_CHECKED
+          ArticleVersionState.OPEN_FOR_ALL_REVIEWERS
         );
       }
     );
@@ -145,90 +145,38 @@ export default {
       }
     );
 
-    /** Reviewers are assigned as editor-approved on an article **/
-    EurekaPlatformContract.events.ReviewersAreInvited(
-      undefined,
-      async (error, event) => {
-        if (error) throw error;
-
-        const approvedReviewers = event.returnValues.editorApprovedReviewers;
-        const articleHash = event.returnValues.articleHash;
-        const timestamp = event.returnValues.stateTimestamp;
-
-        await articleVersionService.changeArticleVersionState(
-          event.returnValues.articleHash,
-          ArticleVersionState.REVIEWERS_INVITED
-        );
-
-        let articleVersion = await ArticleVersion.findOne({
-          articleHash: articleHash
-        });
-        if (!articleVersion) errorThrower.noEntryFoundById(articleHash);
-        for (let i = 0; i < approvedReviewers.length; i++) {
-          const review = new Review({
-            stateTimestamp: timestamp,
-            reviewerAddress: approvedReviewers[i],
-            articleVersion: articleVersion._id,
-            reviewType: ReviewType.EDITOR_APPROVED_REVIEW
-          });
-          await review.save();
-          articleVersion.editorApprovedReviews.push(review._id);
-        }
-        await articleVersion.save();
-
-        // TODO: send email
-        // TODO: get email addresses from a list of ethereum addresses
-
-        const reviewers = await userService.getUsersByEthereumAddress(
-          approvedReviewers
-        );
-
-        await Promise.all(
-          reviewers.map(async reviewer => {
-            const html = getReviewersInvitationTemplate(articleVersion);
-            return await sendEmail({
-              to: reviewer.email,
-              from: 'info@eurekatoken.io',
-              subject: 'Reviewer Invitation',
-              html
-            });
-          })
-        );
-      }
-    );
-
-    EurekaPlatformContract.events.InvitationIsAccepted(
-      undefined,
-      async (error, event) => {
-        if (error) throw error;
-
-        const articleHash = event.returnValues.articleHash;
-        const reviewerAddress = event.returnValues.reviewerAddress;
-
-        let articleVersion = await ArticleVersion.findOne({
-          articleHash: articleHash
-        }).populate('editorApprovedReviews');
-        if (!articleVersion) errorThrower.noEntryFoundById(articleHash);
-
-        let articleReviews = articleVersion.editorApprovedReviews;
-        for (let i = 0; i < articleReviews.length; i++) {
-          if (articleReviews[i].reviewerAddress == reviewerAddress) {
-            articleReviews[i].stateTimestamp =
-              event.returnValues.stateTimestamp;
-            articleReviews[i].reviewState = ReviewState.SIGNED_UP_FOR_REVIEWING;
-            await articleReviews[i].save();
-            break;
-          }
-          if (i === articleReviews.length - 1) {
-            let error = new Error(
-              'Invitation Acception: corresponding review could not be found'
-            );
-            error.status = 500;
-            throw error;
-          }
-        }
-      }
-    );
+    // EurekaPlatformContract.events.SignedUpForReviewing(
+    //   undefined,
+    //   async (error, event) => {
+    //     if (error) throw error;
+    //
+    //     const articleHash = event.returnValues.articleHash;
+    //     const reviewerAddress = event.returnValues.reviewerAddress;
+    //
+    //     let articleVersion = await ArticleVersion.findOne({
+    //       articleHash: articleHash
+    //     }).populate('editorApprovedReviews');
+    //     if (!articleVersion) errorThrower.noEntryFoundById(articleHash);
+    //
+    //     let articleReviews = articleVersion.editorApprovedReviews;
+    //     for (let i = 0; i < articleReviews.length; i++) {
+    //       if (articleReviews[i].reviewerAddress == reviewerAddress) {
+    //         articleReviews[i].stateTimestamp =
+    //           event.returnValues.stateTimestamp;
+    //         articleReviews[i].reviewState = ReviewState.SIGNED_UP_FOR_REVIEWING;
+    //         await articleReviews[i].save();
+    //         break;
+    //       }
+    //       if (i === articleReviews.length - 1) {
+    //         let error = new Error(
+    //           'Invitation Acception: corresponding review could not be found'
+    //         );
+    //         error.status = 500;
+    //         throw error;
+    //       }
+    //     }
+    //   }
+    // );
 
     EurekaPlatformContract.events.EditorApprovedReviewIsAdded(
       undefined,
