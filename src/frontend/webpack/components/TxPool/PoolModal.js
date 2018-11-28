@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import styled, {keyframes} from 'styled-components';
 import {PANEL_LEFT_NORMAL_WIDTH} from '../../../helpers/layout.js';
-import {__GRAY_300, __GRAY_400} from '../../../helpers/colors.js';
+import {__FIFTH, __GRAY_300, __GRAY_400} from '../../../helpers/colors.js';
 import Transactions from './Transactions.js';
 
 const Parent = styled.div`
@@ -43,15 +43,44 @@ const FooterContainer = styled.div`
   border-bottom-right-radius: 4px;
   border-bottom-left-radius: 4px;
 `;
+
+const Header = styled.div`
+  min-height: 45px;
+  background: ${__FIFTH};
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const TxPoolIcon = styled.img`
+  width: 22px;
+  height: 20px;
+  margin-left: 2px;
+`;
+
+const HeaderTitle = styled.h2`
+  margin: 0;
+  color: white;
+  font-size: 14px;
+  text-transform: uppercase;
+  display: flex;
+`;
+
 const PoolModal = ({show, ...otherProps}) => {
   return (
     <Fragment>
       {show ? (
         <Parent>
           <MyModal>
+            <Header>
+              <HeaderTitle>
+                Transaction Pool <TxPoolIcon src="/img/tx/transaction.svg" />{' '}
+              </HeaderTitle>
+            </Header>
             <Transactions />
-            <FooterContainer>
-            </FooterContainer>
+            <FooterContainer />
           </MyModal>
         </Parent>
       ) : null}
