@@ -8,12 +8,12 @@ import {
   __GRAY_300
 } from '../../../helpers/colors.js';
 import TRANSACTION_STATUS from '../../../../helpers/TransactionStatus.mjs';
-import chroma from 'chroma-js';
 import EurekaLogo from '../../views/icons/EurekaLogo.js';
 import TxType from '../MyHistory/TxType.js';
 import {ProgressBar} from './ProgressBar.js';
 import * as animationData from '../TxPool/spinner.json';
 import LottieManager from '../LottieManager.js';
+import {Animation} from './Animation.js';
 
 const getColor = status => {
   switch (status) {
@@ -68,13 +68,7 @@ const Transaction = ({tx, ...otherProps}) => {
         <ProgressBar height={3} />
       </BarContainer>
       <LottieContainer>
-        <LottieManager
-          loop={true}
-          animationData={animationData}
-          width={37}
-          height={36}
-          onComplete={() => {}}
-        />
+        <Animation status={tx.status} />
       </LottieContainer>
     </TxLi>
   );
