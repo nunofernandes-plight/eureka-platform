@@ -87,6 +87,16 @@ router.get(
 );
 
 router.get(
+  '/reviewable/expert',
+  asyncHandler(async req => {
+    let articles = await articleVersionService.getArticlesOpenForExpertReviews(
+      req.session.passport.user.ethereumAddress
+    );
+    return getArticlesResponse(articles);
+  })
+);
+
+router.get(
   '/reviewable/community',
   asyncHandler(async req => {
     let articles = await articleVersionService.getArticlesOpenForCommunityReviews(
