@@ -8,7 +8,11 @@ import {
   START_FETCHING_TXS
 } from './types.js';
 
-const initialState = {addingTxLoading: true, txs: null};
+const initialState = {
+  addingTxLoading: true,
+  txs: null,
+  fetchingTxLoading: true
+};
 
 export const addTransaction = (type, tx) => {
   return dispatch => {
@@ -47,7 +51,7 @@ export const addTransaction = (type, tx) => {
   };
 };
 
-export const getTransactions = () => {
+export const fetchTransactions = () => {
   return dispatch => {
     dispatch({type: START_FETCHING_TXS});
     fetch(`${getDomain()}/api/frontendtransactions`, {
@@ -96,6 +100,21 @@ export const transactionsData = (state = initialState, action) => {
         addingTxLoading: false,
         error: action.error
       };
+    case START_FETCHING_TXS:
+      return {
+        fetchingTxLoading: true
+      };
+    case RECEIVED_TXS:
+      return {
+        txs: action.txs,
+        fetchingTxLoading: false
+      };
+    case ERROR_FETCHING_TXS:
+      return {
+        fetchingTxLoading: false,
+        error: action.error
+      };
+
     default:
       return state;
   }
