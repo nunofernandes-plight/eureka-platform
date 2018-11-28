@@ -11,6 +11,7 @@ import TRANSACTION_STATUS from '../../../../helpers/TransactionStatus.mjs';
 import chroma from 'chroma-js';
 import EurekaLogo from '../../views/icons/EurekaLogo.js';
 import TxType from '../MyHistory/TxType.js';
+import {ProgressBar} from './ProgressBar.js';
 
 const getColor = status => {
   switch (status) {
@@ -49,6 +50,7 @@ const Transaction = ({tx, ...otherProps}) => {
         size={'12'}
         radius={'0'}
       />
+      <ProgressBar />
     </TxLi>
   );
 };
