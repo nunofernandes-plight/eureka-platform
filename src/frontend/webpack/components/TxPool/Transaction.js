@@ -12,6 +12,8 @@ import chroma from 'chroma-js';
 import EurekaLogo from '../../views/icons/EurekaLogo.js';
 import TxType from '../MyHistory/TxType.js';
 import {ProgressBar} from './ProgressBar.js';
+import * as animationData from '../TxPool/spinner.json';
+import LottieManager from '../LottieManager.js';
 
 const getColor = status => {
   switch (status) {
@@ -42,17 +44,38 @@ export const TxLi = styled.li`
   overflow-y: scroll;
 `;
 
+const LottieContainer = styled.div`
+  margin-left: auto;
+`;
+
+const BarContainer = styled.div`
+  position: relative;
+  margin: 0 20px;
+`;
+
 const Transaction = ({tx, ...otherProps}) => {
   return (
     <TxLi key={tx.txHash} status={tx.status}>
       <EurekaLogo width={20} height={20} />
-      <TxType
-        type={tx.transactionType}
-        padding={'5px 20px'}
-        size={'12'}
-        radius={'0'}
-      />
-      <ProgressBar height={7} />
+      <BarContainer>
+        <TxType
+          type={tx.transactionType}
+          padding={'5px 20px'}
+          size={'12'}
+          radius={'0'}
+          noMargin
+        />
+        <ProgressBar height={3} />
+      </BarContainer>
+      <LottieContainer>
+        <LottieManager
+          loop={true}
+          animationData={animationData}
+          width={37}
+          height={36}
+          onComplete={() => {}}
+        />
+      </LottieContainer>
     </TxLi>
   );
 };

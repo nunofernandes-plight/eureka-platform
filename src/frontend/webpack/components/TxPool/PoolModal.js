@@ -30,10 +30,11 @@ const MyModal = styled.div`
   animation-duration: 0.5s;
   transition: 0.3s linear ease-in-out;
   max-width: 100%;
-  max-height: 100%;
+  max-height: 90%;
   z-index: 12;
   overflow: scroll;
   width: 50%;
+  border-radius: 5px;
 `;
 
 const FooterContainer = styled.div`
@@ -53,6 +54,9 @@ const Header = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: fixed;
+  z-index: 100000;
+  width: 50%;
 `;
 
 const TxPoolIcon = styled.img`

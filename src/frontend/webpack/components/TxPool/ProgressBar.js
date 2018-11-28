@@ -2,13 +2,15 @@ import React from 'react';
 import styled, {keyframes} from 'styled-components';
 import {__FIFTH} from '../../../helpers/colors.js';
 
-const Parent = styled.div``;
+const Parent = styled.div`
+  width: 100%;
+  margin-top: -3px;
+`;
 const Slider = styled.div`
-  width: 40%;
+  width: 100%;
   height: ${props => props.height}px;
   position: absolute;
   overflow-x: hidden;
-  border-radius: 10px;
 `;
 
 const Line = styled.div`

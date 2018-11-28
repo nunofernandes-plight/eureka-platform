@@ -39,7 +39,7 @@ const Type = styled.div`
   border-radius: ${props => (props.radius ? props.radius : '10px')};
   font-weight: bold;
   font-size: ${props => (props.size ? props.size + 'px' : 'inherit')};
-  margin: 0 20px;
+  margin: ${props => (props.noMargin ? '0' : '0 20px')};
   text-align: center;
 `;
 const TxType = ({type, ...otherProps}) => {

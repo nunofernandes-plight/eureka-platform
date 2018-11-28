@@ -10,12 +10,13 @@ const Container = styled.ol`
   margin: 0;
   background: white;
   padding-left: 0;
+  padding-top: 45px;
 `;
 
 class Transactions extends React.Component {
   componentDidMount() {
     this.props.fetchTransactions();
-/*    this.interval = setInterval(async () => {
+    /*    this.interval = setInterval(async () => {
       this.props.fetchTransactions();
     }, 10000);*/
   }
