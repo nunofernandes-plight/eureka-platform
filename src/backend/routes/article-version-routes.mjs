@@ -52,17 +52,6 @@ router.get(
 );
 
 router.get(
-  '/assigned/checkReviews',
-  asyncHandler(async req => {
-    let articles = await articleVersionService.getArticlesAssignedTo(
-      req.session.passport.user.ethereumAddress,
-      [ARTICLE_VERSION_STATE.OPEN_FOR_ALL_REVIEWERS]
-    );
-    return getArticlesResponse(articles);
-  })
-);
-
-router.get(
   '/assigned/finalize',
   asyncHandler(async req => {
     let articles = await articleVersionService.getArticlesToFinalize(
