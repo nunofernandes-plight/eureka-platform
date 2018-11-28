@@ -65,7 +65,11 @@ const Transaction = ({tx, ...otherProps}) => {
           radius={'0'}
           noMargin
         />
-        <ProgressBar height={3} />
+        {tx.status === TRANSACTION_STATUS.IN_PROGRESS ? (
+          <ProgressBar height={3} />
+        ) : (
+          <ProgressBar height={3} static />
+        )}
       </BarContainer>
       <LottieContainer>
         <Animation status={tx.status} />
