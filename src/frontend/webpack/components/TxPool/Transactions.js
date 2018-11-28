@@ -34,7 +34,7 @@ class Transactions extends React.Component {
           </TxLi>
         ) : (
           <Fragment>
-            {this.props.txs.map(tx => {
+            {this.props.txs.reverse().map(tx => {
               return <Transaction key={tx.txHash} tx={tx} />;
             })}
           </Fragment>
