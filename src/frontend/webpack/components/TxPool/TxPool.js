@@ -70,9 +70,7 @@ class TxPool extends React.Component {
         toggle={showPool => {
           this.setState({showPool});
         }}
-      >
-        asfasf
-      </PoolModal>
+      />
     );
   }
 

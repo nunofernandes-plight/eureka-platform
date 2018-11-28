@@ -1,6 +1,11 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import {__GRAY_200, __GRAY_300} from '../../../helpers/colors.js';
+import {withRouter} from 'react-router-dom';
+import connect from 'react-redux/es/connect/connect.js';
+import {fetchUserData} from '../../reducers/user.js';
+import {fetchTransactions} from '../../reducers/transactions.js';
+import UploadProgressContainer from '../TextEditor/UploadProgressContainer.js';
 
 const Container = styled.ol`
   list-style-type: none;
@@ -28,14 +33,48 @@ const getData = () => {
   ];
 };
 
-const Transactions = () => {
-  return (
-    <Container>
-      {getData().map(tx => {
-        return <TxLi key={tx.txHash}>{tx.txHash}</TxLi>;
-      })}
-    </Container>
-  );
-};
+class Transactions extends React.Component {
+  componentDidMount() {
+    this.props.fetchTransactions();
+    this.interval = setInterval(async () => {
+      this.props.fetchTransactions();
+    }, 3500);
+  }
 
-export default Transactions;
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  render() {
+    return (
+      <Container>
+        {this.props.loading ? (
+          <TxLi>
+            <UploadProgressContainer />
+          </TxLi>
+        ) : (
+          <Fragment>
+            {' '}
+            {getData().map(tx => {
+              return <TxLi key={tx.txHash}>{tx.txHash}</TxLi>;
+            })}
+          </Fragment>
+        )}
+      </Container>
+    );
+  }
+}
+
+export default connect(
+  state => ({
+    txs: state.transactionsData.txs,
+    loading: state.transactionsData.fetchingTxLoading
+  }),
+  dispatch => {
+    return {
+      fetchTransactions: () => {
+        dispatch(fetchTransactions());
+      }
+    };
+  }
+)(Transactions);
