@@ -300,34 +300,33 @@ export default {
   acceptReview: async (articleHash, reviewerAddress, stateTimestamp) => {
     const articleVersion = await ArticleVersion.findOne({
       articleHash: articleHash
-    }).populate('editorApprovedReviews');
-
-    const reviewId = articleVersion.editorApprovedReviews.find((review) => {
-      return review.reviewerAddress === reviewerAddress;
     });
 
-    let review = await Review.findById(reviewId);
+    let review = await Review.findOne({
+      articleVersion: articleVersion._id,
+      reviewerAddress
+    });
+
     review.reviewState = ReviewState.ACCEPTED;
     review.stateTimestamp = stateTimestamp;
     await review.save();
-    return 'Acception of review ' + reviewId;
+    return 'Acception of review ' + review._id;
   },
 
   declineReview: async (articleHash, reviewerAddress, stateTimestamp) => {
     const articleVersion = await ArticleVersion.findOne({
       articleHash: articleHash
-    }).populate('editorApprovedReviews');
-
-    const reviewId = articleVersion.editorApprovedReviews.find((review) => {
-      return review.reviewerAddress === reviewerAddress;
     });
 
-
-    let review = await Review.findById(reviewId);
+    let review = await Review.findOne({
+      articleVersion: articleVersion._id,
+      reviewerAddress
+    });
+    
     review.reviewState = ReviewState.DECLINED;
     review.stateTimestamp = stateTimestamp;
     await review.save();
 
-    return 'Decline of review ' + reviewId;
+    return 'Decline of review ' + review._id;
   }
 };
