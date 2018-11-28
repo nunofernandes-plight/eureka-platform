@@ -38,6 +38,8 @@ export const TxLi = styled.li`
   padding: 1em 2em;
   border-bottom: 1px solid ${__GRAY_300};
   align-items: center;
+  overflow: hidden;
+  overflow-y: scroll;
 `;
 
 const Transaction = ({tx, ...otherProps}) => {
@@ -50,7 +52,7 @@ const Transaction = ({tx, ...otherProps}) => {
         size={'12'}
         radius={'0'}
       />
-      <ProgressBar />
+      <ProgressBar height={7} />
     </TxLi>
   );
 };

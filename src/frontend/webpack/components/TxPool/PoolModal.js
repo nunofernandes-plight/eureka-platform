@@ -32,6 +32,7 @@ const MyModal = styled.div`
   max-width: 100%;
   max-height: 100%;
   z-index: 12;
+  overflow: scroll;
   width: 50%;
 `;
 
