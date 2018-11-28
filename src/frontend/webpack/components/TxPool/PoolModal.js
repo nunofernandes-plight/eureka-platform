@@ -59,7 +59,6 @@ const Header = styled.div`
   position: fixed;
   z-index: 100000;
   width: 50%;
-  visibility: ${props => (props.loading ? 'hidden' : 'visible')};
 `;
 
 const TxPoolIcon = styled.img`
@@ -82,7 +81,7 @@ const PoolModal = ({show, ...otherProps}) => {
       {show ? (
         <Parent>
           <MyModal>
-            <Header loading={otherProps.loading}>
+            <Header>
               <HeaderTitle>
                 Transaction Pool <TxPoolIcon src="/img/tx/transaction.svg" />{' '}
               </HeaderTitle>

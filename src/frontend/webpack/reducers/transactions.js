@@ -102,6 +102,7 @@ export const transactionsData = (state = initialState, action) => {
       };
     case START_FETCHING_TXS:
       return {
+        ...state,
         fetchingTxLoading: true
       };
     case RECEIVED_TXS:

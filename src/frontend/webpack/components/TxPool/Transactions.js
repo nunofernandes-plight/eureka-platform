@@ -16,12 +16,19 @@ const Container = styled.ol`
 class Transactions extends React.Component {
   componentDidMount() {
     this.props.fetchTransactions();
+    this.interval = setInterval(async () => {
+      this.props.fetchTransactions();
+    }, 7500);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   render() {
     return (
       <Container>
-        {this.props.loading ? (
+        {!this.props.txs ? (
           <TxLi>
             <UploadProgressContainer />
           </TxLi>
