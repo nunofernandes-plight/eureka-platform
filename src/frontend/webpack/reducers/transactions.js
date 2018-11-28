@@ -1,5 +1,12 @@
 import {getDomain} from '../../../helpers/getDomain.mjs';
-import {ADDED_TX, ADDING_TX, ERROR_ADDING_TX} from './types.js';
+import {
+  ADDED_TX,
+  ADDING_TX,
+  ERROR_ADDING_TX,
+  ERROR_FETCHING_TXS,
+  RECEIVED_TXS,
+  START_FETCHING_TXS
+} from './types.js';
 
 const initialState = {addingTxLoading: true, txs: null};
 
@@ -27,6 +34,39 @@ export const addTransaction = (type, tx) => {
         } else {
           dispatch({
             type: ERROR_ADDING_TX,
+            error: response.error
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        dispatch({
+          type: ERROR_ADDING_TX
+        });
+      });
+  };
+};
+
+export const getTransactions = () => {
+  return dispatch => {
+    dispatch({type: START_FETCHING_TXS});
+    fetch(`${getDomain()}/api/frontendtransactions`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.success) {
+          dispatch({
+            type: RECEIVED_TXS,
+            txs: response.data
+          });
+        } else {
+          dispatch({
+            type: ERROR_FETCHING_TXS,
             error: response.error
           });
         }
