@@ -37,7 +37,11 @@ export default {
           .getTransactionReceipt(tx.txHash)
           .then(receipt => {
             if (receipt) {
-              nexTx.status = TRANSACTION_STATUS.COMPLETED;
+              if (receipt.status) {
+                nexTx.status = TRANSACTION_STATUS.COMPLETED;
+              } else {
+                nexTx.status = TRANSACTION_STATUS.ERROR;
+              }
             } else {
               nexTx.status = TRANSACTION_STATUS.IN_PROGRESS;
             }

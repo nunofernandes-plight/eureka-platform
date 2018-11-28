@@ -71,6 +71,7 @@ const Transaction = ({tx, ...otherProps}) => {
           <ProgressBar height={3} static />
         )}
       </BarContainer>
+      {tx.status}
       <LottieContainer>
         <Animation status={tx.status} />
       </LottieContainer>
