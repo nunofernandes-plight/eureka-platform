@@ -456,7 +456,7 @@ export default {
     const existingCommunityReviewsLength = articleVersion.communityReviews.length;
 
     // Add a new communityReview into the DB
-    let dbReview = await reviewService.addNewCommunitydReview(
+    let dbReview = await reviewService.addNewCommunityReview(
       reviewer.ethereumAddress,
       articleVersion.articleHash,
       reviewData.reviewText,

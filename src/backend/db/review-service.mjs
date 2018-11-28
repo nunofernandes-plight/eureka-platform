@@ -251,7 +251,7 @@ export default {
    * @param articleHasMinorIssues
    * @returns {Promise<void>}
    */
-  addNewCommunitydReview: async (userAddress, articleHash, reviewText, reviewHash, score1, score2, articleHasMajorIssues, articleHasMinorIssues) => {
+  addNewCommunityReview: async (userAddress, articleHash, reviewText, reviewHash, score1, score2, articleHasMajorIssues, articleHasMinorIssues) => {
     let articleVersion = await ArticleVersion.findOne({
       articleHash: articleHash
     });
@@ -322,11 +322,10 @@ export default {
       articleVersion: articleVersion._id,
       reviewerAddress
     });
-    
+
     review.reviewState = ReviewState.DECLINED;
     review.stateTimestamp = stateTimestamp;
     await review.save();
-
     return 'Decline of review ' + review._id;
   }
 };

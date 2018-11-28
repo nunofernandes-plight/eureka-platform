@@ -108,7 +108,7 @@ router.put(
   '/community',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
-    return await reviewService.addNewCommunitydReview(
+    return await reviewService.addNewCommunityReview(
       ethereumAddress,
       req.body.articleHash,
       req.body.reviewText,
