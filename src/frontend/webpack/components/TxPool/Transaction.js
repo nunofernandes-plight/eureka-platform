@@ -11,8 +11,6 @@ import TRANSACTION_STATUS from '../../../../helpers/TransactionStatus.mjs';
 import EurekaLogo from '../../views/icons/EurekaLogo.js';
 import TxType from '../MyHistory/TxType.js';
 import {ProgressBar} from './ProgressBar.js';
-import * as animationData from '../TxPool/spinner.json';
-import LottieManager from '../LottieManager.js';
 import {Animation} from './Animation.js';
 
 const getColor = status => {

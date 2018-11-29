@@ -18,7 +18,7 @@ class Transactions extends React.Component {
     this.props.fetchTransactions();
     this.interval = setInterval(async () => {
       this.props.fetchTransactions();
-    }, 1000);
+    }, 7500);
   }
 
   componentWillUnmount() {

@@ -5,6 +5,7 @@ import {__FIFTH, __GRAY_300, __GRAY_400} from '../../../helpers/colors.js';
 import Transactions from './Transactions.js';
 import connect from 'react-redux/es/connect/connect.js';
 import {fetchTransactions} from '../../reducers/transactions.js';
+import Icon from '../../views/icons/Icon.js';
 
 const Parent = styled.div`
   position: fixed;
@@ -68,11 +69,16 @@ const TxPoolIcon = styled.img`
 `;
 
 const HeaderTitle = styled.h2`
-  margin: 0;
   color: white;
   font-size: 14px;
   text-transform: uppercase;
   display: flex;
+  margin: 0 0 0 auto;
+`;
+
+const IconContainer = styled.div`
+  margin-left: auto;
+  margin-right: 5px;
 `;
 
 const PoolModal = ({show, ...otherProps}) => {
@@ -85,6 +91,16 @@ const PoolModal = ({show, ...otherProps}) => {
               <HeaderTitle>
                 Transaction Pool <TxPoolIcon src="/img/tx/transaction.svg" />{' '}
               </HeaderTitle>
+              <IconContainer>
+                <Icon
+                  icon={'close'}
+                  width={10}
+                  height={18}
+                  onClick={() => {
+                    otherProps.toggle(!show);
+                  }}
+                />
+              </IconContainer>
             </Header>
             <Transactions />
             <FooterContainer />
