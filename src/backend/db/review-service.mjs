@@ -5,6 +5,9 @@ import ArticleVersion from '../schema/article-version.mjs';
 import articleVersionService from './article-version-service.mjs';
 import ARTICLE_VERSION_STATE from '../schema/article-version-state-enum.mjs';
 import {getIds} from '../helpers/get-array-of-ids.mjs';
+import REVIEW_TYPE from '../schema/review-type-enum.mjs';
+import {getReviewersInvitationTemplate} from '../email/templates/EmailTemplates.mjs';
+import {sendEmailByEthereumAddress} from '../email/index.mjs';
 
 export default {
   getAllReviews: () => {
@@ -111,11 +114,32 @@ export default {
     ]);
   },
 
-  createReview: async (submissionId, articleHash, stateTimestamp) => {
-    const review = new Review({submissionId, articleHash, stateTimestamp});
-    return review.save(err => {
-      if (err) throw err;
-      console.log('Created new review on DB done');
+  createReviewInvitation: async (reviewerAddress, articleHash, reviewType)  => {
+    let articleVersion = await ArticleVersion.findOne({
+      articleHash
+    });
+    if (!articleVersion) errorThrower.noEntryFoundById(articleHash);
+
+    const review = new Review({
+      stateTimestamp: new Date(),
+      reviewerAddress: reviewerAddress,
+      articleVersion: articleVersion._id,
+      reviewType
+    });
+    await review.save();
+
+    if (reviewType === REVIEW_TYPE.EDITOR_APPROVED_REVIEW)
+      articleVersion.editorApprovedReviews.push(review._id);
+    else
+      articleVersion.editorApprovedReviews.push(review._id);
+
+    await articleVersion.save();
+
+    sendEmailByEthereumAddress({
+      ethereumAddress: reviewerAddress,
+      from: 'info@eurekatoken.io',
+      subject: 'Reviewer Invitation',
+      html: getReviewersInvitationTemplate(articleVersion)
     });
   },
 
