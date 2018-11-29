@@ -81,12 +81,19 @@ class EditorInvite extends React.Component {
   async inviteReviewers() {
     if (!this.state.reviewersToInvite) return;
 
-    this.state.reviewersToInvite.map(r => {
-      createReviewInvitation(
-        r.ethereumAddress,
-        this.state.article.articleHash,
-        REVIEW_TYPE.EDITOR_APPROVED_REVIEW
-      );
+    await Promise.all(
+      this.state.reviewersToInvite.map(r => {
+        return createReviewInvitation(
+          r.ethereumAddress,
+          this.state.article.articleHash,
+          REVIEW_TYPE.EDITOR_APPROVED_REVIEW
+        );
+      })
+    );
+
+    this.setState({
+      showSendEmailAnimation: true,
+      reviewersToInvite: []
     });
   }
 
