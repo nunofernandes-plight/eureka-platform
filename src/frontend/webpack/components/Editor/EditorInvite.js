@@ -93,7 +93,7 @@ class EditorInvite extends React.Component {
 
     this.setState({
       showSendEmailAnimation: true,
-      reviewersToInvite: []
+      reviewersToInvite: null
     });
   }
 
@@ -130,7 +130,10 @@ class EditorInvite extends React.Component {
         <Modal
           toggle={showReviewersPickerModal => {
             this.setState({showReviewersPickerModal});
-            this.setState({article: null});
+            this.setState({
+              article: null,
+              reviewersToInvite: null
+            });
           }}
           hideHeader={this.state.showSendEmailAnimation}
           hideFooter={this.state.showSendEmailAnimation}
