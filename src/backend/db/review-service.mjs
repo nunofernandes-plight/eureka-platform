@@ -61,7 +61,7 @@ export default {
   },
 
   getReviewsByState: async (reviewState) => {
-    if(!(reviewState in ReviewState)) errorThrower.notCorrectStatus('any of Object ReviewState', reviewState);
+    if (!(reviewState in ReviewState)) errorThrower.notCorrectStatus('any of Object ReviewState', reviewState);
 
     return await Review.find({
       reviewState: {$in: [reviewState]}
@@ -114,26 +114,31 @@ export default {
     ]);
   },
 
-  createReviewInvitation: async (reviewerAddress, articleHash, reviewType)  => {
+  createReviewInvitation: async (reviewerAddress, articleHash, reviewType) => {
     let articleVersion = await ArticleVersion.findOne({
       articleHash
     });
     if (!articleVersion) errorThrower.noEntryFoundById(articleHash);
 
-    const review = new Review({
-      stateTimestamp: new Date(),
-      reviewerAddress: reviewerAddress,
-      articleVersion: articleVersion._id,
-      reviewType
+    let review = await Review.findOne({
+      reviewerAddress,
+      articleVersion: articleVersion._id
     });
-    await review.save();
 
-    if (reviewType === REVIEW_TYPE.EDITOR_APPROVED_REVIEW)
-      articleVersion.editorApprovedReviews.push(review._id);
-    else
-      articleVersion.editorApprovedReviews.push(review._id);
-
-    await articleVersion.save();
+    if (review) {
+      review.stateTimestamp = new Date();
+      review.reviewType = reviewType;
+    }
+    else {
+      review = new Review({
+        reviewState: ReviewState.INVITED,
+        stateTimestamp: new Date(),
+        reviewerAddress,
+        articleVersion: articleVersion._id,
+        reviewType
+      });
+    }
+    review.save();
 
     sendEmailByEthereumAddress({
       ethereumAddress: reviewerAddress,
@@ -156,7 +161,7 @@ export default {
 
   getReviewByReviewHash: async (reviewHash) => {
     const review = await Review.findOne({reviewHash: reviewHash});
-    if(!review) errorThrower.noEntryFoundByParameters('reviewHash');
+    if (!review) errorThrower.noEntryFoundByParameters('reviewHash');
     return review;
   },
 
@@ -205,23 +210,23 @@ export default {
   },
 
   updateReview: async (userAddress, reviewId, reviewText, reviewHash, score1, score2, articleHasMajorIssues, articleHasMinorIssues) => {
-      const review = await Review.findById(reviewId);
-      if (!review) errorThrower.noEntryFoundById(reviewId);
-      if (review.reviewerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
-      if (review.reviewState !== ReviewState.HANDED_IN_DB) {
-        errorThrower.notCorrectStatus(
-          [ReviewState.HANDED_IN_DB], review.reviewState);
-      }
+    const review = await Review.findById(reviewId);
+    if (!review) errorThrower.noEntryFoundById(reviewId);
+    if (review.reviewerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+    if (review.reviewState !== ReviewState.HANDED_IN_DB) {
+      errorThrower.notCorrectStatus(
+        [ReviewState.HANDED_IN_DB], review.reviewState);
+    }
 
-      review.reviewHash = reviewHash;
-      review.reviewText = reviewText;
-      review.reviewScore1 = score1;
-      review.reviewScore2 = score2;
-      review.articleHasMajorIssues = articleHasMajorIssues;
-      review.articleHasMinorIssues = articleHasMinorIssues;
-      review.reviewState = ReviewState.HANDED_IN_DB;
-      await review.save();
-      return 'saved editor-approved review to DB.';
+    review.reviewHash = reviewHash;
+    review.reviewText = reviewText;
+    review.reviewScore1 = score1;
+    review.reviewScore2 = score2;
+    review.articleHasMajorIssues = articleHasMajorIssues;
+    review.articleHasMinorIssues = articleHasMinorIssues;
+    review.reviewState = ReviewState.HANDED_IN_DB;
+    await review.save();
+    return 'saved editor-approved review to DB.';
   },
 
   updateEditorApprovedReviewFromSC: async (articleHash, reviewHash, reviewerAddress, stateTimestamp, articleHasMajorIssues, articleHasMinorIssues, score1, score2) => {
@@ -250,7 +255,7 @@ export default {
     let review = await Review.findOne({
       reviewHash: oldReviewHash
     });
-    if(!review) errorThrower.noEntryFoundByParameters('oldReviewHash');
+    if (!review) errorThrower.noEntryFoundByParameters('oldReviewHash');
 
     review.reviewHash = newReviewHash;
     review.stateTimestamp = stateTimestamp;
