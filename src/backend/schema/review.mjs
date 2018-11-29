@@ -15,7 +15,7 @@ export const reviewSchema = mongoose.Schema(
       default: ReviewType.COMMUNITY_REVIEW
     },
     stateTimestamp: {
-      type: String,
+      type: Date,
       required: true
     },
     articleVersion: {
