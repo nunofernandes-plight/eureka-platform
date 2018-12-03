@@ -200,6 +200,7 @@ class MyDrafts extends React.Component {
               <Icon icon={'material'} material={'add'} width={25} />
             </Circle>
           </TitleContainer>
+
           {this.props.onlineDraftsLoading ? (
             <div style={{marginTop: 25}}>
               <CircleSpinner />
