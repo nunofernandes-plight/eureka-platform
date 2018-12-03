@@ -390,7 +390,7 @@ contract EurekaPlatform {
         emit SanityIsNotOk(articleVersions[_articleHash].submissionId, _articleHash, block.timestamp);
     }
 
-    event SignedUpForReviewing(bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp);
+    event SignedUpForReviewing(bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp, bool isEditorApprovedReview);
     function signUpForReviewing(bytes32 _articleHash) public {
 
         require(isExpertReviewer[msg.sender], "msg.sender must be an expert reviewer to sign up for adding an expert review.");
@@ -398,12 +398,15 @@ contract EurekaPlatform {
         require(articleVersions[_articleHash].versionState == ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. version state must be OPEN_FOR_ALL_REVIEWERS.");
 
         Review storage review = reviews[_articleHash][msg.sender];
+        require(review.reviewState == ReviewState.NOT_EXISTING, "the review already exists or the reviewer is already signed up.");
+
         review.reviewState = ReviewState.SIGNED_UP_FOR_REVIEWING;
         review.stateTimestamp = block.timestamp;
         review.reviewer = msg.sender;
+        review.isEditorApprovedReview = true;
 
         articleVersions[_articleHash].editorApprovedReviews.push(review.reviewer);
-        emit SignedUpForReviewing(_articleHash, msg.sender, block.timestamp);
+        emit SignedUpForReviewing(_articleHash, msg.sender, block.timestamp, review.isEditorApprovedReview);
     }
 
     event ResignedFromReviewing(bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp);
@@ -419,6 +422,7 @@ contract EurekaPlatform {
         review.reviewState = ReviewState.NOT_EXISTING;
         review.stateTimestamp = 0;
         review.reviewer = address(0);
+        review.isEditorApprovedReview = false;
 
         emit ResignedFromReviewing(_articleHash, reviewerAddress, block.timestamp);
     }
