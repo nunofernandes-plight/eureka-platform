@@ -7,6 +7,7 @@ import DocumentEditor from '../Articles/TextEditor/DocumentEditor.js';
 import NavPill from '../../views/NavPill.js';
 import MySubmitted from '../Articles/MySubmitted.js';
 import {ArticlesNavPillRoutes} from './ArticlesNavPillRoutes.js';
+import {Card} from '../../views/Card.js';
 
 const Parent = styled.div`
   display: flex;
@@ -61,8 +62,10 @@ class ArticlesRouter extends Component {
           </NavPills>
           <Route
             exact
-            path={`${this.props.base}/drafts`}
-            render={() => <MyDrafts base={`${this.props.base}/drafts`} />}
+            path={`${this.props.base}/drafts/online`}
+            render={() => (
+              <MyDrafts base={`${this.props.base}/drafts/online`} />
+            )}
           />
 
           <Route
@@ -73,14 +76,20 @@ class ArticlesRouter extends Component {
 
           <Route
             exact
-            path={`${this.props.base}/drafts/:id`}
+            path={`${this.props.base}/drafts/online/:id`}
             render={() => <DocumentEditor base={this.props.base} />}
           />
 
           <Route
             exact
+            path={`${this.props.base}/drafts/pdfs`}
+            render={() => <Card title={'culO'}>asfoafoasjofas</Card>}
+          />
+
+          <Route
+            exact
             path={`${this.props.base}`}
-            render={() => <Redirect to={`${this.props.base}/drafts`} />}
+            render={() => <Redirect to={`${this.props.base}/drafts/online`} />}
           />
         </Container>
       </Parent>
