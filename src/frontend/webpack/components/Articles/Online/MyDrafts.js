@@ -11,6 +11,7 @@ import Icon from '../../../views/icons/Icon.js';
 import queryString from 'query-string';
 import {connect} from 'react-redux';
 import {fetchUserData} from '../../../reducers/user.js';
+import {fetchOnlineDrafts} from '../../../reducers/articles.js';
 
 const Container = styled.div`
   display: flex;
@@ -64,7 +65,7 @@ class MyDrafts extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchYourArticles();
+    this.props.fetchOnlineDrafts();
   }
 
   createNewArticle() {
@@ -95,35 +96,6 @@ class MyDrafts extends React.Component {
         this.setState({
           errorMessage: 'Ouh. Something went wrong.',
           loading: false
-        });
-      });
-  }
-
-  fetchYourArticles() {
-    this.setState({fetchingArticlesLoading: true});
-    fetch(`${getDomain()}/api/articles/drafts`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    })
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          this.setState({drafts: response.data});
-        } else {
-          this.setState({
-            errorMessage: response.error,
-            fetchingArticlesLoading: false
-          });
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({
-          errorMessage: 'Ouh. Something went wrong.',
-          fetchingArticlesLoading: false
         });
       });
   }
@@ -228,12 +200,16 @@ class MyDrafts extends React.Component {
               <Icon icon={'material'} material={'add'} width={25} />
             </Circle>
           </TitleContainer>
-          {this.state.drafts ? (
+          {this.props.onlineDraftsLoading ? (
+            <div style={{marginTop: 25}}>
+              <CircleSpinner />
+            </div>
+          ) : (
             <DraftsTable
               loadingAuthor={this.state.loadingAuthor}
               getAuthor={address => this.getAuthor(address)}
               authorsData={this.state.authorsData}
-              drafts={this.state.drafts}
+              drafts={this.props.onlineDrafts}
               base={this.props.base}
               onSubmit={() => this.createNewArticle()}
               onDelete={_id => {
@@ -243,10 +219,6 @@ class MyDrafts extends React.Component {
                 });
               }}
             />
-          ) : (
-            <div style={{marginTop: 25}}>
-              <CircleSpinner />
-            </div>
           )}
         </Card>
       </Container>
@@ -256,11 +228,17 @@ class MyDrafts extends React.Component {
 
 export default withRouter(
   connect(
-    state => ({}),
+    state => ({
+      onlineDrafts: state.articlesData.onlineDrafts,
+      onlineDraftsLoading: state.articlesData.onlineDraftsLoading
+    }),
     dispatch => {
       return {
         fetchUserData: () => {
           dispatch(fetchUserData());
+        },
+        fetchOnlineDrafts: () => {
+          dispatch(fetchOnlineDrafts());
         }
       };
     }

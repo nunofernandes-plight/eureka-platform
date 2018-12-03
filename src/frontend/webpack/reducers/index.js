@@ -5,6 +5,7 @@ import {networkData} from './network.js';
 import {metamaskData} from './metamask.js';
 import {accountsData} from './account.js';
 import {transactionsData} from './transactions.js';
+import {articlesData} from './articles.js';
 
 
 
@@ -14,8 +15,8 @@ const reducer = combineReducers({
   networkData,
   metamaskData,
   accountsData,
-  transactionsData
-
+  transactionsData,
+  articlesData
 });
 
 export default reducer;
