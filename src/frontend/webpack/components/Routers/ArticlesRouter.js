@@ -74,12 +74,6 @@ class ArticlesRouter extends Component {
 
           <Route
             exact
-            path={`${this.props.base}/drafts/online/:id`}
-            render={() => <DocumentEditor base={this.props.base} />}
-          />
-
-          <Route
-            exact
             path={`${this.props.base}`}
             render={() => <Redirect to={`${this.props.base}/drafts`} />}
           />

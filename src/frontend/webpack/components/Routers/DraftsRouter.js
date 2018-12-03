@@ -6,6 +6,7 @@ import {Redirect} from 'react-router-dom';
 import MySubmitted from '../Articles/MySubmitted.js';
 import {Card} from '../../views/Card.js';
 import MyDrafts from '../Articles/Online/MyDrafts.js';
+import DocumentEditor from '../Articles/Online/TextEditor/DocumentEditor.js';
 
 export const DraftsRouter = ({base}) => {
   return (
@@ -14,6 +15,12 @@ export const DraftsRouter = ({base}) => {
         exact
         path={`${base}/online`}
         render={() => <MyDrafts base={`${base}/online`} />}
+      />
+
+      <Route
+        exact
+        path={`${base}/online/:id`}
+        render={() => <DocumentEditor base={base} />}
       />
 
       <Route
