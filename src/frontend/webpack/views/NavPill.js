@@ -14,16 +14,16 @@ export const MyNavPill = styled(NavLink)`
   text-decoration: none;
   font-size: 0.875rem;
   font-weight: 500;
-  padding: 0.75rem 1rem;
-  color: ${__FIFTH};
+  padding: ${props => (props.small ? '0.75rem' : '0.75rem 1rem')};
+  color: ${props => (props.color ? props.color : __FIFTH)};
   background-color: #fff;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   margin: 0 10px;
-  border-radius: 10px;
+  border-radius: ${props => (props.small ? '50%' : '10px')};
   cursor: pointer;
 
   &.${props => props.activeClassName} {
-    background-color: ${__FIFTH};
+    background-color: ${props => (props.color ? props.color : __FIFTH)};
     color: #fff;
   }
 `;
@@ -32,7 +32,7 @@ MyNavPill.defaultProps = {
   activeClassName: 'active'
 };
 const IconContainer = styled.div`
-  width: 125px;
+  width: ${props => (props.small ? null : '125px')};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -50,12 +50,16 @@ const Name = styled.div`
 
 const NavPill = props => {
   return (
-    <MyNavPill to={`${props.base}/${props.path}`}>
+    <MyNavPill
+      to={`${props.base}/${props.path}`}
+      small={props.small}
+      color={props.color}
+    >
       <IconContainer {...props}>
-        <Name>{props.name}</Name>
+        {props.small ? null : <Name>{props.name}</Name>}
         <Icon
           noMove
-          left={5}
+          left={props.small ? 0 : 5}
           icon={props.icon}
           material={props.material}
           width={props.width}
