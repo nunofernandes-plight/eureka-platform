@@ -50,8 +50,8 @@ export const inviteReviewersForArticle = (
   );
 };
 
-export const acceptReviewInvitation = (contract, _articleHash) => {
-  return contract.methods.acceptReviewInvitation(_articleHash);
+export const signUpForReviewing = (contract, _articleHash) => {
+  return contract.methods.signUpForReviewing(_articleHash);
 };
 
 export const addEditorApprovedReview = (

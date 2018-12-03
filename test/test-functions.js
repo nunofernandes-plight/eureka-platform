@@ -6,7 +6,7 @@ import {
   setSanityToOk,
   setSanityIsNotOk,
   inviteReviewersForArticle,
-  acceptReviewInvitation,
+  signUpForReviewing,
   addEditorApprovedReview,
   addCommunityReview,
   acceptReview,
@@ -375,7 +375,7 @@ export default {
    * @returns {Promise<void>}
    */
   acceptInvitationAndTest: async function(t, reviewer, index, articleVersion) {
-    await acceptReviewInvitation(
+    await signUpForReviewing(
       eurekaPlatformContract,
       articleVersion.articleHash
     ).send({
