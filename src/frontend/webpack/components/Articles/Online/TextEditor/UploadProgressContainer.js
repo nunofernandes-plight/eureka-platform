@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import UploadSpinner from '../../../views/spinners/UploadSpinner.js';
+import UploadSpinner from '../../../../views/spinners/UploadSpinner.js';
 
 const Container = styled.div`
   display: flex;

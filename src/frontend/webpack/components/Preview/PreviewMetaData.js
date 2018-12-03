@@ -5,7 +5,7 @@ import {__ALERT_ERROR, __THIRD} from '../../../helpers/colors.js';
 import {
   makeFieldReadable,
   renderField
-} from '../Articles/TextEditor/DocumentRenderer.mjs';
+} from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
 
 const Container = styled.div`
   display: flex;

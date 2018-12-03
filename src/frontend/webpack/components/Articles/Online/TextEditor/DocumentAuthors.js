@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import TitleWithHelper from './TitleWithHelper.js';
-import Icon from '../../../views/icons/Icon.js';
-import {__ALERT_ERROR} from '../../../../helpers/colors.js';
-import Author from '../../../views/Author.js';
+import Icon from '../../../../views/icons/Icon.js';
+import {__ALERT_ERROR} from '../../../../../helpers/colors.js';
+import Author from '../../../../views/Author.js';
 
 const Authors = styled.div``;
 const AddAuthor = styled.div`

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {fromS3toCdn} from '../../../../../helpers/S3UrlConverter.js';
+import {fromS3toCdn} from '../../../../../../helpers/S3UrlConverter.js';
 import DropZoneHandler from './DropZoneHandler.js';
 import DocumentFiguresRenderer from './DocumentFiguresRenderer.js';
 import TitleWithHelper from './TitleWithHelper.js';

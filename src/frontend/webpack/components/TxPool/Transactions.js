@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import connect from 'react-redux/es/connect/connect.js';
 import {fetchTransactions} from '../../reducers/transactions.js';
-import UploadProgressContainer from '../Articles/TextEditor/UploadProgressContainer.js';
+import UploadProgressContainer from '../Articles/Online/TextEditor/UploadProgressContainer.js';
 import Transaction, {TxLi} from './Transaction.js';
 
 const Container = styled.ol`

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Editor from 'draft-js-plugins-editor';
 import TitleWithHelper from './TitleWithHelper.js';
-import {customStyleMap} from '../../../../helpers/customStyleMap.js';
+import {customStyleMap} from '../../../../../helpers/customStyleMap.js';
 import createSingleLinePlugin from 'draft-js-single-line-plugin';
 const titleStyle = () => 'title';
 

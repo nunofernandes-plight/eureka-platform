@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__ALERT_ERROR, __GRAY_300} from '../../../../helpers/colors.js';
-import Icon from '../../../views/icons/Icon.js';
-import Modal from '../../../design-components/Modal.js';
+import {__ALERT_ERROR, __GRAY_300} from '../../../../../helpers/colors.js';
+import Icon from '../../../../views/icons/Icon.js';
+import Modal from '../../../../design-components/Modal.js';
 
 const Container = styled.div`
   display: flex;

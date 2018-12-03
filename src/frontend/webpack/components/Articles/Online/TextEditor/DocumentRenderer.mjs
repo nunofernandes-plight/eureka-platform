@@ -1,6 +1,6 @@
 import draftJs from 'draft-js';
-import Document from '../../../../../models/Document.mjs';
-import {deserializeDocument} from '../../../../../helpers/documentSerializer.mjs';
+import Document from '../../../../../../models/Document.mjs';
+import {deserializeDocument} from '../../../../../../helpers/documentSerializer.mjs';
 const convertToRaw = draftJs.convertToRaw;
 
 export const makeFieldReadable = field => {

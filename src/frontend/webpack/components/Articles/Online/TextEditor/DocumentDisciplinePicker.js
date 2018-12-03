@@ -1,6 +1,6 @@
 import React from 'react';
-import Discipline from '../../../../../models/Discipline.js';
-import Select from '../../Select.js';
+import Discipline from '../../../../../../models/Discipline.js';
+import Select from '../../../Select.js';
 import TitleWithHelper from './TitleWithHelper';
 
 const mapOptions = o => {

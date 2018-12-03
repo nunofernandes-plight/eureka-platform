@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {fetchArticleByReviewId} from '../Articles/TextEditor/DocumentMainMethods.js';
+import {fetchArticleByReviewId} from '../Articles/Online/TextEditor/DocumentMainMethods.js';
 import Document from '../../../../models/Document.mjs';
 import {deserializeDocument} from '../../../../helpers/documentSerializer.mjs';
 import withRouter from 'react-router/es/withRouter.js';

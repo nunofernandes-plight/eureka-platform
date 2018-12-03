@@ -8,7 +8,7 @@ import {
   __ALERT_SUCCESS
 } from '../../helpers/colors.js';
 import {renderTimestamp} from '../../helpers/timestampRenderer.js';
-import {renderField} from '../components/Articles/TextEditor/DocumentRenderer.mjs';
+import {renderField} from '../components/Articles/Online/TextEditor/DocumentRenderer.mjs';
 import ARTICLE_VERSION_STATE from '../../../backend/schema/article-version-state-enum.mjs';
 import Icon from './icons/Icon.js';
 import PulseSpinner from './spinners/PulseSpinner.js';

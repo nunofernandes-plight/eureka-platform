@@ -1,16 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 import {withRouter} from 'react-router-dom';
-import DraftsTable from '../../views/DraftsTable.js';
-import {Card, CardTitle} from '../../views/Card.js';
-import {__ALERT_ERROR, __FIFTH} from '../../../helpers/colors.js';
-import {getDomain} from '../../../../helpers/getDomain.mjs';
-import Modal from '../../design-components/Modal.js';
-import CircleSpinner from '../../views/spinners/CircleSpinner.js';
-import Icon from '../../views/icons/Icon.js';
+import DraftsTable from '../../../views/DraftsTable.js';
+import {Card, CardTitle} from '../../../views/Card.js';
+import {__ALERT_ERROR, __FIFTH} from '../../../../helpers/colors.js';
+import {getDomain} from '../../../../../helpers/getDomain.mjs';
+import Modal from '../../../design-components/Modal.js';
+import CircleSpinner from '../../../views/spinners/CircleSpinner.js';
+import Icon from '../../../views/icons/Icon.js';
 import queryString from 'query-string';
 import {connect} from 'react-redux';
-import {fetchUserData} from '../../reducers/user.js';
+import {fetchUserData} from '../../../reducers/user.js';
 
 const Container = styled.div`
   display: flex;
