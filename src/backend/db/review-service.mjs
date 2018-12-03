@@ -114,6 +114,30 @@ export default {
     ]);
   },
 
+  getReviewById: async (userAddress, reviewId) => {
+    return await Review.findById(reviewId)
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}]
+      });
+  },
+
+  getReviewByReviewHash: async (reviewHash) => {
+    const review = await Review.findOne({reviewHash: reviewHash});
+    if (!review) errorThrower.noEntryFoundByParameters('reviewHash');
+    return review;
+  },
+
+
+  getArticleVersionIds: idObjects => {
+    return idObjects.map(i => {
+      return i.articleVersion;
+    });
+  },
+
   createReviewInvitation: async (reviewerAddress, articleHash, reviewType) => {
     let articleVersion = await ArticleVersion.findOne({
       articleHash
@@ -148,32 +172,33 @@ export default {
     });
   },
 
-  getReviewById: async (userAddress, reviewId) => {
-    return await Review.findById(reviewId)
-      .populate({
-        path: 'articleVersion',
-        populate: [
-          {path: 'articleSubmission'},
-          {path: 'editorApprovedReviews'},
-          {path: 'communityReviews'}]
-      });
-  },
-
-  getReviewByReviewHash: async (reviewHash) => {
-    const review = await Review.findOne({reviewHash: reviewHash});
-    if (!review) errorThrower.noEntryFoundByParameters('reviewHash');
-    return review;
-  },
-
-
-  getArticleVersionIds: idObjects => {
-    return idObjects.map(i => {
-      return i.articleVersion;
+  signUpForReviewing: async (reviewerAddress, articleHash, reviewType) => {
+    let articleVersion = await ArticleVersion.findOne({
+      articleHash
     });
-  },
+    if (!articleVersion) errorThrower.noEntryFoundById(articleHash);
 
-  // TODO: addReviewInvitation
-  // TODO: acceptedReviewInvitation
+    let review = await Review.findOne({
+      reviewerAddress,
+      articleVersion: articleVersion._id
+    });
+
+    if (review) {
+      review.reviewType = reviewType;
+      review.reviewState = ReviewState.SIGNED_UP_FOR_REVIEWING;
+      review.stateTimestamp = new Date();
+    }
+    else {
+      review = new Review({
+        reviewState: ReviewState.SIGNED_UP_FOR_REVIEWING,
+        stateTimestamp: new Date(),
+        reviewerAddress,
+        articleVersion: articleVersion._id,
+        reviewType
+      });
+    }
+    review.save();
+  },
 
   /**
    * Frontend sends the data of an review right
