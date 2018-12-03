@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import styled from 'styled-components';
 import {Route} from 'react-router';
 import {Redirect, withRouter} from 'react-router-dom';
@@ -70,6 +70,12 @@ class ArticlesRouter extends Component {
             exact
             path={`${this.props.base}/submitted`}
             render={() => <MySubmitted base={`${this.props.base}/submitted`} />}
+          />
+
+          <Route
+            exact
+            path={`${this.props.base}/drafts/online/:id`}
+            render={() => <DocumentEditor base={this.props.base} />}
           />
 
           <Route

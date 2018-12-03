@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import {withRouter} from 'react-router-dom';
 import DraftsTable from '../../../views/DraftsTable.js';
@@ -27,6 +27,7 @@ const TitleContainer = styled.div`
     padding: 35px;
     background: #ddd;
   }
+  margin-top: -47px;
   width: 100%;
   display: flex;
   color: ${__ALERT_ERROR} !important;
@@ -158,7 +159,7 @@ class MyDrafts extends React.Component {
 
   renderModal() {
     return (
-      <div>
+      <Fragment>
         <Modal
           type={'notification'}
           toggle={isErrorMessage => {
@@ -185,43 +186,36 @@ class MyDrafts extends React.Component {
           Are you sure you want to delete this draft? This action will be
           permanent.
         </Modal>
-      </div>
+      </Fragment>
     );
   }
 
   render() {
     return (
-      <Container>
+      <Fragment>
         {this.renderModal()}
-        <Card>
-          <TitleContainer>
-            <CardTitle style={{margin: 0}}>My Drafts</CardTitle>
-            <Circle onClick={() => this.createNewArticle()}>
-              <Icon icon={'material'} material={'add'} width={25} />
-            </Circle>
-          </TitleContainer>
-
-          {this.props.onlineDraftsLoading ? (
-            <div style={{marginTop: 25}}>
-              <CircleSpinner />
-            </div>
-          ) : (
-            <DraftsTable
-              loadingAuthor={this.state.loadingAuthor}
-              getAuthor={address => this.getAuthor(address)}
-              authorsData={this.state.authorsData}
-              base={this.props.base}
-              onSubmit={() => this.createNewArticle()}
-              onDelete={_id => {
-                this.setState({
-                  showDeleteModal: true,
-                  draftToDelete: _id
-                });
-              }}
-            />
-          )}
-        </Card>
-      </Container>
+        <TitleContainer>
+          <Circle onClick={() => this.createNewArticle()}>
+            <Icon icon={'material'} material={'add'} width={25} />
+          </Circle>
+        </TitleContainer>
+        {this.props.onlineDraftsLoading ? (
+          <div style={{marginTop: 25}}>
+            <CircleSpinner />
+          </div>
+        ) : (
+          <DraftsTable
+            loadingAuthor={this.state.loadingAuthor}
+            getAuthor={address => this.getAuthor(address)}
+            authorsData={this.state.authorsData}
+            base={this.props.base}
+            onSubmit={() => this.createNewArticle()}
+            onDelete={_id => {
+              this.setState({showDeleteModal: true, draftToDelete: _id});
+            }}
+          />
+        )}
+      </Fragment>
     );
   }
 }
