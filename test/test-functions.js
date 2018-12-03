@@ -29,6 +29,8 @@ import reviewService from '../src/backend/db/review-service.mjs';
 import ReviewState from '../src/backend/schema/review-state-enum.mjs';
 import {transformHashToHex} from './helpers.js';
 import * as web3 from 'web3';
+import {createReviewInvitation} from '../src/frontend/webpack/components/Editor/EditorMethods.js';
+import REVIEW_TYPE from '../src/backend/schema/review-type-enum.mjs';
 
 let eurekaPlatformContract;
 let eurekaTokenContract;
@@ -333,37 +335,17 @@ export default {
    * @returns {Promise<void>}
    */
   inviteReviewersAndTest: async function(t, editor, author, reviewers, articleVersion) {
-    const existingReviewersLength = articleVersion.editorApprovedReviews.length;
-    const newReviewersLength = reviewers.length;
 
-    const reviewersAddress = reviewers.map(reviewer => {
-      return reviewer.ethereumAddress;
-    });
-
-    await inviteReviewersForArticle(
-      eurekaPlatformContract,
-      articleVersion.articleHash,
-      reviewersAddress
-    ).send({
-      from: editor.ethereumAddress,
-      gas: 80000000
-    });
-
-    let dbArticleVersion = await articleVersionService.getArticleVersionById(
-      author.ethereumAddress,
-      articleVersion._id
+    await Promise.all(
+      reviewers.map(r => {
+        return createReviewInvitation(
+          r.ethereumAddress,
+          articleVersion.articleHash,
+          REVIEW_TYPE.EDITOR_APPROVED_REVIEW
+        );
+      })
     );
-    // Check if article-version in DB holds reviewers
-    let counter = 0;
-    while (dbArticleVersion.editorApprovedReviews.length < 3 && counter < 5) {
-      sleepSync(5000);
-      dbArticleVersion = await articleVersionService.getArticleVersionById(
-        author.ethereumAddress,
-        articleVersion._id
-      );
-      counter++;
-    }
-    t.is(dbArticleVersion.editorApprovedReviews.length, (existingReviewersLength + newReviewersLength));
+    t.is(true);
   },
 
   /**
