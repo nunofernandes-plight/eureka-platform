@@ -38,11 +38,13 @@ export const DraftsRouter = ({base}) => {
                 path={item.path}
                 icon={item.icon}
                 material={item.material}
-                width={17}
+                width={25}
+                height={25}
               />
             );
           })}
         </NavPills>
+
         <Route
           exact
           path={`${base}/online`}

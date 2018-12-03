@@ -6,9 +6,23 @@ import {MAKE_MOBILE} from '../../helpers/mobile.js';
 import {PANEL_LEFT_BREAK_POINT} from '../../helpers/layout.js';
 import Icon from './icons/Icon.js';
 
+const IconContainer = styled.div`
+  width: ${props => (props.small ? null : '125px')};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
+    width: auto;
+  `};
+`;
 export const MyNavPill = styled(NavLink)`
   &:hover {
     transform: translateY(2px);
+  }
+  & ${IconContainer} {
+    & > svg {
+      fill: ${props => (props.color ? props.color : __FIFTH)};
+    }
   }
   transition: 0.25s all;
   text-decoration: none;
@@ -23,23 +37,18 @@ export const MyNavPill = styled(NavLink)`
   cursor: pointer;
 
   &.${props => props.activeClassName} {
+    & ${IconContainer} {
+      & > svg {
+        fill: #fff;
+      }
+    }
     background-color: ${props => (props.color ? props.color : __FIFTH)};
     color: #fff;
   }
 `;
-
 MyNavPill.defaultProps = {
   activeClassName: 'active'
 };
-const IconContainer = styled.div`
-  width: ${props => (props.small ? null : '125px')};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  ${MAKE_MOBILE(PANEL_LEFT_BREAK_POINT)`
-    width: auto;
-  `};
-`;
 
 const Name = styled.div`
   white-space: nowrap;

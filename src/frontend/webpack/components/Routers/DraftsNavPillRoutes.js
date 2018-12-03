@@ -8,7 +8,6 @@ export const DraftsNavPillRoutes = [
   {
     path: 'pdfs',
     name: 'PDFs',
-    icon: 'material',
-    material: 'check_box'
+    icon: 'pdf'
   }
 ];

@@ -29,7 +29,7 @@ const TitleContainer = styled.div`
   }
   position: absolute;
   right: 20px;
-  top: 20px;
+  top: 25px;
   width: 100%;
   display: flex;
   color: ${__ALERT_ERROR} !important;
