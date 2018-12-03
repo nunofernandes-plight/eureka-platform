@@ -21,6 +21,7 @@ const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
   word-wrap: break-word;
+  position: relative;
   border: 0.0625rem solid rgba(0, 0, 0, 0.05);
   border-radius: 0.25rem;
   background-color: ${props =>
