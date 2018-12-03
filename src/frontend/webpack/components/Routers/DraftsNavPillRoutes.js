@@ -2,8 +2,7 @@ export const DraftsNavPillRoutes = [
   {
     path: 'online',
     name: 'Online',
-    icon: 'material',
-    material: 'search'
+    icon: 'editor'
   },
   {
     path: 'pdfs',
