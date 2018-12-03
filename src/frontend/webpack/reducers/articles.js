@@ -8,7 +8,7 @@ import {
 
 const initialState = {
   onlineDrafts: null,
-  onlineDraftsLoading: null,
+  onlineDraftsLoading: true,
   onlineDraftError: null
 };
 

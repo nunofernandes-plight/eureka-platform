@@ -209,7 +209,6 @@ class MyDrafts extends React.Component {
               loadingAuthor={this.state.loadingAuthor}
               getAuthor={address => this.getAuthor(address)}
               authorsData={this.state.authorsData}
-              drafts={this.props.onlineDrafts}
               base={this.props.base}
               onSubmit={() => this.createNewArticle()}
               onDelete={_id => {

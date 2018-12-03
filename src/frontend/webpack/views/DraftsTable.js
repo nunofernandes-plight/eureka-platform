@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import {
   __ALERT_ERROR,
   __GRAY_600,
@@ -14,6 +14,7 @@ import AnimatedTooltip from '../design-components/AnimatedTooltip.js';
 import CircleSpinner from '../views/spinners/CircleSpinner.js';
 import Author from './Author.js';
 import {Table} from '../design-components/Table/Table.js';
+import {connect} from 'react-redux';
 
 const DraftsContainer = styled.div`
   font-size: 14px;
@@ -50,15 +51,15 @@ const MyLink = styled(Link)`
   text-decoration: none;
 `;
 
-const getData = props => {
+const getData = ({onlineDrafts, otherProps}) => {
   const data = [];
-  props.drafts.map(draft => {
+  onlineDrafts.map(draft => {
     return data.push({
       icon: getIcon(draft),
-      title: getTitle(props, draft),
-      authors: getAuthors(props, draft),
+      title: getTitle(otherProps, draft),
+      authors: getAuthors(otherProps, draft),
       lastChange: getLastChange(draft),
-      delIcon: getDeleteIcon(props, draft)
+      delIcon: getDeleteIcon(otherProps, draft)
     });
   });
   return data;
@@ -138,33 +139,40 @@ const getDeleteIcon = (props, draft) => {
     />
   );
 };
-const DraftsTable = props => {
-  return (
-    <DraftsContainer>
-      {!props.drafts || props.drafts.length === 0 ? (
-        <NoDrafts>
-          <Icon
-            icon={'material'}
-            material={'gesture'}
-            width={100}
-            height={100}
-            color={__FIFTH}
+
+const mapStateToProps = state => ({
+  onlineDrafts: state.articlesData.onlineDrafts
+});
+
+const DraftsTable = connect(mapStateToProps)(
+  ({onlineDrafts, ...otherProps}) => {
+    return (
+      <DraftsContainer>
+        {!onlineDrafts || onlineDrafts.length === 0 ? (
+          <NoDrafts>
+            <Icon
+              icon={'material'}
+              material={'gesture'}
+              width={100}
+              height={100}
+              color={__FIFTH}
+            />
+            <StartWriting onClick={() => otherProps.onSubmit()}>
+              Start writing your article exploiting EUREKA's Blockchain
+              Technology!
+            </StartWriting>
+          </NoDrafts>
+        ) : (
+          <Table
+            padding={'30px 0'}
+            header={['', 'Name', 'Authors', 'Last Changed', '']}
+            columnWidth={['8', '30', '40', '17', '5']}
+            data={getData({onlineDrafts, otherProps})}
           />
-          <StartWriting onClick={() => props.onSubmit()}>
-            Start writing your article exploiting EUREKA's Blockchain
-            Technology!
-          </StartWriting>
-        </NoDrafts>
-      ) : (
-        <Table
-          padding={'30px 0'}
-          header={['', 'Name', 'Authors', 'Last Changed', '']}
-          columnWidth={['8', '30', '40', '17', '5']}
-          data={getData(props)}
-        />
-      )}
-    </DraftsContainer>
-  );
-};
+        )}
+      </DraftsContainer>
+    );
+  }
+);
 
 export default DraftsTable;
