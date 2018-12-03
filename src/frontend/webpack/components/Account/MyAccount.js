@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {Row} from '../../helpers/layout.js';
-import {__ALERT_ERROR, __GRAY_200, __THIRD} from '../../helpers/colors.js';
-import EurekaLogo from '../views/icons/EurekaLogo.js';
-import Icon from '../views/icons/Icon.js';
-import CircleSpinner from '../views/spinners/CircleSpinner.js';
+import {Row} from '../../../helpers/layout.js';
+import {__ALERT_ERROR, __GRAY_200, __THIRD} from '../../../helpers/colors.js';
+import EurekaLogo from '../../views/icons/EurekaLogo.js';
+import Icon from '../../views/icons/Icon.js';
+import CircleSpinner from '../../views/spinners/CircleSpinner.js';
 import connect from 'react-redux/es/connect/connect.js';
-import withWeb3 from '../contexts/WithWeb3.js';
+import withWeb3 from '../../contexts/WithWeb3.js';
 
 const Container = styled.div`
   display: flex;

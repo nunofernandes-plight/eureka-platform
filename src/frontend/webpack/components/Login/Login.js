@@ -1,16 +1,14 @@
 import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom';
-import {Row} from '../../helpers/layout.js';
-import MetaMaskLogo from '../views/icons/MetaMaskLogo.js';
-import {signPrivateKey} from '../../web3/Helpers.js';
-import Web3Providers from '../../web3/Web3Providers.js';
-import {MetaMaskStatus} from '../../web3/MetaMaskStatus.js';
-import Modal from '../design-components/Modal.js';
-import AccountBalance from '../../web3/AccountBalance.js';
-import {isEmailValid} from '../../../helpers/emailValidator.js';
-import {InputField} from '../design-components/Inputs.js';
-import GridSpinner from '../views/spinners/GridSpinner.js';
-import {getDomain} from '../../../helpers/getDomain.mjs';
+import {Link, Redirect} from 'react-router-dom';
+import {Row} from '../../../helpers/layout.js';
+import MetaMaskLogo from '../../views/icons/MetaMaskLogo.js';
+import {signPrivateKey} from '../../../web3/Helpers.js';
+import Web3Providers from '../../../web3/Web3Providers.js';
+import {MetaMaskStatus} from '../../../web3/MetaMaskStatus.js';
+import Modal from '../../design-components/Modal.js';
+import AccountBalance from '../../../web3/AccountBalance.js';
+import GridSpinner from '../../views/spinners/GridSpinner.js';
+import {getDomain} from '../../../../helpers/getDomain.mjs';
 import {
   Container,
   Paragraph,
@@ -19,23 +17,18 @@ import {
   ButtonRow,
   LoginContainer,
   LoginRow
-} from '../views/SharedForms.js';
-import TopAlertContainer from '../views/TopAlertContainer.js';
-import {getRandomAvatar} from '../../helpers/getRandomAvatar.mjs';
-import withWeb3 from '../contexts/WithWeb3.js';
-import {connect} from 'react-redux';
-import {fetchUserData} from '../reducers/user.js';
-import {TITLE_GENERAL_ERROR} from '../constants/ModalErrors.js';
+} from '../../views/SharedForms.js';
+import TopAlertContainer from '../../views/TopAlertContainer.js';
+import withWeb3 from '../../contexts/WithWeb3.js';
+import connect from 'react-redux/es/connect/connect.js';
+import {fetchUserData} from '../../reducers/user.js';
 
-class SignUp extends Component {
+class Login extends Component {
   constructor() {
     super();
     this.state = {
-      username: null,
-      email: null,
       isShowed: false,
       signature: null,
-      inputStatus: null,
       isEmailValidModal: false,
       submitted: false,
       errorMessage: null,
@@ -47,16 +40,12 @@ class SignUp extends Component {
     this.setState({});
   }
 
-  async register() {
+  async login() {
     this.setState({submitted: true});
-    if (!isEmailValid(this.state.email)) {
-      this.setState({isEmailValidModal: true});
-      return;
-    }
 
     // DEV ENVIRONMENT
     if (this.props.context.provider === Web3Providers.LOCALHOST) {
-      this.apiCall();
+      await this.apiCall();
     } else if (this.props.context.provider === Web3Providers.META_MASK) {
       const status = this.props.metaMaskStatus;
       if (
@@ -69,7 +58,7 @@ class SignUp extends Component {
 
       if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
         // Already logged in
-        this.apiCall();
+        await this.apiCall();
       }
     }
   }
@@ -80,7 +69,7 @@ class SignUp extends Component {
 
     if (signature) {
       this.setState({loading: true});
-      fetch(`${getDomain()}/api/register`, {
+      fetch(`${getDomain()}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -88,9 +77,7 @@ class SignUp extends Component {
         credentials: 'include',
         body: JSON.stringify({
           password: this.state.signature,
-          email: this.state.email,
-          ethereumAddress: this.props.selectedAccount.address,
-          avatar: 'img/icons/avatars/' + getRandomAvatar()
+          ethereumAddress: this.props.selectedAccount.address
         })
       })
         .then(response => response.json())
@@ -100,8 +87,7 @@ class SignUp extends Component {
           } else {
             this.setState({
               errorMessage: response.error,
-              loading: false,
-              inputStatus: null
+              loading: false
             });
           }
         })
@@ -109,8 +95,7 @@ class SignUp extends Component {
           console.log(err);
           this.setState({
             errorMessage: 'Ouh. Something went wrong.',
-            loading: false,
-            inputStatus: null
+            loading: false
           });
         });
     }
@@ -131,15 +116,6 @@ class SignUp extends Component {
         message
       );
     }
-  }
-
-  handleInput(stateKey, e) {
-    if (isEmailValid(e.target.value)) {
-      this.setState({inputStatus: 'valid'});
-    } else {
-      this.setState({inputStatus: 'error'});
-    }
-    this.setState({[stateKey]: e.target.value});
   }
 
   renderModals() {
@@ -179,7 +155,7 @@ class SignUp extends Component {
             this.setState({errorMessage: null});
           }}
           show={this.state.errorMessage}
-          title={TITLE_GENERAL_ERROR}
+          title={'You got the following error'}
         >
           {this.state.errorMessage}
         </Modal>
@@ -190,6 +166,7 @@ class SignUp extends Component {
   render() {
     return (
       <div>
+        {this.props.authed ? <Redirect to={'/dashboard'} /> : null}
         <div>
           {this.state.loading ? (
             <GridSpinner />
@@ -201,21 +178,7 @@ class SignUp extends Component {
 
                 <Row>
                   <LoginContainer>
-                    <SubTitle>Please Register</SubTitle>
-                    <LoginRow>
-                      <InputField
-                        placeholder={'email address'}
-                        status={
-                          this.state.email ? this.state.inputStatus : null
-                        }
-                        onChange={e => this.handleInput('email', e)}
-                        onKeyPress={e => {
-                          if (e.key === 'Enter') {
-                            this.register();
-                          }
-                        }}
-                      />
-                    </LoginRow>
+                    <SubTitle>Please Login</SubTitle>
 
                     {this.props.accounts ? (
                       <LoginRow>
@@ -224,11 +187,11 @@ class SignUp extends Component {
                     ) : null}
                     <ButtonRow>
                       <Button
-                        onClick={() => {
-                          this.register();
+                        onClick={async () => {
+                          await this.login();
                         }}
                       >
-                        Register with Metamask{' '}
+                        Login with Metamask{' '}
                         <MetaMaskLogo width={20} height={20} />
                       </Button>
                     </ButtonRow>
@@ -236,8 +199,8 @@ class SignUp extends Component {
                 </Row>
                 <Row>
                   <Paragraph>
-                    Already have an <strong>account</strong>? Please{' '}
-                    <Link to="/login">Log in </Link>here.
+                    Don't have an <strong>account</strong>? Please{' '}
+                    <Link to="/signup">Sign up </Link>here.
                   </Paragraph>
                 </Row>
               </Container>
@@ -250,7 +213,7 @@ class SignUp extends Component {
 }
 
 export default withWeb3(
-  withRouter(
+  withWeb3(
     connect(
       state => ({
         metaMaskStatus: state.metamaskData.status,
@@ -264,6 +227,6 @@ export default withWeb3(
           }
         };
       }
-    )(SignUp)
+    )(Login)
   )
 );

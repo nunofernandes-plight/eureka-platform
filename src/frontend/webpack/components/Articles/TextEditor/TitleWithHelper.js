@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__THIRD} from '../../../helpers/colors.js';
+import {__THIRD} from '../../../../helpers/colors.js';
 import EditorSectionHint from './EditorSectionHint';
 
 const Container = styled.div`

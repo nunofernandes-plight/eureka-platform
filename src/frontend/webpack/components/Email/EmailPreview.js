@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {__GRAY_200, __GRAY_700, __GRAY_900} from '../../../helpers/colors.js';
-import {renderField} from '../TextEditor/DocumentRenderer.mjs';
+import {renderField} from '../Articles/TextEditor/DocumentRenderer.mjs';
 
 const Container = styled.div`
   margin-bottom: 30px;

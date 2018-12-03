@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import styled from 'styled-components';
-import {renderField} from '../TextEditor/DocumentRenderer.mjs';
+import {renderField} from '../Articles/TextEditor/DocumentRenderer.mjs';
 import ReviewsWriterContainer from '../Reviews/Annotations/WriterContainer.js';
 import {ReviewsWriterFieldContainer} from '../Reviews/Annotations/ReviewsWriterField.js';
 

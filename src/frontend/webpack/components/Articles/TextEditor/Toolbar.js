@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import Popover from '../../design-components/Popover.js';
-import {__GRAY_200, __GRAY_900, __THIRD} from '../../../helpers/colors.js';
-import Icon from '../../views/icons/Icon.js';
+import Popover from '../../../design-components/Popover.js';
+import {__GRAY_200, __GRAY_900, __THIRD} from '../../../../helpers/colors.js';
+import Icon from '../../../views/icons/Icon.js';
 import {
   BOLD,
   ITALIC,

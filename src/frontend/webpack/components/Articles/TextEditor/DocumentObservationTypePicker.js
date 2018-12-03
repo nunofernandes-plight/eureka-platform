@@ -1,6 +1,6 @@
 import React from 'react';
-import ObservationTypeModel from '../../../../models/ObservationType.js';
-import Select from '../Select';
+import ObservationTypeModel from '../../../../../models/ObservationType.js';
+import Select from '../../Select';
 import TitleWithHelper from './TitleWithHelper';
 import DropdownDetailOption from './DropdownDetailOption';
 

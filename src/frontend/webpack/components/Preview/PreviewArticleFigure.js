@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Figure} from '../../views/Figure.js';
-import {renderField} from '../TextEditor/DocumentRenderer.mjs';
+import {renderField} from '../Articles/TextEditor/DocumentRenderer.mjs';
 import {PreviewArticleTitleByField} from './PreviewArticleTitleByField.js';
 import {
   FieldContainer,

@@ -1,19 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Card} from '../views/Card.js';
-import {Row} from '../../helpers/layout.js';
-import {InputField} from '../design-components/Inputs.js';
-import Icon from '../views/icons/Icon.js';
-import {Methods} from './Routers/ContractOwnerMethods.js';
-import {__GRAY_200, __GRAY_700, __THIRD} from '../../helpers/colors.js';
-import {signUpEditor, signUpExpertReviewers} from '../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
-import Modal from '../design-components/Modal.js';
+import {Card} from '../../views/Card.js';
+import {Row} from '../../../helpers/layout.js';
+import {InputField} from '../../design-components/Inputs.js';
+import Icon from '../../views/icons/Icon.js';
+import {Methods} from '../Routers/ContractOwnerMethods.js';
+import {__GRAY_200, __GRAY_700, __THIRD} from '../../../helpers/colors.js';
+import {signUpEditor, signUpExpertReviewers} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import Modal from '../../design-components/Modal.js';
 import 'react-toastify/dist/ReactToastify.css';
-import '../design-components/Notification.css';
+import '../../design-components/Notification.css';
 import {toast, ToastContainer} from 'react-toastify';
-import {isGanache} from '../../../helpers/isGanache.mjs';
-import withWeb3 from '../contexts/WithWeb3.js';
-import {TITLE_GENERAL_ERROR} from '../constants/ModalErrors.js';
+import {isGanache} from '../../../../helpers/isGanache.mjs';
+import withWeb3 from '../../contexts/WithWeb3.js';
+import {TITLE_GENERAL_ERROR} from '../../constants/ModalErrors.js';
 import connect from 'react-redux/es/connect/connect.js';
 
 const Container = styled.div`

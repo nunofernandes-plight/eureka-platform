@@ -2,38 +2,38 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import styled from 'styled-components';
 import queryString from 'query-string';
-import {Card} from '../views/Card.js';
+import {Card} from '../../../views/Card.js';
 import sha256 from 'js-sha256';
-import {getDomain} from '../../../helpers/getDomain.mjs';
-import GridSpinner from '../views/spinners/GridSpinner.js';
-import './TextEditor/new-article.css';
+import {getDomain} from '../../../../../helpers/getDomain.mjs';
+import GridSpinner from '../../../views/spinners/GridSpinner.js';
+import './new-article.css';
 import 'draft-js/dist/Draft.css';
-import {deserializeDocument} from '../../../helpers/documentSerializer.mjs';
-import getChangedFields from '../../../helpers/compareDocuments.js';
+import {deserializeDocument} from '../../../../../helpers/documentSerializer.mjs';
+import getChangedFields from '../../../../../helpers/compareDocuments.js';
 import {pick, debounce} from 'underscore';
-import DocumentPickers from './TextEditor/DocumentPickers.js';
-import Modal from '../../webpack/design-components/Modal.js';
-import SmartContractInputData from '../views/SmartContractInputData.js';
-import {SUBMISSION_PRICE} from '../constants/Constants.js';
-import {submitArticle} from '../../../smartcontracts/methods/web3-token-contract-methods.mjs';
+import DocumentPickers from './DocumentPickers.js';
+import Modal from '../../../../webpack/design-components/Modal.js';
+import SmartContractInputData from '../../../views/SmartContractInputData.js';
+import {SUBMISSION_PRICE} from '../../../constants/Constants.js';
+import {submitArticle} from '../../../../../smartcontracts/methods/web3-token-contract-methods.mjs';
 import {
   fetchArticle,
   submitArticleDB,
   revertArticleToDraft,
   saveArticle
-} from './TextEditor/DocumentMainMethods.js';
-import ARTICLE_VERSION_STATE from '../../../backend/schema/article-version-state-enum.mjs';
-import Document from '../../../models/Document.mjs';
-import DocumentTitle from './TextEditor/DocumentTitle.js';
-import DocumentFigures from './TextEditor/DocumentFigures.js';
-import DocumentAuthors from './TextEditor/DocumentAuthors.js';
-import DocumentLeftPart from './TextEditor/DocumentLeftPart.js';
-import DocumentRightPart from './TextEditor/DocumentRightPart.js';
-import getArticleHex from '../../../smartcontracts/methods/get-articleHex.mjs';
-import UsersSelection from './UsersSelection.js';
-import Roles from '../../../backend/schema/roles-enum.mjs';
-import {isGanache} from '../../../helpers/isGanache.mjs';
-import withWeb3 from '../contexts/WithWeb3.js';
+} from './DocumentMainMethods.js';
+import ARTICLE_VERSION_STATE from '../../../../../backend/schema/article-version-state-enum.mjs';
+import Document from '../../../../../models/Document.mjs';
+import DocumentTitle from './DocumentTitle.js';
+import DocumentFigures from './DocumentFigures.js';
+import DocumentAuthors from './DocumentAuthors.js';
+import DocumentLeftPart from './DocumentLeftPart.js';
+import DocumentRightPart from './DocumentRightPart.js';
+import getArticleHex from '../../../../../smartcontracts/methods/get-articleHex.mjs';
+import UsersSelection from '../../UsersSelection.js';
+import Roles from '../../../../../backend/schema/roles-enum.mjs';
+import {isGanache} from '../../../../../helpers/isGanache.mjs';
+import withWeb3 from '../../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
 
 const Parent = styled.div`

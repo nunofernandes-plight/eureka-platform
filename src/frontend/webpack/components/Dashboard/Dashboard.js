@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {Card} from '../views/Card.js';
+import {Card} from '../../views/Card.js';
 
 const Container = styled.div`
   display: flex;

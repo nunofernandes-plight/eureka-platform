@@ -3,8 +3,8 @@ import DocumentDisciplinePicker from './DocumentDisciplinePicker.js';
 import DocumentSubDisciplinePicker from './DocumentSubDisciplinePicker.js';
 import DocumentKeywordsPicker from './DocumentKeywordsPicker.js';
 import ObservationTypePicker from './DocumentObservationTypePicker.js';
-import Requirement from '../../../../models/Requirement.mjs';
-import Document from '../../../../models/Document.mjs';
+import Requirement from '../../../../../models/Requirement.mjs';
+import Document from '../../../../../models/Document.mjs';
 
 class DocumentPickers extends React.Component {
   requirementForField(field) {

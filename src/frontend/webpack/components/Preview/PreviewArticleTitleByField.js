@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {makeFieldReadable} from '../TextEditor/DocumentRenderer.mjs';
+import {makeFieldReadable} from '../Articles/TextEditor/DocumentRenderer.mjs';
 import {__GRAY_300} from '../../../helpers/colors.js';
 
 const Title = styled.h2`

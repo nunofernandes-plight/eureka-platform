@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import {withRouter} from 'react-router-dom';
-import {Card} from '../views/Card.js';
-import {getDomain} from '../../../helpers/getDomain.mjs';
-import Modal from '../design-components/Modal.js';
-import SubmittedTable from '../views/SubmittedTable.js';
+import {Card} from '../../views/Card.js';
+import {getDomain} from '../../../../helpers/getDomain.mjs';
+import Modal from '../../design-components/Modal.js';
+import SubmittedTable from '../../views/SubmittedTable.js';
 
 const Container = styled.div`
   display: flex;

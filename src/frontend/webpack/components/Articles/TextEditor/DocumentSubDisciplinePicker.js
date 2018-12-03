@@ -1,7 +1,7 @@
 import React from 'react';
 import {flatten} from 'underscore';
 import {Creatable} from 'react-select';
-import getSubdisciplines from '../../../../helpers/SubDiscipline.js';
+import getSubdisciplines from '../../../../../helpers/SubDiscipline.js';
 import TitleWithHelper from './TitleWithHelper';
 
 const getOptions = (type, mainDisciplines, values) => {

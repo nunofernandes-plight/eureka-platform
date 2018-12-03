@@ -7,7 +7,7 @@ import {
   __THIRD,
   __FIFTH
 } from '../../helpers/colors.js';
-import {renderField} from '../components/TextEditor/DocumentRenderer.mjs';
+import {renderField} from '../components/Articles/TextEditor/DocumentRenderer.mjs';
 import {renderTimestamp} from '../../helpers/timestampRenderer.js';
 import Icon from './icons/Icon.js';
 import AnimatedTooltip from '../design-components/AnimatedTooltip.js';

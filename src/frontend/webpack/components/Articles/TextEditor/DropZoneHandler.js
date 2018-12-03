@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import Dropzone from 'react-dropzone';
 import randomstring from 'randomstring';
-import S3Upload from '../../../../helpers/s3upload.js';
-import {getDomain} from '../../../../helpers/getDomain.mjs';
+import S3Upload from '../../../../../helpers/s3upload.js';
+import {getDomain} from '../../../../../helpers/getDomain.mjs';
 import UploadProgressContainer from './UploadProgressContainer.js';
 
 const Container = styled.div`

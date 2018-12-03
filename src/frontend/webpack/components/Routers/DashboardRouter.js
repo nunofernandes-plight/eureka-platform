@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {Route} from 'react-router';
 import {Redirect} from 'react-router-dom';
-import Dashboard from '../Dashboard.js';
-import MyAccount from '../MyAccount.js';
+import Dashboard from '../Dashboard/Dashboard.js';
+import MyAccount from '../Account/MyAccount.js';
 import MyHistory from '../MyHistory/MyHistory.js';
 import TopContainer from '../../views/TopContainer.js';
 import {BottomContainer} from '../../views/BottomContainer.js';
 import ArticlesRouter from './ArticlesRouter.js';
 import AddressBook from '../AddressBook/AddressBook.js';
-import ContractOwnerDashboard from '../ContractOwnerDashboard.js';
+import ContractOwnerDashboard from '../SmartContractOwner/ContractOwnerDashboard.js';
 import {ContractOwnerGuard} from '../Guards/Guards.js';
 import EditorRouter from './EditorRouter.js';
 import Reviewers from '../Reviewers.js';

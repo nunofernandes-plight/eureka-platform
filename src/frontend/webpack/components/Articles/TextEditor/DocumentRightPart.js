@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__GRAY_600} from '../../../helpers/colors.js';
-import Icon from '../../views/icons/Icon.js';
+import {__GRAY_600} from '../../../../helpers/colors.js';
+import Icon from '../../../views/icons/Icon.js';
 
 const RightTopContainer = styled.div`
   padding: 15px 10px;
