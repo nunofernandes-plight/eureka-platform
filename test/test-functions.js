@@ -356,7 +356,7 @@ export default {
    * @param articleVersion
    * @returns {Promise<void>}
    */
-  acceptInvitationAndTest: async function(t, reviewer, index, articleVersion) {
+  signUpForReviewingAndTest: async function(t, reviewer, index, articleVersion) {
     await signUpForReviewing(
       eurekaPlatformContract,
       articleVersion.articleHash

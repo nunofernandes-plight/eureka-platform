@@ -101,9 +101,9 @@ test.only(
     await TestFunctions.inviteReviewersAndTest(t, editor, author, editorApprovedReviewers, articleVersion);
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
     articleVersion = articleSubmission.articleVersions[0];
-    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[0], 0, articleVersion);
-    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[1], 1, articleVersion);
-    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[2], 2, articleVersion);
+    await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[0], 0, articleVersion);
+    await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[1], 1, articleVersion);
+    await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[2], 2, articleVersion);
 
     // Get the reviews from DB
     let review1 = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.editorApprovedReviews[0]);
@@ -150,9 +150,9 @@ test.only(
     articleVersion2 = articleSubmission.articleVersions[1];
 
 
-    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[0], 0, articleVersion2);
-    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[1], 1, articleVersion2);
-    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[2], 2, articleVersion2);
+    await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[0], 0, articleVersion2);
+    await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[1], 1, articleVersion2);
+    await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[2], 2, articleVersion2);
 
     // Get the reviews from DB
     let review21 = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion2.editorApprovedReviews[0]);
@@ -198,9 +198,9 @@ test.only(
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
     articleVersion3 = articleSubmission.articleVersions[2];
 
-    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[0], 0, articleVersion3);
-    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[1], 1, articleVersion3);
-    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[2], 2, articleVersion3);
+    await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[0], 0, articleVersion3);
+    await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[1], 1, articleVersion3);
+    await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[2], 2, articleVersion3);
 
     // Get the reviews from DB
     let review31 = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion3.editorApprovedReviews[0]);
