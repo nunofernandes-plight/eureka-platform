@@ -1,6 +1,6 @@
 export const ArticlesNavPillRoutes = [
 	{
-		path: 'drafts',
+		path: 'drafts/online',
 		name: 'Drafts',
 		icon: 'material',
 		material: 'gesture'
