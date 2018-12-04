@@ -88,7 +88,7 @@ class EditorRouter extends Component {
             <Route
               exact
               path={`${this.props.base}`}
-              render={() => <Redirect to={`${this.props.base}/documents`} />}
+              render={() => <Redirect to={`${this.props.base}/articles`} />}
             />
           </CardContainer>
         </Container>
