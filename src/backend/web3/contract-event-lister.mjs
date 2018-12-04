@@ -156,10 +156,12 @@ export default {
         else
           reviewType = ReviewType.COMMUNITY_REVIEW;
 
-        await reviewService.signUpForReviewing(
+        const review = await reviewService.signUpForReviewing(
           event.returnValues.reviewerAddress,
           event.returnValues.articleHash,
-          reviewType)
+          reviewType);
+
+        await articleVersionService.addReview(event.returnValues.articleHash, review);
       }
     );
 
