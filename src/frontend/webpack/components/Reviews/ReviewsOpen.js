@@ -12,6 +12,7 @@ import {
 import {__THIRD} from '../../../helpers/colors.js';
 import withWeb3 from '../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
+import {fetchArticlesOpenToReview} from '../../reducers/reviews.js';
 
 const Container = styled.div`
   display: flex;
@@ -45,23 +46,7 @@ class ReviewsOpen extends React.Component {
   }
 
   async componentDidMount() {
-    await this.getArticlesOpenToReview();
-  }
-
-  async getArticlesOpenToReview() {
-    this.setState({loading: true});
-    return getArticlesOpenToReview()
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          this.setState({articles: response.data});
-        }
-        this.setState({loading: false});
-      })
-      .catch(err => {
-        this.setState({loading: false});
-        console.error(err);
-      });
+    this.props.fetchArticlesOpenToReview();
   }
 
   renderModals() {
@@ -72,10 +57,10 @@ class ReviewsOpen extends React.Component {
           toggle={isErrorMessage => {
             this.setState({errorMessage: null});
           }}
-          show={this.state.errorMessage}
+          show={this.props.errorMessage}
           title={'You got the following error'}
         >
-          {this.state.errorMessage}
+          {this.props.errorMessage}
         </Modal>
       </div>
     );
@@ -85,13 +70,13 @@ class ReviewsOpen extends React.Component {
     return (
       <Container>
         {this.renderModals()}
-        {this.state.loading ? (
+        {this.props.loading ? (
           <GridSpinner />
         ) : (
           <Card title={'Articles open to review'}>
-            {this.state.articles ? (
-              this.state.articles.length > 0 ? (
-                this.state.articles.map(article => {
+            {this.props.articles ? (
+              this.props.articles.length > 0 ? (
+                this.props.articles.map(article => {
                   return (
                     <Article
                       buttonText={'Write a Review'}
@@ -143,8 +128,17 @@ class ReviewsOpen extends React.Component {
 
 export default withWeb3(
   withRouter(
-    connect(state => ({
-      selectedAccount: state.accountsData.selectedAccount
-    }))(ReviewsOpen)
+    connect(
+      state => ({
+        loading: state.reviewsData.articlesOpenToReviewLoading,
+        errorMessage: state.reviewsData.articlesOpenToReviewError,
+        articles: state.reviewsData.articlesOpenToReview
+      }),
+      dispatch => ({
+        fetchArticlesOpenToReview: () => {
+          dispatch(fetchArticlesOpenToReview());
+        }
+      })
+    )(ReviewsOpen)
   )
 );

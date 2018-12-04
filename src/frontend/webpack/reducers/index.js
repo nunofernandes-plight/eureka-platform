@@ -6,6 +6,7 @@ import {accountsData} from './account.js';
 import {transactionsData} from './transactions.js';
 import {articlesData} from './articles.js';
 import {editorsData} from './editor-methods.js';
+import {reviewsData} from './reviews.js';
 
 
 
@@ -16,7 +17,8 @@ const reducer = combineReducers({
   metamaskData,
   accountsData,
   transactionsData,
-  articlesData
+  articlesData,
+  reviewsData
 });
 
 export default reducer;

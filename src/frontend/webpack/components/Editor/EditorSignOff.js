@@ -32,7 +32,7 @@ const NoArticles = () => {
     <NoArtDiv>
       You don't have any articles to sign off. If you want to assign yourself to
       an article{' '}
-      <Link to={'/app/editor/documents'} style={{marginLeft: 2.5}}>
+      <Link to={'/app/editor/articles'} style={{marginLeft: 2.5}}>
         {' '}
         <strong>click here.</strong>
       </Link>

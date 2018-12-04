@@ -7,7 +7,7 @@ export const SMALL_WIDTH = 768;
 
 export const HEADER_PADDING_TOP = 95;
 export const PANEL_LEFT_BREAK_POINT = 1300;
-export const PANEL_LEFT_NORMAL_WIDTH = 180;
+export const PANEL_LEFT_NORMAL_WIDTH = 150;
 export const PANEL_LEFT_MOBILE_WIDTH = 65;
 
 export const CARD_WIDTH_IN_PERCENTAGE = '85%';
