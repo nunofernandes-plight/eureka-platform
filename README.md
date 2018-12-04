@@ -196,4 +196,5 @@ This project is licensed under the MIT License.
 * EKA Blockchain Solutions GmbH
 * ScienceMatters AG
 * University of Zurich
+* The noun project Icons (https://thenounproject.com)
 * Creative Tim for open-source Argon design system (https://www.creative-tim.com/)
