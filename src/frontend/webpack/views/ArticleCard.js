@@ -11,7 +11,7 @@ import chroma from 'chroma-js';
 import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
 import {LARGE_DEVICES} from '../../helpers/mobile.js';
 import AuthorLookup from '../components/AuthorLookup.js';
-import {renderField} from '../components/TextEditor/DocumentRenderer.mjs';
+import {renderField} from '../components/Articles/TextEditor/DocumentRenderer.mjs';
 import TextTruncate from 'react-text-truncate';
 import {withRouter} from 'react-router-dom';
 

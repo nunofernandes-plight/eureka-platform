@@ -18,6 +18,9 @@ const getTypeAttributes = type => {
     case SC_TRANSACTIONS_TYPE.EDITOR_ASSIGNED:
       return {color: __SCALE_TWO, text: 'EDITOR ASSIGNMENT'};
 
+    case SC_TRANSACTIONS_TYPE.EDITOR_ARTICLE_ASSIGNMENT:
+      return {color: __SCALE_TWO, text: 'ARTICLE ASSIGNED TO YOURSELF'};
+
     case SC_TRANSACTIONS_TYPE.MINTING:
       return {color: __SCALE_THREE, text: 'MINTING'};
 
@@ -25,29 +28,31 @@ const getTypeAttributes = type => {
       return {color: __SCALE_SEVEN, text: 'EXPERT REVIEWER SIGNED UP'};
 
     default:
-      return __SCALE_TEN;
+      return {color: __SCALE_TEN, text: ''};
   }
 };
 
 const Type = styled.div`
   background: ${props => props.background};
   color: ${props => props.color};
-  padding: 8px 5px;
-  border-radius: 10px;
+  padding: ${props => (props.padding ? props.padding : '8px 5px')};
+  border-radius: ${props => (props.radius ? props.radius : '10px')};
   font-weight: bold;
-  margin: 0 20px;
+  font-size: ${props => (props.size ? props.size + 'px' : 'inherit')};
+  margin: ${props => (props.noMargin ? '0' : '0 20px')};
   text-align: center;
 `;
-const TxType = props => {
-  const color = getTypeAttributes(props.type).color;
+const TxType = ({type, ...otherProps}) => {
+  const color = getTypeAttributes(type).color;
   return (
     <Type
+      {...otherProps}
       color={color}
       background={chroma(color)
         .alpha(0.25)
         .css()}
     >
-      {getTypeAttributes(props.type).text}
+      {getTypeAttributes(type).text}
     </Type>
   );
 };

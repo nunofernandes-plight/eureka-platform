@@ -5,7 +5,7 @@ import {NavLink, Redirect, withRouter} from 'react-router-dom';
 import {Card} from '../../views/Card.js';
 import {Go} from './Go.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
-import {renderField} from '../TextEditor/DocumentRenderer.mjs';
+import {renderField} from '../Articles/TextEditor/DocumentRenderer.mjs';
 import PreviewStatus from '../../views/PreviewStatus.js';
 import {
   __FIFTH,
@@ -13,7 +13,7 @@ import {
   __GRAY_200,
   __GRAY_500
 } from '../../../helpers/colors.js';
-import {fetchArticle} from '../TextEditor/DocumentMainMethods.js';
+import {fetchArticle} from '../Articles/TextEditor/DocumentMainMethods.js';
 import Document from '../../../../models/Document.mjs';
 import {deserializeDocument} from '../../../../helpers/documentSerializer.mjs';
 import Modal from '../../design-components/Modal.js';

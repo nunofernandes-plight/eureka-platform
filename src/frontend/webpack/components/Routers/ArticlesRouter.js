@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Route} from 'react-router';
 import {Redirect, withRouter} from 'react-router-dom';
-import MyDrafts from '../MyDrafts.js';
-import DocumentEditor from '../DocumentEditor.js';
+import MyDrafts from '../Articles/MyDrafts.js';
+import DocumentEditor from '../Articles/TextEditor/DocumentEditor.js';
 import NavPill from '../../views/NavPill.js';
-import MySubmitted from '../MySubmitted.js';
+import MySubmitted from '../Articles/MySubmitted.js';
 import {ArticlesNavPillRoutes} from './ArticlesNavPillRoutes.js';
 
 const Parent = styled.div`
