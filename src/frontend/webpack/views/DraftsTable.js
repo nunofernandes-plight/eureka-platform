@@ -82,7 +82,7 @@ const getIcon = draft => {
 
 const getTitle = (props, draft) => {
   return (
-    <MyLink to={`/app/articles/write/${draft._id}`}>
+    <MyLink to={`/app/documents/write/${draft._id}`}>
       {renderField(draft.document, 'title')}
     </MyLink>
   );

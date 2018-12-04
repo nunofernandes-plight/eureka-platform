@@ -64,7 +64,7 @@ const MyHistoryTable = props => {
         <NoTxs>
           <i>You don't have any transactions registered yet.</i>
 
-          <Link style={{textDecoration: 'none'}} to={'/app/articles/drafts'}>
+          <Link style={{textDecoration: 'none'}} to={'/app/documents/drafts'}>
             <button> Submit your first article now!</button>
           </Link>
         </NoTxs>

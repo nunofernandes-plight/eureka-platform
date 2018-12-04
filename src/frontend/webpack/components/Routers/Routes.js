@@ -11,22 +11,22 @@ export const Routes = [
     role: Roles.USER
   },
   {
-    path: 'articles',
-    name: 'My Articles',
+    path: 'documents',
+    name: 'Documents',
     material: 'create',
     icon: 'material',
     role: Roles.USER
   },
   {
     path: 'reviews',
-    name: 'My Reviews',
+    name: 'Reviews',
     icon: 'material',
     material: 'rate_review',
     role: Roles.USER
   },
   {
     path: 'linked',
-    name: 'My Linked Articles',
+    name: 'Linked Articles',
     icon: 'material',
     material: 'format_quote',
     role: Roles.USER
@@ -40,7 +40,7 @@ export const Routes = [
   },
   {
     path: 'editor',
-    name: 'Assigned Articles',
+    name: 'Assessment',
     icon: 'material',
     material: 'playlist_add_check',
     separator: 'Editor',

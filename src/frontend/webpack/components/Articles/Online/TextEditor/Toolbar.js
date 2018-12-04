@@ -181,7 +181,7 @@ const Toolbar = ({document, ...otherProps}) => {
           props.history.push({
             pathname: `/app/preview/${props.documentId}`,
             state: {
-              from: `/app/articles/drafts/${props.documentId}`
+              from: `/app/documents/drafts/${props.documentId}`
             }
           });
         }}

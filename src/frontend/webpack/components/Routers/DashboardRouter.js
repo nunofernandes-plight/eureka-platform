@@ -65,9 +65,9 @@ class DashboardRouter extends Component {
           />
 
           <Route
-            path={`${this.props.base}/articles`}
+            path={`${this.props.base}/documents`}
             render={() => (
-              <ArticlesRouter base={`${this.props.base}/articles`} />
+              <ArticlesRouter base={`${this.props.base}/documents`} />
             )}
           />
 
