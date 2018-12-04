@@ -182,6 +182,10 @@ test.only(
     await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[1], 1, articleVersion);
     await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[2], 2, articleVersion);
 
+    //update from DB
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    articleVersion = articleSubmission.articleVersions[0];
+
     // Get the reviews from DB
     let review1 = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.editorApprovedReviews[0]);
     let review2 = await reviewService.getReviewById(reviewer2.ethereumAddress, articleVersion.editorApprovedReviews[1]);
