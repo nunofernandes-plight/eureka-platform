@@ -11,7 +11,7 @@ import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 import withWeb3 from '../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
-
+import {fetchArticlesToSignOff} from '../../reducers/editor-methods.js';
 
 const Container = styled.div`
   display: flex;
@@ -43,30 +43,12 @@ class EditorSignOff extends React.Component {
   constructor() {
     super();
     this.state = {
-      articles: null,
-      loading: false,
       articleOnHover: null
     };
   }
 
   async componentDidMount() {
-    await this.getArticlesToSignOff();
-  }
-
-  async getArticlesToSignOff() {
-    this.setState({loading: true});
-    return getArticlesToSignOff()
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          this.setState({articles: response.data});
-        }
-        this.setState({loading: false});
-      })
-      .catch(err => {
-        this.setState({loading: false});
-        console.error(err);
-      });
+    this.props.fetchArticlesToSignOff();
   }
 
   signOffArticle(articleHash) {
@@ -82,7 +64,7 @@ class EditorSignOff extends React.Component {
       })
       .on('receipt', async receipt => {
         console.log('Sanity check:  ' + receipt.status);
-        await this.getArticlesToSignOff();
+        this.props.fetchArticlesToSignOff();
         return receipt;
       })
       .catch(err => {
@@ -103,10 +85,10 @@ class EditorSignOff extends React.Component {
           toggle={isErrorMessage => {
             this.setState({errorMessage: null});
           }}
-          show={this.state.errorMessage}
+          show={this.state.errorMessage || this.props.errorMessage}
           title={'You got the following error'}
         >
-          {this.state.errorMessage}
+          {this.state.errorMessage || this.props.errorMessage}
         </Modal>
 
         <Modal
@@ -132,13 +114,13 @@ class EditorSignOff extends React.Component {
     return (
       <Container>
         {this.renderModals()}
-        {this.state.loading ? (
+        {this.props.loading ? (
           <GridSpinner />
         ) : (
           <Card title={'Sign Off Articles'}>
-            {this.state.articles ? (
-              this.state.articles.length > 0 ? (
-                this.state.articles.map(article => {
+            {this.props.articles ? (
+              this.props.articles.length > 0 ? (
+                this.props.articles.map(article => {
                   return (
                     <Article
                       buttonText={'Sign off'}
@@ -172,8 +154,18 @@ class EditorSignOff extends React.Component {
 
 export default withWeb3(
   withRouter(
-    connect(state => ({
-      selectedAccount: state.accountsData.selectedAccount
-    }))(EditorSignOff)
+    connect(
+      state => ({
+        selectedAccount: state.accountsData.selectedAccount,
+        articles: state.editorsData.articlesToSignOff,
+        loading: state.editorsData.loadingSignOff,
+        errorMessage: state.editorsData.errorSignOff
+      }),
+      dispatch => ({
+        fetchArticlesToSignOff: () => {
+          dispatch(fetchArticlesToSignOff());
+        }
+      })
+    )(EditorSignOff)
   )
 );

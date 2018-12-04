@@ -191,10 +191,10 @@ export default withWeb3(
   withRouter(
     connect(
       state => ({
-        articles: state.unassignedArticlesData.articles,
-        nrOfPages: state.unassignedArticlesData.nrOfPages,
-        loading: state.unassignedArticlesData.loading,
-        errorMessage: state.unassignedArticlesData.error,
+        articles: state.editorsData.articles,
+        nrOfPages: state.editorsData.nrOfPages,
+        loading: state.editorsData.loading,
+        errorMessage: state.editorsData.error,
         selectedAccount: state.accountsData.selectedAccount
       }),
       dispatch => {

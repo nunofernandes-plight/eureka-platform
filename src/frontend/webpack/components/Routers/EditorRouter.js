@@ -52,9 +52,9 @@ class EditorRouter extends Component {
           <CardContainer>
             <Route
               exact
-              path={`${this.props.base}/documents`}
+              path={`${this.props.base}/articles`}
               render={() => (
-                <EditorArticles base={`${this.props.base}/documents`} />
+                <EditorArticles base={`${this.props.base}/articles`} />
               )}
             />
             <Route
