@@ -128,7 +128,7 @@ class MySubmitted extends React.Component {
     return (
       <Container>
         {this.renderModals()}
-        <Card title={'My Submitted Documents'}>
+        <Card title={'My Submissions'}>
           <SubmittedTable
             base={this.props.base}
             submitted={this.state.submitted}
