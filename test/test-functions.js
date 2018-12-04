@@ -5,7 +5,6 @@ import {
   removeEditorFromSubmissionProcess,
   setSanityToOk,
   setSanityIsNotOk,
-  inviteReviewersForArticle,
   signUpForReviewing,
   addEditorApprovedReview,
   addCommunityReview,
@@ -29,7 +28,6 @@ import reviewService from '../src/backend/db/review-service.mjs';
 import ReviewState from '../src/backend/schema/review-state-enum.mjs';
 import {transformHashToHex} from './helpers.js';
 import * as web3 from 'web3';
-import {createReviewInvitation} from '../src/frontend/webpack/components/Editor/EditorMethods.js';
 import REVIEW_TYPE from '../src/backend/schema/review-type-enum.mjs';
 
 let eurekaPlatformContract;
@@ -338,14 +336,13 @@ export default {
 
     await Promise.all(
       reviewers.map(r => {
-        return createReviewInvitation(
+        return reviewService.createReviewInvitation(
           r.ethereumAddress,
           articleVersion.articleHash,
           REVIEW_TYPE.EDITOR_APPROVED_REVIEW
         );
       })
     );
-    t.is(true);
   },
 
   /**
