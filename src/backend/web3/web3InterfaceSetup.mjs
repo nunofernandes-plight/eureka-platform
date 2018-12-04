@@ -19,7 +19,7 @@ import {saveJournalInformation} from '../db/journal-service.mjs';
 export let platformContract;
 export let tokenContract;
 
-export const setupWeb3Interface = async (platformContract, tokenContract) => {
+export const setupWeb3Interface = async (_platformContract, _tokenContract) => {
 
   let platformContractAddress;
   let platformContractABI;
@@ -48,14 +48,20 @@ export const setupWeb3Interface = async (platformContract, tokenContract) => {
     process.exit(1);
   }
 
-  if (process.env.NODE_ENV !== 'test') {
+  // if no contract has not been deployed yet
+  if (typeof _platformContract === 'undefined'
+    && typeof _tokenContract === 'undefined') {
     platformContract = new web3.eth.Contract(platformContractABI, platformContractAddress);
     tokenContract = new web3.eth.Contract(tokenContractABI, tokenContractAddress);
   }
+  else {
+    platformContract = _platformContract;
+    tokenContract = _tokenContract;
+  }
+
 
   await contractEventListener.setup(platformContract);
   await saveJournalInformation(platformContract);
-
 
 
   /** Pending Transaction listener **/
@@ -63,8 +69,8 @@ export const setupWeb3Interface = async (platformContract, tokenContract) => {
     .on('data', async (transactionHash) => {
       // console.log(transactionHash);
       const transaction = await web3.eth.getTransaction(transactionHash);
-      if ( transaction
-        && ( transaction.to === platformContract.options.address
+      if (transaction
+        && (transaction.to === platformContract.options.address
           || transaction.from === platformContract.options.address
           || transaction.to === tokenContract.options.address
         )

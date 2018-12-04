@@ -11,7 +11,7 @@ import articleDraftRoutes from './article-draft-routes.mjs';
 import articleVersionRoutes from './article-version-routes.mjs';
 import articleSubmissionRoutes from './article-submission-routes.mjs';
 import addressBook from './address-book-routes.mjs';
-import annotationRoutes from './annotation-routes.mjs'
+import annotationRoutes from './annotation-routes.mjs';
 import frontendTransactionRoutes from './frontend-transaction-routes.mjs';
 
 const router = express.Router();

@@ -1,28 +1,38 @@
 import cron from 'cron';
-import reviewService from '../db/review-service.mjs';
 import articleSubmissionService from '../db/article-submission-service.mjs';
 import articleVersionService from '../db/article-version-service.mjs';
-import ReviewState from '../schema/review-state-enum.mjs';
 import ArticleSubmissionState from '../schema/article-submission-state-enum.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
+import {removeEditorFromSubmissionProcess} from '../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 
 const CronJob = cron.CronJob;
+const TIME_OUT_INTERVAL = 10; //TODO change to dropout time intervall
+const CRONE_TIME_INTERVAL = '*/5 * * * * *';
 
-const TIME_INTERVAL = 2000;
 let cronJob;
 
 export default {
-  start: async () => {
-    cronJob = await new CronJob('* * * * * *', async () => {
+  start: async (_platformContract, _contractOwnerAddress) => {
+    cronJob = await new CronJob(CRONE_TIME_INTERVAL, async () => {
       const timedOutSubmissionIds = await getEditorTimeoutSubmissionIds();
 
       if(timedOutSubmissionIds.length > 0) {
-        // TODO call SC function for each
+
         for(let timedOutSubmissionId of timedOutSubmissionIds) {
-          console.log(timedOutSubmissionId);
+
+          let timedOutSubmission = await articleSubmissionService.getSubmissionById(timedOutSubmissionId);
+          try{
+            await removeEditorFromSubmissionProcess(
+              _platformContract,
+              timedOutSubmission.scSubmissionID
+            ).send({
+              from: _contractOwnerAddress
+            });
+          } catch (e) {
+            console.warn('Removing is already done, ERROR-MESSAGE: ' + e);
+          }
         }
       }
-      console.log('You will see this message every second');
     }, null, true, 'Europe/Zurich');
   },
 
@@ -37,17 +47,27 @@ export default {
  */
 async function getEditorTimeoutSubmissionIds() {
   const submittedArticleVersions = await articleVersionService.getArticleVersionsByState(ArticleVersionState.SUBMITTED);
+  let potentialTimedOutVersions = [];
+
+  for(let submittedArticleVersion of submittedArticleVersions) {
+    const correspondingArticleSubmission =
+      await articleSubmissionService.getSubmissionById(submittedArticleVersion.articleSubmission);
+    if(correspondingArticleSubmission.articleSubmissionState === ArticleSubmissionState.EDITOR_ASSIGNED) {
+      potentialTimedOutVersions.push(submittedArticleVersion);
+    }
+  }
 
   let timeoutSubmissionIds = [];
 
-  for (let submittedArticleVersion of submittedArticleVersions) {
-    if (timeIsRunnedOut(submittedArticleVersion.stateTimestamp)) {
-      timeoutSubmissionIds.push(submittedArticleVersion.articleSubmission);
+  for (let potentialTimedOutVersion of potentialTimedOutVersions) {
+    if (timeIsRunnedOut(potentialTimedOutVersion.stateTimestamp)) {
+      timeoutSubmissionIds.push(potentialTimedOutVersion.articleSubmission);
     }
   }
+
   return timeoutSubmissionIds;
 }
 
 function timeIsRunnedOut(stateTimestamp) {
-  return (new Date().getTime() > stateTimestamp + TIME_INTERVAL);
+  return (new Date().getTime() > stateTimestamp + TIME_OUT_INTERVAL);
 }

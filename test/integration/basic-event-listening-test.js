@@ -89,7 +89,7 @@ test(
   }
 );
 
-test(
+test.only(
   PRETEXT + 'Assignment, Change and Remove of Editor for Submission Process',
   async t => {
     // Create author and editor 1 & 2
@@ -141,7 +141,7 @@ test(PRETEXT + 'Submission of article, Sanity-Check', async t => {
 });
 
 /**************** Article acception ******************/
-test.only(
+test(
   PRETEXT +
   'Article acception',
   async t => {
