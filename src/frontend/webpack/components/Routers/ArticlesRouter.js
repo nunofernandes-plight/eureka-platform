@@ -74,7 +74,7 @@ class ArticlesRouter extends Component {
 
           <Route
             exact
-            path={`${this.props.base}/drafts/online/:id`}
+            path={`${this.props.base}/write/:id`}
             render={() => <DocumentEditor base={this.props.base} />}
           />
 
