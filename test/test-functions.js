@@ -551,10 +551,13 @@ export default {
       from: editor.ethereumAddress
     });
     let dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, articleVersion._id);
+    let dbSubmission = await articleSubmissionService.getSubmissionById(articleVersion.articleSubmission);
     let counter = 0;
-    while (dbArticleVersion.articleVersionState !== ArticleVersionState.ACCEPTED && counter < 5) {
+    while ((dbSubmission.articleSubmissionState !== ArticleSubmissionState.CLOSED || dbArticleVersion.articleVersionState !== ArticleVersionState.ACCEPTED) && counter < 5) {
       sleepSync(5000);
+      console.log(dbSubmission);
       dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, articleVersion._id);
+      dbSubmission = await articleSubmissionService.getSubmissionById(articleVersion.articleSubmission);
       counter++;
     }
     t.is(dbArticleVersion.articleVersionState, ArticleVersionState.ACCEPTED);
