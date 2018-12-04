@@ -125,6 +125,20 @@ export default {
       });
   },
 
+  getReview: async (reviewerAddress, articleVersionId) => {
+    return await Review.findOne({
+      reviewerAddress,
+      articleVersion: articleVersionId
+    })
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}]
+      });
+  },
+
   getReviewByReviewHash: async (reviewHash) => {
     const review = await Review.findOne({reviewHash: reviewHash});
     if (!review) errorThrower.noEntryFoundByParameters('reviewHash');
@@ -197,7 +211,7 @@ export default {
         reviewType
       });
     }
-    review.save();
+    return review.save();
   },
 
   /**
