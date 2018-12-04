@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {NavLink} from 'react-router-dom';
 import {
+  __FIFTH,
   __GRAY_200,
   __GRAY_300,
   __GRAY_500,
@@ -12,10 +13,22 @@ import {MAKE_MOBILE} from '../../helpers/mobile.js';
 import {PANEL_LEFT_BREAK_POINT} from '../../helpers/layout.js';
 import Icon from './icons/Icon.js';
 
+const IconContainer = styled.div`
+  display: flex;
+  width: ${props => (props.isMobileMode ? '100%' : 'auto')};
+  justify-content: ${props => (props.isMobileMode ? 'center' : 'flex-start')};
+`;
+
 const MyNavLink = styled(NavLink)`
   &:hover {
   background-color: ${__GRAY_300}
     cursor: pointer;
+  }
+   
+  & ${IconContainer} {
+    & > svg {
+      fill: ${props => (props.color ? props.color : __FIFTH)};
+    }
   }
   display: flex;
   font-size: 13px;
@@ -27,6 +40,11 @@ const MyNavLink = styled(NavLink)`
   margin: 0;
   text-decoration: none;
   &.${props => props.activeClassName} {
+   & ${IconContainer} {
+      & > svg {
+        fill: #fff;
+      }
+    }
     color: #fff;
     background: linear-gradient(
       150deg,
@@ -79,15 +97,9 @@ const LinkName = styled.div`
     display: none;`};
 `;
 
-const IconContainer = styled.div`
-  display: flex;
-  width: ${props => (props.isMobileMode ? '100%' : 'auto')};
-  justify-content: ${props => (props.isMobileMode ? 'center' : 'flex-start')};
-`;
-
 export const NavItem = props => {
   return (
-    <MyNavLink to={`${props.base}/${props.path}`}>
+    <MyNavLink to={`${props.base}/${props.path}`} color={props.color}>
       <IconContainer {...props}>
         <Icon
           material={props.material}

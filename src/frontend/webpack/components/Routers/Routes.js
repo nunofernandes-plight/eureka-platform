@@ -5,74 +5,64 @@ export const Routes = [
   {
     path: 'dashboard',
     name: 'Dashboard',
-    icon: 'material',
-    material: 'dashboard',
+    icon: 'dashboard',
     separator: 'General',
     role: Roles.USER
   },
   {
     path: 'documents',
     name: 'Documents',
-    material: 'create',
-    icon: 'material',
+    icon: 'articles',
     role: Roles.USER
   },
   {
     path: 'reviews',
     name: 'Reviews',
-    icon: 'material',
-    material: 'rate_review',
+    icon: 'review',
     role: Roles.USER
   },
   {
     path: 'linked',
-    name: 'Linked Articles',
-    icon: 'material',
-    material: 'format_quote',
+    name: 'Citations',
+    icon: 'citation',
     role: Roles.USER
   },
   {
     path: 'book',
     name: 'Address Book',
-    material: 'book',
-    icon: 'material',
+    icon: 'addressBook',
     role: Roles.USER
   },
   {
     path: 'editor',
     name: 'Assessment',
-    icon: 'material',
-    material: 'playlist_add_check',
+    icon: 'assessment',
     separator: 'Editor',
     role: Roles.EDITOR
   },
   {
     path: 'wallet',
     name: 'My Wallet',
-    icon: 'material',
-    material: 'account_balance_wallet',
+    icon: 'wallet',
     separator: 'Personal',
     role: Roles.USER
   },
   {
     path: 'account',
     name: 'My Account',
-    icon: 'material',
-    material: 'account_box',
+    icon: 'account',
     role: Roles.USER
   },
   {
     path: 'actions',
     name: 'My History',
-    icon: 'material',
-    material: 'timeline',
+    icon: 'history',
     role: Roles.USER
   },
   {
     path: 'owner',
     name: 'Smart Contract',
-    material: 'security',
-    icon: 'ethereum',
+    icon: 'smartContract',
     separator: 'Admin',
     role: Roles.CONTRACT_OWNER
   }

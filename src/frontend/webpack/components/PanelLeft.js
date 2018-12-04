@@ -12,6 +12,7 @@ import {
 import ToggleButton from '../design-components/ToggleButton.js';
 import {Routes} from './Routers/Routes.js';
 import connect from 'react-redux/es/connect/connect.js';
+import {__THIRD} from '../../helpers/colors.js';
 
 const Container = styled.div`
   display: flex;
@@ -109,6 +110,7 @@ class PanelLeft extends Component {
                 ) : null}
                 {this.props.user.roles.includes(route.role) ? (
                   <NavItem
+                    color={__THIRD}
                     key={i}
                     material={route.material}
                     path={route.path}
