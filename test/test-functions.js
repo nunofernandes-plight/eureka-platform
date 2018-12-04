@@ -365,19 +365,18 @@ export default {
       gas: 80000000
     });
 
-    let dbReview = await reviewService.getReviewById(
+    let dbReview = await reviewService.getReview(
       reviewer.ethereumAddress,
-      articleVersion.editorApprovedReviews[index]
+      articleVersion._id
     );
 
     let counter = 0;
-    while (
-      dbReview.reviewState !== ReviewState.SIGNED_UP_FOR_REVIEWING &&
+    while ((!dbReview || dbReview.reviewState !== ReviewState.SIGNED_UP_FOR_REVIEWING) &&
       counter < 5) {
       sleepSync(5000);
-      dbReview = await reviewService.getReviewById(
+      dbReview = await reviewService.getReview(
         reviewer.ethereumAddress,
-        articleVersion.editorApprovedReviews[index]
+        articleVersion._id
       );
       counter++;
     }
