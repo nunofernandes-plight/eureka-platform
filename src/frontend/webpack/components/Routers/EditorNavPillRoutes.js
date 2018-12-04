@@ -1,32 +1,27 @@
 export const EditorNavPillRoutes = [
   {
     path: 'articles',
-    name: 'Assign',
-    icon: 'material',
-    material: 'search'
+    name: 'Assignment',
+    icon: 'editorAssign'
   },
   {
     path: 'signoff',
-    name: 'Sign Off',
-    icon: 'material',
-    material: 'check_box'
+    name: 'Sanity Check',
+    icon: 'editorSignOff'
   },
   {
     path: 'invite',
-    name: 'Invite Reviewers',
-    icon: 'material',
-    material: 'mail'
+    name: 'Invitation',
+    icon: 'editorInvite'
   },
   {
     path: 'reviews',
-    name: 'Check Reviews',
-    icon: 'material',
-    material: 'rate_review'
+    name: 'Reviews Check',
+    icon: 'editorReviewsCheck'
   },
   {
     path: 'finalize',
-    name: 'Finalize',
-    icon: 'material',
-    material: 'check'
+    name: 'Finalization',
+    icon: 'editorFinalize'
   }
 ];
