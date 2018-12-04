@@ -743,7 +743,7 @@ contract EurekaPlatform {
         }
         submission.submissionState = SubmissionState.CLOSED;
         submission.stateTimestamp = block.timestamp;
-        emit SubmissionProcessClosed(block.timestamp, _submissionId);
+        emit SubmissionProcessClosed(_submissionId, block.timestamp);
     }
 
     function updateTimeBasedReviewState(bytes32 reviewHash) public {}
