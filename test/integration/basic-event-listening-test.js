@@ -172,7 +172,7 @@ test.only(
     await TestFunctions.signUpExpertReviewerAndTest(t, author, editorApprovedReviewers[2]);
 
     // Invite reviewers 1,2 & 3 to become editor-approved reviewers
-    await TestFunctions.inviteReviewersAndTest(t, editor, author, editorApprovedReviewers, articleVersion);
+    await TestFunctions.inviteReviewers(t, editor, author, editorApprovedReviewers, articleVersion);
 
     //update from DB
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];

@@ -89,7 +89,7 @@ test.only(
     await TestFunctions.signUpExpertReviewerAndTest(t, author, editorApprovedReviewers[2]);
 
     // setup reviewers
-    await TestFunctions.inviteReviewersAndTest(t, editor, author, editorApprovedReviewers, articleVersion);
+    await TestFunctions.inviteReviewers(t, editor, author, editorApprovedReviewers, articleVersion);
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
     articleVersion = articleSubmission.articleVersions[0];
     await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[0], 0, articleVersion);

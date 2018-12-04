@@ -98,7 +98,7 @@ test.only(
     await TestFunctions.signUpExpertReviewerAndTest(t, author, editorApprovedReviewers[2]);
 
     // setup reviewers
-    await TestFunctions.inviteReviewersAndTest(t, editor, author, editorApprovedReviewers, articleVersion);
+    await TestFunctions.inviteReviewers(t, editor, author, editorApprovedReviewers, articleVersion);
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
     articleVersion = articleSubmission.articleVersions[0];
     await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[0], 0, articleVersion);
@@ -143,7 +143,7 @@ test.only(
     await TestFunctions.acceptSanityCheckAndTest(t, editor, author, articleVersion2);
 
     // Invite reviewers 1,2 & 3 to become editor-approved reviewers
-    await TestFunctions.inviteReviewersAndTest(t, editor, author, editorApprovedReviewers, articleVersion2);
+    await TestFunctions.inviteReviewers(t, editor, author, editorApprovedReviewers, articleVersion2);
 
     //update from DB
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
@@ -192,7 +192,7 @@ test.only(
     await TestFunctions.acceptSanityCheckAndTest(t, editor, author, articleVersion3);
 
     // Invite reviewers 1,2 & 3 to become editor-approved reviewers
-    await TestFunctions.inviteReviewersAndTest(t, editor, author, editorApprovedReviewers, articleVersion3);
+    await TestFunctions.inviteReviewers(t, editor, author, editorApprovedReviewers, articleVersion3);
 
     //update from DB
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];

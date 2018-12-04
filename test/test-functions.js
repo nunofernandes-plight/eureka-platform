@@ -332,8 +332,7 @@ export default {
    * @param articleVersion
    * @returns {Promise<void>}
    */
-  inviteReviewersAndTest: async function(t, editor, author, reviewers, articleVersion) {
-
+  inviteReviewers: async function(t, editor, author, reviewers, articleVersion) {
     await Promise.all(
       reviewers.map(r => {
         return reviewService.createReviewInvitation(
