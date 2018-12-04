@@ -341,6 +341,20 @@ export default {
         articleVersionState: versionState
       }
     );
+  },
+
+  async addReview(articleHash, review) {
+    let articleVersion = await ArticleVersion.findOne({
+      articleHash
+    });
+    if (!articleVersion) errorThrower.noEntryFoundByParameters(articleHash);
+
+    if (review.reviewType === REVIEW_TYPE.EDITOR_APPROVED_REVIEW)
+      articleVersion.editorApprovedReviews.push(review._id);
+    else
+      articleVersion.communityReviews.push(review._id);
+
+    return articleVersion.save();
   }
 };
 
