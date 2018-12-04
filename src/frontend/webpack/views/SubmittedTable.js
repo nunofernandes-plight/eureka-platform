@@ -119,7 +119,7 @@ const getIcon = sub => {
       content={sub.articleVersionState}
     >
       {' '}
-      <Icon icon={'file'} width={20} height={20} color={__GRAY_600} />
+      <Icon icon={'file'} width={28} height={28} color={__GRAY_600} />
     </AnimatedTooltip>
   );
 };

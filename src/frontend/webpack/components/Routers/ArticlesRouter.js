@@ -56,7 +56,8 @@ class ArticlesRouter extends Component {
                   path={item.path}
                   icon={item.icon}
                   material={item.material}
-                  width={22}
+                  width={26}
+                  height={26}
                 />
               );
             })}

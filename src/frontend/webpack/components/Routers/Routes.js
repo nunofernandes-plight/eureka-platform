@@ -42,20 +42,20 @@ export const Routes = [
   },
   {
     path: 'wallet',
-    name: 'My Wallet',
+    name: 'Wallet',
     icon: 'wallet',
     separator: 'Personal',
     role: Roles.USER
   },
   {
     path: 'account',
-    name: 'My Account',
+    name: 'Account',
     icon: 'account',
     role: Roles.USER
   },
   {
     path: 'actions',
-    name: 'My History',
+    name: 'History',
     icon: 'history',
     role: Roles.USER
   },

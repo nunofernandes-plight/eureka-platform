@@ -33,18 +33,6 @@ const CardContainer = styled.div`
   min-height: 200px;
   width: ${props =>
     props.width ? props.width + 'px' : CARD_WIDTH_IN_PERCENTAGE};
-
-  ${EXTRA_LARGE_DEVICES`
-    width: 768px; 
-  `};
-
-  ${LARGE_DEVICES`
-    width: 680px; 
-  `};
-
-  ${MEDIUM_DEVICES`
-    width: 500px;
-  `};
 `;
 
 export const Card = props => {

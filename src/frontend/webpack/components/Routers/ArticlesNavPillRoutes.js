@@ -2,19 +2,16 @@ export const ArticlesNavPillRoutes = [
   {
     path: 'drafts',
     name: 'Drafts',
-    icon: 'material',
-    material: 'gesture'
+    icon: 'draft'
   },
   {
     path: 'submitted',
-    icon: 'material',
-    name: 'Submissions',
-    material: 'archive'
+    icon: 'submitted',
+    name: 'Submissions'
   },
   {
     path: 'review',
-    icon: 'material',
-    name: 'On review',
-    material: 'rate_review'
+    icon: 'inReview',
+    name: 'In review'
   }
 ];
