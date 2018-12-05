@@ -11,7 +11,7 @@ router.get(
   '/',
   asyncHandler(async req => {
     const address = req.user.ethereumAddress;
-    return dashboardService.getAnalyitics(address);
+    return dashboardService.getAnalytics(address);
   })
 );
 

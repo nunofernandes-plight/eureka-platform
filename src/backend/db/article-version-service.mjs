@@ -26,15 +26,33 @@ export default {
     return ArticleVersion.find({});
   },
 
-  getArticleVersionsByState: async (articleVersionState) => {
-    if(!(articleVersionState in ArticleVersionState))  {
-      errorThrower.notCorrectStatus('any of Object ArticleVersionState', articleVersionState);
+  getArticleVersionsByState: async articleVersionState => {
+    if (!(articleVersionState in ArticleVersionState)) {
+      errorThrower.notCorrectStatus(
+        'any of Object ArticleVersionState',
+        articleVersionState
+      );
     }
     return await ArticleVersion.find({
       articleVersionState: {$in: [articleVersionState]}
     });
   },
 
+  getArticleVersionsByStateAndUser: async (
+    articleVersionState,
+    ownerAddress
+  ) => {
+    if (!(articleVersionState in ArticleVersionState)) {
+      errorThrower.notCorrectStatus(
+        'any of Object ArticleVersionState',
+        articleVersionState
+      );
+    }
+    return await ArticleVersion.find({
+      ownerAddress,
+      articleVersionState: {$in: [articleVersionState]}
+    });
+  },
 
   getArticlesAssignedTo: async (ethereumAddress, articleVersionStates) => {
     const submissions = await ArticleSubmissionService.getAssignedSubmissions(
@@ -57,10 +75,19 @@ export default {
     const submissionIds = getIds(submissions);
 
     const journal = await getJournal();
-    const articlesWithEnoughEAReviews = await ReviewService.getArticlesWithEnoughAcceptedReviews(REVIEW_TYPE.EDITOR_APPROVED_REVIEW, journal.minAmountOfEditorApprovedReviews);
-    const articlesWithEnoughCommunityReviews = await ReviewService.getArticlesWithEnoughAcceptedReviews(REVIEW_TYPE.COMMUNITY_REVIEW, journal.minAmountOfCommunityReviews);
+    const articlesWithEnoughEAReviews = await ReviewService.getArticlesWithEnoughAcceptedReviews(
+      REVIEW_TYPE.EDITOR_APPROVED_REVIEW,
+      journal.minAmountOfEditorApprovedReviews
+    );
+    const articlesWithEnoughCommunityReviews = await ReviewService.getArticlesWithEnoughAcceptedReviews(
+      REVIEW_TYPE.COMMUNITY_REVIEW,
+      journal.minAmountOfCommunityReviews
+    );
 
-    if (journal.minAmountOfEditorApprovedReviews === 0 && journal.minAmountOfCommunityReviews === 0)
+    if (
+      journal.minAmountOfEditorApprovedReviews === 0 &&
+      journal.minAmountOfCommunityReviews === 0
+    )
       return populate(
         ArticleVersion.find({
           articleVersionState: 'OPEN_FOR_ALL_REVIEWERS',
@@ -72,9 +99,7 @@ export default {
         ArticleVersion.find({
           articleVersionState: 'OPEN_FOR_ALL_REVIEWERS',
           articleSubmission: {$in: submissionIds},
-          $and: [
-            {_id: {$in: getIds(articlesWithEnoughEAReviews)}}
-          ]
+          $and: [{_id: {$in: getIds(articlesWithEnoughEAReviews)}}]
         })
       );
     else if (journal.minAmountOfEditorApprovedReviews === 0)
@@ -82,9 +107,7 @@ export default {
         ArticleVersion.find({
           articleVersionState: 'OPEN_FOR_ALL_REVIEWERS',
           articleSubmission: {$in: submissionIds},
-          $and: [
-            {_id: {$in: getIds(articlesWithEnoughCommunityReviews)}}
-          ]
+          $and: [{_id: {$in: getIds(articlesWithEnoughCommunityReviews)}}]
         })
       );
     else
@@ -106,7 +129,9 @@ export default {
     let reviews = await ReviewService.getMyReviews(ethereumAddress);
     const alreadyReviewedIds = ReviewService.getArticleVersionIds(reviews);
 
-    const submissions = await ArticleSubmissionService.getReviewableSubmissions(ethereumAddress);
+    const submissions = await ArticleSubmissionService.getReviewableSubmissions(
+      ethereumAddress
+    );
     const reviewableSubmissionIds = getIds(submissions);
 
     return populate(
@@ -135,7 +160,9 @@ export default {
     let reviews = await ReviewService.getMyReviews(ethereumAddress);
     const alreadyReviewedIds = ReviewService.getArticleVersionIds(reviews);
 
-    const submissions = await ArticleSubmissionService.getReviewableSubmissions(ethereumAddress);
+    const submissions = await ArticleSubmissionService.getReviewableSubmissions(
+      ethereumAddress
+    );
     const reviewableSubmissionIds = getIds(submissions);
 
     return populate(
@@ -158,7 +185,9 @@ export default {
     let reviews = await ReviewService.getMyReviews(ethereumAddress);
     const alreadyReviewedIds = ReviewService.getArticleVersionIds(reviews);
 
-    const submissions = await ArticleSubmissionService.getReviewableSubmissions(ethereumAddress);
+    const submissions = await ArticleSubmissionService.getReviewableSubmissions(
+      ethereumAddress
+    );
     const reviewableSubmissionIds = getIds(submissions);
 
     return populate(
@@ -351,8 +380,7 @@ export default {
 
     if (review.reviewType === REVIEW_TYPE.EDITOR_APPROVED_REVIEW)
       articleVersion.editorApprovedReviews.push(review._id);
-    else
-      articleVersion.communityReviews.push(review._id);
+    else articleVersion.communityReviews.push(review._id);
 
     return articleVersion.save();
   }
