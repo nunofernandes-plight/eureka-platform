@@ -4,6 +4,10 @@ import {asyncHandler} from '../api/requestHandler.mjs';
 import articleVersionService from '../db/article-version-service.mjs';
 import ARTICLE_VERSION_STATE from '../schema/article-version-state-enum.mjs';
 import {getRelevantArticleData} from '../helpers/relevant-article-data.mjs';
+import {getLimitedObjects, getNumberOfPages} from '../helpers/pagination-helpers.mjs';
+import articleSubmissionService from '../db/article-submission-service.mjs';
+import ReviewService from '../db/review-service.mjs';
+import {getIds} from '../helpers/get-array-of-ids.mjs';
 
 const router = express.Router();
 
@@ -99,10 +103,32 @@ router.get(
 router.get(
   '/reviewable/community',
   asyncHandler(async req => {
-    let articles = await articleVersionService.getArticlesOpenForCommunityReviews(
-      req.session.passport.user.ethereumAddress
+    // gettin reviews first to check which articles where already reviewed
+    const reviews = await ReviewService.getMyReviews(req.session.passport.user.ethereumAddress);
+    const alreadyReviewedIds = ReviewService.getArticleVersionIds(reviews);
+
+    const submissions = await articleSubmissionService.getReviewableSubmissions(req.session.passport.user.ethereumAddress);
+    const reviewableSubmissionIds = getIds(submissions);
+
+    let articles = await getLimitedObjects(
+      articleVersionService.getArticlesOpenForCommunityReviews(
+        req.session.passport.user.ethereumAddress,
+        alreadyReviewedIds,
+        reviewableSubmissionIds
+      ),
+      parseInt(req.query.page),
+      parseInt(req.query.limit)
     );
-    return getArticlesResponse(articles);
+    const array = getArticlesResponse(articles);
+    const nrOfPages = await getNumberOfPages(
+      articleVersionService.getArticlesOpenForCommunityReviews(
+        req.session.passport.user.ethereumAddress,
+        alreadyReviewedIds,
+        reviewableSubmissionIds
+      ),
+      parseInt(req.query.limit)
+    );
+    return {array, nrOfPages};
   })
 );
 

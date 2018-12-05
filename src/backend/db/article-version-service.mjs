@@ -14,7 +14,8 @@ import {getIds} from '../helpers/get-array-of-ids.mjs';
 import {getJournal} from './journal-service.mjs';
 
 const populate = fn => {
-  return fn.populate([
+  return fn
+    .populate([
     {path: 'articleSubmission'},
     {path: 'editorApprovedReviews'},
     {path: 'communityReviews'}
@@ -153,14 +154,7 @@ export default {
     );
   },
 
-  getArticlesOpenForCommunityReviews: async ethereumAddress => {
-    // gettin reviews first to check which articles where already reviewed
-    let reviews = await ReviewService.getMyReviews(ethereumAddress);
-    const alreadyReviewedIds = ReviewService.getArticleVersionIds(reviews);
-
-    const submissions = await ArticleSubmissionService.getReviewableSubmissions(ethereumAddress);
-    const reviewableSubmissionIds = getIds(submissions);
-
+  getArticlesOpenForCommunityReviews: (ethereumAddress, alreadyReviewedIds, reviewableSubmissionIds) => {
     return populate(
       ArticleVersion.find({
         // show article if not reviewed yet
