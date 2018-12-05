@@ -241,7 +241,7 @@ export default {
    * @returns {Promise<void>}
    */
   updateAritcleSubmissionState: async (_submissionId, _articleSubmissionState) => {
-    ArticleSubmission.findOneAndUpdate(
+    return ArticleSubmission.findOneAndUpdate(
       {scSubmissionID: _submissionId},
       {
         articleSubmissionState: _articleSubmissionState

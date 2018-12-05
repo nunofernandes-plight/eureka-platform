@@ -36,6 +36,21 @@ export const getInviteReviewersArticles = () => {
   });
 };
 
+export const createReviewInvitation = (reviewerAddress, articleHash, reviewType) => {
+  return fetch(`${getDomain()}/api/reviews/invite`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+    body: JSON.stringify({
+      reviewerAddress,
+      articleHash,
+      reviewType
+    })
+  });
+};
+
 export const getReviewsToCheck = () => {
   return fetch(`${getDomain()}/api/reviews/checkable`, {
     method: 'GET',

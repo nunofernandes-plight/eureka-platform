@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import styled from 'styled-components';
-import {getInviteReviewersArticles} from './EditorMethods.js';
+import {createReviewInvitation, getInviteReviewersArticles} from './EditorMethods.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Article from '../../views/Article.js';
 import {Card} from '../../views/Card.js';
@@ -10,11 +10,10 @@ import Modal from '../../design-components/Modal.js';
 import TxHash from '../../views/TxHash.js';
 import EdiorReviewersPicker from './EdiorReviewersPicker.js';
 import EmailPreview from '../Email/EmailPreview.js';
-import {isGanache} from '../../../../helpers/isGanache.mjs';
-import {inviteReviewersForArticle} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import SendEmailAnimation from './SendEmailAnimation.js';
 import withWeb3 from '../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
+import REVIEW_TYPE from '../../../../backend/schema/review-type-enum.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -81,50 +80,21 @@ class EditorInvite extends React.Component {
 
   async inviteReviewers() {
     if (!this.state.reviewersToInvite) return;
-    /*
-    this.setState({showReviewersPickerModal: false});*/
-    const reviewers = this.state.reviewersToInvite.map(r => {
-      return r.ethereumAddress;
-    });
-    let gasAmount;
-    // gas estimation on ganache doesn't work properly
-    if (!isGanache(this.props.context.web3))
-      gasAmount = await inviteReviewersForArticle(
-        this.props.context.platformContract,
-        this.state.article.articleHash,
-        reviewers
-      ).estimateGas({
-        from: this.props.selectedAccount.address
-      });
-    else gasAmount = 80000000;
 
-    inviteReviewersForArticle(
-      this.props.context.platformContract,
-      this.state.article.articleHash,
-      reviewers
-    )
-      .send({
-        from: this.props.selectedAccount.address,
-        gas: gasAmount
+    await Promise.all(
+      this.state.reviewersToInvite.map(r => {
+        return createReviewInvitation(
+          r.ethereumAddress,
+          this.state.article.articleHash,
+          REVIEW_TYPE.EDITOR_APPROVED_REVIEW
+        );
       })
-      .on('transactionHash', tx => {
-        this.setState({
-          showSendEmailAnimation: true
-        });
-      })
-      .on('receipt', async receipt => {
-        console.log('Invite Reviewers:  ' + receipt.status);
-        await this.getInviteReviewersArticles();
-        return receipt;
-      })
-      .catch(err => {
-        console.error(err);
-        this.setState({
-          errorMessage:
-            'Ouh. Something went wrong with the Smart Contract call: ' +
-            err.toString()
-        });
-      });
+    );
+
+    this.setState({
+      showSendEmailAnimation: true,
+      reviewersToInvite: null
+    });
   }
 
   renderModals() {
@@ -160,7 +130,10 @@ class EditorInvite extends React.Component {
         <Modal
           toggle={showReviewersPickerModal => {
             this.setState({showReviewersPickerModal});
-            this.setState({article: null});
+            this.setState({
+              article: null,
+              reviewersToInvite: null
+            });
           }}
           hideHeader={this.state.showSendEmailAnimation}
           hideFooter={this.state.showSendEmailAnimation}

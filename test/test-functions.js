@@ -5,8 +5,7 @@ import {
   removeEditorFromSubmissionProcess,
   setSanityToOk,
   setSanityIsNotOk,
-  inviteReviewersForArticle,
-  acceptReviewInvitation,
+  signUpForReviewing,
   addEditorApprovedReview,
   addCommunityReview,
   acceptReview,
@@ -29,6 +28,7 @@ import reviewService from '../src/backend/db/review-service.mjs';
 import ReviewState from '../src/backend/schema/review-state-enum.mjs';
 import {transformHashToHex} from './helpers.js';
 import * as web3 from 'web3';
+import REVIEW_TYPE from '../src/backend/schema/review-type-enum.mjs';
 
 let eurekaPlatformContract;
 let eurekaTokenContract;
@@ -262,7 +262,7 @@ export default {
     let counter = 0;
     while (
       articleVersion.articleVersionState !==
-      ArticleVersionState.EDITOR_CHECKED &&
+      ArticleVersionState.OPEN_FOR_ALL_REVIEWERS &&
       counter < 5) {
       sleepSync(5000);
       dbArticleVersion = await articleVersionService.getArticleVersionById(
@@ -271,7 +271,7 @@ export default {
       );
       counter++;
     }
-    t.is(dbArticleVersion.articleVersionState, ArticleVersionState.EDITOR_CHECKED);
+    t.is(dbArticleVersion.articleVersionState, ArticleVersionState.OPEN_FOR_ALL_REVIEWERS);
   },
 
   /**
@@ -332,38 +332,16 @@ export default {
    * @param articleVersion
    * @returns {Promise<void>}
    */
-  inviteReviewersAndTest: async function(t, editor, author, reviewers, articleVersion) {
-    const existingReviewersLength = articleVersion.editorApprovedReviews.length;
-    const newReviewersLength = reviewers.length;
-
-    const reviewersAddress = reviewers.map(reviewer => {
-      return reviewer.ethereumAddress;
-    });
-
-    await inviteReviewersForArticle(
-      eurekaPlatformContract,
-      articleVersion.articleHash,
-      reviewersAddress
-    ).send({
-      from: editor.ethereumAddress,
-      gas: 80000000
-    });
-
-    let dbArticleVersion = await articleVersionService.getArticleVersionById(
-      author.ethereumAddress,
-      articleVersion._id
+  inviteReviewers: async function(t, editor, author, reviewers, articleVersion) {
+    await Promise.all(
+      reviewers.map(r => {
+        return reviewService.createReviewInvitation(
+          r.ethereumAddress,
+          articleVersion.articleHash,
+          REVIEW_TYPE.EDITOR_APPROVED_REVIEW
+        );
+      })
     );
-    // Check if article-version in DB holds reviewers
-    let counter = 0;
-    while (dbArticleVersion.editorApprovedReviews.length < 3 && counter < 5) {
-      sleepSync(5000);
-      dbArticleVersion = await articleVersionService.getArticleVersionById(
-        author.ethereumAddress,
-        articleVersion._id
-      );
-      counter++;
-    }
-    t.is(dbArticleVersion.editorApprovedReviews.length, (existingReviewersLength + newReviewersLength));
   },
 
   /**
@@ -374,8 +352,8 @@ export default {
    * @param articleVersion
    * @returns {Promise<void>}
    */
-  acceptInvitationAndTest: async function(t, reviewer, index, articleVersion) {
-    await acceptReviewInvitation(
+  signUpForReviewingAndTest: async function(t, reviewer, index, articleVersion) {
+    await signUpForReviewing(
       eurekaPlatformContract,
       articleVersion.articleHash
     ).send({
@@ -383,19 +361,18 @@ export default {
       gas: 80000000
     });
 
-    let dbReview = await reviewService.getReviewById(
+    let dbReview = await reviewService.getReview(
       reviewer.ethereumAddress,
-      articleVersion.editorApprovedReviews[index]
+      articleVersion._id
     );
 
     let counter = 0;
-    while (
-      dbReview.reviewState !== ReviewState.SIGNED_UP_FOR_REVIEWING &&
+    while ((!dbReview || dbReview.reviewState !== ReviewState.SIGNED_UP_FOR_REVIEWING) &&
       counter < 5) {
       sleepSync(5000);
-      dbReview = await reviewService.getReviewById(
+      dbReview = await reviewService.getReview(
         reviewer.ethereumAddress,
-        articleVersion.editorApprovedReviews[index]
+        articleVersion._id
       );
       counter++;
     }
@@ -456,7 +433,7 @@ export default {
     const existingCommunityReviewsLength = articleVersion.communityReviews.length;
 
     // Add a new communityReview into the DB
-    let dbReview = await reviewService.addNewCommunitydReview(
+    let dbReview = await reviewService.addNewCommunityReview(
       reviewer.ethereumAddress,
       articleVersion.articleHash,
       reviewData.reviewText,
@@ -570,10 +547,13 @@ export default {
       from: editor.ethereumAddress
     });
     let dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, articleVersion._id);
+    let dbSubmission = await articleSubmissionService.getSubmissionById(articleVersion.articleSubmission);
     let counter = 0;
-    while (dbArticleVersion.articleVersionState !== ArticleVersionState.ACCEPTED && counter < 5) {
+    while ((dbSubmission.articleSubmissionState !== ArticleSubmissionState.CLOSED || dbArticleVersion.articleVersionState !== ArticleVersionState.ACCEPTED) && counter < 5) {
       sleepSync(5000);
+      console.log(dbSubmission);
       dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, articleVersion._id);
+      dbSubmission = await articleSubmissionService.getSubmissionById(articleVersion.articleSubmission);
       counter++;
     }
     t.is(dbArticleVersion.articleVersionState, ArticleVersionState.ACCEPTED);

@@ -45,18 +45,7 @@ router.get(
   asyncHandler(async req => {
     let articles = await articleVersionService.getArticlesAssignedTo(
       req.session.passport.user.ethereumAddress,
-      [ARTICLE_VERSION_STATE.EDITOR_CHECKED, ARTICLE_VERSION_STATE.REVIEWERS_INVITED]
-    );
-    return getArticlesResponse(articles);
-  })
-);
-
-router.get(
-  '/assigned/checkReviews',
-  asyncHandler(async req => {
-    let articles = await articleVersionService.getArticlesAssignedTo(
-      req.session.passport.user.ethereumAddress,
-      [ARTICLE_VERSION_STATE.REVIEWERS_INVITED]
+      [ARTICLE_VERSION_STATE.OPEN_FOR_ALL_REVIEWERS]
     );
     return getArticlesResponse(articles);
   })
@@ -90,7 +79,17 @@ router.get(
 router.get(
   '/reviewable/invited',
   asyncHandler(async req => {
-    let articles = await articleVersionService.getArticlesInvitedForReviewing(
+    let articles = await articleVersionService.getArticlesOpenForExpertReviews(
+      req.session.passport.user.ethereumAddress
+    );
+    return getArticlesResponse(articles);
+  })
+);
+
+router.get(
+  '/reviewable/expert',
+  asyncHandler(async req => {
+    let articles = await articleVersionService.getArticlesOpenForExpertReviews(
       req.session.passport.user.ethereumAddress
     );
     return getArticlesResponse(articles);

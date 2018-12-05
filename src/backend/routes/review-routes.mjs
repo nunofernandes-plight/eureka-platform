@@ -61,13 +61,17 @@ router.get(
   })
 );
 
-//
-// router.post(
-//   '/',
-//   asyncHandler(async req => {
-//     return reviewService.createReview(req.body);
-//   })
-// );
+
+router.post(
+  '/invite',
+  asyncHandler(async req => {
+    return reviewService.createReviewInvitation(
+      req.body.reviewerAddress,
+      req.body.articleHash,
+      req.body.reviewType
+    );
+  })
+);
 
 /**
  *  Add an review including scoring and issues into an existing review object
@@ -108,7 +112,7 @@ router.put(
   '/community',
   asyncHandler(async req => {
     const ethereumAddress = req.session.passport.user.ethereumAddress;
-    return await reviewService.addNewCommunitydReview(
+    return await reviewService.addNewCommunityReview(
       ethereumAddress,
       req.body.articleHash,
       req.body.reviewText,

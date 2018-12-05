@@ -172,15 +172,19 @@ test.only(
     await TestFunctions.signUpExpertReviewerAndTest(t, author, editorApprovedReviewers[2]);
 
     // Invite reviewers 1,2 & 3 to become editor-approved reviewers
-    await TestFunctions.inviteReviewersAndTest(t, editor, author, editorApprovedReviewers, articleVersion);
+    await TestFunctions.inviteReviewers(t, editor, author, editorApprovedReviewers, articleVersion);
 
     //update from DB
     articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
     articleVersion = articleSubmission.articleVersions[0];
 
-    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[0], 0, articleVersion);
-    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[1], 1, articleVersion);
-    await TestFunctions.acceptInvitationAndTest(t, editorApprovedReviewers[2], 2, articleVersion);
+    await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[0], 0, articleVersion);
+    await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[1], 1, articleVersion);
+    await TestFunctions.signUpForReviewingAndTest(t, editorApprovedReviewers[2], 2, articleVersion);
+
+    //update from DB
+    articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    articleVersion = articleSubmission.articleVersions[0];
 
     // Get the reviews from DB
     let review1 = await reviewService.getReviewById(reviewer1.ethereumAddress, articleVersion.editorApprovedReviews[0]);

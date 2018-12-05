@@ -11,7 +11,7 @@ import {
 } from './ReviewMethods.js';
 import {__THIRD} from '../../../helpers/colors.js';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
-import {acceptReviewInvitation} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {signUpForReviewing} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import withWeb3 from '../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
 const Container = styled.div`
@@ -76,11 +76,11 @@ class ReviewsInvited extends React.Component {
       });
   }
 
-  async acceptReviewInvitation(article) {
+  async signUpForReviewing(article) {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
     if (!isGanache(this.props.context.web3))
-      gasAmount = await acceptReviewInvitation(
+      gasAmount = await signUpForReviewing(
         this.props.context.platformContract,
         article.articleHash
       ).estimateGas({
@@ -88,7 +88,7 @@ class ReviewsInvited extends React.Component {
       });
     else gasAmount = 80000000;
 
-    acceptReviewInvitation(
+    signUpForReviewing(
       this.props.context.platformContract,
       article.articleHash
     )
@@ -167,7 +167,7 @@ class ReviewsInvited extends React.Component {
                     <Article
                       buttonText={
                         article.reviewState === 'INVITED'
-                          ? 'Accept Invitation'
+                          ? 'Sign Up For Reviewing'
                           : 'Write Review'
                       }
                       key={article._id}
@@ -181,7 +181,7 @@ class ReviewsInvited extends React.Component {
                       }}
                       action={async (_, article) => {
                         if (article.reviewState === 'INVITED') {
-                          await this.acceptReviewInvitation(article);
+                          await this.signUpForReviewing(article);
                         } else {
                           await saveEditorApprovedReviewToDB({
                             reviewId: article.reviewId

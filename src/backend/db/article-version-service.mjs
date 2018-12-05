@@ -63,14 +63,14 @@ export default {
     if (journal.minAmountOfEditorApprovedReviews === 0 && journal.minAmountOfCommunityReviews === 0)
       return populate(
         ArticleVersion.find({
-          articleVersionState: 'REVIEWERS_INVITED',
+          articleVersionState: 'OPEN_FOR_ALL_REVIEWERS',
           articleSubmission: {$in: submissionIds}
         })
       );
     else if (journal.minAmountOfCommunityReviews === 0)
       return populate(
         ArticleVersion.find({
-          articleVersionState: 'REVIEWERS_INVITED',
+          articleVersionState: 'OPEN_FOR_ALL_REVIEWERS',
           articleSubmission: {$in: submissionIds},
           $and: [
             {_id: {$in: getIds(articlesWithEnoughEAReviews)}}
@@ -80,7 +80,7 @@ export default {
     else if (journal.minAmountOfEditorApprovedReviews === 0)
       return populate(
         ArticleVersion.find({
-          articleVersionState: 'REVIEWERS_INVITED',
+          articleVersionState: 'OPEN_FOR_ALL_REVIEWERS',
           articleSubmission: {$in: submissionIds},
           $and: [
             {_id: {$in: getIds(articlesWithEnoughCommunityReviews)}}
@@ -90,7 +90,7 @@ export default {
     else
       return populate(
         ArticleVersion.find({
-          articleVersionState: 'REVIEWERS_INVITED',
+          articleVersionState: 'OPEN_FOR_ALL_REVIEWERS',
           articleSubmission: {$in: submissionIds},
           $and: [
             {_id: {$in: getIds(articlesWithEnoughEAReviews)}},
@@ -100,13 +100,11 @@ export default {
       );
   },
 
+  //TODO : update this method
   getArticlesOpenForReviews: async ethereumAddress => {
     // gettin reviews first to check which articles where already reviewed
     let reviews = await ReviewService.getMyReviews(ethereumAddress);
     const alreadyReviewedIds = ReviewService.getArticleVersionIds(reviews);
-    // gettin reviews which user is invited to
-    reviews = await ReviewService.getReviewInvitations(ethereumAddress);
-    const invitedIds = ReviewService.getArticleVersionIds(reviews);
 
     const submissions = await ArticleSubmissionService.getReviewableSubmissions(ethereumAddress);
     const reviewableSubmissionIds = getIds(submissions);
@@ -114,9 +112,9 @@ export default {
     return populate(
       ArticleVersion.find({
         // show article if invited or if not reviewed yet
-        $or: [{_id: {$nin: alreadyReviewedIds}}, {_id: {$in: invitedIds}}],
+        _id: {$nin: alreadyReviewedIds},
         // community reviews can be reviewed as soon as the article is submitted
-        articleVersionState: {$in: ['SUBMITTED', 'EDITOR_CHECKED', 'REVIEWERS_INVITED']},
+        articleVersionState: {$in: ['SUBMITTED', 'OPEN_FOR_ALL_REVIEWERS']},
         // article can't be reviewed by the author or submission owner itself
         ownerAddress: {$ne: ethereumAddress},
         'document.authors': {$ne: ethereumAddress},
@@ -132,14 +130,25 @@ export default {
         'instock.qty': { $lte: 20 }
       });
   * */
-  getArticlesInvitedForReviewing: async ethereumAddress => {
-    const reviews = await ReviewService.getReviewInvitations(ethereumAddress);
-    const ids = ReviewService.getArticleVersionIds(reviews);
+  getArticlesOpenForExpertReviews: async ethereumAddress => {
+    // gettin reviews first to check which articles where already reviewed
+    let reviews = await ReviewService.getMyReviews(ethereumAddress);
+    const alreadyReviewedIds = ReviewService.getArticleVersionIds(reviews);
+
+    const submissions = await ArticleSubmissionService.getReviewableSubmissions(ethereumAddress);
+    const reviewableSubmissionIds = getIds(submissions);
 
     return populate(
       ArticleVersion.find({
-        _id: {$in: ids},
-        articleVersionState: 'REVIEWERS_INVITED'
+        // show article if not reviewed yet
+        _id: {$nin: alreadyReviewedIds},
+        // expert reviews can be reviewed as soon as the article is signed off
+        articleVersionState: {$in: ['OPEN_FOR_ALL_REVIEWERS']},
+        // article can't be reviewed by the author or submission owner itself
+        ownerAddress: {$ne: ethereumAddress},
+        'document.authors': {$ne: ethereumAddress},
+        // article can't be reviewed by the editor of the submission process
+        articleSubmission: {$in: reviewableSubmissionIds}
       })
     );
   },
@@ -148,19 +157,16 @@ export default {
     // gettin reviews first to check which articles where already reviewed
     let reviews = await ReviewService.getMyReviews(ethereumAddress);
     const alreadyReviewedIds = ReviewService.getArticleVersionIds(reviews);
-    // gettin reviews which user is invited to
-    reviews = await ReviewService.getReviewInvitations(ethereumAddress);
-    const invitedIds = ReviewService.getArticleVersionIds(reviews);
 
     const submissions = await ArticleSubmissionService.getReviewableSubmissions(ethereumAddress);
     const reviewableSubmissionIds = getIds(submissions);
 
     return populate(
       ArticleVersion.find({
-        // show article if not invited or if not reviewed yet
-        $and: [{_id: {$nin: alreadyReviewedIds}}, {_id: {$nin: invitedIds}}],
+        // show article if not reviewed yet
+        _id: {$nin: alreadyReviewedIds},
         // community reviews can be reviewed as soon as the article is submitted
-        articleVersionState: {$in: ['EDITOR_CHECKED', 'REVIEWERS_INVITED']},        // TODO: include SUBMITTED state: ['SUBMITTED', 'EDITOR_CHECKED', 'REVIEWERS_INVITED']},
+        articleVersionState: {$in: ['SUBMITTED', 'OPEN_FOR_ALL_REVIEWERS']},
         // article can't be reviewed by the author or submission owner itself
         ownerAddress: {$ne: ethereumAddress},
         'document.authors': {$ne: ethereumAddress},
@@ -309,7 +315,7 @@ export default {
       return articleVersion;
     }
 
-    // after EDITOR_CHECKED the article can be visualized by anyone (open access)
+    // after OPEN_FOR_ALL_REVIEWERS the article can be visualized by anyone (open access)
     if (
       state !== ArticleVersionState.SUBMITTED &&
       state !== ArticleVersionState.FINISHED_DRAFT &&
@@ -335,6 +341,20 @@ export default {
         articleVersionState: versionState
       }
     );
+  },
+
+  async addReview(articleHash, review) {
+    let articleVersion = await ArticleVersion.findOne({
+      articleHash
+    });
+    if (!articleVersion) errorThrower.noEntryFoundByParameters(articleHash);
+
+    if (review.reviewType === REVIEW_TYPE.EDITOR_APPROVED_REVIEW)
+      articleVersion.editorApprovedReviews.push(review._id);
+    else
+      articleVersion.communityReviews.push(review._id);
+
+    return articleVersion.save();
   }
 };
 
