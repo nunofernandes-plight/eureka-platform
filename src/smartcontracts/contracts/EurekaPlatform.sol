@@ -173,8 +173,8 @@ contract EurekaPlatform {
     enum ReviewState {
         NOT_EXISTING,
         SIGNED_UP_FOR_REVIEWING,
-        REVIEWER_REJECTED,
         HANDED_IN,
+        REVIEWER_REJECTED,
         DECLINED,
         ACCEPTED
     }
