@@ -56,21 +56,6 @@ test(PRETEXT + 'Remove of editor after timeout', async t => {
   const contract_owner = await createUserContractOwner();
   const editor = await createEditor1();
 
-  // Assign Editor for submission
-  await TestFunctions.createArticleDraftAndSubmitIt(t, contract_owner, TEST_ARTICLE_1_HASH_HEX, TEST_ARTICLE_1_DATA_IN_HEX);
-  let articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
-  await TestFunctions.signUpEditorAndTest(t, editor);
-  await TestFunctions.assignEditorForSubmissionProcess(t, editor, articleSubmission);
-
-  // Revert of Editor to ArticleSubmission assignment
-  let counter = 0;
-  let openArticleSubmissions = await articleSubmissionService.getArticleSubmissionsByState(ArticleSubmissionState.OPEN);
-  while (
-    openArticleSubmissions.length < 1 &&
-    counter < 20) {
-    sleepSync(5000);
-    openArticleSubmissions = await articleSubmissionService.getArticleSubmissionsByState(ArticleSubmissionState.OPEN);
-    counter++;
-  }
-  t.is(openArticleSubmissions.length, 1);
+  await TestFunctions.timeoutRemoveEditorAndTest(
+    t, contract_owner, editor, TEST_ARTICLE_1_HASH_HEX, TEST_ARTICLE_1_DATA_IN_HEX);
 });

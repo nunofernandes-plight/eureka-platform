@@ -678,6 +678,37 @@ export default {
     t.is(review.articleHasMinorIssues, correctedReview.articleHasMinorIssues);
     t.is(review.reviewScore1, correctedReview.score1);
     t.is(review.reviewScore2, correctedReview.score2);
-  }
+  },
 
+  // TIME BASED TESTING FUNCTIONS
+  timeoutRemoveEditorAndTest: async function(t, _contractOwner, _editor, _articleHashHex, _articleDataHex) {
+    await this.createArticleDraftAndSubmitIt(t, _contractOwner, _articleHashHex, _articleDataHex);
+    let articleSubmission = (await articleSubmissionService.getAllSubmissions())[0];
+    await this.signUpEditorAndTest(t, _editor);
+    await this.assignEditorForSubmissionProcess(t, _editor, articleSubmission);
+
+    // Revert of Editor to ArticleSubmission assignment
+    // Has articleSubmission reverted from EDITOR_ASSIGNED to OPEN
+    let counter = 0;
+    let openArticleSubmissions = await articleSubmissionService.getArticleSubmissionsByState(ArticleSubmissionState.OPEN);
+    while (
+      openArticleSubmissions.length < 1 &&
+      counter < 20) {
+      sleepSync(5000);
+      openArticleSubmissions = await articleSubmissionService.getArticleSubmissionsByState(ArticleSubmissionState.OPEN);
+      counter++;
+    }
+    t.is(openArticleSubmissions.length, 1);
+
+    counter = 0;
+    let editorAssignedSubmissions = await articleSubmissionService.getArticleSubmissionsByState(ArticleSubmissionState.EDITOR_ASSIGNED);
+    while (
+      editorAssignedSubmissions.length > 0 &&
+      counter < 20) {
+      sleepSync(5000);
+      editorAssignedSubmissions = await articleSubmissionService.getArticleSubmissionsByState(ArticleSubmissionState.EDITOR_ASSIGNED);
+      counter++;
+    }
+    t.is(editorAssignedSubmissions.length, 0);
+  }
 };
