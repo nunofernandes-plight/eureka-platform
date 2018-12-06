@@ -1,17 +1,11 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import {
   __ALERT_ERROR,
   __ALERT_WARNING,
-  __FIFTH,
   __GRAY_100,
   __GRAY_200,
-  __GRAY_400,
-  __GRAY_500,
-  __GRAY_600,
-  __MAIN,
-  __THIRD,
-  getScale
+  __GRAY_600
 } from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import {Link} from 'react-router-dom';
@@ -26,24 +20,19 @@ const Container = styled.div`
   margin: 25px 15px;
   box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15), 0 1px 0 rgba(0, 0, 0, 0.02);
   padding: 1em;
-  border: 1px solid ${__GRAY_100};
+  border: 1px solid ${__GRAY_200};
+  position: relative;
 `;
-const LinkContainer = styled.div`
+const NumberContainer = styled.div`
   margin-top: auto;
   border-top: 1px solid ${__GRAY_200};
   color: ${__GRAY_600};
 `;
 
-const Title = styled.div`
+const Number = styled.div`
   font-size: 12px;
   font-style: italic;
-  margin-left: 2px;
-`;
-
-const Number = styled.h1`
-  margin: 0;
-  color: white;
-  font-size: 24px;
+  padding-top: 5px;
 `;
 
 const IconContainer = styled.div`
@@ -81,11 +70,11 @@ const DashboardSubCard = ({category, index, color}) => {
         </IconContainer>
         <MyLink to={'tbd'}>todo insert link here</MyLink>
       </Header>
-      <LinkContainer>
-        <Title>
+      <NumberContainer>
+        <Number>
           In total, <strong>{category.total}</strong> {category.title}
-        </Title>
-      </LinkContainer>
+        </Number>
+      </NumberContainer>
     </Container>
   );
 };

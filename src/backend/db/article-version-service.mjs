@@ -51,7 +51,7 @@ export default {
     return await ArticleVersion.find({
       ownerAddress,
       articleVersionState: {$in: [articleVersionState]}
-    });
+    }).sort({updatedAt: -1});
   },
 
   getArticlesAssignedTo: async (ethereumAddress, articleVersionStates) => {

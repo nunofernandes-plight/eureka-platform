@@ -3,12 +3,14 @@ import reviewService from '../db/review-service.mjs';
 import ARTICLE_VERSION_STATE from '../schema/article-version-state-enum.mjs';
 import REVIEW_STATE from '../schema/review-state-enum.mjs';
 
+
 export default {
   getAnalytics: async userAddress => {
     const drafts = await articleVersionService.getArticleVersionsByStateAndUser(
       ARTICLE_VERSION_STATE.DRAFT,
       userAddress
     );
+
     const submitted = await articleVersionService.getArticleVersionsByStateAndUser(
       ARTICLE_VERSION_STATE.SUBMITTED,
       userAddress
@@ -38,7 +40,8 @@ export default {
           {
             title: 'drafts have been created',
             total: totalDrafts,
-            icon: 'draft'
+            icon: 'draft',
+            last: drafts ? drafts[0] : null
           },
           {
             title: 'drafts have been submitted',
