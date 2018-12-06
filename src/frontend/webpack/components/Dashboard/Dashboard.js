@@ -15,6 +15,7 @@ const Container = styled.div`
 const Cards = styled.div`
   display: flex;
   flex-wrap: wrap;
+  width: 85%;
   box-sizing: border-box;
 `;
 
@@ -75,17 +76,15 @@ class Dashboard extends Component {
       <Container>
         {this.renderModal()}
 
-        <Card title={'Your Dashboard'}>
-          {this.state.loading ? (
-            <EurekaRotateSpinner />
-          ) : (
-            <Cards>
-              {this.state.analytics.map((stat, i) => {
-                return <DashboardCard key={i} stat={stat} />;
-              })}
-            </Cards>
-          )}
-        </Card>
+        {this.state.loading ? (
+          <EurekaRotateSpinner />
+        ) : (
+          <Cards>
+            {this.state.analytics.map((stat, i) => {
+              return <DashboardCard key={i} stat={stat} />;
+            })}
+          </Cards>
+        )}
       </Container>
     );
   }

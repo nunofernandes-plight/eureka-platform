@@ -32,10 +32,12 @@ export default {
     const totalOpenArticles = openToReview.length;
     return [
       {
+        title: 'Articles',
         drafts: totalDrafts,
         submitted: totalSubmitted
       },
       {
+        title: 'Reviews',
         submitted: totalReviews,
         invitations: totalInvitations,
         openArticles: totalOpenArticles
