@@ -58,24 +58,24 @@ export const setupWeb3Interface = async (platformContract, tokenContract) => {
 
 
 
-  /** Pending Transaction listener **/
-  web3.eth.subscribe('pendingTransactions')
-    .on('data', async (transactionHash) => {
-      // console.log(transactionHash);
-      const transaction = await web3.eth.getTransaction(transactionHash);
-      if ( transaction
-        && ( transaction.to === platformContract.options.address
-          || transaction.from === platformContract.options.address
-          || transaction.to === tokenContract.options.address
-        )
-      ) {
-
-        //TODO save transaction because related with platform
-        // check status firs if transaction receipt call is necessary
-        const transactionReceipt = await web3.eth.getTransactionReceipt(transactionHash);
-        // console.log(transactionReceipt);
-      }
-    });
+  // /** Pending Transaction listener **/
+  // web3.eth.subscribe('pendingTransactions')
+  //   .on('data', async (transactionHash) => {
+  //     // console.log(transactionHash);
+  //     const transaction = await web3.eth.getTransaction(transactionHash);
+  //     if ( transaction
+  //       && ( transaction.to === platformContract.options.address
+  //         || transaction.from === platformContract.options.address
+  //         || transaction.to === tokenContract.options.address
+  //       )
+  //     ) {
+  //
+  //       //TODO save transaction because related with platform
+  //       // check status firs if transaction receipt call is necessary
+  //       const transactionReceipt = await web3.eth.getTransactionReceipt(transactionHash);
+  //       // console.log(transactionReceipt);
+  //     }
+  //   });
 
   return [platformContract, tokenContract];
 };
