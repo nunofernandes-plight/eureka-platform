@@ -46,7 +46,8 @@ export default {
           {
             title: 'drafts have been submitted',
             total: totalSubmitted,
-            icon: 'submitted'
+            icon: 'submitted',
+            last: submitted ? submitted[0] : null
           }
         ]
       },

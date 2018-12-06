@@ -1,9 +1,7 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import {
   __ALERT_ERROR,
-  __ALERT_WARNING,
-  __GRAY_100,
   __GRAY_200,
   __GRAY_600
 } from '../../../helpers/colors.js';
