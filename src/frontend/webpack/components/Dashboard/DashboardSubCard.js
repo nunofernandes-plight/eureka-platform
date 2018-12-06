@@ -49,6 +49,7 @@ const IconContainer = styled.div`
 const Header = styled.div`
   display: flex;
   align-items: center;
+  margin: 0 0 20px 0;
 `;
 
 const DashboardSubCard = ({category, index, color, title}) => {
@@ -58,7 +59,11 @@ const DashboardSubCard = ({category, index, color, title}) => {
         <IconContainer color={color}>
           <Icon icon={category.icon} width={20} height={20} color={'white'} />
         </IconContainer>
-        <DashboardSubCardContent content={category.content} start={category.start} title={title}/>
+        <DashboardSubCardContent
+          content={category.content}
+          start={category.start}
+          title={title}
+        />
       </Header>
       <NumberContainer>
         <Number>
