@@ -54,7 +54,15 @@ const DashboardCard = ({stat}) => {
       <Title>{stat.title}</Title>
       <SubCards>
         {stat.categories.map((cat, i) => {
-          return <DashboardSubCard key={i} category={cat} index={i} color={color}/>;
+          return (
+            <DashboardSubCard
+              key={i}
+              category={cat}
+              index={i}
+              color={color}
+              title={stat.title}
+            />
+          );
         })}
       </SubCards>
     </Container>

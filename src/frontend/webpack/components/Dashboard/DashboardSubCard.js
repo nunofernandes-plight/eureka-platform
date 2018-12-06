@@ -7,6 +7,7 @@ import {
 } from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import {Link} from 'react-router-dom';
+import DashboardSubCardContent from './DashboardSubCardContent.js';
 
 const Container = styled.div`
   display: flex;
@@ -50,23 +51,14 @@ const Header = styled.div`
   align-items: center;
 `;
 
-const MyLink = styled(Link)`
-  transition: 0.3s all ease-in-out;
-  cursor: pointer;
-  margin-top: 4px;
-  color: ${__ALERT_ERROR};
-  font-size: 12px;
-  text-decoration: none;
-`;
-
-const DashboardSubCard = ({category, index, color}) => {
+const DashboardSubCard = ({category, index, color, title}) => {
   return (
     <Container>
       <Header>
         <IconContainer color={color}>
           <Icon icon={category.icon} width={20} height={20} color={'white'} />
         </IconContainer>
-        <MyLink to={'tbd'}>todo insert link here</MyLink>
+        <DashboardSubCardContent content={category.content} start={category.start} title={title}/>
       </Header>
       <NumberContainer>
         <Number>

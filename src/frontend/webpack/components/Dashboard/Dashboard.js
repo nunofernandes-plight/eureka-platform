@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import {Card} from '../../views/Card.js';
 import {getDomain} from '../../../../helpers/getDomain.mjs';
 import Modal from '../../design-components/Modal.js';
-import GridSpinner from '../../views/spinners/GridSpinner.js';
 import DashboardCard from './DashboardCard.js';
 import EurekaRotateSpinner from '../../views/spinners/EurekaRotateSpinner.js';
+import {EXTRA_LARGE_DEVICES, LARGE_DEVICES} from '../../../helpers/mobile.js';
 
 const Container = styled.div`
   display: flex;
@@ -17,6 +16,10 @@ const Cards = styled.div`
   flex-wrap: wrap;
   width: 85%;
   box-sizing: border-box;
+
+  ${EXTRA_LARGE_DEVICES`
+   flex-direction: column;
+  `};
 `;
 
 class Dashboard extends Component {

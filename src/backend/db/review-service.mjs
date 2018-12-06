@@ -52,14 +52,16 @@ export default {
       reviewState: {
         $in: ['HANDED_IN_DB', 'HANDED_IN_SC', 'DECLINED', 'ACCEPTED']
       }
-    }).populate({
-      path: 'articleVersion',
-      populate: [
-        {path: 'articleSubmission'},
-        {path: 'editorApprovedReviews'},
-        {path: 'communityReviews'}
-      ]
-    });
+    })
+      .populate({
+        path: 'articleVersion',
+        populate: [
+          {path: 'articleSubmission'},
+          {path: 'editorApprovedReviews'},
+          {path: 'communityReviews'}
+        ]
+      })
+      .sort({stateTimestamp: -1});
   },
 
   getReviewsByState: async reviewState => {
@@ -78,7 +80,7 @@ export default {
     return await Review.find({
       reviewerAddress,
       reviewState: {$in: [reviewState]}
-    });
+    }).sort({stateTimestamp: -1});
   },
 
   getHandedInReviews: async () => {
