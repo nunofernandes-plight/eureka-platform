@@ -15,13 +15,15 @@ const getProvider = () => {
     provider = new Web3.providers.WebsocketProvider('ws://127.0.0.1:7545');
   }
   else if (process.env.BC_NETWORK === 'kovan') {
-    provider = new Web3.providers.WebsocketProvider('wss://kovan.infura.io/ws');
+    provider = new Web3.providers.WebsocketProvider('ws://' + process.env.ETHEREUM_FULL_NODE_KOVAN);   //connecting to digital ocean ethereum-kovan-node
   }
   else {
     console.error('provider ' + process.env.BC_NETWORK + ' couldn\'t be found');
     process.exit(1);
   }
-  provider.on('connect', () => console.log('Web3 Provider connected'));
+  provider.on('connect', (e) => {
+    console.log('Web3 Provider connected to ' + e.target._url);
+  });
   provider.on('error', e => {
     console.error('Web3 Provider Error', e);
     web3.setProvider(getProvider());
