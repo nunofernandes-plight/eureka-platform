@@ -30,16 +30,16 @@ export default {
     const totalInvitations = invitations.length;
     const totalReviews = myReviews.length;
     const totalOpenArticles = openToReview.length;
-    return {
-      articles: {
+    return [
+      {
         drafts: totalDrafts,
         submitted: totalSubmitted
       },
-      reviews: {
+      {
         submitted: totalReviews,
         invitations: totalInvitations,
         openArticles: totalOpenArticles
       }
-    };
+    ];
   }
 };
