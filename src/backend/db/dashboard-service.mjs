@@ -34,15 +34,25 @@ export default {
       {
         title: 'Articles',
         icon: 'dashboardArticles',
-        drafts: totalDrafts,
-        submitted: totalSubmitted
+        categories: [
+          {title: 'Number of Drafts', total: totalDrafts},
+          {title: 'Number of submitted Drafts', total: totalSubmitted}
+        ]
       },
       {
         title: 'Reviews',
         icon: 'myReviews',
-        submitted: totalReviews,
-        invitations: totalInvitations,
-        openArticles: totalOpenArticles
+        categories: [
+          {title: 'Number of submitted Reviews', total: totalReviews},
+          {
+            title: 'Number of pending Invitations Reviews',
+            total: totalInvitations
+          },
+          {
+            title: 'Number of Articles open to Review',
+            total: totalOpenArticles
+          }
+        ]
       }
     ];
   }
