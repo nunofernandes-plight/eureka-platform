@@ -10,7 +10,8 @@ import {
   __GRAY_500,
   __GRAY_600,
   __MAIN,
-  __THIRD
+  __THIRD,
+  getScale
 } from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import {Link} from 'react-router-dom';
@@ -36,8 +37,6 @@ const LinkContainer = styled.div`
 const Title = styled.div`
   font-size: 12px;
   font-style: italic;
-  color: ${__GRAY_600};
-  text-transform: lowercase;
   margin-left: 2px;
 `;
 
@@ -48,15 +47,15 @@ const Number = styled.h1`
 `;
 
 const IconContainer = styled.div`
-  background: ${`linear-gradient(40deg, ${__THIRD}, ${__MAIN})`};
-  width: 50px;
-  height: 50px;
-  padding: 10px;
-  border-radius: 50%;
+  background: ${props => props.color};
+  width: 34px;
+  height: 34px;
+  padding: 6px;
+  border-radius: 6px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: auto;
+  margin-right: 15px;
 `;
 
 const Header = styled.div`
@@ -73,17 +72,19 @@ const MyLink = styled(Link)`
   text-decoration: none;
 `;
 
-const DashboardSubCard = ({category}) => {
+const DashboardSubCard = ({category, index, color}) => {
   return (
     <Container>
       <Header>
-        <Title>{category.title}</Title>{' '}
-        <IconContainer>
-          <Number>{category.total}</Number>
+        <IconContainer color={color}>
+          <Icon icon={category.icon} width={20} height={20} color={'white'} />
         </IconContainer>
+        <MyLink to={'tbd'}>todo insert link here</MyLink>
       </Header>
       <LinkContainer>
-        <MyLink to={'tbd'}>todo insert link here</MyLink>
+        <Title>
+          In total, <strong>{category.total}</strong> {category.title}
+        </Title>
       </LinkContainer>
     </Container>
   );

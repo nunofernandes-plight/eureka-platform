@@ -41,7 +41,6 @@ const getColor = title => {
   if (title === 'Articles') {
     return `linear-gradient(40deg, ${__ALERT_ERROR}, ${__ALERT_WARNING})`;
   }
-
   if (title === 'Reviews') {
     return `linear-gradient(40deg, ${__ALERT_DANGER}, ${__ALERT_ERROR})`;
   }
@@ -55,7 +54,7 @@ const DashboardCard = ({stat}) => {
       <Title>{stat.title}</Title>
       <SubCards>
         {stat.categories.map((cat, i) => {
-          return <DashboardSubCard key={i} category={cat} />;
+          return <DashboardSubCard key={i} category={cat} index={i} color={color}/>;
         })}
       </SubCards>
     </Container>
