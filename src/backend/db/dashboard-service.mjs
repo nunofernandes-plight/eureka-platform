@@ -35,22 +35,36 @@ export default {
         title: 'Articles',
         icon: 'dashboardArticles',
         categories: [
-          {title: 'Number of Drafts', total: totalDrafts},
-          {title: 'Number of submitted Drafts', total: totalSubmitted}
+          {
+            title: 'drafts have been created',
+            total: totalDrafts,
+            icon: 'draft'
+          },
+          {
+            title: 'drafts have been submitted',
+            total: totalSubmitted,
+            icon: 'submitted'
+          }
         ]
       },
       {
         title: 'Reviews',
         icon: 'myReviews',
         categories: [
-          {title: 'Number of submitted Reviews', total: totalReviews},
           {
-            title: 'Number of pending Invitations Reviews',
-            total: totalInvitations
+            title: 'reviews have been submitted',
+            total: totalReviews,
+            icon: 'editorReviewsCheck'
           },
           {
-            title: 'Number of Articles open to Review',
-            total: totalOpenArticles
+            title: 'review invitations are pending',
+            total: totalInvitations,
+            icon: 'editorInvite'
+          },
+          {
+            title: 'articles are available for review',
+            total: totalOpenArticles,
+            icon: 'openForReview'
           }
         ]
       }
