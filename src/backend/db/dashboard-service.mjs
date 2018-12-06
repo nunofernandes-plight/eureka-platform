@@ -33,11 +33,13 @@ export default {
     return [
       {
         title: 'Articles',
+        icon: 'dashboardArticles',
         drafts: totalDrafts,
         submitted: totalSubmitted
       },
       {
         title: 'Reviews',
+        icon: 'myReviews',
         submitted: totalReviews,
         invitations: totalInvitations,
         openArticles: totalOpenArticles
