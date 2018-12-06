@@ -4,7 +4,6 @@ import GanachePlatformContractABI from '../../smartcontracts/constants/GanachePl
 import GanachePlatformContractAddress from '../../smartcontracts/constants/GanachePlatformContractAddress.json';
 import GanacheTokenContractAddress from '../../smartcontracts/constants/GanacheTokenContractAddress.json';
 import GanacheTokenContractABI from '../../smartcontracts/constants/GanacheTokenContractABI.json';
-import {isProduction} from '../../helpers/isProduction.mjs';
 import {
   PLATFORM_MAIN_ADDRESS,
   TOKEN_MAIN_ADDRESS
@@ -25,7 +24,7 @@ export const setupWeb3Interface = async (platformContract, tokenContract) => {
   let platformContractABI;
   let tokenContractAddress;
   let tokenContractABI;
-  if (isProduction()) {
+  if (process.env.BC_NETWORK === 'main') {
     platformContractAddress = PLATFORM_MAIN_ADDRESS;
     platformContractABI = PLATFORM_MAIN_ABI;
     tokenContractAddress = TOKEN_MAIN_ADDRESS;

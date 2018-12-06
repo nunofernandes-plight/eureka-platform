@@ -1,5 +1,4 @@
 import Web3 from 'web3';
-import {isProduction} from './isProduction.mjs';
 const web3 = new Web3();
 
 const initProvider = () => {
@@ -8,7 +7,7 @@ const initProvider = () => {
 
 const getProvider = () => {
   let provider;
-  if (isProduction()) {
+  if (process.env.BC_NETWORK === 'main') {
     provider = new Web3.providers.WebsocketProvider('wss://infura.io/ws');
   }
   else if (process.env.BC_NETWORK === 'ganache') {
