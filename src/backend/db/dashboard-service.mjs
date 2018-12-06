@@ -31,11 +31,15 @@ export default {
     const totalReviews = myReviews.length;
     const totalOpenArticles = openToReview.length;
     return {
-      totalDrafts,
-      totalSubmitted,
-      totalInvitations,
-      totalReviews,
-      totalOpenArticles
+      articles: {
+        drafts: totalDrafts,
+        submitted: totalSubmitted
+      },
+      reviews: {
+        submitted: totalReviews,
+        invitations: totalInvitations,
+        openArticles: totalOpenArticles
+      }
     };
   }
 };
