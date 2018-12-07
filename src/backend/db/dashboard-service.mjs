@@ -50,14 +50,20 @@ export default {
             start: 'Create your first draft now!',
             total: totalDrafts,
             icon: 'draft',
-            content: drafts ? drafts[0] : null
+            content: drafts ? drafts[0] : null,
+            path: drafts
+              ? `/app/documents/write/${drafts[0]._id}`
+              : null
           },
           {
             title: 'drafts have been submitted by you.',
             start: 'Submit your first article now!',
             total: totalSubmitted,
             icon: 'submitted',
-            content: submitted ? submitted[0] : null
+            content: submitted ? submitted[0] : null,
+            path: submitted
+              ? `/app/preview/${submitted[0]._id}`
+              : null
           }
         ]
       },

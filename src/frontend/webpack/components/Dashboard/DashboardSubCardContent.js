@@ -33,11 +33,13 @@ const Title = styled.div`
   flex: 1;
 `;
 
-const renderContent = (content, title) => {
+const renderContent = (content, title, path) => {
   if (title === 'Articles') {
     return (
       <Content>
-        <MyLink to={'skü'}>{renderField(content.document, 'title')} </MyLink>{' '}
+        <MyLink to={path}>
+          {renderField(content.document, 'title')}{' '}
+        </MyLink>{' '}
       </Content>
     );
   }
@@ -67,7 +69,7 @@ const Time = styled.div`
   margin-left: auto;
 `;
 
-const DashboardSubCardContent = ({content, start, title}) => {
+const DashboardSubCardContent = ({content, start, title, path}) => {
   return (
     <Container>
       {content === undefined ? (
@@ -75,7 +77,7 @@ const DashboardSubCardContent = ({content, start, title}) => {
       ) : (
         <div style={{flex: 1}}>
           <Title>Last Modified {renderTime(title, content)}</Title>
-          {renderContent(content, title)}
+          {renderContent(content, title, path)}
         </div>
       )}
     </Container>

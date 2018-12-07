@@ -53,6 +53,7 @@ const Header = styled.div`
 `;
 
 const DashboardSubCard = ({category, index, color, title}) => {
+  console.log(category.content);
   return (
     <Container>
       <Header>
@@ -63,6 +64,7 @@ const DashboardSubCard = ({category, index, color, title}) => {
           content={category.content}
           start={category.start}
           title={title}
+          path={category.path}
         />
       </Header>
       <NumberContainer>
