@@ -37,9 +37,7 @@ const renderContent = (content, title, path) => {
   if (title === 'Articles') {
     return (
       <Content>
-        <MyLink to={path}>
-          {renderField(content.document, 'title')}{' '}
-        </MyLink>{' '}
+        <MyLink to={path}>{renderField(content.document, 'title')} </MyLink>{' '}
       </Content>
     );
   }

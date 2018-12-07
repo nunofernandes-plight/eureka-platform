@@ -51,9 +51,7 @@ export default {
             total: totalDrafts,
             icon: 'draft',
             content: drafts ? drafts[0] : null,
-            path: drafts
-              ? `/app/documents/write/${drafts[0]._id}`
-              : null
+            path: drafts ? `/app/documents/write/${drafts[0]._id}` : null
           },
           {
             title: 'drafts have been submitted by you.',
@@ -61,9 +59,7 @@ export default {
             total: totalSubmitted,
             icon: 'submitted',
             content: submitted ? submitted[0] : null,
-            path: submitted
-              ? `/app/preview/${submitted[0]._id}`
-              : null
+            path: submitted ? `/app/preview/${submitted[0]._id}` : null
           }
         ]
       },
@@ -76,7 +72,8 @@ export default {
             start: 'Submit your first review now by becoming a Reviewer!',
             total: totalReviews,
             icon: 'editorReviewsCheck',
-            content: myReviews ? myReviews[0] : null
+            content: myReviews ? myReviews[0] : null,
+            path: '/app/reviews/me'
           },
           {
             title: 'review invitations are pending for you.',
@@ -84,13 +81,15 @@ export default {
               'You do not have any pending invitations from a handling Editor.',
             total: totalInvitations,
             icon: 'editorInvite',
-            content: invitations ? invitations[0] : null
+            content: invitations ? invitations[0] : null,
+            path: '/app/reviews/invited'
           },
           {
             title: 'articles are available for review for you.',
             total: totalOpenArticles,
             icon: 'openForReview',
-            content: open
+            content: open,
+            path: '/app/reviews/open'
           }
         ]
       }

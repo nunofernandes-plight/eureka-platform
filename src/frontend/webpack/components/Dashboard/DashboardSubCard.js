@@ -11,8 +11,13 @@ import DashboardSubCardContent from './DashboardSubCardContent.js';
 import {EXTRA_LARGE_DEVICES} from '../../../helpers/mobile.js';
 
 const Container = styled.div`
+  &:hover {
+    transform: translateX(-3px) translateY(-4px);
+  }
+  transition: 0.3s all ease-in-out;
   display: flex;
   flex-direction: column;
+  flex: 1;
   min-height: 130px;
   min-width: 95%;
   border-radius: 4px;
@@ -53,20 +58,21 @@ const Header = styled.div`
 `;
 
 const DashboardSubCard = ({category, index, color, title}) => {
-  console.log(category.content);
   return (
     <Container>
-      <Header>
-        <IconContainer color={color}>
-          <Icon icon={category.icon} width={20} height={20} color={'white'} />
-        </IconContainer>
-        <DashboardSubCardContent
-          content={category.content}
-          start={category.start}
-          title={title}
-          path={category.path}
-        />
-      </Header>
+      <Link to={category.path} style={{textDecoration: 'none'}}>
+        <Header>
+          <IconContainer color={color}>
+            <Icon icon={category.icon} width={20} height={20} color={'white'} />
+          </IconContainer>
+          <DashboardSubCardContent
+            content={category.content}
+            start={category.start}
+            title={title}
+            path={category.path}
+          />
+        </Header>
+      </Link>
       <NumberContainer>
         <Number>
           In total, <strong>{category.total}</strong> {category.title}

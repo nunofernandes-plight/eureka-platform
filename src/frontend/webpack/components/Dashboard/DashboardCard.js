@@ -11,7 +11,6 @@ import DashboardCardTopIcon from './DashboardCardTopIcon.js';
 import DashboardSubCard from './DashboardSubCard.js';
 
 const Container = styled.div`
-  flex: 1;
   margin: 20px;
   display: flex;
   flex-direction: column;
