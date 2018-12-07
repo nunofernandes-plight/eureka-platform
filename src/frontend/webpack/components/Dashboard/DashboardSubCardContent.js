@@ -17,14 +17,12 @@ const Container = styled.div`
 const MyLink = styled(Link)`
   transition: 0.3s all ease-in-out;
   cursor: pointer;
-  color: ${__ALERT_ERROR};
   font-size: 13px;
   text-decoration: none;
 `;
 
 const Title = styled.div`
   font-weight: bold;
-  color: ${__ALERT_ERROR};
   font-style: italic;
   font-size: 12px;
   margin-top: 0;

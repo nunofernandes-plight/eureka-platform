@@ -4,7 +4,6 @@ import {
   __ALERT_DANGER,
   __ALERT_ERROR,
   __ALERT_WARNING,
-  __FIFTH,
   __THIRD
 } from '../../../helpers/colors.js';
 import DashboardCardTopIcon from './DashboardCardTopIcon.js';
@@ -20,6 +19,8 @@ const Container = styled.div`
   word-wrap: break-word;
   border-radius: 6px;
   position: relative;
+  width: 100%;
+  color: ${__THIRD};
 `;
 
 const Title = styled.h2`
