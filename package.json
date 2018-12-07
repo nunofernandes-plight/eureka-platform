@@ -2,10 +2,6 @@
   "name": "eureka-platform",
   "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": "10.10.0",
-    "yarn": "1.x"
-  },
   "dependencies": {
     "@kennethormandy/react-flipcard": "^0.4.3",
     "@sendgrid/mail": "^6.3.1",
