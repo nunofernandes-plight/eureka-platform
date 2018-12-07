@@ -2,14 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import {
-  __ALERT_ERROR,
-  __GRAY_100,
   __GRAY_600
 } from '../../../helpers/colors.js';
 import {renderField} from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
 import moment from 'moment';
-import {renderTimestamp} from '../../../helpers/timestampRenderer.js';
-
 const Container = styled.div`
   flex: 1;
 `;

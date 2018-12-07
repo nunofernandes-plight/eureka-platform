@@ -46,7 +46,8 @@ export default {
         icon: 'dashboardArticles',
         categories: [
           {
-            title: 'drafts have been created by you.',
+            title: 'Drafts',
+            text: 'drafts have been created by you.',
             start: 'Create your first draft now!',
             total: totalDrafts,
             icon: 'draft',
@@ -54,7 +55,8 @@ export default {
             path: drafts ? `/app/documents/write/${drafts[0]._id}` : null
           },
           {
-            title: 'drafts have been submitted by you.',
+            title: 'ArticleSubmissions',
+            text: 'drafts have been submitted by you.',
             start: 'Submit your first article now!',
             total: totalSubmitted,
             icon: 'submitted',
@@ -68,7 +70,8 @@ export default {
         icon: 'myReviews',
         categories: [
           {
-            title: 'reviews have been submitted by you.',
+            title: 'ReviewSubmissions',
+            text: 'reviews have been submitted by you.',
             start: 'Submit your first review now by becoming a Reviewer!',
             total: totalReviews,
             icon: 'editorReviewsCheck',
@@ -76,7 +79,8 @@ export default {
             path: '/app/reviews/me'
           },
           {
-            title: 'review invitations are pending for you.',
+            title: 'Invitations',
+            text: 'review invitations are pending for you.',
             start:
               'You do not have any pending invitations from a handling Editor.',
             total: totalInvitations,
@@ -85,7 +89,8 @@ export default {
             path: '/app/reviews/invited'
           },
           {
-            title: 'articles are available for review for you.',
+            title: 'ArticlesToReview',
+            text: 'articles are available for review for you.',
             total: totalOpenArticles,
             icon: 'openForReview',
             content: open,

@@ -35,15 +35,23 @@ const Counter = styled.div`
   font-size: 11px;
 `;
 
-const DashboardSubCardNotificationBell = ({color}) => {
+const DashboardSubCardNotificationBell = ({color, total}) => {
   return (
     <Container>
-      <IconContainer color={color}>
-        <CounterContainer>
-          <Counter>3</Counter>
-        </CounterContainer>
-        <Icon icon={'bell'} width={'26'} height={'26'} noMove color={__THIRD} />
-      </IconContainer>
+      {total > 0 ? (
+        <IconContainer color={color}>
+          <CounterContainer>
+            <Counter>{total}</Counter>
+          </CounterContainer>
+          <Icon
+            icon={'bell'}
+            width={'26'}
+            height={'26'}
+            noMove
+            color={__THIRD}
+          />
+        </IconContainer>
+      ) : null}
     </Container>
   );
 };

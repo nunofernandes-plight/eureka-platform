@@ -56,7 +56,12 @@ const Header = styled.div`
 const DashboardSubCard = ({category, index, color, title}) => {
   return (
     <Container>
-      <DashboardSubCardNotificationBell color={color} />
+      {category.title === 'Invitations' ? (
+        <DashboardSubCardNotificationBell
+          color={color}
+          total={category.total}
+        />
+      ) : null}
       <Link to={category.path} style={{textDecoration: 'none'}}>
         <Header>
           <IconContainer color={color}>
@@ -72,7 +77,7 @@ const DashboardSubCard = ({category, index, color, title}) => {
       </Link>
       <NumberContainer>
         <Number>
-          In total, <strong>{category.total}</strong> {category.title}
+          In total, <strong>{category.total}</strong> {category.text}
         </Number>
       </NumberContainer>
     </Container>
