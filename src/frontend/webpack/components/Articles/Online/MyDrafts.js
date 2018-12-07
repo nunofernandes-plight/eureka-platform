@@ -85,7 +85,7 @@ class MyDrafts extends React.Component {
         if (response.success) {
           this.props.fetchUserData();
           this.props.history.push(
-            `${this.props.base}/${response.data.articleVersionId}`
+            `/app/documents/write/${response.data.articleVersionId}`
           );
         } else {
           this.setState({

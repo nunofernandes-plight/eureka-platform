@@ -4,7 +4,7 @@ import {Card} from '../../views/Card.js';
 import {Row} from '../../../helpers/layout.js';
 import {InputField} from '../../design-components/Inputs.js';
 import Icon from '../../views/icons/Icon.js';
-import {Methods} from '../Routers/ContractOwnerMethods.js';
+import {Methods} from './ContractOwnerMethods.js';
 import {__GRAY_200, __GRAY_700, __THIRD} from '../../../helpers/colors.js';
 import {signUpEditor, signUpExpertReviewers} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';

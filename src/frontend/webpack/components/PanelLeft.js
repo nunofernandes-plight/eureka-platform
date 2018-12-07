@@ -12,7 +12,7 @@ import {
 import ToggleButton from '../design-components/ToggleButton.js';
 import {Routes} from './Routers/Routes.js';
 import connect from 'react-redux/es/connect/connect.js';
-import {__THIRD} from '../../helpers/colors.js';
+import {__ALERT_ERROR, __THIRD} from '../../helpers/colors.js';
 
 const Container = styled.div`
   display: flex;
@@ -52,7 +52,7 @@ const Items = styled.div`
 const NotificationBell = styled.div`
   position: absolute;
   border-radius: 50%;
-  background: red;
+  background: ${__ALERT_ERROR};
   margin-left: 14px;
   width: 18px;
   height: 18px;

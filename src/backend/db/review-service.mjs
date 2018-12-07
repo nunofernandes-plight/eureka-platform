@@ -11,77 +11,92 @@ import {sendEmailByEthereumAddress} from '../email/index.mjs';
 
 export default {
   getAllReviews: () => {
-    return Review.find({})
-      .populate({
-        path: 'articleVersion',
-        populate: [
-          {path: 'articleSubmission'},
-          {path: 'editorApprovedReviews'},
-          {path: 'communityReviews'}]
-      });
+    return Review.find({}).populate({
+      path: 'articleVersion',
+      populate: [
+        {path: 'articleSubmission'},
+        {path: 'editorApprovedReviews'},
+        {path: 'communityReviews'}
+      ]
+    });
   },
 
-  getReviewsFromArticle: (articleVersion) => {
-    return Review.find({articleVersion})
-      .populate({
-        path: 'articleVersion',
-        populate: [
-          {path: 'articleSubmission'},
-          {path: 'editorApprovedReviews'},
-          {path: 'communityReviews'}]
-      });
+  getReviewsFromArticle: articleVersion => {
+    return Review.find({articleVersion}).populate({
+      path: 'articleVersion',
+      populate: [
+        {path: 'articleSubmission'},
+        {path: 'editorApprovedReviews'},
+        {path: 'communityReviews'}
+      ]
+    });
   },
 
-  getReviewInvitations: async (address) => {
+  getReviewInvitations: async address => {
     return await Review.find({
       reviewerAddress: address,
       reviewState: {$in: ['INVITED', 'SIGNED_UP_FOR_REVIEWING']}
-    })
-      .populate({
-        path: 'articleVersion',
-        populate: [
-          {path: 'articleSubmission'},
-          {path: 'editorApprovedReviews'},
-          {path: 'communityReviews'}]
-      });
+    }).populate({
+      path: 'articleVersion',
+      populate: [
+        {path: 'articleSubmission'},
+        {path: 'editorApprovedReviews'},
+        {path: 'communityReviews'}
+      ]
+    });
   },
 
-  getMyReviews: (address) => {
+  getMyReviews: address => {
     return Review.find({
       reviewerAddress: address,
-      reviewState: {$in: ['HANDED_IN_DB', 'HANDED_IN_SC', 'DECLINED', 'ACCEPTED']}
+      reviewState: {
+        $in: ['HANDED_IN_DB', 'HANDED_IN_SC', 'DECLINED', 'ACCEPTED']
+      }
     })
       .populate({
         path: 'articleVersion',
         populate: [
           {path: 'articleSubmission'},
           {path: 'editorApprovedReviews'},
-          {path: 'communityReviews'}]
-      });
+          {path: 'communityReviews'}
+        ]
+      })
+      .sort({stateTimestamp: -1});
   },
 
-  getReviewsByState: async (reviewState) => {
-    if (!(reviewState in ReviewState)) errorThrower.notCorrectStatus('any of Object ReviewState', reviewState);
+  getReviewsByState: async reviewState => {
+    if (!(reviewState in ReviewState))
+      errorThrower.notCorrectStatus('any of Object ReviewState', reviewState);
 
     return await Review.find({
       reviewState: {$in: [reviewState]}
     });
   },
 
+  getReviewsByStateAndUser: async (reviewerAddress, reviewState) => {
+    if (!(reviewState in ReviewState))
+      errorThrower.notCorrectStatus('any of Object ReviewState', reviewState);
+
+    return await Review.find({
+      reviewerAddress,
+      reviewState: {$in: [reviewState]}
+    }).sort({stateTimestamp: -1});
+  },
+
   getHandedInReviews: async () => {
     return await Review.find({
       reviewState: {$in: ['HANDED_IN_SC']}
-    })
-      .populate({
-        path: 'articleVersion',
-        populate: [
-          {path: 'articleSubmission'},
-          {path: 'editorApprovedReviews'},
-          {path: 'communityReviews'}]
-      });
+    }).populate({
+      path: 'articleVersion',
+      populate: [
+        {path: 'articleSubmission'},
+        {path: 'editorApprovedReviews'},
+        {path: 'communityReviews'}
+      ]
+    });
   },
 
-  getHandedInReviewsAssignedTo: async (ethereumAddress) => {
+  getHandedInReviewsAssignedTo: async ethereumAddress => {
     let articles = await articleVersionService.getArticlesAssignedTo(
       ethereumAddress,
       [ARTICLE_VERSION_STATE.OPEN_FOR_ALL_REVIEWERS]
@@ -91,17 +106,20 @@ export default {
     return await Review.find({
       reviewState: {$in: ['HANDED_IN_SC']},
       articleVersion: {$in: articleIds}
-    })
-      .populate({
-        path: 'articleVersion',
-        populate: [
-          {path: 'articleSubmission'},
-          {path: 'editorApprovedReviews'},
-          {path: 'communityReviews'}]
-      });
+    }).populate({
+      path: 'articleVersion',
+      populate: [
+        {path: 'articleSubmission'},
+        {path: 'editorApprovedReviews'},
+        {path: 'communityReviews'}
+      ]
+    });
   },
 
-  getArticlesWithEnoughAcceptedReviews: async (reviewType, minNumberOfReviews) => {
+  getArticlesWithEnoughAcceptedReviews: async (
+    reviewType,
+    minNumberOfReviews
+  ) => {
     return await Review.aggregate([
       {
         $match: {
@@ -115,36 +133,35 @@ export default {
   },
 
   getReviewById: async (userAddress, reviewId) => {
-    return await Review.findById(reviewId)
-      .populate({
-        path: 'articleVersion',
-        populate: [
-          {path: 'articleSubmission'},
-          {path: 'editorApprovedReviews'},
-          {path: 'communityReviews'}]
-      });
+    return await Review.findById(reviewId).populate({
+      path: 'articleVersion',
+      populate: [
+        {path: 'articleSubmission'},
+        {path: 'editorApprovedReviews'},
+        {path: 'communityReviews'}
+      ]
+    });
   },
 
   getReview: async (reviewerAddress, articleVersionId) => {
     return await Review.findOne({
       reviewerAddress,
       articleVersion: articleVersionId
-    })
-      .populate({
-        path: 'articleVersion',
-        populate: [
-          {path: 'articleSubmission'},
-          {path: 'editorApprovedReviews'},
-          {path: 'communityReviews'}]
-      });
+    }).populate({
+      path: 'articleVersion',
+      populate: [
+        {path: 'articleSubmission'},
+        {path: 'editorApprovedReviews'},
+        {path: 'communityReviews'}
+      ]
+    });
   },
 
-  getReviewByReviewHash: async (reviewHash) => {
+  getReviewByReviewHash: async reviewHash => {
     const review = await Review.findOne({reviewHash: reviewHash});
     if (!review) errorThrower.noEntryFoundByParameters('reviewHash');
     return review;
   },
-
 
   getArticleVersionIds: idObjects => {
     return idObjects.map(i => {
@@ -166,8 +183,7 @@ export default {
     if (review) {
       review.stateTimestamp = new Date();
       review.reviewType = reviewType;
-    }
-    else {
+    } else {
       review = new Review({
         reviewState: ReviewState.INVITED,
         stateTimestamp: new Date(),
@@ -201,8 +217,7 @@ export default {
       review.reviewType = reviewType;
       review.reviewState = ReviewState.SIGNED_UP_FOR_REVIEWING;
       review.stateTimestamp = new Date();
-    }
-    else {
+    } else {
       review = new Review({
         reviewState: ReviewState.SIGNED_UP_FOR_REVIEWING,
         stateTimestamp: new Date(),
@@ -227,14 +242,28 @@ export default {
    * @param articleHasMinorIssues
    * @returns {Promise<string>}
    */
-  addEditorApprovedReview: async (userAddress, reviewId, reviewText, reviewHash, score1, score2, articleHasMajorIssues, articleHasMinorIssues) => {
+  addEditorApprovedReview: async (
+    userAddress,
+    reviewId,
+    reviewText,
+    reviewHash,
+    score1,
+    score2,
+    articleHasMajorIssues,
+    articleHasMinorIssues
+  ) => {
     const review = await Review.findById(reviewId);
     if (!review) errorThrower.noEntryFoundById(reviewId);
-    if (review.reviewerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
-    if (review.reviewState !== ReviewState.INVITED &&
-      review.reviewState !== ReviewState.SIGNED_UP_FOR_REVIEWING) {
+    if (review.reviewerAddress !== userAddress)
+      errorThrower.notCorrectEthereumAddress();
+    if (
+      review.reviewState !== ReviewState.INVITED &&
+      review.reviewState !== ReviewState.SIGNED_UP_FOR_REVIEWING
+    ) {
       errorThrower.notCorrectStatus(
-        [ReviewState.INVITED, ReviewState.SIGNED_UP_FOR_REVIEWING], review.reviewState);
+        [ReviewState.INVITED, ReviewState.SIGNED_UP_FOR_REVIEWING],
+        review.reviewState
+      );
     }
 
     review.reviewHash = reviewHash;
@@ -248,13 +277,25 @@ export default {
     return 'Added editor-approved review into DB.';
   },
 
-  updateReview: async (userAddress, reviewId, reviewText, reviewHash, score1, score2, articleHasMajorIssues, articleHasMinorIssues) => {
+  updateReview: async (
+    userAddress,
+    reviewId,
+    reviewText,
+    reviewHash,
+    score1,
+    score2,
+    articleHasMajorIssues,
+    articleHasMinorIssues
+  ) => {
     const review = await Review.findById(reviewId);
     if (!review) errorThrower.noEntryFoundById(reviewId);
-    if (review.reviewerAddress !== userAddress) errorThrower.notCorrectEthereumAddress();
+    if (review.reviewerAddress !== userAddress)
+      errorThrower.notCorrectEthereumAddress();
     if (review.reviewState !== ReviewState.HANDED_IN_DB) {
       errorThrower.notCorrectStatus(
-        [ReviewState.HANDED_IN_DB], review.reviewState);
+        [ReviewState.HANDED_IN_DB],
+        review.reviewState
+      );
     }
 
     review.reviewHash = reviewHash;
@@ -268,7 +309,16 @@ export default {
     return 'saved editor-approved review to DB.';
   },
 
-  updateEditorApprovedReviewFromSC: async (articleHash, reviewHash, reviewerAddress, stateTimestamp, articleHasMajorIssues, articleHasMinorIssues, score1, score2) => {
+  updateEditorApprovedReviewFromSC: async (
+    articleHash,
+    reviewHash,
+    reviewerAddress,
+    stateTimestamp,
+    articleHasMajorIssues,
+    articleHasMinorIssues,
+    score1,
+    score2
+  ) => {
     let articleVersion = await ArticleVersion.findOne({
       articleHash: articleHash
     });
@@ -290,7 +340,15 @@ export default {
     return 'Updated editor-approved review according to SC: ' + reviewHash;
   },
 
-  updateReviewByReviewHash: async (oldReviewHash, newReviewHash, stateTimestamp, articleHasMajorIssues, articleHasMinorIssues, score1, score2) => {
+  updateReviewByReviewHash: async (
+    oldReviewHash,
+    newReviewHash,
+    stateTimestamp,
+    articleHasMajorIssues,
+    articleHasMinorIssues,
+    score1,
+    score2
+  ) => {
     let review = await Review.findOne({
       reviewHash: oldReviewHash
     });
@@ -319,7 +377,16 @@ export default {
    * @param articleHasMinorIssues
    * @returns {Promise<void>}
    */
-  addNewCommunityReview: async (userAddress, articleHash, reviewText, reviewHash, score1, score2, articleHasMajorIssues, articleHasMinorIssues) => {
+  addNewCommunityReview: async (
+    userAddress,
+    articleHash,
+    reviewText,
+    reviewHash,
+    score1,
+    score2,
+    articleHasMajorIssues,
+    articleHasMinorIssues
+  ) => {
     let articleVersion = await ArticleVersion.findOne({
       articleHash: articleHash
     });
@@ -342,7 +409,16 @@ export default {
     await articleVersion.save();
     return review;
   },
-  updateCommunityReviewFromSC: async (articleHash, reviewHash, reviewerAddress, stateTimestamp, articleHasMajorIssues, articleHasMinorIssues, score1, score2) => {
+  updateCommunityReviewFromSC: async (
+    articleHash,
+    reviewHash,
+    reviewerAddress,
+    stateTimestamp,
+    articleHasMajorIssues,
+    articleHasMinorIssues,
+    score1,
+    score2
+  ) => {
     let articleVersion = await ArticleVersion.findOne({
       articleHash: articleHash
     });

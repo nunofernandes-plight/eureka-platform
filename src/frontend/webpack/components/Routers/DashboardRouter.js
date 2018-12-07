@@ -16,6 +16,7 @@ import UserExploration from '../UserExploration.js';
 import ReviewsRouter from './ReviewsRouter.js';
 import PreviewRouter from './PreviewRouter.js';
 import ReviewsWriter from '../Reviews/ReviewsWriter.js';
+import ContractRouter from './ContractRouter.js';
 
 class DashboardRouter extends Component {
   render() {
@@ -30,11 +31,10 @@ class DashboardRouter extends Component {
           />
 
           <Route
-            exact
             path={`${this.props.base}/owner`}
             render={() => (
               <ContractOwnerGuard>
-                <ContractOwnerDashboard />
+                <ContractRouter base={`${this.props.base}/owner`} />
               </ContractOwnerGuard>
             )}
           />

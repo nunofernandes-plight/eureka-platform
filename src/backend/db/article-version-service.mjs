@@ -14,8 +14,7 @@ import {getIds} from '../helpers/get-array-of-ids.mjs';
 import {getJournal} from './journal-service.mjs';
 
 const populate = fn => {
-  return fn
-    .populate([
+  return fn.populate([
     {path: 'articleSubmission'},
     {path: 'editorApprovedReviews'},
     {path: 'communityReviews'}
@@ -27,9 +26,27 @@ export default {
     return ArticleVersion.find({});
   },
 
-  getArticleVersionsByState: async (articleVersionState) => {
-    if(!(articleVersionState in ArticleVersionState))  {
-      errorThrower.notCorrectStatus('any of Object ArticleVersionState', articleVersionState);
+  getArticleVersionsByState: async articleVersionState => {
+    if (!(articleVersionState in ArticleVersionState)) {
+      errorThrower.notCorrectStatus(
+        'any of Object ArticleVersionState',
+        articleVersionState
+      );
+    }
+    return await ArticleVersion.find({
+      articleVersionState: {$in: [articleVersionState]}
+    });
+  },
+
+  getArticleVersionsByStateAndUser: async (
+    articleVersionState,
+    ownerAddress
+  ) => {
+    if (!(articleVersionState in ArticleVersionState)) {
+      errorThrower.notCorrectStatus(
+        'any of Object ArticleVersionState',
+        articleVersionState
+      );
     }
     return await ArticleVersion.find({
       articleVersionState: {$in: [articleVersionState]}
