@@ -58,6 +58,7 @@ const renderTime = (title, content) => {
 const Content = styled.div`
   display: flex;
   flex-direction: column;
+  font-style: italic;
 `;
 
 const Time = styled.div`

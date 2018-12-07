@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {
   __ALERT_ERROR,
+  __GRAY_100,
   __GRAY_200,
   __GRAY_600
 } from '../../../helpers/colors.js';
@@ -13,6 +14,7 @@ import {EXTRA_LARGE_DEVICES} from '../../../helpers/mobile.js';
 const Container = styled.div`
   &:hover {
     transform: translateX(-3px) translateY(-4px);
+    background: ${__GRAY_100};
   }
   transition: 0.3s all ease-in-out;
   display: flex;
