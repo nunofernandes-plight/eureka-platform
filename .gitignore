@@ -24,3 +24,8 @@ yarn-error.log*
 .idea
 src/smartcontracts/build/
 package-lock.json
+
+src/smartcontracts/constants/GanachePlatformContractABI.json
+src/smartcontracts/constants/GanachePlatformContractAddress.json
+src/smartcontracts/constants/GanachePlatformContractAddress.json
+src/smartcontracts/constants/GanacheTokenContractAddress.json
