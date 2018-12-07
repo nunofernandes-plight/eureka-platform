@@ -8,6 +8,9 @@ import {
 } from '../../../helpers/colors.js';
 import DashboardCardTopIcon from './DashboardCardTopIcon.js';
 import DashboardSubCard from './DashboardSubCard.js';
+import connect from 'react-redux/es/connect/connect.js';
+import {fetchUserData} from '../../reducers/user.js';
+import DashboardSubCardNotificationBell from './DashboardSubCardNotificationBell.js';
 
 const Container = styled.div`
   margin: 20px;
@@ -69,4 +72,6 @@ const DashboardCard = ({stat}) => {
   );
 };
 
-export default DashboardCard;
+export default connect(state => ({
+  user: state.userData.data
+}))(DashboardCard);

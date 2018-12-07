@@ -4,6 +4,7 @@ import {__GRAY_200, __GRAY_600} from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
 import {Link} from 'react-router-dom';
 import DashboardSubCardContent from './DashboardSubCardContent.js';
+import DashboardSubCardNotificationBell from './DashboardSubCardNotificationBell.js';
 
 const Container = styled.div`
   &:hover {
@@ -55,6 +56,7 @@ const Header = styled.div`
 const DashboardSubCard = ({category, index, color, title}) => {
   return (
     <Container>
+      <DashboardSubCardNotificationBell color={color} />
       <Link to={category.path} style={{textDecoration: 'none'}}>
         <Header>
           <IconContainer color={color}>
