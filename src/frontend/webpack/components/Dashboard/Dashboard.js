@@ -13,7 +13,6 @@ const Container = styled.div`
 
 const Cards = styled.div`
   display: flex;
-  flex-wrap: wrap;
   width: 85%;
   box-sizing: border-box;
 

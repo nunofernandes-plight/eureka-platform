@@ -8,11 +8,11 @@ import {
 import Icon from '../../views/icons/Icon.js';
 import {Link} from 'react-router-dom';
 import DashboardSubCardContent from './DashboardSubCardContent.js';
+import {EXTRA_LARGE_DEVICES} from '../../../helpers/mobile.js';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1;
   min-height: 130px;
   min-width: 95%;
   border-radius: 4px;
