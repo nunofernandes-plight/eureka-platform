@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {__GRAY_600} from '../../../helpers/colors.js';
+import {__GRAY_600, __GRAY_700} from '../../../helpers/colors.js';
 import {renderField} from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
 import moment from 'moment';
 
@@ -18,7 +18,6 @@ const MyLink = styled.div`
 
 const Title = styled.div`
   font-weight: bold;
-  font-style: italic;
   font-size: 12px;
   margin-top: 0;
   margin-bottom: 2px;
@@ -34,12 +33,14 @@ const renderContent = (content, title, path) => {
       </Content>
     );
   }
-  return 'ciao';
+  if (title === 'Reviews') {
+  }
+  return '...';
 };
 
 const renderTime = (title, content) => {
   if (title === 'Articles') {
-    return <Time>({moment(content.updatedAt).calendar()})</Time>;
+    return <Time>(Last modified, {moment(content.updatedAt).calendar()})</Time>;
   }
 };
 
@@ -56,14 +57,24 @@ const Time = styled.div`
   margin-left: auto;
 `;
 
-const DashboardSubCardContent = ({content, start, title, path}) => {
+const StartText = styled.div`
+  color: ${__GRAY_700};
+  font-style: italic;
+  font-weight: lighter;
+`;
+
+const DashboardSubCardContent = ({content, start, title, subTitle, path}) => {
   return (
     <Container>
       {content === undefined ? (
-        <MyLink to={'tdb'}>{start}</MyLink>
+        <MyLink to={path}>
+          <StartText>{start}</StartText>
+        </MyLink>
       ) : (
         <div style={{flex: 1}}>
-          <Title>Last Modified {renderTime(title, content)}</Title>
+          <Title>
+            {subTitle} {renderTime(title, content)}
+          </Title>
           {renderContent(content, title, path)}
         </div>
       )}

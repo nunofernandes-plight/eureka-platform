@@ -7,13 +7,13 @@ import {REVIEWS_ERROR} from '../constants/ModalErrors.js';
 import {getDomain} from '../../../helpers/getDomain.mjs';
 
 const initialState = {
-  loading: false
+  loading: null
 };
 
 export const becomeAReviewer = () => {
   return async dispatch => {
     dispatch({type: BECOMING_A_REVIEWER});
-    fetch(`${getDomain()}/api/users/becomeReviewer`, {
+    await fetch(`${getDomain()}/api/users/becomeReviewer`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

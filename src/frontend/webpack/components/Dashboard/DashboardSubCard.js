@@ -68,6 +68,7 @@ const DashboardSubCard = ({category, index, color, title}) => {
             <Icon icon={category.icon} width={20} height={20} color={'white'} />
           </IconContainer>
           <DashboardSubCardContent
+            subTitle={category.subTitle}
             content={category.content}
             start={category.start}
             title={title}

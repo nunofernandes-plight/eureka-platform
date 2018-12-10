@@ -22,7 +22,7 @@ export const DashboardCardContainer = styled.div`
   position: relative;
   width: 100%;
   color: ${__THIRD};
-  height: ${props => (props.height ? props.height : '100%')};
+  height: ${props => (props.height ? props.height : null)};
 `;
 
 export const DashboardCardTitle = styled.h2`
