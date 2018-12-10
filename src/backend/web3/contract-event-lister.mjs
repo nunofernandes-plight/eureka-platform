@@ -91,7 +91,8 @@ export default {
 
         articleSubmissionService.updateEditorToSubmission(
           event.returnValues.submissionId,
-          event.returnValues.assignerAddress
+          event.returnValues.assignerAddress,
+          event.returnValues.stateTimestamp
         );
       }
     );

@@ -6,8 +6,8 @@ import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import {removeEditorFromSubmissionProcess} from '../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 
 const CronJob = cron.CronJob;
-const TIME_OUT_INTERVAL = 10; //TODO change to dropout time intervall
-const CRONE_TIME_INTERVAL = '*/5 * * * * *';
+const TIME_OUT_INTERVAL = 50; //timeout interval in seconds //TODO change to dropout time interval
+const CRONE_TIME_INTERVAL = '*/12 * * * * *'; // all 5 seconds // TODO change to real cronjob interval
 
 let cronJob;
 
@@ -19,12 +19,10 @@ export default {
       if(timedOutSubmissionIds.length > 0) {
 
         for(let timedOutSubmissionId of timedOutSubmissionIds) {
-
-          let timedOutSubmission = await articleSubmissionService.getSubmissionById(timedOutSubmissionId);
           try{
             await removeEditorFromSubmissionProcess(
               _platformContract,
-              timedOutSubmission.scSubmissionID
+              timedOutSubmissionId
             ).send({
               from: _contractOwnerAddress
             });
@@ -42,8 +40,11 @@ export default {
 };
 
 /**
- * get all the submission ids from the article-version,
- * where the statetimestamp is too old.
+ * First get all the submission ids from the article-version,
+ * where the state is 'SUBMITTED' and the articleVersion State is 'EDITOR_ASSIGNED'.
+ * Secondly, it checks if the time for the Editor to do the health-check is ran out.
+ * If that is the case the submissionId of the corresponding Articlesubmission gets saved
+ * and eventually returned with all other submissionIds.
  */
 async function getEditorTimeoutSubmissionIds() {
   const submittedArticleVersions = await articleVersionService.getArticleVersionsByState(ArticleVersionState.SUBMITTED);
@@ -53,21 +54,35 @@ async function getEditorTimeoutSubmissionIds() {
     const correspondingArticleSubmission =
       await articleSubmissionService.getSubmissionById(submittedArticleVersion.articleSubmission);
     if(correspondingArticleSubmission.articleSubmissionState === ArticleSubmissionState.EDITOR_ASSIGNED) {
-      potentialTimedOutVersions.push(submittedArticleVersion);
+      potentialTimedOutVersions.push({articleVersion: submittedArticleVersion, submissionTimestamp: correspondingArticleSubmission.stateTimestamp, scSubmissionID: correspondingArticleSubmission.scSubmissionID});
     }
   }
 
   let timeoutSubmissionIds = [];
 
+  let differences = [];
+  let scIDs = [];
+
   for (let potentialTimedOutVersion of potentialTimedOutVersions) {
-    if (timeIsRunnedOut(potentialTimedOutVersion.stateTimestamp)) {
-      timeoutSubmissionIds.push(potentialTimedOutVersion.articleSubmission);
+    const now = Math.round(new Date().getTime()/1000);
+    const timestamp = potentialTimedOutVersion.submissionTimestamp;
+
+    // only testing TODO remove
+    scIDs.push(potentialTimedOutVersion.scSubmissionID);
+    differences.push(now - timestamp);
+
+    if((now - TIME_OUT_INTERVAL - timestamp) > 0) {
+      //sconsole.log(potentialTimedOutVersion);
+      timeoutSubmissionIds.push(potentialTimedOutVersion.scSubmissionID);
     }
   }
 
-  return timeoutSubmissionIds;
-}
 
-function timeIsRunnedOut(stateTimestamp) {
-  return (new Date().getTime() > stateTimestamp + TIME_OUT_INTERVAL);
+  // only testing TODO remove
+  console.log('SCSubmissionIds: ');
+  console.log(scIDs);
+  console.log('Differences: ');
+  console.log(differences);
+
+  return timeoutSubmissionIds;
 }
