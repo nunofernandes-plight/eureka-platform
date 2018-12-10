@@ -160,9 +160,24 @@ export default {
         const review = await reviewService.signUpForReviewing(
           event.returnValues.reviewerAddress,
           event.returnValues.articleHash,
-          reviewType);
+          reviewType,
+          event.returnValues.stateTimestamp,);
 
         await articleVersionService.addReview(event.returnValues.articleHash, review);
+      }
+    );
+
+    EurekaPlatformContract.events.ResignedFromReviewing(
+      undefined,
+      async (error, event) => {
+        if (error) throw error;
+
+        const articleVersionId =
+          (await articleVersionService
+            .getArticleVersionByArticleHash(event.returnValues.articleHash))._id;
+
+        console.log('ARTICLEVERSION_ID : ' + articleVersionId);
+        await reviewService.resignReview(event.returnValues.reviewerAddress, articleVersionId);
       }
     );
 

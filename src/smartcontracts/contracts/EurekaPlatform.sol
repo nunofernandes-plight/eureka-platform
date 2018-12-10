@@ -39,6 +39,7 @@ contract EurekaPlatform {
     + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer;
 
     uint constant maxReviewRounds = 3;
+    uint constant REVIEWER_TIMER_INTERVAL = 100; // in seconds
 
     function getJournalParameters() view public returns (
         address _contractOwner,
@@ -412,19 +413,27 @@ contract EurekaPlatform {
     event ResignedFromReviewing(bytes32 articleHash, address reviewerAddress, uint256 stateTimestamp);
     function resignFromReviewing(bytes32 _articleHash, address reviewerAddress) public {
 
-        require(msg.sender == articleSubmissions[articleVersions[_articleHash].submissionId].editor
-            || msg.sender == reviewerAddress, "msg.sender must be the editor of the review process or the reviewer itself.");
+        require(msg.sender == contractOwner
+            || msg.sender == articleSubmissions[articleVersions[_articleHash].submissionId].editor
+            || msg.sender == reviewerAddress, "msg.sender must be the editor of the review process, the reviewer or the contract-owner.");
         require(articleVersions[_articleHash].versionState <= ArticleVersionState.OPEN_FOR_ALL_REVIEWERS, "this method can't be called. the review proccess of this article version is not open.");
 
-        Review storage review = reviews[_articleHash][msg.sender];
+        Review storage review = reviews[_articleHash][reviewerAddress];
         require(review.reviewState == ReviewState.SIGNED_UP_FOR_REVIEWING,
-            "this method can't be called. the review must be in the state INVITED or SIGNED_UP_FOR_REVIEWING.");
+            "this method can't be called. the review must be in the state 'INVITED' or 'SIGNED_UP_FOR_REVIEWING'.");
+
+        // check for timeout based dropout
+        if(msg.sender == contractOwner) {
+            require((block.timestamp - REVIEWER_TIMER_INTERVAL - review.stateTimestamp) > 0,
+            "Current time has not exceeded the given time-interval. The reviewer cannot be removed yet");
+        }
+
         review.reviewState = ReviewState.NOT_EXISTING;
         review.stateTimestamp = 0;
         review.reviewer = address(0);
         review.isEditorApprovedReview = false;
 
-        emit ResignedFromReviewing(_articleHash, reviewerAddress, block.timestamp);
+        emit ResignedFromReviewing(_articleHash, reviewerAddress,  block.timestamp);
     }
 
     event EditorApprovedReviewIsAdded(bytes32 articleHash, bytes32 reviewHash, address reviewerAddress, bool articleHasMajorIssues, bool articleHasMinorIssues, uint8 score1, uint8 score2, uint256 stateTimestamp);
