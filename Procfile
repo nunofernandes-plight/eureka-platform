@@ -1,1 +1,1 @@
-web: node src/backend/index.mjs
+web: node --experimental-modules src/backend/index.mjs
