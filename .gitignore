@@ -23,4 +23,3 @@ yarn-error.log*
 
 .idea
 src/smartcontracts/build/
-package-lock.json
