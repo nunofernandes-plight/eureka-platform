@@ -25,7 +25,6 @@
     "express-session": "^1.15.6",
     "fs": "^0.0.1-security",
     "heml": "^1.1.3",
-    "hex-rgb": "^2.0.0",
     "hoist-non-react-statics": "latest",
     "js-cookie": "^2.2.0",
     "js-sha256": "^0.9.0",

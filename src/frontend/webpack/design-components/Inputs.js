@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import hexRgb from 'hex-rgb';
+import chroma from 'chroma-js';
 import {
   __ALERT_ERROR,
   __ALERT_SUCCESS,
@@ -11,8 +11,9 @@ import Icon from '../views/icons/Icon.js';
 
 const getColor = (props, placeholder) => {
   if (placeholder) {
-    const rgb = hexRgb(__THIRD);
-    return `rgba(${rgb.red},${rgb.green},${rgb.blue},0.4)`;
+    return chroma(__THIRD)
+      .alpha(0.4)
+      .css();
   }
   if (props.status === 'valid') {
     return `${__ALERT_SUCCESS}`;
