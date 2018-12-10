@@ -27,8 +27,8 @@ export const saveArticle = (draftId, patch) => {
   });
 };
 
-export const fetchArticle = draftId => {
-  return fetch(`${getDomain()}/api/articles/drafts/${draftId}`, {
+export const fetchArticle = id => {
+  return fetch(`${getDomain()}/api/articles/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'

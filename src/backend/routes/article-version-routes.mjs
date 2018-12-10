@@ -8,6 +8,7 @@ import {getLimitedObjects, getNumberOfPages} from '../helpers/pagination-helpers
 import articleSubmissionService from '../db/article-submission-service.mjs';
 import ReviewService from '../db/review-service.mjs';
 import {getIds} from '../helpers/get-array-of-ids.mjs';
+import errorThrower from '../helpers/error-thrower.mjs';
 
 const router = express.Router();
 
@@ -52,6 +53,16 @@ router.get(
     return await articleVersionService.getSubmittedAndFinishedDraftOfUser(
       req.session.passport.user.ethereumAddress
     );
+  })
+);
+
+router.get(
+  '/:id',
+  asyncHandler(async req => {
+    const ethereumAddress = req.session.passport.user.ethereumAddress;
+    if (!ethereumAddress) errorThrower.notLoggedIn();
+    if (!req.params.id) errorThrower.missingParameter('id');
+    return await articleVersionService.getArticleVersionById(req.params.id);
   })
 );
 
