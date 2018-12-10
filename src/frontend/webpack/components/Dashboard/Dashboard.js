@@ -13,6 +13,8 @@ import {connect} from 'react-redux';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
 import {SubCardContainer} from './DashboardSubCard.js';
 import DashboardCardTopIcon from './DashboardCardTopIcon.js';
+import {becomeAReviewer} from '../../reducers/reviewer.js';
+import {fetchUserData} from '../../reducers/user.js';
 
 const Container = styled.div`
   display: flex;
@@ -57,8 +59,15 @@ const Guard = ({stat, title, roles, ...otherProps}) => {
           color={getDashboardColor(title)}
         />
         <DashboardCardTitle>{stat.title}</DashboardCardTitle>
-        <NotAReviewer color={getDashboardColor(title)}>
-          Become a EUREKA Reviewer!
+        <NotAReviewer
+          color={getDashboardColor(title)}
+          onClick={async () => {
+            await otherProps.becomeAReviewer();
+            await otherProps.fetchUserData();
+          }}
+        >
+          Become a EUREKA Reviewer!{' '}
+          {otherProps.becomingReviewerLoading ? '...' : null}
         </NotAReviewer>
       </DashboardCardContainer>
     );
@@ -146,4 +155,19 @@ class Dashboard extends Component {
   }
 }
 
-export default connect(state => ({user: state.userData.data}))(Dashboard);
+export default connect(
+  state => ({
+    user: state.userData.data,
+    becomingReviewerLoading: state.reviewerData.loading
+  }),
+  dispatch => () => {
+    return {
+      fetchUserData: () => {
+        dispatch(fetchUserData());
+      },
+      becomeAReviewer: () => {
+        dispatch(becomeAReviewer());
+      }
+    };
+  }
+)(Dashboard);

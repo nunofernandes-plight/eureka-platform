@@ -112,7 +112,7 @@ router.get(
 router.post(
   '/becomeReviewer',
   asyncHandler(async req => {
-    return userService.becomeReviewer(req.body.ethereumAddress);
+    return userService.becomeReviewer(req.user.ethereumAddress);
   })
 );
 

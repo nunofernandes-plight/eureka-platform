@@ -4,6 +4,7 @@ import {Card} from '../../views/Card.js';
 import {getDomain} from '../../../../helpers/getDomain.mjs';
 import connect from 'react-redux/es/connect/connect.js';
 import {fetchUserData} from '../../reducers/user.js';
+import {becomeAReviewer} from '../../reducers/reviewer.js';
 
 const Container = styled.div`
   display: flex;
@@ -21,37 +22,6 @@ const Box = styled.div`
 `;
 
 class BecomeReviewer extends React.Component {
-  componentDidMount() {}
-
-  becomeReviewer() {
-    fetch(`${getDomain()}/api/users/becomeReviewer`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify({ethereumAddress: this.props.user.ethereumAddress})
-    })
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          this.props.fetchUserData();
-        } else {
-          this.setState({
-            errorMessage: response.error,
-            loading: false
-          });
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({
-          errorMessage: 'Ouh. Something went wrong.',
-          loading: false
-        });
-      });
-  }
-
   render() {
     const IsNotReviewer = () => {
       return (
@@ -61,8 +31,9 @@ class BecomeReviewer extends React.Component {
             reviewing your first article, click the button below
           </i>
           <button
-            onClick={() => {
-              this.becomeReviewer();
+            onClick={async () => {
+              await this.props.becomeAReviewer();
+              await this.props.fetchUserData();
             }}
           >
             Become a reviewer
@@ -88,6 +59,9 @@ export default connect(
   dispatch => ({
     fetchUserData: () => {
       dispatch(fetchUserData());
+    },
+    becomeAReviewer: () => {
+      dispatch(becomeAReviewer());
     }
   })
 )(BecomeReviewer);

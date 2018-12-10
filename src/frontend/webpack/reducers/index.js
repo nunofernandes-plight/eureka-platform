@@ -7,8 +7,7 @@ import {transactionsData} from './transactions.js';
 import {articlesData} from './articles.js';
 import {editorsData} from './editor-methods.js';
 import {reviewsData} from './reviews.js';
-
-
+import {reviewerData} from './reviewer.js';
 
 const reducer = combineReducers({
   userData,
@@ -18,7 +17,8 @@ const reducer = combineReducers({
   accountsData,
   transactionsData,
   articlesData,
-  reviewsData
+  reviewsData,
+  reviewerData
 });
 
 export default reducer;
