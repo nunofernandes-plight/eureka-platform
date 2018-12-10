@@ -27,12 +27,12 @@ const DocumentLinkedArticles = props => {
         title="Linked Articles"
         id="linkedArticles"
       />
-      <AddArticle onClick={() => props.addAuthor()}>
+      <AddArticle onClick={() => props.addLinkedArticles()}>
         Edit <Icon noMove icon={'edit'} width={8} height={8} bottom={2} />
       </AddArticle>
       <Article>
-        {props.authorsData
-          ? props.authorsData.map(author => {
+        {props.linkedArticleData
+          ? props.linkedArticleData.map(author => {
               return (
                 <div key={author.ethereumAddress}>
                   <Author author={author} width={25} height={25} right={13} />
