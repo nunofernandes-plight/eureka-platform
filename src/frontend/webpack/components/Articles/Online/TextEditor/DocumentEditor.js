@@ -513,7 +513,7 @@ class DocumentEditor extends Component {
                     </Line>
                     <Line>
                       <DocumentLinkedArticles
-                        addLinkedArticles={() => {
+                        editLinkedArticles={() => {
                           this.setState({addLinkedArticlesModal: true});
                         }}
                         linkedArticleData={this.state.linkedArticles}

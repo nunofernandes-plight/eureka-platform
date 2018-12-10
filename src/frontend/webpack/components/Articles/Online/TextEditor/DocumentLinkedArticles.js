@@ -26,7 +26,7 @@ const DocumentLinkedArticles = props => {
         title="Linked Articles"
         id="linkedArticles"
       />
-      <AddArticle onClick={() => props.addLinkedArticles()}>
+      <AddArticle onClick={() => props.editLinkedArticles()}>
         Edit <Icon noMove icon={'edit'} width={8} height={8} bottom={2} />
       </AddArticle>
       <Article>
