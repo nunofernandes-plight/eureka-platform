@@ -1,0 +1,1 @@
+web: node src/backend/index.mjs
