@@ -8,7 +8,6 @@ import {getLimitedObjects, getNumberOfPages} from '../helpers/pagination-helpers
 import articleSubmissionService from '../db/article-submission-service.mjs';
 import ReviewService from '../db/review-service.mjs';
 import {getIds} from '../helpers/get-array-of-ids.mjs';
-import errorThrower from '../helpers/error-thrower.mjs';
 
 const router = express.Router();
 
@@ -19,10 +18,31 @@ router.get(
   asyncHandler(async req => {
     let articles;
     if (req.query.title) {
-      articles = await articleVersionService.getArticlesByTitleQuery(req.query.title);
-      return getArticlesResponse(articles);
+      articles = await getLimitedObjects(
+        articleVersionService.getArticlesByTitleQuery(req.query.title, ARTICLE_VERSION_STATE.SUBMITTED), // TODO: change to ArticleVersionState.ACCEPTED (changed to submitted for developing purposes
+        parseInt(req.query.page),
+        parseInt(req.query.limit)
+      );
+      const array = getArticlesResponse(articles);
+      const nrOfPages = await getNumberOfPages(
+        articleVersionService.getArticlesByTitleQuery(req.query.title, ARTICLE_VERSION_STATE.SUBMITTED), // TODO: change to ArticleVersionState.ACCEPTED (changed to submitted for developing purposes
+        parseInt(req.query.limit)
+      );
+      return {array, nrOfPages};
     }
-    errorThrower.noQueryParameterProvided();
+    else {
+      articles = await getLimitedObjects(
+        articleVersionService.getArticleVersionsByState(ARTICLE_VERSION_STATE.SUBMITTED), // TODO: change to ArticleVersionState.ACCEPTED (changed to submitted for developing purposes
+        parseInt(req.query.page),
+        parseInt(req.query.limit)
+      );
+      const array = getArticlesResponse(articles);
+      const nrOfPages = await getNumberOfPages(
+        articleVersionService.getArticleVersionsByState(ARTICLE_VERSION_STATE.SUBMITTED), // TODO: change to ArticleVersionState.ACCEPTED (changed to submitted for developing purposes
+        parseInt(req.query.limit)
+      );
+      return {array, nrOfPages};
+    }
   })
 );
 

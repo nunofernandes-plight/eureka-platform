@@ -25,22 +25,24 @@ export default {
     return ArticleVersion.find({});
   },
 
-  getArticlesByTitleQuery: async (titleQuery) => {
+  getArticlesByTitleQuery: (titleQuery, articleVersionState) => {
     const regexQuery = '.*' + titleQuery + '.*';
-    return await ArticleVersion.find({
-      articleVersionState: ArticleVersionState.SUBMITTED,     // TODO: change to ArticleVersionState.ACCEPTED (changed to submitted for developing purposes
-      'document.title.blocks.text': {$regex: regexQuery, $options: 'i'}
-    });
+    return populate(
+      ArticleVersion.find({
+        articleVersionState: articleVersionState,
+        'document.title.blocks.text': {$regex: regexQuery, $options: 'i'}
+      })
+    );
   },
 
-  getArticleVersionsByState: async articleVersionState => {
+  getArticleVersionsByState: articleVersionState => {
     if (!(articleVersionState in ArticleVersionState)) {
       errorThrower.notCorrectStatus(
         'any of Object ArticleVersionState',
         articleVersionState
       );
     }
-    return await ArticleVersion.find({
+    return ArticleVersion.find({
       articleVersionState: {$in: [articleVersionState]}
     });
   },
