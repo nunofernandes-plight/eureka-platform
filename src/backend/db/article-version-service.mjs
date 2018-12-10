@@ -310,6 +310,13 @@ export default {
     );
   },
 
+  getArticleVersionById: async (articleVersionID) => {
+    const articleVersion = await ArticleVersion.findById(articleVersionID);
+    if (!articleVersion) errorThrower.noEntryFoundById(articleVersionID);
+
+    return articleVersion;
+  },
+
   /**
    * Returns the article-version, but only if it is still in state 'DRAFT'
    * otherwise error
