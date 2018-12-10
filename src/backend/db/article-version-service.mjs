@@ -16,7 +16,8 @@ const populate = fn => {
   return fn.populate([
     {path: 'articleSubmission'},
     {path: 'editorApprovedReviews'},
-    {path: 'communityReviews'}
+    {path: 'communityReviews'},
+    {path: 'linkedArticles'}
   ]);
 };
 
@@ -311,7 +312,7 @@ export default {
   },
 
   getArticleVersionById: async (articleVersionID) => {
-    const articleVersion = await ArticleVersion.findById(articleVersionID);
+    const articleVersion = await populate(ArticleVersion.findById(articleVersionID));
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionID);
 
     return articleVersion;
