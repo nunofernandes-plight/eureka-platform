@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {__GRAY_600, __GRAY_700} from '../../../helpers/colors.js';
 import {renderField} from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
 import moment from 'moment';
+import DashboardSubCardSlider from './DashboardSubCardSlider.js';
 
 const Container = styled.div`
   flex: 1;
@@ -25,7 +26,7 @@ const Title = styled.div`
   flex: 1;
 `;
 
-const renderContent = (content, title, path) => {
+const renderContent = (content, title, path, categoryTitle) => {
   if (title === 'Articles') {
     return (
       <Content>
@@ -34,6 +35,9 @@ const renderContent = (content, title, path) => {
     );
   }
   if (title === 'Reviews') {
+    if (categoryTitle === 'ArticlesToReview') {
+      return 'TODO: create carousel for this';
+    }
   }
   return '...';
 };
@@ -63,7 +67,14 @@ const StartText = styled.div`
   font-weight: lighter;
 `;
 
-const DashboardSubCardContent = ({content, start, title, subTitle, path}) => {
+const DashboardSubCardContent = ({
+  content,
+  start,
+  title,
+  subTitle,
+  path,
+  categoryTitle
+}) => {
   return (
     <Container>
       {content === undefined ? (
@@ -75,7 +86,7 @@ const DashboardSubCardContent = ({content, start, title, subTitle, path}) => {
           <Title>
             {subTitle} {renderTime(title, content)}
           </Title>
-          {renderContent(content, title, path)}
+          {renderContent(content, title, path, categoryTitle)}
         </div>
       )}
     </Container>
