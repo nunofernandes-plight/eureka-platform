@@ -36,6 +36,7 @@ import {isGanache} from '../../../../../../helpers/isGanache.mjs';
 import withWeb3 from '../../../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
 import DocumentLinkedArticles from './DocumentLinkedArticles.js';
+import ArticlesSelection from '../../../ArticlesSelection.js';
 
 const Parent = styled.div`
   display: flex;
@@ -87,7 +88,9 @@ class DocumentEditor extends Component {
       saved: false,
       showSubmitModal: false,
       addAuthorModal: false,
+      addLinkedArticlesModal: false,
       authorsData: null,
+      linkedArticles: null,
       inputData: {
         url: null,
         hash: null,
@@ -415,6 +418,41 @@ class DocumentEditor extends Component {
                 }
               });
               this.fetchAuthorsData();
+            }}
+            deleteFromList={u => {
+              const authors = this.state.document.authors;
+              const indexToDelete = authors.indexOf(u.ethereumAddress);
+              if (indexToDelete > -1) {
+                authors.splice(indexToDelete, 1);
+              }
+              this.updateDocument({
+                document: {
+                  ...this.state.document,
+                  authors
+                }
+              });
+              this.fetchAuthorsData();
+            }}
+          />
+        </Modal>
+        <Modal
+          action={'SAVE'}
+          toggle={addLinkedArticlesModal => {
+            this.setState({addLinkedArticlesModal});
+          }}
+          callback={() => {
+            this.save();
+            this.setState({addLinkedArticlesModal: false});
+          }}
+          show={this.state.addLinkedArticlesModal}
+          title={'Search articles to link to your manuscript.'}
+        >
+          <ArticlesSelection
+            listedTitle={'Linked Articles'}
+            listedArticles={this.state.linkedArticles}
+            addToList={a => {
+              const linkedArticles = this.state.linkedArticles
+              // TODO: add linked articles to db
             }}
             deleteFromList={u => {
               const authors = this.state.document.authors;
