@@ -42,7 +42,8 @@ class ReviewsRouter extends Component {
   render() {
     return (
       <Parent>
-        {this.props.user.roles.includes(Roles.REVIEWER) ? (
+        {this.props.user.roles.includes(Roles.REVIEWER) ||
+        this.props.user.roles.includes(Roles.EXPERT_REVIEWER) ? (
           <Container>
             <NavPills>
               {ReviewsNavPillRoutes.map((item, index) => {
