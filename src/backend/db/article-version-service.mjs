@@ -3,7 +3,6 @@ import Document from '../../models/Document.mjs';
 import {serializeDocument} from '../../helpers/documentSerializer.mjs';
 import createNewEmpty from '../../helpers/createEditorDocument.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
-import ArticleVersionStates from '../schema/article-version-state-enum.mjs';
 import ArticleVersionState from '../schema/article-version-state-enum.mjs';
 import ReviewService from './review-service.mjs';
 import ArticleSubmissionService from './article-submission-service.mjs';
@@ -24,6 +23,14 @@ const populate = fn => {
 export default {
   getAllArticleVersions: () => {
     return ArticleVersion.find({});
+  },
+
+  getArticlesByTitleQuery: async (titleQuery) => {
+    const regexQuery = '.*' + titleQuery + '.*';
+    return await ArticleVersion.find({
+      articleVersionState: ArticleVersionState.SUBMITTED,     // TODO: change to ArticleVersionState.ACCEPTED (changed to submitted for developing purposes
+      'document.title.blocks.text': {$regex: regexQuery, $options: 'i'}
+    });
   },
 
   getArticleVersionsByState: async articleVersionState => {
@@ -213,7 +220,7 @@ export default {
   getDraftsOfUser: async userAddress => {
     let drafts = await ArticleVersion.find({
       ownerAddress: userAddress,
-      articleVersionState: ArticleVersionStates.DRAFT
+      articleVersionState: ArticleVersionState.DRAFT
     });
     if (!drafts) {
       errorThrower.noEntryFoundById('EthereumAddress');
@@ -236,9 +243,9 @@ export default {
     // error checking
     let articleVersion = await ArticleVersion.findById(articleVersionId);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
-    if (articleVersion.articleVersionState !== ArticleVersionStates.DRAFT)
+    if (articleVersion.articleVersionState !== ArticleVersionState.DRAFT)
       errorThrower.notCorrectStatus(
-        ArticleVersionStates.DRAFT,
+        ArticleVersionState.DRAFT,
         articleVersion.articleVersionState
       );
     if (articleVersion.ownerAddress !== userAddress)
@@ -260,16 +267,16 @@ export default {
     // error checking
     let articleVersion = await ArticleVersion.findById(articleVersionId);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
-    if (articleVersion.articleVersionState !== ArticleVersionStates.DRAFT)
+    if (articleVersion.articleVersionState !== ArticleVersionState.DRAFT)
       errorThrower.notCorrectStatus(
-        ArticleVersionStates.DRAFT,
+        ArticleVersionState.DRAFT,
         articleVersion.articleVersionState
       );
     if (articleVersion.ownerAddress !== userAddress)
       errorThrower.notCorrectEthereumAddress();
 
     articleVersion.articleHash = articleHash;
-    articleVersion.articleVersionState = ArticleVersionStates.FINISHED_DRAFT;
+    articleVersion.articleVersionState = ArticleVersionState.FINISHED_DRAFT;
 
     await articleVersion.save();
     return 'Successful finished draft of article-version';
