@@ -8,10 +8,23 @@ import {getLimitedObjects, getNumberOfPages} from '../helpers/pagination-helpers
 import articleSubmissionService from '../db/article-submission-service.mjs';
 import ReviewService from '../db/review-service.mjs';
 import {getIds} from '../helpers/get-array-of-ids.mjs';
+import errorThrower from '../helpers/error-thrower.mjs';
 
 const router = express.Router();
 
 router.use(accesController.loggedInOnly);
+
+router.get(
+  '/',
+  asyncHandler(async req => {
+    let articles;
+    if (req.query.title) {
+      articles = await articleVersionService.getArticlesByTitleQuery(req.query.title);
+      return getArticlesResponse(articles);
+    }
+    errorThrower.noQueryParameterProvided();
+  })
+);
 
 router.get(
   '/submitted',
