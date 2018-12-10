@@ -12,7 +12,7 @@ import {
 
 const CronJob = cron.CronJob;
 const SANITY_TIME_OUT_INTERVAL = 50; //timeout interval in seconds //TODO change to dropout time interval
-const REVIEWER_TIME_OUT_INTERVAL = 10; //timeout interval in seconds //TODO change to dropout time interval
+const REVIEWER_TIME_OUT_INTERVAL = 20; //timeout interval in seconds //TODO change to dropout time interval
 const CRONE_TIME_INTERVAL = '*/12 * * * * *'; // all 5 seconds // TODO change to real cronjob interval
 
 let cronJob;

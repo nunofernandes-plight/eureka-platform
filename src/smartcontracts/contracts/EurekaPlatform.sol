@@ -39,7 +39,7 @@ contract EurekaPlatform {
     + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer;
 
     uint constant maxReviewRounds = 3;
-    uint constant REVIEWER_TIMER_INTERVAL = 100; // in seconds
+    uint constant REVIEWER_TIMER_INTERVAL = 50; // in seconds
 
     function getJournalParameters() view public returns (
         address _contractOwner,
@@ -423,9 +423,8 @@ contract EurekaPlatform {
             "this method can't be called. the review must be in the state 'INVITED' or 'SIGNED_UP_FOR_REVIEWING'.");
 
         // check for timeout based dropout
-        if(msg.sender == contractOwner) {
-            require((block.timestamp - REVIEWER_TIMER_INTERVAL - review.stateTimestamp) > 0,
-            "Current time has not exceeded the given time-interval. The reviewer cannot be removed yet");
+        if(msg.sender == contractOwner && (block.timestamp - REVIEWER_TIMER_INTERVAL - review.stateTimestamp) > 0) {
+            revert("Current time has not exceeded the given time-interval. The reviewer cannot be removed yet");
         }
 
         review.reviewState = ReviewState.NOT_EXISTING;
