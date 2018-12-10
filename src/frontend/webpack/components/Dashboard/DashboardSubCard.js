@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 import DashboardSubCardContent from './DashboardSubCardContent.js';
 import DashboardSubCardNotificationBell from './DashboardSubCardNotificationBell.js';
 
-const Container = styled.div`
+const SubCardContainer = styled.div`
   &:hover {
     transform: translateX(-3px) translateY(-4px);
   }
@@ -55,7 +55,7 @@ const Header = styled.div`
 
 const DashboardSubCard = ({category, index, color, title}) => {
   return (
-    <Container>
+    <SubCardContainer>
       {category.title === 'Invitations' ? (
         <DashboardSubCardNotificationBell
           color={color}
@@ -80,7 +80,7 @@ const DashboardSubCard = ({category, index, color, title}) => {
           In total, <strong>{category.total}</strong> {category.text}
         </Number>
       </NumberContainer>
-    </Container>
+    </SubCardContainer>
   );
 };
 

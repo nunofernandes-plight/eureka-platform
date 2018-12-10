@@ -1,16 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Link} from 'react-router-dom';
-import {
-  __GRAY_600
-} from '../../../helpers/colors.js';
+import {__GRAY_600} from '../../../helpers/colors.js';
 import {renderField} from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
 import moment from 'moment';
+
 const Container = styled.div`
   flex: 1;
+  word-break: break-word;
 `;
 
-const MyLink = styled(Link)`
+const MyLink = styled.div`
   transition: 0.3s all ease-in-out;
   cursor: pointer;
   font-size: 13px;
@@ -36,11 +35,6 @@ const renderContent = (content, title, path) => {
     );
   }
   return 'ciao';
-
-  /* if (title === 'Articles') {
-    return <MyLink to={'tdb'}>{renderedTitle}</MyLink>;
-  }
-  return <MyLink to={'asf'}>ciao</MyLink>;*/
 };
 
 const renderTime = (title, content) => {

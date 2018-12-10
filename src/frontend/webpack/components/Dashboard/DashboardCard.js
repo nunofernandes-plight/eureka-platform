@@ -9,10 +9,8 @@ import {
 import DashboardCardTopIcon from './DashboardCardTopIcon.js';
 import DashboardSubCard from './DashboardSubCard.js';
 import connect from 'react-redux/es/connect/connect.js';
-import {fetchUserData} from '../../reducers/user.js';
-import DashboardSubCardNotificationBell from './DashboardSubCardNotificationBell.js';
 
-const Container = styled.div`
+export const DashboardCardContainer = styled.div`
   margin: 20px;
   display: flex;
   flex-direction: column;
@@ -24,9 +22,10 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   color: ${__THIRD};
+  height: ${props => (props.height ? props.height : '100%')};
 `;
 
-const Title = styled.h2`
+export const DashboardCardTitle = styled.h2`
   font-weight: bold;
   text-align: center;
   text-transform: uppercase;
@@ -40,7 +39,7 @@ const SubCards = styled.div`
   width: 100%;
 `;
 
-const getColor = title => {
+export const getDashboardColor = title => {
   if (title === 'Articles') {
     return `linear-gradient(40deg, ${__ALERT_ERROR}, ${__ALERT_WARNING})`;
   }
@@ -49,12 +48,16 @@ const getColor = title => {
   }
 };
 
-const DashboardCard = ({stat}) => {
-  const color = getColor(stat.title);
+const mapStateToProps = state => ({
+  user: state.userData.data
+});
+
+const DashBoardCard = connect(mapStateToProps)(({stat}) => {
+  const color = getDashboardColor(stat.title);
   return (
-    <Container>
+    <DashboardCardContainer>
       <DashboardCardTopIcon icon={stat.icon} color={color} />
-      <Title>{stat.title}</Title>
+      <DashboardCardTitle>{stat.title}</DashboardCardTitle>
       <SubCards>
         {stat.categories.map((cat, i) => {
           return (
@@ -68,10 +71,8 @@ const DashboardCard = ({stat}) => {
           );
         })}
       </SubCards>
-    </Container>
+    </DashboardCardContainer>
   );
-};
+});
 
-export default connect(state => ({
-  user: state.userData.data
-}))(DashboardCard);
+export default DashBoardCard;
