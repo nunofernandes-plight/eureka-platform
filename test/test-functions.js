@@ -135,7 +135,7 @@ export default {
     await articleVersionService.finishDraftById(user.ethereumAddress, articleVersion._id, articleHashHex
     );
 
-    articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id
+    articleVersion = await articleVersionService.getArticleVersionDraft(user.ethereumAddress, articleVersion._id
     );
     t.is(articleVersion.articleVersionState, ArticleVersionState.FINISHED_DRAFT
     );
@@ -146,14 +146,14 @@ export default {
     await submitArticle(eurekaTokenContract, eurekaPlatformContract.options.address, 5000, articleDataInHex
     ).send({from: user.ethereumAddress, gas: 80000000});
 
-    articleVersion = await articleVersionService.getArticleVersionById(
+    articleVersion = await articleVersionService.getArticleVersionDraft(
       user.ethereumAddress,
       articleVersion._id
     );
     let counter = 0;
     while (articleVersion.articleVersionState === ArticleVersionState.FINISHED_DRAFT && counter < 5) {
       sleepSync(5000);
-      articleVersion = await articleVersionService.getArticleVersionById(user.ethereumAddress, articleVersion._id
+      articleVersion = await articleVersionService.getArticleVersionDraft(user.ethereumAddress, articleVersion._id
       );
       counter++;
     }
@@ -254,7 +254,7 @@ export default {
       from: editor.ethereumAddress
     });
 
-    let dbArticleVersion = await articleVersionService.getArticleVersionById(
+    let dbArticleVersion = await articleVersionService.getArticleVersionDraft(
       author.ethereumAddress,
       articleVersion._id
     );
@@ -265,7 +265,7 @@ export default {
       ArticleVersionState.OPEN_FOR_ALL_REVIEWERS &&
       counter < 5) {
       sleepSync(5000);
-      dbArticleVersion = await articleVersionService.getArticleVersionById(
+      dbArticleVersion = await articleVersionService.getArticleVersionDraft(
         author.ethereumAddress,
         articleVersion._id
       );
@@ -291,7 +291,7 @@ export default {
     ).send({
       from: editor.ethereumAddress
     });
-    let dbArticleVersion = await articleVersionService.getArticleVersionById(
+    let dbArticleVersion = await articleVersionService.getArticleVersionDraft(
       author.ethereumAddress,
       articleVersion._id
     );
@@ -302,7 +302,7 @@ export default {
       ArticleVersionState.DECLINED_SANITY_NOTOK &&
       counter < 5) {
       sleepSync(5000);
-      dbArticleVersion = await articleVersionService.getArticleVersionById(
+      dbArticleVersion = await articleVersionService.getArticleVersionDraft(
         author.ethereumAddress,
         articleVersion._id
       );
@@ -445,7 +445,7 @@ export default {
     );
 
     // check if community review has been added and status has changed on DB
-    articleVersion = await articleVersionService.getArticleVersionById(
+    articleVersion = await articleVersionService.getArticleVersionDraft(
       author.ethereumAddress,
       articleVersion._id
     );
@@ -546,13 +546,13 @@ export default {
     ).send({
       from: editor.ethereumAddress
     });
-    let dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, articleVersion._id);
+    let dbArticleVersion = await articleVersionService.getArticleVersionDraft(articleVersion.ownerAddress, articleVersion._id);
     let dbSubmission = await articleSubmissionService.getSubmissionById(articleVersion.articleSubmission);
     let counter = 0;
     while ((dbSubmission.articleSubmissionState !== ArticleSubmissionState.CLOSED || dbArticleVersion.articleVersionState !== ArticleVersionState.ACCEPTED) && counter < 5) {
       sleepSync(5000);
       console.log(dbSubmission);
-      dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, articleVersion._id);
+      dbArticleVersion = await articleVersionService.getArticleVersionDraft(articleVersion.ownerAddress, articleVersion._id);
       dbSubmission = await articleSubmissionService.getSubmissionById(articleVersion.articleSubmission);
       counter++;
     }
@@ -566,11 +566,11 @@ export default {
     ).send({
       from: editor.ethereumAddress
     });
-    let dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, articleVersion._id);
+    let dbArticleVersion = await articleVersionService.getArticleVersionDraft(articleVersion.ownerAddress, articleVersion._id);
     let counter = 0;
     while (dbArticleVersion.articleVersionState !== ArticleVersionState.DECLINED && counter < 5) {
       sleepSync(5000);
-      dbArticleVersion = await articleVersionService.getArticleVersionById(articleVersion.ownerAddress, articleVersion._id);
+      dbArticleVersion = await articleVersionService.getArticleVersionDraft(articleVersion.ownerAddress, articleVersion._id);
       counter++;
     }
     t.is(dbArticleVersion.articleVersionState, ArticleVersionState.DECLINED);

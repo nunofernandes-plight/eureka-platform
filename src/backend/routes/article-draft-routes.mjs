@@ -40,7 +40,7 @@ router.get(
     }
 
     const requesterAddress = req.session.passport.user.ethereumAddress;
-    return await articleVersionService.getArticleVersionById(
+    return await articleVersionService.getArticleVersionDraft(
       requesterAddress,
       req.params.draftId
     );

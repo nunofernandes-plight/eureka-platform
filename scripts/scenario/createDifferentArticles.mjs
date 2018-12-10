@@ -203,7 +203,7 @@ export const createDifferentDrafts = async () => {
         const newArticle = await articleSubmissionService.createSubmission(
           account
         );
-        const article = await articleVersionService.getArticleVersionById(
+        const article = await articleVersionService.getArticleVersionDraft(
           account,
           newArticle.articleVersionId
         );
@@ -270,7 +270,7 @@ const submitDraft = async (tokenContract, platformContract, draft, account) => {
   );
   await articleVersionService.finishDraftById(account, draft._id, hash);
 
-  const submittedArticle = await articleVersionService.getArticleVersionById(
+  const submittedArticle = await articleVersionService.getArticleVersionDraft(
     account,
     draft._id
   );

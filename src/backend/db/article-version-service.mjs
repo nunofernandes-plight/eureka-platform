@@ -317,7 +317,7 @@ export default {
    * @param articleVersionID
    * @returns {Promise<void>}
    */
-  getArticleVersionById: async (userAddress, articleVersionID) => {
+  getArticleVersionDraft: async (userAddress, articleVersionID) => {
     const articleVersion = await ArticleVersion.findById(articleVersionID);
     const user = await userService.getUserByEthereumAddress(userAddress);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionID);
