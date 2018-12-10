@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import {__GRAY_600, __GRAY_700} from '../../../helpers/colors.js';
 import {renderField} from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
 import moment from 'moment';
-import DashboardSubCardSlider from './DashboardSubCardSlider.js';
 
 const Container = styled.div`
   flex: 1;
