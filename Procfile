@@ -1,1 +1,2 @@
-web: node --experimental-modules src/backend/index.mjs
+worker: node --experimental-modules index.mjs
+web: npm start
