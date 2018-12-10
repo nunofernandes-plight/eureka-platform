@@ -11,11 +11,9 @@ import router from '../routes/index.mjs';
 import timebasedContractService from '../web3/timebased-contract-service.mjs';
 import uploadRouter from '../routes/file-upload.routes.mjs';
 import {
-  platformContract,
   setupWeb3Interface
 } from '../web3/web3InterfaceSetup.mjs';
 import {configEmailProvider, sendEmail} from '../email/index.mjs';
-import {getReviewersInvitationTemplate} from '../email/templates/EmailTemplates.mjs';
 
 if (!isProduction) {
   dotenv.config();
@@ -23,6 +21,10 @@ if (!isProduction) {
 
 let app;
 let server;
+let platformContract;
+let tokenContract;
+
+const CONTRACT_OWNER_ADDRESS = '0x9c51e96A3f5c5E3BeD25242CEe180aC8eAB03E23';
 
 export default {
   setupApp: async () => {
@@ -59,8 +61,7 @@ export default {
     app.use(passport.session());
 
     /** Web3 Interface: SC Events Listener, Transaction Listener**/
-    if (process.env.NODE_ENV !== 'test')
-      await setupWeb3Interface();
+    [platformContract, tokenContract] = await setupWeb3Interface();
 
     /**
      * Config and set Email Provider SendGrid (API key as env variable)
@@ -68,8 +69,7 @@ export default {
     configEmailProvider();
 
     /** Timebased contract service**/
-    // TODO activate it again for checking
-    //timebasedContractService.start();
+    timebasedContractService.start(platformContract, CONTRACT_OWNER_ADDRESS);
 
     //set global variable isAuthenticated -> call ir everywhere dynamically
     app.use(function(req, res, next) {
