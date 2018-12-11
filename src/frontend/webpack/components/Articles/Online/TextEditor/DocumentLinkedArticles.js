@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import TitleWithHelper from './TitleWithHelper.js';
 import Icon from '../../../../views/icons/Icon.js';
 import {__ALERT_ERROR} from '../../../../../helpers/colors.js';
+import Author from '../../../../views/Author.js';
+import SmallArticle from '../../../../views/SmallArticle.js';
 
 const Article = styled.div``;
 const AddArticle = styled.div`
@@ -34,7 +36,7 @@ const DocumentLinkedArticles = props => {
           ? props.linkedArticleData.map(article => {
               return (
                 <div key={article._id}>
-                  {article.title.blocks[0].text}
+                  <SmallArticle article={article} width={25} height={25} right={13} />
                 </div>
               );
             })
