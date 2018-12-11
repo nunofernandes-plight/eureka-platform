@@ -10,6 +10,7 @@ import {
 } from '../../helpers/colors.js';
 import Icon from '../views/icons/Icon.js';
 import queryString from 'query-string';
+import SmallArticle from '../views/SmallArticle.js';
 
 const Container = styled.div`
   display: flex;
@@ -35,7 +36,8 @@ const Article = styled.li`
   cursor: pointer;
   display: flex;
   align-items: center;
-  padding: 10px;
+  text-align: left;
+  padding: 0;
 `;
 
 const ArticlesSection = styled.div`
@@ -62,6 +64,7 @@ const Listed = styled.div`
 const Element = styled.div`
   display: flex;
   align-items: center;
+  text-align: left;
   width: 100%;
 `;
 const TopContainer = styled.div`
@@ -143,7 +146,11 @@ class ArticlesSelection extends React.Component {
           this.props.addToList(article);
         }}
       >
-        {article.title.blocks[0].text}
+        <SmallArticle
+          article={article}
+          width={25} height={25} right={13} fontSize={'10px'}
+          noLinks
+        />
       </Article>
     );
   }
@@ -175,13 +182,13 @@ class ArticlesSelection extends React.Component {
           <Listed>
             {this.props.listedArticles
               ? this.props.listedArticles.map(a => {
-                  return (
-                    <Element key={a._id}>
-                      {a.title.blocks[0].text}
-                      {this.renderDeleteButton(a)}
-                    </Element>
-                  );
-                })
+                return (
+                  <Element key={a._id}>
+                    <SmallArticle article={a} width={25} height={25} right={13} fontSize={'10px'}/>
+                    {this.renderDeleteButton(a)}
+                  </Element>
+                );
+              })
               : null}
           </Listed>
         </ArticlesSection>
