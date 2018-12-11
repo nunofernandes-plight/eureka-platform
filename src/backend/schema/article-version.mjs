@@ -39,6 +39,10 @@ export const articleVersionSchema = mongoose.Schema(
     communityReviews: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Review'
+    }],
+    linkedArticles: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ArticleVersion'
     }]
   },
   {
