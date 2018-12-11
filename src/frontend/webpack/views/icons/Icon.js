@@ -7,7 +7,7 @@ const MyIcon = styled.svg`
     transform: ${props => (props.noMove ? null : 'translateY(2px)')};
   }
   transition: 0.25s all;
-  cursor: pointer;
+  cursor: ${props => (props.noPointer ? null : 'pointer')};
   width: ${props => props.width}px;
   height: ${props => props.height}px;
   vertical-align: middle;
