@@ -55,9 +55,12 @@ router.put(
     if (!req.params.draftId) errorThrower.missingParameter('DraftId');
     const draftId = req.params.draftId;
 
-    return await articleVersionService.updateDraftById(ethereumAddress, draftId,
-      req.body.document);
-
+    return await articleVersionService.updateDraftById(
+      ethereumAddress,
+      draftId,
+      req.body.document,
+      req.body.linkedArticles
+    );
   })
 );
 
