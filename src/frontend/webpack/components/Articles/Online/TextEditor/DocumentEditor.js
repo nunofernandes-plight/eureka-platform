@@ -257,15 +257,31 @@ class DocumentEditor extends Component {
   }
 
   getArticle() {
+    const contributionRatio = Math.floor(10000 / this.state.document.authors.length);
+    let contributorRatios = this.state.document.authors.map(a => {
+      return contributionRatio;
+    });
+    if (contributorRatios.length !== 0)
+      contributorRatios[0] = contributorRatios[0] + (10000 - contributorRatios.length * contributionRatio);
+
+
+    const linkedArticles = this.state.linkedArticles.map(a => {
+      return a.articleHash;
+    });
+    const linkedArticlesRatio = Math.floor(10000 / linkedArticles.length);
+    let linkedArticlesSplitRatios = linkedArticles.map(a => {
+      return linkedArticlesRatio;
+    });
+    if (linkedArticlesSplitRatios.length !== 0)
+      linkedArticlesSplitRatios[0] = linkedArticlesSplitRatios[0] + (10000 - linkedArticles.length * linkedArticlesRatio);
+
     return {
       articleHash: this.state.inputData.hash,
       url: 'u', //this.state.inputData.url,
-      authors: [this.props.selectedAccount.address],
-      contributorRatios: [4000, 6000],
-      linkedArticles: [
-        '5f37e6ef7ee3f86aaa592bce4b142ef345c42317d6a905b0218c7241c8e30015'
-      ],
-      linkedArticlesSplitRatios: [3334, 3333, 3333]
+      authors: this.state.document.authors,
+      contributorRatios,
+      linkedArticles,
+      linkedArticlesSplitRatios
     };
   }
 
@@ -289,6 +305,8 @@ class DocumentEditor extends Component {
         });
       });
 
+    const articleHex = getArticleHex(this.props.context.web3, article);
+
     let gasAmount;
     // gas estimation on ganache doesn't work properly
     if (!isGanache(this.props.context.web3))
@@ -296,7 +314,7 @@ class DocumentEditor extends Component {
         this.props.context.tokenContract,
         this.props.context.platformContract.options.address,
         SUBMISSION_PRICE,
-        getArticleHex(this.props.context.web3, article)
+        articleHex
       ).estimateGas({
         from: this.props.selectedAccount.address
       });
@@ -306,7 +324,7 @@ class DocumentEditor extends Component {
       this.props.context.tokenContract,
       this.props.context.platformContract.options.address,
       SUBMISSION_PRICE,
-      getArticleHex(this.props.context.web3, article)
+      articleHex
     )
       .send({
         from: this.props.selectedAccount.address,
