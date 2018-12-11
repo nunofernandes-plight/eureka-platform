@@ -745,7 +745,17 @@ contract EurekaPlatform {
         }
 
         //reward linked articles if article is accepted
-        if (articleVersions[submission.versions[submission.versions.length - 1]].versionState == ArticleVersionState.ACCEPTED) {
+        articleVersion = articleVersions[submission.versions[submission.versions.length - 1]];
+        if (articleVersion.versionState == ArticleVersionState.ACCEPTED) {
+            for (i=0; i < articleVersion.linkedArticles.length; i++) {
+                require(
+                    eurekaTokenContract.transfer(
+                        articleVersions[articleVersion.linkedArticles[i]].authors[0],
+                        linkedArticlesReward.mul(articleVersion.linkedArticlesSplitRatios[i]).div(10000)
+                    )
+                );
+            }
+
             //TODO: reward linkedArticles authors and invalidation work
             // check also if time is already up
         }
