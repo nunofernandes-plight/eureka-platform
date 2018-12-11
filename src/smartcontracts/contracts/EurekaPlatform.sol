@@ -744,20 +744,28 @@ contract EurekaPlatform {
             }
         }
 
-        //reward linked articles if article is accepted
         articleVersion = articleVersions[submission.versions[submission.versions.length - 1]];
+        //reward linked articles if article is accepted
         if (articleVersion.versionState == ArticleVersionState.ACCEPTED) {
-            for (i=0; i < articleVersion.linkedArticles.length; i++) {
-                require(
-                    eurekaTokenContract.transfer(
-                        articleVersions[articleVersion.linkedArticles[i]].authors[0],
-                        linkedArticlesReward.mul(articleVersion.linkedArticlesSplitRatios[i]).div(10000)
-                    )
-                );
+            for (i = 0; i < articleVersion.linkedArticles.length; i++) {
+                
+                ArticleVersion memory linkedArticle = articleVersions[articleVersion.linkedArticles[i]];
+                uint rewardForArticle = linkedArticlesReward.mul(articleVersion.linkedArticlesSplitRatios[i]).div(10000);
+                
+                for (uint a=0; a < linkedArticle.authors.length; a++) {
+            
+                    require(
+                        eurekaTokenContract.transfer(
+                            linkedArticle.authors[a],
+                            // reward for article is splitted relatively to the contribution
+                            rewardForArticle.mul(linkedArticle.authorContributionRatios[a]).div(10000)
+                        ),
+                        "the transfer was not succesful"
+                    );
+                }
             }
 
-            //TODO: reward linkedArticles authors and invalidation work
-            // check also if time is already up
+            //TODO: reward invalidation work, check also if time is already up
         }
         submission.submissionState = SubmissionState.CLOSED;
         submission.stateTimestamp = block.timestamp;
