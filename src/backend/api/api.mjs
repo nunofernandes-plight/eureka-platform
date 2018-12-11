@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import session from 'express-session';
@@ -23,11 +24,14 @@ if (!isProduction) {
 
 let app;
 let server;
+const __dirname = path.resolve();
 
 export default {
   setupApp: async () => {
     app = express();
-    app.use(express.static('build'));
+    // Serve static files from the React app
+    app.use(express.static(path.join(__dirname, '/build')));
+    // app.use(express.static(path.join(__dirname, '/build')));
 
     /** Parser **/
     //Parses the text as URL encoded data
@@ -81,6 +85,12 @@ export default {
     app.use(bodyParser.json());
     app.use('/api', router);
     app.get('/fileupload', uploadRouter);
+
+    // The "catchall" handler: for any request that doesn't
+    // match one above, send back React's index.html file.
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname + '/build/index.html'));
+    });
   },
 
   listenTo: port => {

@@ -2,6 +2,7 @@
   "name": "eureka-platform",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "@kennethormandy/react-flipcard": "^0.4.3",
     "@sendgrid/mail": "^6.3.1",
@@ -88,7 +89,8 @@
     "deploy-gan-server": "npm run deploy-contracts && npm run gan-server",
     "deploy-contracts": "cross-env BC_NETWORK=ganache NODE_ENV=development node --experimental-modules src/smartcontracts/deployment/deployer-script.mjs babel-node",
     "nodemon-dev": "cross-env BC_NETWORK=ganache NODE_ENV=development nodemon --exec \"node --experimental-modules\" localDevTests/index.mjs babel-node",
-    "scenario": "npm run deploy-contracts && cross-env BC_NETWORK=ganache SCENARIO=SUBMIT_FEW_ARTICLES node --experimental-modules scripts/scenario/index.mjs babel-node && npm run gan-server"
+    "scenario": "npm run deploy-contracts && cross-env BC_NETWORK=ganache SCENARIO=SUBMIT_FEW_ARTICLES node --experimental-modules scripts/scenario/index.mjs babel-node && npm run gan-server",
+    "heroku-postbuild": "yarn && yarn run build"
   },
   "devDependencies": {
     "ava": "^0.25.0",
