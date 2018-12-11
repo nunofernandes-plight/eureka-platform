@@ -471,19 +471,14 @@ class DocumentEditor extends Component {
               this.setState({linkedArticles});
               this.save();
             }}
-            deleteFromList={u => {
-              const authors = this.state.document.authors;
-              const indexToDelete = authors.indexOf(u.ethereumAddress);
+            deleteFromList={a=> {
+              const linkedArticles = this.state.linkedArticles;
+              const indexToDelete = linkedArticles.indexOf(a);
               if (indexToDelete > -1) {
-                authors.splice(indexToDelete, 1);
+                linkedArticles.splice(indexToDelete, 1);
               }
-              this.updateDocument({
-                document: {
-                  ...this.state.document,
-                  authors
-                }
-              });
-              this.fetchAuthorsData();
+              this.setState({linkedArticles});
+              this.save();
             }}
           />
         </Modal>

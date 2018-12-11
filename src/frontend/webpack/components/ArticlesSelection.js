@@ -158,7 +158,7 @@ class ArticlesSelection extends React.Component {
           color={__ALERT_ERROR}
           right={20}
           onClick={() => {
-            this.props.deleteFromListedArticles(a);
+            this.props.deleteFromList(a);
           }}
         />
       </Delete>
