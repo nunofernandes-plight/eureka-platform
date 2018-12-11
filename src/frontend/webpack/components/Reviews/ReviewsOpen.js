@@ -7,7 +7,6 @@ import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {withRouter} from 'react-router-dom';
 import {
   addCommunityReviewToDB,
-  getArticlesOpenToReview
 } from './ReviewMethods.js';
 import {__THIRD} from '../../../helpers/colors.js';
 import withWeb3 from '../../contexts/WithWeb3.js';

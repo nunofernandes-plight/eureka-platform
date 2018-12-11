@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route} from 'react-router';
 import {Redirect} from 'react-router-dom';
-import {Card, CardTitle} from '../../views/Card.js';
+import {Card} from '../../views/Card.js';
 import MyDrafts from '../Articles/Online/MyDrafts.js';
 import styled from 'styled-components';
 import {DraftsNavPillRoutes} from './DraftsNavPillRoutes.js';

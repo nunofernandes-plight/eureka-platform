@@ -2,7 +2,6 @@ import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import {withRouter} from 'react-router-dom';
 import DraftsTable from '../../../views/DraftsTable.js';
-import {Card, CardTitle} from '../../../views/Card.js';
 import {__ALERT_ERROR, __FIFTH} from '../../../../helpers/colors.js';
 import {getDomain} from '../../../../../helpers/getDomain.mjs';
 import Modal from '../../../design-components/Modal.js';
@@ -13,12 +12,7 @@ import {connect} from 'react-redux';
 import {fetchUserData} from '../../../reducers/user.js';
 import {fetchOnlineDrafts} from '../../../reducers/articles.js';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
+
 const TitleContainer = styled.div`
   &::before {
     content: '';

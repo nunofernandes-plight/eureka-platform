@@ -4,7 +4,7 @@ import {
   RECEIVED_ARTICLES_OPEN_TO_REVIEW,
   START_FETCH_ARTICLES_OPEN_TO_REVIEW
 } from './types.js';
-import {REVIEWS_ERROR, TITLE_GENERAL_ERROR} from '../constants/ModalErrors.js';
+import {REVIEWS_ERROR} from '../constants/ModalErrors.js';
 
 const initialState = {
   articlesOpenToReviewLoading: null,

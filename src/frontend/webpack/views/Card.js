@@ -1,11 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import {__ALERT_ERROR} from '../../helpers/colors.js';
-import {
-  EXTRA_LARGE_DEVICES,
-  LARGE_DEVICES,
-  MEDIUM_DEVICES
-} from '../../helpers/mobile.js';
 import {CARD_WIDTH_IN_PERCENTAGE} from '../../helpers/layout.js';
 
 export const CardTitle = styled.h2`

@@ -1,13 +1,11 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Route} from 'react-router';
 import {Redirect, withRouter} from 'react-router-dom';
-import MyDrafts from '../Articles/Online/MyDrafts.js';
 import DocumentEditor from '../Articles/Online/TextEditor/DocumentEditor.js';
 import NavPill from '../../views/NavPill.js';
 import MySubmitted from '../Articles/MySubmitted.js';
 import {ArticlesNavPillRoutes} from './ArticlesNavPillRoutes.js';
-import {Card} from '../../views/Card.js';
 import {DraftsRouter} from './DraftsRouter.js';
 
 const Parent = styled.div`

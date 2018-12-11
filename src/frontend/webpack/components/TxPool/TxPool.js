@@ -1,11 +1,6 @@
 import React from 'react';
 import styled, {keyframes} from 'styled-components';
 import {transparentize} from 'polished';
-import Modal from '../../design-components/Modal.js';
-import {
-  TITLE_GENERAL_ERROR,
-  TRANSACTION_POOL
-} from '../../constants/ModalErrors.js';
 import PoolModal from './PoolModal.js';
 
 const animation = keyframes`

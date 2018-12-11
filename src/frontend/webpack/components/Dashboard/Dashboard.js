@@ -8,10 +8,9 @@ import DashboardCard, {
   getDashboardColor
 } from './DashboardCard.js';
 import EurekaRotateSpinner from '../../views/spinners/EurekaRotateSpinner.js';
-import {EXTRA_LARGE_DEVICES, LARGE_DEVICES} from '../../../helpers/mobile.js';
+import {EXTRA_LARGE_DEVICES} from '../../../helpers/mobile.js';
 import {connect} from 'react-redux';
 import Roles from '../../../../backend/schema/roles-enum.mjs';
-import {SubCardContainer} from './DashboardSubCard.js';
 import DashboardCardTopIcon from './DashboardCardTopIcon.js';
 import {becomeAReviewer} from '../../reducers/reviewer.js';
 import {fetchUserData} from '../../reducers/user.js';
