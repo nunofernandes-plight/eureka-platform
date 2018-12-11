@@ -2,7 +2,6 @@
   "name": "eureka-platform",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8080",
   "dependencies": {
     "@kennethormandy/react-flipcard": "^0.4.3",
     "@sendgrid/mail": "^6.3.1",
