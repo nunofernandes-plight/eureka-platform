@@ -35,6 +35,7 @@ import Roles from '../../../../../../backend/schema/roles-enum.mjs';
 import {isGanache} from '../../../../../../helpers/isGanache.mjs';
 import withWeb3 from '../../../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
+import DocumentLinkedArticles from './DocumentLinkedArticles.js';
 
 const Parent = styled.div`
   display: flex;
@@ -470,6 +471,14 @@ class DocumentEditor extends Component {
                           this.setState({addAuthorModal: true});
                         }}
                         authorsData={this.state.authorsData}
+                      />
+                    </Line>
+                    <Line>
+                      <DocumentLinkedArticles
+                        addLinkedArticles={() => {
+                          this.setState({addLinkedArticlesModal: true});
+                        }}
+                        linkedArticleData={this.state.linkedArticles}
                       />
                     </Line>
                     <Line>
