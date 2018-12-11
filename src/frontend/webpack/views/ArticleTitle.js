@@ -7,10 +7,15 @@ const Title = styled.div`
   font-weight: bold;
 `;
 
-export const ArticleTitle = ({article, ...otherProps}) => {
-  return (
-    <Link to={`/app/preview/${article._id}`}>
+export const ArticleTitle = ({article, noLink, ...otherProps}) => {
+  if (noLink)
+    return (
       <Title>{article.title.blocks[0].text}</Title>
-    </Link>
-  );
+    );
+  else
+    return (
+      <Link to={`/app/preview/${article._id}`}>
+        <Title>{article.title.blocks[0].text}</Title>
+      </Link>
+    );
 };
