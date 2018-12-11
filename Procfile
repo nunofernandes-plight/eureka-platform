@@ -1,2 +1,2 @@
-worker: node --experimental-modules index.mjs
+worker: node --experimental-modules src/index.mjs
 web: npm start

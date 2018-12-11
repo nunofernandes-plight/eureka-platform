@@ -27,6 +27,7 @@ let server;
 export default {
   setupApp: async () => {
     app = express();
+    app.use(express.static('build'));
 
     /** Parser **/
     //Parses the text as URL encoded data
@@ -59,8 +60,7 @@ export default {
     app.use(passport.session());
 
     /** Web3 Interface: SC Events Listener, Transaction Listener**/
-    if (process.env.NODE_ENV !== 'test')
-      await setupWeb3Interface();
+    if (process.env.NODE_ENV !== 'test') await setupWeb3Interface();
 
     /**
      * Config and set Email Provider SendGrid (API key as env variable)
