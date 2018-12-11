@@ -62,7 +62,15 @@ router.get(
     const ethereumAddress = req.session.passport.user.ethereumAddress;
     if (!ethereumAddress) errorThrower.notLoggedIn();
     if (!req.params.id) errorThrower.missingParameter('id');
-    return await articleVersionService.getArticleVersionById(req.params.id);
+    let articleVersions = await articleVersionService.getArticleVersionById(req.params.id);
+
+    // changing linkedArticles object to response objects which includes the relevant data only
+    const linkedArticlesResp = getArticlesResponse(articleVersions.linkedArticles);
+    const newArticleVersion = {
+        ...articleVersions._doc,
+      linkedArticles: linkedArticlesResp
+    };
+    return newArticleVersion;
   })
 );
 
