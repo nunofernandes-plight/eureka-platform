@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Avatar from './Avatar.js';
-import {__FIFTH, __GRAY_100, __GRAY_600} from '../../helpers/colors.js';
+import {__ALERT_DANGER, __FIFTH, __GRAY_100, __GRAY_600} from '../../helpers/colors.js';
 import {EthereumAddress} from './Address.js';
 import {Email} from './Email.js';
 import {ArticleTitle} from './ArticleTitle.js';
@@ -36,6 +36,7 @@ const SmallArticle = props => {
           <ArticleTitle
             article={article}
             fontSize={'16px'}
+            noLink={props.noLinks}
           />
         )}
         {!article.authors ? null : (
@@ -50,6 +51,7 @@ const SmallArticle = props => {
                   fontWeight={'normal'}
                   index={index}
                   listLength={article.authors.length}
+                  noLink={props.noLinks}
                 />
               );
             })}
