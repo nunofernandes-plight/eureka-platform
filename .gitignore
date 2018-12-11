@@ -12,7 +12,7 @@ src/backend/.env
 
 # misc
 .DS_Store
-.env*
+.env
 src/backend/.env
 
 npm-debug.log*
