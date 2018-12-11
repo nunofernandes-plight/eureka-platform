@@ -242,7 +242,7 @@ export default {
     return getDraftInfos(drafts);
   },
 
-  updateDraftById: async (userAddress, articleVersionId, document) => {
+  updateDraftById: async (userAddress, articleVersionId, document, linkedArticles) => {
     // error checking
     let articleVersion = await ArticleVersion.findById(articleVersionId);
     if (!articleVersion) errorThrower.noEntryFoundById(articleVersionId);
@@ -261,6 +261,7 @@ export default {
       }
     }
 
+    articleVersion.linkedArticles = linkedArticles;
     articleVersion.timestamp = new Date().getTime();
     await ArticleVersion.findByIdAndUpdate(articleVersionId, articleVersion);
     return 'Successful updated Article Version with ID: ' + articleVersionId;
