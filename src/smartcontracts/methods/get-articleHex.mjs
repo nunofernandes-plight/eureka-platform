@@ -61,7 +61,7 @@ const getArticleHex = (web3, article) => {
     .padLeft(web3.utils.toHex(article.linkedArticles.length), 64)
     .substring(2);
   article.linkedArticles.forEach(hash => {
-    dataInHex += hash;
+    dataInHex += hash.substring(2);
   });
 
   //linked articles split ratio array
