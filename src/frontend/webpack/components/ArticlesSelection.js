@@ -140,7 +140,7 @@ class ArticlesSelection extends React.Component {
       <Article
         key={article._id}
         onClick={() => {
-          this.props.addToListedArticles(article);
+          this.props.addToList(article);
         }}
       >
         {article.title.blocks[0].text}
@@ -177,7 +177,7 @@ class ArticlesSelection extends React.Component {
               ? this.props.listedArticles.map(a => {
                   return (
                     <Element key={a._id}>
-                      {a.title.blocks.text}
+                      {a.title.blocks[0].text}
                       {this.renderDeleteButton(a)}
                     </Element>
                   );

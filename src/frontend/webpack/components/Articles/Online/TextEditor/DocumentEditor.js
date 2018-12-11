@@ -90,7 +90,7 @@ class DocumentEditor extends Component {
       addAuthorModal: false,
       addLinkedArticlesModal: false,
       authorsData: null,
-      linkedArticles: null,
+      linkedArticles: [],
       inputData: {
         url: null,
         hash: null,
@@ -116,10 +116,15 @@ class DocumentEditor extends Component {
         if (response.success) {
           let document = new Document(response.data.document);
           let deserialized = deserializeDocument(document);
+          let linkedArticles = [];
+          if (response.data.linkedArticles)
+            linkedArticles = response.data.linkedArticles;
+
           this.setState({
             _id: response.data._id,
             document: deserialized,
-            lastSavedVersion: deserialized
+            lastSavedVersion: deserialized,
+            linkedArticles
           });
           this.fetchAuthorsData();
         } else {
@@ -204,7 +209,17 @@ class DocumentEditor extends Component {
       patch.figure = toSave.figure;
     }
 
-    saveArticle(draftId, patch)
+    let linkedArticles;
+    if(this.state.linkedArticles)
+      linkedArticles = this.state.linkedArticles.map(a => {
+        return a._id;
+      });
+
+    saveArticle(
+      draftId,
+      patch,
+      linkedArticles
+    )
       .then(response => response.json())
       .then(response => {
         if (response.success) {
@@ -451,8 +466,10 @@ class DocumentEditor extends Component {
             listedTitle={'Linked Articles'}
             listedArticles={this.state.linkedArticles}
             addToList={a => {
-              const linkedArticles = this.state.linkedArticles
-              // TODO: add linked articles to db
+              const linkedArticles = this.state.linkedArticles;
+              linkedArticles.push(a);
+              this.setState({linkedArticles});
+              this.save();
             }}
             deleteFromList={u => {
               const authors = this.state.document.authors;

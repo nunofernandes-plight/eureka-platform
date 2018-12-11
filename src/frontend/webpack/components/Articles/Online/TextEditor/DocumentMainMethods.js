@@ -14,7 +14,7 @@ export const submitArticleDB = (draftId, article) => {
   });
 };
 
-export const saveArticle = (draftId, patch) => {
+export const saveArticle = (draftId, patch, linkedArticles) => {
   return fetch(`${getDomain()}/api/articles/drafts/${draftId}`, {
     method: 'PUT',
     headers: {
@@ -22,7 +22,8 @@ export const saveArticle = (draftId, patch) => {
     },
     credentials: 'include',
     body: JSON.stringify({
-      document: serializeSavePatch(patch)
+      document: serializeSavePatch(patch),
+      linkedArticles: linkedArticles
     })
   });
 };
