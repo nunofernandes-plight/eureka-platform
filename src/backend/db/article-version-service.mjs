@@ -48,6 +48,12 @@ export default {
     });
   },
 
+  getArticleVersionByArticleHash: async _articleHash => {
+    const articleVersion = await ArticleVersion.findOne({articleHash: _articleHash});
+    if(!articleVersion) errorThrower.noEntryFoundByParameters('articlehash = ' + _articleHash);
+    return articleVersion;
+  },
+
   getArticleVersionsByStateAndUser: async (
     articleVersionState,
     ownerAddress

@@ -202,7 +202,7 @@ export default {
     });
   },
 
-  signUpForReviewing: async (reviewerAddress, articleHash, reviewType) => {
+  signUpForReviewing: async (reviewerAddress, articleHash, reviewType, stateTimeStamp) => {
     let articleVersion = await ArticleVersion.findOne({
       articleHash
     });
@@ -216,11 +216,11 @@ export default {
     if (review) {
       review.reviewType = reviewType;
       review.reviewState = ReviewState.SIGNED_UP_FOR_REVIEWING;
-      review.stateTimestamp = new Date();
+      review.stateTimestamp = stateTimeStamp;
     } else {
       review = new Review({
         reviewState: ReviewState.SIGNED_UP_FOR_REVIEWING,
-        stateTimestamp: new Date(),
+        stateTimestamp: stateTimeStamp,
         reviewerAddress,
         articleVersion: articleVersion._id,
         reviewType
@@ -471,5 +471,20 @@ export default {
     review.stateTimestamp = stateTimestamp;
     await review.save();
     return 'Decline of review ' + review._id;
+  },
+
+  resignReview: async (_reviewerAddress, _articleVersionId) => {
+    let review = await  Review.findOne({
+      reviewerAddress: _reviewerAddress,
+      articleVersion: _articleVersionId
+    });
+
+
+    review.reviewState = ReviewState.NOT_EXISTING;
+    review.stateTimestamp = 0;
+    review.reviewer = '0x0';
+    //review.isEditorApprovedReview = false;
+    await review.save();
+    return 'Resigning of the review ' + review._id;
   }
 };

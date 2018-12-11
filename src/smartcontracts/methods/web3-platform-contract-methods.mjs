@@ -73,6 +73,10 @@ export const addEditorApprovedReview = (
   );
 };
 
+export const resignFromReviewing = (contract, _articleHash, _reviewerAddress) => {
+  return contract.methods.resignFromReviewing(_articleHash, _reviewerAddress);
+};
+
 export const addCommunityReview = (
   contract,
   _articleHash,

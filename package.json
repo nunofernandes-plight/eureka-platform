@@ -82,7 +82,7 @@
     "test-sc": "ava --serial test/integration/smartcontracts",
     "test-ci": "if [ \"${CIRCLE_BRANCH}\" = \"dev\" ]; then ava --serial ./test/unit/NormalTests.js; elif [ \"${CIRCLE_BRANCH}\" = \"master\" ]; then ava --serial ./test/unit/NormalTests.js; else ava --serial;fi",
     "test-db": "cross-env BC_NETWORK=ganache NODE_ENV=development ava --serial test/db/db-article-version-service-test.js",
-    "test-int": "cross-env BC_NETWORK=ganache ava --serial test/integration/decline-article-version-test.js",
+    "test-int": "cross-env BC_NETWORK=ganache ava --serial test/integration/timebased-contract-test.js",
     "lint": "eslint **/*.mjs --ignore-path .gitignore",
     "prettier": "prettier --write --single-quote --no-bracket-spacing --no-jsx-bracket-same-line --no-use-tabs **/*.mjs",
     "eject": "react-scripts eject",
@@ -96,6 +96,8 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-stage-0": "^6.24.1",
     "cross-env": "^5.2.0",
     "eslint": "^5.0.1",
     "eslint-plugin-prettier": "^2.6.1",
@@ -104,7 +106,8 @@
   },
   "ava": {
     "require": [
-      "babel-register"
+      "babel-register",
+      "babel-polyfill"
     ],
     "babel": "inherit"
   },

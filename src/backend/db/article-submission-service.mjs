@@ -219,12 +219,13 @@ export default {
    * @param _editor
    * @returns {Promise<void>}
    */
-  updateEditorToSubmission: async (_submissionId, _editor) => {
+  updateEditorToSubmission: async (_submissionId, _editor, _stateTimestamp) => {
     ArticleSubmission.findOneAndUpdate(
       {scSubmissionID: _submissionId},
       {
         editor: _editor,
-        articleSubmissionState: ArticleSubmissionState.EDITOR_ASSIGNED
+        articleSubmissionState: ArticleSubmissionState.EDITOR_ASSIGNED,
+        stateTimestamp: _stateTimestamp
       },
       (err, submission) => {
         if (err) throw err;

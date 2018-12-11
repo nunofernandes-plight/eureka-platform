@@ -52,7 +52,7 @@ export default {
             total: totalDrafts,
             icon: 'draft',
             content: drafts ? drafts[0] : null,
-            path: drafts ? `/app/documents/write/${drafts[0]._id}` : null
+            path: drafts && drafts.length > 0 ? `/app/documents/write/${drafts[0]._id}` : ''
           },
           {
             title: 'ArticleSubmissions',
@@ -61,7 +61,7 @@ export default {
             total: totalSubmitted,
             icon: 'submitted',
             content: submitted ? submitted[0] : null,
-            path: submitted ? `/app/preview/${submitted[0]._id}` : null
+            path: submitted && submitted.length > 0 ? `/app/preview/${submitted[0]._id}` : ''
           }
         ]
       },
@@ -75,7 +75,7 @@ export default {
             start: 'Submit your first review now by becoming a Reviewer!',
             total: totalReviews,
             icon: 'editorReviewsCheck',
-            content: myReviews ? myReviews[0] : null,
+            content: myReviews && myReviews.length > 0 ? myReviews[0] : null,
             path: '/app/reviews/me'
           },
           {
@@ -85,7 +85,7 @@ export default {
               'You do not have any pending invitations from a handling Editor.',
             total: totalInvitations,
             icon: 'editorInvite',
-            content: invitations ? invitations[0] : null,
+            content: invitations && invitations.length > 0 ? invitations[0] : null,
             path: '/app/reviews/invited'
           },
           {
