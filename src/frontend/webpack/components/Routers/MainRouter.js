@@ -22,6 +22,7 @@ import withWeb3 from '../../contexts/WithWeb3.js';
 import {connect} from 'react-redux';
 import {fetchUserData} from '../../reducers/user.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
+import EurekaLogo from '../../views/icons/EurekaLogo.js';
 
 const PaddingLeft = styled.div`
   padding-left: ${props =>
@@ -30,6 +31,13 @@ const PaddingLeft = styled.div`
     padding-left: ${PANEL_LEFT_MOBILE_WIDTH}px; 
   `};
   transition: 0.5s all;
+`;
+const Center = styled.div`
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  height: 75vh;
+  margin-top: 8px;
 `;
 
 class MainRouter extends Component {
@@ -91,7 +99,9 @@ class MainRouter extends Component {
     return (
       <div>
         {this.areEssentialsLoading() ? (
-          <GridSpinner />
+          <Center>
+            <EurekaLogo width={75} />
+          </Center>
         ) : (
           <Fragment>
             <Header provider={this.props.context.provider} />
