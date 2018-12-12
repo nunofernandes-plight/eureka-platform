@@ -1,0 +1,14 @@
+.slick-vertical .slick-slide {
+  height: 180px;
+}
+.slick-arrow {
+  background-color: grey;
+  /* color: black; */
+}
+
+.slick-dots li button {
+  margin: 0;
+  transition: none;
+  animation: none;
+  box-shadow: none;
+}

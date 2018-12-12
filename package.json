@@ -49,6 +49,7 @@
     "react-lottie": "^1.2.3",
     "react-portal-tooltip": "^2.4.0",
     "react-redux": "^5.0.7",
+    "react-responsive-carousel": "^3.1.43",
     "react-router": "latest",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",

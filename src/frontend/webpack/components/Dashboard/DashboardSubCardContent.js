@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {__GRAY_600, __GRAY_700} from '../../../helpers/colors.js';
 import {renderField} from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
 import moment from 'moment';
+import Slick from '../../design-components/Slick/Slick.js';
 
 const Container = styled.div`
   flex: 1;
@@ -25,6 +26,11 @@ const Title = styled.div`
   flex: 1;
 `;
 
+const SlickContainer = styled.div`
+  margin-top: 10px;
+  width: 65%;
+`;
+
 const renderContent = (content, title, path, categoryTitle) => {
   if (title === 'Articles') {
     return (
@@ -35,7 +41,12 @@ const renderContent = (content, title, path, categoryTitle) => {
   }
   if (title === 'Reviews') {
     if (categoryTitle === 'ArticlesToReview') {
-      return 'TODO: create carousel for this';
+      console.log(content);
+      return (
+        <SlickContainer>
+          <Slick showThumbs={false} infiniteLoop={true} autoPlay={true} />
+        </SlickContainer>
+      );
     }
   }
   return '...';
@@ -76,7 +87,7 @@ const DashboardSubCardContent = ({
 }) => {
   return (
     <Container>
-      {content === undefined ? (
+      {!content ? (
         <MyLink to={path}>
           <StartText>{start}</StartText>
         </MyLink>
