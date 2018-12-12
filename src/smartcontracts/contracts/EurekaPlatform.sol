@@ -759,8 +759,7 @@ contract EurekaPlatform {
                             linkedArticle.authors[a],
                             // reward for article is splitted relatively to the contribution
                             rewardForArticle.mul(linkedArticle.authorContributionRatios[a]).div(10000)
-                        ),
-                        "the transfer was not succesful"
+                        )
                     );
                 }
             }
