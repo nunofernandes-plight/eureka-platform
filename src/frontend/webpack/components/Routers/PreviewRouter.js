@@ -175,7 +175,7 @@ class PreviewRouter extends Component {
               <PreviewMetaData article={this.state.article} />
               <ArticlePreview>
                 <Title>{renderField(this.state.document, 'title')}</Title>
-                <PreviewStatus status={this.state.article.articleVersionState} />
+                {/*<PreviewStatus status={this.state.article.articleVersionState} />*/}
                 <ArticlePreviewNavBar>
                   <MyLabels>
                     <MyLink
