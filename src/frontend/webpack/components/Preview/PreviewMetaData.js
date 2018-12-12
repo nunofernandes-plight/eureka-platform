@@ -37,7 +37,7 @@ const Metadata = styled.div`
 
 const CustomPreviewStatus = styled(PreviewStatus)`
   margin-top: 20px;
-  padding-right: 10px;
+  padding-right: 25px;
 `;
 
 const Field = ({doc, field, ...otherProps}) => {
@@ -63,14 +63,14 @@ const Field = ({doc, field, ...otherProps}) => {
   );
 };
 
-const PreviewMetaData = ({document, ...otherProps}) => {
+const PreviewMetaData = ({article, ...otherProps}) => {
   const fields = Document.metaDataFields();
   return (
     <Container>
       {fields.map((field, i) => {
-        return <Field key={i} doc={document} field={field} />;
+        return <Field key={i} doc={article.document} field={field} />;
       })}
-      <CustomPreviewStatus status={document.state} />
+      <CustomPreviewStatus status={article.articleVersionState} />
     </Container>
   );
 };

@@ -100,6 +100,7 @@ class PreviewRouter extends Component {
   constructor() {
     super();
     this.state = {
+      article: null,
       document: null,
       from: null
     };
@@ -116,7 +117,8 @@ class PreviewRouter extends Component {
           let deserialized = deserializeDocument(document);
           this.setState({
             _id: response.data._id,
-            document: deserialized
+            document: deserialized,
+            article: response.data
           });
         } else {
           this.setState({
@@ -170,10 +172,10 @@ class PreviewRouter extends Component {
             <GridSpinner />
           ) : (
             <MyPreview>
-              <PreviewMetaData document={this.state.document} />
+              <PreviewMetaData article={this.state.article} />
               <ArticlePreview>
                 <Title>{renderField(this.state.document, 'title')}</Title>
-                <PreviewStatus status={this.state.document.state} />
+                <PreviewStatus status={this.state.article.articleVersionState} />
                 <ArticlePreviewNavBar>
                   <MyLabels>
                     <MyLink
