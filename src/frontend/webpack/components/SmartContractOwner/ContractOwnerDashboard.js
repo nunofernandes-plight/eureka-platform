@@ -6,11 +6,13 @@ import {InputField} from '../../design-components/Inputs.js';
 import Icon from '../../views/icons/Icon.js';
 import {Methods} from './ContractOwnerMethods.js';
 import {__GRAY_200, __GRAY_700, __THIRD} from '../../../helpers/colors.js';
-import {signUpEditor, signUpExpertReviewers} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
+import {
+  signUpEditor,
+  signUpExpertReviewers
+} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../design-components/Notification.css';
-import {toast, ToastContainer} from 'react-toastify';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import withWeb3 from '../../contexts/WithWeb3.js';
 import {TITLE_GENERAL_ERROR} from '../../constants/ModalErrors.js';
@@ -129,12 +131,7 @@ class ContractOwnerDashboard extends React.Component {
         return receipt;
       })
       .on('confirmationNr', res => {
-        toast('Your requested has been successfully processed', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 20000,
-          className: '__ALERT_SUCCESS',
-          progressClassName: '__BAR'
-        });
+
       })
       .catch(err => {
         console.error('submitArticle error: ', err);
@@ -147,9 +144,11 @@ class ContractOwnerDashboard extends React.Component {
   }
 
   async signUpExpertReviewers() {
-    const reviewerAddressesArray = this.state.reviewerAddresses.split(",").map(function(item) {
-      return item.trim();
-    });
+    const reviewerAddressesArray = this.state.reviewerAddresses
+      .split(',')
+      .map(function(item) {
+        return item.trim();
+      });
     let gasAmount;
     // gas estimation on ganache doesn't work properly
     if (!isGanache(this.props.context.web3))
@@ -176,12 +175,6 @@ class ContractOwnerDashboard extends React.Component {
         return receipt;
       })
       .on('confirmationNr', res => {
-        toast('Your requested has been successfully processed', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 20000,
-          className: '__ALERT_SUCCESS',
-          progressClassName: '__BAR'
-        });
       })
       .catch(err => {
         console.error('error: ', err);
@@ -201,14 +194,13 @@ class ContractOwnerDashboard extends React.Component {
     if (!this.state[stateKey]) {
       return null;
     }
-    if (stateKey === "editorAddress" || stateKey === "mintingAddress") {
+    if (stateKey === 'editorAddress' || stateKey === 'mintingAddress') {
       if (this.props.context.web3.utils.isAddress(this.state[stateKey])) {
         return 'valid';
       } else {
         return 'error';
       }
-    }
-    else return null;
+    } else return null;
   }
 
   renderModals() {
@@ -246,7 +238,6 @@ class ContractOwnerDashboard extends React.Component {
     return (
       <Container>
         {' '}
-        <ToastContainer />
         {this.renderModals()}
         <Card style={{padding: '50px'}} title={'Contract Owner Dashboard'}>
           {Methods.map((item, index) => {

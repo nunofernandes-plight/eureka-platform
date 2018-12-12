@@ -9,6 +9,7 @@ import {updateNetwork} from './webpack/reducers/network.js';
 import {updateMetaMask} from './webpack/reducers/metamask.js';
 import {updateAccounts} from './webpack/reducers/account.js';
 
+
 class App extends Component {
 
   componentDidMount() {

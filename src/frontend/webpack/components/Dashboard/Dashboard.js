@@ -2,19 +2,9 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {getDomain} from '../../../../helpers/getDomain.mjs';
 import Modal from '../../design-components/Modal.js';
-import DashboardCard, {
-  DashboardCardContainer,
-  DashboardCardTitle,
-  getDashboardColor
-} from './DashboardCard.js';
+import DashboardCard from './DashboardCard.js';
 import EurekaRotateSpinner from '../../views/spinners/EurekaRotateSpinner.js';
 import {EXTRA_LARGE_DEVICES, LARGE_DEVICES} from '../../../helpers/mobile.js';
-import {connect} from 'react-redux';
-import Roles from '../../../../backend/schema/roles-enum.mjs';
-import {SubCardContainer} from './DashboardSubCard.js';
-import DashboardCardTopIcon from './DashboardCardTopIcon.js';
-import {becomeAReviewer} from '../../reducers/reviewer.js';
-import {fetchUserData} from '../../reducers/user.js';
 
 const Container = styled.div`
   display: flex;
@@ -30,50 +20,6 @@ const Cards = styled.div`
    flex-direction: column;
   `};
 `;
-
-const NotAReviewer = styled.div`
-  &:hover {
-    transform: translateY(-2px);
-  }
-  transition: 0.3s all ease-in-out;
-  width: 220px;
-  text-align: center;
-  align-self: center;
-  padding: 10px 12px;
-  border-radius: 6px;
-  background: ${props => props.color};
-  color: white;
-  cursor: pointer;
-`;
-
-const Guard = ({stat, title, roles, ...otherProps}) => {
-  // User is not a reviewer
-  if (
-    title === 'Reviews' &&
-    !(roles.includes(Roles.EXPERT_REVIEWER) || roles.includes(Roles.REVIEWER))
-  ) {
-    return (
-      <DashboardCardContainer height={'28%'}>
-        <DashboardCardTopIcon
-          icon={stat.icon}
-          color={getDashboardColor(title)}
-        />
-        <DashboardCardTitle>{stat.title}</DashboardCardTitle>
-        <NotAReviewer
-          color={getDashboardColor(title)}
-          onClick={async () => {
-            await otherProps.becomeAReviewer();
-            await otherProps.fetchUserData();
-          }}
-        >
-          Become a EUREKA Reviewer!{' '}
-          {otherProps.becomingReviewerLoading ? '...' : null}
-        </NotAReviewer>
-      </DashboardCardContainer>
-    );
-  }
-  return otherProps.children;
-};
 
 class Dashboard extends Component {
   constructor() {
@@ -131,22 +77,13 @@ class Dashboard extends Component {
     return (
       <Container>
         {this.renderModal()}
+
         {this.state.loading ? (
           <EurekaRotateSpinner />
         ) : (
           <Cards>
             {this.state.analytics.map((stat, i) => {
-              return (
-                <Guard
-                  stat={stat}
-                  key={i}
-                  title={stat.title}
-                  roles={this.props.user.roles}
-                  {...this.props}
-                >
-                  <DashboardCard key={i} stat={stat} />
-                </Guard>
-              );
+              return <DashboardCard key={i} stat={stat} />;
             })}
           </Cards>
         )}
@@ -155,19 +92,4 @@ class Dashboard extends Component {
   }
 }
 
-export default connect(
-  state => ({
-    user: state.userData.data,
-    becomingReviewerLoading: state.reviewerData.loading
-  }),
-  dispatch => () => {
-    return {
-      fetchUserData: () => {
-        dispatch(fetchUserData());
-      },
-      becomeAReviewer: () => {
-        dispatch(becomeAReviewer());
-      }
-    };
-  }
-)(Dashboard);
+export default Dashboard;
