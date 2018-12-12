@@ -1,16 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Link} from 'react-router-dom';
-import {
-  __GRAY_600
-} from '../../../helpers/colors.js';
+import {__GRAY_600, __GRAY_700} from '../../../helpers/colors.js';
 import {renderField} from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
 import moment from 'moment';
+
 const Container = styled.div`
   flex: 1;
+  word-break: break-word;
 `;
 
-const MyLink = styled(Link)`
+const MyLink = styled.div`
   transition: 0.3s all ease-in-out;
   cursor: pointer;
   font-size: 13px;
@@ -19,7 +18,6 @@ const MyLink = styled(Link)`
 
 const Title = styled.div`
   font-weight: bold;
-  font-style: italic;
   font-size: 12px;
   margin-top: 0;
   margin-bottom: 2px;
@@ -27,7 +25,7 @@ const Title = styled.div`
   flex: 1;
 `;
 
-const renderContent = (content, title, path) => {
+const renderContent = (content, title, path, categoryTitle) => {
   if (title === 'Articles') {
     return (
       <Content>
@@ -35,17 +33,17 @@ const renderContent = (content, title, path) => {
       </Content>
     );
   }
-  return 'ciao';
-
-  /* if (title === 'Articles') {
-    return <MyLink to={'tdb'}>{renderedTitle}</MyLink>;
+  if (title === 'Reviews') {
+    if (categoryTitle === 'ArticlesToReview') {
+      return 'TODO: create carousel for this';
+    }
   }
-  return <MyLink to={'asf'}>ciao</MyLink>;*/
+  return '...';
 };
 
 const renderTime = (title, content) => {
   if (title === 'Articles') {
-    return <Time>({moment(content.updatedAt).calendar()})</Time>;
+    return <Time>(Last modified, {moment(content.updatedAt).calendar()})</Time>;
   }
 };
 
@@ -62,15 +60,32 @@ const Time = styled.div`
   margin-left: auto;
 `;
 
-const DashboardSubCardContent = ({content, start, title, path}) => {
+const StartText = styled.div`
+  color: ${__GRAY_700};
+  font-style: italic;
+  font-weight: lighter;
+`;
+
+const DashboardSubCardContent = ({
+  content,
+  start,
+  title,
+  subTitle,
+  path,
+  categoryTitle
+}) => {
   return (
     <Container>
       {content === undefined ? (
-        <MyLink to={'tdb'}>{start}</MyLink>
+        <MyLink to={path}>
+          <StartText>{start}</StartText>
+        </MyLink>
       ) : (
         <div style={{flex: 1}}>
-          <Title>Last Modified {renderTime(title, content)}</Title>
-          {renderContent(content, title, path)}
+          <Title>
+            {subTitle} {renderTime(title, content)}
+          </Title>
+          {renderContent(content, title, path, categoryTitle)}
         </div>
       )}
     </Container>

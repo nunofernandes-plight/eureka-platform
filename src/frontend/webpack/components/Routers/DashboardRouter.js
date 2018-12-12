@@ -8,7 +8,6 @@ import TopContainer from '../../views/TopContainer.js';
 import {BottomContainer} from '../../views/BottomContainer.js';
 import ArticlesRouter from './ArticlesRouter.js';
 import AddressBook from '../AddressBook/AddressBook.js';
-import ContractOwnerDashboard from '../SmartContractOwner/ContractOwnerDashboard.js';
 import {ContractOwnerGuard} from '../Guards/Guards.js';
 import EditorRouter from './EditorRouter.js';
 import Reviewers from '../Reviewers.js';

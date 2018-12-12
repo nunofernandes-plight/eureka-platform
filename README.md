@@ -133,24 +133,6 @@ npm run test-ci
 ```
 
 #### Testing strategy
-
-**Local testing:**  
-    1. DB must be running on port 27017 (see Create & start MongoDB locally).   
-    2. Ganache must be running on port 7545.  
-    3. run 'yarn run test'.
-
-**Dev testing:**  
-    only application-intern unit-tests.
-    
-**Test testing:**  
-    1. DB on: https://app.compose.io/science-matters-ag/deployments/eureka-platform-mongodb/mongodb/databases/test-eureka-platform/collections  
-    2. SC is deployed to //TODO  
-    3. Runs all types of tests
-    
-**Master testing:**  
-    1. DB on:  https://app.compose.io/science-matters-ag/deployments/eureka-platform-mongodb/mongodb/databases/eureka-platform/collections  
-    2. SC is deployed to ethereum main-net
-    3. runs only application-intern unit-tests
      
 | Branch\ Test-type       | Unit test        | DB test  | SC Integration test |
 | ----------------------- |:----------------:| --------:|--------------------:|

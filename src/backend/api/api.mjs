@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import session from 'express-session';
@@ -11,9 +12,11 @@ import router from '../routes/index.mjs';
 import timebasedContractService from '../web3/timebased-contract-service.mjs';
 import uploadRouter from '../routes/file-upload.routes.mjs';
 import {
+  platformContract,
   setupWeb3Interface
 } from '../web3/web3InterfaceSetup.mjs';
 import {configEmailProvider, sendEmail} from '../email/index.mjs';
+import {getReviewersInvitationTemplate} from '../email/templates/EmailTemplates.mjs';
 
 if (!isProduction) {
   dotenv.config();
@@ -21,14 +24,17 @@ if (!isProduction) {
 
 let app;
 let server;
-let platformContract;
-let tokenContract;
-
-const CONTRACT_OWNER_ADDRESS = '0x9c51e96A3f5c5E3BeD25242CEe180aC8eAB03E23';
+const __dirname = path.resolve();
 
 export default {
   setupApp: async () => {
     app = express();
+    // Serve static files from the React app
+    if (isProduction()) {
+      app.use(express.static(path.join(__dirname, '/build')));
+    }
+
+    // app.use(express.static(path.join(__dirname, '/build')));
 
     /** Parser **/
     //Parses the text as URL encoded data
@@ -61,7 +67,7 @@ export default {
     app.use(passport.session());
 
     /** Web3 Interface: SC Events Listener, Transaction Listener**/
-    [platformContract, tokenContract] = await setupWeb3Interface();
+    if (process.env.NODE_ENV !== 'test') await setupWeb3Interface();
 
     /**
      * Config and set Email Provider SendGrid (API key as env variable)
@@ -69,7 +75,8 @@ export default {
     configEmailProvider();
 
     /** Timebased contract service**/
-    timebasedContractService.start(platformContract, CONTRACT_OWNER_ADDRESS);
+    // TODO activate it again for checking
+    //timebasedContractService.start();
 
     //set global variable isAuthenticated -> call ir everywhere dynamically
     app.use(function(req, res, next) {
@@ -81,6 +88,14 @@ export default {
     app.use(bodyParser.json());
     app.use('/api', router);
     app.get('/fileupload', uploadRouter);
+
+    // The "catchall" handler: for any request that doesn't
+    // match one above, send back React's index.html file.
+    if (isProduction()) {
+      app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname + '/build/index.html'));
+      });
+    }
   },
 
   listenTo: port => {

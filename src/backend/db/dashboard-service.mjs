@@ -47,6 +47,7 @@ export default {
         categories: [
           {
             title: 'Drafts',
+            subTitle: 'Continue writing..',
             text: 'drafts have been created by you.',
             start: 'Create your first draft now!',
             total: totalDrafts,
@@ -56,6 +57,7 @@ export default {
           },
           {
             title: 'ArticleSubmissions',
+            subTitle: 'Last submitted Article',
             text: 'drafts have been submitted by you.',
             start: 'Submit your first article now!',
             total: totalSubmitted,
@@ -71,8 +73,9 @@ export default {
         categories: [
           {
             title: 'ReviewSubmissions',
+            subTitle: 'Last submitted Review',
             text: 'reviews have been submitted by you.',
-            start: 'Submit your first review now by becoming a Reviewer!',
+            start: 'Submit your first review now!',
             total: totalReviews,
             icon: 'editorReviewsCheck',
             content: myReviews && myReviews.length > 0 ? myReviews[0] : null,
@@ -80,6 +83,7 @@ export default {
           },
           {
             title: 'Invitations',
+            subTitle: 'Last Invitation to review',
             text: 'review invitations are pending for you.',
             start:
               'You do not have any pending invitations from a handling Editor.',
@@ -90,6 +94,7 @@ export default {
           },
           {
             title: 'ArticlesToReview',
+            subTitle: 'Open Articles to review',
             text: 'articles are available for review for you.',
             total: totalOpenArticles,
             icon: 'openForReview',

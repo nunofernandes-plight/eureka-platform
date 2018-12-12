@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Link, Redirect} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {
   __ALERT_ERROR,
   __GRAY_600,

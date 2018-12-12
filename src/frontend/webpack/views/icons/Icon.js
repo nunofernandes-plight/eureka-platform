@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Card} from '../Card.js';
 
 const MyIcon = styled.svg`
   &:hover {
