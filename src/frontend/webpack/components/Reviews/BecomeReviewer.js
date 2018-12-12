@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Card} from '../../views/Card.js';
+import {getDomain} from '../../../../helpers/getDomain.mjs';
 import connect from 'react-redux/es/connect/connect.js';
 import {fetchUserData} from '../../reducers/user.js';
 import {becomeAReviewer} from '../../reducers/reviewer.js';

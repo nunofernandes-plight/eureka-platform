@@ -4,6 +4,7 @@ import {PANEL_LEFT_NORMAL_WIDTH} from '../../../helpers/layout.js';
 import {__FIFTH, __GRAY_300, __GRAY_400} from '../../../helpers/colors.js';
 import Transactions from './Transactions.js';
 import connect from 'react-redux/es/connect/connect.js';
+import {fetchTransactions} from '../../reducers/transactions.js';
 import Icon from '../../views/icons/Icon.js';
 
 const Parent = styled.div`

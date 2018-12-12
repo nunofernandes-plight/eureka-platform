@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import {getArticlesToSignOff} from './EditorMethods.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Article from '../../views/Article.js';
 import {Card} from '../../views/Card.js';

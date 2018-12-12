@@ -1,5 +1,5 @@
 import {getDomain} from '../../../helpers/getDomain.mjs';
-import {ONLINE_DRAFTS} from '../constants/ModalErrors.js';
+import {ONLINE_DRAFTS, TITLE_GENERAL_ERROR} from '../constants/ModalErrors.js';
 import {
   ERROR_FETCHING_ONLINE_DRAFTS,
   RECEIVED_ONLINE_DRAFTS,
