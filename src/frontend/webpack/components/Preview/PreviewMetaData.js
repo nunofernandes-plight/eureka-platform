@@ -6,6 +6,7 @@ import {
   makeFieldReadable,
   renderField
 } from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
+import PreviewStatus from '../../views/PreviewStatus.js';
 
 const Container = styled.div`
   display: flex;
@@ -33,6 +34,12 @@ const Content = styled.div`
 const Metadata = styled.div`
   font-size: 10.5px;
 `;
+
+const CustomPreviewStatus = styled(PreviewStatus)`
+  margin-top: 20px;
+  padding-right: 10px;
+`;
+
 const Field = ({doc, field, ...otherProps}) => {
   let content = renderField(doc, field);
   if (!content) content = '-';
@@ -63,6 +70,7 @@ const PreviewMetaData = ({document, ...otherProps}) => {
       {fields.map((field, i) => {
         return <Field key={i} doc={document} field={field} />;
       })}
+      <CustomPreviewStatus status={document.state} />
     </Container>
   );
 };
