@@ -9,19 +9,22 @@ import {REVIEWS_ERROR, TITLE_GENERAL_ERROR} from '../constants/ModalErrors.js';
 const initialState = {
   articlesOpenToReviewLoading: null,
   articlesOpenToReview: true,
-  articlesOpenToReviewError: null
+  articlesOpenToReviewError: null,
+  nrOfPages: null,
+  limit: 10
 };
 
-export const fetchArticlesOpenToReview = () => {
+export const fetchArticlesOpenToReview = (page) => {
   return async dispatch => {
     dispatch({type: START_FETCH_ARTICLES_OPEN_TO_REVIEW});
-    getArticlesOpenToReview()
+    getArticlesOpenToReview(page, initialState.limit)
       .then(response => response.json())
       .then(response => {
         if (response.success) {
           dispatch({
             type: RECEIVED_ARTICLES_OPEN_TO_REVIEW,
-            articles: response.data
+            articles: response.data.array,
+            nrOfPages: response.data.nrOfPages
           });
         } else {
           dispatch({
@@ -49,7 +52,8 @@ export const reviewsData = (state = initialState, action) => {
     case RECEIVED_ARTICLES_OPEN_TO_REVIEW:
       return {
         articlesOpenToReview: action.articles,
-        articlesOpenToReviewLoading: false
+        articlesOpenToReviewLoading: false,
+        nrOfPages: action.nrOfPages
       };
     case ERROR_ARTICLES_OPEN_TO_REVIEW:
       return {

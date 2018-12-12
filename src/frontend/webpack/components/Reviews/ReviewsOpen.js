@@ -12,6 +12,7 @@ import {__THIRD} from '../../../helpers/colors.js';
 import withWeb3 from '../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
 import {fetchArticlesOpenToReview} from '../../reducers/reviews.js';
+import Pagination from '../Editor/Pagination.js';
 
 const Container = styled.div`
   display: flex;
@@ -40,12 +41,18 @@ class ReviewsOpen extends React.Component {
       article: null,
       loading: false,
       articleOnHover: null,
-      errorMessage: false
+      errorMessage: false,
+      page: null
     };
   }
 
   async componentDidMount() {
-    this.props.fetchArticlesOpenToReview();
+    this.getArticles(1);
+  }
+
+  getArticles(page) {
+    this.setState({page});
+    this.props.fetchArticlesOpenToReview(page);
   }
 
   renderModals() {
@@ -73,6 +80,15 @@ class ReviewsOpen extends React.Component {
           <GridSpinner />
         ) : (
           <Card title={'Articles open to review'}>
+
+            <Pagination
+              currentPage={this.state.page}
+              totalPages={this.props.nrOfPages}
+              goToPage={page => {
+                this.getArticles(page);
+              }}
+            />
+
             {this.props.articles ? (
               this.props.articles.length > 0 ? (
                 this.props.articles.map(article => {
@@ -131,11 +147,12 @@ export default withWeb3(
       state => ({
         loading: state.reviewsData.articlesOpenToReviewLoading,
         errorMessage: state.reviewsData.articlesOpenToReviewError,
-        articles: state.reviewsData.articlesOpenToReview
+        articles: state.reviewsData.articlesOpenToReview,
+        nrOfPages: state.reviewsData.nrOfPages
       }),
       dispatch => ({
-        fetchArticlesOpenToReview: () => {
-          dispatch(fetchArticlesOpenToReview());
+        fetchArticlesOpenToReview: page => {
+          dispatch(fetchArticlesOpenToReview(page));
         }
       })
     )(ReviewsOpen)

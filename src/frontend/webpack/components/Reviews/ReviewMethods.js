@@ -10,8 +10,12 @@ export const getArticlesInvitedForReviewing = () => {
   });
 };
 
-export const getArticlesOpenToReview = () => {
-  return fetch(`${getDomain()}/api/articles/reviewable/community`, {
+export const getArticlesOpenToReview = (page, limit) => {
+  return fetch(`${getDomain()}/api/articles/reviewable/community?page=` +
+    page +
+    `&limit=` +
+    limit,
+    {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
