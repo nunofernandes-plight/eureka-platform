@@ -148,7 +148,7 @@ class ArticlesSelection extends React.Component {
       >
         <SmallArticle
           article={article}
-          width={25} height={25} right={13} fontSize={'10px'}
+          width={25} height={25} right={13} fontSize={12}
           noLinks
         />
       </Article>
@@ -184,7 +184,7 @@ class ArticlesSelection extends React.Component {
               ? this.props.listedArticles.map(a => {
                 return (
                   <Element key={a._id}>
-                    <SmallArticle article={a} width={25} height={25} right={13} fontSize={'10px'}/>
+                    <SmallArticle article={a} width={25} height={25} right={13} fontSize={12}/>
                     {this.renderDeleteButton(a)}
                   </Element>
                 );
