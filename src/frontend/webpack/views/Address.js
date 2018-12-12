@@ -17,25 +17,24 @@ const Address = styled.span`
   word-break: break-all;
 `;
 
-export const EthereumAddress = ({ethereumAddress, listLength, index, noLink, ...otherProps}) => {
+export const EthereumAddress = ({
+  ethereumAddress,
+  listLength,
+  index,
+  noLink,
+  ...otherProps
+}) => {
+  console.log(otherProps);
   let content = otherProps.content;
   if (!content) content = ethereumAddress;
-  if (listLength && index === listLength - 2)
-    content = content + ' and ';
-  else if (listLength && index !== listLength - 1)
-    content = content + ', ';
+  if (listLength && index === listLength - 2) content = content + ' and ';
+  else if (listLength && index !== listLength - 1) content = content + ', ';
 
-  if (noLink)
-    return (
-      <Address {...otherProps}>
-        {content}
-      </Address>
-    );
+  if (noLink) return <Address {...otherProps}>{content}</Address>;
   else
     return (
       <AddressLink to={`/app/users/${ethereumAddress}`} {...otherProps}>
         {content}
       </AddressLink>
     );
-
 };

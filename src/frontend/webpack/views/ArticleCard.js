@@ -40,9 +40,6 @@ const FigureSection = styled.div`
 
 const Figure = styled.img`
   margin-bottom: auto;
-  ${LARGE_DEVICES`
-  width:100%; 
-  `};
 `;
 
 const Title = styled.h2`
@@ -197,6 +194,7 @@ const ArticleCard = ({article, ...otherProps}) => {
               right={10}
               width={35}
               height={35}
+              fontSize={13}
               padding={'12px'}
             />
           </Authors>
