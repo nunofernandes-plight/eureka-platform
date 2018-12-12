@@ -1,11 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 import Avatar from './Avatar.js';
-import {__ALERT_DANGER, __FIFTH, __GRAY_100, __GRAY_600} from '../../helpers/colors.js';
+import {
+  __ALERT_DANGER,
+  __FIFTH,
+  __GRAY_100,
+  __GRAY_600
+} from '../../helpers/colors.js';
 import {EthereumAddress} from './Address.js';
 import {Email} from './Email.js';
 import {ArticleTitle} from './ArticleTitle.js';
 import Icon from './icons/Icon.js';
+import AuthorLookup from '../components/AuthorLookup.js';
 
 const ArticleInfo = styled.div`
   display: flex;
@@ -23,14 +29,23 @@ const ArticleContainer = styled.div`
   width: 100%;
 `;
 
-const AuthorsList = styled.div``;
+const AuthorsList = styled.div`
+  display: flex;
+`;
 
 const SmallArticle = props => {
   const article = props.article;
   const fontSize = props.fontSize ? props.fontSize + 'px' : 'inherit';
   return (
     <ArticleContainer padding={props.padding} fontSize={fontSize}>
-      <Icon icon={'file'} width={28} height={28} color={__GRAY_600} noMove noPointer/>
+      <Icon
+        icon={'file'}
+        width={28}
+        height={28}
+        color={__GRAY_600}
+        noMove
+        noPointer
+      />
       <ArticleInfo>
         {!article.title.blocks[0].text ? null : (
           <ArticleTitle
@@ -41,20 +56,15 @@ const SmallArticle = props => {
         )}
         {!article.authors ? null : (
           <AuthorsList>
-            {'by '}
-            {article.authors.map((a, index) => {
-              return (
-                <EthereumAddress
-                  ethereumAddress={a}
-                  fontSize={fontSize}
-                  noDecoration
-                  fontWeight={'normal'}
-                  index={index}
-                  listLength={article.authors.length}
-                  noLink={props.noLinks}
-                />
-              );
-            })}
+            <AuthorLookup
+              addresses={article.authors}
+              right={5}
+              width={18}
+              height={18}
+              noAddress
+              fontSize={10}
+              padding={'4px 0px'}
+            />
           </AuthorsList>
         )}
       </ArticleInfo>
