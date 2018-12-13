@@ -29,7 +29,7 @@ const Button = styled.div`
   cursor: pointer;
 `;
 
-const Comment = Button.extend`
+const Comment = styled(Button)`
   margin-left: auto;
   color: white;
   background: ${__ALERT_SUCCESS};
@@ -38,7 +38,7 @@ const Comment = Button.extend`
   pointer-events: ${props => (props.text ? 'auto' : 'none')};
 `;
 
-const Cancel = Button.extend`
+const Cancel = styled(Button)`
   margin-right: auto;
   color: ${__GRAY_600};
   background: ${__GRAY_200};

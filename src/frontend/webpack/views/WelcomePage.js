@@ -21,7 +21,7 @@ const Container = styled.div`
   position: relative;
 `;
 
-const Wrapper = Row.extend`
+const Wrapper = styled(Row)`
   justify-content: center;
   align-items: center;
   flex-direction: column;

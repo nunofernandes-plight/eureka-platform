@@ -13,7 +13,7 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const CardContainer = Row.extend`
+const CardContainer = styled(Row)`
   transition: all 0.15s ease;
 `;
 
@@ -52,7 +52,7 @@ const ProfileRow = styled.div`
   margin: 10px 0;
 `;
 
-const EmailContainer = ProfileRow.extend`
+const EmailContainer = styled(ProfileRow)`
   margin-top: 9rem;
 `;
 

@@ -18,7 +18,7 @@ const Parent = styled.div`
   background: white;
   z-index: 100;
 `;
-const Container = Row.extend`
+const Container = styled(Row)`
   transition: all 150ms ease;
   color: ${__THIRD};
   font-size: 18px;
@@ -46,7 +46,7 @@ const Item = styled.div`
   align-self: center;
 `;
 
-const SignUp = Item.extend`
+const SignUp = styled(Item)`
   &:hover {
     border: 1px solid ${__THIRD};
     background: ${__THIRD};

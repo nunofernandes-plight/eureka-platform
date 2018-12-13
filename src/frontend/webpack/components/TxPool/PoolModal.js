@@ -73,12 +73,12 @@ const HeaderTitle = styled.h2`
   font-size: 14px;
   text-transform: uppercase;
   display: flex;
-  margin: 0 0 0 auto;
+  margin: 0 -20px 0 auto;
 `;
 
 const IconContainer = styled.div`
   margin-left: auto;
-  margin-right: 5px;
+  margin-right: 40px;
 `;
 
 const PoolModal = ({show, ...otherProps}) => {

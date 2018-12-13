@@ -41,7 +41,7 @@ export const AlertContainer = styled.div`
   margin-top: 30px;
 `;
 
-export const TitleRow = Row.extend`
+export const TitleRow = styled(Row)`
   flex-direction: column;
 `;
 export const LoginRow = styled.div`
