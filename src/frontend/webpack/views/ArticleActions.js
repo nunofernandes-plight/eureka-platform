@@ -157,16 +157,16 @@ const CommunityReviewerActions = ({article, user}) => {
           return null;
 
         case (REVIEW_STATE.HANDED_IN_DB):
-          return <div>Continue Review</div>;
+          return <div>Continue Community Review</div>;
 
         case (REVIEW_STATE.HANDED_IN_SC):
-          return <div>See Your Review</div>;
+          return <div>See Your Community Review</div>;
 
         case (REVIEW_STATE.DECLINED):
-          return <div>Correct Your Review</div>;
+          return <div>Correct Your Community Review</div>;
 
         case (REVIEW_STATE.ACCEPTED):
-          return <div>Edit Your Review</div>;
+          return <div>Edit Your Community Review</div>;
 
         default:
           return null;
