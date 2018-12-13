@@ -8,7 +8,7 @@ import DashboardSubCardNotificationBell from './DashboardSubCardNotificationBell
 
 const SubCardContainer = styled.div`
   &:hover {
-    transform: translateX(-3px) translateY(-4px);
+    box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15), 0 1px 0 rgba(0, 0, 0, 0.02);
   }
   transition: 0.3s all ease-in-out;
   display: flex;
@@ -18,7 +18,6 @@ const SubCardContainer = styled.div`
   min-width: 95%;
   border-radius: 4px;
   margin: 25px 15px;
-  box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15), 0 1px 0 rgba(0, 0, 0, 0.02);
   padding: 1em;
   border: 1px solid ${__GRAY_200};
   position: relative;
@@ -62,21 +61,21 @@ const DashboardSubCard = ({category, index, color, title}) => {
           total={category.total}
         />
       ) : null}
-      <Link to={category.path} style={{textDecoration: 'none'}}>
-        <Header>
-          <IconContainer color={color}>
-            <Icon icon={category.icon} width={20} height={20} color={'white'} />
-          </IconContainer>
-          <DashboardSubCardContent
-            categoryTitle={category.title}
-            subTitle={category.subTitle}
-            content={category.content}
-            start={category.start}
-            title={title}
-            path={category.path}
-          />
-        </Header>
-      </Link>
+
+      <Header>
+        <IconContainer color={color}>
+          <Icon icon={category.icon} width={20} height={20} color={'white'} />
+        </IconContainer>
+        <DashboardSubCardContent
+          categoryTitle={category.title}
+          subTitle={category.subTitle}
+          content={category.content}
+          start={category.start}
+          title={title}
+          path={category.path}
+        />
+      </Header>
+
       <NumberContainer>
         <Number>
           In total, <strong>{category.total}</strong> {category.text}

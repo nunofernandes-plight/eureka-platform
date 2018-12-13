@@ -24,6 +24,7 @@ export default {
       userAddress
     );
 
+
     let open = [];
     if (openToReview.length > 2) {
       open = [openToReview[0], openToReview[1], openToReview[2]];
@@ -53,7 +54,10 @@ export default {
             total: totalDrafts,
             icon: 'draft',
             content: drafts ? drafts[0] : null,
-            path: drafts && drafts.length > 0 ? `/app/documents/write/${drafts[0]._id}` : ''
+            path:
+              drafts && drafts.length > 0
+                ? `/app/documents/write/${drafts[0]._id}`
+                : ''
           },
           {
             title: 'ArticleSubmissions',
@@ -63,7 +67,10 @@ export default {
             total: totalSubmitted,
             icon: 'submitted',
             content: submitted ? submitted[0] : null,
-            path: submitted && submitted.length > 0 ? `/app/preview/${submitted[0]._id}` : ''
+            path:
+              submitted && submitted.length > 0
+                ? `/app/preview/${submitted[0]._id}`
+                : ''
           }
         ]
       },
@@ -75,7 +82,7 @@ export default {
             title: 'ReviewSubmissions',
             subTitle: 'Last submitted Review',
             text: 'reviews have been submitted by you.',
-            start: 'Submit your first review now!',
+            start: 'You do not have submitted any review yet.',
             total: totalReviews,
             icon: 'editorReviewsCheck',
             content: myReviews && myReviews.length > 0 ? myReviews[0] : null,
@@ -89,7 +96,8 @@ export default {
               'You do not have any pending invitations from a handling Editor.',
             total: totalInvitations,
             icon: 'editorInvite',
-            content: invitations && invitations.length > 0 ? invitations[0] : null,
+            content:
+              invitations && invitations.length > 0 ? invitations[0] : null,
             path: '/app/reviews/invited'
           },
           {
