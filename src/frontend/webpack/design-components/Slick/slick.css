@@ -30,3 +30,7 @@
     var(--main) 94%
   );
 }
+
+.carousel.carousel-slider .control-arrow {
+  margin-bottom: 0;
+}

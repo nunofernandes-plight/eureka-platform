@@ -52,17 +52,21 @@ const renderContent = (content, title, path, categoryTitle) => {
       const items = content.map(article => {
         return getFiguresAndTitles(article.document, article._id);
       });
-      return (
-        <SlickContainer>
-          <Slick
-            showStatus={false}
-            showThumbs={false}
-            showIndicators={false}
-            infiniteLoop={true}
-            items={items}
-          />
-        </SlickContainer>
-      );
+      if (items) {
+        return (
+          <SlickContainer>
+            <Slick
+              showStatus={false}
+              showThumbs={false}
+              showIndicators={false}
+              infiniteLoop={true}
+              items={items}
+            />
+          </SlickContainer>
+        );
+      } else {
+        return null;
+      }
     }
   }
   return '...';
