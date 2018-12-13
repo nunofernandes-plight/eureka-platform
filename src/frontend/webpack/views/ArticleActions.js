@@ -75,19 +75,24 @@ const ExpertReviewerActions = ({article, user}) => {
     && article.articleSubmission.editor !== user.ethereumAddress
     && !article.document.authors.includes(user.ethereumAddress)) {
 
-    const review = article.editorApprovedReviews.find(r => {
+    const expertReview = article.editorApprovedReviews.find(r => {
       return r.reviewerAddress === user.ethereumAddress;
     });
 
-    if (!review)
+    const communityReview = article.communityReviews.find(r => {
+      return r.reviewerAddress === user.ethereumAddress;
+    });
+
+    if (!expertReview && !communityReview)
       return (
         <div>
           <div>Sign Up For Expert Review</div>
           <div>Write Expert Review</div>
         </div>
       );
-    else {
-      switch (review.reviewState) {
+
+    if (expertReview) {
+      switch (expertReview.reviewState) {
 
         case (REVIEW_STATE.INVITED):
           return (
@@ -131,14 +136,19 @@ const CommunityReviewerActions = ({article, user}) => {
     && article.articleSubmission.editor !== user.ethereumAddress
     && !article.document.authors.includes(user.ethereumAddress)) {
 
-    const review = article.communityReviews.find(r => {
+    const expertReview = article.editorApprovedReviews.find(r => {
       return r.reviewerAddress === user.ethereumAddress;
     });
 
-    if (!review)
+    const communityReview = article.communityReviews.find(r => {
+      return r.reviewerAddress === user.ethereumAddress;
+    });
+
+    if (!expertReview && !communityReview)
       return <div>Annotate Article as Community Reviewer</div>;
-    else {
-      switch (review.reviewState) {
+
+    if (communityReview) {
+      switch (communityReview.reviewState) {
 
         case (REVIEW_STATE.INVITED):
           return <div>Annotate Article as Community Reviewer</div>;
@@ -216,9 +226,9 @@ const ArticleActions = connect(mapStateToProps)(({article, user}) => {
   return (
     <Actions>
       <AuthorActions article={article} user={user}/>
-      <EditorActions article={article} user={user} />
-      <ExpertReviewerActions article={article} user={user} />
-      <CommunityReviewerActions article={article} user={user} />
+      <EditorActions article={article} user={user}/>
+      <ExpertReviewerActions article={article} user={user}/>
+      <CommunityReviewerActions article={article} user={user}/>
     </Actions>
   );
 });
