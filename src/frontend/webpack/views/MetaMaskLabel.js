@@ -16,29 +16,25 @@ const Item = styled.div`
   align-self: center;
 `;
 
-const MetaMask = Item.extend`
+const MetaMask = styled(Item)`
   display: flex;
   align-items: center;
   font-size: 13px;
-
-  padding-top: 9px;
-  padding-bottom: 9px;
-  padding-left: 10px;
-  padding-right: 4px;
+  padding: 9px 4px 9px 10px;
   border-radius: 6px;
 `;
 
-const NoMetaMask = MetaMask.extend`
+const NoMetaMask = styled(MetaMask)`
   background: ${__ALERT_ERROR};
   color: white;
 `;
 
-const MetaMaskDetectedNoLoggedIn = MetaMask.extend`
+const MetaMaskDetectedNoLoggedIn = styled(MetaMask)`
   background: ${__ALERT_WARNING};
   color: white;
 `;
 
-const MetaMaskDetectedLoggedIn = MetaMask.extend`
+const MetaMaskDetectedLoggedIn = styled(MetaMask)`
   background: ${__ALERT_SUCCESS};
   color: white;
 `;
