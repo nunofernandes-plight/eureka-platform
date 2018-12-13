@@ -17,11 +17,9 @@ const SubCardContainer = styled.div`
   min-height: 130px;
   min-width: 95%;
   border-radius: 4px;
-  margin: ${props =>
-    props.title === 'ArticlesToReview' ? '0 15px' : '25px 15px'};
+  margin: 25px 15px;
   padding: 1em;
-  border: ${props =>
-    props.title === 'ArticlesToReview' ? null : `1px solid ${__GRAY_200}`};
+  border: 1px solid ${__GRAY_200};
   position: relative;
 `;
 const NumberContainer = styled.div`
@@ -56,7 +54,7 @@ const Header = styled.div`
 
 const DashboardSubCard = ({category, index, color, title}) => {
   return (
-    <SubCardContainer title={category.title}>
+    <SubCardContainer>
       {category.title === 'Invitations' ? (
         <DashboardSubCardNotificationBell
           color={color}
@@ -65,11 +63,9 @@ const DashboardSubCard = ({category, index, color, title}) => {
       ) : null}
 
       <Header>
-        {category.title === 'ArticlesToReview' ? null : (
-          <IconContainer color={color}>
-            <Icon icon={category.icon} width={20} height={20} color={'white'} />
-          </IconContainer>
-        )}
+        <IconContainer color={color}>
+          <Icon icon={category.icon} width={20} height={20} color={'white'} />
+        </IconContainer>
         <DashboardSubCardContent
           categoryTitle={category.title}
           subTitle={category.subTitle}
@@ -77,6 +73,7 @@ const DashboardSubCard = ({category, index, color, title}) => {
           start={category.start}
           title={title}
           path={category.path}
+          total={category.total}
         />
       </Header>
 

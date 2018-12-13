@@ -5,6 +5,7 @@ import {renderField} from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
 import moment from 'moment';
 import Slick from '../../design-components/Slick/Slick.js';
 import MaterialButton from '../../design-components/MaterialButton.js';
+import AuthorLookup from '../AuthorLookup.js';
 
 const Container = styled.div`
   flex: 1;
@@ -40,7 +41,7 @@ const getFiguresAndTitles = (document, id) => {
   };
 };
 
-const renderContent = (content, title, path, categoryTitle) => {
+const renderContent = (content, title, path, categoryTitle, total) => {
   if (title === 'Articles') {
     return (
       <Content>
@@ -62,6 +63,8 @@ const renderContent = (content, title, path, categoryTitle) => {
               showIndicators={false}
               infiniteLoop={true}
               items={items}
+              more={`...discover more than ${total} articles`}
+              moreLink={path}
             />
           </SlickContainer>
         );
@@ -104,7 +107,8 @@ const DashboardSubCardContent = ({
   title,
   subTitle,
   path,
-  categoryTitle
+  categoryTitle,
+  total
 }) => {
   return (
     <Container>
@@ -114,12 +118,11 @@ const DashboardSubCardContent = ({
         </MyLink>
       ) : (
         <div style={{flex: 1}}>
-          {categoryTitle === 'ArticlesToReview' ? null : (
-            <Title>
-              {subTitle} {renderTime(title, content)}
-            </Title>
-          )}
-          {renderContent(content, title, path, categoryTitle)}
+          <Title>
+            {subTitle} {renderTime(title, content)}
+          </Title>
+
+          {renderContent(content, title, path, categoryTitle, total)}
         </div>
       )}
     </Container>

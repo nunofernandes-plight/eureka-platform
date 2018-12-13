@@ -4,24 +4,35 @@ import {Link} from 'react-router-dom';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import {Carousel} from 'react-responsive-carousel';
 import './slick.css';
+import Ink from 'react-ink';
 
-const Item = styled.div``;
+const Item = styled.div`
+  position: relative;
+`;
 
-const Slick = ({items, ...otherProps}) => {
+const Slick = ({items, more, moreLink, ...otherProps}) => {
   return (
     <Carousel {...otherProps}>
       {items.map((item, i) => {
         return (
           <Item key={i}>
-            {item.image ? (
-              <img src={item.image}/>
-            ) : null}
+            <Ink />
+            {item.image ? <img src={item.image} /> : null}
             <Link to={item.link}>
-              <p className="legend newLegend">{item.legend}</p>
+              <div className="legend">
+                <div className="legendText"> {item.legend}</div>
+              </div>
             </Link>
           </Item>
         );
       })}
+      <Item>
+        <Link to={moreLink}>
+          <div className="legend">
+            <div className="legendText">{more}</div>
+          </div>
+        </Link>
+      </Item>
     </Carousel>
   );
 };
