@@ -54,7 +54,7 @@ const renderContent = (content, title, path, categoryTitle, total) => {
       const items = content.map(article => {
         return getFiguresAndTitles(article.document, article._id);
       });
-      if (items) {
+      if (items && items.length !== 0) {
         return (
           <SlickContainer>
             <Slick
@@ -69,7 +69,13 @@ const renderContent = (content, title, path, categoryTitle, total) => {
           </SlickContainer>
         );
       } else {
-        return null;
+        return (
+          <MyLink to={path}>
+            <StartText>
+              At the moment, there are no articles that can be peer-reviewed.
+            </StartText>
+          </MyLink>
+        );
       }
     }
   }
@@ -110,9 +116,10 @@ const DashboardSubCardContent = ({
   categoryTitle,
   total
 }) => {
+  console.log(content);
   return (
     <Container>
-      {!content ? (
+      {!content || content === undefined ? (
         <MyLink to={path}>
           <StartText>{start}</StartText>
         </MyLink>
@@ -121,7 +128,6 @@ const DashboardSubCardContent = ({
           <Title>
             {subTitle} {renderTime(title, content)}
           </Title>
-
           {renderContent(content, title, path, categoryTitle, total)}
         </div>
       )}

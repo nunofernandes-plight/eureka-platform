@@ -20,6 +20,7 @@ import Modal from '../../design-components/Modal.js';
 import PreviewAuthors from '../Preview/PreviewAuthors.js';
 import PreviewMetaData from '../Preview/PreviewMetaData.js';
 import PreviewArticle from '../Preview/PreviewArticle.js';
+import {LARGE_DEVICES} from '../../../helpers/mobile.js';
 
 const Container = styled.div`
   display: flex;
@@ -40,6 +41,9 @@ const MyPreview = styled.div`
   display: flex;
   padding: 20px;
   width: 100%;
+  ${LARGE_DEVICES`
+    flex-direction: column;
+  `}
 `;
 
 const ArticlePreview = styled.div`

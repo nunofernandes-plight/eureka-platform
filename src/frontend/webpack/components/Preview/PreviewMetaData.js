@@ -1,22 +1,35 @@
 import React from 'react';
 import styled from 'styled-components';
 import Document from '../../../../models/Document.mjs';
-import {__ALERT_ERROR, __THIRD} from '../../../helpers/colors.js';
+import {__ALERT_ERROR, __GRAY_300, __THIRD} from '../../../helpers/colors.js';
 import {
   makeFieldReadable,
   renderField
 } from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
 import PreviewStatus from '../../views/PreviewStatus.js';
+import {LARGE_DEVICES} from '../../../helpers/mobile.js';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 1 0;
+  ${LARGE_DEVICES`
+    margin-top: 2em; 
+    flex-direction: row; 
+    flex: 1; 
+    order: 1; 
+    flex-wrap: wrap; 
+    border-top: 1px solid ${__GRAY_300};
+    padding-top: 15px;
+  `};
 `;
 
 const FieldContainer = styled.div`
   display: flex;
   flex-direction: column;
+  ${LARGE_DEVICES`
+     margin: 0 25px 12px 0px;
+  `};
 `;
 
 const Title = styled.h4`

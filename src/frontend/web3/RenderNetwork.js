@@ -4,6 +4,7 @@ import {__ALERT_WARNING, __FIFTH, __MAIN, __THIRD} from '../helpers/colors.js';
 import Icon from '../webpack/views/icons/Icon.js';
 import Network from './Network.js';
 import {connect} from 'react-redux';
+import {LARGE_DEVICES} from '../helpers/mobile.js';
 
 const NetworkContainer = styled.div`
   box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.1);
@@ -20,6 +21,12 @@ const GanacheLogo = styled.img`
   width: 20px;
   height: 20px;
   margin-bottom: 2px;
+`;
+
+const Text = styled.span`
+  ${LARGE_DEVICES`
+      display: none; 
+  `};
 `;
 
 const getColor = network => {
@@ -47,7 +54,7 @@ const getColor = network => {
 const RenderNetwork = props => {
   return (
     <NetworkContainer network={props.network}>
-      {props.network}{' '}
+      <Text>{props.network} </Text>
       {props.network === Network.GANACHE ? (
         <GanacheLogo src="/img/logos/ganache.png" />
       ) : (
