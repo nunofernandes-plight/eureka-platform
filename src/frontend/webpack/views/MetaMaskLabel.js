@@ -9,6 +9,7 @@ import {
 import MetaMaskLogo from './icons/MetaMaskLogo.js';
 import CircleHeaderSpinner from './spinners/CircleHeaderSpinner.js';
 import connect from 'react-redux/es/connect/connect.js';
+import {LARGE_DEVICES} from '../../helpers/mobile.js';
 
 const Item = styled.div`
   margin: 0 10px;
@@ -42,6 +43,12 @@ const MetaMaskDetectedLoggedIn = MetaMask.extend`
   color: white;
 `;
 
+const Text = styled.span`
+  ${LARGE_DEVICES`
+    display: none; 
+    `};
+`;
+
 const MetaMaskLabel = ({metaMaskStatus}) => {
   if (!metaMaskStatus) {
     return <CircleHeaderSpinner />;
@@ -50,7 +57,7 @@ const MetaMaskLabel = ({metaMaskStatus}) => {
   if (status === MetaMaskStatus.DETECTED_NO_LOGGED_IN) {
     return (
       <MetaMaskDetectedNoLoggedIn>
-        MetaMask locked
+        <Text>MetaMask locked</Text>
         <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
       </MetaMaskDetectedNoLoggedIn>
     );
@@ -58,7 +65,7 @@ const MetaMaskLabel = ({metaMaskStatus}) => {
   if (status === MetaMaskStatus.NO_DETECTED) {
     return (
       <NoMetaMask>
-        No MetaMask
+        <Text>No MetaMask</Text>
         <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
       </NoMetaMask>
     );
@@ -66,7 +73,7 @@ const MetaMaskLabel = ({metaMaskStatus}) => {
   if (status === MetaMaskStatus.DETECTED_LOGGED_IN) {
     return (
       <MetaMaskDetectedLoggedIn>
-        MetaMask unlocked
+        <Text>MetaMask unlocked</Text>
         <MetaMaskLogo style={{marginRight: 5}} width={15} height={15} />
       </MetaMaskDetectedLoggedIn>
     );

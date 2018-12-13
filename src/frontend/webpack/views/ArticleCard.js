@@ -5,15 +5,18 @@ import {
   __ALERT_ERROR,
   __ALERT_WARNING,
   __GRAY_100,
+  __THIRD,
   getScale
 } from '../../helpers/colors.js';
 import chroma from 'chroma-js';
 import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
-import {LARGE_DEVICES} from '../../helpers/mobile.js';
 import AuthorLookup from '../components/AuthorLookup.js';
 import {renderField} from '../components/Articles/Online/TextEditor/DocumentRenderer.mjs';
 import TextTruncate from 'react-text-truncate';
 import {withRouter} from 'react-router-dom';
+import Ink from 'react-ink';
+import Icon from './icons/Icon.js';
+import {EXTRA_LARGE_DEVICES, LARGE_DEVICES} from '../../helpers/mobile.js';
 
 const Parent = styled.div`
   position: relative;
@@ -30,12 +33,18 @@ const Container = styled.div`
   width: 100%;
   min-height: 350px;
   background: ${__GRAY_100};
+  ${LARGE_DEVICES`
+    flex-direction: column; 
+  `};
 `;
 
 const FigureSection = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  ${LARGE_DEVICES`
+    order: 1; 
+  `};
 `;
 
 const Figure = styled.img`
@@ -55,6 +64,7 @@ const TitleSection = styled.div`
   padding: 1em;
   cursor: pointer;
   margin-left: 1em;
+  flex: 1;
 `;
 const getFigureLink = (url, width, height) => {
   return fromS3toCdn(url, `fit=crop&w=${width}&h=${height}&auto=compress`);
@@ -139,6 +149,11 @@ const FancyButton = styled.div`
   border-top-right-radius: 5px;
   padding: 0.625rem 1rem;
 `;
+const NoImageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const ArticleCard = ({article, ...otherProps}) => {
   return (
@@ -162,6 +177,7 @@ const ArticleCard = ({article, ...otherProps}) => {
                   otherProps.action(article.scSubmissionID, article);
                 }}
               >
+                <Ink />
                 {otherProps.buttonText}
               </FancyButton>
               {otherProps.button2Text ? (
@@ -172,17 +188,22 @@ const ArticleCard = ({article, ...otherProps}) => {
                     otherProps.action2(article.scSubmissionID, article);
                   }}
                 >
+                  <Ink />
                   {otherProps.button2Text}
                 </FancyButton>
               ) : null}
             </FancyButtonContainer>
             {article.figure.length === 0 ? (
-              <Figure
-                src="/img/noPicture.png"
-                width={170}
-                height={'auto'}
-                style={{alignSelf: 'center', marginTop: 15}}
-              />
+              <NoImageContainer>
+                <Icon
+                  noMove
+                  icon={'noImage'}
+                  width={150}
+                  height={150}
+                  color={__THIRD}
+                  top={25}
+                />
+              </NoImageContainer>
             ) : (
               <Figure src={getFigureLink(article.figure[0].url, 375, 250)} />
             )}
@@ -194,7 +215,7 @@ const ArticleCard = ({article, ...otherProps}) => {
               right={10}
               width={35}
               height={35}
-              fontSize={13}
+              fontSize={12}
               padding={'12px'}
             />
           </Authors>

@@ -73,6 +73,7 @@ const DashboardSubCard = ({category, index, color, title}) => {
           start={category.start}
           title={title}
           path={category.path}
+          total={category.total}
         />
       </Header>
 

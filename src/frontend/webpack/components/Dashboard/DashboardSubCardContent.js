@@ -4,6 +4,8 @@ import {__GRAY_600, __GRAY_700} from '../../../helpers/colors.js';
 import {renderField} from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
 import moment from 'moment';
 import Slick from '../../design-components/Slick/Slick.js';
+import MaterialButton from '../../design-components/MaterialButton.js';
+import AuthorLookup from '../AuthorLookup.js';
 
 const Container = styled.div`
   flex: 1;
@@ -27,11 +29,19 @@ const Title = styled.div`
 `;
 
 const SlickContainer = styled.div`
-  margin-top: 10px;
-  width: 65%;
+  width: 100%;
 `;
 
-const renderContent = (content, title, path, categoryTitle) => {
+const getFiguresAndTitles = (document, id) => {
+  console.log(document);
+  return {
+    legend: renderField(document, 'title'),
+    link: `/app/preview/${id}`,
+    image: renderField(document, 'figure')[0]
+  };
+};
+
+const renderContent = (content, title, path, categoryTitle, total) => {
   if (title === 'Articles') {
     return (
       <Content>
@@ -41,12 +51,32 @@ const renderContent = (content, title, path, categoryTitle) => {
   }
   if (title === 'Reviews') {
     if (categoryTitle === 'ArticlesToReview') {
-      console.log(content);
-      return (
-        <SlickContainer>
-          <Slick showThumbs={false} infiniteLoop={true} autoPlay={true} />
-        </SlickContainer>
-      );
+      const items = content.map(article => {
+        return getFiguresAndTitles(article.document, article._id);
+      });
+      if (items && items.length !== 0) {
+        return (
+          <SlickContainer>
+            <Slick
+              showStatus={false}
+              showThumbs={false}
+              showIndicators={false}
+              infiniteLoop={true}
+              items={items}
+              more={`...discover more than ${total} articles`}
+              moreLink={path}
+            />
+          </SlickContainer>
+        );
+      } else {
+        return (
+          <MyLink to={path}>
+            <StartText>
+              At the moment, there are no articles that can be peer-reviewed.
+            </StartText>
+          </MyLink>
+        );
+      }
     }
   }
   return '...';
@@ -83,11 +113,13 @@ const DashboardSubCardContent = ({
   title,
   subTitle,
   path,
-  categoryTitle
+  categoryTitle,
+  total
 }) => {
+  console.log(content);
   return (
     <Container>
-      {!content ? (
+      {!content || content === undefined ? (
         <MyLink to={path}>
           <StartText>{start}</StartText>
         </MyLink>
@@ -96,7 +128,7 @@ const DashboardSubCardContent = ({
           <Title>
             {subTitle} {renderTime(title, content)}
           </Title>
-          {renderContent(content, title, path, categoryTitle)}
+          {renderContent(content, title, path, categoryTitle, total)}
         </div>
       )}
     </Container>
