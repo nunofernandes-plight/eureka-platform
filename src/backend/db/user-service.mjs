@@ -235,6 +235,10 @@ export default {
     if (!user.roles.includes(Roles.EXPERT_REVIEWER)) {
       user.roles.push(Roles.EXPERT_REVIEWER);
     }
+    // the role reviewer is parent of expert reviewer
+    if (!user.roles.includes(Roles.REVIEWER)) {
+      user.roles.push(Roles.REVIEWER);
+    }
 
     await user.save();
   },
