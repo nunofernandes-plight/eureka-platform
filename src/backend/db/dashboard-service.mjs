@@ -2,6 +2,10 @@ import articleVersionService from '../db/article-version-service.mjs';
 import reviewService from '../db/review-service.mjs';
 import ARTICLE_VERSION_STATE from '../schema/article-version-state-enum.mjs';
 import REVIEW_STATE from '../schema/review-state-enum.mjs';
+import {getLimitedObjects} from '../helpers/pagination-helpers.mjs';
+import ReviewService from './review-service.mjs';
+import articleSubmissionService from './article-submission-service.mjs';
+import {getIds} from '../helpers/get-array-of-ids.mjs';
 
 export default {
   getAnalytics: async userAddress => {
@@ -20,10 +24,22 @@ export default {
       REVIEW_STATE.INVITED
     );
 
-    const openToReview = await articleVersionService.getArticlesOpenForCommunityReviews(
+    const myReviews = await reviewService.getMyReviews(userAddress);
+    const alreadyReviewedIds = ReviewService.getArticleVersionIds(myReviews);
+    const submissions = await articleSubmissionService.getReviewableSubmissions(
       userAddress
     );
+    const reviewableSubmissionIds = getIds(submissions);
 
+    let openToReview = await getLimitedObjects(
+      articleVersionService.getArticlesOpenForCommunityReviews(
+        userAddress,
+        alreadyReviewedIds,
+        reviewableSubmissionIds
+      ),
+      parseInt('1'),
+      parseInt('3')
+    );
 
     let open = [];
     if (openToReview.length > 2) {
@@ -33,8 +49,6 @@ export default {
     } else if (openToReview.length === 1) {
       open = [openToReview[0]];
     }
-
-    const myReviews = await reviewService.getMyReviews(userAddress);
 
     const totalDrafts = drafts.length;
     const totalSubmitted = submitted.length;
