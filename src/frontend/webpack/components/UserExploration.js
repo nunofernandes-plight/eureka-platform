@@ -50,7 +50,7 @@ class UserExploration extends React.Component {
     const user = this.state.user;
     return (
       <Container>
-        <Card width={'1000'} title={'User lookup'}>
+        <Card title={'User lookup'}>
           {!user ? (
             <GridSpinner />
           ) : (

@@ -128,7 +128,7 @@ class PanelLeft extends Component {
           })}
 
           <MobileMode>
-            <MobileModeTitle>Toggle menu</MobileModeTitle>
+            <MobileModeTitle />
             <ToggleButton
               checked={this.props.checked}
               onChange={isMobileMode => {
