@@ -23,7 +23,7 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-const MyRow = Row.extend`
+const MyRow = styled(Row)`
   flex-direction: column;
   width: 100%;
   justify-content: center;
