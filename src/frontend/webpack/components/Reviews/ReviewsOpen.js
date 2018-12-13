@@ -29,6 +29,13 @@ const NoArtDiv = styled.div`
   font-size: 16px;
 `;
 
+const Articles = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  margin-top: 1em;
+`;
+
 const NoArticles = () => {
   return <NoArtDiv>There are currently no articles to review.</NoArtDiv>;
 };
@@ -76,18 +83,23 @@ class ReviewsOpen extends React.Component {
     return (
       <Container>
         {this.renderModals()}
+        <Card title={'Articles open to review'}>
+
+          <Pagination
+            currentPage={this.state.page}
+            totalPages={this.props.nrOfPages}
+            goToPage={page => {
+              this.getArticles(page);
+            }}
+          />
+
         {this.props.loading ? (
           <GridSpinner />
         ) : (
-          <Card title={'Articles open to review'}>
+          <Articles>
 
-            <Pagination
-              currentPage={this.state.page}
-              totalPages={this.props.nrOfPages}
-              goToPage={page => {
-                this.getArticles(page);
-              }}
-            />
+
+
 
             {this.props.articles ? (
               this.props.articles.length > 0 ? (
@@ -134,8 +146,9 @@ class ReviewsOpen extends React.Component {
             ) : (
               <NoArticles />
             )}
-          </Card>
+          </Articles>
         )}
+        </Card>
       </Container>
     );
   }
