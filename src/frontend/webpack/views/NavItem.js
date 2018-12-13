@@ -12,6 +12,7 @@ import {
 import {MAKE_MOBILE} from '../../helpers/mobile.js';
 import {PANEL_LEFT_BREAK_POINT} from '../../helpers/layout.js';
 import Icon from './icons/Icon.js';
+import Ink from 'react-ink';
 
 const IconContainer = styled.div`
   display: flex;
@@ -30,6 +31,7 @@ const MyNavLink = styled(NavLink)`
       fill: ${props => (props.color ? props.color : __FIFTH)};
     }
   }
+  position: relative;
   display: flex;
   font-size: 13px;
   font-weight: 500;
@@ -100,6 +102,7 @@ const LinkName = styled.div`
 export const NavItem = props => {
   return (
     <MyNavLink to={`${props.base}/${props.path}`} color={props.color}>
+      <Ink />
       <IconContainer {...props}>
         <Icon
           material={props.material}

@@ -9,11 +9,11 @@ import {
 } from '../../helpers/colors.js';
 import chroma from 'chroma-js';
 import {fromS3toCdn} from '../../../helpers/S3UrlConverter.js';
-import {LARGE_DEVICES} from '../../helpers/mobile.js';
 import AuthorLookup from '../components/AuthorLookup.js';
 import {renderField} from '../components/Articles/Online/TextEditor/DocumentRenderer.mjs';
 import TextTruncate from 'react-text-truncate';
 import {withRouter} from 'react-router-dom';
+import Ink from 'react-ink';
 
 const Parent = styled.div`
   position: relative;
@@ -138,6 +138,7 @@ const FancyButton = styled.div`
   border-bottom-right-radius: 5px;
   border-top-right-radius: 5px;
   padding: 0.625rem 1rem;
+  
 `;
 
 const ArticleCard = ({article, ...otherProps}) => {
@@ -162,6 +163,7 @@ const ArticleCard = ({article, ...otherProps}) => {
                   otherProps.action(article.scSubmissionID, article);
                 }}
               >
+                <Ink />
                 {otherProps.buttonText}
               </FancyButton>
               {otherProps.button2Text ? (
@@ -172,6 +174,7 @@ const ArticleCard = ({article, ...otherProps}) => {
                     otherProps.action2(article.scSubmissionID, article);
                   }}
                 >
+                  <Ink />
                   {otherProps.button2Text}
                 </FancyButton>
               ) : null}

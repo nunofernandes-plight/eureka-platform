@@ -5,6 +5,7 @@ import {__FIFTH} from '../../helpers/colors.js';
 import {MAKE_MOBILE} from '../../helpers/mobile.js';
 import {PANEL_LEFT_BREAK_POINT} from '../../helpers/layout.js';
 import Icon from './icons/Icon.js';
+import Ink from 'react-ink';
 
 const IconContainer = styled.div`
   width: ${props => (props.small ? null : '125px')};
@@ -25,6 +26,7 @@ export const MyNavPill = styled(NavLink)`
     }
   }
   transition: 0.25s all;
+  position: relative;
   text-decoration: none;
   font-size: 0.875rem;
   font-weight: 500;
@@ -64,6 +66,7 @@ const NavPill = props => {
       small={props.small}
       color={props.color}
     >
+      <Ink />
       <IconContainer {...props}>
         {props.small ? null : <Name>{props.name}</Name>}
         <Icon
