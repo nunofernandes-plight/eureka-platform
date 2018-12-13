@@ -7,6 +7,7 @@ import {
   renderField
 } from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
 import PreviewStatus from '../../views/PreviewStatus.js';
+import ArticleActions from '../../views/ArticleActions.js';
 
 const Container = styled.div`
   display: flex;
@@ -71,6 +72,7 @@ const PreviewMetaData = ({article, ...otherProps}) => {
         return <Field key={i} doc={article.document} field={field} />;
       })}
       <CustomPreviewStatus status={article.articleVersionState} />
+      <ArticleActions article={article} />
     </Container>
   );
 };
