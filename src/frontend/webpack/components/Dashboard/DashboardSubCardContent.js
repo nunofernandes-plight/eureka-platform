@@ -27,9 +27,17 @@ const Title = styled.div`
 `;
 
 const SlickContainer = styled.div`
-  margin-top: 10px;
-  width: 65%;
+  width: 100%;
 `;
+
+const getFiguresAndTitles = (document, id) => {
+  console.log(document);
+  return {
+    legend: renderField(document, 'title'),
+    link: `/app/preview/${id}`,
+    image: renderField(document, 'figure')[0]
+  };
+};
 
 const renderContent = (content, title, path, categoryTitle) => {
   if (title === 'Articles') {
@@ -41,10 +49,12 @@ const renderContent = (content, title, path, categoryTitle) => {
   }
   if (title === 'Reviews') {
     if (categoryTitle === 'ArticlesToReview') {
-      console.log(content);
+      const items = content.map(article => {
+        return getFiguresAndTitles(article.document, article._id);
+      });
       return (
         <SlickContainer>
-          <Slick showThumbs={false} infiniteLoop={true} autoPlay={true} />
+          <Slick showThumbs={false} infiniteLoop={true} items={items} />
         </SlickContainer>
       );
     }
@@ -93,9 +103,11 @@ const DashboardSubCardContent = ({
         </MyLink>
       ) : (
         <div style={{flex: 1}}>
-          <Title>
-            {subTitle} {renderTime(title, content)}
-          </Title>
+          {categoryTitle === 'ArticlesToReview' ? null : (
+            <Title>
+              {subTitle} {renderTime(title, content)}
+            </Title>
+          )}
           {renderContent(content, title, path, categoryTitle)}
         </div>
       )}

@@ -1,14 +1,33 @@
-.slick-vertical .slick-slide {
-  height: 180px;
-}
-.slick-arrow {
-  background-color: grey;
-  /* color: black; */
+.carousel .control-dots {
+  padding-left: 0;
 }
 
-.slick-dots li button {
+.carousel .slide .legend {
+  position: absolute;
+  bottom: 40px;
+  left: 55%;
+  margin-left: -45%;
+  width: 80%;
+  border-radius: 10px;
+  background: white;
+  color: var(--third);
+  padding: 10px;
+  font-size: 12px;
+  text-align: center;
+  opacity: 0.25;
+  transition: opacity 0.35s ease-in-out;
+}
+
+.carousel .slide {
+  border-radius: 4px;
+  min-width: 100%;
   margin: 0;
-  transition: none;
-  animation: none;
-  box-shadow: none;
+  position: relative;
+  text-align: center;
+  background: linear-gradient(
+    150deg,
+    var(--third) 15%,
+    var(--second) 70%,
+    var(--main) 94%
+  );
 }

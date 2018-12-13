@@ -38,17 +38,20 @@ export default {
         reviewableSubmissionIds
       ),
       parseInt('1'),
-      parseInt('3')
+      parseInt(null)
     );
 
-    let open = [];
-    if (openToReview.length > 2) {
-      open = [openToReview[0], openToReview[1], openToReview[2]];
-    } else if (openToReview.length === 2) {
-      open = [openToReview[0], openToReview[1]];
-    } else if (openToReview.length === 1) {
-      open = [openToReview[0]];
-    }
+    let carousel = await getLimitedObjects(
+      articleVersionService.getArticlesOpenForCommunityReviews(
+        userAddress,
+        alreadyReviewedIds,
+        reviewableSubmissionIds
+      ),
+      parseInt('9'),
+      parseInt('10')
+    );
+
+
 
     const totalDrafts = drafts.length;
     const totalSubmitted = submitted.length;
@@ -120,7 +123,7 @@ export default {
             text: 'articles are available for review for you.',
             total: totalOpenArticles,
             icon: 'openForReview',
-            content: open,
+            content: carousel,
             path: '/app/reviews/open'
           }
         ]
