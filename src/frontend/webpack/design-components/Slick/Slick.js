@@ -14,7 +14,7 @@ const Slick = ({items, ...otherProps}) => {
         return (
           <Item key={i}>
             {item.image ? (
-              <img src={item.image} style={{borderRadius: '4px'}} />
+              <img src={item.image}/>
             ) : null}
             <Link to={item.link}>
               <p className="legend newLegend">{item.legend}</p>

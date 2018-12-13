@@ -54,7 +54,13 @@ const renderContent = (content, title, path, categoryTitle) => {
       });
       return (
         <SlickContainer>
-          <Slick showThumbs={false} infiniteLoop={true} items={items} />
+          <Slick
+            showStatus={false}
+            showThumbs={false}
+            showIndicators={false}
+            infiniteLoop={true}
+            items={items}
+          />
         </SlickContainer>
       );
     }

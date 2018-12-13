@@ -8,7 +8,7 @@
   left: 55%;
   margin-left: -45%;
   width: 80%;
-  border-radius: 10px;
+  border-radius: 0;
   background: white;
   color: var(--third);
   padding: 10px;
@@ -19,7 +19,6 @@
 }
 
 .carousel .slide {
-  border-radius: 4px;
   min-width: 100%;
   margin: 0;
   position: relative;

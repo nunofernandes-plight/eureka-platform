@@ -41,17 +41,17 @@ export default {
       parseInt(null)
     );
 
+    // TODO: change the limit of showed article in prod
+    const limit = "10";
     let carousel = await getLimitedObjects(
       articleVersionService.getArticlesOpenForCommunityReviews(
         userAddress,
         alreadyReviewedIds,
         reviewableSubmissionIds
       ),
-      parseInt('9'),
-      parseInt('10')
+      parseInt('1'),
+      parseInt(limit)
     );
-
-
 
     const totalDrafts = drafts.length;
     const totalSubmitted = submitted.length;
