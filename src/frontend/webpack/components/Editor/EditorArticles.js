@@ -95,8 +95,8 @@ class EditorArticles extends React.Component {
           tx
         );
         toast(ARTICLE_ASSIGNED_TX(tx), {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 20000,
+          position: toast.POSITION.TOP_LEFT,
+          autoClose: 8000,
           className: '__ALERT_SUCCESS',
           progressClassName: '__BAR'
         });

@@ -37,7 +37,9 @@
 
 .Toastify__toast-container {
   word-break: break-word;
-  width: 480px;
+  font-size: 12px;
+  line-height: 1.4;
+  left: 180px;
 }
 
 .Toastify__close-button,

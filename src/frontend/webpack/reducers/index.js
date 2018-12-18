@@ -8,6 +8,7 @@ import {articlesData} from './articles.js';
 import {editorsData} from './editor-methods.js';
 import {reviewsData} from './reviews.js';
 import {reviewerData} from './reviewer.js';
+import {txModalData} from './txPool.js';
 
 const reducer = combineReducers({
   userData,
@@ -18,7 +19,8 @@ const reducer = combineReducers({
   transactionsData,
   articlesData,
   reviewsData,
-  reviewerData
+  reviewerData,
+  txModalData
 });
 
 export default reducer;
