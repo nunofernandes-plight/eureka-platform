@@ -17,7 +17,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import '../../design-components/Notification.css';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {ARTICLE_ASSIGNED_TX} from '../../constants/Messages.js';
+import {
+  ARTICLE_ASSIGNED_TX,
+  ArticleAssignedMessage
+} from '../../constants/Messages.js';
 import {addTransaction} from '../../reducers/transactions.js';
 import SC_TRANSACTIONS_TYPE from '../../../../backend/schema/sc-transaction-state-enum.mjs';
 
@@ -94,7 +97,7 @@ class EditorArticles extends React.Component {
           SC_TRANSACTIONS_TYPE.EDITOR_ARTICLE_ASSIGNMENT,
           tx
         );
-        toast(ARTICLE_ASSIGNED_TX(tx), {
+        toast(<ArticleAssignedMessage tx={tx} />, {
           position: toast.POSITION.TOP_LEFT,
           autoClose: 8000,
           className: '__ALERT_SUCCESS',
