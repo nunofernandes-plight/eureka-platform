@@ -13,12 +13,23 @@ const Container = styled.ol`
   padding-top: 45px;
 `;
 
+const NoTxs = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+`;
+
+const Parent = styled.div`
+  overflow: scroll;
+  max-height: 75vh;
+`;
+
 class Transactions extends React.Component {
   componentDidMount() {
     this.props.fetchTransactions();
     this.interval = setInterval(async () => {
       this.props.fetchTransactions();
-    }, 7500);
+    }, 10000);
   }
 
   componentWillUnmount() {
@@ -29,15 +40,20 @@ class Transactions extends React.Component {
     return (
       <Container>
         {!this.props.txs ? (
-          <TxLi>
+          <div>
             <UploadProgressContainer />
-          </TxLi>
+          </div>
         ) : (
-          <Fragment>
+          <Parent>
+            {this.props.txs.length === 0 ? (
+              <NoTxs>
+                ⚙️ There are no pending transactions in your pool yet.
+              </NoTxs>
+            ) : null}
             {this.props.txs.reverse().map(tx => {
               return <Transaction key={tx.txHash} tx={tx} />;
             })}
-          </Fragment>
+          </Parent>
         )}
       </Container>
     );

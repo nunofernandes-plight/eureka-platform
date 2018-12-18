@@ -55,11 +55,10 @@ const Header = styled.div`
   border-top-right-radius: 4px;
   border-top-left-radius: 4px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  position: fixed;
+  position: absolute;
+  width: 100%;
   z-index: 100000;
-  width: 50%;
 `;
 
 const TxPoolIcon = styled.img`
@@ -73,12 +72,21 @@ const HeaderTitle = styled.h2`
   font-size: 14px;
   text-transform: uppercase;
   display: flex;
-  margin: 0 -20px 0 auto;
+`;
+const Left = styled.div`
+  flex: 1;
+`;
+const Centered = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
 `;
 
-const IconContainer = styled.div`
-  margin-left: auto;
-  margin-right: 40px;
+const Right = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
 `;
 
 const PoolModal = ({show, ...otherProps}) => {
@@ -88,19 +96,22 @@ const PoolModal = ({show, ...otherProps}) => {
         <Parent>
           <MyModal>
             <Header>
-              <HeaderTitle>
-                Transaction Pool <TxPoolIcon src="/img/tx/transaction.svg" />{' '}
-              </HeaderTitle>
-              <IconContainer>
+              <Left />
+              <Centered>
+                <HeaderTitle>Transaction Pool</HeaderTitle>
+                <TxPoolIcon src="/img/tx/transaction.svg" />{' '}
+              </Centered>
+              <Right>
                 <Icon
                   icon={'close'}
+                  right={40}
                   width={10}
                   height={18}
                   onClick={() => {
                     otherProps.toggle(!show);
                   }}
                 />
-              </IconContainer>
+              </Right>
             </Header>
             <Transactions />
             <FooterContainer />
