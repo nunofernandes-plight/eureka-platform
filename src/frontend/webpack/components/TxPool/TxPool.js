@@ -2,6 +2,9 @@ import React from 'react';
 import styled, {keyframes} from 'styled-components';
 import {transparentize} from 'polished';
 import PoolModal from './PoolModal.js';
+import {connect} from 'react-redux';
+import {fetchArticlesOpenToReview} from '../../reducers/reviews.js';
+import {closeTxModal, openTxModal} from '../../reducers/txPool.js';
 
 const animation = keyframes`
 	from {
@@ -53,17 +56,12 @@ const Container = styled.div`
 `;
 
 class TxPool extends React.Component {
-  constructor() {
-    super();
-    this.state = {showPool: false};
-  }
-
   renderPool() {
     return (
       <PoolModal
-        show={this.state.showPool}
-        toggle={showPool => {
-          this.setState({showPool});
+        show={this.props.show}
+        toggle={() => {
+          this.props.close();
         }}
       />
     );
@@ -75,7 +73,7 @@ class TxPool extends React.Component {
         {this.renderPool()}
         <TxPoolContainer
           onClick={() => {
-            this.setState({showPool: true});
+            this.props.open();
           }}
         >
           <TxPoolIcon src="/img/tx/transaction.svg" />
@@ -86,4 +84,14 @@ class TxPool extends React.Component {
   }
 }
 
-export default TxPool;
+export default connect(
+  state => ({show: state.txModalData}),
+  dispatch => ({
+    open: () => {
+      dispatch(openTxModal());
+    },
+    close: () => {
+      dispatch(closeTxModal());
+    }
+  })
+)(TxPool);
