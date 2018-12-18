@@ -5,13 +5,18 @@ import {
   __ALERT_SUCCESS,
   __ALERT_WARNING,
   __GRAY_100,
-  __GRAY_300
+  __GRAY_200,
+  __GRAY_300,
+  __GRAY_400,
+  __GRAY_600,
+  __GRAY_700
 } from '../../../helpers/colors.js';
 import TRANSACTION_STATUS from '../../../../helpers/TransactionStatus.mjs';
 import EurekaLogo from '../../views/icons/EurekaLogo.js';
 import TxType from '../MyHistory/TxType.js';
 import {ProgressBar} from './ProgressBar.js';
 import {Animation} from './Animation.js';
+import moment from 'moment';
 
 const getColor = status => {
   switch (status) {
@@ -51,10 +56,20 @@ const BarContainer = styled.div`
   margin: 0 20px;
 `;
 
+const Time = styled.div`
+  color: ${__GRAY_700};
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-left: 15px;
+  background: ${__GRAY_100};
+`;
+
 const Transaction = ({tx, ...otherProps}) => {
   return (
     <TxLi key={tx.txHash} status={tx.status}>
-      <EurekaLogo width={20} height={20} />
+      <EurekaLogo width={20} height={20} />{' '}
+      <Time>{moment(tx.createdAt).calendar()}</Time>
       <BarContainer>
         <TxType
           type={tx.transactionType}

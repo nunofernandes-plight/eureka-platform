@@ -36,7 +36,6 @@ const MyModal = styled.div`
   max-height: 90%;
   z-index: 12;
   overflow: scroll;
-  width: 50%;
   border-radius: 5px;
 `;
 
