@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import {openTxModal} from '../reducers/txPool.js';
 import connect from 'react-redux/es/connect/connect.js';
-import {__ALERT_ERROR} from '../../helpers/colors.js';
 import Icon from '../views/icons/Icon.js';
 
 const Notification = styled.div``;

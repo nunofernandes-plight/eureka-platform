@@ -50,6 +50,7 @@ class Transactions extends React.Component {
                 ⚙️ There are no pending transactions in your pool yet.
               </NoTxs>
             ) : null}
+
             {this.props.txs.reverse().map(tx => {
               return <Transaction key={tx.txHash} tx={tx} />;
             })}

@@ -95,7 +95,16 @@ const PoolModal = ({show, ...otherProps}) => {
         <Parent>
           <MyModal>
             <Header>
-              <Left />
+              <Left>
+                <div style={{marginLeft: 25}}>
+                  <Icon
+                    icon={'update'}
+                    width={25}
+                    height={25}
+                    color={'white'}
+                  />
+                </div>
+              </Left>
               <Centered>
                 <HeaderTitle>Transaction Pool</HeaderTitle>
                 <TxPoolIcon src="/img/tx/transaction.svg" />{' '}

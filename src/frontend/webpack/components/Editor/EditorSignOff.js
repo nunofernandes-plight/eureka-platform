@@ -11,8 +11,12 @@ import withWeb3 from '../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
 import {fetchArticlesToSignOff} from '../../reducers/editor-methods.js';
 import {addTransaction} from '../../reducers/transactions.js';
-import {ToastContainer} from 'react-toastify';
 import toast from '../../design-components/Notification/Toast.js';
+import {
+  EditorInfoMessage,
+  EditorSuccessMessage
+} from '../../constants/Messages.js';
+import SC_TRANSACTIONS_TYPE from '../../../../backend/schema/sc-transaction-state-enum.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -52,15 +56,30 @@ class EditorSignOff extends React.Component {
     this.props.fetchArticlesToSignOff();
   }
 
-  signOffArticle(articleHash) {
+  signOffArticle(article, articleHash) {
     setSanityToOk(this.props.context.platformContract, articleHash)
       .send({
         from: this.props.selectedAccount.address
       })
-      .on('transactionHash', tx => {})
+      .on('transactionHash', tx => {
+        this.props.addTransaction(SC_TRANSACTIONS_TYPE.SANITY_OK, tx);
+        toast.info(
+          <EditorInfoMessage
+            path={'signoff'}
+            text={'Your article will be signed off in the next minutes.'}
+          />
+        );
+      })
       .on('receipt', async receipt => {
         console.log('Sanity check:  ' + receipt.status);
         this.props.fetchArticlesToSignOff();
+        toast.success(
+          <EditorSuccessMessage
+            path={'invite'}
+            articleId={article._id}
+            text={`The article has been successfully signed off`}
+          />
+        );
         return receipt;
       })
       .catch(err => {
@@ -114,7 +133,7 @@ class EditorSignOff extends React.Component {
                         this.setState({articleOnHover: null});
                       }}
                       action={(_, article) => {
-                        this.signOffArticle(article.articleHash);
+                        this.signOffArticle(article, article.articleHash);
                       }}
                     />
                   );
