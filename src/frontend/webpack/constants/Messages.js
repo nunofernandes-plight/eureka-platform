@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import {openTxModal} from '../reducers/txPool.js';
 import connect from 'react-redux/es/connect/connect.js';
+import {__ALERT_ERROR} from '../../helpers/colors.js';
 
 const Notification = styled.div``;
 
 const MyLink = styled(Link)`
   font-weight: bold;
-  margin: 0 2px;
+  margin: 0 1.5px;
 `;
 
 const mapDispatchToProps = dispatch => ({
@@ -46,33 +47,24 @@ const Linker = ({path, ...otherProps}) => {
   );
 };
 
-export const EDITOR_ARTICLE_ASSIGNMENT = () => {
+export const EditorInfoMessage = ({path, ...otherProps}) => {
   return (
     <Notification>
       <TransactionTracker name={'handling Editor'} />
-      If you want to sign off this article and thus continuing the editorial
-      assessment process click
-      <Linker path={'signoff'}>here</Linker>.
+      {otherProps.text}
     </Notification>
   );
 };
 
-export const ARTICLE_SANITY_OK_TX = ({closeToast, tx}) => {
+export const EditorSuccessMessage = ({path, id}) => {
   return (
     <Notification>
-      <strong>Dear editor</strong>,
+      <strong>Dear handling Editor, ‍</strong>
       <br />
-      You can track this transaction
-      <MyLink onClick={closeToast} style={{marginLeft: 2}} to={'tdb'}>
-        <strong>here.</strong>
-      </MyLink>
+      The<MyLink to={`/app/preview/${id}`}>article</MyLink>has been
+      successfully assigned to yourself.
       <br />
-      In the mean time, you can sanity check other articles or{' '}
-      <MyLink to={'invite'} onClick={closeToast} style={{marginLeft: 2}}>
-        continuing with the editorial process{' '}
-      </MyLink>
+      <Linker path={path}>Click for the next step.</Linker>.
     </Notification>
   );
 };
-
-export const ARTCILE_ASSIGNED_CONFIRMED = () => {};

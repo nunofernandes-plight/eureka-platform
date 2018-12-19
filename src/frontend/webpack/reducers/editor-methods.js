@@ -6,7 +6,7 @@ import {
   START_FETCHING_ARTICLES_TO_SIGNOFF,
   START_FETCHING_UNASSIGNED_SUBMISSIONS
 } from './types.js';
-import {EDITOR_ERROR, TITLE_GENERAL_ERROR} from '../constants/ModalErrors.js';
+import {EDITOR_ERROR} from '../constants/ModalErrors.js';
 import {
   getArticlesToSignOff,
   getUnassignedSubmissions
