@@ -11,7 +11,7 @@ import {
 
 const defaultOptions = {
   position: toast.POSITION.TOP_LEFT,
-  autoClose: 10000000000
+  autoClose: 10000
 };
 
 export default {

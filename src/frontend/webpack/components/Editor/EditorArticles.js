@@ -13,15 +13,11 @@ import withWeb3 from '../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
 import {fetchUnassignedSubmissions} from '../../reducers/editor-methods.js';
 import {TITLE_GENERAL_ERROR} from '../../constants/ModalErrors.js';
-import {
-  ArticleAssignedMessage,
-  EDITOR_ARTICLE_ASSIGNMENT
-} from '../../constants/Messages.js';
+import {EDITOR_ARTICLE_ASSIGNMENT} from '../../constants/Messages.js';
 import {addTransaction} from '../../reducers/transactions.js';
 import SC_TRANSACTIONS_TYPE from '../../../../backend/schema/sc-transaction-state-enum.mjs';
-import 'react-toastify/dist/ReactToastify.css';
-import '../../design-components/Notification.css';
-import {ToastContainer, toast} from 'react-toastify';
+import {ToastContainer} from 'react-toastify';
+import toast from '../../design-components/Notification/Toast.js';
 
 const Container = styled.div`
   display: flex;
@@ -96,17 +92,13 @@ class EditorArticles extends React.Component {
           SC_TRANSACTIONS_TYPE.EDITOR_ARTICLE_ASSIGNMENT,
           tx
         );
-        toast(<EDITOR_ARTICLE_ASSIGNMENT />, {
-          position: toast.POSITION.TOP_LEFT,
-          autoClose: 8000,
-          className: '__ALERT_SUCCESS',
-          progressClassName: '__BAR'
-        });
+        toast.info(<EDITOR_ARTICLE_ASSIGNMENT />);
       })
       .on('receipt', receipt => {
-        console.log(
-          'Assigning the editor to the submission exited with the TX status: ' +
+        toast.success(
+          `Assigning the editor to the submission exited with the TX status: ${
             receipt.status
+          }`
         );
         return receipt;
       })

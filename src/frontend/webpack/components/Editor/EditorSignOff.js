@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import {getArticlesToSignOff} from './EditorMethods.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Article from '../../views/Article.js';
 import {Card} from '../../views/Card.js';
@@ -8,10 +7,13 @@ import {__THIRD} from '../../../helpers/colors.js';
 import {Link, withRouter} from 'react-router-dom';
 import {setSanityToOk} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import Modal from '../../design-components/Modal.js';
-import TxHash from '../../views/TxHash.js';
 import withWeb3 from '../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
 import {fetchArticlesToSignOff} from '../../reducers/editor-methods.js';
+import {addTransaction} from '../../reducers/transactions.js';
+import {ToastContainer} from 'react-toastify';
+import toast from '../../design-components/Notification/Toast.js';
+import {EDITOR_ARTICLE_ASSIGNMENT} from '../../constants/Messages.js';
 
 const Container = styled.div`
   display: flex;
@@ -57,10 +59,7 @@ class EditorSignOff extends React.Component {
         from: this.props.selectedAccount.address
       })
       .on('transactionHash', tx => {
-        this.setState({
-          tx,
-          showTxModal: true
-        });
+        toast.error(<EDITOR_ARTICLE_ASSIGNMENT />);
       })
       .on('receipt', async receipt => {
         console.log('Sanity check:  ' + receipt.status);
@@ -90,22 +89,6 @@ class EditorSignOff extends React.Component {
         >
           {this.state.errorMessage || this.props.errorMessage}
         </Modal>
-
-        <Modal
-          toggle={isTx => {
-            this.setState({tx: null});
-          }}
-          action={'GOT IT'}
-          callback={() => {
-            this.props.history.push('/app/editor/invite');
-          }}
-          show={this.state.tx}
-          title={'We got your request!'}
-        >
-          This article successfully passed the sanity check! You can find its tx
-          hash here: <TxHash txHash={this.state.tx}>Transaction Hash</TxHash>.{' '}
-          <br />
-        </Modal>
       </div>
     );
   }
@@ -113,6 +96,7 @@ class EditorSignOff extends React.Component {
   render() {
     return (
       <Container>
+        <ToastContainer />
         {this.renderModals()}
         {this.props.loading ? (
           <GridSpinner />
@@ -164,6 +148,9 @@ export default withWeb3(
       dispatch => ({
         fetchArticlesToSignOff: () => {
           dispatch(fetchArticlesToSignOff());
+        },
+        addTransaction: (txType, tx) => {
+          dispatch(addTransaction(txType, tx));
         }
       })
     )(EditorSignOff)
