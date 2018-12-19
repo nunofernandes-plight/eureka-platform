@@ -8,6 +8,10 @@ import {addTransaction} from '../../../reducers/transactions.js';
 import SC_TRANSACTIONS_TYPE from '../../../../../backend/schema/sc-transaction-state-enum.mjs';
 import {fetchingArticleData} from '../../../reducers/article.js';
 
+const MyButton = styled(Button) `
+  //width: 100%;
+`;
+
 export const signOffArticle = (platformContract, props) => {
   setSanityToOk(platformContract, props.article.articleHash)
     .send({
@@ -50,14 +54,14 @@ export const SanityCheckAcceptButton = connect(mapStateToProps, mapDispatchToPro
     <Web3Context.Consumer>
       {web3Context => {
         return (
-          <Button
+          <MyButton
             onClick={() => {
               signOffArticle(web3Context.platformContract, props);
             }}
             title={'The sanity of the article is ok and it is released for the peer review process'}
           >
             Sanity OK
-          </Button>
+          </MyButton>
         );
       }}
     </Web3Context.Consumer>
