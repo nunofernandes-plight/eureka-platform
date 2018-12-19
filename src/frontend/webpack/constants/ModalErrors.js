@@ -9,3 +9,6 @@ export const ONLINE_DRAFTS =
 
 export const REVIEWS_ERROR =
   'Dear Reviewer, We had some troubles fetching the data from our server. Please try again or contact us at the following email address: it-team@eurekatoken.io  ';
+
+export const ARTICLE_ERROR =
+  'Dear User, We had some troubles fetching the data from our server. Please try again or contact us at the following email address: it-team@eurekatoken.io  ';
