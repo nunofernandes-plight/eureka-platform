@@ -1,5 +1,6 @@
 import SC_TRANSACTIONS_TYPE from '../../backend/schema/sc-transaction-state-enum.mjs';
 import {__SCALE_EIGHT, __SCALE_ONE, __SCALE_SEVEN, __SCALE_TEN, __SCALE_THREE, __SCALE_TWO} from './colors.js';
+import React from 'react';
 
 export const getTypeAttributes = type => {
   switch (type) {
@@ -20,6 +21,9 @@ export const getTypeAttributes = type => {
 
     case SC_TRANSACTIONS_TYPE.SANITY_OK:
       return {color: __SCALE_EIGHT, text: 'ARTICLE SANITY ACCEPTED'};
+
+    case SC_TRANSACTIONS_TYPE.SANITY_NOT_OK:
+      return {color: __SCALE_EIGHT, text: 'ARTICLE SANITY DECLINED'};
 
     default:
       return {color: __SCALE_TEN, text: ''};
