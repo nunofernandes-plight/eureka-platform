@@ -24,7 +24,6 @@ export const EthereumAddress = ({
   noLink,
   ...otherProps
 }) => {
-  console.log(otherProps);
   let content = otherProps.content;
   if (!content) content = ethereumAddress;
   if (listLength && index === listLength - 2) content = content + ' and ';

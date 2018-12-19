@@ -1,40 +1,58 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
+import {openTxModal} from '../reducers/txPool.js';
+import connect from 'react-redux/es/connect/connect.js';
+
 const Notification = styled.div``;
 
 const MyLink = styled(Link)`
   font-weight: bold;
+  margin: 0 2px;
 `;
 
-/*
 const mapDispatchToProps = dispatch => ({
-  fetchNetwork: () => {
-    dispatch(fetchNetwork());
+  openModal: () => {
+    dispatch(openTxModal());
   }
 });
-const mapStateToProps = state => ({
-  network: state.networkData.network
-});
-*/
 
-/**
- * EDITOR NOTIFICATIONS
- **/
-export const ARTICLE_ASSIGNED_TX = ({closeToast, tx}) => {
+const TransactionTracker = connect(
+  null,
+  mapDispatchToProps
+)(({name, ...otherProps}) => {
+  return (
+    <Fragment>
+      <strong>Dear {name},‍</strong>,
+      <br />
+      You can track this transaction by clicking{' '}
+      <strong
+        onClick={() => {
+          otherProps.openModal();
+        }}
+      >
+        here.
+      </strong>
+      <br />
+    </Fragment>
+  );
+});
+
+const Linker = ({path, ...otherProps}) => {
+  return (
+    <Fragment>
+      <MyLink to={path}>{otherProps.children}</MyLink>
+    </Fragment>
+  );
+};
+
+export const EDITOR_ARTICLE_ASSIGNMENT = () => {
   return (
     <Notification>
-      <strong>Dear editor</strong>,
-      <br />
-      You can track this transaction
-      <MyLink onClick={closeToast} style={{marginLeft: 2}} to={'tdb'}>
-        <strong>here.</strong>
-      </MyLink>
-      <br />
-      In the mean time, you can assign other articles to yourself or{' '}
-      <MyLink to={'signoff'} onClick={closeToast} style={{marginLeft: 2}}>
-        continuing with the editorial assessment process{' '}
-      </MyLink>
+      <TransactionTracker name={'handling Editor'} />
+      If you want to sign off this article and thus continuing the editorial
+      assessment process click
+      <Linker path={'signoff'}>here</Linker>.
     </Notification>
   );
 };
@@ -56,4 +74,5 @@ export const ARTICLE_SANITY_OK_TX = ({closeToast, tx}) => {
     </Notification>
   );
 };
+
 export const ARTCILE_ASSIGNED_CONFIRMED = () => {};

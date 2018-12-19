@@ -61,6 +61,8 @@ const Time = styled.div`
   font-size: 11px;
   padding: 3px 6px;
   border-radius: 4px;
+  width: 120px;
+  text-align: center;
   margin-left: 15px;
   background: ${__GRAY_100};
 `;
