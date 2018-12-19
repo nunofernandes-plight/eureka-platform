@@ -6,7 +6,7 @@ import Modal from '../../design-components/Modal.js';
 import Article from '../../views/Article.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {assignForSubmissionProcess} from '../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
-import {withRouter} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import {isGanache} from '../../../../helpers/isGanache.mjs';
 import Pagination from './Pagination.js';
 import withWeb3 from '../../contexts/WithWeb3.js';
@@ -21,6 +21,7 @@ import {addTransaction} from '../../reducers/transactions.js';
 import SC_TRANSACTIONS_TYPE from '../../../../backend/schema/sc-transaction-state-enum.mjs';
 import {ToastContainer} from 'react-toastify';
 import toast from '../../design-components/Notification/Toast.js';
+import {renderField} from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
 
 const Container = styled.div`
   display: flex;
@@ -102,19 +103,19 @@ class EditorArticles extends React.Component {
         );
       })
       .on('receipt', receipt => {
+        console.log(article);
         this.props.fetchUnassignedSubmissions(this.state.page);
         toast.success(
-          <EditorSuccessMessage path={'signoff'} id={article._id} />
+          <EditorSuccessMessage
+            path={'signoff'}
+            articleId={article._id}
+            text={`The article has been successfully assigned to yourself`}
+          />
         );
         return receipt;
       })
       .catch(err => {
-        console.error(err);
-        this.setState({
-          errorMessage:
-            'Ouh. Something went wrong with the Smart Contract call: ' +
-            err.toString()
-        });
+        toast.error(err.toLocaleString(), {autoClose: false});
       });
   }
 

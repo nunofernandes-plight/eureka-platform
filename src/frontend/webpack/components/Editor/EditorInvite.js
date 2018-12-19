@@ -217,7 +217,7 @@ class EditorInvite extends React.Component {
                         buttonText={'Invite Reviewers'}
                         key={article._id}
                         article={article}
-                        onHover={this.state.articleOnHover === article._id}
+                        show={this.state.articleOnHover === article._id}
                         onMouseEnter={obj => {
                           this.setState({articleOnHover: obj._id});
                         }}

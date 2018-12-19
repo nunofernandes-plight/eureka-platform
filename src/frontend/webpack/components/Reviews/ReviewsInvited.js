@@ -165,6 +165,7 @@ class ReviewsInvited extends React.Component {
                 this.state.articles.map(article => {
                   return (
                     <Article
+                      show={this.state.articleOnHover === article._id}
                       buttonText={
                         article.reviewState === 'INVITED'
                           ? 'Sign Up For Reviewing'
@@ -172,7 +173,6 @@ class ReviewsInvited extends React.Component {
                       }
                       key={article._id}
                       article={article}
-                      onHover={this.state.articleOnHover === article._id}
                       onMouseEnter={obj => {
                         this.setState({articleOnHover: obj._id});
                       }}

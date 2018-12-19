@@ -97,19 +97,15 @@ class ReviewsOpen extends React.Component {
           <GridSpinner />
         ) : (
           <Articles>
-
-
-
-
             {this.props.articles ? (
               this.props.articles.length > 0 ? (
                 this.props.articles.map(article => {
                   return (
                     <Article
                       buttonText={'Write a Review'}
+                      show={this.state.articleOnHover === article._id}
                       key={article._id}
                       article={article}
-                      onHover={this.state.articleOnHover === article._id}
                       onMouseEnter={obj => {
                         this.setState({articleOnHover: obj._id});
                       }}

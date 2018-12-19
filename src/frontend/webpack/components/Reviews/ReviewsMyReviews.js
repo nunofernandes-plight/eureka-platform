@@ -219,9 +219,9 @@ class ReviewsMyReviews extends React.Component {
                   return (
                     <Article
                       buttonText={'Edit Review'}
+                      show={this.state.articleOnHover === article._id}
                       key={article._id}
                       article={article}
-                      onHover={this.state.articleOnHover === article._id}
                       onMouseEnter={obj => {
                         this.setState({articleOnHover: obj._id});
                       }}

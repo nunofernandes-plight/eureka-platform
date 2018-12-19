@@ -103,10 +103,10 @@ class EditorSignOff extends React.Component {
                 this.props.articles.map(article => {
                   return (
                     <Article
+                      show={this.state.articleOnHover === article._id}
                       buttonText={'Sign off'}
                       key={article._id}
                       article={article}
-                      onHover={this.state.articleOnHover === article._id}
                       onMouseEnter={obj => {
                         this.setState({articleOnHover: obj._id});
                       }}
