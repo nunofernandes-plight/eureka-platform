@@ -6,21 +6,19 @@ import {Card} from '../../views/Card.js';
 import {Go} from './Go.js';
 import GridSpinner from '../../views/spinners/GridSpinner.js';
 import {renderField} from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
-import PreviewStatus from '../../views/PreviewStatus.js';
 import {
   __FIFTH,
   __GRAY_100,
   __GRAY_200,
   __GRAY_500
 } from '../../../helpers/colors.js';
-import {fetchArticle} from '../Articles/Online/TextEditor/DocumentMainMethods.js';
-import Document from '../../../../models/Document.mjs';
-import {deserializeDocument} from '../../../../helpers/documentSerializer.mjs';
 import Modal from '../../design-components/Modal.js';
 import PreviewAuthors from '../Preview/PreviewAuthors.js';
 import PreviewMetaData from '../Preview/PreviewMetaData.js';
 import PreviewArticle from '../Preview/PreviewArticle.js';
 import {LARGE_DEVICES} from '../../../helpers/mobile.js';
+import connect from 'react-redux/es/connect/connect.js';
+import {fetchingArticleData} from '../../reducers/article.js';
 
 const Container = styled.div`
   display: flex;
@@ -104,40 +102,14 @@ class PreviewRouter extends Component {
   constructor() {
     super();
     this.state = {
-      article: null,
-      document: null,
       from: null
     };
   }
 
   componentDidMount() {
     this.setFromLocation();
-    const draftId = this.props.match.params.id;
-    fetchArticle(draftId)
-      .then(response => response.json())
-      .then(response => {
-        if (response.success) {
-          let document = new Document(response.data.document);
-          let deserialized = deserializeDocument(document);
-          this.setState({
-            _id: response.data._id,
-            document: deserialized,
-            article: response.data
-          });
-        } else {
-          this.setState({
-            errorMessage: response.error
-          });
-        }
-        this.setState({loading: false});
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({
-          errorMessage: 'Ouh. Something went wrong.',
-          loading: false
-        });
-      });
+    const articleId = this.props.match.params.id;
+    this.props.fetchingArticleData(articleId);
   }
 
   setFromLocation() {
@@ -172,14 +144,14 @@ class PreviewRouter extends Component {
         <Card title={this.props.cardTitle}>
           <Go back {...this.props} from={this.state.from} />
           <MySeparator />
-          {!this.state.document ? (
+          {!this.props.document ? (
             <GridSpinner />
           ) : (
             <MyPreview>
-              <PreviewMetaData article={this.state.article} />
+              <PreviewMetaData article={this.props.article} />
               <ArticlePreview>
-                <Title>{renderField(this.state.document, 'title')}</Title>
-                {/*<PreviewStatus status={this.state.article.articleVersionState} />*/}
+                <Title>{renderField(this.props.document, 'title')}</Title>
+                {/*<PreviewStatus status={this.props.article.articleVersionState} />*/}
                 <ArticlePreviewNavBar>
                   <MyLabels>
                     <MyLink
@@ -215,7 +187,7 @@ class PreviewRouter extends Component {
                     this.props.match.params.id
                   }/article`}
                   render={() => (
-                    <PreviewArticle document={this.state.document} />
+                    <PreviewArticle document={this.props.document} />
                   )}
                 />
 
@@ -225,7 +197,7 @@ class PreviewRouter extends Component {
                     this.props.match.params.id
                   }/authors`}
                   render={() => (
-                    <PreviewAuthors authors={this.state.document.authors} />
+                    <PreviewAuthors authors={this.props.document.authors} />
                   )}
                 />
 
@@ -249,4 +221,18 @@ class PreviewRouter extends Component {
   }
 }
 
-export default withRouter(PreviewRouter);
+export default withRouter(
+  connect(
+    state => ({
+      article: state.articleData.article,
+      document: state.articleData.document,
+      errorMessage: state.articleData.articleDataError,
+      loading: state.articleData.articleDataLoading
+    }),
+    dispatch => ({
+      fetchingArticleData: (articleId) => {
+        dispatch(fetchingArticleData(articleId));
+      }
+    })
+  )(PreviewRouter)
+);
