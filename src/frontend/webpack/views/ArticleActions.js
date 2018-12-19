@@ -39,7 +39,7 @@ const EditorActions = ({article, user}) => {
       if (article.articleVersionState === ARTICLE_VERSION_STATE.SUBMITTED)
         return (
           <RoleActions>
-            <SanityCheckAcceptButton articleHash={article.articleHash} />
+            <SanityCheckAcceptButton article={article} />
             <RoleActions>
               Reject Article Because Of Missing Sanity
             </RoleActions>

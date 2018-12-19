@@ -6,9 +6,10 @@ import Button from '../../../design-components/Button.js';
 import {Web3Context} from '../../../contexts/Web3Context.js';
 import {addTransaction} from '../../../reducers/transactions.js';
 import SC_TRANSACTIONS_TYPE from '../../../../../backend/schema/sc-transaction-state-enum.mjs';
+import {fetchingArticleData} from '../../../reducers/article.js';
 
 export const signOffArticle = (platformContract, props) => {
-  setSanityToOk(platformContract, props.articleHash)
+  setSanityToOk(platformContract, props.article.articleHash)
     .send({
       from: props.selectedAccount.address
     })
@@ -24,6 +25,7 @@ export const signOffArticle = (platformContract, props) => {
         'Accepting the article`s sanity exited with the TX status: ' +
         receipt.status
       );
+      props.fetchingArticleData(props.article._id);
     })
     .catch(err => {
       console.error(err);
@@ -37,6 +39,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   addTransaction: (txType, tx) => {
     dispatch(addTransaction(txType, tx));
+  },
+  fetchingArticleData: (articleId) => {
+    dispatch(fetchingArticleData(articleId));
   }
 });
 
