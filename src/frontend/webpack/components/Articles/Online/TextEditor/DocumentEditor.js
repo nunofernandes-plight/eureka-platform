@@ -572,7 +572,7 @@ class DocumentEditor extends Component {
                       onClick={() => {
                         this.computeInputData();
                       }}
-                      title={"This is tool tip text"}
+                      title={"You will have to confirm your decision in a pop up."}
                       >
                       Submit Article
                     </Button>
