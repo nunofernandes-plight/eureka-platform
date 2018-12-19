@@ -6,8 +6,9 @@ import Roles from '../../../backend/schema/roles-enum.mjs';
 import ARTICLE_SUBMISSION_STATE from '../../../backend/schema/article-submission-state-enum.mjs';
 import {connect} from 'react-redux';
 import REVIEW_STATE from '../../../backend/schema/review-state-enum.mjs';
-import {SanityCheckAcceptButton} from '../components/Articles/ArticleActions/SignOffArticle.js';
+import {SanityCheckAcceptButton} from '../components/Articles/ArticleActions/SanityOk.js';
 import {SanityCheckDeclineButton} from '../components/Articles/ArticleActions/SanityNotOk.js';
+import {SanityCheckDeclineAndCloseButton} from '../components/Articles/ArticleActions/SanityNotOkAndClose.js';
 
 const Actions = styled.div`
   font-size: 14px;
@@ -42,9 +43,7 @@ const EditorActions = ({article, user}) => {
           <RoleActions>
             <SanityCheckAcceptButton article={article} />
             <SanityCheckDeclineButton article={article} />
-            <RoleActions>
-              Reject Article Because Of Missing Sanity
-            </RoleActions>
+            <SanityCheckDeclineAndCloseButton article={article} />
             <RoleActions>
               Resign for being editor of this submission process
             </RoleActions>
