@@ -19,9 +19,7 @@ import {
 } from '../../constants/Messages.js';
 import {addTransaction} from '../../reducers/transactions.js';
 import SC_TRANSACTIONS_TYPE from '../../../../backend/schema/sc-transaction-state-enum.mjs';
-import {ToastContainer} from 'react-toastify';
 import toast from '../../design-components/Notification/Toast.js';
-import {renderField} from '../Articles/Online/TextEditor/DocumentRenderer.mjs';
 
 const Container = styled.div`
   display: flex;
