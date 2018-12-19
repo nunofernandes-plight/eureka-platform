@@ -9,7 +9,13 @@ import {
   __GRAY_300,
   __GRAY_400,
   __GRAY_600,
-  __GRAY_700
+  __GRAY_700,
+  __SCALE_EIGHT,
+  __SCALE_ONE,
+  __SCALE_SEVEN,
+  __SCALE_TEN,
+  __SCALE_THREE,
+  __SCALE_TWO
 } from '../../../helpers/colors.js';
 import TRANSACTION_STATUS from '../../../../helpers/TransactionStatus.mjs';
 import EurekaLogo from '../../views/icons/EurekaLogo.js';
@@ -17,6 +23,8 @@ import TxType from '../MyHistory/TxType.js';
 import {ProgressBar} from './ProgressBar.js';
 import {Animation} from './Animation.js';
 import moment from 'moment';
+import SC_TRANSACTIONS_TYPE from '../../../../backend/schema/sc-transaction-state-enum.mjs';
+import {getTypeAttributes} from '../../../helpers/getTransactionTypeAttributes.js';
 
 const getColor = status => {
   switch (status) {
@@ -67,23 +75,27 @@ const Time = styled.div`
   background: ${__GRAY_100};
 `;
 
+
+
 const Transaction = ({tx, ...otherProps}) => {
+  const type = getTypeAttributes(tx.transactionType);
   return (
     <TxLi key={tx.txHash} status={tx.status}>
       <EurekaLogo width={20} height={20} />{' '}
       <Time>{moment(tx.createdAt).calendar()}</Time>
       <BarContainer>
         <TxType
-          type={tx.transactionType}
+          color={type.color}
+          text={type.text}
           padding={'5px 20px'}
           size={'12'}
           radius={'0'}
           noMargin
         />
         {tx.status === TRANSACTION_STATUS.IN_PROGRESS ? (
-          <ProgressBar height={3} />
+          <ProgressBar height={3} color={type.color} />
         ) : (
-          <ProgressBar height={3} static />
+          <ProgressBar height={3} static color={type.color} />
         )}
       </BarContainer>
       {tx.status}

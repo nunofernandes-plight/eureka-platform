@@ -6,6 +6,7 @@ import {Table} from '../../design-components/Table/Table.js';
 import {renderTimestamp} from '../../../helpers/timestampRenderer';
 import EurekaLogo from '../../views/icons/EurekaLogo';
 import {EthereumAddress} from '../../views/Address.js';
+import {getTypeAttributes} from '../../../helpers/getTransactionTypeAttributes.js';
 
 const ContactsContainer = styled.div`
   font-size: 14px;
@@ -54,7 +55,8 @@ const getTimestamp = tx => {
 };
 
 const getTxType = tx => {
-  return <TxType type={tx.transactionType} />;
+  const type = getTypeAttributes(tx.transactionType);
+  return <TxType color={type.color} text={type.text} />;
 };
 
 const MyHistoryTable = props => {
