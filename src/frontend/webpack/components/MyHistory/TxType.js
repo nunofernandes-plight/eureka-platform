@@ -7,7 +7,7 @@ import {
   __SCALE_ONE,
   __SCALE_TEN,
   __SCALE_THREE,
-  __SCALE_TWO
+  __SCALE_TWO, __SCALE_EIGHT
 } from '../../../helpers/colors.js';
 
 const getTypeAttributes = type => {
@@ -26,6 +26,9 @@ const getTypeAttributes = type => {
 
     case SC_TRANSACTIONS_TYPE.EXPERT_REVIEWER_SIGNEDUP:
       return {color: __SCALE_SEVEN, text: 'EXPERT REVIEWER SIGNED UP'};
+
+    case SC_TRANSACTIONS_TYPE.SANITY_OK:
+      return {color: __SCALE_EIGHT, text: 'ARTICLE SANITY ACCEPTED'};
 
     default:
       return {color: __SCALE_TEN, text: ''};

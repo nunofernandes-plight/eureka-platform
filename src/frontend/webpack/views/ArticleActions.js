@@ -6,6 +6,7 @@ import Roles from '../../../backend/schema/roles-enum.mjs';
 import ARTICLE_SUBMISSION_STATE from '../../../backend/schema/article-submission-state-enum.mjs';
 import {connect} from 'react-redux';
 import REVIEW_STATE from '../../../backend/schema/review-state-enum.mjs';
+import {SanityCheckAcceptButton} from '../components/Articles/ArticleActions/SignOffArticle.js';
 
 const Actions = styled.div`
   font-size: 14px;
@@ -38,9 +39,7 @@ const EditorActions = ({article, user}) => {
       if (article.articleVersionState === ARTICLE_VERSION_STATE.SUBMITTED)
         return (
           <RoleActions>
-            <RoleActions>
-              Sign Off Article
-            </RoleActions>
+            <SanityCheckAcceptButton articleHash={article.articleHash} />
             <RoleActions>
               Reject Article Because Of Missing Sanity
             </RoleActions>

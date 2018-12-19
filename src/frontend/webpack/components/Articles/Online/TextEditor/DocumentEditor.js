@@ -37,6 +37,7 @@ import withWeb3 from '../../../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
 import DocumentLinkedArticles from './DocumentLinkedArticles.js';
 import ArticlesSelection from '../../../ArticlesSelection.js';
+import Button from '../../../../design-components/Button.js';
 
 const Parent = styled.div`
   display: flex;
@@ -72,7 +73,6 @@ const Line = styled.div`
 const ButtonContainer = styled.div`
   align-self: center;
 `;
-const Button = styled.button``;
 
 class DocumentEditor extends Component {
   constructor() {
@@ -572,7 +572,8 @@ class DocumentEditor extends Component {
                       onClick={() => {
                         this.computeInputData();
                       }}
-                    >
+                      title={"You will have to confirm your decision in a pop up."}
+                      >
                       Submit Article
                     </Button>
                   </ButtonContainer>
