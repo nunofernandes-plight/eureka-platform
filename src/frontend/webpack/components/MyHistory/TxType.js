@@ -30,6 +30,9 @@ const getTypeAttributes = type => {
     case SC_TRANSACTIONS_TYPE.SANITY_OK:
       return {color: __SCALE_EIGHT, text: 'ARTICLE SANITY ACCEPTED'};
 
+    case SC_TRANSACTIONS_TYPE.SANITY_NOT_OK:
+      return {color: __SCALE_EIGHT, text: 'ARTICLE SANITY DECLINED'};
+
     default:
       return {color: __SCALE_TEN, text: ''};
   }
