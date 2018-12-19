@@ -13,7 +13,10 @@ import withWeb3 from '../../contexts/WithWeb3.js';
 import connect from 'react-redux/es/connect/connect.js';
 import {fetchUnassignedSubmissions} from '../../reducers/editor-methods.js';
 import {TITLE_GENERAL_ERROR} from '../../constants/ModalErrors.js';
-import {EDITOR_ARTICLE_ASSIGNMENT} from '../../constants/Messages.js';
+import {
+  EditorInfoMessage,
+  EditorSuccessMessage
+} from '../../constants/Messages.js';
 import {addTransaction} from '../../reducers/transactions.js';
 import SC_TRANSACTIONS_TYPE from '../../../../backend/schema/sc-transaction-state-enum.mjs';
 import {ToastContainer} from 'react-toastify';
@@ -66,7 +69,7 @@ class EditorArticles extends React.Component {
     this.props.fetchUnassignedSubmissions(page);
   }
 
-  async assignArticle(scSubmissionID) {
+  async assignArticle(scSubmissionID, article) {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
     if (!isGanache(this.props.context.web3))
@@ -87,18 +90,21 @@ class EditorArticles extends React.Component {
         gas: gasAmount
       })
       .on('transactionHash', tx => {
-        this.props.fetchUnassignedSubmissions(this.state.page);
         this.props.addTransaction(
           SC_TRANSACTIONS_TYPE.EDITOR_ARTICLE_ASSIGNMENT,
           tx
         );
-        toast.info(<EDITOR_ARTICLE_ASSIGNMENT />);
+        toast.info(
+          <EditorInfoMessage
+            path={'signoff'}
+            text={'Your article will be assigned to you in the next minutes.'}
+          />
+        );
       })
       .on('receipt', receipt => {
+        this.props.fetchUnassignedSubmissions(this.state.page);
         toast.success(
-          `Assigning the editor to the submission exited with the TX status: ${
-            receipt.status
-          }`
+          <EditorSuccessMessage path={'signoff'} id={article._id} />
         );
         return receipt;
       })
@@ -130,7 +136,6 @@ class EditorArticles extends React.Component {
   render() {
     return (
       <Container>
-        <ToastContainer />
         {this.renderModals()}
         <Card title={'Assign articles'}>
           <EditorQuerySection
@@ -168,8 +173,8 @@ class EditorArticles extends React.Component {
                     onMouseLeave={obj => {
                       this.setState({articleOnHover: null});
                     }}
-                    action={async id => {
-                      await this.assignArticle(id);
+                    action={async (id, article) => {
+                      await this.assignArticle(id, article);
                     }}
                   />
                 );

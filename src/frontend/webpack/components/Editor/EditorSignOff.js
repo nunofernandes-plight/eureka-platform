@@ -13,7 +13,6 @@ import {fetchArticlesToSignOff} from '../../reducers/editor-methods.js';
 import {addTransaction} from '../../reducers/transactions.js';
 import {ToastContainer} from 'react-toastify';
 import toast from '../../design-components/Notification/Toast.js';
-import {EDITOR_ARTICLE_ASSIGNMENT} from '../../constants/Messages.js';
 
 const Container = styled.div`
   display: flex;
@@ -58,9 +57,7 @@ class EditorSignOff extends React.Component {
       .send({
         from: this.props.selectedAccount.address
       })
-      .on('transactionHash', tx => {
-        toast.error(<EDITOR_ARTICLE_ASSIGNMENT />);
-      })
+      .on('transactionHash', tx => {})
       .on('receipt', async receipt => {
         console.log('Sanity check:  ' + receipt.status);
         this.props.fetchArticlesToSignOff();
@@ -96,7 +93,6 @@ class EditorSignOff extends React.Component {
   render() {
     return (
       <Container>
-        <ToastContainer />
         {this.renderModals()}
         {this.props.loading ? (
           <GridSpinner />

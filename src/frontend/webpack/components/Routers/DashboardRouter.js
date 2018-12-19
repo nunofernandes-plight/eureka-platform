@@ -16,6 +16,13 @@ import ReviewsRouter from './ReviewsRouter.js';
 import PreviewRouter from './PreviewRouter.js';
 import ReviewsWriter from '../Reviews/ReviewsWriter.js';
 import ContractRouter from './ContractRouter.js';
+import {ToastContainer} from 'react-toastify';
+
+const CloseButton = ({YouCanPassAnyProps, closeToast}) => (
+  <i className="material-icons" onClick={closeToast}>
+    delete
+  </i>
+);
 
 class DashboardRouter extends Component {
   render() {
@@ -23,6 +30,7 @@ class DashboardRouter extends Component {
       <div>
         <TopContainer action={item => this.props.action(item)} />
         <BottomContainer>
+          <ToastContainer />
           <Route
             exact
             path={`${this.props.base}/dashboard`}

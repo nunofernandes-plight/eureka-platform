@@ -12,6 +12,7 @@ const Article = ({article, ...otherProps}) => {
       onMouseLeave={obj => {
         otherProps.onMouseLeave(obj);
       }}
+
       article={article}
       action={(id, article) => {
         otherProps.action(id, article);
