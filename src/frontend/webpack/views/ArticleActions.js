@@ -9,6 +9,7 @@ import REVIEW_STATE from '../../../backend/schema/review-state-enum.mjs';
 import {SanityCheckAcceptButton} from '../components/Articles/ArticleActions/SanityOk.js';
 import {SanityCheckDeclineButton} from '../components/Articles/ArticleActions/SanityNotOk.js';
 import {SanityCheckDeclineAndCloseButton} from '../components/Articles/ArticleActions/SanityNotOkAndClose.js';
+import {AssignAsEditorButton} from '../components/Articles/ArticleActions/AssignEditor.js';
 
 const Actions = styled.div`
   font-size: 14px;
@@ -32,7 +33,11 @@ const EditorActions = ({article, user}) => {
 
   if (user.roles.includes(Roles.EDITOR)) {
     if (article.articleSubmission.articleSubmissionState === ARTICLE_SUBMISSION_STATE.OPEN) {
-      return <RoleActions>Assign yourself as Editor</RoleActions>;
+      return (
+        <RoleActions>
+          <AssignAsEditorButton article={article}/>
+        </RoleActions>
+      );
     }
 
     if (article.articleSubmission.articleSubmissionState === ARTICLE_SUBMISSION_STATE.EDITOR_ASSIGNED
@@ -41,9 +46,9 @@ const EditorActions = ({article, user}) => {
       if (article.articleVersionState === ARTICLE_VERSION_STATE.SUBMITTED)
         return (
           <RoleActions>
-            <SanityCheckAcceptButton article={article} />
-            <SanityCheckDeclineButton article={article} />
-            <SanityCheckDeclineAndCloseButton article={article} />
+            <SanityCheckAcceptButton article={article}/>
+            <SanityCheckDeclineButton article={article}/>
+            <SanityCheckDeclineAndCloseButton article={article}/>
             <RoleActions>
               Resign for being editor of this submission process
             </RoleActions>
