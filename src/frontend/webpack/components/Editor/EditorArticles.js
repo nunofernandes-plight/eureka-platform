@@ -160,7 +160,7 @@ class EditorArticles extends React.Component {
                   <Article
                     buttonText={'Assign to me'}
                     key={article._id}
-                    onHover={this.state.articleOnHover === article._id}
+                    show={this.state.articleOnHover === article._id}
                     article={article}
                     onMouseEnter={obj => {
                       this.setState({articleOnHover: obj._id});

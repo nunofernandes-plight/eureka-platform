@@ -141,9 +141,9 @@ const FancyButton = styled.div`
   letter-spacing: 1.5px;
   text-transform: uppercase;
   margin-left: -2rem;
-  visibility: ${props => (props.onHover ? 'visible' : 'hidden')};
+  visibility: ${props => (props.show ? 'visible' : 'hidden')};
   transform: ${props =>
-    props.onHover ? 'translateX(2rem)' : 'translateX(0rem)'};
+    props.show ? 'translateX(2rem)' : 'translateX(0rem)'};
   transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   border-bottom-right-radius: 5px;
   border-top-right-radius: 5px;
@@ -170,9 +170,9 @@ const ArticleCard = ({article, ...otherProps}) => {
           <FigureContainer>
             <FancyButtonContainer>
               <FancyButton
+                show={otherProps.show}
                 background={__ALERT_ERROR}
                 top={10}
-                onHover={otherProps.onHover}
                 onClick={() => {
                   otherProps.action(article.scSubmissionID, article);
                 }}
@@ -182,6 +182,7 @@ const ArticleCard = ({article, ...otherProps}) => {
               </FancyButton>
               {otherProps.button2Text ? (
                 <FancyButton
+                  show={otherProps.show}
                   background={__ALERT_WARNING}
                   top={17.5}
                   onClick={() => {
