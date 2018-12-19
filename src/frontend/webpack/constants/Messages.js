@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import {openTxModal} from '../reducers/txPool.js';
 import connect from 'react-redux/es/connect/connect.js';
 import {__ALERT_ERROR} from '../../helpers/colors.js';
+import Icon from '../views/icons/Icon.js';
 
 const Notification = styled.div``;
 
@@ -56,15 +57,20 @@ export const EditorInfoMessage = ({path, ...otherProps}) => {
   );
 };
 
-export const EditorSuccessMessage = ({path, id}) => {
+export const EditorSuccessMessage = ({path, articleId, text}) => {
   return (
     <Notification>
-      <strong>Dear handling Editor, ‍</strong>
-      <br />
-      The<MyLink to={`/app/preview/${id}`}>article</MyLink>has been
-      successfully assigned to yourself.
-      <br />
-      <Linker path={path}>Click for the next step.</Linker>.
+      {' '}
+      <Icon
+        icon={'material'}
+        material={'check_circle_outline'}
+        width={15}
+        height={15}
+        right={5}
+      />
+      {text}. Find the article
+      <Linker path={`/app/preview/${articleId}`}>here</Linker>
+      or go to the <Linker path={path}>next step</Linker>.
     </Notification>
   );
 };

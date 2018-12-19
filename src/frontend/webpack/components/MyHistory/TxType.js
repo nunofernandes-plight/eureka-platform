@@ -7,38 +7,13 @@ import {
   __SCALE_ONE,
   __SCALE_TEN,
   __SCALE_THREE,
-  __SCALE_TWO, __SCALE_EIGHT
+  __SCALE_TWO,
+  __SCALE_EIGHT
 } from '../../../helpers/colors.js';
 
-const getTypeAttributes = type => {
-  switch (type) {
-    case SC_TRANSACTIONS_TYPE.SUBMIT_ARTICLE:
-      return {color: __SCALE_ONE, text: 'ARTICLE SUBMISSION'};
-
-    case SC_TRANSACTIONS_TYPE.EDITOR_ASSIGNED:
-      return {color: __SCALE_TWO, text: 'EDITOR ASSIGNMENT'};
-
-    case SC_TRANSACTIONS_TYPE.EDITOR_ARTICLE_ASSIGNMENT:
-      return {color: __SCALE_TWO, text: 'ARTICLE ASSIGNED TO YOURSELF'};
-
-    case SC_TRANSACTIONS_TYPE.MINTING:
-      return {color: __SCALE_THREE, text: 'MINTING'};
-
-    case SC_TRANSACTIONS_TYPE.EXPERT_REVIEWER_SIGNEDUP:
-      return {color: __SCALE_SEVEN, text: 'EXPERT REVIEWER SIGNED UP'};
-
-    case SC_TRANSACTIONS_TYPE.SANITY_OK:
-      return {color: __SCALE_EIGHT, text: 'ARTICLE SANITY ACCEPTED'};
-
-    case SC_TRANSACTIONS_TYPE.SANITY_NOT_OK:
-      return {color: __SCALE_EIGHT, text: 'ARTICLE SANITY DECLINED'};
-
-    default:
-      return {color: __SCALE_TEN, text: ''};
-  }
-};
 
 const Type = styled.div`
+  width: 250px;
   background: ${props => props.background};
   color: ${props => props.color};
   padding: ${props => (props.padding ? props.padding : '8px 5px')};
@@ -48,8 +23,7 @@ const Type = styled.div`
   margin: ${props => (props.noMargin ? '0' : '0 20px')};
   text-align: center;
 `;
-const TxType = ({type, ...otherProps}) => {
-  const color = getTypeAttributes(type).color;
+const TxType = ({color, text, ...otherProps}) => {
   return (
     <Type
       {...otherProps}
@@ -58,7 +32,7 @@ const TxType = ({type, ...otherProps}) => {
         .alpha(0.25)
         .css()}
     >
-      {getTypeAttributes(type).text}
+      {text}
     </Type>
   );
 };

@@ -207,7 +207,7 @@ class EditorCheckReviews extends React.Component {
                       buttonText={'Accept Review'}
                       key={review.reviewId}
                       article={review}
-                      onHover={this.state.reviewOnHover === review.reviewId}
+                      show={this.state.reviewOnHover === review.reviewId}
                       onMouseEnter={obj => {
                         this.setState({reviewOnHover: obj.reviewId});
                       }}

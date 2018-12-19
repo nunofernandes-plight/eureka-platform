@@ -15,7 +15,7 @@ const Slider = styled.div`
 
 const Line = styled.div`
   opacity: ${props => (props.static ? '1' : '0.4')};
-  background: ${__FIFTH};
+  background: ${props => props.color};
   width: 150%;
   height: ${props => props.height}px;
   position: absolute;
@@ -23,7 +23,7 @@ const Line = styled.div`
 
 const Subline = styled.div`
   position: absolute;
-  background: ${__FIFTH};
+  background: ${props => props.color};
 `;
 
 const Increase = keyframes`
@@ -46,13 +46,13 @@ const SublineDecrease = styled(Subline)`
   height: ${props => props.height}px;
 `;
 
-export const ProgressBar = ({height, ...otherProps}) => {
+export const ProgressBar = ({height, color, ...otherProps}) => {
   return (
     <Parent>
       <Slider height={height}>
-        <Line height={height} static={otherProps.static} />
-        <SublineIncrease height={height} />
-        <SublineDecrease height={height} />
+        <Line height={height} static={otherProps.static} color={color} />
+        <SublineIncrease height={height} color={color} />
+        <SublineDecrease height={height} color={color} />
       </Slider>
     </Parent>
   );

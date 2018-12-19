@@ -207,7 +207,7 @@ class EditorFinalize extends React.Component {
                       buttonText={'Accept this article'}
                       key={article._id}
                       article={article}
-                      onHover={this.state.articleOnHover === article._id}
+                      show={this.state.articleOnHover === article._id}
                       onMouseEnter={obj => {
                         this.setState({articleOnHover: obj._id});
                       }}
