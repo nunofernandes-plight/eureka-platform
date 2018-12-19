@@ -15,7 +15,7 @@ const Actions = styled.div`
 `;
 
 const RoleActions = styled.div`
-  
+  margin-right: 20px;
 `;
 
 const AuthorActions = ({article, user}) => {
