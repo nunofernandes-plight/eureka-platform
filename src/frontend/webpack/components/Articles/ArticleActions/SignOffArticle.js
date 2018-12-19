@@ -5,6 +5,7 @@ import {setSanityToOk} from '../../../../../smartcontracts/methods/web3-platform
 import Button from '../../../design-components/Button.js';
 import {Web3Context} from '../../../contexts/Web3Context.js';
 import {addTransaction} from '../../../reducers/transactions.js';
+import SC_TRANSACTIONS_TYPE from '../../../../../backend/schema/sc-transaction-state-enum.mjs';
 
 export const signOffArticle = (platformContract, props) => {
   setSanityToOk(platformContract, props.articleHash)
@@ -12,13 +13,20 @@ export const signOffArticle = (platformContract, props) => {
       from: props.selectedAccount.address
     })
     .on('transactionHash', tx => {
-      // props.onTransactionHash(tx);
+      props.addTransaction(
+        SC_TRANSACTIONS_TYPE.SANITY_OK,
+        tx
+      );
+      // TODO: this toast!
     })
     .on('receipt', async receipt => {
-      // props.onReceipt(receipt);
+      console.log(
+        'Accepting the article`s sanity exited with the TX status: ' +
+        receipt.status
+      );
     })
     .catch(err => {
-      // props.onError(err);
+      console.error(err);
     });
 };
 
