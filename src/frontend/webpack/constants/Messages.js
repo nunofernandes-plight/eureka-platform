@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import {openTxModal} from '../reducers/txPool.js';
 import connect from 'react-redux/es/connect/connect.js';
+
 const Notification = styled.div``;
 
 const MyLink = styled(Link)`
   font-weight: bold;
+  margin: 0 2px;
 `;
 
 const mapDispatchToProps = dispatch => ({
@@ -15,33 +17,42 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-/**
- * EDITOR NOTIFICATIONS
- **/
-
-export const ArticleAssignedMessage = connect(
+const TransactionTracker = connect(
   null,
   mapDispatchToProps
-)(({closeToast, tx, ...otherProps}) => {
+)(({name, ...otherProps}) => {
   return (
-    <Notification>
-      <strong>Dear editor</strong>,
+    <Fragment>
+      <strong>Dear {name},‍</strong>,
       <br />
-      You can track this transaction
+      You can track this transaction by clicking{' '}
       <strong
         onClick={() => {
-          closeToast();
           otherProps.openModal();
         }}
       >
-        here
+        here.
       </strong>
       <br />
-      In the mean time, you can assign other articles to yourself or{' '}
-      <MyLink to={'signoff'} onClick={closeToast} style={{marginLeft: 2}}>
-        continuing with the editorial assessment process{' '}
-      </MyLink>
-    </Notification>
+    </Fragment>
   );
 });
-export const ARTCILE_ASSIGNED_CONFIRMED = () => {};
+
+const Linker = ({path, ...otherProps}) => {
+  return (
+    <Fragment>
+      <MyLink to={path}>{otherProps.children}</MyLink>
+    </Fragment>
+  );
+};
+
+export const EDITOR_ARTICLE_ASSIGNMENT = () => {
+  return (
+    <Notification>
+      <TransactionTracker name={'handling Editor'} />
+      If you want to sign off this article and thus continuing the editorial
+      assessment process click
+      <Linker path={'signoff'}>here</Linker>.
+    </Notification>
+  );
+};
