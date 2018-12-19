@@ -60,7 +60,7 @@ export const SanityCheckDeclineAndCloseButton = connect(mapStateToProps, mapDisp
             }}
             title={'Request a new article version since the sanity of this version is not ok.'}
           >
-            Not Ok And Close
+            Sanity Not Ok And Close
           </Button>
         );
       }}
