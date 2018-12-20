@@ -220,20 +220,15 @@ export default {
    * @returns {Promise<void>}
    */
   updateEditorToSubmission: async (_submissionId, _editor, _stateTimestamp) => {
-    ArticleSubmission.findOneAndUpdate(
-      {scSubmissionID: _submissionId},
-      {
-        editor: _editor,
-        articleSubmissionState: ArticleSubmissionState.EDITOR_ASSIGNED,
-        stateTimestamp: _stateTimestamp
-      },
-      (err, submission) => {
-        if (err) throw err;
-        else {
-          return submission;
-        }
-      }
-    );
+
+    let articleSubmission = await ArticleSubmission.findOne({scSubmissionID: _submissionId});
+    const removedEditor = articleSubmission.editor;
+
+    articleSubmission.editor = _editor;
+    articleSubmission.articleSubmissionState = ArticleSubmissionState.EDITOR_ASSIGNED;
+    articleSubmission.stateTimestamp = _stateTimestamp;
+    await articleSubmission.save();
+    return removedEditor;
   },
   /**
    * Updates the ArticleSubmissionState
