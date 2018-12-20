@@ -9,3 +9,11 @@ export const getReviewersInvitationTemplate = article => {
   );
   return html;
 };
+
+export const getEditorResignedInvitationTemplate = article => {
+  const html = readFileSync(
+    'src/backend/email/templates/html/EDITOR_RESIGNED.html',
+    'utf-8'
+  );
+  return html;
+};

@@ -255,22 +255,15 @@ export default {
   },
 
   removeEditorFromSubmission: async _submissionId => {
-    ArticleSubmission.findOneAndUpdate(
-      {scSubmissionID: _submissionId},
-      {
-        editor: undefined,
-        articleSubmissionState: ArticleSubmissionState.OPEN
-      },
-      (err, submission) => {
-        if (err) throw err;
-        else {
-          console.log(
-            'Submission ' + submission._id + ' has the editor removed'
-          );
-          return submission;
-        }
-      }
-    );
+
+    let articleSubmission = await ArticleSubmission.findOne({scSubmissionID: _submissionId});
+    const editorAdress = articleSubmission.editor;
+
+    articleSubmission.editor = undefined;
+    articleSubmission.articleSubmissionState = ArticleSubmissionState.OPEN;
+
+    await articleSubmission.save();
+    return editorAdress;
   },
   /**
    * Push a new article version to the given submission

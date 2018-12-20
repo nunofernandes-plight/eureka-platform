@@ -13,6 +13,8 @@ import Review from '../schema/review.mjs';
 import ArticleVersion from '../schema/article-version.mjs';
 import {sendEmail} from '../email/index.mjs';
 import {getReviewersInvitationTemplate} from '../email/templates/EmailTemplates.mjs';
+import {sendEmailByEthereumAddress} from '../email/index';
+import {getEditorResignedInvitationTemplate} from '../email/templates/EmailTemplates';
 
 
 export default {
@@ -94,6 +96,7 @@ export default {
           event.returnValues.assignerAddress,
           event.returnValues.stateTimestamp
         );
+
       }
     );
 
@@ -103,9 +106,17 @@ export default {
       async (error, event) => {
         if (error) throw error;
 
-        await articleSubmissionService.removeEditorFromSubmission(
+        const oldEditorAddress = await articleSubmissionService.removeEditorFromSubmission(
           event.returnValues.submissionId
         );
+
+
+        sendEmailByEthereumAddress({
+          ethereumAddress: oldEditorAddress,
+          from: 'info@eurekatoken.io',
+          subject: 'Editor Resignation',
+          html: getEditorResignedInvitationTemplate()
+        });
       }
     );
 
