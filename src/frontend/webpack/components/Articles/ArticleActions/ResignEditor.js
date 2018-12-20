@@ -17,7 +17,7 @@ const MyButton = styled(Button) `
   width: 100%;
 `;
 
-export const resignEditor = async (web3Context, props) => {
+export const resignEditor = async (web3Context, props, callback) => {
   let gasAmount;
   // gas estimation on ganache doesn't work properly
   if (!isGanache(web3Context.web3))
@@ -46,7 +46,7 @@ export const resignEditor = async (web3Context, props) => {
     })
     .on('receipt', receipt => {
       toast.success(`You have been sucessfully removed from the article submission process.`);
-      props.fetchingArticleData(props.article._id);
+      callback();
     })
     .catch(err => {
       toast.error(err.toLocaleString(), {autoClose: false});

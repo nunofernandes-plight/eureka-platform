@@ -20,8 +20,8 @@ const AuthorContainer = styled.div`
   width: 100%;
 `;
 
-const Author = props => {
-  const author = props.author;
+const Author = ({author, ...otherProps}) => {
+  const props = otherProps;
   const fontSize = props.fontSize ? props.fontSize + 'px' : 'inherit';
   return (
     <AuthorContainer padding={props.padding} fontSize={fontSize}>

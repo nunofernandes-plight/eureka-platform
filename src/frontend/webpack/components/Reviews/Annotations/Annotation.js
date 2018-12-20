@@ -1,14 +1,13 @@
 import React, {Fragment} from 'react';
 import styled from 'styled-components';
+import {connect} from 'react-redux';
 import AuthorLookup from '../../AuthorLookup.js';
-import {
-  __GRAY_500,
-  __GRAY_700
-} from '../../../../helpers/colors.js';
+import {__GRAY_500, __GRAY_700} from '../../../../helpers/colors.js';
 import Icon from '../../../views/icons/Icon.js';
 import AnnotationEditor from './AnnotationEditor.js';
 import moment from 'moment';
 import AnnotationMenu from './AnnotationMenu.js';
+import Author from '../../../views/Author.js';
 
 const Container = styled.div`
   padding: 10px;
@@ -77,10 +76,9 @@ class Annotation extends React.Component {
     return (
       <Container show={this.state.showAnnotation}>
         <Fragment>
-          {' '}
           <AnnotationHeader>
-            <AuthorLookup
-              addresses={annotation.owner}
+            <Author
+              author={this.props.user}
               right={5}
               width={23}
               height={23}
@@ -140,4 +138,7 @@ class Annotation extends React.Component {
     );
   }
 }
-export default Annotation;
+
+export default connect(state => ({
+  user: state.userData.data
+}))(Annotation);
