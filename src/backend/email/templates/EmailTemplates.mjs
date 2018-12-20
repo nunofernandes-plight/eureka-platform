@@ -9,3 +9,7 @@ export const getReviewersInvitationTemplate = article => {
   );
   return html;
 };
+
+export const getEmailFromDiniMutter = () => {
+
+}

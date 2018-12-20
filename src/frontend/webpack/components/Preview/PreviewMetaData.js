@@ -1,7 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import Document from '../../../../models/Document.mjs';
-import {__ALERT_ERROR, __GRAY_300, __THIRD} from '../../../helpers/colors.js';
+import {
+  __ALERT_ERROR,
+  __GRAY_300,
+  __GRAY_400,
+  __THIRD
+} from '../../../helpers/colors.js';
 import {
   makeFieldReadable,
   renderField
@@ -77,15 +82,27 @@ const Field = ({doc, field, ...otherProps}) => {
   );
 };
 
+const Fields = ({fields, article}) => {
+  return fields.map((field, i) => {
+    return <Field key={i} doc={article.document} field={field} />;
+  });
+};
+
+const Separator = styled.div`
+  height: 1px;
+  width: 75%;
+  background: ${__GRAY_400};
+  margin: 25px 0 10px 0;
+`;
+
 const PreviewMetaData = ({article, ...otherProps}) => {
   const fields = Document.metaDataFields();
   return (
     <Container>
-      {fields.map((field, i) => {
-        return <Field key={i} doc={article.document} field={field} />;
-      })}
-      <CustomPreviewStatus status={article.articleVersionState} />
+      <Fields article={article} fields={fields} />
+      <Separator />
       <ArticleActions article={article} />
+      <CustomPreviewStatus status={article.articleVersionState} />
     </Container>
   );
 };
