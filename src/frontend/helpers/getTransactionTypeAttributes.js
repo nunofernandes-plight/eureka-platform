@@ -10,6 +10,9 @@ export const getTypeAttributes = type => {
     case SC_TRANSACTIONS_TYPE.EDITOR_ASSIGNED:
       return {color: __SCALE_TWO, text: 'EDITOR ASSIGNMENT'};
 
+    case SC_TRANSACTIONS_TYPE.REMOVE_EDITOR_FROM_SUBMISSION:
+      return {color: __SCALE_TWO, text: 'EDITOR REMOVED FROM SUBMISSION PROCESS'};
+
     case SC_TRANSACTIONS_TYPE.EDITOR_ARTICLE_ASSIGNMENT:
       return {color: __SCALE_TWO, text: 'ARTICLE ASSIGNED TO YOURSELF'};
 
