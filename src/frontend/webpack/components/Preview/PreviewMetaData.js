@@ -95,12 +95,17 @@ const Separator = styled.div`
   margin: 25px 0 10px 0;
 `;
 
+const SubTitle = styled.h4`
+  color: ${__ALERT_ERROR};
+`;
+
 const PreviewMetaData = ({article, ...otherProps}) => {
   const fields = Document.metaDataFields();
   return (
     <Container>
       <Fields article={article} fields={fields} />
       <Separator />
+      <SubTitle>Actions you can do</SubTitle>
       <ArticleActions article={article} />
       <CustomPreviewStatus status={article.articleVersionState} />
     </Container>

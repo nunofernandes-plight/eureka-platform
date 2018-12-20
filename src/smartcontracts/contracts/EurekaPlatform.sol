@@ -39,7 +39,8 @@ contract EurekaPlatform {
     + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer;
 
     uint constant maxReviewRounds = 3;
-    uint constant REVIEWER_TIMER_INTERVAL = 50; // in seconds
+    uint constant REVIEWER_TIMER_INTERVAL = 120; // in seconds
+    uint constant NO_NEW_REVIEW_ROUND_INTERVAL = 50; // in seconds
 
     function getJournalParameters() view public returns (
         address _contractOwner,
@@ -713,9 +714,16 @@ contract EurekaPlatform {
 
     function declineNewReviewRound(uint256 _submissionId) public {
 
-        require(msg.sender == articleSubmissions[_submissionId].submissionOwner, "only the submission process owner can call this method");
+        require(msg.sender == articleSubmissions[_submissionId].submissionOwner
+            || msg.sender == contractOwner,
+            "only the submission process owner can call this method");
         require(articleSubmissions[_submissionId].submissionState == SubmissionState.NEW_REVIEW_ROUND_REQUESTED,
             "this method can't be called. the submission process state must be NEW_REVIEW_ROUND_REQUESTED.");
+
+
+//        if(msg.sender == contractOwner && (block.timestamp - NO_NEW_REVIEW_ROUND_INTERVAL - articleSubmissions[_submissionId].stateTimestamp) > 0) {
+//            revert("Current time has not exceeded the given time-interval. The reviewer cannot be removed yet");
+//        }
 
         closeSubmissionProcess(_submissionId);
         emit NewReviewRoundDeclined(_submissionId, block.timestamp);
