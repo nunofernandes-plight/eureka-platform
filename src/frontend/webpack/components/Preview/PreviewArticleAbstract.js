@@ -37,7 +37,6 @@ class PreviewArticleAbstract extends React.Component {
               isReview={this.props.isReview}
               show={this.state.onShow}
               onClick={ref => {
-                console.log(ref);
                 this.props.onAdd(ref, FIELD);
               }}
               updateOffsets={sentences => {
