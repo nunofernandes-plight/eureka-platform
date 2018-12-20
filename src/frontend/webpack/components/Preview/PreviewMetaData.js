@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Document from '../../../../models/Document.mjs';
 import {
   __ALERT_ERROR,
+  __FIFTH,
   __GRAY_300,
   __GRAY_400,
   __THIRD
@@ -97,6 +98,10 @@ const Separator = styled.div`
 
 const SubTitle = styled.h4`
   color: ${__ALERT_ERROR};
+  margin: 0;
+  font-size: 10px;
+  font-weight: 100;
+  text-transform: uppercase;
 `;
 
 const PreviewMetaData = ({article, ...otherProps}) => {
@@ -105,7 +110,7 @@ const PreviewMetaData = ({article, ...otherProps}) => {
     <Container>
       <Fields article={article} fields={fields} />
       <Separator />
-      <SubTitle>Actions you can do</SubTitle>
+  {/*    <SubTitle>Actions you can do</SubTitle>*/}
       <ArticleActions article={article} />
       <CustomPreviewStatus status={article.articleVersionState} />
     </Container>

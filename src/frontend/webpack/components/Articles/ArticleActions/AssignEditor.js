@@ -13,7 +13,7 @@ import {
 import {isGanache} from '../../../../../helpers/isGanache.mjs';
 import toast from '../../../design-components/Notification/Toast.js';
 import ActionButton from './ActionButton.js';
-import {__ALERT_SUCCESS} from '../../../../helpers/colors.js';
+import {__ALERT_SUCCESS, __FIFTH} from '../../../../helpers/colors.js';
 
 const Container = styled.div`
   display: flex;
@@ -87,7 +87,7 @@ export const AssignAsEditorButton = connect(
         return (
           <Container>
             <ActionButton
-              background={__ALERT_SUCCESS}
+              background={__FIFTH}
               onClick={async () => {
                 await assignEditor(web3Context, props);
               }}
