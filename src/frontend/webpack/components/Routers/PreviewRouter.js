@@ -19,6 +19,8 @@ import PreviewArticle from '../Preview/PreviewArticle.js';
 import {LARGE_DEVICES} from '../../../helpers/mobile.js';
 import connect from 'react-redux/es/connect/connect.js';
 import {fetchingArticleData} from '../../reducers/article.js';
+import PreviewStatus from '../../views/PreviewStatus.js';
+import Alert from '../../design-components/Alerts.js';
 
 const Container = styled.div`
   display: flex;
@@ -150,8 +152,14 @@ class PreviewRouter extends Component {
             <MyPreview>
               <PreviewMetaData article={this.props.article} />
               <ArticlePreview>
+                <div style={{marginBottom: 15}}>
+                  <Alert status={'info'} iconSize={18} color={__FIFTH}>
+                    <PreviewStatus
+                      status={this.props.article.articleVersionState}
+                    />
+                  </Alert>
+                </div>
                 <Title>{renderField(this.props.document, 'title')}</Title>
-                {/*<PreviewStatus status={this.props.article.articleVersionState} />*/}
                 <ArticlePreviewNavBar>
                   <MyLabels>
                     <MyLink
@@ -230,7 +238,7 @@ export default withRouter(
       loading: state.articleData.articleDataLoading
     }),
     dispatch => ({
-      fetchingArticleData: (articleId) => {
+      fetchingArticleData: articleId => {
         dispatch(fetchingArticleData(articleId));
       }
     })

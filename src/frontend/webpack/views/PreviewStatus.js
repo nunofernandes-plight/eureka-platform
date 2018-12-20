@@ -38,9 +38,8 @@ const getStringFromStatus = status => {
 };
 
 const Status = styled.div`
-  font-size: 14px;
-  color: ${__SCALE_SIX};
-  font-style: italic;
+  font-size: 12px;
+  color: white;
 `;
 
 const PreviewStatus = ({status, className}) => {
