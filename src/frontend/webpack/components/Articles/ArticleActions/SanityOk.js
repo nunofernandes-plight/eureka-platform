@@ -12,7 +12,7 @@ const MyButton = styled(Button) `
   //width: 100%;
 `;
 
-export const signOffArticle = (platformContract, props) => {
+export const signOffArticle = (platformContract, props, callback) => {
   setSanityToOk(platformContract, props.article.articleHash)
     .send({
       from: props.selectedAccount.address
@@ -29,7 +29,7 @@ export const signOffArticle = (platformContract, props) => {
         'Accepting the article`s sanity exited with the TX status: ' +
         receipt.status
       );
-      props.fetchingArticleData(props.article._id);
+      callback();
     })
     .catch(err => {
       console.error(err);
@@ -56,7 +56,9 @@ export const SanityCheckAcceptButton = connect(mapStateToProps, mapDispatchToPro
         return (
           <MyButton
             onClick={() => {
-              signOffArticle(web3Context.platformContract, props);
+              signOffArticle(web3Context.platformContract, props, () => {
+                props.fetchingArticleData(props.article._id);
+              });
             }}
             title={'The sanity of the article is ok and it is released for the peer review process'}
           >
