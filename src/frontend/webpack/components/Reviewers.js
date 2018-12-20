@@ -70,7 +70,7 @@ class Reviewers extends React.Component {
   render() {
     return (
       <Container>
-        <Card title={'REVIEWERS'} width={'1000'}>
+        <Card title={'REVIEWERS'}>
           <Go back {...this.props} />
           {!this.state.reviewers ? (
             <GridSpinner />
