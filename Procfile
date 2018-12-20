@@ -1,1 +1,1 @@
-worker: node --experimental-modules src/index.mjs
+web: node --experimental-modules src/index.mjs
