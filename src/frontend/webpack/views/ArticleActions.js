@@ -10,6 +10,7 @@ import {SanityCheckAcceptButton} from '../components/Articles/ArticleActions/San
 import {SanityCheckDeclineButton} from '../components/Articles/ArticleActions/SanityNotOk.js';
 import {SanityCheckDeclineAndCloseButton} from '../components/Articles/ArticleActions/SanityNotOkAndClose.js';
 import {AssignAsEditorButton} from '../components/Articles/ArticleActions/AssignEditor.js';
+import {ResignAsEditorButton} from '../components/Articles/ArticleActions/ResignEditor.js';
 
 const Actions = styled.div`
   font-size: 14px;
@@ -49,9 +50,7 @@ const EditorActions = ({article, user}) => {
             <SanityCheckAcceptButton article={article}/>
             <SanityCheckDeclineButton article={article}/>
             <SanityCheckDeclineAndCloseButton article={article}/>
-            <RoleActions>
-              Resign for being editor of this submission process
-            </RoleActions>
+            <ResignAsEditorButton article={article}/>
           </RoleActions>
         );
 
