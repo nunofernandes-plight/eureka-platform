@@ -11,8 +11,9 @@ import {
 } from '../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 
 const CronJob = cron.CronJob;
-const SANITY_TIME_OUT_INTERVAL = 50; //timeout interval in seconds //TODO change to dropout time interval
-const REVIEWER_TIME_OUT_INTERVAL = 20; //timeout interval in seconds //TODO change to dropout time interval
+const SANITY_TIME_OUT_INTERVAL = 60; //timeout interval in seconds //TODO change to dropout time interval
+const REVIEWER_TIME_OUT_INTERVAL = 120; //timeout interval in seconds //TODO change to dropout time interval
+const NO_NEW_REVIEW_ROUND_INTERVAL = 3 * 24 * 3600; //timeout interval in seconds
 const CRONE_TIME_INTERVAL = '*/12 * * * * *'; // all 5 seconds // TODO change to real cronjob interval
 
 let cronJob;
@@ -36,6 +37,12 @@ export default {
       // Resign reviewers which don't hand in a review to an articleVersion
       // TODO inform reviewers by mail and in frontend
       await removeTimedOutAssignedReviewers();
+
+      // Remove editor if he doesn't accept review
+      // TODO test if it works
+      const reviewAcceptionTimeoutSubmissionIds = await getTimedOutReviewAcceptingEditors();
+      await removeEditorFromSubmissionbyScSubmissionId(reviewAcceptionTimeoutSubmissionIds);
+
     }, null, true, 'Europe/Zurich');
   },
 
@@ -110,7 +117,6 @@ async function removeTimedOutAssignedReviewers() {
   const now = Math.round((new Date().getTime()/1000));
 
   for (let signedUpReview of signedUpReviews) {
-    console.log('Difference: ' + (now - REVIEWER_TIME_OUT_INTERVAL - signedUpReview.stateTimestamp));
     if(now - REVIEWER_TIME_OUT_INTERVAL - signedUpReview.stateTimestamp > 0)  {
       const articleHash = (await articleVersionService.getArticleVersionById(signedUpReview.articleVersion)).articleHash;
 
@@ -129,4 +135,20 @@ async function removeTimedOutAssignedReviewers() {
     }
   }
   return 'Remove Reviewers done';
+}
+
+async function getTimedOutReviewAcceptingEditors() {
+  const handedInReviews = await reviewService.getReviewsByState(ReviewState.HANDED_IN_SC);
+
+  const now = Math.round((new Date().getTime()/1000));
+
+  let scIDs = [];
+  for(let handedInReview of handedInReviews) {
+    if(now - NO_NEW_REVIEW_ROUND_INTERVAL - handedInReview.stateTimestamp > 0) {
+      const articleVersion = await articleVersionService.getArticleVersionById(handedInReview.articleVersion);
+      const articleSubmission = await articleSubmissionService.getSubmissionById(articleVersion.articleSubmission);
+      scIDs.push(articleSubmission.scSubmissionID);
+    }
+  }
+  return scIDs;
 }
