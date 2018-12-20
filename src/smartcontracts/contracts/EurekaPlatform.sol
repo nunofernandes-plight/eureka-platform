@@ -39,8 +39,16 @@ contract EurekaPlatform {
     + maxAmountOfRewardedCommunityReviews * secondReviewerRewardPerReviewer;
 
     uint constant maxReviewRounds = 3;
-    uint constant REVIEWER_TIMER_INTERVAL = 120; // in seconds
-    uint constant NO_NEW_REVIEW_ROUND_INTERVAL = 50; // in seconds
+    uint REVIEWER_TIMER_INTERVAL = 120; // in seconds
+    uint NO_NEW_REVIEW_ROUND_INTERVAL = 180; // in seconds
+
+    function setReviewerTimerInterval(uint256 reviewerTimerInterval) public {
+        REVIEWER_TIMER_INTERVAL = reviewerTimerInterval;
+    }
+    
+//    function setNoNewReviewRoundInterval(uint256 noNewReviewRoundInterval) public {
+//        NO_NEW_REVIEW_ROUND_INTERVAL = noNewReviewRoundInterval;
+//    }
 
     function getJournalParameters() view public returns (
         address _contractOwner,
@@ -778,8 +786,6 @@ contract EurekaPlatform {
         submission.stateTimestamp = block.timestamp;
         emit SubmissionProcessClosed(_submissionId, block.timestamp);
     }
-
-    function updateTimeBasedReviewState(bytes32 reviewHash) public {}
 
     function rewardEditorApprovedReviews(ArticleVersion _articleVersion, uint _reviewRounds) private {
         uint rewardedReviewers = 0;
