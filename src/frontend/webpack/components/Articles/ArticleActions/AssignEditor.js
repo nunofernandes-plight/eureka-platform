@@ -14,11 +14,7 @@ import {isGanache} from '../../../../../helpers/isGanache.mjs';
 import toast from '../../../design-components/Notification/Toast.js';
 import ActionButton from './ActionButton.js';
 import {__ALERT_SUCCESS, __FIFTH} from '../../../../helpers/colors.js';
-
-const Container = styled.div`
-  display: flex;
-  margin: 10px 0;
-`;
+import {ASSIGN_ARTICLE} from './ButtonsNaming.js';
 
 export const assignEditor = async (web3Context, props) => {
   let gasAmount;
@@ -85,20 +81,19 @@ export const AssignAsEditorButton = connect(
     <Web3Context.Consumer>
       {web3Context => {
         return (
-          <Container>
-            <ActionButton
-              background={__FIFTH}
-              onClick={async () => {
-                await assignEditor(web3Context, props);
-              }}
-              title={
-                'Assign yourself as a handling editor to supervise this submission process.'
-              }
-            >
-              {' '}
-              Assign Me As Editor
-            </ActionButton>
-          </Container>
+          <ActionButton
+            dataTip={'assignEditor'}
+            icon={'editorAssign'}
+            background={__FIFTH}
+            onClick={async () => {
+              await assignEditor(web3Context, props);
+            }}
+            title={
+              'Assign yourself as a handling editor to supervise this submission process.'
+            }
+          >
+            {ASSIGN_ARTICLE}
+          </ActionButton>
         );
       }}
     </Web3Context.Consumer>

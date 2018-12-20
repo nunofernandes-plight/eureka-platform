@@ -16,10 +16,13 @@ const Actions = styled.div`
   font-size: 14px;
   color: ${__GRAY_600};
   font-style: italic;
+  display: flex;
+  flex-direction: column;
+  width: 90%;
 `;
 
 const RoleActions = styled.div`
-  margin-right: 20px;
+
 `;
 
 const AuthorActions = ({article, user}) => {
@@ -31,36 +34,41 @@ const AuthorActions = ({article, user}) => {
 };
 
 const EditorActions = ({article, user}) => {
-
   if (user.roles.includes(Roles.EDITOR)) {
-    if (article.articleSubmission.articleSubmissionState === ARTICLE_SUBMISSION_STATE.OPEN) {
+    if (
+      article.articleSubmission.articleSubmissionState ===
+      ARTICLE_SUBMISSION_STATE.OPEN
+    ) {
       return (
         <RoleActions>
-          <AssignAsEditorButton article={article}/>
+          <AssignAsEditorButton article={article} />
         </RoleActions>
       );
     }
 
-    if (article.articleSubmission.articleSubmissionState === ARTICLE_SUBMISSION_STATE.EDITOR_ASSIGNED
-      && article.articleSubmission.editor === user.ethereumAddress) {
-
+    if (
+      article.articleSubmission.articleSubmissionState ===
+        ARTICLE_SUBMISSION_STATE.EDITOR_ASSIGNED &&
+      article.articleSubmission.editor === user.ethereumAddress
+    ) {
       if (article.articleVersionState === ARTICLE_VERSION_STATE.SUBMITTED)
         return (
           <RoleActions>
-            <SanityCheckAcceptButton article={article}/>
-            <SanityCheckDeclineButton article={article}/>
-            <SanityCheckDeclineAndCloseButton article={article}/>
-            <ResignAsEditorButton article={article}/>
+            <SanityCheckAcceptButton article={article} />
+            <SanityCheckDeclineButton article={article} />
+            <SanityCheckDeclineAndCloseButton article={article} />
+            <ResignAsEditorButton article={article} />
           </RoleActions>
         );
 
-      if (article.articleVersionState === ARTICLE_VERSION_STATE.OPEN_FOR_ALL_REVIEWERS)
+      if (
+        article.articleVersionState ===
+        ARTICLE_VERSION_STATE.OPEN_FOR_ALL_REVIEWERS
+      )
         return (
           <RoleActions>
             {getNumberOfReviewsInformation(article)}
-            <RoleActions>
-              Invite Reviewers
-            </RoleActions>
+            <RoleActions>Invite Reviewers</RoleActions>
             {getCheckReviewsButton(article)}
             {getAcceptArticleButton(article)}
             {getDeclineArticleButton(article)}
@@ -74,11 +82,12 @@ const EditorActions = ({article, user}) => {
 };
 
 const ExpertReviewerActions = ({article, user}) => {
-  if (user.roles.includes(Roles.EXPERT_REVIEWER)
-    && article.articleSubmission.ownerAddress !== user.ethereumAddress
-    && article.articleSubmission.editor !== user.ethereumAddress
-    && !article.document.authors.includes(user.ethereumAddress)) {
-
+  if (
+    user.roles.includes(Roles.EXPERT_REVIEWER) &&
+    article.articleSubmission.ownerAddress !== user.ethereumAddress &&
+    article.articleSubmission.editor !== user.ethereumAddress &&
+    !article.document.authors.includes(user.ethereumAddress)
+  ) {
     const expertReview = article.editorApprovedReviews.find(r => {
       return r.reviewerAddress === user.ethereumAddress;
     });
@@ -97,8 +106,7 @@ const ExpertReviewerActions = ({article, user}) => {
 
     if (expertReview) {
       switch (expertReview.reviewState) {
-
-        case (REVIEW_STATE.INVITED):
+        case REVIEW_STATE.INVITED:
           return (
             <div>
               <div>Sign Up For Expert Review</div>
@@ -106,7 +114,7 @@ const ExpertReviewerActions = ({article, user}) => {
             </div>
           );
 
-        case (REVIEW_STATE.SIGNED_UP_FOR_REVIEWING):
+        case REVIEW_STATE.SIGNED_UP_FOR_REVIEWING:
           return (
             <div>
               <div>Write Expert Review</div>
@@ -114,16 +122,16 @@ const ExpertReviewerActions = ({article, user}) => {
             </div>
           );
 
-        case (REVIEW_STATE.HANDED_IN_DB):
+        case REVIEW_STATE.HANDED_IN_DB:
           return <div>Continue Review</div>;
 
-        case (REVIEW_STATE.HANDED_IN_SC):
+        case REVIEW_STATE.HANDED_IN_SC:
           return <div>See Your Review</div>;
 
-        case (REVIEW_STATE.DECLINED):
+        case REVIEW_STATE.DECLINED:
           return <div>Correct Your Review</div>;
 
-        case (REVIEW_STATE.ACCEPTED):
+        case REVIEW_STATE.ACCEPTED:
           return <div>Edit Your Review</div>;
 
         default:
@@ -135,11 +143,12 @@ const ExpertReviewerActions = ({article, user}) => {
 };
 
 const CommunityReviewerActions = ({article, user}) => {
-  if (user.roles.includes(Roles.REVIEWER)
-    && article.articleSubmission.ownerAddress !== user.ethereumAddress
-    && article.articleSubmission.editor !== user.ethereumAddress
-    && !article.document.authors.includes(user.ethereumAddress)) {
-
+  if (
+    user.roles.includes(Roles.REVIEWER) &&
+    article.articleSubmission.ownerAddress !== user.ethereumAddress &&
+    article.articleSubmission.editor !== user.ethereumAddress &&
+    !article.document.authors.includes(user.ethereumAddress)
+  ) {
     const expertReview = article.editorApprovedReviews.find(r => {
       return r.reviewerAddress === user.ethereumAddress;
     });
@@ -153,23 +162,22 @@ const CommunityReviewerActions = ({article, user}) => {
 
     if (communityReview) {
       switch (communityReview.reviewState) {
-
-        case (REVIEW_STATE.INVITED):
+        case REVIEW_STATE.INVITED:
           return <div>Annotate Article as Community Reviewer</div>;
 
-        case (REVIEW_STATE.SIGNED_UP_FOR_REVIEWING):
+        case REVIEW_STATE.SIGNED_UP_FOR_REVIEWING:
           return null;
 
-        case (REVIEW_STATE.HANDED_IN_DB):
+        case REVIEW_STATE.HANDED_IN_DB:
           return <div>Continue Community Review</div>;
 
-        case (REVIEW_STATE.HANDED_IN_SC):
+        case REVIEW_STATE.HANDED_IN_SC:
           return <div>See Your Community Review</div>;
 
-        case (REVIEW_STATE.DECLINED):
+        case REVIEW_STATE.DECLINED:
           return <div>Correct Your Community Review</div>;
 
-        case (REVIEW_STATE.ACCEPTED):
+        case REVIEW_STATE.ACCEPTED:
           return <div>Edit Your Community Review</div>;
 
         default:
@@ -186,11 +194,8 @@ const getNumberOfReviewsInformation = article => {
 
 const getCheckReviewsButton = article => {
   if (getNumberOfCheckableReviews(article) > 0)
-    return <RoleActions>
-      Check Reviews
-    </RoleActions>;
-  else
-    return null;
+    return <RoleActions>Check Reviews</RoleActions>;
+  else return null;
 };
 
 const getNumberOfCheckableReviews = article => {
@@ -198,29 +203,28 @@ const getNumberOfCheckableReviews = article => {
 };
 
 const getAcceptArticleButton = article => {
-  return <RoleActions>
-    Accept Article and Publish
-  </RoleActions>;
+  return <RoleActions>Accept Article and Publish</RoleActions>;
 };
 
 const getDeclineArticleButton = article => {
-  return <RoleActions>
-    Decline Article and Request a new article version
-  </RoleActions>;
+  return (
+    <RoleActions>Decline Article and Request a new article version</RoleActions>
+  );
 };
 
 const getDeclineArticleAndCloseSubmissionButton = article => {
-  return <RoleActions>
-    Decline Article and Close Submission Process
-  </RoleActions>;
+  return (
+    <RoleActions>Decline Article and Close Submission Process</RoleActions>
+  );
 };
 
 const getDeclineArticleNotEnoughReviewerButton = article => {
-  return <RoleActions>
-    Close submission process because not enough reviewers found
-  </RoleActions>;
+  return (
+    <RoleActions>
+      Close submission process because not enough reviewers found
+    </RoleActions>
+  );
 };
-
 
 const mapStateToProps = state => ({
   user: state.userData.data
@@ -229,10 +233,10 @@ const mapStateToProps = state => ({
 const ArticleActions = connect(mapStateToProps)(({article, user}) => {
   return (
     <Actions>
-      <AuthorActions article={article} user={user}/>
-      <EditorActions article={article} user={user}/>
-      <ExpertReviewerActions article={article} user={user}/>
-      <CommunityReviewerActions article={article} user={user}/>
+      <AuthorActions article={article} user={user} />
+      <EditorActions article={article} user={user} />
+      <ExpertReviewerActions article={article} user={user} />
+      <CommunityReviewerActions article={article} user={user} />
     </Actions>
   );
 });
