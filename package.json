@@ -40,6 +40,7 @@
     "polished": "^2.3.0",
     "query-string": "^5.1.1",
     "randomstring": "^1.1.5",
+    "rc-tooltip": "^3.7.3",
     "react": "^16.4.1",
     "react-card-flip": "^0.2.1",
     "react-detect-offline": "^2.1.2",
