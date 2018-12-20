@@ -10,6 +10,7 @@ import mongooseDB from '../db/mongoose-db.mjs';
 import {isProduction} from '../../helpers/isProduction.mjs';
 import router from '../routes/index.mjs';
 import timebasedContractService from '../web3/timebased-contract-service.mjs';
+import {getJournal} from '../db/journal-service.mjs';
 import uploadRouter from '../routes/file-upload.routes.mjs';
 import {
   setupWeb3Interface
@@ -36,8 +37,6 @@ export default {
   setupApp: async () => {
     app = express();
 
-    contractOwner = (await getAccounts(web3))[0];
-    console.log(contractOwner);
     // Serve static files from the React app
     if (isProduction()) {
       app.use(express.static(path.join(__dirname, '/build')));
@@ -77,7 +76,8 @@ export default {
 
     /** Web3 Interface: SC Events Listener, Transaction Listener**/
     [platformContract, tokenContract] = await setupWeb3Interface();
-
+    contractOwner = (await getJournal()).contractOwner;
+    
 
     /**
      * Config and set Email Provider SendGrid (API key as env variable)
