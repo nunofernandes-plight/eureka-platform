@@ -1,21 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 import {connect} from 'react-redux';
-import {
-  assignForSubmissionProcess
-} from '../../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
-import Button from '../../../design-components/Button.js';
+import {assignForSubmissionProcess} from '../../../../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 import {Web3Context} from '../../../contexts/Web3Context.js';
 import {addTransaction} from '../../../reducers/transactions.js';
 import SC_TRANSACTIONS_TYPE from '../../../../../backend/schema/sc-transaction-state-enum.mjs';
 import {fetchingArticleData} from '../../../reducers/article.js';
-import {EditorInfoMessage, EditorSuccessMessage} from '../../../constants/Messages.js';
+import {
+  EditorInfoMessage,
+  EditorSuccessMessage
+} from '../../../constants/Messages.js';
 import {isGanache} from '../../../../../helpers/isGanache.mjs';
 import toast from '../../../design-components/Notification/Toast.js';
-
-const MyButton = styled(Button) `
-  width: 100%;
-`;
+import ActionButton from './ActionButton.js';
+import {__ALERT_SUCCESS, __FIFTH} from '../../../../helpers/colors.js';
+import {ASSIGN_ARTICLE} from './ButtonsNaming.js';
 
 export const assignEditor = async (web3Context, props) => {
   let gasAmount;
@@ -38,10 +37,7 @@ export const assignEditor = async (web3Context, props) => {
       gas: gasAmount
     })
     .on('transactionHash', tx => {
-      props.addTransaction(
-        SC_TRANSACTIONS_TYPE.EDITOR_ARTICLE_ASSIGNMENT,
-        tx
-      );
+      props.addTransaction(SC_TRANSACTIONS_TYPE.EDITOR_ARTICLE_ASSIGNMENT, tx);
       toast.info(
         <EditorInfoMessage
           path={'signoff'}
@@ -72,24 +68,32 @@ const mapDispatchToProps = dispatch => ({
   addTransaction: (txType, tx) => {
     dispatch(addTransaction(txType, tx));
   },
-  fetchingArticleData: (articleId) => {
+  fetchingArticleData: articleId => {
     dispatch(fetchingArticleData(articleId));
   }
 });
 
-export const AssignAsEditorButton = connect(mapStateToProps, mapDispatchToProps)(props => {
+export const AssignAsEditorButton = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(props => {
   return (
     <Web3Context.Consumer>
       {web3Context => {
         return (
-          <MyButton
-            onClick={() => {
-              assignEditor(web3Context, props);
+          <ActionButton
+            dataTip={'assignEditor'}
+            icon={'editorAssign'}
+            background={__FIFTH}
+            onClick={async () => {
+              await assignEditor(web3Context, props);
             }}
-            title={'Assign yourself as a handling editor to supervise this submission process.'}
+            title={
+              'Assign yourself as a handling editor to supervise this submission process.'
+            }
           >
-            Assign Me As Editor
-          </MyButton>
+            {ASSIGN_ARTICLE}
+          </ActionButton>
         );
       }}
     </Web3Context.Consumer>

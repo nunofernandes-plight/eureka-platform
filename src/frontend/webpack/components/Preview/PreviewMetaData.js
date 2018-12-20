@@ -1,7 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import Document from '../../../../models/Document.mjs';
-import {__ALERT_ERROR, __GRAY_300, __THIRD} from '../../../helpers/colors.js';
+import {
+  __ALERT_ERROR,
+  __FIFTH,
+  __GRAY_300,
+  __GRAY_400,
+  __THIRD
+} from '../../../helpers/colors.js';
 import {
   makeFieldReadable,
   renderField
@@ -77,17 +83,37 @@ const Field = ({doc, field, ...otherProps}) => {
   );
 };
 
+const Fields = ({fields, article}) => {
+  return fields.map((field, i) => {
+    return <Field key={i} doc={article.document} field={field} />;
+  });
+};
+
+const Separator = styled.div`
+  height: 1px;
+  width: 75%;
+  background: ${__GRAY_400};
+  margin: 25px 0 10px 0;
+`;
+
+const SubTitle = styled.h4`
+  color: ${__ALERT_ERROR};
+  margin: 0;
+  font-size: 10px;
+  font-weight: 100;
+  text-transform: uppercase;
+`;
+
 const PreviewMetaData = ({article, ...otherProps}) => {
   const fields = Document.metaDataFields();
-  return (
-    <Container>
-      {fields.map((field, i) => {
-        return <Field key={i} doc={article.document} field={field} />;
-      })}
-      <CustomPreviewStatus status={article.articleVersionState} />
+  return <Container>
+      <Fields article={article} fields={fields} />
+      <Separator />
+      <SubTitle>Actions you can do</SubTitle>
       <ArticleActions article={article} />
-    </Container>
-  );
+      <Separator />
+      <CustomPreviewStatus status={article.articleVersionState} />
+    </Container>;
 };
 
 export default PreviewMetaData;
