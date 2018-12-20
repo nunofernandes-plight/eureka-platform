@@ -12,23 +12,32 @@ import router from '../routes/index.mjs';
 import timebasedContractService from '../web3/timebased-contract-service.mjs';
 import uploadRouter from '../routes/file-upload.routes.mjs';
 import {
-  platformContract,
   setupWeb3Interface
 } from '../web3/web3InterfaceSetup.mjs';
 import {configEmailProvider, sendEmail} from '../email/index.mjs';
 import {getReviewersInvitationTemplate} from '../email/templates/EmailTemplates.mjs';
+import getAccounts from '../../smartcontracts/methods/get-accounts';
+import web3 from '../../helpers/web3Instance';
+
 
 if (!isProduction) {
   dotenv.config();
 }
 
+let platformContract;
+let tokenContract;
+let contractOwner;
 let app;
 let server;
+
 const __dirname = path.resolve();
 
 export default {
   setupApp: async () => {
     app = express();
+
+    contractOwner = (await getAccounts(web3))[0];
+    console.log(contractOwner);
     // Serve static files from the React app
     if (isProduction()) {
       app.use(express.static(path.join(__dirname, '/build')));
@@ -67,7 +76,8 @@ export default {
     app.use(passport.session());
 
     /** Web3 Interface: SC Events Listener, Transaction Listener**/
-    if (process.env.NODE_ENV !== 'test') await setupWeb3Interface();
+    [platformContract, tokenContract] = await setupWeb3Interface();
+
 
     /**
      * Config and set Email Provider SendGrid (API key as env variable)
@@ -76,7 +86,7 @@ export default {
 
     /** Timebased contract service**/
     // TODO activate it again for checking
-    //timebasedContractService.start();
+    timebasedContractService.start(platformContract, contractOwner);
 
     //set global variable isAuthenticated -> call ir everywhere dynamically
     app.use(function(req, res, next) {

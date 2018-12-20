@@ -10,6 +10,9 @@ import {
 import Icon from '../views/icons/Icon.js';
 
 const getColor = props => {
+  if (props.color) {
+    return props.color;
+  }
   if (props.status === 'success') {
     return `${__ALERT_SUCCESS}`;
   }
@@ -29,7 +32,7 @@ const getColor = props => {
 
 const getIcon = props => {
   const marginRight = 20;
-  const iconSize = 25;
+  const iconSize = props.iconSize;
   if (props.status === 'success') {
     return (
       <Icon
@@ -40,7 +43,11 @@ const getIcon = props => {
       />
     );
   }
-  if (props.status === 'info') {
+  if (
+    props.status === 'info' ||
+    props.status === 'warning' ||
+    props.status === 'danger'
+  ) {
     return (
       <Icon
         icon={'bell'}
@@ -50,26 +57,7 @@ const getIcon = props => {
       />
     );
   }
-  if (props.status === 'warning') {
-    return (
-      <Icon
-        icon={'bell'}
-        width={iconSize}
-        height={iconSize}
-        right={marginRight}
-      />
-    );
-  }
-  if (props.status === 'danger') {
-    return (
-      <Icon
-        icon={'bell'}
-        width={iconSize}
-        height={iconSize}
-        right={marginRight}
-      />
-    );
-  }
+
   if (props.status === 'error') {
     return (
       <Icon
@@ -86,11 +74,29 @@ const Container = styled.div`
   border-color: ${props => getColor(props)};
   background-color: ${props => getColor(props)};
   font-size: 0.875rem;
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1.5rem;
   border: 0;
   border-radius: 0.25rem;
   transition: 0.5s ease-in-out;
   display: ${props => (props.isHidden ? 'none' : 'flex')};
+`;
+
+const Element = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+`;
+
+const First = styled(Element)`
+  justify-content: flex-start;
+`;
+
+const Second = styled(Element)`
+  flex: 25;
+`;
+
+const Third = styled(Element)`
+  justify-content: flex-end;
 `;
 
 class Alert extends Component {
@@ -106,18 +112,23 @@ class Alert extends Component {
   }
 
   render() {
+    const iconSize = this.props.iconSize || 25;
+
     return (
       <div>
         <Container isHidden={this.state.isHidden} {...this.props}>
-          {getIcon(this.props)} {this.props.children}
-          <Icon
-            onClick={() => this.hideAlert()}
-            icon={'close'}
-            width={18}
-            height={18}
-            top={2}
-            left={10}
-          />
+          <First>{getIcon(this.props)}</First>{' '}
+          <Second>{this.props.children}</Second>
+          <Third>
+            <Icon
+              onClick={() => this.hideAlert()}
+              icon={'reject'}
+              width={iconSize}
+              height={iconSize}
+              left={8}
+              color={'white'}
+            />
+          </Third>
         </Container>
       </div>
     );

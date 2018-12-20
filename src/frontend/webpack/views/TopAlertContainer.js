@@ -14,7 +14,7 @@ const TopAlertContainer = ({provider}) => {
     <TitleRow>
       {provider === Web3Providers.META_MASK ? (
         <AlertContainer>
-          <Alert status={'info'}>
+          <Alert status={'info'} iconSize={18}>
             We detected MetaMask in your Browser! We use it as our
             authentication provider. Please note that we are not able neither to
             see nor to store your private keys.{' '}
@@ -23,7 +23,7 @@ const TopAlertContainer = ({provider}) => {
       ) : null}
       {provider === Web3Providers.LOCALHOST ? (
         <AlertDevContainer>
-          <Alert status={'warning'}>THIS IS A DEV ENVIRONMENT</Alert>
+          <Alert status={'warning'} iconSize={18}>THIS IS A DEV ENVIRONMENT</Alert>
         </AlertDevContainer>
       ) : null}
       <Title>

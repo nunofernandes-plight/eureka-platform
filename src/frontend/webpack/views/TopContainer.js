@@ -1,14 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import {__MAIN, __SECOND, __THIRD} from '../../helpers/colors.js';
-import RenderNetwork from '../../web3/RenderNetwork.js';
-import Avatar from './Avatar.js';
-import MetaMaskLabel from './MetaMaskLabel.js';
 import Ball from './Ball.js';
-import UserDropDownMenu from './UserDropDownMenu.js';
-import {Items} from './UserDropDownItems.js';
 import connect from 'react-redux/es/connect/connect.js';
-import TxPool from '../components/TxPool/TxPool.js';
+import AppHeader from './AppHeader.js';
 
 export const Container = styled.div`
   min-height: 353px;
@@ -27,24 +22,6 @@ const BallContainer = styled.div`
   width: 100%;
 `;
 
-const Profile = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: flex-end;
-`;
-
-const DropDownMenuParent = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-`;
-
-const Elements = styled.div`
-  display: flex;
-  margin-top: 12px;
-  align-items: center;
-`;
-
 class TopContainer extends React.Component {
   constructor() {
     super();
@@ -61,32 +38,15 @@ class TopContainer extends React.Component {
   render() {
     return (
       <Container>
-        <Profile>
-          <Elements>
-            <TxPool />
-            <RenderNetwork />
-            <MetaMaskLabel />
-            <DropDownMenuParent
-              onMouseEnter={() => this.toggle()}
-              onMouseLeave={() => this.toggle()}
-            >
-              <Avatar
-                avatar={this.props.user.avatar}
-                width={40}
-                height={40}
-                right={15}
-                cursor={'pointer'}
-              />
-              <UserDropDownMenu
-                items={Items}
-                top={40}
-                right={20}
-                visible={this.state.dropMenuVisible}
-                action={item => this.props.action(item)}
-              />
-            </DropDownMenuParent>
-          </Elements>
-        </Profile>
+        <AppHeader
+          show={this.state.dropMenuVisible}
+          toggle={() => {
+            this.toggle();
+          }}
+          action={item => {
+            this.props.action(item);
+          }}
+        />
         <BallContainer>
           <Ball
             rgb={'255, 255, 255'}

@@ -11,10 +11,10 @@ import {
 } from '../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 
 const CronJob = cron.CronJob;
-const SANITY_TIME_OUT_INTERVAL = 60; //timeout interval in seconds //TODO change to dropout time interval
+const SANITY_TIME_OUT_INTERVAL = 10; //timeout interval in seconds //TODO change to dropout time interval
 const REVIEWER_TIME_OUT_INTERVAL = 120; //timeout interval in seconds //TODO change to dropout time interval
 const NO_NEW_REVIEW_ROUND_INTERVAL = 3 * 24 * 3600; //timeout interval in seconds
-const CRONE_TIME_INTERVAL = '*/12 * * * * *'; // all 5 seconds // TODO change to real cronjob interval
+const CRONE_TIME_INTERVAL = '*/12 * * * * *'; // all 5 seconds
 
 let cronJob;
 let platformContract;
@@ -28,7 +28,6 @@ export default {
 
 
     cronJob = await new CronJob(CRONE_TIME_INTERVAL, async () => {
-      console.log('NEW CRONJOB');
       // Remove editor which don't do sanity check
       const timedOutSubmissionIds = await getEditorTimeoutSubmissionIds();
       await removeEditorFromSubmissionbyScSubmissionId(timedOutSubmissionIds);
@@ -39,7 +38,6 @@ export default {
       await removeTimedOutAssignedReviewers();
 
       // Remove editor if he doesn't accept review
-      // TODO test if it works
       const reviewAcceptionTimeoutSubmissionIds = await getTimedOutReviewAcceptingEditors();
       await removeEditorFromSubmissionbyScSubmissionId(reviewAcceptionTimeoutSubmissionIds);
 
@@ -84,7 +82,6 @@ async function getEditorTimeoutSubmissionIds() {
     differences.push(now - timestamp);
 
     if((now - SANITY_TIME_OUT_INTERVAL - timestamp) > 0) {
-      //sconsole.log(potentialTimedOutVersion);
       timeoutSubmissionIds.push(potentialTimedOutVersion.scSubmissionID);
     }
   }
@@ -113,7 +110,6 @@ async function removeEditorFromSubmissionbyScSubmissionId(timedOutSubmissionIds)
 
 async function removeTimedOutAssignedReviewers() {
   const signedUpReviews = await reviewService.getReviewsByState(ReviewState.SIGNED_UP_FOR_REVIEWING);
-  console.log(signedUpReviews);
   const now = Math.round((new Date().getTime()/1000));
 
   for (let signedUpReview of signedUpReviews) {
