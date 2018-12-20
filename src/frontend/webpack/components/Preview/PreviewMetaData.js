@@ -55,10 +55,6 @@ const Metadata = styled.div`
   font-size: 10.5px;
 `;
 
-const CustomPreviewStatus = styled(PreviewStatus)`
-  margin-top: 20px;
-  padding-right: 25px;
-`;
 
 const Field = ({doc, field, ...otherProps}) => {
   let content = renderField(doc, field);
@@ -106,14 +102,15 @@ const SubTitle = styled.h4`
 
 const PreviewMetaData = ({article, ...otherProps}) => {
   const fields = Document.metaDataFields();
-  return <Container>
+  return (
+    <Container>
       <Fields article={article} fields={fields} />
       <Separator />
       <SubTitle>Actions you can do</SubTitle>
       <ArticleActions article={article} />
       <Separator />
-      <CustomPreviewStatus status={article.articleVersionState} />
-    </Container>;
+    </Container>
+  );
 };
 
 export default PreviewMetaData;

@@ -1,14 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import {__MAIN, __SECOND, __THIRD} from '../../helpers/colors.js';
-import RenderNetwork from '../../web3/RenderNetwork.js';
-import Avatar from './Avatar.js';
-import MetaMaskLabel from './MetaMaskLabel.js';
 import Ball from './Ball.js';
-import UserDropDownMenu from './UserDropDownMenu.js';
-import {Items} from './UserDropDownItems.js';
 import connect from 'react-redux/es/connect/connect.js';
-import TxPool from '../components/TxPool/TxPool.js';
 import AppHeader from './AppHeader.js';
 
 export const Container = styled.div`

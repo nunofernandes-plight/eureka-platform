@@ -27,13 +27,6 @@ const Parent = styled.div`
 class Transactions extends React.Component {
   componentDidMount() {
     this.props.fetchTransactions();
-    this.interval = setInterval(async () => {
-      this.props.fetchTransactions();
-    }, 10000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
   }
 
   render() {
