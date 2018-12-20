@@ -1,37 +1,14 @@
 export const TOKEN_KOVAN_ABI = [
   {
-    "constant": true,
-    "inputs": [],
-    "name": "name",
-    "outputs": [
-      {
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "constant": false,
     "inputs": [
       {
-        "name": "_spender",
-        "type": "address"
-      },
-      {
-        "name": "_value",
-        "type": "uint256"
+        "name": "_articleHash",
+        "type": "bytes32"
       }
     ],
-    "name": "approve",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "name": "acceptArticleVersion",
+    "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
@@ -40,90 +17,16 @@ export const TOKEN_KOVAN_ABI = [
     "constant": false,
     "inputs": [
       {
-        "name": "_signature",
-        "type": "bytes"
+        "name": "_articleHash",
+        "type": "bytes32"
       },
       {
-        "name": "_to",
+        "name": "_reviewerAddress",
         "type": "address"
-      },
-      {
-        "name": "_value",
-        "type": "uint256"
-      },
-      {
-        "name": "_fee",
-        "type": "uint256"
-      },
-      {
-        "name": "_nonce",
-        "type": "uint256"
       }
     ],
-    "name": "transferPreSigned",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "totalSupply",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_signature",
-        "type": "bytes"
-      },
-      {
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "name": "_value",
-        "type": "uint256"
-      },
-      {
-        "name": "_fee",
-        "type": "uint256"
-      },
-      {
-        "name": "_nonce",
-        "type": "uint256"
-      },
-      {
-        "name": "_methodName",
-        "type": "bytes4"
-      },
-      {
-        "name": "_args",
-        "type": "bytes"
-      }
-    ],
-    "name": "transferAndCallPreSigned",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "name": "acceptReview",
+    "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
@@ -132,93 +35,229 @@ export const TOKEN_KOVAN_ABI = [
     "constant": false,
     "inputs": [
       {
-        "name": "_from",
-        "type": "address"
+        "name": "_articleHash",
+        "type": "bytes32"
       },
       {
-        "name": "_to",
-        "type": "address"
+        "name": "_reviewHash",
+        "type": "bytes32"
       },
       {
-        "name": "_value",
-        "type": "uint256"
-      }
-    ],
-    "name": "transferFrom",
-    "outputs": [
-      {
-        "name": "",
+        "name": "_articleHasMajorIssues",
         "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_addr",
-        "type": "address"
-      }
-    ],
-    "name": "balanceWithLoyaltyClaimOf",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
       },
       {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "decimals",
-    "outputs": [
+        "name": "_articleHasMinorIssues",
+        "type": "bool"
+      },
       {
-        "name": "",
+        "name": "_score1",
+        "type": "uint8"
+      },
+      {
+        "name": "_score2",
         "type": "uint8"
       }
     ],
+    "name": "addCommunityReview",
+    "outputs": [],
     "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "totalSupply_",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "constant": false,
     "inputs": [
       {
-        "name": "_holders",
+        "name": "_articleHash",
+        "type": "bytes32"
+      },
+      {
+        "name": "_reviewHash",
+        "type": "bytes32"
+      },
+      {
+        "name": "_articleHasMajorIssues",
+        "type": "bool"
+      },
+      {
+        "name": "_articleHasMinorIssues",
+        "type": "bool"
+      },
+      {
+        "name": "_score1",
+        "type": "uint8"
+      },
+      {
+        "name": "_score2",
+        "type": "uint8"
+      }
+    ],
+    "name": "addEditorApprovedReview",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_submissionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "assignForSubmissionProcess",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_submissionId",
+        "type": "uint256"
+      },
+      {
+        "name": "_newEditor",
+        "type": "address"
+      }
+    ],
+    "name": "changeEditorFromSubmissionProcess",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_articleHash",
+        "type": "bytes32"
+      },
+      {
+        "name": "_reviewHash",
+        "type": "bytes32"
+      },
+      {
+        "name": "_articleHasMajorIssues",
+        "type": "bool"
+      },
+      {
+        "name": "_articleHasMinorIssues",
+        "type": "bool"
+      },
+      {
+        "name": "_score1",
+        "type": "uint8"
+      },
+      {
+        "name": "_score2",
+        "type": "uint8"
+      }
+    ],
+    "name": "correctReview",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_articleHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "declineArticleVersion",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_articleHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "declineArticleVersionAndClose",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_submissionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "declineNewReviewRound",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_articleHash",
+        "type": "bytes32"
+      },
+      {
+        "name": "_reviewerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "declineReview",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_submissionId",
+        "type": "uint256"
+      },
+      {
+        "name": "_articleHash",
+        "type": "bytes32"
+      },
+      {
+        "name": "_articleURL",
+        "type": "bytes32"
+      },
+      {
+        "name": "_authors",
         "type": "address[]"
       },
       {
-        "name": "_timeouts",
-        "type": "uint256[]"
+        "name": "_authorContributionRatios",
+        "type": "uint16[]"
+      },
+      {
+        "name": "_linkedArticles",
+        "type": "bytes32[]"
+      },
+      {
+        "name": "_linkedArticlesSplitRatios",
+        "type": "uint16[]"
       }
     ],
-    "name": "lockTokens",
+    "name": "openNewReviewRound",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -228,87 +267,15 @@ export const TOKEN_KOVAN_ABI = [
     "constant": false,
     "inputs": [
       {
-        "name": "_to",
-        "type": "address"
+        "name": "_articleHash",
+        "type": "bytes32"
       },
       {
-        "name": "_value",
-        "type": "uint256"
-      },
-      {
-        "name": "_methodName",
-        "type": "bytes4"
-      },
-      {
-        "name": "_args",
-        "type": "bytes"
-      }
-    ],
-    "name": "transferAndCall",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "oneYearsInBlocks",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_owner",
-        "type": "address"
-      },
-      {
-        "name": "_from",
+        "name": "_reviewerAddress",
         "type": "address"
       }
     ],
-    "name": "rewardOf",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "loyalty",
+    "name": "rejectReviewer",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -318,530 +285,211 @@ export const TOKEN_KOVAN_ABI = [
     "constant": false,
     "inputs": [
       {
-        "name": "_from",
-        "type": "address"
-      },
-      {
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "name": "_value",
-        "type": "uint256"
-      },
-      {
-        "name": "_rewardType",
-        "type": "uint8"
-      }
-    ],
-    "name": "transferFrom",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "name": "_value",
-        "type": "uint256"
-      },
-      {
-        "name": "_rewardType",
-        "type": "uint8"
-      },
-      {
-        "name": "_methodName",
-        "type": "bytes4"
-      },
-      {
-        "name": "_args",
-        "type": "bytes"
-      }
-    ],
-    "name": "transferAndCall",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_spender",
-        "type": "address"
-      },
-      {
-        "name": "_subtractedValue",
+        "name": "_submissionId",
         "type": "uint256"
       }
     ],
-    "name": "decreaseApproval",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "name": "balanceOf",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_signature",
-        "type": "bytes"
-      },
-      {
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "name": "_value",
-        "type": "uint256"
-      },
-      {
-        "name": "_fee",
-        "type": "uint256"
-      },
-      {
-        "name": "_nonce",
-        "type": "uint256"
-      },
-      {
-        "name": "_rewardType",
-        "type": "uint8"
-      },
-      {
-        "name": "_methodName",
-        "type": "bytes4"
-      },
-      {
-        "name": "_args",
-        "type": "bytes"
-      }
-    ],
-    "name": "transferAndCallPreSigned",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_owner",
-        "type": "address"
-      },
-      {
-        "name": "_amountType",
-        "type": "bool"
-      }
-    ],
-    "name": "balanceOf",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "finishMinting",
+    "name": "removeEditorFromSubmissionProcess",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "constant": true,
-    "inputs": [],
-    "name": "loyalty",
-    "outputs": [
+    "constant": false,
+    "inputs": [
       {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "name": "",
+        "name": "editor",
         "type": "address"
       }
     ],
+    "name": "resignEditor",
+    "outputs": [],
     "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "mintingDone",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "constant": false,
     "inputs": [
       {
-        "name": "loyaltyOwners",
+        "name": "expertReviewer",
+        "type": "address"
+      }
+    ],
+    "name": "resignExpertReviewer",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_articleHash",
+        "type": "bytes32"
+      },
+      {
+        "name": "reviewerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "resignFromReviewing",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_articleHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "sanityIsNotOk",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_articleHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "sanityIsOk",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_eurekaTokenContractAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setEurekaTokenContract",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "reviewerTimerInterval",
+        "type": "uint256"
+      }
+    ],
+    "name": "setReviewerTimerInterval",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "editor",
+        "type": "address"
+      }
+    ],
+    "name": "signUpEditor",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "expertReviewer",
+        "type": "address"
+      }
+    ],
+    "name": "signUpExpertReviewer",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "expertReviewers",
         "type": "address[]"
       }
     ],
-    "name": "reclaim",
+    "name": "signUpExpertReviewers",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "constant": true,
-    "inputs": [],
-    "name": "symbol",
-    "outputs": [
-      {
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_owner",
-        "type": "address"
-      },
-      {
-        "name": "_amountType",
-        "type": "bool"
-      },
-      {
-        "name": "_fromBlock",
-        "type": "uint64"
-      }
-    ],
-    "name": "balanceOf",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "constant": false,
     "inputs": [
       {
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "name": "_value",
-        "type": "uint256"
+        "name": "_articleHash",
+        "type": "bytes32"
       }
     ],
-    "name": "transfer",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_signature",
-        "type": "bytes"
-      },
-      {
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "name": "_value",
-        "type": "uint256"
-      },
-      {
-        "name": "_fee",
-        "type": "uint256"
-      },
-      {
-        "name": "_nonce",
-        "type": "uint256"
-      },
-      {
-        "name": "_fromType",
-        "type": "uint8"
-      }
-    ],
-    "name": "transferPreSigned",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "lockups",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "maxSupply",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_spender",
-        "type": "address"
-      },
-      {
-        "name": "_addedValue",
-        "type": "uint256"
-      }
-    ],
-    "name": "increaseApproval",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "max88",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "name": "_value",
-        "type": "uint256"
-      },
-      {
-        "name": "_rewardType",
-        "type": "uint8"
-      }
-    ],
-    "name": "transfer",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_owner",
-        "type": "address"
-      },
-      {
-        "name": "_spender",
-        "type": "address"
-      }
-    ],
-    "name": "allowance",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_recipients",
-        "type": "address[]"
-      },
-      {
-        "name": "_amounts",
-        "type": "uint256[]"
-      }
-    ],
-    "name": "mint",
+    "name": "signUpForReviewing",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "constant": true,
+    "constant": false,
     "inputs": [
-      {
-        "name": "_owner",
-        "type": "address"
-      },
       {
         "name": "_from",
         "type": "address"
       },
       {
-        "name": "_fromBlock",
-        "type": "uint48"
-      }
-    ],
-    "name": "rewardOf",
-    "outputs": [
-      {
-        "name": "",
+        "name": "_value",
         "type": "uint256"
       },
       {
-        "name": "",
-        "type": "uint256"
+        "name": "_articleHash",
+        "type": "bytes32"
       },
       {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
+        "name": "_articleURL",
+        "type": "bytes32"
+      },
       {
-        "name": "_newOwner",
-        "type": "address"
+        "name": "_authors",
+        "type": "address[]"
+      },
+      {
+        "name": "_authorContributionRatios",
+        "type": "uint16[]"
+      },
+      {
+        "name": "_linkedArticles",
+        "type": "bytes32[]"
+      },
+      {
+        "name": "_linkedArticlesSplitRatios",
+        "type": "uint16[]"
       }
     ],
-    "name": "transferOwnership",
+    "name": "startSubmissionProcess",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -857,17 +505,22 @@ export const TOKEN_KOVAN_ABI = [
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "name": "_holder",
+        "indexed": false,
+        "name": "submissionOwner",
         "type": "address"
       },
       {
         "indexed": false,
-        "name": "_timeout",
+        "name": "editorAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
         "type": "uint256"
       }
     ],
-    "name": "TokensLocked",
+    "name": "EditorSignUp",
     "type": "event"
   },
   {
@@ -875,161 +528,918 @@ export const TOKEN_KOVAN_ABI = [
     "inputs": [
       {
         "indexed": false,
-        "name": "_amount",
+        "name": "contractOwner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "editorAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
         "type": "uint256"
       }
     ],
-    "name": "TokensLoyalty",
+    "name": "EditorResigned",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "name": "_from",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "_to",
+        "indexed": false,
+        "name": "contractOwner",
         "type": "address"
       },
       {
         "indexed": false,
-        "name": "_value",
+        "name": "reviewerAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "name": "_methodName",
-        "type": "bytes4"
-      },
-      {
-        "indexed": false,
-        "name": "_args",
-        "type": "bytes"
       }
     ],
-    "name": "Transfer",
+    "name": "ExpertReviewerSignUp",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "name": "_from",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "_delegate",
+        "indexed": false,
+        "name": "contractOwner",
         "type": "address"
       },
       {
         "indexed": false,
-        "name": "_amount",
-        "type": "uint256"
+        "name": "editorAddress",
+        "type": "address"
       },
       {
         "indexed": false,
-        "name": "_fee",
+        "name": "stateTimestamp",
         "type": "uint256"
       }
     ],
-    "name": "TransferPreSigned",
+    "name": "ExpertReviewerResigned",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "name": "_from",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "_delegate",
-        "type": "address"
-      },
-      {
         "indexed": false,
-        "name": "_amount",
+        "name": "submissionId",
         "type": "uint256"
       },
       {
         "indexed": false,
-        "name": "_fee",
+        "name": "submissionOwner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "articleURL",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "name": "_methodName",
-        "type": "bytes4"
-      },
-      {
-        "indexed": false,
-        "name": "_args",
-        "type": "bytes"
       }
     ],
-    "name": "TransferPreSigned",
+    "name": "SubmissionProcessStart",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "spender",
+        "indexed": false,
+        "name": "assignerAddress",
         "type": "address"
       },
       {
         "indexed": false,
-        "name": "value",
+        "name": "submissionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
         "type": "uint256"
       }
     ],
-    "name": "Approval",
+    "name": "AssignmentForSubmissionProcess",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "name": "from",
-        "type": "address"
+        "indexed": false,
+        "name": "submissionId",
+        "type": "uint256"
       },
       {
-        "indexed": true,
-        "name": "to",
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "RemovedEditorFromSubmission",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "submissionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "newEditor",
         "type": "address"
       },
       {
         "indexed": false,
-        "name": "value",
+        "name": "stateTimestamp",
         "type": "uint256"
       }
     ],
-    "name": "Transfer",
+    "name": "ChangedEditorFromSubmission",
     "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "submissionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "SanityIsOk",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "submissionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "SanityIsNotOk",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "reviewerAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "isEditorApprovedReview",
+        "type": "bool"
+      }
+    ],
+    "name": "SignedUpForReviewing",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "reviewerAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "ResignedFromReviewing",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "reviewHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "reviewerAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "articleHasMajorIssues",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "name": "articleHasMinorIssues",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "name": "score1",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "name": "score2",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "EditorApprovedReviewIsAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "reviewHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "reviewerAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "articleHasMajorIssues",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "name": "articleHasMinorIssues",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "name": "score1",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "name": "score2",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "CommunityReviewIsAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "oldReviewHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "reviewerAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "reviewHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "articleHasMajorIssues",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "name": "articleHasMinorIssues",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "name": "score1",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "name": "score2",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "ReviewIsCorrected",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "reviewer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "ReviewIsAccepted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "reviewer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "ReviewIsDeclined",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "reviewer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "ReviewerRejected",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "editor",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "ArticleVersionIsAccepted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "editor",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "DeclineArticleVersion",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "editor",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "DeclineArticleVersionAndClose",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "submissionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "NewReviewRoundRequested",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "submissionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "articleUrl",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "NewReviewRoundOpened",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "submissionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "NewReviewRoundDeclined",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "submissionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "SubmissionProcessClosed",
+    "type": "event"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "articleSubmissions",
+    "outputs": [
+      {
+        "name": "submissionId",
+        "type": "uint256"
+      },
+      {
+        "name": "submissionState",
+        "type": "uint8"
+      },
+      {
+        "name": "stateTimestamp",
+        "type": "uint256"
+      },
+      {
+        "name": "submissionOwner",
+        "type": "address"
+      },
+      {
+        "name": "editor",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "articleVersions",
+    "outputs": [
+      {
+        "name": "submissionId",
+        "type": "uint256"
+      },
+      {
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "name": "publishedTimestamp",
+        "type": "uint256"
+      },
+      {
+        "name": "articleUrl",
+        "type": "bytes32"
+      },
+      {
+        "name": "versionState",
+        "type": "uint8"
+      },
+      {
+        "name": "stateTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "contractOwner",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "hash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getAuthors",
+    "outputs": [
+      {
+        "name": "authors",
+        "type": "address[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getJournalParameters",
+    "outputs": [
+      {
+        "name": "_contractOwner",
+        "type": "address"
+      },
+      {
+        "name": "_minAmountOfEditorApprovedReviews",
+        "type": "uint256"
+      },
+      {
+        "name": "_maxAmountOfRewardedEditorApprovedReviews",
+        "type": "uint256"
+      },
+      {
+        "name": "_minAmountOfCommunityReviews",
+        "type": "uint256"
+      },
+      {
+        "name": "_maxAmountOfRewardedCommunityReviews",
+        "type": "uint256"
+      },
+      {
+        "name": "_sciencemattersFoundationReward",
+        "type": "uint256"
+      },
+      {
+        "name": "_editorReward",
+        "type": "uint256"
+      },
+      {
+        "name": "_linkedArticlesReward",
+        "type": "uint256"
+      },
+      {
+        "name": "_invalidationWorkReward",
+        "type": "uint256"
+      },
+      {
+        "name": "_editorApprovedReviewerRewardPerReviewer",
+        "type": "uint256"
+      },
+      {
+        "name": "_communityReviewerRewardPerReviewer",
+        "type": "uint256"
+      },
+      {
+        "name": "_secondReviewerRewardPerReviewer",
+        "type": "uint256"
+      },
+      {
+        "name": "_submissionFee",
+        "type": "uint256"
+      },
+      {
+        "name": "_maxReviewRounds",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "hash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getLinkedArticles",
+    "outputs": [
+      {
+        "name": "linkedArticles",
+        "type": "bytes32[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "isEditor",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "isExpertReviewer",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      },
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "reviews",
+    "outputs": [
+      {
+        "name": "articleHash",
+        "type": "bytes32"
+      },
+      {
+        "name": "reviewer",
+        "type": "address"
+      },
+      {
+        "name": "isEditorApprovedReview",
+        "type": "bool"
+      },
+      {
+        "name": "reviewState",
+        "type": "uint8"
+      },
+      {
+        "name": "stateTimestamp",
+        "type": "uint256"
+      },
+      {
+        "name": "reviewHash",
+        "type": "bytes32"
+      },
+      {
+        "name": "reviewedTimestamp",
+        "type": "uint256"
+      },
+      {
+        "name": "articleHasMajorIssues",
+        "type": "bool"
+      },
+      {
+        "name": "articleHasMinorIssues",
+        "type": "bool"
+      },
+      {
+        "name": "score1",
+        "type": "uint8"
+      },
+      {
+        "name": "score2",
+        "type": "uint8"
+      },
+      {
+        "name": "reviewedBy",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "submissionFee",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   }
 ];
