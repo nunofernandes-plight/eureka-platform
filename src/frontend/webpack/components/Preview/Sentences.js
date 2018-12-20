@@ -65,7 +65,7 @@ class Sentences extends React.Component {
               onClick={() => {
                 this.props.onClick(this[refId]);
               }}
-              innerRef={ref => (this[refId] = ref)}
+              ref={element => (this[refId] = element)}
             >
               {this.props.show === i ? <CommentIcon show={true} /> : null}
             </Circle>
