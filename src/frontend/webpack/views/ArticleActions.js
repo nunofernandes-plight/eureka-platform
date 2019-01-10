@@ -11,6 +11,7 @@ import {SanityCheckDeclineButton} from '../components/Articles/ArticleActions/Sa
 import {SanityCheckDeclineAndCloseButton} from '../components/Articles/ArticleActions/SanityNotOkAndClose.js';
 import {AssignAsEditorButton} from '../components/Articles/ArticleActions/AssignEditor.js';
 import {ResignAsEditorButton} from '../components/Articles/ArticleActions/ResignEditor.js';
+import {InviteReviewersButton} from '../components/Articles/ArticleActions/InviteReviewers.js';
 
 const Actions = styled.div`
   font-size: 14px;
@@ -72,7 +73,7 @@ const EditorActions = ({article, user}) => {
         return (
           <RoleActions>
             {getNumberOfReviewsInformation(article)}
-            <RoleActions>Invite Reviewers</RoleActions>
+            {/*<InviteReviewersButton article={article} />*/}
             {getCheckReviewsButton(article)}
             {getAcceptArticleButton(article)}
             {getDeclineArticleButton(article)}
