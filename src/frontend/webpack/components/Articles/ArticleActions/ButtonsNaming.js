@@ -7,3 +7,7 @@ export const INVITE_REVIEWERS = {
   label: 'Invite Reviewers',
   tooltip: 'Invite some reviewers by email to review this article'
 };
+export const CHECK_REVIEWS = {
+  label: 'Check reviews',
+  tooltip: 'Check the quality of the already handed in reviews'
+};

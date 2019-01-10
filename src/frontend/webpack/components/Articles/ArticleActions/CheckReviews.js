@@ -5,7 +5,13 @@ import {Web3Context} from '../../../contexts/Web3Context.js';
 import {fetchingArticleData} from '../../../reducers/article.js';
 import ActionButton from './ActionButton.js';
 import {__ALERT_SUCCESS} from '../../../../helpers/colors.js';
-import {INVITE_REVIEWERS} from './ButtonsNaming.js';
+import {CHECK_REVIEWS} from './ButtonsNaming.js';
+import {withRouter} from 'react-router';
+import {Link} from 'react-router-dom';
+
+const MyLink = styled(Link)`
+  text-decoration: none;
+`;
 
 const mapStateToProps = state => ({
   selectedAccount: state.accountsData.selectedAccount
@@ -17,7 +23,7 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export const InviteReviewersButton = connect(
+export const CheckReviewsButton = withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
 )(props => {
@@ -25,19 +31,19 @@ export const InviteReviewersButton = connect(
     <Web3Context.Consumer>
       {web3Context => {
         return (
-          <ActionButton
-            icon={'editorSignOff'}
-            background={__ALERT_SUCCESS}
-            dataTip={'signOffArticle'}
-            onClick={() => {
-              //TODO
-            }}
-            title={INVITE_REVIEWERS.tooltip}
-          >
-            {INVITE_REVIEWERS.label}
-          </ActionButton>
+          <MyLink to={'/app/editor/reviews'}>
+            <ActionButton
+              icon={'editorSignOff'}
+              background={__ALERT_SUCCESS}
+              dataTip={'checkReviews'}
+              onClick={() => {}}
+              title={CHECK_REVIEWS.tooltip}
+            >
+              {CHECK_REVIEWS.label}
+            </ActionButton>
+          </MyLink>
         );
       }}
     </Web3Context.Consumer>
   );
-});
+}));
