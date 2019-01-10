@@ -22,7 +22,7 @@ const Actions = styled.div`
 `;
 
 const RoleActions = styled.div`
-
+  margin-bottom: 20px;
 `;
 
 const AuthorActions = ({article, user}) => {
@@ -41,24 +41,28 @@ const EditorActions = ({article, user}) => {
     ) {
       return (
         <RoleActions>
-          <AssignAsEditorButton article={article} />
+          <AssignAsEditorButton article={article}/>
         </RoleActions>
       );
     }
 
     if (
       article.articleSubmission.articleSubmissionState ===
-        ARTICLE_SUBMISSION_STATE.EDITOR_ASSIGNED &&
+      ARTICLE_SUBMISSION_STATE.EDITOR_ASSIGNED &&
       article.articleSubmission.editor === user.ethereumAddress
     ) {
       if (article.articleVersionState === ARTICLE_VERSION_STATE.SUBMITTED)
         return (
-          <RoleActions>
-            <SanityCheckAcceptButton article={article} />
-            <SanityCheckDeclineButton article={article} />
-            <SanityCheckDeclineAndCloseButton article={article} />
-            <ResignAsEditorButton article={article} />
-          </RoleActions>
+          <div>
+            <RoleActions>
+              <SanityCheckAcceptButton article={article}/>
+              <SanityCheckDeclineButton article={article}/>
+              <SanityCheckDeclineAndCloseButton article={article}/>
+            </RoleActions>
+            <RoleActions>
+              <ResignAsEditorButton article={article}/>
+            </RoleActions>
+          </div>
         );
 
       if (
@@ -233,10 +237,10 @@ const mapStateToProps = state => ({
 const ArticleActions = connect(mapStateToProps)(({article, user}) => {
   return (
     <Actions>
-      <AuthorActions article={article} user={user} />
-      <EditorActions article={article} user={user} />
-      <ExpertReviewerActions article={article} user={user} />
-      <CommunityReviewerActions article={article} user={user} />
+      <AuthorActions article={article} user={user}/>
+      <EditorActions article={article} user={user}/>
+      <ExpertReviewerActions article={article} user={user}/>
+      <CommunityReviewerActions article={article} user={user}/>
     </Actions>
   );
 });
