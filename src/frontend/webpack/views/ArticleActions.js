@@ -36,8 +36,8 @@ const AuthorActions = ({article, user}) => {
 const EditorActions = ({article, user}) => {
   if (user.roles.includes(Roles.EDITOR)) {
     if (
-      article.articleSubmission.articleSubmissionState ===
-      ARTICLE_SUBMISSION_STATE.OPEN
+      article.articleSubmission.articleSubmissionState === ARTICLE_SUBMISSION_STATE.OPEN
+      && article.articleSubmission.ownerAddress !== user.ethereumAddress
     ) {
       return (
         <RoleActions>
