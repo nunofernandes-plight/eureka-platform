@@ -11,8 +11,8 @@ import {
 } from '../../smartcontracts/methods/web3-platform-contract-methods.mjs';
 
 const CronJob = cron.CronJob;
-const SANITY_TIME_OUT_INTERVAL = 10; //timeout interval in seconds //TODO change to dropout time interval
-const REVIEWER_TIME_OUT_INTERVAL = 120; //timeout interval in seconds //TODO change to dropout time interval
+const SANITY_TIME_OUT_INTERVAL = 1000000000000000; //timeout interval in seconds //TODO change to dropout time interval
+const REVIEWER_TIME_OUT_INTERVAL = 120000000000000; //timeout interval in seconds //TODO change to dropout time interval
 const NO_NEW_REVIEW_ROUND_INTERVAL = 3 * 24 * 3600; //timeout interval in seconds
 const CRONE_TIME_INTERVAL = '*/12 * * * * *'; // all 5 seconds
 
