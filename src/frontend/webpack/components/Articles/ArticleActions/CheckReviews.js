@@ -36,7 +36,6 @@ export const CheckReviewsButton = withRouter(connect(
               icon={'editorSignOff'}
               background={__ALERT_SUCCESS}
               dataTip={'checkReviews'}
-              onClick={() => {}}
               title={CHECK_REVIEWS.tooltip}
             >
               {CHECK_REVIEWS.label}

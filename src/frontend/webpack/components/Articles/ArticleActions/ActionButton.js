@@ -30,7 +30,8 @@ const ActionButton = ({title, dataTip, ...otherProps}) => {
         data-tip={dataTip}
         background={otherProps.background}
         onClick={() => {
-          otherProps.onClick();
+          if (otherProps && otherProps.onClick)
+            otherProps.onClick();
         }}
       >
         <Icon
