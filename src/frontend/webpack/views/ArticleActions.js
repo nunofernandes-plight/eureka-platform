@@ -73,15 +73,19 @@ const EditorActions = ({article, user}) => {
         ARTICLE_VERSION_STATE.OPEN_FOR_ALL_REVIEWERS
       )
         return (
-          <RoleActions>
+          <div>
             {/*{getNumberOfReviewsInformation(article)}*/}
             {/*<InviteReviewersButton article={article} />*/}
-            {getCheckReviewsButton(article)}
-            {getAcceptArticleButton(article)}
-            {getDeclineArticleButton(article)}
-            {getDeclineArticleAndCloseSubmissionButton(article)}
-            {getDeclineArticleNotEnoughReviewerButton(article)}
-          </RoleActions>
+            <RoleActions>
+              {getCheckReviewsButton(article)}
+            </RoleActions>
+            <RoleActions>
+              {getAcceptArticleButton(article)}
+              {getDeclineArticleButton(article)}
+              {getDeclineArticleAndCloseSubmissionButton(article)}
+              {getDeclineArticleNotEnoughReviewerButton(article)}
+            </RoleActions>
+          </div>
         );
     }
   }
@@ -201,11 +205,7 @@ const getNumberOfReviewsInformation = article => {
 
 const getCheckReviewsButton = article => {
   if (getNumberOfCheckableReviews(article) > 0)
-    return (
-      <RoleActions>
-        <CheckReviewsButton article={article}/>
-      </RoleActions>
-    );
+    return <CheckReviewsButton article={article}/>;
   else
     return null;
 };
@@ -220,11 +220,7 @@ const isArticleAcceptable = article => {
 
 const getAcceptArticleButton = article => {
   if (isArticleAcceptable(article))
-    return (
-      <RoleActions>
-        <AcceptArticleButton article={article}/>
-      </RoleActions>
-    );
+    return <AcceptArticleButton article={article}/>;
   else
     return null;
 };
