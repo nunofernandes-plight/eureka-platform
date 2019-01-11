@@ -78,7 +78,7 @@ class EditorFinalize extends React.Component {
     let gasAmount;
     // gas estimation on ganache doesn't work properly
     if (!isGanache(this.props.context.web3))
-      gasAmount = await this.acceptArticleVersion(
+      gasAmount = await acceptArticleVersion(
         this.props.context.platformContract,
         articleHash
       ).estimateGas({

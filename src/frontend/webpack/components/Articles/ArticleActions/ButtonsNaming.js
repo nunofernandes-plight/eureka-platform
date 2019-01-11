@@ -11,3 +11,7 @@ export const CHECK_REVIEWS = {
   label: 'Check reviews',
   tooltip: 'Check the quality of the already handed in reviews'
 };
+export const ACCEPT_ARTICLE = {
+  label: 'Accept article',
+  tooltip: 'Accept this article and finish the peer review process'
+};

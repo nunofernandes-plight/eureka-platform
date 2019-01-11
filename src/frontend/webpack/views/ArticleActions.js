@@ -13,6 +13,7 @@ import {AssignAsEditorButton} from '../components/Articles/ArticleActions/Assign
 import {ResignAsEditorButton} from '../components/Articles/ArticleActions/ResignEditor.js';
 import {InviteReviewersButton} from '../components/Articles/ArticleActions/InviteReviewers.js';
 import {CheckReviewsButton} from '../components/Articles/ArticleActions/CheckReviews.js';
+import {AcceptArticleButton} from '../components/Articles/ArticleActions/AcceptArticle.js';
 
 const Actions = styled.div`
   font-size: 14px;
@@ -213,8 +214,19 @@ const getNumberOfCheckableReviews = article => {
   return 1;
 };
 
+const isArticleAcceptable = article => {
+  return true;
+};
+
 const getAcceptArticleButton = article => {
-  return <RoleActions>Accept Article and Publish</RoleActions>;
+  if (isArticleAcceptable(article))
+    return (
+      <RoleActions>
+        <AcceptArticleButton article={article}/>
+      </RoleActions>
+    );
+  else
+    return null;
 };
 
 const getDeclineArticleButton = article => {
