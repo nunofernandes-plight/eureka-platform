@@ -2,15 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import Avatar from './Avatar.js';
 import UserRoles from './UserRoles.js';
-import {
-  __ALERT_ERROR,
-  __FIFTH,
-  __GRAY_400,
-  __GRAY_600,
-  __THIRD
-} from '../../helpers/colors.js';
-import {DraftsNavPillRoutes} from '../components/Routers/DraftsNavPillRoutes.js';
+import {__ALERT_ERROR, __GRAY_600} from '../../helpers/colors.js';
 import NavPill from './NavPill.js';
+import {UserLookupRoutes} from '../components/Routers/UserLookupRoutes.js';
+import {Route} from 'react-router';
+import UserLookupRouter from '../components/Routers/UserLookupRouter.js';
 
 const Container = styled.div`
   display: flex;
@@ -43,7 +39,12 @@ const HorizontalSeparator = styled.div`
   border-radius: 15px;
 `;
 
-const User = ({user}) => {
+const Routes = styled.div`
+  display: flex;
+  margin-top: 15px;
+`;
+const User = ({user, base}) => {
+  console.log(base);
   return (
     <Container>
       <Avatar avatar={user.avatar} width={135} height={135} />
@@ -57,7 +58,26 @@ const User = ({user}) => {
       </TagLine>
       <UserRoles roles={user.roles} />
       <HorizontalSeparator />
+      <Routes>
+        {UserLookupRoutes.map((item, index) => {
+          return (
+            <NavPill
+              small={true}
+              color={__ALERT_ERROR}
+              name={item.name}
+              base={base}
+              key={index}
+              path={item.path}
+              icon={item.icon}
+              material={item.material}
+              width={25}
+              height={25}
+            />
+          );
+        })}
+      </Routes>
 
+      <UserLookupRouter base={base} />
     </Container>
   );
 };

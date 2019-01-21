@@ -1,7 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Role} from './Role.js';
-import {__FIFTH, __GRAY_100, __GRAY_200, __THIRD} from '../../helpers/colors.js';
+import {
+  __FIFTH,
+  __GRAY_100,
+  __GRAY_200,
+  __THIRD
+} from '../../helpers/colors.js';
 
 const Container = styled.div`
   display: flex;
@@ -22,8 +27,8 @@ const UserRoles = ({roles}) => {
     <Container>
       {roles.map((role, i) => {
         return (
-          <RoleContainer>
-            <Role role={role} key={i} />
+          <RoleContainer key={i}>
+            <Role role={role} />
             {i !== roles.length - 1 ? <Separator /> : null}
           </RoleContainer>
         );

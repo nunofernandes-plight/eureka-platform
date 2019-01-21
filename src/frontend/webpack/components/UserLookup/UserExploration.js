@@ -1,13 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Card} from '../views/Card.js';
+import {Card} from '../../views/Card.js';
 import queryString from 'query-string';
-import {getDomain} from '../../../helpers/getDomain.mjs';
+import {getDomain} from '../../../../helpers/getDomain.mjs';
 import {withRouter} from 'react-router-dom';
-import GridSpinner from '../views/spinners/GridSpinner.js';
-import Icon from '../views/icons/Icon.js';
-import {__ALERT_ERROR} from '../../helpers/colors.js';
-import User from '../views/User.js';
+import GridSpinner from '../../views/spinners/GridSpinner.js';
+import Icon from '../../views/icons/Icon.js';
+import {__ALERT_ERROR} from '../../../helpers/colors.js';
+import User from '../../views/User.js';
 
 const Container = styled.div`
   display: flex;
@@ -101,7 +101,7 @@ class UserExploration extends React.Component {
             <GridSpinner/>
           ) : (
             <UserContainer>
-              <User user={user}/>
+              <User user={user} base={`${this.props.base}/${this.state.givenAddress}`}/>
             </UserContainer>
           )}
         </Card>
