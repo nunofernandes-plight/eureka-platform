@@ -4,10 +4,10 @@ import {Card} from '../views/Card.js';
 import queryString from 'query-string';
 import {getDomain} from '../../../helpers/getDomain.mjs';
 import {withRouter} from 'react-router-dom';
-import Avatar from '../views/Avatar.js';
 import GridSpinner from '../views/spinners/GridSpinner.js';
 import Icon from '../views/icons/Icon.js';
-import {__ALERT_ERROR, __THIRD} from '../../helpers/colors.js';
+import {__ALERT_ERROR} from '../../helpers/colors.js';
+import User from '../views/User.js';
 
 const Container = styled.div`
   display: flex;
@@ -31,6 +31,11 @@ const NotFoundSubTitle = styled.p`
   margin-top: 4px;
 `;
 
+const UserContainer = styled.div`
+  width: 100%;
+  margin-top:-70px;
+`;
+
 const NotFound = ({address}) => {
   return (
     <NotFoundContainer>
@@ -40,7 +45,7 @@ const NotFound = ({address}) => {
       <NotFoundSubTitle>
         Are you sure is the address <strong>{address}</strong> correct?
       </NotFoundSubTitle>
-      <Icon icon={'404'} width={180} height={180} color={__ALERT_ERROR} />
+      <Icon icon={'404'} width={180} height={180} color={__ALERT_ERROR}/>
     </NotFoundContainer>
   );
 };
@@ -56,9 +61,10 @@ class UserExploration extends React.Component {
   }
 
   componentDidMount() {
+    const address = this.props.match.params.ethereumAddress;
     this.setState({givenAddress: this.props.match.params.ethereumAddress});
     const query = queryString.stringify({
-      ethAddress: this.props.match.params.ethereumAddress
+      ethAddress: address
     });
     fetch(`${getDomain()}/api/users?${query}`, {
       method: 'GET',
@@ -88,13 +94,15 @@ class UserExploration extends React.Component {
     const user = this.state.user;
     return (
       <Container>
-        <Card title={'User lookup'}>
+        <Card>
           {this.state.notFound && this.state.givenAddress ? (
-            <NotFound address={this.state.givenAddress} />
+            <NotFound address={this.state.givenAddress}/>
           ) : !user ? (
-            <GridSpinner />
+            <GridSpinner/>
           ) : (
-            <Avatar avatar={user.avatar} width={100} height={100} />
+            <UserContainer>
+              <User user={user}/>
+            </UserContainer>
           )}
         </Card>
       </Container>

@@ -20,7 +20,6 @@ const getColor = role => {
   switch (role) {
     case Roles.AUTHOR:
       return getScale()[0];
-
     case Roles.REVIEWER:
       return getScale()[2];
     case Roles.CONTRACT_OWNER:
@@ -33,6 +32,14 @@ const getColor = role => {
   }
 };
 
+const removeSpecialCharacters = str => {
+  return str
+    .toString()
+    .replace(/[^\w\s]/gi, '')
+    .toString()
+    .replace('_', ' ');
+};
+
 export const Role = ({role}) => {
   const color = getColor(role);
   const background = chroma(color)
@@ -41,7 +48,7 @@ export const Role = ({role}) => {
 
   return (
     <Container color={color} background={background}>
-      {role}
+      {removeSpecialCharacters(role)}
     </Container>
   );
 };

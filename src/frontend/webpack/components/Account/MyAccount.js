@@ -139,7 +139,6 @@ class MyAccount extends Component {
   }
 
   render() {
-    console.log(this.props.selectedAccount);
     return (
       <Container>
         <CardContainer>
