@@ -15,6 +15,7 @@ import {InviteReviewersButton} from '../components/Articles/ArticleActions/Invit
 import {CheckReviewsButton} from '../components/Articles/ArticleActions/CheckReviews.js';
 import {AcceptArticleButton} from '../components/Articles/ArticleActions/AcceptArticle.js';
 import {DeclineArticleAndRequestButton} from '../components/Articles/ArticleActions/DeclineArticleAndRequest.js';
+import {DeclineArticleAndCloseButton} from '../components/Articles/ArticleActions/DeclineArticleAndClose.js';
 
 const Actions = styled.div`
   font-size: 14px;
@@ -78,6 +79,7 @@ const EditorActions = ({article, user}) => {
             <RoleActions>
               {/*{getNumberOfReviewsInformation(article)}*/}
               <InviteReviewersButton article={article} />
+              {getDeclineArticleNotEnoughReviewerButton(article)}
             </RoleActions>
             <RoleActions>
               {getCheckReviewsButton(article)}
@@ -86,7 +88,6 @@ const EditorActions = ({article, user}) => {
               {getAcceptArticleButton(article)}
               {getDeclineArticleAndRequestNewVersionButton(article)}
               {getDeclineArticleAndCloseSubmissionButton(article)}
-              {getDeclineArticleNotEnoughReviewerButton(article)}
             </RoleActions>
           </div>
         );
@@ -244,9 +245,10 @@ const getDeclineArticleAndRequestNewVersionButton = article => {
 };
 
 const getDeclineArticleAndCloseSubmissionButton = article => {
-  return (
-    <RoleActions>Decline Article and Close Submission Process</RoleActions>
-  );
+  if (isDeclinable(article))
+    return <DeclineArticleAndCloseButton article={article}/>;
+  else
+    return null;
 };
 
 const getDeclineArticleNotEnoughReviewerButton = article => {

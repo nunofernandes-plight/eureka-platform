@@ -19,3 +19,7 @@ export const DECLINE_ARTICLE_AND_REQUEST_NEW = {
   label: 'Request new article',
   tooltip: 'Decline this article version and request a new one.'
 };
+export const DECLINE_ARTICLE_AND_CLOSE_SUBMISSION = {
+  label: 'Decline article & finish',
+  tooltip: 'Decline this article version and finish the peer review process.'
+};
