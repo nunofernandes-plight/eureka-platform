@@ -43,7 +43,15 @@ class AuthorLookup extends React.Component {
         {this.state.data ? (
           <div>
             {this.state.data.map((author, i) => {
-              return <Author key={i} author={author} {...this.props} />;
+              if (author) {
+                return <Author key={i} author={author} {...this.props} />;
+              } else {
+                return (
+                  <i key={i}>
+                    We did not found any user with this address in our database.
+                  </i>
+                );
+              }
             })}
           </div>
         ) : (
