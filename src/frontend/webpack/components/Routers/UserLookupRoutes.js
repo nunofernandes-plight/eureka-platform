@@ -1,6 +1,6 @@
 export const UserLookupRoutes = [
   {
-    path: 'encoding',
+    path: 'address',
     name: 'Encoding',
     icon: 'crypto'
   },
