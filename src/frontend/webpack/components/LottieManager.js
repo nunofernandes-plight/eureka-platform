@@ -5,7 +5,7 @@ class LottieManager extends React.Component {
   render() {
     const defaultOptions = {
       loop: this.props.loop,
-      autoplay: true,
+      autoplay: this.props.autoplay && true,
       animationData: this.props.animationData,
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid slice'
