@@ -12,14 +12,11 @@ import router from '../routes/index.mjs';
 import timebasedContractService from '../web3/timebased-contract-service.mjs';
 import {getJournal} from '../db/journal-service.mjs';
 import uploadRouter from '../routes/file-upload.routes.mjs';
-import {
-  setupWeb3Interface
-} from '../web3/web3InterfaceSetup.mjs';
+import {setupWeb3Interface} from '../web3/web3InterfaceSetup.mjs';
 import {configEmailProvider, sendEmail} from '../email/index.mjs';
 import {getReviewersInvitationTemplate} from '../email/templates/EmailTemplates.mjs';
 import getAccounts from '../../smartcontracts/methods/get-accounts';
 import web3 from '../../helpers/web3Instance';
-
 
 if (!isProduction) {
   dotenv.config();
@@ -68,7 +65,16 @@ export default {
       })
     );
 
-    app.use(cors({credentials: true, origin: ['http://localhost:3000']}));
+    app.use(
+      cors({
+        credentials: true,
+        origin: [
+          'http://localhost:3000',
+          'https://eureka-base58-converter.herokuapp.com',
+          'https://eurekaplatform.herokuapp.com'
+        ]
+      })
+    );
 
     /** Passport setup **/
     app.use(passport.initialize());
@@ -77,7 +83,6 @@ export default {
     /** Web3 Interface: SC Events Listener, Transaction Listener**/
     [platformContract, tokenContract] = await setupWeb3Interface();
     contractOwner = (await getJournal()).contractOwner;
-    
 
     /**
      * Config and set Email Provider SendGrid (API key as env variable)

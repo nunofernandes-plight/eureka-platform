@@ -11,7 +11,7 @@ import AddressBook from '../AddressBook/AddressBook.js';
 import {ContractOwnerGuard} from '../Guards/Guards.js';
 import EditorRouter from './EditorRouter.js';
 import Reviewers from '../Reviewers.js';
-import UserExploration from '../UserExploration.js';
+import UserExploration from '../UserLookup/UserExploration.js';
 import ReviewsRouter from './ReviewsRouter.js';
 import PreviewRouter from './PreviewRouter.js';
 import ReviewsWriter from '../Reviews/ReviewsWriter.js';
@@ -91,9 +91,8 @@ class DashboardRouter extends Component {
           />
 
           <Route
-            exact
             path={`${this.props.base}/users/:ethereumAddress`}
-            render={() => <UserExploration />}
+            render={() => <UserExploration base={`${this.props.base}/users`} />}
           />
 
           <Route
