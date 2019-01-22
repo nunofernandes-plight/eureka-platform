@@ -75,8 +75,10 @@ const EditorActions = ({article, user}) => {
       )
         return (
           <div>
-            {/*{getNumberOfReviewsInformation(article)}*/}
-            {/*<InviteReviewersButton article={article} />*/}
+            <RoleActions>
+              {/*{getNumberOfReviewsInformation(article)}*/}
+              <InviteReviewersButton article={article} />
+            </RoleActions>
             <RoleActions>
               {getCheckReviewsButton(article)}
             </RoleActions>
