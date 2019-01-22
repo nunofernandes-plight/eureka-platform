@@ -8,9 +8,9 @@ import sha256 from 'sha256';
 import {InputField} from '../../design-components/Inputs.js';
 import AuthorLookup from '../AuthorLookup.js';
 import LottieManager from '../LottieManager.js';
+import EncodingResult from './EncodingResult.js';
 
-const Container = styled.div`
-`;
+const Container = styled.div``;
 
 export const ConvertButton = styled.div`
   transition: 0.3s all ease-in-out;
@@ -125,10 +125,10 @@ class Encoding extends Component {
 
         {this.state.encodedAddress ? (
           <Fragment>
-            {/*  <EncodingResult
+            <EncodingResult
               encodedAddress={this.state.encodedAddress}
               ethAddress={this.state.address}
-            />*/}
+            />
           </Fragment>
         ) : null}
       </Container>

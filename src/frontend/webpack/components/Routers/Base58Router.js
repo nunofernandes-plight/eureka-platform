@@ -2,13 +2,10 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import {Redirect, Route, withRouter} from 'react-router';
 import Encoding from '../UserLookup/Encoding.js';
-import {__ALERT_ERROR, __GRAY_300} from '../../../helpers/colors.js';
+import {__GRAY_300} from '../../../helpers/colors.js';
 import OptionPicker from '../UserLookup/OptionPicker.js';
-import * as PropTypes from 'prop-types';
-
 const Container = styled.div`
   max-width: 1110px;
-  min-width: 800px;
   border: 1px solid ${__GRAY_300};
   padding: 10px 30px 30px 30px;
   border-radius: 5px;
@@ -17,8 +14,8 @@ const Container = styled.div`
 
 const Title = styled.h2`
   text-align: center;
-  color: ${__ALERT_ERROR};
 `;
+
 const MarginTop = styled.div`
   margin-top: 4em;
 `;
