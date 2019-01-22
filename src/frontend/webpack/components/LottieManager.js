@@ -18,6 +18,7 @@ class LottieManager extends React.Component {
           options={defaultOptions}
           height={this.props.height}
           width={this.props.width}
+          isPaused={this.props.isPaused}
           margin={-24}
           eventListeners={[
             {
