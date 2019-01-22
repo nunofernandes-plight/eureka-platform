@@ -1,29 +1,31 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Redirect, Route} from 'react-router';
+import Encoding from '../UserLookup/Encoding.js';
 
-const Container = styled.div``;
+const Container = styled.div`
+  width: 66.7%;
+`;
 
 const UserLookupRouter = ({base}) => {
   return (
     <Container>
-      {' '}
       <Route
         exact
         path={`${base}/encoding`}
         render={() => {
-          return <h1>hello encoding asijfasjifjiasfijasfijasfijfasijjif</h1>;
+          return <Encoding base={`${base}/encoding`} />;
         }}
       />{' '}
       <Route
         exact
         path={`${base}/publications`}
-        render={() => <div>hello publications</div>}
+        render={() => <div>No Publications</div>}
       />{' '}
       <Route
         exact
         path={`${base}/reviews`}
-        render={() => <div>hello reviews</div>}
+        render={() => <div>No Reviews</div>}
       />{' '}
       <Route
         exact
