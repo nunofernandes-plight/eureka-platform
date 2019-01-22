@@ -14,6 +14,7 @@ import {ResignAsEditorButton} from '../components/Articles/ArticleActions/Resign
 import {InviteReviewersButton} from '../components/Articles/ArticleActions/InviteReviewers.js';
 import {CheckReviewsButton} from '../components/Articles/ArticleActions/CheckReviews.js';
 import {AcceptArticleButton} from '../components/Articles/ArticleActions/AcceptArticle.js';
+import {DeclineArticleAndRequestButton} from '../components/Articles/ArticleActions/DeclineArticleAndRequest.js';
 
 const Actions = styled.div`
   font-size: 14px;
@@ -81,7 +82,7 @@ const EditorActions = ({article, user}) => {
             </RoleActions>
             <RoleActions>
               {getAcceptArticleButton(article)}
-              {getDeclineArticleButton(article)}
+              {getDeclineArticleAndRequestNewVersionButton(article)}
               {getDeclineArticleAndCloseSubmissionButton(article)}
               {getDeclineArticleNotEnoughReviewerButton(article)}
             </RoleActions>
@@ -225,10 +226,19 @@ const getAcceptArticleButton = article => {
     return null;
 };
 
-const getDeclineArticleButton = article => {
-  return (
-    <RoleActions>Decline Article and Request a new article version</RoleActions>
-  );
+const isDeclinable = article => {
+  return true;
+};
+
+const isNewVersionRequestPossible = article => {
+  return true;
+};
+
+const getDeclineArticleAndRequestNewVersionButton = article => {
+  if (isDeclinable(article) && isNewVersionRequestPossible(article))
+    return <DeclineArticleAndRequestButton article={article}/>;
+  else
+    return null;
 };
 
 const getDeclineArticleAndCloseSubmissionButton = article => {

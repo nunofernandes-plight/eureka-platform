@@ -15,3 +15,7 @@ export const ACCEPT_ARTICLE = {
   label: 'Accept article',
   tooltip: 'Accept this article and finish the peer review process'
 };
+export const DECLINE_ARTICLE_AND_REQUEST_NEW = {
+  label: 'Request new article',
+  tooltip: 'Decline this article version and request a new one.'
+};
