@@ -4,6 +4,7 @@ import {Redirect, Route, withRouter} from 'react-router';
 import Encoding from '../UserLookup/Encoding.js';
 import {__GRAY_300} from '../../../helpers/colors.js';
 import OptionPicker from '../UserLookup/OptionPicker.js';
+import Decoding from '../UserLookup/Decoding.js';
 const Container = styled.div`
   max-width: 1110px;
   border: 1px solid ${__GRAY_300};
@@ -49,7 +50,12 @@ class Base58Router extends Component {
             exact
             path={`${base}/decoding`}
             render={() => {
-              return <div>decoding here</div>;
+              return (
+                <Decoding
+                  base={`${base}/encoding`}
+                  address={this.props.address}
+                />
+              );
             }}
           />
           <Route
