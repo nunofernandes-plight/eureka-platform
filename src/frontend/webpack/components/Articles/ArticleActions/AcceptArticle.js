@@ -34,7 +34,7 @@ export const acceptArticle = async (web3Context, props, callback) => {
         gas: gasAmount
       })
       .on('transactionHash', tx => {
-        props.addTransaction(SC_TRANSACTIONS_TYPE.EDITOR_ARTICLE_ASSIGNMENT, tx);
+        props.addTransaction(SC_TRANSACTIONS_TYPE.ARTICLE_ACCEPTED, tx);
         // toast.info(
         //   <EditorInfoMessage
         //     path={'signoff'}
