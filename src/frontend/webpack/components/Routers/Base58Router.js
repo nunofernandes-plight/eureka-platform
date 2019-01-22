@@ -19,6 +19,9 @@ const Title = styled.h2`
   text-align: center;
   color: ${__ALERT_ERROR};
 `;
+const MarginTop = styled.div`
+  margin-top: 4em;
+`;
 
 class Base58Router extends Component {
   render() {
@@ -31,31 +34,33 @@ class Base58Router extends Component {
             this.props.history.push(`${this.props.base}/${value}`);
           }}
         />
-        <Route
-          exact
-          path={`${base}/encoding`}
-          render={() => {
-            return <Encoding base={`${base}/encoding`}/>;
-          }}
-        />
-        <Route
-          exact
-          path={`${base}/decoding`}
-          render={() => {
-            return <div>decoding here</div>;
-          }}
-        />
-        <Route
-          exact
-          path={base}
-          render={() => {
-            return <Redirect to={`${base}/encoding`}/>;
-          }}
-        />
+
+        <MarginTop>
+          <Route
+            exact
+            path={`${base}/encoding`}
+            render={() => {
+              return <Encoding base={`${base}/encoding`} />;
+            }}
+          />
+          <Route
+            exact
+            path={`${base}/decoding`}
+            render={() => {
+              return <div>decoding here</div>;
+            }}
+          />
+          <Route
+            exact
+            path={base}
+            render={() => {
+              return <Redirect to={`${base}/encoding`} />;
+            }}
+          />
+        </MarginTop>
       </Container>
     );
   }
 }
-
 
 export default withRouter(Base58Router);
