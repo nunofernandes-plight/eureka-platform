@@ -8,13 +8,13 @@ const Container = styled.div`
   width: 66.7%;
 `;
 
-const UserLookupRouter = ({base}) => {
+const UserLookupRouter = ({base, address}) => {
   return (
     <Container>
       <Route
         path={`${base}/address`}
         render={() => {
-          return <Base58Router base={`${base}/address`} />;
+          return <Base58Router base={`${base}/address`} address={address} />;
         }}
       />
       <Route

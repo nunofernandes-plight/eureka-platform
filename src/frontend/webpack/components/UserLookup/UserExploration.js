@@ -33,7 +33,7 @@ const NotFoundSubTitle = styled.p`
 
 const UserContainer = styled.div`
   width: 100%;
-  margin-top:-70px;
+  margin-top: -70px;
 `;
 
 const NotFound = ({address}) => {
@@ -45,7 +45,7 @@ const NotFound = ({address}) => {
       <NotFoundSubTitle>
         Are you sure is the address <strong>{address}</strong> correct?
       </NotFoundSubTitle>
-      <Icon icon={'404'} width={180} height={180} color={__ALERT_ERROR}/>
+      <Icon icon={'404'} width={180} height={180} color={__ALERT_ERROR} />
     </NotFoundContainer>
   );
 };
@@ -96,12 +96,16 @@ class UserExploration extends React.Component {
       <Container>
         <Card>
           {this.state.notFound && this.state.givenAddress ? (
-            <NotFound address={this.state.givenAddress}/>
+            <NotFound address={this.state.givenAddress} />
           ) : !user ? (
-            <GridSpinner/>
+            <GridSpinner />
           ) : (
             <UserContainer>
-              <User user={user} base={`${this.props.base}/${this.state.givenAddress}`}/>
+              <User
+                user={user}
+                base={`${this.props.base}/${this.state.givenAddress}`}
+                address={this.state.givenAddress}
+              />
             </UserContainer>
           )}
         </Card>

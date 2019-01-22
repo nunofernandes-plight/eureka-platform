@@ -43,8 +43,7 @@ const Routes = styled.div`
   display: flex;
   margin-top: 15px;
 `;
-const User = ({user, base}) => {
-  console.log(base);
+const User = ({user, base, address}) => {
   return (
     <Container>
       <Avatar avatar={user.avatar} width={135} height={135} />
@@ -77,7 +76,7 @@ const User = ({user, base}) => {
         })}
       </Routes>
 
-      <UserLookupRouter base={base} />
+      <UserLookupRouter base={base} address={address} />
     </Container>
   );
 };

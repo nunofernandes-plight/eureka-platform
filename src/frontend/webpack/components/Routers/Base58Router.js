@@ -37,7 +37,12 @@ class Base58Router extends Component {
             exact
             path={`${base}/encoding`}
             render={() => {
-              return <Encoding base={`${base}/encoding`} />;
+              return (
+                <Encoding
+                  base={`${base}/encoding`}
+                  address={this.props.address}
+                />
+              );
             }}
           />
           <Route

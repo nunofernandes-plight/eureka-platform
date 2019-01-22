@@ -41,17 +41,19 @@ const Label = styled.label`
 `;
 
 class Encoding extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       status: null,
-      address: null,
+      address: props.address,
       encodedAddress: null,
       isConverting: false
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.checkStatus(this.state.address);
+  }
 
   checkStatus(value) {
     if (this.state.encodedAddress) {
@@ -86,6 +88,7 @@ class Encoding extends Component {
       <Container>
         <Label>Ethereum Address</Label>
         <InputField
+          value={this.state.address}
           onChange={e => {
             this.checkStatus(e.target.value);
           }}
