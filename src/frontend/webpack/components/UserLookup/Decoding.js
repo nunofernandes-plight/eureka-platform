@@ -11,6 +11,7 @@ import {ALLOWED_CHARACTERS_BS58} from '../../constants/Base58Characters.js';
 import LottieControl from '../LottieManager.js';
 import DecodingResult from './DecodingResult.js';
 import {NUMBER_OF_CHECKSUM_BYTES} from './ChecksumParameters.js';
+import {bs58decode, isCheckSum} from '../../../helpers/base58.js';
 
 const Container = styled.div``;
 const Label = styled.label`
@@ -31,79 +32,23 @@ class Decoding extends Component {
 
   componentDidMount() {}
 
-  static areCharactersAllowedByBS58(value) {
-    let flat = true;
-    for (let i = 0; i < value.length; i++) {
-      const c = value.charAt(i).toString();
-      if (!(ALLOWED_CHARACTERS_BS58.indexOf(c) > -1)) {
-        // character is not in the array and thus is not a valid character
-        flat = false;
-      }
-    }
-    return flat;
-  }
-
-  // checks if there is prefix. If yes, it gets removed
-  static removePrefix(value) {
-    if (value.includes(InitialPrefix) && value.includes(EndPrefix)) {
-      return value
-        .toString()
-        .replace(InitialPrefix, '')
-        .replace(EndPrefix, '');
-    }
-    return value;
-  }
-
-  isValueValid(value) {
-    if (!Decoding.areCharactersAllowedByBS58(value)) {
-      return false;
-    } else {
-      const potentialAddress = bs58
-        .decode(Decoding.removePrefix(value))
-        .toString('hex');
-      return !!web3.utils.isAddress(potentialAddress);
-    }
-  }
-
   checkStatus(value) {
-    // remove prefix
+    // remove prefix EKA is it is in there
     value = value.includes(InitialPrefix)
       ? value.substr(InitialPrefix.length)
       : value;
-    if (this.isCheckSum(value)) {
+    if (isCheckSum(value)) {
       this.setState({status: 'valid', ekaAddress: value});
     } else {
       this.setState({status: 'error', ekaAddress: value});
     }
   }
 
-  isCheckSum(value) {
-    if (!Decoding.areCharactersAllowedByBS58(value)) {
-      return false;
-    }
-    let flag = true;
-    const buffer = new Buffer(bs58.decode(value));
-    const address = buffer.slice(0, -NUMBER_OF_CHECKSUM_BYTES);
-    const checksum = buffer.slice(-NUMBER_OF_CHECKSUM_BYTES);
-    let hash = new Buffer(sha256(sha256(address)));
-    checksum.forEach((digit, i) => {
-      if (digit !== hash[i]) {
-        flag = false;
-      }
-    });
-
-    return flag;
-  }
-
   decode() {
-    this.setState({isConverting: true});
-    if (this.isCheckSum(this.state.ekaAddress)) {
-      const buffer = new Buffer(bs58.decode(this.state.ekaAddress));
-      const decodedAddress = web3.utils.toChecksumAddress(
-        '0x' + buffer.slice(0, -NUMBER_OF_CHECKSUM_BYTES).toString('hex')
-      );
-      this.setState({decodedAddress});
-    }
+    this.setState({
+      isConverting: true,
+      decodedAddress: bs58decode(this.state.ekaAddress)
+    });
   }
 
   render() {
