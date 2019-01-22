@@ -8,6 +8,7 @@ import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Icon from '../../views/icons/Icon.js';
 import {__ALERT_ERROR} from '../../../helpers/colors.js';
 import User from '../../views/User.js';
+import {bs58decode, bs58encode} from '../../../helpers/base58.js';
 
 const Container = styled.div`
   display: flex;
@@ -61,7 +62,14 @@ class UserExploration extends React.Component {
   }
 
   componentDidMount() {
-    const address = this.props.match.params.ethereumAddress;
+    let address = this.props.match.params.ethereumAddress;
+
+    if (bs58decode(address)) {
+      // address is in the EKA format
+      address = bs58decode(address);
+    }
+
+
     this.setState({givenAddress: this.props.match.params.ethereumAddress});
     const query = queryString.stringify({
       ethAddress: address
