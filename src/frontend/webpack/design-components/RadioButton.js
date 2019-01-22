@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { __FIFTH, __THIRD } from "../helpers/colors";
+import {__THIRD} from '../../helpers/colors.js';
 
 const Container = styled.div`
   position: relative;
