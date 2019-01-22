@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Web3Context} from '../../../contexts/Web3Context.js';
 import {fetchingArticleData} from '../../../reducers/article.js';
 import ActionButton from './ActionButton.js';
-import {__ALERT_SUCCESS} from '../../../../helpers/colors.js';
+import {__FIFTH} from '../../../../helpers/colors.js';
 import {CHECK_REVIEWS} from './ButtonsNaming.js';
 import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
@@ -33,8 +33,8 @@ export const CheckReviewsButton = withRouter(connect(
         return (
           <MyLink to={'/app/editor/reviews'}>
             <ActionButton
-              icon={'editorSignOff'}
-              background={__ALERT_SUCCESS}
+              icon={'editorReviewsCheck'}
+              background={__FIFTH}
               dataTip={'checkReviews'}
               title={CHECK_REVIEWS.tooltip}
             >
