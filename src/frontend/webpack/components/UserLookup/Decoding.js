@@ -10,6 +10,7 @@ import {InputField} from '../../design-components/Inputs.js';
 import {ALLOWED_CHARACTERS_BS58} from '../../constants/Base58Characters.js';
 import LottieControl from '../LottieManager.js';
 import DecodingResult from './DecodingResult.js';
+import {NUMBER_OF_CHECKSUM_BYTES} from './ChecksumParameters.js';
 
 const Container = styled.div``;
 const Label = styled.label`
@@ -82,8 +83,8 @@ class Decoding extends Component {
     }
     let flag = true;
     const buffer = new Buffer(bs58.decode(value));
-    const address = buffer.slice(0, -2);
-    const checksum = buffer.slice(-2);
+    const address = buffer.slice(0, -NUMBER_OF_CHECKSUM_BYTES);
+    const checksum = buffer.slice(-NUMBER_OF_CHECKSUM_BYTES);
     let hash = new Buffer(sha256(sha256(address)));
     checksum.forEach((digit, i) => {
       if (digit !== hash[i]) {
@@ -99,7 +100,7 @@ class Decoding extends Component {
     if (this.isCheckSum(this.state.ekaAddress)) {
       const buffer = new Buffer(bs58.decode(this.state.ekaAddress));
       const decodedAddress = web3.utils.toChecksumAddress(
-        '0x' + buffer.slice(0, -2).toString('hex')
+        '0x' + buffer.slice(0, -NUMBER_OF_CHECKSUM_BYTES).toString('hex')
       );
       this.setState({decodedAddress});
     }

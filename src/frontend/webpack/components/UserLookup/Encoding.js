@@ -9,6 +9,7 @@ import {InputField} from '../../design-components/Inputs.js';
 import AuthorLookup from '../AuthorLookup.js';
 import LottieManager from '../LottieManager.js';
 import EncodingResult from './EncodingResult.js';
+import {NUMBER_OF_CHECKSUM_BYTES} from './ChecksumParameters.js';
 
 const Container = styled.div``;
 
@@ -74,9 +75,12 @@ class Encoding extends Component {
       this.setState({isConverting: true});
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      let address = new Buffer(this.state.address.substr(2).toString(), 'hex');
+      let address = new Buffer(
+        this.state.address.replace('0x', '').toString(),
+        'hex'
+      );
       let hash = new Buffer(sha256(sha256(address)));
-      let checksum = hash.slice(0, 2);
+      let checksum = hash.slice(0, NUMBER_OF_CHECKSUM_BYTES);
       let addressAndChecksum = Buffer.concat([address, checksum]);
       const encodedAddress = bs58.encode(addressAndChecksum);
       this.setState({encodedAddress});
