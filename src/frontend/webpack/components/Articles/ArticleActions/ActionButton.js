@@ -16,6 +16,7 @@ const MyButton = styled.div`
   border-radius: 4px;
   padding: 4px 6px;
   width: 100%;
+  max-width: 150px;
 `;
 
 const Container = styled.div`
