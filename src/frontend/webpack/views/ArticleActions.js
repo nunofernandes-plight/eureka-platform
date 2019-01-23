@@ -19,6 +19,7 @@ import {DeclineArticleAndCloseButton} from '../components/Articles/ArticleAction
 import {DeclineArticleNotEnoughReviewersButton} from '../components/Articles/ArticleActions/DeclineArticleNotEnoughReviewers.js';
 import {EditArticleButton} from '../components/Articles/ArticleActions/EditArticle.js';
 import {SignUpForExpertReviewButton} from '../components/Articles/ArticleActions/SignUpForExpertReview.js';
+import {WriteExpertReviewButton} from '../components/Articles/ArticleActions/WriteExpertReview.js';
 
 const Actions = styled.div`
   font-size: 14px;
@@ -118,7 +119,7 @@ const ExpertReviewerActions = ({article, user}) => {
       return (
         <RoleActions>
           <SignUpForExpertReviewButton article={article}/>
-          <div>Write Expert Review</div>
+          <WriteExpertReviewButton article={article}/>
         </RoleActions>
       );
 
@@ -128,14 +129,14 @@ const ExpertReviewerActions = ({article, user}) => {
           return (
             <RoleActions>
               <SignUpForExpertReviewButton article={article}/>
-              <div>Write Expert Review</div>
+              <WriteExpertReviewButton article={article}/>
             </RoleActions>
           );
 
         case REVIEW_STATE.SIGNED_UP_FOR_REVIEWING:
           return (
             <div>
-              <div>Write Expert Review</div>
+              <WriteExpertReviewButton article={article}/>
               <div>Resign from Expert Reviewing</div>
             </div>
           );
