@@ -16,6 +16,7 @@ import {CheckReviewsButton} from '../components/Articles/ArticleActions/CheckRev
 import {AcceptArticleButton} from '../components/Articles/ArticleActions/AcceptArticle.js';
 import {DeclineArticleAndRequestButton} from '../components/Articles/ArticleActions/DeclineArticleAndRequest.js';
 import {DeclineArticleAndCloseButton} from '../components/Articles/ArticleActions/DeclineArticleAndClose.js';
+import {DeclineArticleNotEnoughReviewersButton} from '../components/Articles/ArticleActions/DeclineArticleNotEnoughReviewers.js';
 
 const Actions = styled.div`
   font-size: 14px;
@@ -252,11 +253,7 @@ const getDeclineArticleAndCloseSubmissionButton = article => {
 };
 
 const getDeclineArticleNotEnoughReviewerButton = article => {
-  return (
-    <RoleActions>
-      Close submission process because not enough reviewers found
-    </RoleActions>
-  );
+  return <DeclineArticleNotEnoughReviewersButton article={article}/>;
 };
 
 const mapStateToProps = state => ({

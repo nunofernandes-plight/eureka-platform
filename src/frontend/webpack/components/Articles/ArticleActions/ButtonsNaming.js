@@ -7,6 +7,10 @@ export const INVITE_REVIEWERS = {
   label: 'Invite Reviewers',
   tooltip: 'Invite some reviewers by email to review this article'
 };
+export const DECLINE_ARTICLE_NOT_ENOUGH_REVIEWERS = {
+  label: 'Not enough reviewers',
+  tooltip: 'Close the submission process because there were not enough reviewers found.'
+};
 export const CHECK_REVIEWS = {
   label: 'Check reviews',
   tooltip: 'Check the quality of the already handed in reviews'
