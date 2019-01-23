@@ -8,7 +8,7 @@ import GridSpinner from '../../views/spinners/GridSpinner.js';
 import Icon from '../../views/icons/Icon.js';
 import {__ALERT_ERROR} from '../../../helpers/colors.js';
 import User from '../../views/User.js';
-import {bs58decode, bs58encode} from '../../../helpers/base58.js';
+import {bs58decode} from '../../../helpers/base58.js';
 
 const Container = styled.div`
   display: flex;
@@ -69,8 +69,7 @@ class UserExploration extends React.Component {
       address = bs58decode(address);
     }
 
-
-    this.setState({givenAddress: this.props.match.params.ethereumAddress});
+    this.setState({givenAddress: address});
     const query = queryString.stringify({
       ethAddress: address
     });
@@ -111,7 +110,7 @@ class UserExploration extends React.Component {
             <UserContainer>
               <User
                 user={user}
-                base={`${this.props.base}/${this.state.givenAddress}`}
+                base={`${this.props.base}/${this.props.match.params.ethereumAddress}`}
                 address={this.state.givenAddress}
               />
             </UserContainer>

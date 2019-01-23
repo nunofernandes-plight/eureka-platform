@@ -16,6 +16,11 @@ import {CheckReviewsButton} from '../components/Articles/ArticleActions/CheckRev
 import {AcceptArticleButton} from '../components/Articles/ArticleActions/AcceptArticle.js';
 import {DeclineArticleAndRequestButton} from '../components/Articles/ArticleActions/DeclineArticleAndRequest.js';
 import {DeclineArticleAndCloseButton} from '../components/Articles/ArticleActions/DeclineArticleAndClose.js';
+import {DeclineArticleNotEnoughReviewersButton} from '../components/Articles/ArticleActions/DeclineArticleNotEnoughReviewers.js';
+import {EditArticleButton} from '../components/Articles/ArticleActions/EditArticle.js';
+import {SignUpForExpertReviewButton} from '../components/Articles/ArticleActions/SignUpForExpertReview.js';
+import {WriteExpertReviewButton} from '../components/Articles/ArticleActions/WriteExpertReview.js';
+import {WriteCommunityReviewButton} from '../components/Articles/ArticleActions/WriteCommunityReview.js';
 
 const Actions = styled.div`
   font-size: 14px;
@@ -33,7 +38,7 @@ const RoleActions = styled.div`
 const AuthorActions = ({article, user}) => {
   if (article.articleSubmission.ownerAddress === user.ethereumAddress) {
     if (article.articleVersionState === ARTICLE_VERSION_STATE.DRAFT)
-      return <RoleActions>Edit Article Draft</RoleActions>;
+      return <EditArticleButton article={article}/>;
   }
   return null;
 };
@@ -78,7 +83,7 @@ const EditorActions = ({article, user}) => {
           <div>
             <RoleActions>
               {/*{getNumberOfReviewsInformation(article)}*/}
-              <InviteReviewersButton article={article} />
+              <InviteReviewersButton article={article}/>
               {getDeclineArticleNotEnoughReviewerButton(article)}
             </RoleActions>
             <RoleActions>
@@ -113,26 +118,26 @@ const ExpertReviewerActions = ({article, user}) => {
 
     if (!expertReview && !communityReview)
       return (
-        <div>
-          <div>Sign Up For Expert Review</div>
-          <div>Write Expert Review</div>
-        </div>
+        <RoleActions>
+          <SignUpForExpertReviewButton article={article}/>
+          <WriteExpertReviewButton article={article}/>
+        </RoleActions>
       );
 
     if (expertReview) {
       switch (expertReview.reviewState) {
         case REVIEW_STATE.INVITED:
           return (
-            <div>
-              <div>Sign Up For Expert Review</div>
-              <div>Write Expert Review</div>
-            </div>
+            <RoleActions>
+              <SignUpForExpertReviewButton article={article}/>
+              <WriteExpertReviewButton article={article}/>
+            </RoleActions>
           );
 
         case REVIEW_STATE.SIGNED_UP_FOR_REVIEWING:
           return (
             <div>
-              <div>Write Expert Review</div>
+              <WriteExpertReviewButton article={article}/>
               <div>Resign from Expert Reviewing</div>
             </div>
           );
@@ -173,15 +178,27 @@ const CommunityReviewerActions = ({article, user}) => {
     });
 
     if (!expertReview && !communityReview)
-      return <div>Annotate Article as Community Reviewer</div>;
+      return (
+        <RoleActions>
+          <WriteCommunityReviewButton article={article}/>
+        </RoleActions>
+      );
 
     if (communityReview) {
       switch (communityReview.reviewState) {
         case REVIEW_STATE.INVITED:
-          return <div>Annotate Article as Community Reviewer</div>;
+          return (
+            <RoleActions>
+              <WriteCommunityReviewButton article={article}/>
+            </RoleActions>
+          );
 
         case REVIEW_STATE.SIGNED_UP_FOR_REVIEWING:
-          return null;
+          return (
+            <RoleActions>
+              <WriteCommunityReviewButton article={article}/>
+            </RoleActions>
+          );
 
         case REVIEW_STATE.HANDED_IN_DB:
           return <div>Continue Community Review</div>;
@@ -252,11 +269,7 @@ const getDeclineArticleAndCloseSubmissionButton = article => {
 };
 
 const getDeclineArticleNotEnoughReviewerButton = article => {
-  return (
-    <RoleActions>
-      Close submission process because not enough reviewers found
-    </RoleActions>
-  );
+  return <DeclineArticleNotEnoughReviewersButton article={article}/>;
 };
 
 const mapStateToProps = state => ({
