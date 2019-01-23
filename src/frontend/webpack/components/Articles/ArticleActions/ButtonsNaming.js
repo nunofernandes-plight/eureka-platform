@@ -1,3 +1,7 @@
+export const EDIT_ARTICLE = {
+  label: 'Continue Writing',
+  tooltip: 'Change to the editor for editing this article draft.'
+};
 export const ASSIGN_ARTICLE = 'Assign Me As Editor';
 export const SANITY_OK = 'Sanity Check Passed';
 export const RESIGN_EDITOR = 'Resign Editor Role ';

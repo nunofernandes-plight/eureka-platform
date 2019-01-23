@@ -17,6 +17,7 @@ import {AcceptArticleButton} from '../components/Articles/ArticleActions/AcceptA
 import {DeclineArticleAndRequestButton} from '../components/Articles/ArticleActions/DeclineArticleAndRequest.js';
 import {DeclineArticleAndCloseButton} from '../components/Articles/ArticleActions/DeclineArticleAndClose.js';
 import {DeclineArticleNotEnoughReviewersButton} from '../components/Articles/ArticleActions/DeclineArticleNotEnoughReviewers.js';
+import {EditArticleButton} from '../components/Articles/ArticleActions/EditArticle.js';
 
 const Actions = styled.div`
   font-size: 14px;
@@ -34,7 +35,7 @@ const RoleActions = styled.div`
 const AuthorActions = ({article, user}) => {
   if (article.articleSubmission.ownerAddress === user.ethereumAddress) {
     if (article.articleVersionState === ARTICLE_VERSION_STATE.DRAFT)
-      return <RoleActions>Edit Article Draft</RoleActions>;
+      return <EditArticleButton article={article}/>;
   }
   return null;
 };
