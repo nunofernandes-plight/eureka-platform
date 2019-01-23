@@ -31,6 +31,7 @@ export const WriteExpertReviewButton = withRouter(connect(
             dataTip={'writeExpertReview'}
             background={__FIFTH}
             onClick={() => {
+              // TODO: change to addExpertRevieToDB
               addCommunityReviewToDB({
                 articleHash: props.article.articleHash
               })
