@@ -120,7 +120,7 @@ export default {
           {
             title: 'ArticlesToReview',
             subTitle: 'Open Articles to review',
-            text: 'articles are available for review for you.',
+            text: 'articles are available for review.',
             total: totalOpenArticles,
             icon: 'openForReview',
             content: carousel,

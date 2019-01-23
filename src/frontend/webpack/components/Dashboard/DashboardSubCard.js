@@ -52,6 +52,22 @@ const Header = styled.div`
   margin: 0 0 20px 0;
 `;
 
+/**
+ *
+ * @param category
+ * @param index
+ * @param color
+ * @param title
+ * @returns {*}
+ * @constructor
+ * TODO: add a placeholder for publications --> in the dashboard
+ * TODO: how many articles a reviewer already selected for reviewing
+ * TODO: recommend based on the keywords for expertise
+ * TODO: link to see all articles --> based on keywords
+ *
+ * TODO: author perspective: add an info button for linked article --> inform people of linked articles that your article has been mentioned
+ * TODO: link https://www.biorxiv.org/ and https://arxiv.org/ in our website
+ */
 const DashboardSubCard = ({category, index, color, title}) => {
   return (
     <SubCardContainer>
