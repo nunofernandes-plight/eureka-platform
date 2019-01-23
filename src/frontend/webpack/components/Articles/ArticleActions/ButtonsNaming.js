@@ -36,8 +36,11 @@ export const SIGN_UP_FOR_REVIEWING = {
   label: 'Sign up for Reviewing',
   tooltip: 'Reserve your reward by signing up for an expert review. After successfully signing up for the review, you have three days to hand in review.'
 };
-
 export const WRITE_EXPERT_REVIEW = {
   label: 'Write Expert Review',
   tooltip: 'Write an expert review without signing up for the review slot.'
+};
+export const WRITE_COMMUNITY_REVIEW = {
+  label: 'Annotate Article',
+  tooltip: 'Annotate this article as a community reviewer.'
 };

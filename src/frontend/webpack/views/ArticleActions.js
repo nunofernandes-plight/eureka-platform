@@ -20,6 +20,7 @@ import {DeclineArticleNotEnoughReviewersButton} from '../components/Articles/Art
 import {EditArticleButton} from '../components/Articles/ArticleActions/EditArticle.js';
 import {SignUpForExpertReviewButton} from '../components/Articles/ArticleActions/SignUpForExpertReview.js';
 import {WriteExpertReviewButton} from '../components/Articles/ArticleActions/WriteExpertReview.js';
+import {WriteCommunityReviewButton} from '../components/Articles/ArticleActions/WriteCommunityReview.js';
 
 const Actions = styled.div`
   font-size: 14px;
@@ -82,7 +83,7 @@ const EditorActions = ({article, user}) => {
           <div>
             <RoleActions>
               {/*{getNumberOfReviewsInformation(article)}*/}
-              <InviteReviewersButton article={article} />
+              <InviteReviewersButton article={article}/>
               {getDeclineArticleNotEnoughReviewerButton(article)}
             </RoleActions>
             <RoleActions>
@@ -177,15 +178,27 @@ const CommunityReviewerActions = ({article, user}) => {
     });
 
     if (!expertReview && !communityReview)
-      return <div>Annotate Article as Community Reviewer</div>;
+      return (
+        <RoleActions>
+          <WriteCommunityReviewButton article={article}/>
+        </RoleActions>
+      );
 
     if (communityReview) {
       switch (communityReview.reviewState) {
         case REVIEW_STATE.INVITED:
-          return <div>Annotate Article as Community Reviewer</div>;
+          return (
+            <RoleActions>
+              <WriteCommunityReviewButton article={article}/>
+            </RoleActions>
+          );
 
         case REVIEW_STATE.SIGNED_UP_FOR_REVIEWING:
-          return null;
+          return (
+            <RoleActions>
+              <WriteCommunityReviewButton article={article}/>
+            </RoleActions>
+          );
 
         case REVIEW_STATE.HANDED_IN_DB:
           return <div>Continue Community Review</div>;
