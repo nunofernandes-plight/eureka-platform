@@ -70,7 +70,7 @@ const EncodingResult = ({ ethAddress, encodedAddress }) => {
           <LatexCitation encodedAddress={encodedAddress} />
         </AddressesContainer>
         <QRContainer>
-          <EKAQRCode value={InitialPrefix + encodedAddress + EndPrefix} />
+          <EKAQRCode value={InitialPrefix + encodedAddress} />
         </QRContainer>
       </SubContainer>
     </Container>
