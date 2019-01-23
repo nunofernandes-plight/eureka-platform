@@ -1,3 +1,7 @@
+/**
+ * Backend starting point
+ **/
+
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
@@ -13,10 +17,7 @@ import timebasedContractService from '../web3/timebased-contract-service.mjs';
 import {getJournal} from '../db/journal-service.mjs';
 import uploadRouter from '../routes/file-upload.routes.mjs';
 import {setupWeb3Interface} from '../web3/web3InterfaceSetup.mjs';
-import {configEmailProvider, sendEmail} from '../email/index.mjs';
-import {getReviewersInvitationTemplate} from '../email/templates/EmailTemplates.mjs';
-import getAccounts from '../../smartcontracts/methods/get-accounts';
-import web3 from '../../helpers/web3Instance';
+import {configEmailProvider} from '../email/index.mjs';
 
 if (!isProduction) {
   dotenv.config();
@@ -39,7 +40,6 @@ export default {
       app.use(express.static(path.join(__dirname, '/build')));
     }
 
-    // app.use(express.static(path.join(__dirname, '/build')));
 
     /** Parser **/
     //Parses the text as URL encoded data

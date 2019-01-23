@@ -5,7 +5,6 @@ import ArticleVersion from '../schema/article-version.mjs';
 import articleVersionService from './article-version-service.mjs';
 import ARTICLE_VERSION_STATE from '../schema/article-version-state-enum.mjs';
 import {getIds} from '../helpers/get-array-of-ids.mjs';
-import REVIEW_TYPE from '../schema/review-type-enum.mjs';
 import {getReviewersInvitationTemplate} from '../email/templates/EmailTemplates.mjs';
 import {sendEmailByEthereumAddress} from '../email/index.mjs';
 

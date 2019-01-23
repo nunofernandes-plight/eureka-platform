@@ -1,9 +1,8 @@
 import express from 'express';
 import {asyncHandler} from '../api/requestHandler.mjs';
-
-const router = express.Router();
 import addressBookService from '../db/address-book-service.mjs';
 import accesController from '../controller/acess-controller.mjs';
+const router = express.Router();
 
 
 router.use(accesController.loggedInOnly);

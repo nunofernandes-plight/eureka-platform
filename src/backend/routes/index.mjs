@@ -17,7 +17,7 @@ import dashboardRoutes from './dashboard-routes.mjs';
 
 const router = express.Router();
 
-//Different backend routes goes here
+//Backen routes
 router.use('/welcome', welcomeRoutes);
 router.use('/reviews', reviewRoutes);
 router.use('/signup', signupRoutes);

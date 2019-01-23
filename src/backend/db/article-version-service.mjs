@@ -142,7 +142,6 @@ export default {
       );
   },
 
-  //TODO : update this method
   getArticlesOpenForReviews: async ethereumAddress => {
     // gettin reviews first to check which articles where already reviewed
     let reviews = await ReviewService.getMyReviews(ethereumAddress);
@@ -168,12 +167,7 @@ export default {
     );
   },
 
-  /* tipp not used anymore
-  * Query for a document nested in an array
-  *   const cursor = db.collection('inventory').find({
-        'instock.qty': { $lte: 20 }
-      });
-  * */
+
   getArticlesOpenForExpertReviews: async ethereumAddress => {
     // gettin reviews first to check which articles where already reviewed
     let reviews = await ReviewService.getMyReviews(ethereumAddress);

@@ -1,3 +1,7 @@
+/**
+ *  General Error- and Success-Handler:
+ */
+
 const errorHandler = (response, err) => {
   const statusCode = err.status || 500;
   response.status(statusCode).json({

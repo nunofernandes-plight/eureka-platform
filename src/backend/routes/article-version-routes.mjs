@@ -67,7 +67,7 @@ router.get(
     // changing linkedArticles object to response objects which includes the relevant data only
     const linkedArticlesResp = getArticlesResponse(articleVersions.linkedArticles);
     const newArticleVersion = {
-        ...articleVersions._doc,
+      ...articleVersions._doc,
       linkedArticles: linkedArticlesResp
     };
     return newArticleVersion;

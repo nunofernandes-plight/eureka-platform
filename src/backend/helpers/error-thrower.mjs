@@ -1,3 +1,6 @@
+/**
+ * General Error thrower
+ */
 
 export default {
   notLoggedIn: () => {
@@ -99,4 +102,4 @@ export default {
     error.status = 400;
     throw error;
   }
-}
+};

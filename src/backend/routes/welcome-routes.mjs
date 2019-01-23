@@ -8,7 +8,7 @@ import {asyncHandler} from '../api/requestHandler.mjs';
 
 const router = express.Router();
 
-router.get('/', asyncHandler(async (req, res) => {
+router.get('/', asyncHandler(async (req) => {
   // console.log(req.user);
   // console.log(req.isAuthenticated());
   if(!req.user) {

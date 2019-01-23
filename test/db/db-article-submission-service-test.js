@@ -23,10 +23,6 @@ test.after(async () => {
 });
 
 
-test(PRETEXT + 'Test', async t => {
-  t.is(true, true);
-});
-
 test(PRETEXT + 'Connection to reviews in DB', async t => {
   let articleSubmissions = await articleSubmissionService.getAllSubmissions();
   t.is(articleSubmissions.length, 0);
