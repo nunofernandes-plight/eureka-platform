@@ -1,14 +1,13 @@
-import React from "react";
-import styled from "styled-components";
-import { MarkdownTitle } from "./EncodingResult";
+import React from 'react';
+import styled from 'styled-components';
+import {MarkdownTitle} from './EncodingResult';
 import {
   __ALERT_ERROR,
   __ALERT_WARNING,
   __GRAY_400,
-  __SECOND,
-} from "../../../helpers/colors";
+  __SECOND
+} from '../../../helpers/colors';
 import {EndPrefix, InitialPrefix} from '../../constants/Prefix.js';
-
 
 const Container = styled.div`
   flex: 11;
@@ -69,39 +68,52 @@ const getValue = value => {
   );
 };
 
-const BibLine = ({ name, nameType, value, ...otherProps }) => {
+const BibLine = ({name, nameType, value, ...otherProps}) => {
   return (
     <BibLineContainer>
       {getProperty(name)} = {getValue(value)}
-      {otherProps.last ? null : ","}
+      {otherProps.last ? null : ','}
       <br />
     </BibLineContainer>
   );
 };
 
-const LatexCitation = ({ encodedAddress }) => {
+const getKey = address => {
+  const initialString = InitialPrefix + address.substr(0, 5);
+  const timestamp = new Date()
+    .getTime()
+    .toString()
+    .substr(-5);
+
+  return initialString + timestamp;
+};
+
+const LatexCitation = ({encodedAddress}) => {
+  const date = new Date().getTime();
+  console.log(date);
   return (
     <Container>
       <MarkdownTitle>BibTex</MarkdownTitle>
       <ContentEditable contentEditable spellCheck="false">
         <Entry>
           {`@`}article{`{`}
-          <Label>{InitialPrefix + encodedAddress + EndPrefix}</Label>
+          <Label>{getKey(encodedAddress)}</Label>
           <Default>,</Default>
           <br />
         </Entry>
-        <BibLine name={"author"} value={"tbd"} />
-        <BibLine name={"year"} value={"tbd"} />
-        <BibLine name={"title"} value={"tbd"} />
-        <BibLine name={"journal"} value={"tbd"} />
-        <BibLine name={"volume"} value={"tbd"} />
-        <BibLine name={"number"} value={"tbd"} />
-        <BibLine name={"pages"} value={"tbd"} />
-        <BibLine name={"doi"} value={"tbd"} />
-        <BibLine name={"isbn"} value={"tbd"} />
-        <BibLine name={"issn"} value={"tbd"} />
-        <BibLine name={"pmid"} value={"tbd"} />
-        <BibLine name={"url"} value={"tbd"} last />
+        <BibLine name={'author'} value={'tbd'} />
+        <BibLine name={'note'} value={InitialPrefix + encodedAddress} />
+        <BibLine name={'year'} value={'tbd'} />
+        <BibLine name={'title'} value={'tbd'} />
+        <BibLine name={'journal'} value={'tbd'} />
+        <BibLine name={'volume'} value={'tbd'} />
+        <BibLine name={'number'} value={'tbd'} />
+        <BibLine name={'pages'} value={'tbd'} />
+        <BibLine name={'doi'} value={'tbd'} />
+        <BibLine name={'isbn'} value={'tbd'} />
+        <BibLine name={'issn'} value={'tbd'} />
+        <BibLine name={'pmid'} value={'tbd'} />
+        <BibLine name={'url'} value={'tbd'} last />
         <Default>{`}`}</Default>
       </ContentEditable>
     </Container>
