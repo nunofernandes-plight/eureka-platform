@@ -31,3 +31,8 @@ export const DECLINE_ARTICLE_AND_CLOSE_SUBMISSION = {
   label: 'Decline article & finish',
   tooltip: 'Decline this article version and finish the peer review process.'
 };
+
+export const SIGN_UP_FOR_REVIEWING = {
+  label: 'Sign up for Reviewing',
+  tooltip: 'Reserve your reward by signing up for an expert review. After successfully signing up for the review, you have three days to hand in review.'
+};

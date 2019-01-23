@@ -18,6 +18,7 @@ import {DeclineArticleAndRequestButton} from '../components/Articles/ArticleActi
 import {DeclineArticleAndCloseButton} from '../components/Articles/ArticleActions/DeclineArticleAndClose.js';
 import {DeclineArticleNotEnoughReviewersButton} from '../components/Articles/ArticleActions/DeclineArticleNotEnoughReviewers.js';
 import {EditArticleButton} from '../components/Articles/ArticleActions/EditArticle.js';
+import {SignUpForExpertReviewButton} from '../components/Articles/ArticleActions/SignUpForExpertReview.js';
 
 const Actions = styled.div`
   font-size: 14px;
@@ -115,20 +116,20 @@ const ExpertReviewerActions = ({article, user}) => {
 
     if (!expertReview && !communityReview)
       return (
-        <div>
-          <div>Sign Up For Expert Review</div>
+        <RoleActions>
+          <SignUpForExpertReviewButton article={article}/>
           <div>Write Expert Review</div>
-        </div>
+        </RoleActions>
       );
 
     if (expertReview) {
       switch (expertReview.reviewState) {
         case REVIEW_STATE.INVITED:
           return (
-            <div>
-              <div>Sign Up For Expert Review</div>
+            <RoleActions>
+              <SignUpForExpertReviewButton article={article}/>
               <div>Write Expert Review</div>
-            </div>
+            </RoleActions>
           );
 
         case REVIEW_STATE.SIGNED_UP_FOR_REVIEWING:
