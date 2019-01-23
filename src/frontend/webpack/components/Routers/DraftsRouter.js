@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import {DraftsNavPillRoutes} from './DraftsNavPillRoutes.js';
 import NavPill from '../../views/NavPill.js';
 import {__ALERT_ERROR} from '../../../helpers/colors.js';
+import PDFUploader from '../PDFs/PDFUploader.js';
 
 const Container = styled.div`
   display: flex;
@@ -51,7 +52,11 @@ export const DraftsRouter = ({base}) => {
           render={() => <MyDrafts base={`${base}/online`} />}
         />
 
-        <Route exact path={`${base}/pdfs`} render={() => <span />} />
+        <Route
+          exact
+          path={`${base}/pdfs`}
+          render={() => <PDFUploader base={`${base}/pdfs`} />}
+        />
 
         <Route
           exact
