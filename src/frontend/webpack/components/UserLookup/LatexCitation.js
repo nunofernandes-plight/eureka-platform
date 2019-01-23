@@ -84,13 +84,10 @@ const getKey = address => {
     .getTime()
     .toString()
     .substr(-5);
-
   return initialString + timestamp;
 };
 
 const LatexCitation = ({encodedAddress}) => {
-  const date = new Date().getTime();
-  console.log(date);
   return (
     <Container>
       <MarkdownTitle>BibTex</MarkdownTitle>
