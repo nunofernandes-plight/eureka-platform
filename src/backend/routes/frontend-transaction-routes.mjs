@@ -29,12 +29,4 @@ router.get(
     return frontendTransactionService.getAllTxs(address);
   })
 );
-
-router.delete(
-  '/',
-  asyncHandler(async req => {
-    const address = req.user.ethereumAddress;
-  })
-);
-
 export default router;

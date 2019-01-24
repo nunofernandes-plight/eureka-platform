@@ -31,7 +31,6 @@ export default {
     });
   },
 
-  //TODO: Assignable are only submissions where user is not equal submission owner or author
   getUnassignedSubmissions: (ethereumAddress) => {
     return populate(
       ArticleSubmission.find({
@@ -42,7 +41,7 @@ export default {
     );
   },
 
-  getAssignedSubmissions: ethereumAddress => {
+  getAssignedSubmissions: (ethereumAddress) => {
     return populate(
       ArticleSubmission.find({
         editor: ethereumAddress,
@@ -304,6 +303,7 @@ export default {
 
     return await submission.save();
   },
+
   closeArticleSubmission: async (_scSubmissionId) => {
     let submission = await ArticleSubmission.findOne({scSubmissionID: _scSubmissionId});
     if (!submission) {

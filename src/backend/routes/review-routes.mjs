@@ -33,7 +33,7 @@ router.get(
 
 router.get(
   '/handedin',
-  asyncHandler(async req => {
+  asyncHandler(async () => {
     let reviews = await reviewService.getHandedInReviews();
     return getReviewsResponseArray(reviews);
   })
@@ -152,20 +152,6 @@ const getRelevantReviewData = review => {
 };
 
 const getDetailedArticleAndReviewData = review => {
-  // const reviewObj = {
-  //   reviewId: review._id,
-  //   reviewHash: review.reviewHash,
-  //   reviewState: review.reviewState,
-  //   reviewType: review.reviewType,
-  //   articleHasMajorIssues: review.articleHasMajorIssues,
-  //   articleHasMinorIssues: review.articleHasMinorIssues,
-  //   stateTimestamp: review.stateTimestamp,
-  //   reviewerAddress: review.reviewerAddress,
-  //   score1: review.reviewScore1,
-  //   score2: review.reviewScore2,
-  //   reviewText: review.reviewText
-  // };
-
   return {
     article: review.articleVersion,
     review: review

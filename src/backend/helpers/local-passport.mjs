@@ -1,3 +1,7 @@
+/**
+ * Local Passport strategy
+ */
+
 import passport from 'passport';
 import passportLocal from 'passport-local/lib/index';
 import bcryptHasher from './bcrypt-hasher.mjs';

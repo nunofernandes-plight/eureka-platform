@@ -55,6 +55,5 @@ export default {
       })
     );
     return data;
-  },
-  deleteTransaction: async userAddress => {}
+  }
 };

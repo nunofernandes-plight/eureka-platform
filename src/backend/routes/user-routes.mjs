@@ -7,7 +7,6 @@ import Roles from '../schema/roles-enum.mjs';
 
 const router = express.Router();
 
-// router.use(accesController.loggedInOnly);
 router.get(
   '/',
   asyncHandler(async req => {

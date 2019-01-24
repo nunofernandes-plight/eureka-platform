@@ -5,7 +5,7 @@ import articleSubmissionService from '../db/article-submission-service.mjs';
 import errorThrower from '../helpers/error-thrower.mjs';
 import Roles from '../schema/roles-enum.mjs';
 import {getRelevantArticleData} from '../helpers/relevant-article-data.mjs';
-import {getLimitedObjects, getNumberOfObjects, getNumberOfPages} from '../helpers/pagination-helpers.mjs';
+import {getLimitedObjects, getNumberOfPages} from '../helpers/pagination-helpers.mjs';
 
 const router = express.Router();
 router.use(accesController.loggedInOnly);

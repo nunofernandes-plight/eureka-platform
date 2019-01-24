@@ -1,5 +1,9 @@
+/**
+ * Access Controller is handling the authorisation of
+ * the different REST routes based on the user id.
+ */
+
 import User from '../schema/user.mjs';
-import Roles from '../schema/roles-enum.mjs';
 
 export default {
   /**
@@ -19,22 +23,6 @@ export default {
       'success': false,
       'error': 'Not logged in'
     });
-  },
-
-  adminOnly: (req, res, next) => {
-    console.log(req.user);
-    User.findById(req.user)
-      .exec()
-      .then(user => {
-        if (user.roles.indexOf(Roles.ADMIN) >= 0) next(); // index is -1 if not in the array
-
-        res.status(403).json({
-          error: 'Not authorized - not an admin'
-        });
-      })
-      .catch(err => {
-        throw err;
-      });
   },
 
   /**
