@@ -23,6 +23,8 @@ received in transactions on the Ethereum ecosystem.
 
 ![Eureka Token Logo](public/img/platform/1.png)
 
+![Eureka Token Vidoe](public/eureka_video.gif)
+
 ## Website
 
 > EUREKA token (EKA) description: https://eurekatoken.io

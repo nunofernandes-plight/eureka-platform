@@ -1,12 +1,9 @@
 import React from 'react';
-import classNames from 'classnames';
 import Dropzone from 'react-dropzone';
 import styled from 'styled-components';
 import {
   __FIFTH,
-  __GRAY_200,
   __GRAY_300,
-  __GRAY_400,
   __GRAY_500
 } from '../../../helpers/colors.js';
 import Icon from '../../views/icons/Icon.js';
