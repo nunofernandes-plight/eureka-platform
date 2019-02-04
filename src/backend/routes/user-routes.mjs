@@ -16,6 +16,12 @@ router.get(
         req.query.roles
       );
     }
+    const role = req.body.role;
+    if (role !== Roles.CONTRACT_OWNER && role !== Roles.CONTRACT_OWNER) {
+      let error = new Error('No authorization for role:' + role);
+      error.status = 400;
+      throw error;
+    }
     if (req.query.ethAddress) {
       const query = req.query.ethAddress;
       if (!Array.isArray(query)) {
