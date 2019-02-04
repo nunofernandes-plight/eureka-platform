@@ -5,17 +5,17 @@
 @import url('https://fonts.googleapis.com/css?family=Lato');
 
 :root {
-  --main: rgb(76, 174, 243);
-  --main-hover: rgb(114, 197, 255);
-  /****************EUREKA LOGO COLORS******************/
-  --second: rgb(66, 113, 173);
-  --second-hover: rgb(66, 134, 194);
-  --third: rgb(46, 50, 146);
-  --third-hover: rgb(46, 50, 165);
+  --main: #4caef3;
+  --second: #4271ad;
+  --third: #2e3292;
   --fourth: #66cad3;
-  --fourth-hover: #66d4dd;
-  /************************** *************************/
+  --fifth: #5e72e4;
 
+  /************************** *************************/
+  --main-hover: rgb(114, 197, 255);
+  --second-hover: rgb(66, 134, 194);
+  --third-hover: rgb(46, 50, 165);
+  --fourth-hover: #66d4dd;
   --color-text: white;
 }
 
@@ -25,7 +25,7 @@ body {
   background-color: rgba(0, 0, 0, 0);
   /*font-family: 'Poppins', sans-serif;*/
   /*font-family: 'Open Sans', sans-serif;*/
-/*  font-family: 'Open Sans', sans-serif;*/
+  /*  font-family: 'Open Sans', sans-serif;*/
   font-family: 'Lato', sans-serif;
   color: var(--third);
   font-size: 14px;
