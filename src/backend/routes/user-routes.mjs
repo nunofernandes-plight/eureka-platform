@@ -17,7 +17,7 @@ router.get(
       );
     }
     const role = req.body.role;
-    if (role !== Roles.CONTRACT_OWNER && role !== Roles.CONTRACT_OWNER) {
+    if (role !== Roles.CONTRACT_OWNER && role !== Roles.ADMIN) {
       let error = new Error('No authorization for role:' + role);
       error.status = 400;
       throw error;
